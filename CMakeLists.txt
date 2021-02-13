@@ -39,6 +39,8 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
+set (CMAKE_CXX_STANDARD 17)
+
 ###############################################################################
 # Project Setup
 ###############################################################################
@@ -54,7 +56,8 @@ add_library(${PROJECT_NAME} STATIC)
 
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE
-    src/io/f3xx/GPIO.cpp
+    src/io/GPIO.cpp
+    src/io/platform/f3xx/GPIOf3.cpp
     src/dev/LED.cpp
 )
 
@@ -69,6 +72,10 @@ endif()
 ###############################################################################
 # Handle dependencies
 ###############################################################################
+
+# TODO: This should be set by the user of this library
+add_compile_definitions(STM32F302x8)
+
 add_subdirectory(libs/HALf3/)
 
 # Later this will be handled dynamically, either the HALf3 or the HALf4 will

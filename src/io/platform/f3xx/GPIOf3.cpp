@@ -1,7 +1,10 @@
 #include <cstdint>
 
 #include <EVT/io/GPIO.hpp>
+#include <EVT/io/platform/f3xx/GPIOf3.hpp>
 #include <EVT/io/pin.hpp>
+
+#include <HALf3/stm32f3xx_hal_rcc.h>
 #include <HALf3/stm32f3xx_hal_gpio.h>
 
 namespace
@@ -67,64 +70,59 @@ extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 namespace EVT::core::IO
 {
 
-    GPIOf3::GPIOf3(GPIO::Pin pin, GPIO::Direction direction) : GPIO(pin, direction)
+GPIOf3::GPIOf3(Pin pin, GPIO::Direction direction) : GPIO(pin, direction)
+{
+
+    GPIO_InitTypeDef gpioInit;
+
+    this->halPin = 1 << (static_cast<uint16_t>(this->pin) & 0x0F);
+    switch((static_cast<uint8_t>(pin) & 0xF0) >> 4)
     {
-
-        GPIO_InitTypeDef gpioInit;
-
-        this->halPin = 1 << (static_cast<uint16_t>(this->pin) & 0x0F);
-        switch((static_cast<uint8_t>(pin) & 0xF0) >> 4)
-        {
-            case 0x0:
-                this->port = GPIOA;
-                __HAL_RCC_GPIOA_CLK_ENABLE();
-                break;
-            case 0x1:
-                this->port = GPIOB;
-                __HAL_RCC_GPIOB_CLK_ENABLE();
-                break;
-            case 0x2:
-                this->port = GPIOC;
-                __HAL_RCC_GPIOC_CLK_ENABLE();
-                break;
-            case 0x3:
-                this->port = GPIOD;
-                __HAL_RCC_GPIOD_CLK_ENABLE();
-                break;
-            case 0x5:
-                this->port = GPIOF;
-                __HAL_RCC_GPIOF_CLK_ENABLE();
-                break;
-            default:
-                break; // Should never get here
-        }
-
-        gpioInit.Pin = this->halPin;
-        gpioInit.Mode = GPIO_MODE_OUTPUT_PP;
-        gpioInit.Pull = GPIO_NOPULL;
-        gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
-        HAL_GPIO_Init(this->port, &gpioInit);
-        this->writePin(GpioIntf::STATE::LOW); // Output set low by default
+        case 0x0:
+            this->port = GPIOA;
+            __HAL_RCC_GPIOA_CLK_ENABLE();
+            break;
+        case 0x1:
+            this->port = GPIOB;
+            __HAL_RCC_GPIOB_CLK_ENABLE();
+            break;
+        case 0x2:
+            this->port = GPIOC;
+            __HAL_RCC_GPIOC_CLK_ENABLE();
+            break;
+        case 0x3:
+            this->port = GPIOD;
+            __HAL_RCC_GPIOD_CLK_ENABLE();
+            break;
+        case 0x5:
+            this->port = GPIOF;
+            __HAL_RCC_GPIOF_CLK_ENABLE();
+            break;
+        default:
+            break; // Should never get here
     }
 
-    GPIO::~GPIO()
-    {
-        // Empty destructor
-    }
+    gpioInit.Pin = this->halPin;
+    gpioInit.Mode = GPIO_MODE_OUTPUT_PP;
+    gpioInit.Pull = GPIO_NOPULL;
+    gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
+    HAL_GPIO_Init(this->port, &gpioInit);
+    this->writePin(GPIO::State::LOW); // Output set low by default
+}
 
-    void GPIOf3::setDirection(GpioIntf::DIRECTION direction)
-    {
-        LL_GPIO_SetPinMode(this->port, static_cast<uint32_t>(this->halPin), static_cast<uint32_t>(direction));
-    }
+void GPIOf3::setDirection(GPIO::Direction direction)
+{
+    // TODO: Add implementation of resetting the direction
+}
 
-    void GPIOf3::writePin(GpioIntf::STATE state)
-    {
-        HAL_GPIO_WritePin(this->port, this->halPin, static_cast<GPIO_PinState>(state));
-    }
+void GPIOf3::writePin(GPIO::State state)
+{
+    HAL_GPIO_WritePin(this->port, this->halPin, static_cast<GPIO_PinState>(state));
+}
 
-    GPIO::STATE GPIO::readPin()
-    {
-        return static_cast<GpioIntf::STATE>(HAL_GPIO_ReadPin(this->port, this->halPin));
-    }
+GPIO::State GPIOf3::readPin()
+{
+    return static_cast<GPIO::State>(HAL_GPIO_ReadPin(this->port, this->halPin));
+}
 
 }

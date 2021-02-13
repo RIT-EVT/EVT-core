@@ -5,12 +5,29 @@
  */
 #include <iostream>
 
-#include <EVT/utils/bits.hpp>
+#include <EVT/io/GPIO.hpp>
+#include <EVT/io/platform/f3xx/GPIOf3.hpp>
+#include <EVT/dev/LED.hpp>
+#include <EVT/io/pin.hpp>
 
+namespace IO = EVT::core::IO;
+namespace DEV = EVT::core::DEV;
 
 int main()
 {
-    std::cout << +getHighByte(1000) << std::endl;
+    // Setup the GPIO pin
+    IO::GPIOf3 ledGPIO(IO::Pin::PB_13, IO::GPIO::Direction::OUTPUT); 
+    DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
+
+    while(1) {
+        led.toggle();
+
+        // TODO: Create wait function
+        for(int i = 0; i < 10000; i++) {
+            (void)i;
+        }
+
+    }
     
     return 0;
 }

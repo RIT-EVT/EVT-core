@@ -42,9 +42,6 @@ target_sources(${PROJECT_NAME} PRIVATE
 # code expects the headers to be
 target_include_directories(${PROJECT_NAME} PRIVATE include/HALf3/)
 
-# Define more specifics about the F3 version
-add_compile_definitions(STM32F302x8)
-
 ###############################################################################
 # Compiler settings
 ###############################################################################

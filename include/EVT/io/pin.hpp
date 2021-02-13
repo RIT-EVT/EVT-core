@@ -6,6 +6,8 @@
 #ifndef _EVT_PIN_
 #define _EVT_PIN_
 
+namespace EVT::core::IO
+{
 // STM32F302R8 pin names
 #ifdef STM32F302x8
 
@@ -99,5 +101,6 @@
 #else
     #error "Please set the desired platform"
 #endif
+};
 
 #endif

@@ -67,16 +67,6 @@ public:
     GPIO(Pin pin, Direction direction);
 
     /**
-     * Create an instance of a GPIO based on the hardware of the system.
-     * This is the preferred way to get an instance of a GPIO. The instance
-     * generated will have the ability of a generic GPIO.
-     * @return Reference to a static instance of a GPIO attached to the
-     *  provided pin
-     */
-    template<Pin pin, Direction direction>
-    static GPIO& getInstance();
-
-    /**
      * Set the direction of the pin.
      *
      * @param direction The direction of information.
@@ -92,14 +82,17 @@ public:
 
     /**
      * Used for reading the state of a pin.
+     *
+     * @return The state of the pin.
      */
     virtual State readPin() = 0;
 
-private:
+protected:
     /// The pin the GPIO instance is attached to
     Pin pin;
     /// Direction of the flow of information, input or output
     Direction direction;
 };
 
+}
 #endif

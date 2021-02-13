@@ -7,7 +7,7 @@
 #include <HALf3/stm32f3xx_hal_gpio.h>
 
 
-namspace EVT::core::IO
+namespace EVT::core::IO
 {
 
 class GPIOf3 : public GPIO
@@ -58,7 +58,7 @@ private:
     /// Pin representing the underlying HAL pin identifer
     uint16_t halPin;
     /// Represents the GPIO port of the pin (A, B, C, D, E, or F)
-    GPIO_TypeDef * my_port;
+    GPIO_TypeDef * port;
 };
     
 }
