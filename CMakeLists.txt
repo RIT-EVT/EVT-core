@@ -29,7 +29,7 @@ set(CMAKE_STRIP             "$ENV{GCC_ARM_TOOLS_PATH}/arm-none-eabi-strip")
 
 set(EVT_COMMON_FLAGS        "-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 \
                             -mfloat-abi=hard -Og -Wall -fdata-sections \
-                            -ffunction-sections -MMD -MP -MF")
+                            -ffunction-sections -MMD -MP -MF -g3")
     
 set(CMAKE_C_FLAGS           "${EVT_COMMON_FLAGS} \
                             -std=gnu99")

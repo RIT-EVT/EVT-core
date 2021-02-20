@@ -7,6 +7,7 @@ set_target_properties(${SAMPLE_NAME} PROPERTIES
     SUFFIX ".elf"
 )
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb")
 # Generate map
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
                             -Wl,-Map=${SAMPLE_NAME}.map")
