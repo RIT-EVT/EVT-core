@@ -4,7 +4,7 @@
 #include <cstdint>
 
 #include <EVT/io/GPIO.hpp>
-#include <HALf3/stm32f3xx_hal_gpio.h>
+#include <HALf3/stm32f3xx.h>
 
 
 namespace EVT::core::IO

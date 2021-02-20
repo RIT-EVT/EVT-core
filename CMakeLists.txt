@@ -27,19 +27,26 @@ set(CMAKE_RANLIB            "$ENV{GCC_ARM_TOOLS_PATH}/arm-none-eabi-ranlib")
 set(CMAKE_SIZE              "$ENV{GCC_ARM_TOOLS_PATH}/arm-none-eabi-size")
 set(CMAKE_STRIP             "$ENV{GCC_ARM_TOOLS_PATH}/arm-none-eabi-strip")
 
-set(CMAKE_C_FLAGS           "${CMAKE_C_FLAGS} -Wno-psabi \
-                            -fdata-sections -ffunction-sections \
-                            -Wl,--gc-sections " CACHE INTERNAL "")
-set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} -fno-exceptions \
-                            " CACHE INTERNAL "")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -specs=nosys.specs\
-                            -mthumb -mcpu=cortex-m4")
+set(EVT_COMMON_FLAGS        "-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 \
+                            -mfloat-abi=hard -Og -Wall -fdata-sections \
+                            -ffunction-sections -MMD -MP -MF")
+    
+set(CMAKE_C_FLAGS           "${EVT_COMMON_FLAGS} \
+                            -std=gnu99")
+
+set(CMAKE_CXX_FLAGS         "${EVT_COMMON_FLAGS} \
+                            -fno-rtti -Wvla")
+
+set(CMAKE_EXE_LINKER_FLAGS "-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 \
+                            -mfloat-abi=hard -specs=nano.specs \
+                            -T/home/cbolles/devel/evt/EVT-core/libs/HALf3/STM32F302C8Tx_FLASH.ld \
+                            -lc -lm -lnosys -Wl,--gc-sections")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
-set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_STANDARD 14)
 
 ###############################################################################
 # Project Setup
@@ -59,6 +66,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/io/GPIO.cpp
     src/io/platform/f3xx/GPIOf3.cpp
     src/dev/LED.cpp
+    src/wrapper.cpp
 )
 
 # Check to see if this project is being built on its own, or as a dependency
@@ -75,6 +83,7 @@ endif()
 
 # TODO: This should be set by the user of this library
 add_compile_definitions(STM32F302x8)
+add_compile_definitions(USE_HAL_DRIVER)
 
 add_subdirectory(libs/HALf3/)
 
