@@ -1,31 +1,41 @@
-# EVT Sample Source
+# EVT-core
 
 ## Introduction
 
-This project is a sample of what the architecture of the core EVT firmware
-could look like. The goal is for this code to be the replacement for mbed in
-EVT applications and to maintain the shared functionality that all EVT targets
-share.
+### What is EVT?
+EVT stands for the Electric Vehicle Team at RIT. We build and race electric
+vehicles. Currently we have two track motorcycles we develop for and are
+desiging an electric dirt bike.
 
-The key points of the project are listed below. If it is decided that this
-architecture would benefit the team in the long term, then the process of
-porting our existing code over to this system will begin.
+This repository is managed by the Firmware team which handles the firmware
+used by the team on the various vehicles.
 
-## Key Points
+### What is EVT-Core?
+EVT-Core is the central library used by EVT for interacting with the MCUs on
+the different components on the electric vehicles. The library is designed to
+be an alternative to Mbed which was the previous tool used for programming the
+MCUs. EVT-Core is not a RTOS, it instead contains abstractions for bare metal
+programming. Contained is abstractions for working with I2C, SPI, GPIO, PWM,
+RTC, etc.
 
-* CMake used for building project, allows this repo to be dependency in many
-other projects
-* Building no longer reliant on mbed.
-* Testing of core functionality (io abstractions, utilities, etc) no longer
-coupled with specific targets (TMS, BMS, etc)
-* Version control of the core code base independent of the various targets.
+### How is EVT-Core Used?
+EVT-Core is a CMake library and as such can be built as a library and
+manually linked to, or can be added as a sub-directory to a larger project.
+Further information is to come.
 
-## Next Steps
+## Features Supported
 
-In the case that this architecture is chosen then this repo will be moved to
-an EVT controlled location (either Bitbucket or Github). After that, the
-existing code will be ported over.
 
-Each target (TMS, BMS, LVSS) will then be given a dedicated repo and be treated
-as independent projects. This way testing, version controlling, and
-documentation will all be decoupled.
+| Platform    | I2C | SPI | PWM | CAN | ADC | Flash | RTC | UART | GPIO |
+|-------------|-----|-----|-----|-----|-----|-------|-----|------|------|
+| STM32F302R8 | :x: | :x: | :x: | :x: | :x: | :x:   | :x: | :x:  | :x:  |
+| STM32F446RE | :x: | :x: | :x: | :x: | :x: | :x:   | :x: | :x:  | :x:  |
+
+
+## Release Notes
+
+## 0.0.1
+
+* GPIO Support
+* Blinky Sample
+* Building for STM32F302R8
