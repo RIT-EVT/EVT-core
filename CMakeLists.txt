@@ -14,6 +14,10 @@ if(NOT DEFINED ENV{GCC_ARM_TOOLS_PATH})
     )
 endif()
 
+# Flags to skip compiler check
+set(CMAKE_C_COMPILER_WORKS 1)
+set(CMAKE_CXX_COMPILER_WORKS 1)
+
 # Setup for cross compilation
 set(CMAKE_SYSTEM_NAME       Generic)
 set(CMAKE_SYSTEM_PROCESSOR  arm)
@@ -39,7 +43,6 @@ set(CMAKE_CXX_FLAGS         "${EVT_COMMON_FLAGS} \
 
 set(CMAKE_EXE_LINKER_FLAGS "-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 \
                             -mfloat-abi=hard -specs=nano.specs \
-                            -T/home/cbolles/devel/evt/EVT-core/libs/HALf3/STM32F302C8Tx_FLASH.ld \
                             -lc -lm -lnosys -Wl,--gc-sections")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)

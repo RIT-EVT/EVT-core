@@ -5,8 +5,6 @@ cmake_minimum_required(VERSION 3.15)
 
 include(GNUInstallDirs)
 
-message("${CMAKE_C_COMPILER}")
-
 ###############################################################################
 # Project Setup
 ###############################################################################
@@ -49,6 +47,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE include/HALf3/)
 set(HALf3_HARDWARE_FLAGS "-mthumb -mcpu=cortex-m4")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${HALf3_HARDWARE_FLAGS}")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -TSTM32F302C8Tx_FLASH.ld")
 
 ###############################################################################
 # Expose library

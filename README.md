@@ -25,17 +25,28 @@ Further information is to come.
 
 ## Features Supported
 
+Below is the state of supported features on each platform.
 
 | Platform    | I2C | SPI | PWM | CAN | ADC | Flash | RTC | UART | GPIO |
 |-------------|-----|-----|-----|-----|-----|-------|-----|------|------|
 | STM32F302R8 | :x: | :x: | :x: | :x: | :x: | :x:   | :x: | :x:  | :x:  |
 | STM32F446RE | :x: | :x: | :x: | :x: | :x: | :x:   | :x: | :x:  | :x:  |
 
+## Future Features
+
+EVT-Core is heavily a work in progress, below is a running list of the features
+or concepts that EVT-Core should support.
+
+* STM32F446RE HAL
+* I2C
+* SPI
+* PWM
+* ADC
+* Flash
+* RTC
+* UART
+* GPIO
+* Test Platform
+* Linting
 
 ## Release Notes
-
-## 0.0.1
-
-* GPIO Support
-* Blinky Sample
-* Building for STM32F302R8
