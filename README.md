@@ -49,4 +49,8 @@ or concepts that EVT-Core should support.
 * Test Platform
 * Linting
 
+## TODO
+
+* Reduce program size by removing need for the linker flag `-specs=nosys.specs`
+
 ## Release Notes

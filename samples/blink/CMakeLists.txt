@@ -1,7 +1,7 @@
 # Add example code
 set(SAMPLE_NAME blink)
 
-add_executable(${SAMPLE_NAME} main.cpp wrapper.cpp)
+add_executable(${SAMPLE_NAME} main.cpp)
 set_target_properties(${SAMPLE_NAME} PROPERTIES 
     OUTPUT_NAME "${SAMPLE_NAME}"
     SUFFIX ".elf"

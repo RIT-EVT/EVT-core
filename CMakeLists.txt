@@ -42,7 +42,7 @@ set(CMAKE_CXX_FLAGS         "${EVT_COMMON_FLAGS} \
                             -fno-rtti -Wvla")
 
 set(CMAKE_EXE_LINKER_FLAGS "-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 \
-                            -mfloat-abi=hard -specs=nano.specs \
+                            -mfloat-abi=hard -specs=nano.specs -specs=nosys.specs \
                             -lc -lm -lnosys -Wl,--gc-sections")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
@@ -69,7 +69,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/io/GPIO.cpp
     src/io/platform/f3xx/GPIOf3.cpp
     src/dev/LED.cpp
-    src/wrapper.cpp
 )
 
 # Check to see if this project is being built on its own, or as a dependency
