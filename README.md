@@ -48,6 +48,9 @@ or concepts that EVT-Core should support.
 * GPIO
 * Test Platform
 * Linting
+* System Initialization Function
+    * Calling HAL init
+    * Clock settings
 
 ## TODO
 

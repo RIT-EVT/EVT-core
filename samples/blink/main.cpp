@@ -7,9 +7,11 @@
 #include <EVT/io/platform/f3xx/GPIOf3.hpp>
 #include <EVT/dev/LED.hpp>
 #include <EVT/io/pin.hpp>
+#include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
+namespace time = EVT::core::time;
 
 int main()
 {
@@ -20,11 +22,8 @@ int main()
     while(1) {
         led.toggle();
 
-        // TODO: Create wait function
-        for(int i = 0; i < 1000000; i++) {
-            (void)i;
-        }
-
+        // Wait half a second
+        time::wait(1);
     }
     
     return 0;

@@ -49,7 +49,7 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
-set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD 17)
 
 ###############################################################################
 # Project Setup
@@ -69,6 +69,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/io/GPIO.cpp
     src/io/platform/f3xx/GPIOf3.cpp
     src/dev/LED.cpp
+    src/utils/platform/f3xx/time.cpp
 )
 
 # Check to see if this project is being built on its own, or as a dependency
