@@ -6,6 +6,7 @@
 
 #include <HALf3/stm32f3xx_hal_rcc.h>
 #include <HALf3/stm32f3xx_hal_gpio.h>
+#include <HALf3/stm32f3xx_hal_flash.h>
 
 namespace
 {

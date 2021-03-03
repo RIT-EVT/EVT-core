@@ -25,9 +25,9 @@ set_source_files_properties(
 )
 
 # Add linker script
-set_target_properties(${TARGET_NAME} PROPERTIES 
-    LINK_DEPENDS STM32F302C8Tx_FLASH.ld
-)
+# set_target_properties(${TARGET_NAME} PROPERTIES 
+#    LINK_DEPENDS STM32F302C8Tx_FLASH.ld
+#)
 
 # Add C and Assembly source files
 target_sources(${PROJECT_NAME} PRIVATE 
