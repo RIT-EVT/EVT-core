@@ -6,6 +6,7 @@
 #include <EVT/utils/time.hpp>
 
 #include <HALf3/stm32f3xx_hal.h>
+#include <HALf3/stm32f3xx_it.h>
 
 
 namespace EVT::core::time
@@ -17,6 +18,8 @@ namespace EVT::core::time
     {
         // TODO: Remove HAL_Init() call once intialization is consolidated
         HAL_Init();
+        HAL_IncTick();
+        SysTick_Handler();
         HAL_Delay(ms);
     }
 }

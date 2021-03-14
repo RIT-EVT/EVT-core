@@ -18,16 +18,12 @@ int main()
     // Setup the GPIO pin
     IO::GPIOf3 ledGPIO(IO::Pin::PB_13, IO::GPIO::Direction::OUTPUT); 
     DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
-    int i = 0;
 
     while(1) {
         led.toggle();
 
         // Wait half a second
-        i = 0;
-        while(i < 100000) {
-            i++;
-        }
+        time::wait(500);
     }
     
     return 0;
