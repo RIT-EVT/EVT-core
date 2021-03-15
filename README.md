@@ -54,6 +54,8 @@ or concepts that EVT-Core should support.
 
 ## TODO
 
-* Reduce program size by removing need for the linker flag `-specs=nosys.specs`
+* Add ability to prune out un-used code by adding the linker argument
+`-Wl,--gc-sections` without removing the handler functions. This can half by
+accomplished by calling the target handler once from main code execution.
 
 ## Release Notes

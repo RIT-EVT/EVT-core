@@ -86,7 +86,7 @@ set(CMAKE_CXX_FLAGS         "${EVT_COMMON_FLAGS} \
 set(CMAKE_EXE_LINKER_FLAGS "-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 \
                             -mfloat-abi=hard -specs=nano.specs -specs=nosys.specs \
                             -T ${PROJECT_SOURCE_DIR}/libs/HALf3/STM32F302C8Tx_FLASH.ld \
-                            -lc -lm -lnosys -Wl,--gc-sections")
+                            -lc -lm -lnosys")
 
 ###############################################################################
 # Handle dependencies
