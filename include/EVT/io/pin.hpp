@@ -96,7 +96,10 @@ namespace EVT::core::IO
         D12         = PB_14,
         D13         = PB_13,
         D14         = PB_9,
-        D15         = PB_8
+        D15         = PB_8,
+
+        // Common Configured Pins
+        LED         = PB_13
     };
 #else
     #error "Please set the desired platform"

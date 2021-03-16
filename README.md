@@ -51,6 +51,7 @@ or concepts that EVT-Core should support.
 * System Initialization Function
     * Calling HAL init
     * Clock settings
+* Ability for users of code to interject their own pin mappings
 
 ## TODO
 
