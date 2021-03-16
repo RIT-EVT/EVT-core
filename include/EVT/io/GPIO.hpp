@@ -87,6 +87,17 @@ public:
      */
     virtual State readPin() = 0;
 
+    /**
+     * Preferred method to get an instance of a GPIO interface. This method
+     * will handle the logic of generating a GPIO interface the match the
+     * platform being used.
+     *
+     * @param pin The pin to use for the GPIO.
+     * @param direction The direction of the GPIO, either input or output
+     * @return A reference to a GPIO pin.
+     */
+    static GPIO& getInstance(Pin pin, Direction direction=Direction::OUTPUT);
+
 protected:
     /// The pin the GPIO instance is attached to
     Pin pin;

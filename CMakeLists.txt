@@ -72,6 +72,7 @@ endif()
 ###############################################################################
 # Set compiler and linker flags
 ###############################################################################
+# TODO: Decouple hardware specific flags
 set(EVT_COMMON_FLAGS        "-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 \
                             -mfloat-abi=hard -Og -Wall -fdata-sections \
                             -ffunction-sections -MMD -MP -MF -ggdb -g3")
@@ -83,8 +84,7 @@ set(CMAKE_CXX_FLAGS         "${EVT_COMMON_FLAGS} \
                             -fno-rtti -Wvla")
 
 # TODO: Check for platform to decide which linker script to use
-set(CMAKE_EXE_LINKER_FLAGS "-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 \
-                            -mfloat-abi=hard -specs=nano.specs -specs=nosys.specs \
+set(CMAKE_EXE_LINKER_FLAGS  "-mfloat-abi=hard -specs=nano.specs -specs=nosys.specs \
                             -T ${PROJECT_SOURCE_DIR}/libs/HALf3/STM32F302C8Tx_FLASH.ld \
                             -lc -lm -lnosys")
 

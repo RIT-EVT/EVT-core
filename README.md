@@ -57,5 +57,7 @@ or concepts that EVT-Core should support.
 * Add ability to prune out un-used code by adding the linker argument
 `-Wl,--gc-sections` without removing the handler functions. This can half by
 accomplished by calling the target handler once from main code execution.
+* Style checking should be part of the build process.
+* Add documentation for using this library.
 
 ## Release Notes

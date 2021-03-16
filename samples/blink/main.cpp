@@ -1,10 +1,12 @@
 /**
- * This example is the hello world application of the EVT common software.
- * The application creates a UART connection which then repeatedly prints out
- * "hello world" at 9600 baud.
+ * This example is the basic LED blink sample. This samples shows how the
+ * device level drivers (the LED in this case) can be established by providing
+ * the driver with the cooresponding IO level driver (GPIO in this case).
+ *
+ * The code will setup a GPIO pin as an output then setup an LED using that
+ * GPIO.
  */
 #include <EVT/io/GPIO.hpp>
-#include <EVT/io/platform/f3xx/GPIOf3.hpp>
 #include <EVT/dev/LED.hpp>
 #include <EVT/io/pin.hpp>
 #include <EVT/utils/time.hpp>
@@ -16,7 +18,7 @@ namespace time = EVT::core::time;
 int main()
 {
     // Setup the GPIO pin
-    IO::GPIOf3 ledGPIO(IO::Pin::PB_13, IO::GPIO::Direction::OUTPUT); 
+    IO::GPIO& ledGPIO = IO::GPIO::getInstance(IO::Pin::PB_13, IO::GPIO::Direction::OUTPUT); 
     DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
 
     while(1) {
