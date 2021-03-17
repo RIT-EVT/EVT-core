@@ -23,6 +23,32 @@ EVT-Core is a CMake library and as such can be built as a library and
 manually linked to, or can be added as a sub-directory to a larger project.
 Further information is to come.
 
+### How do I Build the Code?
+The compilation process is handled via CMake and in general follows standard
+practices. The noticable addition is the need to setup an environment variable
+which stores the location to the gcc arm toolchain. Below is an example of
+how to set the environment variable on Linux/Unix.
+
+```bash
+export GCC_ARM_TOOLS_PATH=/path/to/gcc_arm_tools_path/bin/
+```
+
+The compilation logic will make use of that enivronment variable to locate
+the needed tools to generate the code.
+
+After that, the compilation process follows standard practice. Below is
+an example compilation process.
+
+```bash
+mkdir build/
+cd build/
+cmake ../
+make
+```
+
+After that, in the `build` folder will be the compiled library code as well
+as generated samples.
+
 ## Features Supported
 
 Below is the state of supported features on each platform.
