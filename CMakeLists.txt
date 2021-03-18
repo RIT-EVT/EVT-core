@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 3.15)
 if(NOT DEFINED ENV{GCC_ARM_TOOLS_PATH})
     message(FATAL_ERROR 
         "Set your environment variables you frickin' hecker."
-        "   --John Jenco"
+        "   --Shane Snover"
     )
 endif()
 
