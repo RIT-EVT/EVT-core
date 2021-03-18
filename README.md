@@ -5,7 +5,7 @@
 ### What is EVT?
 EVT stands for the Electric Vehicle Team at RIT. We build and race electric
 vehicles. Currently we have two track motorcycles we develop for and are
-desiging an electric dirt bike.
+designing an electric dirt bike.
 
 This repository is managed by the Firmware team which handles the firmware
 used by the team on the various vehicles.
@@ -43,7 +43,7 @@ an example compilation process.
 mkdir build/
 cd build/
 cmake ../
-make
+make -j
 ```
 
 After that, in the `build` folder will be the compiled library code as well
