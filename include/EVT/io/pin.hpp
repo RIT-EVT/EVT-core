@@ -11,6 +11,11 @@ namespace EVT::core::IO
 // STM32F302R8 pin names
 #ifdef STM32F302x8
 
+    /**
+     * Pin mapping information. These values are generated via a combination of the GPIO bank that
+     * the pin is on and the number of the pin. We referenced MBed's documentation for generating
+     * these values.
+     */ 
     enum class Pin
     {
         PA_0  = 0x00,
