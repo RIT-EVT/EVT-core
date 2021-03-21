@@ -3,17 +3,13 @@
 
 #include <cstdint>
 
-// Forward declarations
 namespace EVT::core::IO
 {
-    // The different pins are hardware specific. Forward declaration to allow
-    // at compilation time the decision of which pins should be used.
-    enum class Pin;
-}
+// Forward declarations:
+// The different pins are hardware specific. Forward declaration to allow
+// at compilation time the decision of which pins should be used.
+enum class Pin;
 
-
-namespace EVT::core::IO
-{
 
 /**
  * Interface for interacting with GPIO pins on a device. GPIO pins can have
