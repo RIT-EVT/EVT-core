@@ -1,7 +1,7 @@
 #include <cstdint>
 
 #include <EVT/io/GPIO.hpp>
-#include <EVT/io/platform/f3xx/GPIOf3.hpp>
+#include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
 #include <EVT/io/pin.hpp>
 
 #include <HALf3/stm32f3xx_hal_rcc.h>
@@ -71,7 +71,7 @@ extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 namespace EVT::core::IO
 {
 
-GPIOf3::GPIOf3(Pin pin, GPIO::Direction direction) : GPIO(pin, direction)
+GPIOf302x8::GPIOf302x8(Pin pin, GPIO::Direction direction) : GPIO(pin, direction)
 {
 
     GPIO_InitTypeDef gpioInit;
@@ -111,17 +111,17 @@ GPIOf3::GPIOf3(Pin pin, GPIO::Direction direction) : GPIO(pin, direction)
     this->writePin(GPIO::State::LOW); // Output set low by default
 }
 
-void GPIOf3::setDirection(GPIO::Direction direction)
+void GPIOf302x8::setDirection(GPIO::Direction direction)
 {
     // TODO: Add implementation of resetting the direction
 }
 
-void GPIOf3::writePin(GPIO::State state)
+void GPIOf302x8::writePin(GPIO::State state)
 {
     HAL_GPIO_WritePin(this->port, this->halPin, static_cast<GPIO_PinState>(state));
 }
 
-GPIO::State GPIOf3::readPin()
+GPIO::State GPIOf302x8::readPin()
 {
     return static_cast<GPIO::State>(HAL_GPIO_ReadPin(this->port, this->halPin));
 }

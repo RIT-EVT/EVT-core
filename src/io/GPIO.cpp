@@ -2,7 +2,7 @@
 
 // Find out which platform being built for
 #ifdef STM32F302x8
-    #include <EVT/io/platform/f3xx/GPIOf3.hpp>
+    #include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
 #else
     #error "The target platform does not support GPIO"
 #endif
@@ -26,7 +26,7 @@ GPIO& GPIO::getInstance(Pin pin, Direction direction)
 {
     // Determine which GPIO interface to use
     #ifdef STM32F302x8
-        static GPIOf3 gpioPin(pin, direction);
+        static GPIOf302x8 gpioPin(pin, direction);
         return gpioPin;
     #endif
 }
