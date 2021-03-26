@@ -7,23 +7,19 @@
     #error "The target platform does not support GPIO"
 #endif
 
-namespace EVT::core::IO
-{
+namespace EVT::core::IO {
 
 // Setup instance variables
-GPIO::GPIO(Pin pin) 
-{
+GPIO::GPIO(Pin pin)  {
     this->pin = pin;
 }
 
-GPIO::GPIO(Pin pin, Direction direction) 
-{
+GPIO::GPIO(Pin pin, Direction direction) {
     this->pin = pin;
     this->direction = direction;
 }
 
-GPIO& GPIO::getInstance(Pin pin, Direction direction)
-{
+GPIO& GPIO::getInstance(Pin pin, Direction direction) {
     // Determine which GPIO interface to use
     #ifdef STM32F302x8
         static GPIOf302x8 gpioPin(pin, direction);
@@ -31,4 +27,4 @@ GPIO& GPIO::getInstance(Pin pin, Direction direction)
     #endif
 }
 
-}         
+}  // namespace EVT::core::IO

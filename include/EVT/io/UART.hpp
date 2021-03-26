@@ -1,7 +1,7 @@
 #ifndef _EVT_UART_
 #define _EVT_UART_
 
-#include <cstdint>
+#include <stdint.h>
 
 namespace EVT::core::IO
 {
@@ -78,7 +78,7 @@ public:
      *
      * @param baudrate The new baudrate to use
      */
-    virtual void setBaudrate(int baudrate);
+    virtual void setBaudrate(uint32_t baudrate) = 0;
 
     /**
      * Set the format that data will be communicated with over UART.
@@ -143,7 +143,7 @@ public:
      * 
      * @return The buf pointer on success, NULL otherwise
      */
-    virtual char* gets(char* buf, uint32_t size) = 0;
+    char* gets(char* buf, size_t size);
 
     /**
      * Print a formatted string over UART, not great performance so best in
@@ -173,7 +173,7 @@ public:
      * @param bytes The data to send out over UART
      * @param size The number of bytes to send out over UART.
      */
-    virtual void writeBytes(const uint8_t* bytes, uint32_t size) = 0;
+    virtual void writeBytes(const uint8_t* bytes, size_t size) = 0;
 
     /**
      * Blocking reading of an arbitrary number of bytes in over UART.
@@ -181,7 +181,15 @@ public:
      * @param bytes The data buffer to fill
      * @param size The number of bytes to read in.
      */
-    virtual void readBytes(const uint8_t* bytes, uint32_t size) = 0;
+    virtual void readBytes(const uint8_t* bytes, size_t size) = 0;
+
+private:
+    /// The TX pin used by the UART interface
+    Pin txPin;
+    /// The RX pin used by the UART interface
+    Pin rxPin;
+    /// The baudrate that is currently being operated at
+    uint32_t baudrate;
 };
 
 }

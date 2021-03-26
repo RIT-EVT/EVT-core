@@ -1,7 +1,7 @@
 #ifndef _EVT_GPIO_
 #define _EVT_GPIO_
 
-#include <cstdint>
+#include <stdint.h>
 
 namespace EVT::core::IO
 {

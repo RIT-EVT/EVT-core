@@ -15,21 +15,20 @@ namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
 namespace time = EVT::core::time;
 
-int main()
-{
+int main() {
     // Setup the GPIO pin.
     // Notice that the pin used is called "LED". Each platform has a dedicated
     // LED pin, for the f3xx that is PB_13.
-    IO::GPIO& ledGPIO = IO::GPIO::getInstance(IO::Pin::LED, IO::GPIO::Direction::OUTPUT); 
+    IO::GPIO& ledGPIO = IO::GPIO::getInstance(IO::Pin::LED,
+            IO::GPIO::Direction::OUTPUT);
     DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
 
-    while(1) 
-    {
+    while (1) {
         led.toggle();
 
         // Wait half a second
         time::wait(500);
     }
-    
+
     return 0;
 }

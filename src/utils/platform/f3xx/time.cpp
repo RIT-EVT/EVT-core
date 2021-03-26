@@ -8,21 +8,18 @@
 #include <HALf3/stm32f3xx_hal.h>
 #include <HALf3/stm32f3xx_it.h>
 
-namespace EVT::core::time
-{
+namespace EVT::core::time {
     /**
      * Calls HAL wait, assumes HAL_Init() has been called
      */
-    void wait(uint32_t ms)
-    {
+    void wait(uint32_t ms) {
         // TODO: Remove need for this first time call
         static bool isFirst = true;
-        if(isFirst)
-        {
+        if (isFirst) {
             HAL_Init();
             SysTick_Handler();
         }
 
         HAL_Delay(ms);
     }
-}
+}  // namespace EVT::core::time

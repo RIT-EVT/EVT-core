@@ -49,7 +49,7 @@ option(EVT_LINT
 ###############################################################################
 # Verify that the ARM tools path is set
 if(NOT DEFINED ENV{GCC_ARM_TOOLS_PATH})
-    message(FATAL_ERROR 
+    message(FATAL_ERROR
         "Set your environment variables you frickin' hecker."
         "   --Shane Snover"
     )
@@ -79,7 +79,8 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set (CMAKE_CXX_STANDARD 17)
 
 if(EVT_LINT)
-    set(CMAKE_CXX_CPPLINT "cpplint;--filter=-legal/copyright")
+    set(CMAKE_CXX_CPPLINT "cpplint;--filter=-legal/copyright, \
+                          -readability/todo,-build/include_order")
 endif()
 
 ###############################################################################
@@ -114,7 +115,7 @@ include(GNUInstallDirs)
 set(EVT_COMMON_FLAGS        "-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 \
                             -mfloat-abi=hard -Og -Wall -fdata-sections \
                             -ffunction-sections -MMD -MP -MF -ggdb -g3")
-    
+
 set(CMAKE_C_FLAGS           "${EVT_COMMON_FLAGS} \
                             -std=gnu99")
 
@@ -144,7 +145,7 @@ target_link_libraries(${PROJECT_NAME}
 
 ###############################################################################
 # Install and expose library
-############################################################################### 
+###############################################################################
 # Expose headers
 target_include_directories(${PROJECT_NAME}
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
