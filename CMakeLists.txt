@@ -79,6 +79,8 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set (CMAKE_CXX_STANDARD 17)
 
 if(EVT_LINT)
+    # TODO: In the future these filter settings sound be included in cfg
+    # files.
     set(CMAKE_CXX_CPPLINT "cpplint;--filter=-legal/copyright, \
                           -readability/todo,-build/include_order")
 endif()
