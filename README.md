@@ -49,6 +49,16 @@ make -j
 After that, in the `build` folder will be the compiled library code as well
 as generated samples.
 
+For building with linting enabled (recommended). First install cpplint, then
+run the installation with the modification below.
+
+```bash
+mkdir build/                                                                              
+cd build/                                                                                 
+cmake -DEVT_LINT=ON ../                                                                                 
+make -j
+```
+
 ## Features Supported
 
 Below is the state of supported features on each platform.

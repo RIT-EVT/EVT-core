@@ -3,6 +3,47 @@
 ###############################################################################
 cmake_minimum_required(VERSION 3.15)
 
+include(CMakeDependentOption)
+
+###############################################################################
+# Provide build options
+###############################################################################
+# Check to see if this project is being built on its own, or as a dependency
+# of another project
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    set(EVT_IS_MAIN_PROJECT TRUE)
+else()
+    set(EVT_IS_MAIN_PROJECT FALSE)
+endif()
+
+# Determine if the sample code should be built. Defaults to false if this
+# project is not the main project.
+cmake_dependent_option(EVT_BUILD_SAMPLES
+    "Build the EVT core samples" ON
+    "EVT_IS_MAIN_PROJECT" OFF
+)
+
+# Determine if the project should be installed and made accessible as a
+# library. Defaults to true if this project is not the main project
+cmake_dependent_option(EVT_INSTALL
+    "Install the EVT library" OFF
+    "NOT EVT_IS_MAIN_PROJECT" ON
+)
+
+# Determine if the sample code should be added. By default, if this is the
+# main project then samples will be compiled, otherwise they will not.
+cmake_dependent_option(EVT_BUILD_SAMPLES
+    "Build samples" OFF
+    "EVT_IS_MAIN_PROJECT" ON
+)
+
+# EVT Linking option, linting revolves around cpplint which is a tool that
+# conforms to Google's C++ style guide. cpplint needs to be installed.
+option(EVT_LINT
+    "Lint source code, need to have cpplint installed"
+    OFF
+)
+
 ###############################################################################
 # Compiler settings
 ###############################################################################
@@ -37,6 +78,10 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
 set (CMAKE_CXX_STANDARD 17)
 
+if(EVT_LINT)
+    set(CMAKE_CXX_CPPLINT "cpplint;--filter=-legal/copyright")
+endif()
+
 ###############################################################################
 # Project Setup
 ###############################################################################
@@ -45,26 +90,22 @@ project(EVT
     LANGUAGES CXX C
 )
 
-include(GNUInstallDirs)
-include(CMakeDependentOption)
-
 add_library(${PROJECT_NAME} STATIC)
 
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE
     src/io/GPIO.cpp
+    src/io/UART.cpp
     src/io/platform/f3xx/f302x8/GPIOf302x8.cpp
     src/dev/LED.cpp
     src/utils/platform/f3xx/time.cpp
 )
 
-# Check to see if this project is being built on its own, or as a dependency
-# of another project
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    set(EVT_IS_MAIN_PROJECT TRUE)
-else()
-    set(EVT_IS_MAIN_PROJECT FALSE)
-endif()
+# Generate compile_commands.json
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # does not produce the json file
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "") # works
+
+include(GNUInstallDirs)
 
 ###############################################################################
 # Set compiler and linker flags
@@ -102,61 +143,34 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 ###############################################################################
-# Provide build options
-###############################################################################
-# Determine if the sample code should be built. Defaults to false if this
-# project is not the main project.
-cmake_dependent_option(EVT_BUILD_SAMPLES
-    "Build the EVT core samples" ON
-    "EVT_IS_MAIN_PROJECT" OFF
-)
-
-# Determine if the project should be installed and made accessible as a
-# library. Defaults to true if this project is not the main project
-cmake_dependent_option(EVT_INSTALL
-    "Install the EVT library" OFF
-    "NOT EVT_IS_MAIN_PROJECT" ON
-)
-
-# Determine if the sample code should be added. By default, if this is the
-# main project then samples will be compiled, otherwise they will not.
-cmake_dependent_option(EVT_BUILD_SAMPLES
-    "Build samples" OFF
-    "EVT_IS_MAIN_PROJECT" ON
-)
-
-###############################################################################
 # Install and expose library
-###############################################################################
-if(EVT_INSTALL)
+############################################################################### 
+# Expose headers
+target_include_directories(${PROJECT_NAME}
+    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
+           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 
-    # Expose headers
-    target_include_directories(${PROJECT_NAME}
-        PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
-               $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-    )
+target_compile_definitions(${PROJECT_NAME} PRIVATE -D_EXPORT)
 
-    target_compile_definitions(${PROJECT_NAME} PRIVATE -D_EXPORT)
+set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 
-    set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
+install(TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}-config
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
 
-    install(TARGETS ${PROJECT_NAME}
-        EXPORT ${PROJECT_NAME}-config
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
+install(
+    EXPORT ${PROJECT_NAME}-config
+    NAMESPACE ${PROJECT_NAME}::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
 
-    install(
-        EXPORT ${PROJECT_NAME}-config
-        NAMESPACE ${PROJECT_NAME}::
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-    )
-
-    install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
-    )
-endif()
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
+)
 
 ###############################################################################
 # Handle adding samples
