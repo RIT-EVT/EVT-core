@@ -7,6 +7,7 @@
  * GPIO.
  */
 #include <EVT/io/GPIO.hpp>
+#include <EVT/io/manager.hpp>
 #include <EVT/dev/LED.hpp>
 #include <EVT/io/pin.hpp>
 #include <EVT/utils/time.hpp>
@@ -19,8 +20,7 @@ int main() {
     // Setup the GPIO pin.
     // Notice that the pin used is called "LED". Each platform has a dedicated
     // LED pin, for the f3xx that is PB_13.
-    IO::GPIO& ledGPIO = IO::GPIO::getInstance(IO::Pin::LED,
-            IO::GPIO::Direction::OUTPUT);
+    IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();
     DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
 
     while (1) {
