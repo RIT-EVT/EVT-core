@@ -91,13 +91,12 @@ project(EVT
     LANGUAGES CXX C
 )
 
-add_library(${PROJECT_NAME} STATIC)
-
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE
     src/io/GPIO.cpp
-    src/io/UART.cpp
+    src/io/I2C.cpp
     src/io/platform/f3xx/f302x8/GPIOf302x8.cpp
+    src/io/platform/f3xx/f302x8/I2Cf302x8.cpp
     src/dev/LED.cpp
     src/utils/platform/f3xx/time.cpp
 )
