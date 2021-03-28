@@ -17,12 +17,12 @@ int main() {
     // Setup the GPIO input pin
     IO::GPIO& inputGPIO = IO::getGPIO<IO::Pin::PC_3>(
             IO::GPIO::Direction::INPUT);
-    
+
     // Setup the GPIO output pin
     IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();
     DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
 
-    while(1) {
+    while (1) {
         IO::GPIO::State state = inputGPIO.readPin();
         led.setState(state);
 
