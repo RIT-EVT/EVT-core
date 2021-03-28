@@ -5,11 +5,10 @@
 
 namespace EVT::core::IO {
 
-UART::UART(Pin txPin, Pin rxPin, uint32_t baudrate, uint8_t portID) {
+UART::UART(Pin txPin, Pin rxPin, uint32_t baudrate) {
     this->txPin = txPin;
     this->rxPin = rxPin;
     this->baudrate = baudrate;
-    this->portID = portID;
 }
 
 char* UART::gets(char* buf, size_t size) {

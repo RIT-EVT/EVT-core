@@ -65,9 +65,8 @@ public:
      * @param txPin The UART TX pin.
      * @param rxPin The UART RX pin.
      * @param baudrate The baudrate to operate the UART with.
-     * @param portID The ID of the UART interface to use.
      */
-    UART(Pin txPin, Pin rxPin, uint32_t baudrate, uint8_t portID);
+    UART(Pin txPin, Pin rxPin, uint32_t baudrate);
 
     /**
      * Set the baudrate that the UART will operate with.
@@ -201,8 +200,6 @@ protected:
     Pin rxPin;
     /// The baudrate that is currently being operated at
     uint32_t baudrate;
-    /// The identification of the UART being selected
-    uint8_t portID;
 
     constexpr static uint32_t DEFAULT_TIMEOUT = 100;
 };

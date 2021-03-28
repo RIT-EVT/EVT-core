@@ -19,7 +19,7 @@ public:
      * @param rxPin THe UART RX pin.
      * @param baudrate The baudrate to operate the UART with/
      */
-    UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate, uint8_t portID);
+    UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate);
 
     /**
      * Set the baudrate that the UART will operate with.
@@ -37,9 +37,9 @@ public:
      * @param parity The parity settings to use.
      * @param numStopBits The number of stop bits (1-2)
      */
-    virtual void setFormat(WordLength wordLength=WordLength::EIGHT,
+    void setFormat(WordLength wordLength=WordLength::EIGHT,
             Parity parity=Parity::NONE,
-            NumStopBits numStopBits=NumStopBits::ONE) = 0;
+            NumStopBits numStopBits=NumStopBits::ONE);
 
     /**
      * Sends a serial break condition over UART.
