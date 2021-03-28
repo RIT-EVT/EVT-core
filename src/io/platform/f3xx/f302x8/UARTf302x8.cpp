@@ -3,15 +3,40 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#include <EVT/io/pin.hpp>
 #include <EVT/io/platform/f3xx/f302x8/UARTf302x8.hpp>
 
 #include <HALf3/stm32f3xx.h>
 
 namespace EVT::core::IO {
 
-UARTf302x8::UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate, uint8_t portID)
-    : UART(txPin, rxPin, baudrate, portID) {
-        GPIO_InitTypeDef gpioInit;
+UARTf302x8::UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate)
+    : UART(txPin, rxPin, baudrate) {
+
+    GPIO_InitTypeDef gpioInit;
+
+    // Determine portID
+    uint8_t portID = 1;
+
+    switch (txPin) {
+        case Pin::PA_9:
+        case Pin::PB_6:
+        case Pin::PC_4:
+            portID = 1;
+            break;
+        case Pin::PA_2:
+        case Pin::PA_14:
+        case Pin::PB_3:
+            portID = 2;
+            break;
+        case Pin::PB_9:
+        case Pin::PB_10:
+        case Pin::PC_10:
+            portID = 3;
+            break;
+        default:
+            break;
+    }
 
     switch (portID) {
         case 1:
