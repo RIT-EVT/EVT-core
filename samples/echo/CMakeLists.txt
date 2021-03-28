@@ -1,5 +1,5 @@
 # Add example code
-set(SAMPLE_NAME uart)
+set(SAMPLE_NAME echo)
 
 project(${SAMPLE_NAME} C CXX ASM)
 
