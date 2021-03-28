@@ -92,7 +92,8 @@ public:
      * @param direction The direction of the GPIO, either input or output
      * @return A reference to a GPIO pin.
      */
-    static GPIO& getInstance(Pin pin, Direction direction=Direction::OUTPUT);
+    template<Pin pin>
+    static GPIO& getInstance(Direction direction=Direction::OUTPUT);
 
 protected:
     /// The pin the GPIO instance is attached to
@@ -101,5 +102,5 @@ protected:
     Direction direction;
 };
 
-}
+}  // EVT::core::IO
 #endif
