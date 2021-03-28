@@ -16,7 +16,6 @@ int main() {
     // String to store user input
     char buf[100];
 
-
     while (1) {
         // Read user input
         uart.printf("Enter message: ");
