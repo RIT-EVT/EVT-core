@@ -11,10 +11,11 @@ namespace time = EVT::core::time;
 
 int main() {
 
-    IO::PWM& pwm = IO::getPWM<IO::Pin::PA_3>();
-    pwm.setPeriod(100);
-
+    IO::PWM& pwm = IO::getPWM<IO::Pin::PA_6>();
+    pwm.setPeriod(65535);
     while(1) {
-        time::wait(100);
+        for(uint16_t i = 0; i < 65535; i++) {
+            time::wait(10);
+        }
     }
 }
