@@ -3,8 +3,7 @@
 
 #include <stdint.h>
 
-namespace EVT::core::IO
-{
+namespace EVT::core::IO {
 
 // Forward declarations:
 // The different pins are hardware specific. Forward declarations to allow
@@ -26,16 +25,14 @@ enum class Pin;
  * NOTE: You cannot directly make an instance of this class via a constructor.
  * To make an isntance, use the UART::getInstance method.
  */
-class UART
-{
+class UART {
 public:
 
     /**
      * Represents the options for the parity settings that may be used when
      * setting up a UART.
      */
-    enum class Parity
-    {
+    enum class Parity {
         NONE,
         ODD,
         EVEN,
@@ -46,19 +43,17 @@ public:
     /**
      * Represents the possible lengths of words that can exist for UART.
      */
-    enum class WordLength
-    {
+    enum class WordLength {
         FIVE = 5,
         SIX = 6,
         SEVEN = 7,
         EIGHT = 8
     };
-    
+
     /**
      * Represents the number of stop bits that are used.
      */
-    enum class NumStopBits
-    {
+    enum class NumStopBits {
         ONE = 1,
         TWO = 2
     };
@@ -110,7 +105,7 @@ public:
      *
      * @return True if the UART is writable
      */
-    virtual bool isWrittable() = 0;
+    virtual bool isWritable() = 0;
 
     /**
      * Put a single character to the UART module.
@@ -140,7 +135,7 @@ public:
      *
      * @param buf The character array to fill
      * @param size The maximum number of characters to read.
-     * 
+     *
      * @return The buf pointer on success, NULL otherwise
      */
     char* gets(char* buf, size_t size);
@@ -148,7 +143,7 @@ public:
     /**
      * Print a formatted string over UART, not great performance so best in
      * test situations not production.
-     * 
+     *
      * @param format The format string to print out.
      */
     virtual void printf(const char* format, ...) = 0;
@@ -173,7 +168,7 @@ public:
      * @param bytes The data to send out over UART
      * @param size The number of bytes to send out over UART.
      */
-    virtual void writeBytes(const uint8_t* bytes, size_t size) = 0;
+    virtual void writeBytes(uint8_t* bytes, size_t size) = 0;
 
     /**
      * Blocking reading of an arbitrary number of bytes in over UART.
@@ -181,15 +176,32 @@ public:
      * @param bytes The data buffer to fill
      * @param size The number of bytes to read in.
      */
-    virtual void readBytes(const uint8_t* bytes, size_t size) = 0;
+    virtual void readBytes(uint8_t* bytes, size_t size) = 0;
 
-private:
+    /**
+     * Preferred method to get an instnace of a GPIO interface. This method
+     * will handle the logic of generating a UART interface to match the
+     * platform being used.
+     *
+     * @param txPin The transmit pin of the UART
+     * @param rxPin The receive pin of the UART
+     * @param baudrate The baudrate to operate the UART at
+     * @param portID The identification of the UART module to use
+     *
+     * @return Instance of a UART interface.
+     */
+    static UART& getInstance(Pin txPin, Pin rxPin, uint32_t baudrate, uint8_t portID);
+
+
+protected:
     /// The TX pin used by the UART interface
     Pin txPin;
     /// The RX pin used by the UART interface
     Pin rxPin;
     /// The baudrate that is currently being operated at
     uint32_t baudrate;
+
+    constexpr static uint32_t DEFAULT_TIMEOUT = 100;
 };
 
 }

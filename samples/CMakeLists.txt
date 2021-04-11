@@ -2,3 +2,4 @@
 add_subdirectory(blink)
 add_subdirectory(pwm)
 add_subdirectory(read_write)
+add_subdirectory(echo)

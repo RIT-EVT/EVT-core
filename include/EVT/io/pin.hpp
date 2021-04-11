@@ -15,7 +15,7 @@ namespace EVT::core::IO
      * Pin mapping information. These values are generated via a combination of the GPIO bank that
      * the pin is on and the number of the pin. We referenced MBed's documentation for generating
      * these values.
-     */ 
+     */
     enum class Pin
     {
         PA_0  = 0x00,
@@ -104,7 +104,9 @@ namespace EVT::core::IO
         D15         = PB_8,
 
         // Common Configured Pins
-        LED         = PB_13
+        LED         = PB_13,
+        UART_TX     = PA_2,
+        UART_RX     = PA_3
     };
 #else
     #error "Please set the desired platform"
