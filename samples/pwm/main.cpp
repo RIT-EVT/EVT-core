@@ -10,13 +10,12 @@ namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
 
 int main() {
-
     IO::PWM& pwm = IO::getPWM<IO::Pin::PC_0>();
     // 1 second period
     pwm.setPeriod(1);
     // 50 % duty cycle
     pwm.setDutyCycle(0.5);
-    while(1) {
+    while (1) {
         time::wait(10);
     }
 }

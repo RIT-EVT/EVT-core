@@ -78,7 +78,7 @@ static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
             *channel = TIM_CHANNEL_2;
             *alternateFunction = GPIO_AF6_TIM1;
             break;
-        //complementary channel
+        // complementary channel
         case Pin::PB_1:
             *instance = TIM1;
             *channel = TIM_CHANNEL_3;
@@ -169,25 +169,20 @@ static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
             *channel = -1;
             *alternateFunction = -1;
     }
-
 }
 
 PWMf302x8::PWMf302x8(Pin pin) : PWM(pin) {
-
     TIM_TypeDef* instance;
     uint32_t alternateFunction;
     getInstance(pin, &instance, &halTIMChannelID, &alternateFunction);
 
     if (instance == TIM1) {
         __HAL_RCC_TIM1_CLK_ENABLE();
-    }
-    else if (instance == TIM15) {
+    } else if (instance == TIM15) {
         __HAL_RCC_TIM15_CLK_ENABLE();
-    }
-    else if (instance == TIM16) {
+    } else if (instance == TIM16) {
         __HAL_RCC_TIM16_CLK_ENABLE();
-    }
-    else if (instance == TIM17) {
+    } else if (instance == TIM17) {
         __HAL_RCC_TIM17_CLK_ENABLE();
     }
 
@@ -259,7 +254,6 @@ void PWMf302x8::setDutyCycle(float dutyCycle) {
 
     HAL_TIM_PWM_ConfigChannel(&halTIM, &sConfigOC, halTIMChannelID);
     HAL_TIM_PWM_Start(&halTIM, halTIMChannelID);
-
 }
 
 void PWMf302x8::setPeriod(float period) {
@@ -275,7 +269,7 @@ void PWMf302x8::setPeriod(float period) {
     do {
         prescaler++;
         autoReload = period * clockFrequency / (prescaler + 1) - 1;
-    } while(autoReload > 65535);
+    } while (autoReload > 65535);
 
     halTIM.Init.Period = autoReload;
     halTIM.Init.Prescaler = prescaler;
