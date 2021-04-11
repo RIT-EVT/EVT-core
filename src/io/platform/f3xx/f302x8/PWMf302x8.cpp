@@ -282,8 +282,8 @@ void PWMf302x8::setPeriod(float period) {
     HAL_TIM_Base_Init(&halTIM);
     HAL_TIM_PWM_Start(&halTIM, halTIMChannelID);
 
+    // Duty cycle value depends on period, need to update duty cycle
     setDutyCycle(this->dutyCycle);
-
 }
 
 float PWMf302x8::getDutyCycle() {
