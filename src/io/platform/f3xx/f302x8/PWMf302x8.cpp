@@ -198,7 +198,7 @@ PWMf302x8::PWMf302x8(Pin pin) : PWM(pin) {
     halTIM.Instance = instance;
     halTIM.Init.Prescaler = 0;
     halTIM.Init.CounterMode = TIM_COUNTERMODE_UP;
-    halTIM.Init.Period = 65535;
+    halTIM.Init.Period = 0;
     halTIM.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     halTIM.Init.RepetitionCounter = 0;
     halTIM.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
@@ -260,22 +260,24 @@ void PWMf302x8::setDutyCycle(float dutyCycle) {
     this->dutyCycle = dutyCycle;
 }
 
-void PWMf302x8::setPeriod(uint32_t period) {
+void PWMf302x8::setPeriod(float period) {
     this->period = period;
-
     HAL_TIM_PWM_Stop(&halTIM, halTIMChannelID);
 
-    halTIM.Init.Period = period;
-    HAL_TIM_PWM_Init(&halTIM);
+    uint32_t autoReload = 0;
+    uint32_t prescaler = -1;
+    uint32_t clockFrequency = HAL_RCC_GetSysClockFreq();
 
-    TIM_OC_InitTypeDef channelConfig;
-    channelConfig.OCMode = TIM_OCMODE_PWM1;
-    channelConfig.Pulse = 10000;
-    channelConfig.OCPolarity = TIM_OCPOLARITY_HIGH;
-    channelConfig.OCFastMode = TIM_OCFAST_DISABLE;
-    HAL_TIM_PWM_ConfigChannel(&halTIM, &channelConfig, halTIMChannelID);
+    do {
+        prescaler++;
+        autoReload = period * clockFrequency / (prescaler + 1) - 1;
+    } while(autoReload > 65535);
 
+    halTIM.Init.Period = autoReload;
+    halTIM.Init.Prescaler = prescaler;
+    HAL_TIM_Base_Init(&halTIM);
     HAL_TIM_PWM_Start(&halTIM, halTIMChannelID);
+
 }
 
 float PWMf302x8::getDutyCycle() {

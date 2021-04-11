@@ -28,9 +28,9 @@ public:
     /**
      * Set the period for the PWM.
      *
-     * @param period The period of the PWM in micro seconds.
+     * @param period The period of the PWM in seconds.
      */
-     void setPeriod(uint32_t period);
+     void setPeriod(float period);
 
     /**
      * Get the current duty cycle.

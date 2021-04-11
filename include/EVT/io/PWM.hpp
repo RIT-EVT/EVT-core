@@ -30,11 +30,11 @@ public:
     virtual void setDutyCycle(float dutyCycle) = 0;
 
     /**
-     * Set the period for the PWM.
+     * Set the period for the PWM in seconds.
      *
-     * @param period The period of the PWM in micro seconds.
+     * @param period The period of the PWM in seconds.
      */
-    virtual void setPeriod(uint32_t period) = 0;
+    virtual void setPeriod(float period) = 0;
 
     /**
      * Get the current duty cycle.
@@ -46,7 +46,7 @@ public:
     /**
      * Get the current period.
      *
-     * @return The period the PWM is operating at.
+     * @return The period the PWM is operating at in seconds.
      */
     virtual uint32_t getPeriod() = 0;
 
