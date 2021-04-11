@@ -12,7 +12,7 @@ namespace EVT::core::IO {
  * @param channel The channel to assign to
  * @param alternateFunction The GPIO identifier for the function of the pin
  */
-static void getInstance(Pin pin, TIM_TypeDef** instance, uint16_t* channel,
+static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
         uint32_t* alternateFunction) {
     switch (pin) {
         // complementary channel
@@ -175,9 +175,8 @@ static void getInstance(Pin pin, TIM_TypeDef** instance, uint16_t* channel,
 PWMf302x8::PWMf302x8(Pin pin) : PWM(pin) {
 
     TIM_TypeDef* instance;
-    uint16_t channel;
     uint32_t alternateFunction;
-    getInstance(pin, &instance, &channel, &alternateFunction);
+    getInstance(pin, &instance, &halTIMChannelID, &alternateFunction);
 
     if (instance == TIM1) {
         __HAL_RCC_TIM1_CLK_ENABLE();
@@ -192,7 +191,6 @@ PWMf302x8::PWMf302x8(Pin pin) : PWM(pin) {
         __HAL_RCC_TIM17_CLK_ENABLE();
     }
 
-    TIM_OC_InitTypeDef sConfigOC = {0};
     TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
 
     halTIM.Instance = instance;
@@ -205,15 +203,6 @@ PWMf302x8::PWMf302x8(Pin pin) : PWM(pin) {
     HAL_TIM_Base_Init(&halTIM);
 
     HAL_TIM_PWM_Init(&halTIM);
-
-    sConfigOC.OCMode = TIM_OCMODE_PWM1;
-    sConfigOC.Pulse = 10000;
-    sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-    sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
-    sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-    sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
-    sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-    HAL_TIM_PWM_ConfigChannel(&halTIM, &sConfigOC, channel);
 
     sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
     sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
@@ -258,6 +247,19 @@ PWMf302x8::PWMf302x8(Pin pin) : PWM(pin) {
 
 void PWMf302x8::setDutyCycle(float dutyCycle) {
     this->dutyCycle = dutyCycle;
+
+    TIM_OC_InitTypeDef sConfigOC = {0};
+    sConfigOC.OCMode = TIM_OCMODE_PWM1;
+    sConfigOC.Pulse = dutyCycle * halTIM.Init.Period;
+    sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+    sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
+    sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+    sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
+    sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+
+    HAL_TIM_PWM_ConfigChannel(&halTIM, &sConfigOC, halTIMChannelID);
+    HAL_TIM_PWM_Start(&halTIM, halTIMChannelID);
+
 }
 
 void PWMf302x8::setPeriod(float period) {
@@ -268,6 +270,8 @@ void PWMf302x8::setPeriod(float period) {
     uint32_t prescaler = -1;
     uint32_t clockFrequency = HAL_RCC_GetSysClockFreq();
 
+    // Required loop in order to determine a prescaler which will bring the
+    // autoreload value into a valid range.
     do {
         prescaler++;
         autoReload = period * clockFrequency / (prescaler + 1) - 1;
@@ -277,6 +281,8 @@ void PWMf302x8::setPeriod(float period) {
     halTIM.Init.Prescaler = prescaler;
     HAL_TIM_Base_Init(&halTIM);
     HAL_TIM_PWM_Start(&halTIM, halTIMChannelID);
+
+    setDutyCycle(this->dutyCycle);
 
 }
 
