@@ -4,9 +4,11 @@
 #include <stdint.h>
 
 #include <EVT/io/GPIO.hpp>
+#include <EVT/io/PWM.hpp>
 
 #ifdef STM32F302x8
     #include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
+    #include <EVT/io/platform/f3xx/f302x8/PWMf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/UARTf302x8.hpp>
 #endif
 
@@ -28,6 +30,19 @@ GPIO& getGPIO(GPIO::Direction direction=GPIO::Direction::OUTPUT) {
 }
 
 /**
+ * Get an instance of a PWM pin.
+ *
+ * @param pin The pin to attach to the PWM.
+ */
+template<Pin pin>
+PWM& getPWM() {
+    #ifdef STM32F302x8
+        static PWMf302x8 pwm(pin);
+        return pwm;
+    #endif
+}
+
+/*
  * Get an instance of a UART.
  *
  * @param txPin The transmit pin for the UART.

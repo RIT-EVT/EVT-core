@@ -53,9 +53,9 @@ For building with linting enabled (recommended). First install cpplint, then
 run the installation with the modification below.
 
 ```bash
-mkdir build/                                                                              
-cd build/                                                                                 
-cmake -DEVT_LINT=ON ../                                                                                 
+mkdir build/
+cd build/
+cmake -DEVT_LINT=ON ../
 make -j
 ```
 
@@ -63,10 +63,12 @@ make -j
 
 Below is the state of supported features on each platform.
 
-| Platform    | I2C | SPI | PWM | CAN | ADC | Flash | RTC | UART | GPIO |
-|-------------|-----|-----|-----|-----|-----|-------|-----|------|------|
-| STM32F302R8 | :x: | :x: | :x: | :x: | :x: | :x:   | :x: | :x:  | :x:  |
-| STM32F446RE | :x: | :x: | :x: | :x: | :x: | :x:   | :x: | :x:  | :x:  |
+NOTE: In these early releases testing is not fully verbose.
+
+| Platform    | I2C | SPI | PWM                | CAN | ADC | Flash | RTC | UART                | GPIO                |
+|-------------|-----|-----|--------------------|-----|-----|-------|-----|---------------------|---------------------|
+| STM32F302R8 | :x: | :x: | :heavy_check_mark: | :x: | :x: | :x:   | :x: | :heavy_check_mark:  | :heavy_check_mark:  |
+| STM32F446RE | :x: | :x: | :x:                | :x: | :x: | :x:   | :x: | :x:                 | :x:                 |
 
 ## Future Features
 
