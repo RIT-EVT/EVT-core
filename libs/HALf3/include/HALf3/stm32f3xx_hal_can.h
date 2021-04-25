@@ -32,7 +32,7 @@ extern "C" {
   * @{
   */
 
-#if defined (CAN)
+#if defined (CAN1)
 /** @addtogroup CAN
   * @{
   */
