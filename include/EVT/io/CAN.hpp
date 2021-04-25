@@ -1,7 +1,9 @@
-#ifndef _EVT_GPIO_
-#define _EVT_GPIO_
+#ifndef _EVT_CAN_
+#define _EVT_CAN_
 
 #include <stdint.h>
+
+#include <EVT/io/types/CANMessage.hpp>
 
 namespace EVT::core::IO
 {
@@ -25,30 +27,6 @@ enum class Pin;
 class CAN
 {
 public:
-
-    /**
-     * Represents the format of all CAN messages used for sending and
-     * receiving CAN messages over the bus.
-     */
-    struct CANMessage
-    {
-        /** ID of the CAN message */
-        uint32_t id;
-        /** Number of bytes used for the data (<=MAX_CAN_MESSAGE_LENGTH) */
-        uint8_t dataLength;
-        /** The data stored in the CAN message */
-        uint8_t* payload;
-
-        CANMessage(uint32_t id, uint8_t* payload, uint8_t dataLength) {
-            this->id = id;
-            this->dataLength = dataLength;
-            // Copy over payload content
-            for(uint8_t i = 0; i < dataLength; i++)
-                this->payload[i] = payload[i];
-        }
-    };
-
-
     /**
      * Creates a new instance of the CAN interface which will use the given
      * transmit and receive pins.
@@ -76,21 +54,6 @@ public:
      *      received.
      */
     virtual CANMessage* receive(CANMessage* message) = 0;
-
-    /**
-     * Add a call back that will be called when a CAN message of a specific
-     * ID is received.
-     *
-     * NOTE: If you add a call back for the given ID, then the message will
-     *      not be added to the receive buffer (cannot later call
-     *      CAN::receive and expect the message to be there)
-     *
-     * @param callback Function to call when the message is recieved
-     * @param id The CAN message to attach the call back to
-     */
-    virtual void addCallback(void (*callback)(CANMessage* message),
-                             uint8_t id);
-
 
     /** Maximum size any CAN message can be in bytes */
     constexpr static uint8_t MAX_CAN_MESSAGE_LENGTH = 8;
