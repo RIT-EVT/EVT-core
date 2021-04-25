@@ -47,7 +47,7 @@ public:
      *
      * @param message The message to send over CAN.
      */
-    virtual void transmit(CANMessage message) = 0;
+    virtual void transmit(CANMessage& message) = 0;
 
     /**
      * Receive a message over CAN. The user can either receive in blocking or
