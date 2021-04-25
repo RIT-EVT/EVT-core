@@ -31,6 +31,10 @@ public:
      * Creates a new instance of the CAN interface which will use the given
      * transmit and receive pins.
      *
+     * The user can supply a pointer to a series of CAN ids that will be
+     * allowed to be recieved. If the provided array is empty. Then all
+     * CAN messages will be allowed in.
+     *
      * @param txPin The pin to use for transmitting data
      * @param rxPin The pin to use for receiving data
      * @param CANids Array of the IDs that will be recognized
@@ -46,23 +50,32 @@ public:
     virtual void transmit(CANMessage message) = 0;
 
     /**
-     * Receive a message with the given ID. If a message with that ID has
-     * not been received, then nullptr is returned.
+     * Receive a message over CAN. The user can either receive in blocking or
+     * non-blocking mode. In blocking mode, the code will hang until a message
+     * is received then return a pointer to the message that was passed in.
+     * In non-blocking, a nullptr will be returned if no message is currently
+     * in the mailbox.
      *
      * @param message {out} The message to populate with data
+     * @param blocking Used to determine if received should block or not, by
+     *      default receive is blocking
      * @return A pointer to the passed in message, nullptr if message not
      *      received.
      */
-    virtual CANMessage* receive(CANMessage* message) = 0;
-
-    /** Maximum size any CAN message can be in bytes */
-    constexpr static uint8_t MAX_CAN_MESSAGE_LENGTH = 8;
+    virtual CANMessage* receive(CANMessage* message, bool blocking=true) = 0;
 
 private:
+    /** The CAN transmit pin */
+    Pin txPin;
+    /** The CAN receive pin */
+    Pin rxPin;
+
     /** CAN ids that will be filtered and received */
     uint8_t* CANids;
     /** Number of CAN ids that are recognized */
     uint8_t numCANids;
+    /** Represents if filtering should take place for CAN ids */
+    bool filtering;
 };
 }  // namespace EVT::core::IO
 
