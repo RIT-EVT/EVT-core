@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <cstring>
 
 #include <EVT/io/types/CANMessage.hpp>
 
@@ -24,6 +25,18 @@ uint8_t CANMessage::getDataLength() {
 
 uint8_t* CANMessage::getPayload() {
     return &payload[0];
+}
+
+void CANMessage::setId(uint32_t id) {
+    this->id = id;
+}
+
+void CANMessage::setDataLength(uint8_t size) {
+    this->dataLength = size;
+}
+
+void CANMessage::setPayload(uint8_t *payload) {
+    std::memcpy(this->payload, payload, CAN_MAX_PAYLOAD_SIZE);
 }
 
 }  // namespace EVT::core::IO

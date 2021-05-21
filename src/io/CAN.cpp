@@ -2,8 +2,7 @@
 
 #include <EVT/io/CAN.hpp>
 
-namespace EVT::core::IO
-{
+namespace EVT::core::IO {
 
 CAN::CAN(Pin txPin, Pin rxPin, uint8_t* CANids, uint8_t numCANids) {
     this->txPin = txPin;

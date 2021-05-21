@@ -3,10 +3,12 @@
 
 #include <stdint.h>
 
+#include <HALf3/stm32f3xx.h>
+#include <HALf3/stm32f3xx_hal_can.h>
+
 #include <EVT/io/CAN.hpp>
 
-namespace EVT::core::IO
-{
+namespace EVT::core::IO {
 
 /**
  * STMF302x8 implementation of the CAN protocol. The STM32f302x8 has an on
@@ -18,8 +20,7 @@ namespace EVT::core::IO
  * 2. Hardware based message filtering which allows the filtering of messages
  * to be handled by hardware not software.
  */
-class CANf302x8 : public CAN
-{
+class CANf302x8 : public CAN {
 
     /**
      * Create a new instance of an STM32f302x8 CAN interface
@@ -36,7 +37,7 @@ class CANf302x8 : public CAN
     /**
      * Send a message over CAN
      *
-     * @param message THe message to send over CAN.
+     * @param message THe mes   sage to send over CAN.
      */
     void transmit(CANMessage& message);
 
@@ -60,6 +61,8 @@ class CANf302x8 : public CAN
     CANMessage* receive(CANMessage* message, bool blocking=true);
 
 private:
+    /** Instance of the HAL can interface */
+    CAN_HandleTypeDef halCAN;
 
 };
 

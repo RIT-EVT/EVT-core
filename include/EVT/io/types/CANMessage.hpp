@@ -47,6 +47,30 @@ public:
      */
     uint8_t* getPayload();
 
+    /**
+     * Set the id of the CAN Message
+     *
+     * @param id The id of the CAN message
+     */
+    void setId(uint32_t id);
+
+    /**
+     * Set the size of the payload in bytes
+     *
+     * @param size The size of the payload in bytes
+     */
+    void setDataLength(uint8_t size);
+
+    /**
+     * Set the payload to the contents of the provided array. Does a copy
+     * of the bytes stored.
+     *
+     * NOTE: Will copy over CAN_MAX_PAYLOAD_SIZE number of bytes over
+     *
+     * @param payload The payload to copy over
+     */
+    void setPayload(uint8_t* payload);
+
 private:
     /** ID of the CAN message */
     uint32_t id;
