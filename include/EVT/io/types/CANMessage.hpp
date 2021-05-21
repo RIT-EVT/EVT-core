@@ -27,6 +27,12 @@ public:
     CANMessage(uint32_t id, uint8_t dataLength, uint8_t* payload);
 
     /**
+     * Create an empty CANMessage, the id will be 0, dataLength will be 0 and
+     * the payload will be empty
+     */
+    CANMessage();
+
+    /**
      * Get the id of the CAN message
      *
      * @return id of the specific CAN message

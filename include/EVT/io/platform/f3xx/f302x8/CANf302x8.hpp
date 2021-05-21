@@ -21,6 +21,7 @@ namespace EVT::core::IO {
  * to be handled by hardware not software.
  */
 class CANf302x8 : public CAN {
+public:
 
     /**
      * Create a new instance of an STM32f302x8 CAN interface

@@ -3,10 +3,12 @@
 
 #include <stdint.h>
 
+#include <EVT/io/CAN.hpp>
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/PWM.hpp>
 
 #ifdef STM32F302x8
+    #include <EVT/io/platform/f3xx/f302x8/CANf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/PWMf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/UARTf302x8.hpp>
@@ -14,6 +16,20 @@
 
 namespace EVT::core::IO
 {
+
+/**
+ * Get an instance of a CAN interface.
+ *
+ * @param txPin CAN pin for transmitting messages
+ * @param rxPin CAN pin for receiving messages
+ */
+template<Pin txPin, Pin rxPin>
+CAN& getCAN(uint8_t* CANids, uint8_t numCANids) {
+    #ifdef STM32F302x8
+        static CANf302x8 can(txPin, rxPin, CANids, numCANids);
+        return can;
+    #endif
+}
 
 /**
  * Get an instance of a GPIO pin.

@@ -1,6 +1,7 @@
-// TODO: Implement choicing between polling and interrupt mode
+// TODO: Implement choosing between polling and interrupt mode
 
 #include <cstring>
+#include <stdint.h>
 
 #include <EVT/io/platform/f3xx/f302x8/CANf302x8.hpp>
 #include <EVT/utils/time.hpp>
@@ -48,7 +49,7 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, uint8_t* CANids, uint8_t numCANids)
     // Initialize HAL CAN
     halCAN.Instance = CAN1;
     halCAN.Init.Prescaler = 5;
-    halCAN.Init.Mode = CAN_MODE_NORMAL;
+    halCAN.Init.Mode = CAN_MODE_LOOPBACK;
     halCAN.Init.SyncJumpWidth = CAN_SJW_1TQ;
     halCAN.Init.TimeSeg1 = CAN_BS1_1TQ;
     halCAN.Init.TimeSeg2 = CAN_BS2_1TQ;

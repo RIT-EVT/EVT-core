@@ -15,6 +15,11 @@ CANMessage::CANMessage(uint32_t id, uint8_t dataLength, uint8_t* payload) {
         this->payload[i] = payload[i];
 }
 
+CANMessage::CANMessage() {
+    this->id = 0;
+    this->dataLength = 0;
+}
+
 uint32_t CANMessage::getId() {
     return id;
 }
