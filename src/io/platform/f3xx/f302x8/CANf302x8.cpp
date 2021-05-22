@@ -3,6 +3,8 @@
 #include <cstring>
 #include <stdint.h>
 
+#include <HALf3/stm32f3xx.h>
+
 #include <EVT/io/platform/f3xx/f302x8/CANf302x8.hpp>
 #include <EVT/utils/time.hpp>
 

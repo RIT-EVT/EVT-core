@@ -105,6 +105,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/io/platform/f3xx/f302x8/GPIOf302x8.cpp
     src/io/platform/f3xx/f302x8/PWMf302x8.cpp
     src/io/platform/f3xx/f302x8/UARTf302x8.cpp
+    src/io/types/CANMessage.cpp
     src/dev/LED.cpp
     src/utils/platform/f3xx/time.cpp
 )
