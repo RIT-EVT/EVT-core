@@ -104,6 +104,7 @@ public:
         if (front > end)
             front = &elements[0];
         size--;
+        return true;
     }
 
     /**
