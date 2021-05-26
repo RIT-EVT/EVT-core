@@ -7,6 +7,47 @@
 
 #include <EVT/io/platform/f3xx/f302x8/CANf302x8.hpp>
 #include <EVT/utils/time.hpp>
+#include <EVT/utils/types/FixedQueue.hpp>
+
+
+namespace {
+
+// Pointer to a queue element that will store the CAN messages. This is made
+// global so that the CAN interrupts can have access to the queue. In a more
+// ideal situation, the passed in HAL CAN instance would contain the queue
+// as "private data". This should be considered for the future.
+//
+// NOTE: Part of the reason this works is because the STM32F3xx only supports
+// a single CAN interface at a time.
+EVT::core::types::FixedQueue<EVT::core::IO::CANMessage>* canMessageQueue;
+// Pointer to the CAN interface, made global for similar reasons to the
+// variable above.
+CAN_HandleTypeDef* hcan;
+
+}
+
+extern "C" void CAN_RX_IRQHandler(void) {
+    HAL_CAN_IRQHandler(hcan);
+}
+
+/**
+ * Interrupt handler for incoming CAN messages. The messages are added to
+ * a queue for receiving.
+ *
+ * NOTE: Ideally a pointer to the queue would be stored in the CAN handle
+ * typedef. It may be worth considering changing the HAL code.
+ */
+extern "C" void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
+    CAN_RxHeaderTypeDef rxHeader = {0};
+    uint8_t payload[EVT::core::IO::CANMessage::CAN_MAX_PAYLOAD_SIZE];
+
+    HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rxHeader, payload);
+
+    EVT::core::IO::CANMessage message(rxHeader.ExtId, rxHeader.DLC, payload);
+    // TODO: Part of an error system should log when the CAN buffer has filled
+    if (canMessageQueue->canInsert())
+        canMessageQueue->append(message);
+}
 
 namespace EVT::core::IO {
 
@@ -62,8 +103,35 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, uint8_t* CANids, uint8_t numCANids)
     halCAN.Init.ReceiveFifoLocked = DISABLE;
     halCAN.Init.TransmitFifoPriority = DISABLE;
 
+    // Setup global variables
+    hcan = &this->halCAN;
+    canMessageQueue = &this->messageQueue;
+
+    // Intialize interrupts
+    HAL_CAN_ActivateNotification(&halCAN, CAN_IT_RX_FIFO0_MSG_PENDING |
+            CAN_IT_RX_FIFO1_MSG_PENDING);
+    NVIC_SetVector(CAN_RX0_IRQn, (uint32_t)&CAN_RX_IRQHandler);
+    NVIC_SetVector(CAN_RX1_IRQn, (uint32_t)&CAN_RX_IRQHandler);
+
+
+    /* By default - filter that accepts all incoming messages */
+    CAN_FilterTypeDef defaultFilter;
+    defaultFilter.FilterIdHigh         = 0;
+    defaultFilter.FilterIdLow          = 0;
+    defaultFilter.FilterMaskIdHigh     = 0;
+    defaultFilter.FilterMaskIdLow      = 0;
+    defaultFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+    defaultFilter.FilterBank           = 0;
+    defaultFilter.FilterMode           = CAN_FILTERMODE_IDMASK;
+    defaultFilter.FilterScale          = CAN_FILTERSCALE_32BIT;
+    defaultFilter.FilterActivation     = ENABLE;
+
+    HAL_CAN_ConfigFilter(&halCAN, &defaultFilter);
+
     __HAL_RCC_CAN1_CLK_ENABLE();
     HAL_CAN_Init(&halCAN);
+    HAL_CAN_ActivateNotification(&halCAN, CAN_IT_RX_FIFO0_MSG_PENDING);
+    HAL_CAN_Start(&halCAN);
 }
 
 void CANf302x8::transmit(CANMessage& message) {
@@ -92,30 +160,24 @@ void CANf302x8::transmit(CANMessage& message) {
 
 // TODO: Use both RxFifo0 and RxFif1
 CANMessage* CANf302x8::receive(CANMessage* message, bool blocking) {
-    CAN_RxHeaderTypeDef rxHeader = {0};
-    uint8_t payload[CANMessage::CAN_MAX_PAYLOAD_SIZE] = {0};
-
     bool hasMessage = false;
 
     // Check to make sure a message is available, if blocking, wait until
     // a message is available.
     do {
-        time::wait(1);
-        hasMessage = HAL_CAN_GetRxFifoFillLevel(&halCAN, CAN_RX_FIFO0) > 0;
+        hasMessage = !messageQueue.isEmpty();
         // If the user does not want to wait for a message, return nullptr
         if (!blocking && !hasMessage)
             return nullptr;
+        time::wait(1);
     } while (!hasMessage);
 
-    // Read in message
-    HAL_CAN_GetRxMessage(&halCAN, CAN_RX_FIFO0, &rxHeader, payload);
-
-    // Construct CANMessage
-    message->setId(rxHeader.ExtId);
-    message->setDataLength(rxHeader.DLC);
-    message->setPayload(payload);
-
-    return message;
+    // Return the message from the queue;
+    if (messageQueue.pop(message)) {
+        return message;
+    } else {
+        return nullptr;
+    }
 }
 
 }  // namespace EVT::core::IO

@@ -7,6 +7,7 @@
 #include <HALf3/stm32f3xx_hal_can.h>
 
 #include <EVT/io/CAN.hpp>
+#include <EVT/utils/types/FixedQueue.hpp>
 
 namespace EVT::core::IO {
 
@@ -64,6 +65,8 @@ public:
 private:
     /** Instance of the HAL can interface */
     CAN_HandleTypeDef halCAN;
+    /** Queue which holds received CAN messages */
+    EVT::core::types::FixedQueue<CANMessage> messageQueue;
 
 };
 

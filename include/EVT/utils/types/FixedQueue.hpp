@@ -9,6 +9,8 @@
  * NOTE: The elements of the queue must implement the copy assignment
  * operator.
  *
+ * TODO: Consider locking mechanism around critical regions.
+ *
  * @author Collin Bolles
  */
 #ifndef _EVT_FIXED_QUEUE_
