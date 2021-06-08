@@ -90,29 +90,30 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, uint8_t* CANids, uint8_t numCANids)
     }
 
     // Initialize HAL CAN
-    halCAN.Instance = CAN1;
-    halCAN.Init.Prescaler = 5;
-    halCAN.Init.Mode = CAN_MODE_LOOPBACK;
-    halCAN.Init.SyncJumpWidth = CAN_SJW_1TQ;
-    halCAN.Init.TimeSeg1 = CAN_BS1_1TQ;
-    halCAN.Init.TimeSeg2 = CAN_BS2_1TQ;
-    halCAN.Init.TimeTriggeredMode = DISABLE;
-    halCAN.Init.AutoBusOff = DISABLE;
-    halCAN.Init.AutoWakeUp = DISABLE;
-    halCAN.Init.AutoRetransmission = DISABLE;
-    halCAN.Init.ReceiveFifoLocked = DISABLE;
-    halCAN.Init.TransmitFifoPriority = DISABLE;
+    // Bit timing values calculated from the website
+    // http://www.bittiming.can-wiki.info/
+    halCAN.Instance                     = CAN1;
+    halCAN.Init.Prescaler               = 1;
+    halCAN.Init.Mode                    = CAN_MODE_LOOPBACK;
+    halCAN.Init.SyncJumpWidth           = CAN_SJW_1TQ;
+    halCAN.Init.TimeSeg1                = CAN_BS1_13TQ;
+    halCAN.Init.TimeSeg2                = CAN_BS2_2TQ;
+    halCAN.Init.TimeTriggeredMode       = DISABLE;
+    halCAN.Init.AutoBusOff              = DISABLE;
+    halCAN.Init.AutoWakeUp              = DISABLE;
+    halCAN.Init.AutoRetransmission      = DISABLE;
+    halCAN.Init.ReceiveFifoLocked       = DISABLE;
+    halCAN.Init.TransmitFifoPriority    = DISABLE;
 
     // Setup global variables
     hcan = &this->halCAN;
     canMessageQueue = &this->messageQueue;
 
     // Intialize interrupts
-    HAL_CAN_ActivateNotification(&halCAN, CAN_IT_RX_FIFO0_MSG_PENDING |
-            CAN_IT_RX_FIFO1_MSG_PENDING);
-    NVIC_SetVector(CAN_RX0_IRQn, (uint32_t)&CAN_RX_IRQHandler);
-    NVIC_SetVector(CAN_RX1_IRQn, (uint32_t)&CAN_RX_IRQHandler);
-
+    HAL_CAN_ActivateNotification(&halCAN, CAN_IT_RX_FIFO0_MSG_PENDING);
+    HAL_NVIC_SetPriority(CAN_RX0_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(CAN_RX0_IRQn);
+    // NVIC_SetVector(CAN_RX0_IRQn, (uint32_t)&CAN_RX_IRQHandler);
 
     /* By default - filter that accepts all incoming messages */
     CAN_FilterTypeDef defaultFilter;
