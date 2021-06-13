@@ -3,6 +3,7 @@
 //      * Add flexible baud rates
 //      * Add hardware based filtering settings
 //      * "Thread" safty for queue access
+//      * Support hardware based filtering
 
 #include <cstring>
 #include <stdint.h>
@@ -28,7 +29,7 @@ EVT::core::types::FixedQueue<EVT::core::IO::CANMessage>* canMessageQueue;
 // variable above.
 CAN_HandleTypeDef* hcan;
 
-}
+}  // namespace
 
 extern "C" void CAN_RX0_IRQHandler(void) {
     HAL_CAN_IRQHandler(hcan);
@@ -55,8 +56,8 @@ extern "C" void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
 
 namespace EVT::core::IO {
 
-CANf302x8::CANf302x8(Pin txPin, Pin rxPin, uint8_t* CANids, uint8_t numCANids)
-    : CAN(txPin, rxPin, CANids, numCANids) {
+CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
+    : CAN(txPin, rxPin, loopbackEnabled) {
 
     // Setup GPIO
     GPIO_InitTypeDef gpioInit = {0};
@@ -96,9 +97,10 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, uint8_t* CANids, uint8_t numCANids)
     // Initialize HAL CAN
     // Bit timing values calculated from the website
     // http://www.bittiming.can-wiki.info/
+    uint32_t mode = loopbackEnabled ? CAN_MODE_LOOPBACK : CAN_MODE_NORMAL;
     halCAN.Instance                     = CAN1;
     halCAN.Init.Prescaler               = 1;
-    halCAN.Init.Mode                    = CAN_MODE_LOOPBACK;
+    halCAN.Init.Mode                    = mode;
     halCAN.Init.SyncJumpWidth           = CAN_SJW_1TQ;
     halCAN.Init.TimeSeg1                = CAN_BS1_13TQ;
     halCAN.Init.TimeSeg2                = CAN_BS2_2TQ;
@@ -119,7 +121,6 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, uint8_t* CANids, uint8_t numCANids)
     // Intialize interrupts
     HAL_CAN_ActivateNotification(&halCAN, CAN_IT_RX_FIFO0_MSG_PENDING);
     HAL_NVIC_SetPriority(CAN_RX0_IRQn, 0, 0);
-    // NVIC_SetVector(CAN_RX0_IRQn, (uint32_t)&CAN_RX0_IRQHandler);
     HAL_NVIC_EnableIRQ(CAN_RX0_IRQn);
 
     /* By default - filter that accepts all incoming messages */

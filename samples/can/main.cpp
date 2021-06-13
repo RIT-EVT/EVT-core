@@ -12,7 +12,8 @@ namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
 
 int main() {
-    IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>(nullptr, 0);
+    // Get CAN instance with loopback enabled
+    IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>(true);
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     uint8_t payload[] = { 0xDE, 0xAD, 0xBE, 0xBE, 0xEF, 0x00, 0x01, 0x02 };
@@ -21,7 +22,7 @@ int main() {
 
     uart.printf("Starting CAN testing\r\n");
 
-    while(true) {
+    while (true) {
         can.transmit(transmit_message);
         can.receive(&received_message, true);
 
@@ -31,7 +32,7 @@ int main() {
         uart.printf("Message contents: ");
 
         uint8_t* message_payload = received_message.getPayload();
-        for(int i = 0; i < received_message.getDataLength(); i++) {
+        for (int i = 0; i < received_message.getDataLength(); i++) {
             uart.printf("0x%02X ", message_payload[i]);
         }
         uart.printf("\r\n\r\n");

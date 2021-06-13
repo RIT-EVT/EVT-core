@@ -24,9 +24,9 @@ namespace EVT::core::IO
  * @param rxPin CAN pin for receiving messages
  */
 template<Pin txPin, Pin rxPin>
-CAN& getCAN(uint8_t* CANids, uint8_t numCANids) {
+CAN& getCAN(bool loopbackEnabled=false) {
     #ifdef STM32F302x8
-        static CANf302x8 can(txPin, rxPin, CANids, numCANids);
+        static CANf302x8 can(txPin, rxPin, loopbackEnabled);
         return can;
     #endif
 }

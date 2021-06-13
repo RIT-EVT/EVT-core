@@ -29,12 +29,9 @@ public:
      *
      * @param txPin The pin to trasmit CAN messages on
      * @param rxPin The pin to receive CAN messages on
-     * @param CANids Array of CAN ids to recieve, leaving empty allows
-     *      all CAN messages to be received
-     * @param numCANids The number of CAN ids in the provided array of
-     *      CAN ids, zero means allow all CAN ids
+     * @param loopbackEnabled Flag for enabling CAN loop back
      */
-    CANf302x8(Pin txPin, Pin rxPin, uint8_t* CANids, uint8_t numCANids);
+    CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled);
 
     /**
      * Send a message over CAN

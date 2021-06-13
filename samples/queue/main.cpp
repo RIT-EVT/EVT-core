@@ -17,17 +17,17 @@ namespace types = EVT::core::types;
  * Test class for showing off having a custom class in the FixedQueue.
  */
 class TestClass {
-private:
+ private:
     int a;
     int b;
     int c;
 
-public:
+ public:
     TestClass(int a, int b, int c) : a(a), b(b), c(c) {}
     TestClass(): a(0), b(0), c(0) {}
 
     // Copy operator, important to have
-    TestClass& operator=(TestClass& other) {
+    TestClass& operator=(const TestClass& other) {
         if (this == &other)
             return *this;
         this->a = other.a;
@@ -37,10 +37,9 @@ public:
     }
 
     // For easier debugging
-    void print(IO::UART& uart) {
-        uart.printf("TestClass(a = %d, b = %d, c = %d)", a, b, c);
+    void print(IO::UART* uart) {
+        uart->printf("TestClass(a = %d, b = %d, c = %d)", a, b, c);
     }
-
 };
 
 int main() {
@@ -57,7 +56,7 @@ int main() {
     uart.printf("numberQueue.isEmpty() -> %d\r\n", numberQueue.isEmpty());
 
     // Add ten numbers, the max allowed
-    for(int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) {
         uart.printf("numberQueue.append(%d)\r\n", i);
         numberQueue.append(i);
     }
@@ -66,7 +65,7 @@ int main() {
     uart.printf("numberQueue.isFull() -> %d\r\n", numberQueue.isFull());
 
     // Pull out all the numbers
-    for(int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) {
         int valuePopped = 0;
         numberQueue.pop(&valuePopped);
         uart.printf("numberQueue.pop() -> %d\r\n", valuePopped);
@@ -83,7 +82,7 @@ int main() {
     types::FixedQueue<int> numberQueueOverwrite(10, true);
 
     // Add ten numbers, should be full after
-    for(int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) {
         uart.printf("numberQueueOverwrite.append(%d)\n\r", i);
         numberQueueOverwrite.append(i);
     }
@@ -93,11 +92,11 @@ int main() {
             numberQueueOverwrite.canInsert());
 
     // Add ten more numbers
-    for(int i = 10; i < 20; i++) {
+    for (int i = 10; i < 20; i++) {
         uart.printf("numberQueueOverwrite.append(%d)\n\r", i);
         numberQueueOverwrite.append(i);
     }
-    for(int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) {
         int valuePopped = 0;
         numberQueueOverwrite.pop(&valuePopped);
         uart.printf("numberQueueOverwrite.pop() -> %d\r\n", valuePopped);
@@ -110,20 +109,20 @@ int main() {
     types::FixedQueue<TestClass> customQueue(10);
 
     // Add ten objects to the queue
-    for(int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) {
         TestClass element(i * 1, i * 2, i * 3);
         uart.printf("customQueue.append(");
-        element.print(uart);
+        element.print(&uart);
         uart.printf(")\r\n");
         customQueue.append(element);
     }
 
     // Print out all of the elements
-    for(int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) {
         TestClass element;
         customQueue.pop(&element);
         uart.printf("numberQueueOverwrite.pop() -> ");
-        element.print(uart);
+        element.print(&uart);
         uart.printf("\r\n");
     }
 

@@ -31,16 +31,11 @@ public:
      * Creates a new instance of the CAN interface which will use the given
      * transmit and receive pins.
      *
-     * The user can supply a pointer to a series of CAN ids that will be
-     * allowed to be recieved. If the provided array is empty. Then all
-     * CAN messages will be allowed in.
-     *
      * @param txPin The pin to use for transmitting data
      * @param rxPin The pin to use for receiving data
-     * @param CANids Array of the IDs that will be recognized
-     * @param numCANids Number of CANids that were passed in
+     * @param loopbackEnabled Flag to enable CAN loop back functionality
      */
-    CAN(Pin txPin, Pin rxPin, uint8_t* CANids, uint8_t numCANids);
+    CAN(Pin txPin, Pin rxPin, bool loopbackEnabled);
 
     /**
      * Transmit the message over CAN.
@@ -69,13 +64,10 @@ private:
     Pin txPin;
     /** The CAN receive pin */
     Pin rxPin;
-
-    /** CAN ids that will be filtered and received */
-    uint8_t* CANids;
-    /** Number of CAN ids that are recognized */
-    uint8_t numCANids;
     /** Represents if filtering should take place for CAN ids */
     bool filtering;
+    /** If CAN should operate in loop back mode */
+    bool loopbackEnabled;
 };
 }  // namespace EVT::core::IO
 

@@ -3,15 +3,14 @@
 
 #include <EVT/io/types/CANMessage.hpp>
 
-namespace EVT::core::IO
-{
+namespace EVT::core::IO {
 
 CANMessage::CANMessage(uint32_t id, uint8_t dataLength, uint8_t* payload) {
     this->id = id;
     this->dataLength = dataLength;
 
     // Copy contents of provided payload into message's payload
-    for(int i = 0; i < dataLength; i++)
+    for (int i = 0; i < dataLength; i++)
         this->payload[i] = payload[i];
 }
 
