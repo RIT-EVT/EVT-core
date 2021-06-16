@@ -1,4 +1,5 @@
 # Add all samples
+add_subdirectory(adc)
 add_subdirectory(blink)
 add_subdirectory(can)
 add_subdirectory(pwm)
