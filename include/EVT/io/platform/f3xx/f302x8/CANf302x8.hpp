@@ -57,7 +57,7 @@ public:
      * @return A pointer to the passed in message, nullptr if message not
      *      received.
      */
-    CANMessage* receive(CANMessage* message, bool blocking=true);
+    CANMessage* receive(CANMessage* message, bool blocking=false);
 
 private:
     /** Instance of the HAL can interface */

@@ -56,7 +56,7 @@ public:
      * @return A pointer to the passed in message, nullptr if message not
      *      received.
      */
-    virtual CANMessage* receive(CANMessage* message, bool blocking=true) = 0;
+    virtual CANMessage* receive(CANMessage* message, bool blocking=false) = 0;
 
 private:
     /** The CAN transmit pin */
