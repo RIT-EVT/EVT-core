@@ -55,8 +55,8 @@ int main() {
     // Check if it is empty, should be empty
     uart.printf("numberQueue.isEmpty() -> %d\r\n", numberQueue.isEmpty());
 
-    // Add ten numbers, the max allowed
-    for (int i = 0; i < 10; i++) {
+    // Add 15 numbers when only 10 are allowed
+    for (int i = 0; i < 15; i++) {
         uart.printf("numberQueue.append(%d)\r\n", i);
         numberQueue.append(i);
     }
@@ -74,6 +74,10 @@ int main() {
     // Check if it is empty again, should be
     uart.printf("numberQueue.isFull() -> %d\r\n", numberQueue.isFull());
     uart.printf("numberQueue.isEmpty() -> %d\r\n", numberQueue.isEmpty());
+
+    // Try to pop from empty queue
+    int value;
+    uart.printf("numberQueue.pop() success ? ->%d\r\n", numberQueue.pop(&value));
 
     ///////////////////////////////////////////////////////////////////////////
     // Test a queue of numbers, with overwritting
