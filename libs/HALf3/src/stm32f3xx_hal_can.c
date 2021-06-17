@@ -216,7 +216,7 @@
   * @{
   */
 
-#if defined(CAN)
+#if defined(CAN1)
 
 /** @defgroup CAN CAN
   * @brief CAN driver modules
@@ -2183,6 +2183,7 @@ __weak void HAL_CAN_TxMailbox2AbortCallback(CAN_HandleTypeDef *hcan)
    */
 }
 
+#if 0
 /**
   * @brief  Rx FIFO 0 message pending callback.
   * @param  hcan pointer to a CAN_HandleTypeDef structure that contains
@@ -2199,6 +2200,7 @@ __weak void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
             user file
    */
 }
+#endif
 
 /**
   * @brief  Rx FIFO 0 full callback.
