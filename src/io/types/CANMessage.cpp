@@ -7,10 +7,13 @@ namespace EVT::core::IO {
 
 CANMessage::CANMessage(uint32_t id, uint8_t dataLength, uint8_t* payload) {
     this->id = id;
-    this->dataLength = dataLength;
+    // TODO: Should include way to notify user of invalid CAN frame,
+    // to be added to error manager later.
+    this->dataLength = dataLength <= CAN_MAX_PAYLOAD_SIZE ?
+        dataLength : CAN_MAX_PAYLOAD_SIZE;
 
     // Copy contents of provided payload into message's payload
-    for (int i = 0; i < dataLength; i++)
+    for (int i = 0; i < this->dataLength; i++)
         this->payload[i] = payload[i];
 }
 
