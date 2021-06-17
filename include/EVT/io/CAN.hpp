@@ -24,8 +24,7 @@ enum class Pin;
  * NOTE: You cannot directly make an instance of this class via a constructor.
  * You will need to use the getCAN function in the IO namespace.
  */
-class CAN
-{
+class CAN {
 public:
     /**
      * Creates a new instance of the CAN interface which will use the given
@@ -35,7 +34,7 @@ public:
      * @param rxPin The pin to use for receiving data
      * @param loopbackEnabled Flag to enable CAN loop back functionality
      */
-    CAN(Pin txPin, Pin rxPin, bool loopbackEnabled);
+    CAN(Pin txPin, Pin rxPin, bool loopbackEnabled=false);
 
     /**
      * Transmit the message over CAN.

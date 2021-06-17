@@ -31,7 +31,7 @@ public:
      * @param rxPin The pin to receive CAN messages on
      * @param loopbackEnabled Flag for enabling CAN loop back
      */
-    CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled);
+    CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled=false);
 
     /**
      * Send a message over CAN
