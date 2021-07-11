@@ -8,12 +8,13 @@
 namespace {
     /// This is made as a global variable so that it is accessible in the
     // interrupt.
-    DMA_HandleTypeDef* DMA;
+    DMA_HandleTypeDef* dmaHandle;
+    ADC_HandleTypeDef* adcHandle;
 
 }  // namespace
 
 extern "C" void DMA1_Channel1_IRQHandler() {
-        HAL_DMA_IRQHandler(DMA);
+    HAL_DMA_IRQHandler(dmaHandle);
 }
 
 namespace EVT::core::IO {
@@ -29,63 +30,99 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
 
     // Flag representing if the ADC has been configured yet
     static bool halADCisInit = false;
-    // "Rank" represents the channel value
-    static uint8_t rank;
+    // "Rank" represents the order in which the channels are added
+    static uint8_t rank = 1;
 
+    // Initialization of the HAL ADC should only take place once since there is
+    // only one ADC device which has muliple channels supported.
     if (!halADCisInit) {
 
-        // Init ADC
-        halADC.Instance = ADC1;
-        halADC.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV4;     // TODO: Need a good value for this...seems to work for now
-        halADC.Init.Resolution            = ADC_RESOLUTION_12B;           // 12-bit resolution
-        halADC.Init.DataAlign             = ADC_DATAALIGN_RIGHT;          // LSB of data is located at bit 0
-        halADC.Init.ScanConvMode          = ENABLE;                       // Conversions performed in sequence across all channels
-        halADC.Init.EOCSelection          = DISABLE;                      // No end-of-conversion flag
-        halADC.Init.LowPowerAutoWait      = DISABLE;                      // Don't transition to low-power state when not in use
-        halADC.Init.ContinuousConvMode    = ENABLE;                       // Keep converting continuously after a trigger occurs (opposite of single mode / one conversion only)
-        halADC.Init.NbrOfConversion       = 0;                            // Number of channels we're going to convert
-        halADC.Init.DiscontinuousConvMode = DISABLE;                      // Perform all conversions in one complete sequence (as opposed to multiple discrete sequences)
-        halADC.Init.NbrOfDiscConversion   = 1;                            // Number of subdivisions for the main conversion sequence
-        halADC.Init.ExternalTrigConv      = ADC_SOFTWARE_START;           // Trigger manually with software
-        halADC.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_NONE;// Don't care since we're using ADC_SOFTWARE_START as our trigger
-        halADC.Init.DMAContinuousRequests = ENABLE;                       // Keep going once a full DMA transfer is done (opposite of single-shot mode)
-        halADC.Init.Overrun               = ADC_OVR_DATA_OVERWRITTEN;     // Overwrite the data in the DMA buffer upon overrun
-
-        __HAL_RCC_ADC1_CLK_ENABLE();
-        HAL_ADC_Init(&halADC);
-
-        // Start DMA
-        HAL_ADC_Stop(&halADC);
-
-        DMA = &this->halDMA;
-
         __HAL_RCC_DMA1_CLK_ENABLE();
-
-        this->halDMA.Instance                 = DMA1_Channel1;
-        this->halDMA.Init.Direction           = DMA_PERIPH_TO_MEMORY;    // Data going from the ADC peripheral to a buffer in memory
-        this->halDMA.Init.PeriphInc           = DMA_PINC_DISABLE;        // Disable peripheral pointer auto-increment
-        this->halDMA.Init.MemInc              = DMA_MINC_ENABLE;         // Enable memory pointer auto-increment
-        this->halDMA.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD; // 16-bit data alignment (the ADC runs in 12-bit mode)
-        this->halDMA.Init.MemDataAlignment    = DMA_MDATAALIGN_HALFWORD;
-        this->halDMA.Init.Mode                = DMA_CIRCULAR;            // Wrap around to the beginning of the buffer when we reach the end
-        this->halDMA.Init.Priority            = DMA_PRIORITY_VERY_HIGH;
-
-        HAL_DMA_Init(&this->halDMA);
         HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
         HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 
-        __HAL_LINKDMA(&halADC, DMA_Handle, this->halDMA);
+        initADC();
 
-        HAL_ADC_Start_DMA(&halADC, &buffer[0], MAX_CHANNELS);
+        initDMA();
+
+        dmaHandle = &this->halDMA;
+        adcHandle = &this->halADC;
 
         halADCisInit = true;
     }
 
-    // Add on the new channel
-    halADC.Init.NbrOfConversion++;
+    addChannel(rank);
+    initDMA();
 
+    HAL_ADC_Start_DMA(&halADC, &buffer[0], MAX_CHANNELS);
+
+    rank++;
+}
+
+float ADCf302x8::read() {
+    float percentage = readPercentage();
+    return percentage * MAX_VOLTAGE;
+}
+
+uint32_t ADCf302x8::readRaw() {
+    // Search through list of channels to determine which DMA buffer index to
+    // use
+    uint8_t channelNum = 0;
+    while(channels[channelNum] != pin)
+        channelNum++;
+    return static_cast<float>(buffer[channelNum]);
+}
+
+float ADCf302x8::readPercentage() {
+    uint32_t raw = readRaw();
+    return static_cast<float>(raw / MAX_RAW);
+}
+
+void ADCf302x8::initADC() {
+    halADC.Instance = ADC1;     // Only ADC the F3 supportes
+
+    halADC.Init.ClockPrescaler          = ADC_CLOCK_ASYNC_DIV1;
+    halADC.Init.Resolution              = ADC_RESOLUTION_12B;
+    halADC.Init.DataAlign               = ADC_DATAALIGN_RIGHT;
+    halADC.Init.ScanConvMode            = ADC_SCAN_ENABLE;
+    halADC.Init.EOCSelection            = DISABLE;
+    halADC.Init.LowPowerAutoWait        = DISABLE;
+    halADC.Init.ContinuousConvMode      = ENABLE;
+    halADC.Init.NbrOfConversion         = MAX_CHANNELS;
+    halADC.Init.DiscontinuousConvMode   = DISABLE;
+    halADC.Init.NbrOfDiscConversion     = 1;
+    halADC.Init.ExternalTrigConv        = ADC_SOFTWARE_START;
+    halADC.Init.ExternalTrigConvEdge    = ADC_EXTERNALTRIGCONVEDGE_NONE;
+    halADC.Init.DMAContinuousRequests   = ENABLE;
+    halADC.Init.Overrun                 = ADC_OVR_DATA_OVERWRITTEN;
+
+    __HAL_RCC_ADC1_CLK_ENABLE();
     HAL_ADC_Init(&halADC);
+}
 
+void ADCf302x8::initDMA() {
+
+    // HAL_ADC_Stop(&halADC);
+
+
+    // TODO: Add some way of selecting the next available DMA channel
+    // Ideally we would have a "DMA" class dedicated to DMA resource
+    // allocation.
+    halDMA.Instance                 = DMA1_Channel1;
+    halDMA.Init.Direction           = DMA_PERIPH_TO_MEMORY;
+    halDMA.Init.PeriphInc           = DMA_PINC_DISABLE;
+    halDMA.Init.MemInc              = DMA_MINC_ENABLE;
+    halDMA.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+    halDMA.Init.MemDataAlignment    = DMA_MDATAALIGN_HALFWORD;
+    halDMA.Init.Mode                = DMA_CIRCULAR;
+    halDMA.Init.Priority            = DMA_PRIORITY_VERY_HIGH;
+
+    HAL_DMA_Init(&halDMA);
+
+    __HAL_LINKDMA(&halADC, DMA_Handle, halDMA);
+}
+
+void ADCf302x8::addChannel(uint8_t rank) {
     GPIO_InitTypeDef gpioInit;
     ADC_ChannelConfTypeDef adcChannel;
 
@@ -167,34 +204,11 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
     // Subtract 1 because rank starts at 1
     channels[rank-1] = pin;
 
-    adcChannel.Rank = rank++;
+    adcChannel.Rank = rank;
     adcChannel.SamplingTime = ADC_SAMPLETIME_601CYCLES_5;
     adcChannel.Offset = 0;
 
     HAL_ADC_ConfigChannel(&halADC, &adcChannel);
-
-    HAL_DMA_Init(&this->halDMA);
-    HAL_ADC_Start_DMA(&halADC, &buffer[0], MAX_CHANNELS);
-
-}
-
-float ADCf302x8::read() {
-    float percentage = readPercentage();
-    return percentage * MAX_VOLTAGE;
-}
-
-uint32_t ADCf302x8::readRaw() {
-    // Search through list of channels to determine which DMA buffer index to
-    // use
-    uint8_t channelNum = 0;
-    while(channels[channelNum] != pin)
-        channelNum++;
-    return static_cast<float>(buffer[channelNum]);
-}
-
-float ADCf302x8::readPercentage() {
-    uint32_t raw = readRaw();
-    return static_cast<float>(raw / MAX_RAW);
 }
 
 }  // namespace EVT::core::IO

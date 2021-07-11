@@ -58,6 +58,24 @@ private:
     /// channel
     static uint32_t buffer[MAX_CHANNELS];
     static DMA_HandleTypeDef halDMA;
+
+    /**
+     * Initialize the HAL ADC handler. This should only have to be run once
+     */
+    void initADC();
+
+    /**
+     * Initialize the HALD DMA for the ADC, should only have to be run once
+     */
+    void initDMA();
+
+    /**
+     * Adds an ADC channel to the HAL ADC device.
+     *
+     * @param rank The "rank" which represents the order in which the channle
+     *      was added to the ADC starting at 1
+     */
+    void addChannel(uint8_t rank);
 };
 
 

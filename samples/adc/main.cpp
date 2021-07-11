@@ -16,19 +16,21 @@ int main() {
 
     uart.printf("Starting ADC test\r\n");
 
+    time::wait(500);
+
     IO::ADC& adc0 = IO::getADC<IO::Pin::PA_0>();
-    IO::ADC& adc1 = IO::getADC<IO::Pin::PA_1>();
+    // IO::ADC& adc1 = IO::getADC<IO::Pin::PA_1>();
 
     while(1) {
         uart.printf("--------------------\r\n");
         uart.printf("ADC0 : %0.2fV\r\n", adc0.read());
         uart.printf("ADC0: %.2f%%\r\n", adc0.readPercentage());
         uart.printf("ADC0 raw: %d\r\n\r\n", adc0.readRaw());
-
+/*
         uart.printf("ADC1: %.2fV\r\n", adc1.read());
         uart.printf("ADC1: %.2f%%\r\n", adc1.readPercentage());
         uart.printf("ADC1 raw: %d\r\n", adc1.readRaw());
-
+*/
         uart.printf("--------------------\r\n\r\n");
         time::wait(500);
     }
