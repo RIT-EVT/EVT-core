@@ -111,11 +111,11 @@ uint32_t ADCf302x8::readRaw() {
     uint8_t channelNum = 0;
     while(channels[channelNum] != pin)
         channelNum++;
-    return static_cast<float>(buffer[channelNum]);
+    return buffer[channelNum];
 }
 
 float ADCf302x8::readPercentage() {
-    uint32_t raw = readRaw();
+    float raw = static_cast<float>(readRaw());
     return static_cast<float>(raw / MAX_RAW);
 }
 
