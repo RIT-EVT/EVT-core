@@ -56,7 +56,7 @@ private:
     static Pin channels[MAX_CHANNELS];
     /// Buffer for DMA where each spot represents the value read in from a
     /// channel
-    static uint32_t buffer[MAX_CHANNELS];
+    static uint16_t buffer[MAX_CHANNELS];
     static DMA_HandleTypeDef halDMA;
 
     /**

@@ -1,6 +1,8 @@
 #include <EVT/io/platform/f3xx/f302x8/ADCf302x8.hpp>
 #include <EVT/io/pin.hpp>
 
+#include <HALf3/stm32f3xx.h>
+
 #include <HALf3/stm32f3xx_hal_adc.h>
 #include <HALf3/stm32f3xx_hal_adc_ex.h>
 
@@ -13,8 +15,48 @@ namespace {
 
 }  // namespace
 
-extern "C" void DMA1_Channel1_IRQHandler() {
+extern "C" void DMA1_Channel1_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle);
+}
+
+/**
+ * Current "work around" solution that ensurs the clock settings are applied
+ * and the HAL is initialized. This will later be moved into a common place
+ * that will happen once at system start up. For the time being this can be
+ * used for basic setup. This is not a long term solution.
+ */
+static void lowLevelInit() {
+    HAL_Init();
+    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+    RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+    RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+
+    /** Initializes the RCC Oscillators according to the specified parameters
+    * in the RCC_OscInitTypeDef structure.
+    */
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+    RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL2;
+    HAL_RCC_OscConfig(&RCC_OscInitStruct);
+
+    /** Initializes the CPU, AHB and APB buses clocks
+    */
+    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+    RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+    HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0);
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC1;
+    PeriphClkInit.Adc1ClockSelection = RCC_ADC1PLLCLK_DIV1;
+
+    HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
+
 }
 
 namespace EVT::core::IO {
@@ -22,7 +64,7 @@ namespace EVT::core::IO {
 // Init static member variables
 ADC_HandleTypeDef ADCf302x8::halADC = {0};
 Pin ADCf302x8::channels[MAX_CHANNELS];
-uint32_t ADCf302x8::buffer[MAX_CHANNELS];
+uint16_t ADCf302x8::buffer[MAX_CHANNELS];
 DMA_HandleTypeDef ADCf302x8::halDMA = {0};
 
 
@@ -38,9 +80,8 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
     if (!halADCisInit) {
 
         __HAL_RCC_DMA1_CLK_ENABLE();
-        HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
-        HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 
+        lowLevelInit();
         initADC();
 
         initDMA();
@@ -54,7 +95,7 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
     addChannel(rank);
     initDMA();
 
-    HAL_ADC_Start_DMA(&halADC, &buffer[0], MAX_CHANNELS);
+    HAL_ADC_Start_DMA(&halADC, (uint32_t*)&buffer[0], MAX_CHANNELS);
 
     rank++;
 }
@@ -118,6 +159,9 @@ void ADCf302x8::initDMA() {
     halDMA.Init.Priority            = DMA_PRIORITY_VERY_HIGH;
 
     HAL_DMA_Init(&halDMA);
+
+    HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 
     __HAL_LINKDMA(&halADC, DMA_Handle, halDMA);
 }
