@@ -2,7 +2,7 @@
 
 namespace EVT::core::IO {
 
-ADC::ADC (Pin pin) {
+ADC::ADC(Pin pin) {
     this->pin = pin;
 }
 

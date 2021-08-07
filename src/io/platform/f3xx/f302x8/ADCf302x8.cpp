@@ -56,7 +56,6 @@ static void lowLevelInit() {
     PeriphClkInit.Adc1ClockSelection = RCC_ADC1PLLCLK_DIV1;
 
     HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
-
 }
 
 namespace EVT::core::IO {
@@ -69,7 +68,6 @@ DMA_HandleTypeDef ADCf302x8::halDMA = {0};
 
 
 ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
-
     // Flag representing if the ADC has been configured yet
     static bool halADCisInit = false;
     // "Rank" represents the order in which the channels are added
@@ -78,7 +76,6 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
     // Initialization of the HAL ADC should only take place once since there is
     // only one ADC device which has muliple channels supported.
     if (!halADCisInit) {
-
         __HAL_RCC_DMA1_CLK_ENABLE();
 
         lowLevelInit();
@@ -95,7 +92,8 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
     addChannel(rank);
     initDMA();
 
-    HAL_ADC_Start_DMA(&halADC, (uint32_t*)&buffer[0], MAX_CHANNELS);
+    HAL_ADC_Start_DMA(&halADC, reinterpret_cast<uint32_t*>(&buffer[0]),
+            MAX_CHANNELS);
 
     rank++;
 }
@@ -109,7 +107,7 @@ uint32_t ADCf302x8::readRaw() {
     // Search through list of channels to determine which DMA buffer index to
     // use
     uint8_t channelNum = 0;
-    while(channels[channelNum] != pin)
+    while (channels[channelNum] != pin)
         channelNum++;
     return buffer[channelNum];
 }
@@ -142,9 +140,7 @@ void ADCf302x8::initADC() {
 }
 
 void ADCf302x8::initDMA() {
-
     // HAL_ADC_Stop(&halADC);
-
 
     // TODO: Add some way of selecting the next available DMA channel
     // Ideally we would have a "DMA" class dedicated to DMA resource
@@ -176,8 +172,7 @@ void ADCf302x8::addChannel(uint8_t rank) {
     gpioInit.Pull = GPIO_NOPULL;
 
     // Which GPIO bank?
-    switch ((static_cast<uint8_t>(pin) & 0xF0) >> 4)
-    {
+    switch ((static_cast<uint8_t>(pin) & 0xF0) >> 4) {
         case 0x0:
             __HAL_RCC_GPIOA_CLK_ENABLE();
             HAL_GPIO_Init(GPIOA, &gpioInit);
@@ -191,11 +186,10 @@ void ADCf302x8::addChannel(uint8_t rank) {
             HAL_GPIO_Init(GPIOC, &gpioInit);
             break;
         default:
-            break; // Should never get here
+            break;  // Should never get here
     }
 
-    switch (pin)
-    {
+    switch (pin) {
         case Pin::PA_0:
             adcChannel.Channel = ADC_CHANNEL_1;
             break;
@@ -242,7 +236,7 @@ void ADCf302x8::addChannel(uint8_t rank) {
             adcChannel.Channel = ADC_CHANNEL_15;
             break;
         default:
-            break; // Should never get here
+            break;  // Should never get here
     }
 
     // Subtract 1 because rank starts at 1

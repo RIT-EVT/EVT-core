@@ -21,7 +21,7 @@ int main() {
     IO::ADC& adc0 = IO::getADC<IO::Pin::PA_0>();
     IO::ADC& adc1 = IO::getADC<IO::Pin::PA_1>();
 
-    while(1) {
+    while (1) {
         uart.printf("--------------------\r\n");
         uart.printf("ADC0 : %.2fV\r\n", adc0.read());
         uart.printf("ADC0: %.2f%%\r\n", adc0.readPercentage() * 100);
@@ -34,5 +34,4 @@ int main() {
         uart.printf("--------------------\r\n\r\n");
         time::wait(500);
     }
-
 }
