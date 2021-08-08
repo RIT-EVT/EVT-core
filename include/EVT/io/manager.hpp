@@ -3,11 +3,13 @@
 
 #include <stdint.h>
 
+#include <EVT/io/ADC.hpp>
 #include <EVT/io/CAN.hpp>
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/PWM.hpp>
 
 #ifdef STM32F302x8
+    #include <EVT/io/platform/f3xx/f302x8/ADCf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/CANf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/PWMf302x8.hpp>
@@ -16,6 +18,19 @@
 
 namespace EVT::core::IO
 {
+
+/**
+ * Get an instance of an ADC channel
+ *
+ * @param pin The pin to use with the ADC
+ */
+template<Pin pin>
+ADC& getADC() {
+    #ifdef STM32F302x8
+        static ADCf302x8 adc(pin);
+        return adc;
+    #endif
+}
 
 /**
  * Get an instance of a CAN interface.

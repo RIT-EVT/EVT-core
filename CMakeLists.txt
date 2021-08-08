@@ -97,10 +97,12 @@ add_library(${PROJECT_NAME} STATIC)
 
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE
+    src/io/ADC.cpp
     src/io/CAN.cpp
     src/io/GPIO.cpp
     src/io/PWM.cpp
     src/io/UART.cpp
+    src/io/platform/f3xx/f302x8/ADCf302x8.cpp
     src/io/platform/f3xx/f302x8/CANf302x8.cpp
     src/io/platform/f3xx/f302x8/GPIOf302x8.cpp
     src/io/platform/f3xx/f302x8/PWMf302x8.cpp
@@ -133,7 +135,7 @@ set(CMAKE_CXX_FLAGS         "${EVT_COMMON_FLAGS} \
 # TODO: Check for platform to decide which linker script to use
 set(CMAKE_EXE_LINKER_FLAGS  "-mfloat-abi=hard -specs=nano.specs -specs=nosys.specs \
                             -T ${PROJECT_SOURCE_DIR}/libs/HALf3/STM32F302C8Tx_FLASH.ld \
-                            -lc -lm -lnosys")
+                            -lc -lm -lnosys -u _printf_float")
 
 ###############################################################################
 # Handle dependencies
