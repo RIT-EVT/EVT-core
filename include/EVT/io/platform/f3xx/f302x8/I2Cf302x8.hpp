@@ -1,24 +1,23 @@
-#ifndef _EVT_I2C_
-#define _EVT_I2C_
+#ifndef _EVT_I2Cf302x8_
+#define _EVT_I2Cf302x8_
 
 #include <stdint.h>
 
-namespace EVT::core::IO {
-// Forward declarations:
-// The different pins are hardware specific. Forward declaration to allow
-// at compilation time the decision of which pins should be used.
-enum class Pin;
+#include <EVT/io/I2C.hpp>
+#include <HALf3/stm32f3xx.h>
 
-class I2C {
+namespace EVT::core::IO {
+
+class I2Cf302x8 : public I2C {
 public:
     /**
-     * Make an instance of an I2C interface that will use the given pins
-     * for clock and data lines.
+     * Make an instance of an I2C interface for the F3. Will determine
+     * which I2C bus of the STM to use based on the provided pins.
      *
-     * @param sclPin The clock pin
-     * @param sdaPin The data pin
+     * @param sclPin The I2C clock pin
+     * @param sdaPin The I2C data pin
      */
-    I2C(Pin sclPin, Pin sdaPin);
+    I2Cf302x8(Pin sclPin, Pin sdaPin);
 
     /**
      * Write a single byte out over I2C.
@@ -26,7 +25,7 @@ public:
      * @param addr The 7 bit unshifted I2C address to write to
      * @param byte The value to write over I2C.
      */
-    virtual void write(uint8_t addr, uint8_t byte) = 0;
+    void write(uint8_t addr, uint8_t byte);
 
     /**
      * Read a single byte back from the I2C bus.
@@ -34,7 +33,7 @@ public:
      * @param addr The 7 bit unshifted I2C address to read from.
      * @return The byte read from the address.
      */
-    virtual uint8_t read(uint8_t addr) = 0;
+    uint8_t read(uint8_t addr);
 
     /**
      * Write out multiple bytes over I2C. Each byte will be written one by
@@ -77,10 +76,10 @@ public:
             uint8_t* bytes, uint8_t length);
 
 private:
-    /** The I2C clock line */
-    Pin sclPin;
-    /** The I2C data line */
-    Pin sdaPin;
+    constexpr static uint32_t DEFAULT_I2C_FREQ = 100000;
+    constexpr static uint32_t DEFAULT_I2C_TIMEOUT = 100;
+    /** Interface into the HAL */
+    I2C_HandleTypeDef halI2C;
 };
 
 }  // namespace EVT::core::IO
