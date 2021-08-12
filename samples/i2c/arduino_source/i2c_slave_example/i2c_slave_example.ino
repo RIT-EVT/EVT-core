@@ -9,6 +9,8 @@
 void receive_handler(int count);
 void request_handler();
 
+char response_buf[] = "o";
+
 void setup()
 {
     Wire.begin(4);  // Join the I2C bus with an address of 4
@@ -29,12 +31,15 @@ void receive_handler(int count)
     while (Wire.available())    // While there are chars to read
     {
         temp = Wire.read();     // Read a char
-        Serial.print(temp);     // Print it to the terminal
+        if(temp == 0)
+          response_buf[0] = 'o';
+        else
+          response_buf[0] = 'k';
     }
     Serial.println();           // Move to the next line
 }
 
 void request_handler()
 {
-    Wire.write("OK");   // Respond with the message expected by the master.
+    Wire.write(response_buf);   // Respond with the message expected by the master.
 }
