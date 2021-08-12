@@ -55,6 +55,15 @@ public:
     void read(uint8_t addr, uint8_t* bytes, uint8_t length);
 
     /**
+     * Write a value to a register has that 8 bit addresses and 8 bit values.
+     *
+     * @param addr The 7 bit unshifted I2C address to write to.
+     * @param reg The 8 bit register
+     * @param byte The byte to write out
+     */
+    void writeReg(uint8_t addr, uint8_t reg, uint8_t byte);
+
+    /**
      * Read a value from a register that has an 8 bit address and 8 bit value
      *
      * @param addr The 7 bit unshifted I2C address to read from.
@@ -62,6 +71,18 @@ public:
      * @return The 8 bit value of the register.
      */
     uint8_t readReg(uint8_t addr, uint8_t reg);
+
+    /**
+     * Write out a multi byte register value.
+     *
+     * @param addr The 7 bit unshifted I2C address to write to
+     * @param reg The register bytes
+     * @param regLength The number of bytes in the register address
+     * @param bytes The data to write out
+     * @param length The number of bytes in the data
+     */
+    void writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
+            uint8_t* bytes, uint8_t length);
 
     /**
      * Read a value from a register.
@@ -77,6 +98,7 @@ public:
 
 private:
     constexpr static uint32_t DEFAULT_I2C_FREQ = 100000;
+    /** Timeout in milliseconds **/
     constexpr static uint32_t DEFAULT_I2C_TIMEOUT = 100;
     /** Interface into the HAL */
     I2C_HandleTypeDef halI2C;
