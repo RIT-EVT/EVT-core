@@ -11,12 +11,12 @@ namespace EVT::core::IO {
     I2C::I2C(Pin sclPin, Pin sdaPin): sclPin(sclPin), sdaPin(sdaPin) {}
 
     void I2C::write(uint8_t addr, uint8_t* bytes, uint8_t length) {
-        for(int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++)
             write(addr, bytes[i]);
     }
 
     void I2C::read(uint8_t addr, uint8_t* bytes, uint8_t length) {
-        for(int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++)
             bytes[i] = read(addr);
     }
 
@@ -38,10 +38,10 @@ namespace EVT::core::IO {
     void I2C::readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
             uint8_t* bytes, uint8_t length) {
         // Write out register address
-        for(int i = 0; i < regLength; i++)
+        for (int i = 0; i < regLength; i++)
             write(addr, reg[i]);
         // Read in response
-        for(int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++)
             bytes[i] = read(addr);
     }
 

@@ -39,5 +39,4 @@ int main() {
         // Wait half a second before repeating the test
         time::wait(500);
     }
-
 }

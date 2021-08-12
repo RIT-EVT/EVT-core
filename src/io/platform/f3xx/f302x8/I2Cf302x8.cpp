@@ -36,12 +36,11 @@ namespace EVT::core::IO {
             GPIO_InitTypeDef gpioInit;
 
         uint8_t portId = getPortID(sclPin);
-        switch (portId)
-        {
+        switch (portId) {
             case 1:
                 halI2C.Instance = I2C1;
 
-                if(!(__HAL_RCC_I2C1_IS_CLK_ENABLED()))
+                if (!(__HAL_RCC_I2C1_IS_CLK_ENABLED()))
                     __HAL_RCC_I2C1_CLK_ENABLE();
 
                 gpioInit.Alternate = GPIO_AF4_I2C1;
@@ -50,7 +49,7 @@ namespace EVT::core::IO {
             case 2:
                 halI2C.Instance = I2C2;
 
-                if(!(__HAL_RCC_I2C2_IS_CLK_ENABLED()))
+                if (!(__HAL_RCC_I2C2_IS_CLK_ENABLED()))
                     __HAL_RCC_I2C2_CLK_ENABLE();
 
                 gpioInit.Alternate = GPIO_AF4_I2C2;
@@ -59,7 +58,7 @@ namespace EVT::core::IO {
             case 3:
                 halI2C.Instance = I2C3;
 
-                if(!(__HAL_RCC_I2C3_IS_CLK_ENABLED()))
+                if (!(__HAL_RCC_I2C3_IS_CLK_ENABLED()))
                     __HAL_RCC_I2C3_CLK_ENABLE();
 
                 gpioInit.Alternate = GPIO_AF2_I2C3;
@@ -79,10 +78,8 @@ namespace EVT::core::IO {
         gpioInit.Pull       = GPIO_NOPULL;
         gpioInit.Speed      = GPIO_SPEED_FREQ_HIGH;
 
-        for(uint8_t i = 0; i < 2; i++)
-        {
-            switch((static_cast<uint8_t>(i2cPins[i]) & 0xF0) >> 4)
-            {
+        for (uint8_t i = 0; i < 2; i++) {
+            switch ((static_cast<uint8_t>(i2cPins[i]) & 0xF0) >> 4) {
                 case 0x0:
                     __HAL_RCC_GPIOA_CLK_ENABLE();
                     HAL_GPIO_Init(GPIOA, &gpioInit);
@@ -104,8 +101,11 @@ namespace EVT::core::IO {
             }
         }
 
-        halI2C.Init.Timing           = 0x00310309; // 8MHz = 0x00310309; 16MHz = 0x10320309; 48MHz = 0x50330309
-                                                   // Timing Register Layout(Bits): [PRESC(4)][RESERVED(4)][SCLDEL(4)][SDADEL(4)][SCLH(8)][SCLL(8)]
+        // 8MHz = 0x00310309; 16MHz = 0x10320309; 48MHz = 0x50330309
+        halI2C.Init.Timing           = 0x00310309;
+        // Timing Register Layout(Bits): [PRESC(4)][RESERVED(4)]
+        //                               [SCLDEL(4)][SDADEL(4)]
+        //                               [SCLH(8)][SCLL(8)]
         halI2C.Init.OwnAddress1      = 0;
         halI2C.Init.AddressingMode   = I2C_ADDRESSINGMODE_7BIT;
         halI2C.Init.DualAddressMode  = I2C_DUALADDRESS_DISABLE;
