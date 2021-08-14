@@ -9,6 +9,8 @@
 #include <EVT/io/PWM.hpp>
 
 #ifdef STM32F302x8
+    #include <EVT/platform/f3xx/stm32f302x8.hpp>
+
     #include <EVT/io/platform/f3xx/f302x8/ADCf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/CANf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
@@ -19,6 +21,17 @@
 
 namespace EVT::core::IO
 {
+
+/**
+ * Initialize the low level components of the system. This is highly
+ * platform specific and usually involves clock setup and other peripheral
+ * init logic.
+ */
+void init() {
+    #ifndef STM32F302x8
+        stm32f302x8_init();
+    #endif
+}
 
 /**
  * Get an instance of an ADC channel

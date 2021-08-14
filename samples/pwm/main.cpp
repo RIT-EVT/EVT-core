@@ -10,6 +10,9 @@ namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
 
 int main() {
+    // Initialize system
+    IO::init();
+
     IO::PWM& pwm = IO::getPWM<IO::Pin::PC_0>();
     // 1 second period
     pwm.setPeriod(1);

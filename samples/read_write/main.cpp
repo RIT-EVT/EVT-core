@@ -14,6 +14,9 @@ namespace DEV = EVT::core::DEV;
 namespace time = EVT::core::time;
 
 int main() {
+    // Initialize system
+    IO::init();
+
     // Setup the GPIO input pin
     IO::GPIO& inputGPIO = IO::getGPIO<IO::Pin::PC_3>(
             IO::GPIO::Direction::INPUT);

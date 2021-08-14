@@ -43,6 +43,9 @@ class TestClass {
 };
 
 int main() {
+    // Initialize system
+    IO::init();
+
     // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 

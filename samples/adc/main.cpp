@@ -12,6 +12,9 @@ namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
 
 int main() {
+    // Initialize system
+    IO::init();
+
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     uart.printf("Starting ADC test\r\n");

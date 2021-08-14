@@ -23,6 +23,9 @@ constexpr uint8_t O_REGISTER = 0x00;
 constexpr uint8_t K_REGISTER = 0x01;
 
 int main() {
+    // Initialize system
+    IO::init();
+
     IO::I2C& i2c = IO::getI2C<IO::Pin::PB_8, IO::Pin::PB_9>();
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
