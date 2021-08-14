@@ -12,6 +12,9 @@ namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
 
 int main() {
+    // Initialize system
+    IO::init();
+
     // Get CAN instance with loopback enabled
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>(true);
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
