@@ -12,6 +12,7 @@
     #include <EVT/io/platform/f3xx/f302x8/ADCf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/CANf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
+    #include <EVT/io/platform/f3xx/f302x8/I2Cf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/PWMf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/UARTf302x8.hpp>
 #endif
@@ -57,6 +58,20 @@ GPIO& getGPIO(GPIO::Direction direction=GPIO::Direction::OUTPUT) {
     #ifdef STM32F302x8
         static GPIOf302x8 gpioPin(pin, direction);
         return gpioPin;
+    #endif
+}
+
+/**
+ * Get an I2C master interface.
+ *
+ * @param scl The I2C clock pin
+ * @param sda The I2C data pin
+ */
+template<Pin scl, Pin sda>
+I2C& getI2C() {
+    #ifdef STM32F302x8
+        static I2Cf302x8 i2c(scl, sda);
+        return i2c;
     #endif
 }
 
