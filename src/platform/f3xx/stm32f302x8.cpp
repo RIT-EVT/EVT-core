@@ -2,6 +2,8 @@
 
 #include <EVT/platform/f3xx/stm32f302x8.hpp>
 
+namespace EVT::core::platform {
+
 void stm32f302x8_init() {
     HAL_Init();
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
@@ -35,3 +37,5 @@ void stm32f302x8_init() {
     HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
 
 }
+
+}  //namespace EVT::core::platform
