@@ -28,8 +28,8 @@ namespace EVT::core::IO
  * init logic.
  */
 void init() {
-    #ifndef STM32F302x8
-        stm32f302x8_init();
+    #ifdef STM32F302x8
+    EVT::core::platform::stm32f302x8_init();
     #endif
 }
 
