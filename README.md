@@ -65,10 +65,10 @@ Below is the state of supported features on each platform.
 
 NOTE: In these early releases testing is not fully verbose.
 
-| Platform    | I2C | SPI | PWM                | CAN | ADC | Flash | RTC | UART                | GPIO                |
-|-------------|-----|-----|--------------------|-----|-----|-------|-----|---------------------|---------------------|
-| STM32F302R8 | :x: | :x: | :heavy_check_mark: | :heavy_check_mark: | :x: | :x:   | :x: | :heavy_check_mark:  | :heavy_check_mark:  |
-| STM32F446RE | :x: | :x: | :x:                | :x: | :x: | :x:   | :x: | :x:                 | :x:                 |
+| Platform    | I2C                | SPI | PWM                | CAN                | ADC                | Flash | RTC | UART                | GPIO                |
+|-------------|--------------------|-----|--------------------|--------------------|--------------------|-------|-----|---------------------|---------------------|
+| STM32F302R8 | :heavy_check_mark: | :x: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :x:   | :x: | :heavy_check_mark:  | :heavy_check_mark:  |
+| STM32F446RE | :x:                | :x: | :x:                | :x:                | :x:                | :x:   | :x: | :x:                 | :x:                 |
 
 ## Future Features
 
@@ -98,5 +98,3 @@ or concepts that EVT-Core should support.
 accomplished by calling the target handler once from main code execution.
 * Style checking should be part of the build process.
 * Add documentation for using this library.
-
-## Release Notes
