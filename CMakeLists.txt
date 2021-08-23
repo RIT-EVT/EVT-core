@@ -57,7 +57,7 @@ endif()
 # Project Setup
 ###############################################################################
 project(EVT
-        VERSION 0.0.1
+        VERSION 0.1.1
         LANGUAGES CXX C
 )
 
