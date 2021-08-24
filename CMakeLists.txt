@@ -5,6 +5,11 @@ cmake_minimum_required(VERSION 3.15)
 
 include(CMakeDependentOption)
 
+project(EVT
+        VERSION 0.0.1
+        LANGUAGES CXX C
+)
+
 ###############################################################################
 # Provide build options
 ###############################################################################
@@ -28,13 +33,6 @@ cmake_dependent_option(EVT_BUILD_SAMPLES
 cmake_dependent_option(EVT_INSTALL
     "Install the EVT library" OFF
     "NOT EVT_IS_MAIN_PROJECT" ON
-)
-
-# Determine if the sample code should be added. By default, if this is the
-# main project then samples will be compiled, otherwise they will not.
-cmake_dependent_option(EVT_BUILD_SAMPLES
-    "Build samples" OFF
-    "EVT_IS_MAIN_PROJECT" ON
 )
 
 # EVT Linking option, linting revolves around cpplint which is a tool that
@@ -88,11 +86,6 @@ endif()
 ###############################################################################
 # Project Setup
 ###############################################################################
-project(EVT
-    VERSION 0.0.1
-    LANGUAGES CXX C
-)
-
 add_library(${PROJECT_NAME} STATIC)
 
 # Add sources
