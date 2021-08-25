@@ -75,7 +75,14 @@ public:
      *
      * @param payload The payload to copy over
      */
-    void setPayload(uint8_t* payload);
+    void setPayload(const uint8_t* payload);
+    
+    /**
+     * Assignment operator where the contents of the CANMessage is copied into
+     * this message.
+     * @param other The CANMessage to copy from
+     */
+    CANMessage& operator= (const CANMessage& other);
 
 private:
     /** ID of the CAN message */

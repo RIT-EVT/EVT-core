@@ -42,8 +42,15 @@ void CANMessage::setDataLength(uint8_t size) {
     this->dataLength = size;
 }
 
-void CANMessage::setPayload(uint8_t *payload) {
+void CANMessage::setPayload(const uint8_t *payload) {
     std::memcpy(this->payload, payload, CAN_MAX_PAYLOAD_SIZE);
+}
+
+CANMessage& CANMessage::operator=(const CANMessage& other) {
+    this->id = other.id;
+    this->dataLength = other.dataLength;
+    this->setPayload(other.payload);
+    return *this;
 }
 
 }  // namespace EVT::core::IO
