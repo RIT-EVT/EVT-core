@@ -1,3 +1,3 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/evt-core_build.cmake)
-
-make_exe(can main.cpp)
+# Add all samples
+add_subdirectory(loopback)
+add_subdirectory(back_and_forth)
