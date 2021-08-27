@@ -3,9 +3,11 @@
 ###############################################################################
 cmake_minimum_required(VERSION 3.15)
 
-include(CMakeDependentOption)
 set(EVT_CORE_DIR     ${CMAKE_SOURCE_DIR})
+
+include(CMakeDependentOption)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_compiler.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_install.cmake)
 
 ###############################################################################
 # Project Setup
@@ -75,32 +77,7 @@ target_link_libraries(${PROJECT_NAME}
 ###############################################################################
 # Install and expose library
 ###############################################################################
-# Expose headers
-target_include_directories(${PROJECT_NAME}
-    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
-           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-)
-
-target_compile_definitions(${PROJECT_NAME} PRIVATE -D_EXPORT)
-
-set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
-
-install(TARGETS ${PROJECT_NAME}
-    EXPORT ${PROJECT_NAME}-config
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-)
-
-install(
-    EXPORT ${PROJECT_NAME}-config
-    NAMESPACE ${PROJECT_NAME}::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-)
-
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
-)
+install_and_expose(${PROJECT_NAME})
 
 ###############################################################################
 # Handle adding samples
