@@ -1,6 +1,8 @@
-###############################################################################
-# Compiler settings
-###############################################################################
+#[[
+Cmake include file that contains all compiler variables and flags for EVT-core
+and related projects.
+Requires: `${EVT_CORE_DIR}` cmake variable to be set.
+]]#
 # Verify that the ARM tools path is set
 if(NOT DEFINED ENV{GCC_ARM_TOOLS_PATH})
     message(FATAL_ERROR

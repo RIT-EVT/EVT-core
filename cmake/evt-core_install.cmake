@@ -1,6 +1,6 @@
- ###############################################################################
- # Install and expose library
- ###############################################################################
+#[[
+Macro to install and expose the library associated with the currently built project.
+]]#
 macro(install_and_expose proj_name)
    
     # Expose headers
