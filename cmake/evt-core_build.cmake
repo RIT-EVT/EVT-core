@@ -25,5 +25,5 @@ macro(make_exe proj_name sources)
     COMMENT "Building ${HEX_FILE} \nBuilding ${BIN_FILE}")
 
     # Link the EVT-core library
-    target_link_libraries(${proj_name} EVT)
+    target_link_libraries(${proj_name} PUBLIC EVT)
 endmacro()
