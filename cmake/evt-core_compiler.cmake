@@ -32,6 +32,12 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
 set (CMAKE_CXX_STANDARD 17)
 
+# Generate compile_commands.json
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # does not produce the json file
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "") # works
+
+include(GNUInstallDirs)
+
 # EVT Linking option, linting revolves around cpplint which is a tool that
 # conforms to Google's C++ style guide. cpplint needs to be installed.
 option(EVT_LINT

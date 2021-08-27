@@ -38,12 +38,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/utils/platform/f3xx/time.cpp
 )
 
-# Generate compile_commands.json
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # does not produce the json file
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "") # works
-
-include(GNUInstallDirs)
-
 ###############################################################################
 # Provide build options
 ###############################################################################
