@@ -5,43 +5,6 @@ cmake_minimum_required(VERSION 3.15)
 
 include(CMakeDependentOption)
 
-project(EVT
-        VERSION 0.0.1
-        LANGUAGES CXX C
-)
-
-###############################################################################
-# Provide build options
-###############################################################################
-# Check to see if this project is being built on its own, or as a dependency
-# of another project
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    set(EVT_IS_MAIN_PROJECT TRUE)
-else()
-    set(EVT_IS_MAIN_PROJECT FALSE)
-endif()
-
-# Determine if the sample code should be built. Defaults to false if this
-# project is not the main project.
-cmake_dependent_option(EVT_BUILD_SAMPLES
-    "Build the EVT core samples" ON
-    "EVT_IS_MAIN_PROJECT" OFF
-)
-
-# Determine if the project should be installed and made accessible as a
-# library. Defaults to true if this project is not the main project
-cmake_dependent_option(EVT_INSTALL
-    "Install the EVT library" OFF
-    "NOT EVT_IS_MAIN_PROJECT" ON
-)
-
-# EVT Linking option, linting revolves around cpplint which is a tool that
-# conforms to Google's C++ style guide. cpplint needs to be installed.
-option(EVT_LINT
-    "Lint source code, need to have cpplint installed"
-    OFF
-)
-
 ###############################################################################
 # Compiler settings
 ###############################################################################
@@ -76,6 +39,13 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
 set (CMAKE_CXX_STANDARD 17)
 
+# EVT Linking option, linting revolves around cpplint which is a tool that
+# conforms to Google's C++ style guide. cpplint needs to be installed.
+option(EVT_LINT
+        "Lint source code, need to have cpplint installed"
+        OFF
+        )
+
 if(EVT_LINT)
     # TODO: In the future these filter settings sound be included in cfg
     # files.
@@ -86,6 +56,11 @@ endif()
 ###############################################################################
 # Project Setup
 ###############################################################################
+project(EVT
+        VERSION 0.0.1
+        LANGUAGES CXX C
+)
+
 add_library(${PROJECT_NAME} STATIC)
 
 # Add sources
@@ -114,6 +89,24 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # does not produce the json file
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "") # works
 
 include(GNUInstallDirs)
+
+###############################################################################
+# Provide build options
+###############################################################################
+# Check to see if this project is being built on its own, or as a dependency
+# of another project
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    set(EVT_IS_MAIN_PROJECT TRUE)
+else()
+    set(EVT_IS_MAIN_PROJECT FALSE)
+endif()
+
+# Determine if the sample code should be built. Defaults to false if this
+# project is not the main project.
+cmake_dependent_option(EVT_BUILD_SAMPLES
+        "Build the EVT core samples" ON
+        "EVT_IS_MAIN_PROJECT" OFF
+)
 
 ###############################################################################
 # Set compiler and linker flags
