@@ -1,4 +1,6 @@
 #include <HALf3/stm32f3xx.h>
+#include <HALf3/stm32f3xx_hal.h>
+#include <HALf3/stm32f3xx_it.h>
 
 #include <EVT/platform/f3xx/stm32f302x8.hpp>
 
@@ -18,7 +20,7 @@ void stm32f302x8_init() {
     RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
     RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-    RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL2;
+    RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL4;
     HAL_RCC_OscConfig(&RCC_OscInitStruct);
 
     /** Initializes the CPU, AHB and APB buses clocks
@@ -36,6 +38,7 @@ void stm32f302x8_init() {
 
     HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
 
+    SysTick_Handler();
 }
 
 }  //namespace EVT::core::platform
