@@ -152,7 +152,7 @@ void UARTf302x8::puts(const char* s) {
 
 char UARTf302x8::getc() {
     uint8_t c;
-    HAL_UART_Receive(&halUART, &c, 1, DEFAULT_TIMEOUT);
+    while(HAL_UART_Receive(&halUART, &c, 1, DEFAULT_TIMEOUT) == HAL_TIMEOUT);
     return static_cast<char>(c);
 }
 
