@@ -99,7 +99,7 @@ public:
      * condition.
      * @param edge The edge trigger event to trigger the interrupt
      */
-    virtual void registerIrq(TriggerEdge edge, EVT::core::types::void_function_ptr_t irqHandler);
+    virtual void registerIrq(TriggerEdge edge, EVT::core::types::void_function_ptr_t irqHandler) = 0;
 
     /**
      * Preferred method to get an instance of a GPIO interface. This method
