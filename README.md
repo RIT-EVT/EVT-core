@@ -19,25 +19,54 @@ programming. Contained is abstractions for working with I2C, SPI, GPIO, PWM,
 RTC, etc.
 
 ### How is EVT-Core Used?
+
 EVT-Core is a CMake library and as such can be built as a library and
 manually linked to, or can be added as a sub-directory to a larger project.
 Further information is to come.
 
 ### How do I Build the Code?
-The compilation process is handled via CMake and in general follows standard
-practices. The noticable addition is the need to setup an environment variable
-which stores the location to the gcc arm toolchain. Below is an example of
-how to set the environment variable on Linux/Unix.
 
-```bash
+The compilation process is handled via CMake following general standard
+practices. The noticable addition is the need for an environment variable
+to identify the location of the GCC ARM toolchain which is used for compiling
+for the ARM micrcontrollers.
+
+On your system [install CMake](https://cmake.org/install/).
+
+#### Step 1. Install GCC ARM Tools
+
+First install the GCC ARM tools for your platform. You can find the
+installation [link here](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads).
+On Mac OS and Linux downloading the tarball file is preferred.
+
+After installing, take note of where the files have been installed. On Windows
+systems the files are often installed in `C:\Program Files` or `C:\Program Files (x86)`.
+On Mac OS and Linux if you downloaded a tarball you can extract the files to
+a known location. From here you will need to set and environment variable to
+the `bin/` folder contained in the installation.
+
+#### Step 2. Setting Environment Variable
+
+Next an environment variable needs to be set. On Windows follow
+the directions [here](https://kb.wisc.edu/cae/page.php?id=24500). For variable
+name enter `GCC_ARM_TOOLS_PATH`. For the value, select "Browse Directory.."
+and locate the GCC ARM installation and select the "bin" folder contained. After
+pressing "Ok" a system restart may be required for the variable to take effect.
+
+For Mac OS and Linux, setting an environment variable can be done by
+editing `.bashrc` on Linux and `.bash_profile` or `.zshrc` on Mac OS. In
+the file that exists on your system, add the line below.
+
+```
 export GCC_ARM_TOOLS_PATH=/path/to/gcc_arm_tools_path/bin/
 ```
 
-The compilation logic will make use of that enivronment variable to locate
-the needed tools to generate the code.
+After adding that line, restart your terminal for the changes to take effect.
 
-After that, the compilation process follows standard practice. Below is
-an example compilation process.
+#### Step 3. Build EVT-core
+
+Below are the commands for building EVT-core. You can execute them from
+within the cloned EVT-core repository from the terminal.
 
 ```bash
 mkdir build/
@@ -46,18 +75,8 @@ cmake ../
 make -j
 ```
 
-After that, in the `build` folder will be the compiled library code as well
-as generated samples.
-
-For building with linting enabled (recommended). First install cpplint, then
-run the installation with the modification below.
-
-```bash
-mkdir build/
-cd build/
-cmake -DEVT_LINT=ON ../
-make -j
-```
+After running those commands, you should have a fully build EVT-core including
+samples.
 
 ## Features Supported
 
