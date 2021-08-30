@@ -10,7 +10,7 @@
 
 
 namespace {
-    void (*INTERRUPT_HANDLERS[16])() = {0};
+    void (*INTERRUPT_HANDLERS[16])() = {nullptr};
 }
 
 extern "C" void EXTI0_IRQHandler(void) {
@@ -112,8 +112,61 @@ GPIO::State GPIOf302x8::readPin() {
     return static_cast<GPIO::State>(HAL_GPIO_ReadPin(this->port, this->halPin));
 }
 
-void regsiterIrq(GPIO::TriggerEdge edge, EVT::core::types::void_function_ptr_t irqHandler) {
+void GPIOf302x8::registerIrq(TriggerEdge edge, EVT::core::types::void_function_ptr_t irqHandler) {
+    GPIO_InitTypeDef gpioInit;
 
+    gpioInit.Pin = this -> halPin;
+    gpioInit.Mode = GPIOf302x8::GPIO_TRIGGER_INTERRUPT_BASE | (static_cast<uint32_t>(edge) << 20);
+    gpioInit.Pull = GPIO_NOPULL;
+    gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
+
+    HAL_GPIO_Init(this -> port, &gpioInit);
+
+    INTERRUPT_HANDLERS[(static_cast<uint8_t>(this->pin) & 0x0F)] = irqHandler;
+
+    switch(this -> halPin)
+    {
+        case GPIO_PIN_0:
+            NVIC_SetVector(EXTI0_IRQn, (uint32_t)&EXTI0_IRQHandler);
+            HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+            break;
+        case GPIO_PIN_1:
+            NVIC_SetVector(EXTI1_IRQn, (uint32_t)&EXTI1_IRQHandler);
+            HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+            break;
+        case GPIO_PIN_2:
+            NVIC_SetVector(EXTI2_TSC_IRQn, (uint32_t)&EXTI2_TSC_IRQHandler);
+            HAL_NVIC_EnableIRQ(EXTI2_TSC_IRQn);
+            break;
+        case GPIO_PIN_3:
+            NVIC_SetVector(EXTI3_IRQn, (uint32_t)&EXTI3_IRQHandler);
+            HAL_NVIC_EnableIRQ(EXTI3_IRQn);
+            break;
+        case GPIO_PIN_4:
+            NVIC_SetVector(EXTI4_IRQn, (uint32_t)&EXTI4_IRQHandler);
+            HAL_NVIC_EnableIRQ(EXTI4_IRQn);
+            break;
+        case GPIO_PIN_5:
+        case GPIO_PIN_6:
+        case GPIO_PIN_7:
+        case GPIO_PIN_8:
+        case GPIO_PIN_9:
+            NVIC_SetVector(EXTI9_5_IRQn, (uint32_t)&EXTI9_5_IRQHandler);
+            HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+            break;
+        case GPIO_PIN_10:
+        case GPIO_PIN_11:
+        case GPIO_PIN_12:
+        case GPIO_PIN_13:
+        case GPIO_PIN_14:
+        case GPIO_PIN_15:
+            NVIC_SetVector(EXTI15_10_IRQn, (uint32_t)&EXTI15_10_IRQHandler);
+            HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+            break;
+
+        default:
+            break; // Shouldn't get here
+    }
 }
 
 }  // namespace EVT::core::IO

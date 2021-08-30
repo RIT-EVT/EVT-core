@@ -52,9 +52,9 @@ public:
      */
     enum class TriggerEdge
     {
-        RISING,
-        FALLING,
-        RISING_FALLING
+        RISING          = 0u,
+        FALLING         = 1u,
+        RISING_FALLING  = 2u
     };
 
     /**
@@ -99,7 +99,7 @@ public:
      * condition.
      * @param edge The edge trigger event to trigger the interrupt
      */
-    virtual void regsiterIrq(TriggerEdge edge, EVT::core::types::void_function_ptr_t irqHandler);
+    virtual void registerIrq(TriggerEdge edge, EVT::core::types::void_function_ptr_t irqHandler);
 
     /**
      * Preferred method to get an instance of a GPIO interface. This method
