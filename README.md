@@ -117,3 +117,11 @@ or concepts that EVT-Core should support.
 accomplished by calling the target handler once from main code execution.
 * Style checking should be part of the build process.
 * Add documentation for using this library.
+
+## Links and Resources
+
+* [Installing CMake](https://cmake.org/install/)
+* [Running CMake on Windows](https://stackoverflow.com/questions/4101456/running-cmake-on-windows)
+* [Setting an Environment Variable on Mac](https://phoenixnap.fr/kb/set-environment-variable-mac)
+* [GNU Arms Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads)
+* [Setting an Enviornment Variable on Windows](https://kb.wisc.edu/cae/page.php?id=24500)
