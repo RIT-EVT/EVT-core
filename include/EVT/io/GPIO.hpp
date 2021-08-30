@@ -2,6 +2,7 @@
 #define _EVT_GPIO_
 
 #include <stdint.h>
+#include <EVT/utils/types/VoidFunctions.h>
 
 namespace EVT::core::IO
 {
@@ -47,6 +48,16 @@ public:
     };
 
     /**
+     * Enum to handler the possible GPIO trigger states
+     */
+    enum class TriggerEdge
+    {
+        RISING,
+        FALLING,
+        RISING_FALLING
+    };
+
+    /**
      * Create a new GPIO interface on a specific pin. The direction will not
      * be set and will have to be set manually.
      *
@@ -82,6 +93,13 @@ public:
      * @return The state of the pin.
      */
     virtual State readPin() = 0;
+
+    /**
+     * Registers the IRQHandler for this instances GPIO pin on the given edge
+     * condition.
+     * @param edge The edge trigger event to trigger the interrupt
+     */
+    virtual void regsiterIrq(TriggerEdge edge, EVT::core::types::void_function_ptr_t irqHandler);
 
     /**
      * Preferred method to get an instance of a GPIO interface. This method
