@@ -80,7 +80,8 @@ int main() {
 
     // Try to pop from empty queue
     int value;
-    uart.printf("numberQueue.pop() success ? ->%d\r\n", numberQueue.pop(&value));
+    uart.printf("numberQueue.pop() success ? ->%d\r\n",
+            numberQueue.pop(&value));
 
     ///////////////////////////////////////////////////////////////////////////
     // Test a queue of numbers, with overwritting

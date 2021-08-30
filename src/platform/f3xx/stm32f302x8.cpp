@@ -41,4 +41,4 @@ void stm32f302x8_init() {
     SysTick_Handler();
 }
 
-}  //namespace EVT::core::platform
+}  // namespace EVT::core::platform
