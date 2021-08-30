@@ -51,6 +51,13 @@ public:
      * @return The state of the pin.
      */
     State readPin();
+
+    /**
+     * Used to register an IRQ Handler for the GPIO instance
+     * @param edge the trigger edge
+     * @param irqHandler the function pointer to the handler
+     */
+    void registerIrq(TriggerEdge edge, EVT::core::types::void_function_ptr_t irqHandler) override;
    
 private:
     constexpr static uint32_t GPIO_TRIGGER_INTERRUPT_BASE = 0x10010000U;
