@@ -7,7 +7,6 @@
 
 #include <HALf3/stm32f3xx_hal_rcc.h>
 #include <HALf3/stm32f3xx_hal_gpio.h>
-#include <HALf3/stm32f3xx_hal_flash.h>
 
 
 namespace {
@@ -111,6 +110,10 @@ void GPIOf302x8::writePin(GPIO::State state) {
 
 GPIO::State GPIOf302x8::readPin() {
     return static_cast<GPIO::State>(HAL_GPIO_ReadPin(this->port, this->halPin));
+}
+
+void regsiterIrq(GPIO::TriggerEdge edge, EVT::core::types::void_function_ptr_t irqHandler) {
+
 }
 
 }  // namespace EVT::core::IO
