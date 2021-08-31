@@ -112,11 +112,13 @@ GPIO::State GPIOf302x8::readPin() {
     return static_cast<GPIO::State>(HAL_GPIO_ReadPin(this->port, this->halPin));
 }
 
-void GPIOf302x8::registerIrq(TriggerEdge edge, EVT::core::types::void_function_ptr_t irqHandler) {
+void GPIOf302x8::registerIrq(TriggerEdge edge,
+                             EVT::core::types::void_function_ptr_t irqHandler) {
     GPIO_InitTypeDef gpioInit;
 
     gpioInit.Pin = this -> halPin;
-    gpioInit.Mode = GPIOf302x8::GPIO_TRIGGER_INTERRUPT_BASE | (static_cast<uint32_t>(edge) << 20);
+    gpioInit.Mode = GPIOf302x8::GPIO_TRIGGER_INTERRUPT_BASE |
+            (static_cast<uint32_t>(edge) << GPIO_MODE_IT_SHIFT);
     gpioInit.Pull = GPIO_PULLDOWN;
     gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
 
@@ -124,8 +126,7 @@ void GPIOf302x8::registerIrq(TriggerEdge edge, EVT::core::types::void_function_p
 
     INTERRUPT_HANDLERS[(static_cast<uint8_t>(this->pin) & 0x0F)] = irqHandler;
 
-    switch(this -> halPin)
-    {
+    switch (this -> halPin) {
         case GPIO_PIN_0:
             HAL_NVIC_EnableIRQ(EXTI0_IRQn);
             break;
@@ -158,7 +159,7 @@ void GPIOf302x8::registerIrq(TriggerEdge edge, EVT::core::types::void_function_p
             break;
 
         default:
-            break; // Shouldn't get here
+            break;  // Shouldn't get here
     }
 }
 
