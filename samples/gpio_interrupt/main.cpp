@@ -12,16 +12,14 @@ namespace IO = EVT::core::IO;
 constexpr int BAUD_RATE = 9600;
 constexpr IO::Pin INTERRUPT_PIN = IO::Pin::PC_3;
 
-IO::GPIO *interruptGPIO;
+IO::UART *uart;
 
-void risingEdgeHandler() {
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(BAUD_RATE);
+void risingEdgeHandler(IO::GPIO *pin) {
+    IO::GPIO::State pin_value = pin->readPin();
 
-    IO::GPIO::State pin_value = interruptGPIO->readPin();
-
-    uart.printf("Received %s edge interrupt for pin C3\n\r",
+    uart->printf("Received %s edge interrupt for pin C3\n\r",
                 pin_value == IO::GPIO::State::HIGH ? "rising" : "falling");
-    uart.printf("Pin Value: %d\n\r", static_cast<uint32_t>(pin_value));
+    uart->printf("Pin Value: %d\n\r", static_cast<uint32_t>(pin_value));
 }
 
 int main() {
@@ -29,15 +27,15 @@ int main() {
     IO::init();
 
     // Setup UART
-    IO::UART &uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(BAUD_RATE);
+    uart = &IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(BAUD_RATE);
 
     // Set the GPIO interrupt
-    interruptGPIO = &IO::getGPIO<INTERRUPT_PIN>(
+    IO::GPIO& interruptGPIO = IO::getGPIO<INTERRUPT_PIN>(
             IO::GPIO::Direction::INPUT);
-    interruptGPIO->registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING,
+    interruptGPIO.registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING,
                                risingEdgeHandler);
 
-    uart.printf("\n\rWaiting for interrupts...\n\r");
+    uart->printf("\n\rWaiting for interrupts...\n\r");
 
     while (1) {
         continue;

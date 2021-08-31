@@ -9,7 +9,8 @@
 #include <HALf3/stm32f3xx_hal_gpio.h>
 
 
-void (*INTERRUPT_HANDLERS[16])() = {nullptr};
+void (*INTERRUPT_HANDLERS[16])(EVT::core::IO::GPIO *pin) = {nullptr};
+EVT::core::IO::GPIO* INTERRUPT_GPIOS[16] = {nullptr};
 
 extern "C" void EXTI0_IRQHandler(void) {
     HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
@@ -52,7 +53,7 @@ extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
         count++;
     }
     if (nullptr != INTERRUPT_HANDLERS[count]) {
-        INTERRUPT_HANDLERS[count]();
+        INTERRUPT_HANDLERS[count](INTERRUPT_GPIOS[count]);
     }
 }
 
@@ -110,7 +111,7 @@ GPIO::State GPIOf302x8::readPin() {
     return static_cast<GPIO::State>(HAL_GPIO_ReadPin(this->port, this->halPin));
 }
 
-void GPIOf302x8::registerIRQ(TriggerEdge edge, void (*irqHandler)()) {
+void GPIOf302x8::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO *pin)) {
     GPIO_InitTypeDef gpioInit;
 
     gpioInit.Pin = this -> halPin;
@@ -121,7 +122,9 @@ void GPIOf302x8::registerIRQ(TriggerEdge edge, void (*irqHandler)()) {
 
     HAL_GPIO_Init(this -> port, &gpioInit);
 
-    INTERRUPT_HANDLERS[(static_cast<uint8_t>(this->pin) & 0x0F)] = irqHandler;
+    auto pin_index = static_cast<uint8_t>(this->pin) & 0x0F;
+    INTERRUPT_HANDLERS[pin_index] = irqHandler;
+    INTERRUPT_GPIOS[pin_index] = this;
 
     switch (this -> halPin) {
         case GPIO_PIN_0:

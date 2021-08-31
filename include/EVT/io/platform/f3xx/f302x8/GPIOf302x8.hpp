@@ -57,7 +57,7 @@ public:
      * @param edge the trigger edge
      * @param irqHandler the function pointer to the handler
      */
-    void registerIRQ(TriggerEdge edge, void (*irqHandler)()) override;
+    void registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO *pin)) override;
    
 private:
     // See stm32f3xx_hal_gpio -> GPIO_mode for info on derivations
