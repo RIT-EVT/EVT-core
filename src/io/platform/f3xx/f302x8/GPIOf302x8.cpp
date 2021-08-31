@@ -92,8 +92,8 @@ GPIOf302x8::GPIOf302x8(Pin pin, GPIO::Direction direction)
     }
 
     gpioInit.Pin = this->halPin;
-    gpioInit.Mode = GPIO_MODE_OUTPUT_PP;
-    gpioInit.Pull = GPIO_NOPULL;
+    gpioInit.Mode = static_cast<uint32_t>(direction);
+    gpioInit.Pull = GPIO_PULLDOWN;
     gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(this->port, &gpioInit);
     this->writePin(GPIO::State::LOW);  // Output set low by default
@@ -117,7 +117,7 @@ void GPIOf302x8::registerIrq(TriggerEdge edge, EVT::core::types::void_function_p
 
     gpioInit.Pin = this -> halPin;
     gpioInit.Mode = GPIOf302x8::GPIO_TRIGGER_INTERRUPT_BASE | (static_cast<uint32_t>(edge) << 20);
-    gpioInit.Pull = GPIO_NOPULL;
+    gpioInit.Pull = GPIO_PULLDOWN;
     gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
 
     HAL_GPIO_Init(this -> port, &gpioInit);
@@ -127,23 +127,18 @@ void GPIOf302x8::registerIrq(TriggerEdge edge, EVT::core::types::void_function_p
     switch(this -> halPin)
     {
         case GPIO_PIN_0:
-            NVIC_SetVector(EXTI0_IRQn, (uint32_t)&EXTI0_IRQHandler);
             HAL_NVIC_EnableIRQ(EXTI0_IRQn);
             break;
         case GPIO_PIN_1:
-            NVIC_SetVector(EXTI1_IRQn, (uint32_t)&EXTI1_IRQHandler);
             HAL_NVIC_EnableIRQ(EXTI1_IRQn);
             break;
         case GPIO_PIN_2:
-            NVIC_SetVector(EXTI2_TSC_IRQn, (uint32_t)&EXTI2_TSC_IRQHandler);
             HAL_NVIC_EnableIRQ(EXTI2_TSC_IRQn);
             break;
         case GPIO_PIN_3:
-            NVIC_SetVector(EXTI3_IRQn, (uint32_t)&EXTI3_IRQHandler);
             HAL_NVIC_EnableIRQ(EXTI3_IRQn);
             break;
         case GPIO_PIN_4:
-            NVIC_SetVector(EXTI4_IRQn, (uint32_t)&EXTI4_IRQHandler);
             HAL_NVIC_EnableIRQ(EXTI4_IRQn);
             break;
         case GPIO_PIN_5:
@@ -151,7 +146,6 @@ void GPIOf302x8::registerIrq(TriggerEdge edge, EVT::core::types::void_function_p
         case GPIO_PIN_7:
         case GPIO_PIN_8:
         case GPIO_PIN_9:
-            NVIC_SetVector(EXTI9_5_IRQn, (uint32_t)&EXTI9_5_IRQHandler);
             HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
             break;
         case GPIO_PIN_10:
@@ -160,7 +154,6 @@ void GPIOf302x8::registerIrq(TriggerEdge edge, EVT::core::types::void_function_p
         case GPIO_PIN_13:
         case GPIO_PIN_14:
         case GPIO_PIN_15:
-            NVIC_SetVector(EXTI15_10_IRQn, (uint32_t)&EXTI15_10_IRQHandler);
             HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
             break;
 

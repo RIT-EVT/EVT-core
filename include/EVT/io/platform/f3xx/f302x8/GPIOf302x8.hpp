@@ -60,7 +60,10 @@ public:
     void registerIrq(TriggerEdge edge, EVT::core::types::void_function_ptr_t irqHandler) override;
    
 private:
-    constexpr static uint32_t GPIO_TRIGGER_INTERRUPT_BASE = 0x10010000U;
+    // See stm32f3xx_hal_gpio -> GPIO_mode for info on derivations
+    constexpr static int GPIO_MODE_IT_SHIFT = 20;
+    constexpr static uint32_t GPIO_TRIGGER_INTERRUPT_BASE = GPIO_MODE_IT_RISING & ~(1 << GPIO_MODE_IT_SHIFT);
+
 
     /// Pin representing the underlying HAL pin identifer
     uint16_t halPin;

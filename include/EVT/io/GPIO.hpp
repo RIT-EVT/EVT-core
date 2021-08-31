@@ -52,9 +52,9 @@ public:
      */
     enum class TriggerEdge
     {
-        RISING          = 0u,
-        FALLING         = 1u,
-        RISING_FALLING  = 2u
+        RISING          = 1u,
+        FALLING         = 2u,
+        RISING_FALLING  = 3u
     };
 
     /**
