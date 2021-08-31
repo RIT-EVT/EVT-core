@@ -20,7 +20,7 @@ void rising_edge_handler() {
     IO::GPIO::State pin_value = interruptGPIO->readPin();
 
     uart.printf("Received %s edge interrupt for pin C3\n\r",
-                pin_value==IO::GPIO::State::HIGH ? "rising" : "falling");
+                pin_value == IO::GPIO::State::HIGH ? "rising" : "falling");
     uart.printf("Pin Value: %d\n\r", static_cast<uint32_t>(pin_value));
 }
 
@@ -34,7 +34,8 @@ int main() {
     // Set the GPIO interrupt
     interruptGPIO = &IO::getGPIO<INTERRUPT_PIN>(
             IO::GPIO::Direction::INPUT);
-    interruptGPIO->registerIrq(IO::GPIO::TriggerEdge::RISING_FALLING, rising_edge_handler);
+    interruptGPIO->registerIrq(IO::GPIO::TriggerEdge::RISING_FALLING,
+                               rising_edge_handler);
 
     uart.printf("\n\rWaiting for interrupts...\n\r");
 
