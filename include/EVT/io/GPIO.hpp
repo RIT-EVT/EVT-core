@@ -97,8 +97,10 @@ public:
      * Registers the IRQHandler for this instances GPIO pin on the given edge
      * condition.
      * @param edge The edge trigger event to trigger the interrupt
+     * @param irqHandler The function pointer to handle the GPIO interrupt
+     * @param pin A pointer to the GPIO pin that triggered the interrupt.  To be used by irqHandler
      */
-    virtual void registerIRQ(TriggerEdge edge, void (*irqHandler)()) = 0;
+    virtual void registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO *pin)) = 0;
 
     /**
      * Preferred method to get an instance of a GPIO interface. This method
