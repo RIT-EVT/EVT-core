@@ -2,7 +2,6 @@
 #define _EVT_GPIO_
 
 #include <stdint.h>
-#include <EVT/utils/types/VoidFunctions.h>
 
 namespace EVT::core::IO
 {
@@ -99,7 +98,7 @@ public:
      * condition.
      * @param edge The edge trigger event to trigger the interrupt
      */
-    virtual void registerIrq(TriggerEdge edge, EVT::core::types::void_function_ptr_t irqHandler) = 0;
+    virtual void registerIRQ(TriggerEdge edge, void (*irqHandler)()) = 0;
 
     /**
      * Preferred method to get an instance of a GPIO interface. This method

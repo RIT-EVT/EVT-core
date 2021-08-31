@@ -9,12 +9,12 @@
 
 namespace IO = EVT::core::IO;
 
-constexpr int BAUD_RATE = 115200;
+constexpr int BAUD_RATE = 9600;
 constexpr IO::Pin INTERRUPT_PIN = IO::Pin::PC_3;
 
 IO::GPIO *interruptGPIO;
 
-void rising_edge_handler() {
+void risingEdgeHandler() {
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(BAUD_RATE);
 
     IO::GPIO::State pin_value = interruptGPIO->readPin();
@@ -34,8 +34,8 @@ int main() {
     // Set the GPIO interrupt
     interruptGPIO = &IO::getGPIO<INTERRUPT_PIN>(
             IO::GPIO::Direction::INPUT);
-    interruptGPIO->registerIrq(IO::GPIO::TriggerEdge::RISING_FALLING,
-                               rising_edge_handler);
+    interruptGPIO->registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING,
+                               risingEdgeHandler);
 
     uart.printf("\n\rWaiting for interrupts...\n\r");
 

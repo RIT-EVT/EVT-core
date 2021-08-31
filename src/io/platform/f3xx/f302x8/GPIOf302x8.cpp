@@ -9,9 +9,7 @@
 #include <HALf3/stm32f3xx_hal_gpio.h>
 
 
-namespace {
-    void (*INTERRUPT_HANDLERS[16])() = {nullptr};
-}
+void (*INTERRUPT_HANDLERS[16])() = {nullptr};
 
 extern "C" void EXTI0_IRQHandler(void) {
     HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
@@ -112,8 +110,7 @@ GPIO::State GPIOf302x8::readPin() {
     return static_cast<GPIO::State>(HAL_GPIO_ReadPin(this->port, this->halPin));
 }
 
-void GPIOf302x8::registerIrq(TriggerEdge edge,
-                             EVT::core::types::void_function_ptr_t irqHandler) {
+void GPIOf302x8::registerIRQ(TriggerEdge edge, void (*irqHandler)()) {
     GPIO_InitTypeDef gpioInit;
 
     gpioInit.Pin = this -> halPin;
