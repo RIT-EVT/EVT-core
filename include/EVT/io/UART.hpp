@@ -1,7 +1,8 @@
 #ifndef _EVT_UART_
 #define _EVT_UART_
 
-#include <stdint.h>
+#include <cstdint>
+#include <cstdlib>
 
 namespace EVT::core::IO {
 

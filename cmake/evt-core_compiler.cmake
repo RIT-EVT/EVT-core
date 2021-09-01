@@ -51,7 +51,7 @@ if(EVT_LINT)
     # TODO: In the future these filter settings sound be included in cfg
     # files.
     set(CMAKE_CXX_CPPLINT "cpplint;--filter=-legal/copyright, \
-                          -readability/todo,-build/include_order")
+                          -readability/todo,-build/include_order;--linelength=120")
 endif()
 
 ###############################################################################
