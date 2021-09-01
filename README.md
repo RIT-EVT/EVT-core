@@ -89,13 +89,13 @@ After running those commands, you should have a fully build EVT-core including
 samples.
 
 For a more detailed build process using CLion and on Windows,
-visit the EVT wiki.
+visit the [EVT wiki](https://wiki.rit.edu/display/EVT/Setup+for+EVT-core+Development).
 
 #### Step 4. Flashing the Board
 
 After building has taken place, you should be left with a folder that contains
 all of the built samples. The samples will be located in `build/samples` and
-each sample with have its own folder. 
+each sample with have its own folder.
 
 For example, in `build/samples/blink/` there will be an ELF, bin, hex, and
 map files among others. To flash the blink sample to the nucleo, copy the
@@ -106,8 +106,8 @@ should start blinking at a set rate.
 
 For interacting with samples that make use of a UART monitor, a serial console
 will be needed. PuTTY on Windows is a good tool. Linux and MacOS will have some
-built in tools for serial console. But when in doubt, the Arduino serial
-console will also work!
+built in tools for serial console and gtkterm is worth looking into.
+But when in doubt, the Arduino serial console will also work!
 
 ## Features Supported
 
