@@ -66,7 +66,8 @@ After adding that line, restart your terminal for the changes to take effect.
 #### Step 3. Build EVT-core
 
 Below are the commands for building EVT-core. You can execute them from
-within the cloned EVT-core repository from the terminal.
+within the cloned EVT-core repository from the terminal. Below are the steps
+easiest followed for Mac and Linux with CMake installed.
 
 ```bash
 mkdir build/
@@ -75,8 +76,38 @@ cmake ../
 make -j
 ```
 
+On Windows there are a couple of options worth looking into. CMake has a GUI
+which allows you to select projects and how to build them, if you use the GUI,
+you can directly select "MinGW" as the generator to ensure that the build
+takes place properly. Or you can make use of CLion which will abstract the
+build process away. Another option (which I recommend for long term use), is
+to learn about WSL (Windows Subsystem for Linux). Linux is the OS of choice
+for software developers and includes a lot of great tools for development. WSL
+is a happy medium between running Windows and installing a virtual machine.
+
 After running those commands, you should have a fully build EVT-core including
 samples.
+
+For a more detailed build process using CLion and on Windows,
+visit the EVT wiki.
+
+#### Step 4. Flashing the Board
+
+After building has taken place, you should be left with a folder that contains
+all of the built samples. The samples will be located in `build/samples` and
+each sample with have its own folder. 
+
+For example, in `build/samples/blink/` there will be an ELF, bin, hex, and
+map files among others. To flash the blink sample to the nucleo, copy the
+bin file from your directory to the nucleo that is connected to their computer.
+The nucleo should show up as an external storage device. After dragging the
+bin file to the nucleo, the sample should be flashed and an LED on the board
+should start blinking at a set rate.
+
+For interacting with samples that make use of a UART monitor, a serial console
+will be needed. PuTTY on Windows is a good tool. Linux and MacOS will have some
+built in tools for serial console. But when in doubt, the Arduino serial
+console will also work!
 
 ## Features Supported
 
