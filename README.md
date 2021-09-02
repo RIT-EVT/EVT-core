@@ -85,6 +85,30 @@ to learn about WSL (Windows Subsystem for Linux). Linux is the OS of choice
 for software developers and includes a lot of great tools for development. WSL
 is a happy medium between running Windows and installing a virtual machine.
 
+Below are incomplete and experimental instructions for building on Windows. Using
+CLion is the preferred approach on Windows. But some success has come from using
+the terminal, VS code, etc.
+
+1. Install mingwin from the instructions [here](https://www.ics.uci.edu/~pattis/common/handouts/mingweclipse/mingw.html). Make sure to also follow the instructions for updating the PATH
+variable! You will probably have to restart your system after this.
+
+2. Launch the CMake GUI from the start menu.
+
+3. For "Where is source" navigate to the top level of the EVT-core repo.
+
+4. For "Where to build the binaries" select "<EVT-core path>/build"
+
+5. From Tool > Configure change the generator to "Codeblock - MinGW Makefiles" and select
+"use default native compilers"
+
+6. Press Configure then Generate.
+
+7. At this point things get choppy. There have been some success building from
+terminal manually, some with VS code, but mostly with CLion.
+
+
+
+
 After running those commands, you should have a fully build EVT-core including
 samples.
 

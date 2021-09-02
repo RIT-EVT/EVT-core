@@ -16,17 +16,31 @@ set(CMAKE_C_COMPILER_WORKS 1)
 set(CMAKE_CXX_COMPILER_WORKS 1)
 
 # Setup for cross compilation
+file(TO_CMAKE_PATH "$ENV{GCC_ARM_TOOLS_PATH}" GCC_ARM_TOOLS_PATH)
 set(CMAKE_SYSTEM_NAME       Generic)
 set(CMAKE_SYSTEM_PROCESSOR  arm)
-set(CMAKE_AR                "$ENV{GCC_ARM_TOOLS_PATH}/arm-none-eabi-ar")
-set(CMAKE_ASM_COMPILER      "$ENV{GCC_ARM_TOOLS_PATH}/arm-none-eabi-gcc")
-set(CMAKE_C_COMPILER        "$ENV{GCC_ARM_TOOLS_PATH}/arm-none-eabi-gcc")
-set(CMAKE_CXX_COMPILER      "$ENV{GCC_ARM_TOOLS_PATH}/arm-none-eabi-g++")
-set(CMAKE_LINKER            "$ENV{GCC_ARM_TOOLS_PATH}/arm-none-eabi-ld")
-set(CMAKE_OBJCOPY           "$ENV{GCC_ARM_TOOLS_PATH}/arm-none-eabi-objcopy")
-set(CMAKE_RANLIB            "$ENV{GCC_ARM_TOOLS_PATH}/arm-none-eabi-ranlib")
-set(CMAKE_SIZE              "$ENV{GCC_ARM_TOOLS_PATH}/arm-none-eabi-size")
-set(CMAKE_STRIP             "$ENV{GCC_ARM_TOOLS_PATH}/arm-none-eabi-strip")
+
+if (WIN32)
+    set(CMAKE_AR                "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-ar.exe")
+    set(CMAKE_ASM_COMPILER      "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-gcc.exe")
+    set(CMAKE_C_COMPILER        "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-gcc.exe")
+    set(CMAKE_CXX_COMPILER      "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-g++.exe")
+    set(CMAKE_LINKER            "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-ld.exe")
+    set(CMAKE_OBJCOPY           "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-objcopy.exe")
+    set(CMAKE_RANLIB            "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-ranlib.exe")
+    set(CMAKE_SIZE              "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-size.exe")
+    set(CMAKE_STRIP             "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-strip.exe")
+else()
+    set(CMAKE_AR                "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-ar")
+    set(CMAKE_ASM_COMPILER      "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-gcc")
+    set(CMAKE_C_COMPILER        "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-gcc")
+    set(CMAKE_CXX_COMPILER      "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-g++")
+    set(CMAKE_LINKER            "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-ld")
+    set(CMAKE_OBJCOPY           "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-objcopy")
+    set(CMAKE_RANLIB            "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-ranlib")
+    set(CMAKE_SIZE              "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-size")
+    set(CMAKE_STRIP             "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-strip")
+endif()
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
@@ -43,9 +57,9 @@ include(GNUInstallDirs)
 # EVT Linking option, linting revolves around cpplint which is a tool that
 # conforms to Google's C++ style guide. cpplint needs to be installed.
 option(EVT_LINT
-        "Lint source code, need to have cpplint installed"
-        OFF
-        )
+    "Lint source code, need to have cpplint installed"
+    OFF
+)
 
 if(EVT_LINT)
     # TODO: In the future these filter settings sound be included in cfg
