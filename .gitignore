@@ -1,5 +1,5 @@
 # Build files
-build/
+/build/
 compile_commands.json
 
 # Virtual environments
