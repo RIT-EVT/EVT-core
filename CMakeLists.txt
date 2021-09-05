@@ -43,6 +43,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/utils/platform/f3xx/time.cpp
 )
 
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 ###############################################################################
 # Provide build options
 ###############################################################################
