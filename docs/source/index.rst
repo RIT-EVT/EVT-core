@@ -10,11 +10,10 @@ Welcome to EVT-core's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   api/index.rst
+
 Docs
 ====
-
-.. doxygennamespace:: EVT::core
-   :members:
 
 Indices and tables
 ==================
