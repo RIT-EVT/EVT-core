@@ -61,6 +61,11 @@ cmake_dependent_option(EVT_BUILD_SAMPLES
         "EVT_IS_MAIN_PROJECT" OFF
 )
 
+option(EVT_BUILD_DOCS
+    "Build the EVT-core documentation"
+    OFF
+)
+
 ###############################################################################
 # Handle dependencies
 ###############################################################################
@@ -88,4 +93,9 @@ install_and_expose(${PROJECT_NAME})
 if(EVT_BUILD_SAMPLES)
     # Add the sample code sub directory
     add_subdirectory(samples)
+endif()
+
+# Building docs
+if(EVT_BUILD_DOCS)
+    add_subdirectory(docs)
 endif()
