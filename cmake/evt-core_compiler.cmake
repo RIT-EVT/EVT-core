@@ -5,7 +5,7 @@ Requires: `${EVT_CORE_DIR}` cmake variable to be set.
 ]]#
 # Verify that the ARM tools path is set
 if(NOT DEFINED ENV{GCC_ARM_TOOLS_PATH})
-    message(FATAL_ERROR
+    message(WARNING
             "Set your environment variables you frickin' hecker."
             "   --Shane Snover"
             )

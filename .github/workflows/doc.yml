@@ -1,0 +1,42 @@
+name: Doc
+
+on:
+    push:
+        branches: [ feature/cbolles/sphinx-documentation ]
+    pull_request:
+        branches: [ main ]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Debug
+          run: ls -ll
+        - name: Requirments
+          run: sudo apt-get install doxygen &&
+            pip3 install sphinx &&
+            pip3 install sphinx-rtd-theme &&
+            pip3 install breathe &&
+            sudo apt install wget &&
+            sudo apt install cmake
+        - name: Checkout branch
+          uses: actions/checkout@1.0.0
+          with:
+            ref: 'feature/cbolles/sphinx-documentation'
+        - name: Build docs
+          run: mkdir build &&
+            wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.07/gcc-arm-none-eabi-10.3-2021.07-x86_64-linux.tar.bz2 &&
+            tar -xf gcc-arm-none-eabi-10.3-2021.07-x86_64-linux.tar.bz2 &&
+            cd build &&
+            export GCC_ARM_TOOLS_PATH=$(pwd)/gcc-arm-none-eabi-10.3-2021.07/bin &&
+            cmake -DEVT_BUILD_DOCS=ON ../ &&
+            make Sphinx &&
+            cd ../
+        - name: Deploy
+          uses: JamesIves/github-pages-deploy-action@releases/v3
+          with:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              BRANCH: gh-pages
+              FOLDER: build/docs/docs/sphinx
+
