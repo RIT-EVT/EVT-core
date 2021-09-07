@@ -3,7 +3,7 @@
 ###############################################################################
 cmake_minimum_required(VERSION 3.15)
 
-set(EVT_CORE_DIR     ${CMAKE_SOURCE_DIR})
+set(EVT_CORE_DIR     ${CMAKE_CURRENT_SOURCE_DIR})
 
 include(CMakeDependentOption)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_compiler.cmake)
