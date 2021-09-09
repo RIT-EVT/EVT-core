@@ -20,5 +20,35 @@ namespace EVT::core::time
      * @param ms The number of milliseconds to wait for
      */
     void wait(uint32_t ms);
+
+    /**
+     * Struct representing a timestamp.
+     */
+    struct TimeStamp {
+        /**
+         * The current year
+         */
+        uint16_t year;
+        /**
+         * The current month (0-12)
+         */
+        uint8_t month;
+        /**
+         * The current day (1-31)
+         */
+        uint8_t day;
+        /**
+         * The hour in a 24 hour timeframe
+         */
+        uint8_t hour;
+        /**
+         * The minute (0-59)
+         */
+        uint8_t minute;
+        /**
+         * The second (0-59)
+         */
+        uint8_t second;
+    };
 }
 #endif
