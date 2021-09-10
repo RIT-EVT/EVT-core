@@ -34,7 +34,7 @@ public:
      *
      * @return The time since epoch as determined by the RTC
      */
-    uint64_t getTime();
+    uint32_t getTime();
 
     /**
      * Set the time of the real time clock.
