@@ -8,7 +8,7 @@ namespace EVT::core::DEV {
 RTCf302x8::RTCf302x8() {
     halRTC.Instance             = RTC1;
 
-    // TODO: Determine where magic numbers came from
+    // Numbers generated from STMCubeMX
     halRTC.Init.HourFormat      = RTC_HOURFORMAT_24;
     halRTC.Init.AsynchPrediv    = 127;
     halRTC.Init.SynchPrediv     = 255;
@@ -56,7 +56,6 @@ void RTCf302x8::getTime(EVT::core::time::TimeStamp& time) {
 }
 
 uint32_t RTCf302x8::getTime() {
-
     EVT::core::time::TimeStamp ts;
     getTime(ts);
 
@@ -71,11 +70,11 @@ uint32_t RTCf302x8::getTime() {
     // Get number of days sinc epoch
     y -= m <= 2;
     const uint32_t era = (y >= 0 ? y : y-399) / 400;
-    const uint32_t yoe = static_cast<uint32_t>(y - era * 400);      // [0, 399]
-    const uint32_t doy = (153*(m + (m > 2 ? -3 : 9)) + 2)/5 + d-1;  // [0, 365]
-    const uint32_t doe = yoe * 365 + yoe/4 - yoe/100 + doy;         // [0, 146096]
+    const uint32_t yoe = static_cast<uint32_t>(y - era * 400);
+    const uint32_t doy = (153*(m + (m > 2 ? -3 : 9)) + 2)/5 + d-1;
+    const uint32_t doe = yoe * 365 + yoe/4 - yoe/100 + doy;
     uint32_t time = era * 146097 + static_cast<int32_t>(doe) - 719468;
-    
+
     // Convert to seconds
     time *= 86400;
 
