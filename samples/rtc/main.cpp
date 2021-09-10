@@ -33,6 +33,8 @@ int main() {
 
     time::wait(500);
 
+    uint32_t epochTime;
+
 
     while(1) {
         rtc.getTime(time);
@@ -40,6 +42,9 @@ int main() {
         uart.printf("%d/%d/%d %d:%d:%d\r\n",
                 time.day, time.month, time.year,
                 time.hour, time.minute, time.second);
+
+        epochTime = rtc.getTime();
+        uart.printf("Timestamp since Epoch: %d\r\n\r\n", epochTime);
         time::wait(1000);
     }
 

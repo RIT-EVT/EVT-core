@@ -55,9 +55,34 @@ void RTCf302x8::getTime(EVT::core::time::TimeStamp& time) {
     time.day = rtcDate.Date;
 }
 
+uint32_t RTCf302x8::getTime() {
 
-uint64_t RTCf302x8::getTime() {
-    return 0;
+    EVT::core::time::TimeStamp ts;
+    getTime(ts);
+
+    uint32_t y = ts.year;
+    uint32_t m = ts.month;
+    uint32_t d = ts.day;
+    uint32_t h = ts.hour;
+    uint32_t min = ts.minute;
+    uint32_t s = ts.second;
+
+
+    // Get number of days sinc epoch
+    y -= m <= 2;
+    const uint32_t era = (y >= 0 ? y : y-399) / 400;
+    const uint32_t yoe = static_cast<uint32_t>(y - era * 400);      // [0, 399]
+    const uint32_t doy = (153*(m + (m > 2 ? -3 : 9)) + 2)/5 + d-1;  // [0, 365]
+    const uint32_t doe = yoe * 365 + yoe/4 - yoe/100 + doy;         // [0, 146096]
+    uint32_t time = era * 146097 + static_cast<int32_t>(doe) - 719468;
+    
+    // Convert to seconds
+    time *= 86400;
+
+    // Add current number of seconds in day
+    time += (h * 3600) + (min * 60) + s;
+
+    return time;
 }
 
 void RTCf302x8::setTime(EVT::core::time::TimeStamp& time) {
