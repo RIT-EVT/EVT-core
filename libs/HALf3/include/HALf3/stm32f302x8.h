@@ -768,7 +768,7 @@ typedef struct
   */
 #define TIM2                ((TIM_TypeDef *) TIM2_BASE)
 #define TIM6                ((TIM_TypeDef *) TIM6_BASE)
-#define RTC                 ((RTC_TypeDef *) RTC_BASE)
+#define RTC1                 ((RTC_TypeDef *) RTC_BASE)
 #define WWDG                ((WWDG_TypeDef *) WWDG_BASE)
 #define IWDG                ((IWDG_TypeDef *) IWDG_BASE)
 #define I2S2ext             ((SPI_TypeDef *) I2S2ext_BASE)
