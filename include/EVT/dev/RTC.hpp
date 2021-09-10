@@ -16,7 +16,7 @@ public:
      *
      * @param[out] time The time struct to populate
      */
-    virtual void getTime(EVT::core::time::TimeStamp time) = 0;
+    virtual void getTime(EVT::core::time::TimeStamp& time) = 0;
 
     /**
      * Get the timestamp since epoch in seconds
@@ -30,7 +30,7 @@ public:
      *
      * @param[in] time The time to set the RTC to use.
      */
-    virtual void setTime(EVT::core::time::TimeStamp time) = 0;
+    virtual void setTime(EVT::core::time::TimeStamp& time) = 0;
 
 };
 
