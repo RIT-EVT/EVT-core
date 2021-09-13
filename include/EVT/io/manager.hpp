@@ -5,6 +5,7 @@
 
 #include <EVT/io/ADC.hpp>
 #include <EVT/io/CAN.hpp>
+#include <EVT/io/Flash.hpp>
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/PWM.hpp>
 
@@ -13,6 +14,7 @@
 
     #include <EVT/io/platform/f3xx/f302x8/ADCf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/CANf302x8.hpp>
+    #include <EVT/io/platform/f3xx/f302x8/Flashf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/I2Cf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/PWMf302x8.hpp>
@@ -57,6 +59,16 @@ CAN& getCAN(bool loopbackEnabled=false) {
     #ifdef STM32F302x8
         static CANf302x8 can(txPin, rxPin, loopbackEnabled);
         return can;
+    #endif
+}
+
+/**
+ * Get an instance of the Flash interface.
+ */
+Flash& getFlash() {
+    #ifdef STM32F302x8
+        static Flashf302x8 flash;
+        return flash;
     #endif
 }
 
