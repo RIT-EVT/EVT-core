@@ -30,7 +30,7 @@ namespace EVT::core::time
          */
         uint16_t year;
         /**
-         * The current month (0-12)
+         * The current month (1-12)
          */
         uint8_t month;
         /**
