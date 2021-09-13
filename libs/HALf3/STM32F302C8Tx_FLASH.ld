@@ -58,11 +58,17 @@ _estack = 0x20004000;    /* end of RAM */
 _Min_Heap_Size = 0x200;      /* required amount of heap  */
 _Min_Stack_Size = 0x400; /* required amount of stack */
 
-/* Specify the memory areas */
+/**
+ * Specify the memory areas 
+ *
+ * RAM: Default setting
+ * FLASH: Total available 64K across 32 2K pages. Last page dedicated
+ *  to use as non-violitile memory. So 62K of regular FLASH available.
+ */
 MEMORY
 {
 RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 16K
-FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 64K
+FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 62K
 }
 
 /* Define output sections */

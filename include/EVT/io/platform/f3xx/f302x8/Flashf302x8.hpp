@@ -1,13 +1,17 @@
-#ifndef _EVT_FLASH_
-#define _EVT_FLASH_
+#ifndef _EVT_Flashf302x8_
+#define _EVT_Flashf302x8_
 
-#include <stdint.h>
+#include <EVT/io/Flash.hpp>
 
 namespace EVT::core::IO {
 
-class Flash {
-
+class Flashf302x8 : public Flash {
 public:
+
+    /**
+     * Empty constructor, enables writting to STM flash
+     */
+    Flashf302x8();
 
     /**
      * Read 8 bits of data from the given address.
@@ -15,7 +19,7 @@ public:
      * @param[in] address The address to read from
      * @return The 8 bits of data at the address
      */
-    virtual uint8_t readByte(uint32_t address) = 0;
+    uint8_t readByte(uint32_t address);
 
     /**
      * Read 16 bites of data from the given address.
@@ -23,7 +27,7 @@ public:
      * @param[in] address The address to read from
      * @return The 16 bits of data at the address
      */
-    virtual uint16_t readHalfWord(uint32_t address) = 0;
+    uint16_t readHalfWord(uint32_t address);
 
     /**
      * Read 32 bits of data from the given address.
@@ -31,7 +35,7 @@ public:
      * @param[in] address The address to read from
      * @return The 32 bits of data at the address
      */
-    virtual uint32_t readWord(uint32_t address) = 0;
+    uint32_t readWord(uint32_t address);
 
     /**
      * Read the 64 bits of data from the givne address.
@@ -39,7 +43,7 @@ public:
      * @param[in] address The address to read from
      * @return The 32 bits of data the address
      */
-    virtual uint64_t readDoubleWord(uint32_t address) = 0;
+    uint64_t readDoubleWord(uint32_t address);
 
     /**
      * Write 8 bits of data to the given address.
@@ -47,7 +51,7 @@ public:
      * @param[in] address The address to write to
      * @param[in] data The data to write out
      */
-    virtual void writeByte(uint32_t address, uint8_t data) = 0;
+    void writeByte(uint32_t address, uint8_t data);
 
     /**
      * Write 16 bits of data to the given address.
@@ -55,7 +59,7 @@ public:
      * @param[in] address The address to write to
      * @param[in] data The data to write out
      */
-    virtual void writeHalfWord(uint32_t address, uint16_t data) = 0;
+    void writeHalfWord(uint32_t address, uint16_t data);
 
     /**
      * Write 32 bits of data to the given address.
@@ -63,7 +67,7 @@ public:
      * @param[in] address The address to write to
      * @param[in] data The data to write out
      */
-    virtual void writeWord(uint32_t address, uint32_t data) = 0;
+    void writeWord(uint32_t address, uint32_t data);
 
     /**
      * Write 64 bits of data to the given address.
@@ -71,7 +75,24 @@ public:
      * @param[in] address The address to write to
      * @param[in] data The data to write out
      */
-    virtual void writeDoubleWord(uint32_t address, uint64_t data) = 0;
+    void writeDoubleWord(uint32_t address, uint64_t data);
+
+private:
+    /**
+     * Starting place in memory that writing can take place.
+     * This is the address for the start of page 31 in the
+     * STM32f302x8 which is the last page. This is set aside
+     * for user manipulation.
+     */
+    static constexpr uint32_t USER_FLASH_START = 0x0800F000;
+    /**
+     * Numeric representation of the custom configuration we apply
+     * to make 31
+     */
+    static constexpr uint8_t CUSTOM_PAGE_CONFIG = 123;
+
 };
+
 }  // namespace EVT::core::IO
+
 #endif
