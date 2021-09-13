@@ -67,7 +67,9 @@ uint32_t RTCf302x8::getTime() {
     uint32_t s = ts.second;
 
 
-    // Get number of days sinc epoch
+    // Get number of days since epoch
+    // This algorithm is used to convert a date/time to an epoch.
+    // This algorithm was taken from http://howardhinnant.github.io/date_algorithms.html
     y -= m <= 2;
     const uint32_t era = (y >= 0 ? y : y-399) / 400;
     const uint32_t yoe = static_cast<uint32_t>(y - era * 400);
