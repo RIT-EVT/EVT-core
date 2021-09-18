@@ -10,7 +10,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
+import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
@@ -35,8 +35,6 @@ extensions = [
         'sphinx_rtd_theme'
 ]
 
-breathe_default_project = 'EVT'
-
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -57,3 +55,12 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+
+# -- Doxygen support ---- #
+os.system('mkdir -p ../build/doxygen')
+
+breathe_default_project = 'EVT'
+breathe_projects = { 'EVT': '../build/doxygen/xml/' }
+
+os.system('cd ../; doxygen')
