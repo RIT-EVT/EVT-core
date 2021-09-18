@@ -59,8 +59,6 @@ html_static_path = ['_static']
 
 # -- Doxygen support ---- #
 os.system('mkdir -p ../build/doxygen')
-
 breathe_default_project = 'EVT-core'
 breathe_projects = { 'EVT-core': '../build/doxygen/xml/' }
-
 os.system('cd ../; doxygen')
