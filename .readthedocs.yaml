@@ -1,0 +1,16 @@
+version: 2
+
+# Build from the docs/ directory with Sphinx
+sphinx:
+    configuration: docs/source/conf.py
+
+build:
+    image: latest
+    apt_packages:
+        - doxygen
+
+# Explicitly set the version of Python and its requirements
+python:
+    version: 3.7
+    install:
+        - requirements: docs/requirements.txt
