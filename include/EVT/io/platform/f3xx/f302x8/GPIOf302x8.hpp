@@ -58,12 +58,26 @@ public:
      * @param irqHandler the function pointer to the handler
      */
     void registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO *pin)) override;
+
+    /**
+     * Provides cleaner implementation of GPIO settings initialization
+     * @param targetGpio The GPIO instance
+     * @param pins The pins used by the device
+     * @param numOfPins Number of GPIO pins affected
+     * @param mode The GPIO configuration mode to be set
+     * @param pull The GPIO pull activation to be set
+     * @param speed The maximum GPIO output frequency
+     * @param alternate The specified peripheral connected to the pins
+     */
+    void gpioStateInit(GPIO_InitTypeDef targetGpio, Pin pins[], uint8_t numOfPins, uint32_t mode, uint32_t pull, uint32_t speed, uint8_t alternate);
    
 private:
     // See stm32f3xx_hal_gpio -> GPIO_mode for info on derivations
     constexpr static int GPIO_MODE_IT_SHIFT = 20;
     constexpr static uint32_t GPIO_TRIGGER_INTERRUPT_BASE = GPIO_MODE_IT_RISING & ~(1 << GPIO_MODE_IT_SHIFT);
 
+    // Default value when Alternate Function is not explicitly set
+    constexpr static uint8_t GPIO_NO_AF = 0x0DU;
 
     /// Pin representing the underlying HAL pin identifer
     uint16_t halPin;

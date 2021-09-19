@@ -64,6 +64,12 @@ GPIOf302x8::GPIOf302x8(Pin pin, GPIO::Direction direction)
 
     GPIO_InitTypeDef gpioInit;
 
+    //Pin myPins[2] = {pin, };
+    //uint8_t numOfPins = 1;
+    //uint32_t mode = static_cast<uint32_t>(direction);
+
+    //gpioStateInit(gpioInit, myPins, numOfPins, mode, GPIO_PULLDOWN, GPIO_SPEED_FREQ_HIGH, Alternate);
+
     this->halPin = 1 << (static_cast<uint16_t>(this->pin) & 0x0F);
     switch ((static_cast<uint8_t>(pin) & 0xF0) >> 4) {
         case 0x0:
@@ -163,4 +169,46 @@ void GPIOf302x8::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO *pin)) {
     }
 }
 
+void gpioStateInit(GPIO_InitTypeDef targetGpio, Pin pins[], uint8_t numOfPins, uint32_t mode, uint32_t pull, uint32_t speed, uint8_t alternate = 0x0DU){
+    targetGpio.Pin = static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[0]) & 0x0F)) |
+                     static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[1]) & 0x0F));
+
+    targetGpio.Mode = mode;
+
+    targetGpio.Pull = pull;
+
+    targetGpio.Speed = speed;
+
+    if(alternate != 0x0DU){
+    targetGpio.Alternate = alternate;
+    }
+
+    for(uint8_t i = 0; i < numOfPins; i++){
+        switch((static_cast<uint8_t>(pins[i]) & 0xF0) >> 4){
+            case 0x0:
+                __HAL_RCC_GPIOA_CLK_ENABLE();
+                HAL_GPIO_Init(GPIOA, &targetGpio);
+                break;
+            case 0x1:
+                __HAL_RCC_GPIOB_CLK_ENABLE();
+                HAL_GPIO_Init(GPIOB, &targetGpio);
+                break;
+            case 0x2:
+                __HAL_RCC_GPIOC_CLK_ENABLE();
+                HAL_GPIO_Init(GPIOC, &targetGpio);
+                break;
+            case 0x3:
+                __HAL_RCC_GPIOD_CLK_ENABLE();
+                HAL_GPIO_Init(GPIOD, &targetGpio);
+                break;
+            case 0x5:
+                __HAL_RCC_GPIOF_CLK_ENABLE();
+                HAL_GPIO_Init(GPIOF, &targetGpio);
+                break;
+            default:
+                break; // Should never get here
+        }
+    }
+
+}
 }  // namespace EVT::core::IO
