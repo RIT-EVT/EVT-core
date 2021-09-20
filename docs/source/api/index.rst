@@ -9,19 +9,25 @@ and platform agnostic features. For more information on each section, and
 for specifics on using the EVT-core API refer to the links below.
 
 DEV
-***
+===
 Devices, representation of hardware that can be interfaced with. In
 general, devices are communicated with via some sort of IO interface, but that
 is not strictly a rule. An LED is a simplistic example of a device.
 
 LED
-===
+---
 
 .. doxygenclass:: EVT::core::DEV::LED
    :members:
 
+RTC
+---
+
+.. doxygenclass:: EVT::core::DEV::RTC
+   :members:
+
 IO
-**
+==
 
 IO represents different IO interfaces. The common ones are I2C, GPIO,
 PWM, and CAN. IO generally includes and means for interfacing beyond the
@@ -33,25 +39,25 @@ shared across many devices, platform specific functionality may be
 supported by the platform's implementation of the IO interface.
 
 ADC
-===
+---
 
 .. doxygenclass:: EVT::core::IO::ADC
    :members:
 
 CAN
-===
+---
 
 .. doxygenclass:: EVT::core::IO::CAN
    :members:
 
 GPIO
-====
+----
 
 .. doxygenclass:: EVT::core::IO::GPIO
    :members:
 
 I2C
-===
+---
 
 .. doxygenclass:: EVT::core::IO::I2C
    :members:
@@ -63,7 +69,7 @@ PWM
    :members:
 
 UART
-====
+----
 
 .. doxygenclass:: EVT::core::IO::UART
    :members:
@@ -83,12 +89,13 @@ Platform Implementations
 .. toctree::
    :maxdepth: 2
    :caption: Supported Platforms:
-
+ 
+   stm32f302x8/stm32f302x8_dev.rst
    stm32f302x8/stm32f302x8_io.rst
 
 
 Platform
-********
+--------
 
 Platform represents the microcontroller that the code is running
 on. Platform specific code such as system setup is included here. For example,
@@ -96,7 +103,7 @@ placing the microcontroller into a "low power mode" is specific to the
 microcontroller itself.
 
 Utils
-*****
+=====
 
 Utilities refer to software utilities that make development easier.
 These can be used to reduce duplicated code, abstract common tasks, or handle

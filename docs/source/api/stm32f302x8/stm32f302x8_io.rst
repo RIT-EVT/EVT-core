@@ -1,5 +1,6 @@
+==============
 STM32F302x8 IO
-##############
+==============
 
 Below are the currently supported IO interfaces of EVT-core on the STM32F302x8.
 
