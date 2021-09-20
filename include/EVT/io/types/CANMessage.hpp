@@ -20,9 +20,9 @@ public:
     /**
      * Create an instance of a CANMessage
      *
-     * @param id The id of the CAN Message
-     * @param dataLength The size of the payload (<= CAN_MAX_PAYLOAD_SIZE)
-     * @param payload The data in the CAN message
+     * @param id[in] The id of the CAN Message
+     * @param dataLength[in] The size of the payload (<= CAN_MAX_PAYLOAD_SIZE)
+     * @param payload[in] The data in the CAN message
      */
     CANMessage(uint32_t id, uint8_t dataLength, uint8_t* payload);
 
@@ -56,14 +56,14 @@ public:
     /**
      * Set the id of the CAN Message
      *
-     * @param id The id of the CAN message
+     * @param id[in] The id of the CAN message
      */
     void setId(uint32_t id);
 
     /**
      * Set the size of the payload in bytes
      *
-     * @param size The size of the payload in bytes
+     * @param size[in] The size of the payload in bytes
      */
     void setDataLength(uint8_t size);
 
@@ -73,7 +73,7 @@ public:
      *
      * NOTE: Will copy over CAN_MAX_PAYLOAD_SIZE number of bytes over
      *
-     * @param payload The payload to copy over
+     * @param payload[in] The payload to copy over
      */
     void setPayload(const uint8_t* payload);
     

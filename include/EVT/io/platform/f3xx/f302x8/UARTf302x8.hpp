@@ -15,16 +15,16 @@ public:
      * Create an instance of the STMF302x8 UART interface using the provided
      * TX and RX pins.
      *
-     * @param txPin The UART TX pin.
-     * @param rxPin THe UART RX pin.
-     * @param baudrate The baudrate to operate the UART with/
+     * @param txPin[in] The UART TX pin.
+     * @param rxPin[in] THe UART RX pin.
+     * @param baudrate[in] The baudrate to operate the UART with/
      */
     UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate);
 
     /**
      * Set the baudrate that the UART will operate with.
      *
-     * @param baudrate The new baudrate to use
+     * @param baudrate[in] The new baudrate to use
      */
     void setBaudrate(uint32_t baudrate);
 
@@ -33,9 +33,9 @@ public:
      *
      * DEFAULT: 8 bit words, no parity, 1 stop bit
      *
-     * @param wordLength The number of bits in a work (5-8)
-     * @param parity The parity settings to use.
-     * @param numStopBits The number of stop bits (1-2)
+     * @param wordLength[in] The number of bits in a work (5-8)
+     * @param parity[in] The parity settings to use.
+     * @param numStopBits[in] The number of stop bits (1-2)
      */
     void setFormat(WordLength wordLength=WordLength::EIGHT,
             Parity parity=Parity::NONE,
@@ -63,14 +63,14 @@ public:
     /**
      * Put a single character to the UART module.
      *
-     * @param c The character to send over UART.
+     * @param c[in] The character to send over UART.
      */
      void putc(char c);
 
     /**
      * Put a null-terminal string out over UART.
      *
-     * @param s The null-terminated string to put over UART.
+     * @param s[in] The null-terminated string to put over UART.
      */
      void puts(const char* s);
 
@@ -85,14 +85,14 @@ public:
      * Print a formatted string over UART, not great performance so best in
      * test situations not production.
      *
-     * @param format The format string to print out.
+     * @param format[in] The format string to print out.
      */
      void printf(const char* format, ...);
 
     /**
      * Write out a single byte over UART.
      *
-     * @param byte The byte to write out over UART.
+     * @param byte[in] The byte to write out over UART.
      */
      void write(uint8_t byte);
 
@@ -106,16 +106,16 @@ public:
     /**
      * Write an arbitrary number of bytes out over UART.
      *
-     * @param bytes The data to send out over UART
-     * @param size The number of bytes to send out over UART.
+     * @param bytes[in] The data to send out over UART
+     * @param size[in] The number of bytes to send out over UART.
      */
      void writeBytes(uint8_t* bytes, size_t size);
 
     /**
      * Blocking reading of an arbitrary number of bytes in over UART.
      *
-     * @param bytes The data buffer to fill
-     * @param size The number of bytes to read in.
+     * @param bytes[out] The data buffer to fill
+     * @param size[in] The number of bytes to read in.
      */
      void readBytes(uint8_t* bytes, size_t size);
 

@@ -63,16 +63,16 @@ public:
      * Creates a new UART instance that will have the given TX and RX pins
      * as well as the given baud rate.
      *
-     * @param txPin The UART TX pin.
-     * @param rxPin The UART RX pin.
-     * @param baudrate The baudrate to operate the UART with.
+     * @param txPin[in] The UART TX pin.
+     * @param rxPin[in] The UART RX pin.
+     * @param baudrate[in] The baudrate to operate the UART with.
      */
     UART(Pin txPin, Pin rxPin, uint32_t baudrate);
 
     /**
      * Set the baudrate that the UART will operate with.
      *
-     * @param baudrate The new baudrate to use
+     * @param baudrate[in] The new baudrate to use
      */
     virtual void setBaudrate(uint32_t baudrate) = 0;
 
@@ -81,9 +81,9 @@ public:
      *
      * DEFAULT: 8 bit words, no parity, 1 stop bit
      *
-     * @param wordLength The number of bits in a work (5-8)
-     * @param parity The parity settings to use.
-     * @param numStopBits The number of stop bits (1-2)
+     * @param wordLength[in] The number of bits in a work (5-8)
+     * @param parity[in] The parity settings to use.
+     * @param numStopBits[in] The number of stop bits (1-2)
      */
     virtual void setFormat(WordLength wordLength=WordLength::EIGHT,
             Parity parity=Parity::NONE,
@@ -111,14 +111,14 @@ public:
     /**
      * Put a single character to the UART module.
      *
-     * @param c The character to send over UART.
+     * @param c[in] The character to send over UART.
      */
     virtual void putc(char c) = 0;
 
     /**
      * Put a null-terminal string out over UART.
      *
-     * @param s The null-terminated string to put over UART.
+     * @param s[in] The null-terminated string to put over UART.
      */
     virtual void puts(const char* s) = 0;
 
@@ -152,7 +152,7 @@ public:
     /**
      * Write out a single byte over UART.
      *
-     * @param byte The byte to write out over UART.
+     * @param byte[in] The byte to write out over UART.
      */
     virtual void write(uint8_t byte) = 0;
 
@@ -166,32 +166,18 @@ public:
     /**
      * Write an arbitrary number of bytes out over UART.
      *
-     * @param bytes The data to send out over UART
-     * @param size The number of bytes to send out over UART.
+     * @param bytes[in] The data to send out over UART
+     * @param size[in] The number of bytes to send out over UART.
      */
     virtual void writeBytes(uint8_t* bytes, size_t size) = 0;
 
     /**
      * Blocking reading of an arbitrary number of bytes in over UART.
      *
-     * @param bytes The data buffer to fill
-     * @param size The number of bytes to read in.
+     * @param bytes[out] The data buffer to fill
+     * @param size[in] The number of bytes to read in.
      */
     virtual void readBytes(uint8_t* bytes, size_t size) = 0;
-
-    /**
-     * Preferred method to get an instnace of a GPIO interface. This method
-     * will handle the logic of generating a UART interface to match the
-     * platform being used.
-     *
-     * @param txPin The transmit pin of the UART
-     * @param rxPin The receive pin of the UART
-     * @param baudrate The baudrate to operate the UART at
-     * @param portID The identification of the UART module to use
-     *
-     * @return Instance of a UART interface.
-     */
-    static UART& getInstance(Pin txPin, Pin rxPin, uint32_t baudrate, uint8_t portID);
 
 
 protected:

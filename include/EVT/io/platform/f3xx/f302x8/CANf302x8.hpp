@@ -27,16 +27,16 @@ public:
     /**
      * Create a new instance of an STM32f302x8 CAN interface
      *
-     * @param txPin The pin to trasmit CAN messages on
-     * @param rxPin The pin to receive CAN messages on
-     * @param loopbackEnabled Flag for enabling CAN loop back
+     * @param txPin[in] The pin to trasmit CAN messages on
+     * @param rxPin[in] The pin to receive CAN messages on
+     * @param loopbackEnabled[in] Flag for enabling CAN loop back
      */
     CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled=false);
 
     /**
      * Send a message over CAN
      *
-     * @param message THe mes   sage to send over CAN.
+     * @param message[in] The message to send over CAN.
      */
     void transmit(CANMessage& message);
 
@@ -51,8 +51,8 @@ public:
      * return a nullptr. If you leave this as blocking, then the program will
      * always block.
      *
-     * @param message {out} The message to populate with data
-     * @param blocking Used to determine if received should block or not, by
+     * @param message[out] The message to populate with data
+     * @param blocking[in] Used to determine if received should block or not, by
      *      default receive is blocking
      * @return A pointer to the passed in message, nullptr if message not
      *      received.
