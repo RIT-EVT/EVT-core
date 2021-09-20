@@ -9,3 +9,6 @@ venv/
 
 # IDE Files
 .idea/
+
+# macOS files
+.DS_Store
