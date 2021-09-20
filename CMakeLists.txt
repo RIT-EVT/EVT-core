@@ -12,9 +12,11 @@ include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_install.cmake)
 ###############################################################################
 # Project Setup
 ###############################################################################
+file(STRINGS version.txt EVT_VERSION)
+
 project(EVT
-        VERSION 0.1.1
-        LANGUAGES CXX C
+    VERSION ${EVT_VERSION}
+    LANGUAGES CXX C
 )
 
 add_library(${PROJECT_NAME} STATIC)
