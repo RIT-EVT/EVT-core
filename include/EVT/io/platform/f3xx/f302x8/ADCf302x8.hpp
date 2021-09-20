@@ -14,7 +14,7 @@ public:
     /**
      * Setup the given pin for ADC usage
      *
-     * @param pin The pin to setup for ADC
+     * @param pin[in] The pin to setup for ADC
      */
     ADCf302x8(Pin pin);
 
@@ -34,7 +34,8 @@ public:
 
     /**
      * Read the value from the ADC as a percentage of the possible values
-     * from 0 to 1
+     * from 0 to 1. This is based on the maximum possible value the ADC
+     * can read.
      *
      * @return The ADC value as a percentage
      */

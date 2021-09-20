@@ -18,21 +18,21 @@ public:
     /**
      * Setup the given pin for PWM usage.
      *
-     * @param pin The pin to setup for PWM
+     * @param pin[in] The pin to setup for PWM
      */
     PWM(Pin pin);
 
     /**
      * Set the duty cycle for the pin to operate at.
      *
-     * @param dutyCycle Duty cycle to set the pin to.
+     * @param dutyCycle[in] Duty cycle to set the pin to.
      */
     virtual void setDutyCycle(float dutyCycle) = 0;
 
     /**
      * Set the period for the PWM in seconds.
      *
-     * @param period The period of the PWM in seconds.
+     * @param period[in] The period of the PWM in seconds.
      */
     virtual void setPeriod(float period) = 0;
 

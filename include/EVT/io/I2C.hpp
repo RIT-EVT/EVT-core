@@ -15,23 +15,23 @@ public:
      * Make an instance of an I2C interface that will use the given pins
      * for clock and data lines.
      *
-     * @param sclPin The clock pin
-     * @param sdaPin The data pin
+     * @param sclPin[in] The clock pin
+     * @param sdaPin[in] The data pin
      */
     I2C(Pin sclPin, Pin sdaPin);
 
     /**
      * Write a single byte out over I2C.
      *
-     * @param addr The 7 bit unshifted I2C address to write to
-     * @param byte The value to write over I2C.
+     * @param addr[in] The 7 bit unshifted I2C address to write to
+     * @param byte[in] The value to write over I2C.
      */
     virtual void write(uint8_t addr, uint8_t byte) = 0;
 
     /**
      * Read a single byte back from the I2C bus.
      *
-     * @param addr The 7 bit unshifted I2C address to read from.
+     * @param addr[in] The 7 bit unshifted I2C address to read from.
      * @return The byte read from the address.
      */
     virtual uint8_t read(uint8_t addr) = 0;
@@ -40,18 +40,18 @@ public:
      * Write out multiple bytes over I2C. Each byte will be written one by
      * one.
      *
-     * @param addr The 7 bit unshifted I2C address to write to.
-     * @param bytes The bytes to write out over I2C.
-     * @param length The number of bytes to write out.
+     * @param addr[in] The 7 bit unshifted I2C address to write to.
+     * @param bytes[in] The bytes to write out over I2C.
+     * @param length[in] The number of bytes to write out.
      */
     void write(uint8_t addr, uint8_t* bytes, uint8_t length);
 
     /**
      * Read multiple bytes from an I2C device.
      *
-     * @param addr The 7 bit unshifted I2C address to write to
-     * @param bytes The buffer to fill with the read in bytes.
-     * @param length The number of bytes to read.
+     * @param addr[in] The 7 bit unshifted I2C address to write to
+     * @param bytes[out] The buffer to fill with the read in bytes.
+     * @param length[in] The number of bytes to read.
      */
     void read(uint8_t addr, uint8_t* bytes, uint8_t length);
 
@@ -67,8 +67,8 @@ public:
     /**
      * Read a value from a register that has an 8 bit address and 8 bit value
      *
-     * @param addr The 7 bit unshifted I2C address to read from.
-     * @param reg The 8 bit register
+     * @param addr[in] The 7 bit unshifted I2C address to read from.
+     * @param reg[in] The 8 bit register
      * @return The 8 bit value of the register.
      */
     uint8_t readReg(uint8_t addr, uint8_t reg);
@@ -76,11 +76,11 @@ public:
     /**
      * Write out a multi byte register value.
      *
-     * @param addr The 7 bit unshifted I2C address to write to
-     * @param reg The register bytes
-     * @param regLength The number of bytes in the register address
-     * @param bytes The data to write out
-     * @param length The number of bytes in the data
+     * @param addr[in] The 7 bit unshifted I2C address to write to
+     * @param reg[in] The register bytes
+     * @param regLength[in] The number of bytes in the register address
+     * @param bytes[in] The data to write out
+     * @param length[in] The number of bytes in the data
      */
     void writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
             uint8_t* bytes, uint8_t length);
@@ -88,11 +88,11 @@ public:
     /**
      * Read a value from a register.
      *
-     * @param addr The 7 bit unshifted I2C address to read from.
-     * @param reg The bytes containing the register to read from
-     * @param regLength The size in bytes of the register
-     * @param bytes The bytes read from the register
-     * @param length The size of the data returned by the register in bytes
+     * @param addr[in] The 7 bit unshifted I2C address to read from.
+     * @param reg[in] The bytes containing the register to read from
+     * @param regLength[in] The size in bytes of the register
+     * @param bytes[out] The bytes read from the register
+     * @param length[in] The size of the data returned by the register in bytes
      */
     void readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
             uint8_t* bytes, uint8_t length);

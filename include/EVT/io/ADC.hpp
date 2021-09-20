@@ -36,7 +36,8 @@ public:
 
     /**
      * Read the value from the ADC as a percentage of the possible values
-     * from 0 to 1
+     * from 0 to 1 This is based on the maximum possible valie the ADC
+     * can read.
      *
      * @return The ADC value as a percentage
      */

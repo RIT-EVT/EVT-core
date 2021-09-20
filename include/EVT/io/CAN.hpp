@@ -30,16 +30,16 @@ public:
      * Creates a new instance of the CAN interface which will use the given
      * transmit and receive pins.
      *
-     * @param txPin The pin to use for transmitting data
-     * @param rxPin The pin to use for receiving data
-     * @param loopbackEnabled Flag to enable CAN loop back functionality
+     * @param txPin[in] The pin to use for transmitting data
+     * @param rxPin[in] The pin to use for receiving data
+     * @param loopbackEnabled[in] Flag to enable CAN loop back functionality
      */
     CAN(Pin txPin, Pin rxPin, bool loopbackEnabled=false);
 
     /**
      * Transmit the message over CAN.
      *
-     * @param message The message to send over CAN.
+     * @param message[in] The message to send over CAN.
      */
     virtual void transmit(CANMessage& message) = 0;
 
@@ -50,8 +50,8 @@ public:
      * In non-blocking, a nullptr will be returned if no message is currently
      * in the mailbox.
      *
-     * @param message {out} The message to populate with data
-     * @param blocking Used to determine if received should block or not, by
+     * @param message[out] The message to populate with data
+     * @param blocking[in] Used to determine if received should block or not, by
      *      default receive is blocking
      * @return A pointer to the passed in message, nullptr if message not
      *      received.
