@@ -22,7 +22,9 @@ copyright = '2021, EVT'
 author = 'EVT'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.2'
+with open('../../version.txt') as version_file:
+    version = version_file.readlines()[0]
+release = version
 
 
 # -- General configuration ---------------------------------------------------
