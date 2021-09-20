@@ -63,7 +63,7 @@ I2C
    :members:
 
 PWM
-===
+---
 
 .. doxygenclass:: EVT::core::IO::PWM
    :members:
