@@ -1,5 +1,6 @@
+===
 API
-###
+===
 
 The EVT-core library is broken up into several semantic sections.
 The sections are meant as a way to divide functionality semantically. Each
