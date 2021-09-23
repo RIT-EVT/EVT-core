@@ -150,16 +150,9 @@ EVT-Core is heavily a work in progress, below is a running list of the features
 or concepts that EVT-Core should support.
 
 * STM32F446RE HAL
-* I2C
 * SPI
-* PWM
-* ADC
 * Flash
-* RTC
-* UART
-* GPIO
 * Test Platform
-* Linting
 * System Initialization Function
     * Calling HAL init
     * Clock settings
@@ -171,7 +164,6 @@ or concepts that EVT-Core should support.
 `-Wl,--gc-sections` without removing the handler functions. This can half by
 accomplished by calling the target handler once from main code execution.
 * Style checking should be part of the build process.
-* Add documentation for using this library.
 
 ## Links and Resources
 
