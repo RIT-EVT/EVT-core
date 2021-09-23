@@ -69,7 +69,7 @@ public:
      * @param speed maximum gpio output frequency
      * @param alternate gpio alternate function selection
      */
-    void gpioStateInit(GPIO_InitTypeDef targetGpio, Pin pins[], uint8_t numOfPins, uint32_t mode, uint32_t pull, uint32_t speed, uint8_t alternate);
+    static void gpioStateInit(GPIO_InitTypeDef *targetGpio, Pin *pins, uint8_t numOfPins, uint32_t mode, uint32_t pull, uint32_t speed, uint8_t alternate = 0x0DU);
    
 private:
     // See stm32f3xx_hal_gpio -> GPIO_mode for info on derivations
