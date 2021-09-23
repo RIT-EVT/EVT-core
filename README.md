@@ -24,6 +24,11 @@ EVT-Core is a CMake library and as such can be built as a library and
 manually linked to, or can be added as a sub-directory to a larger project.
 Further information is to come.
 
+### Where can I get more Information?
+
+Check out EVT-core's documentation hosted [here](https://evt-core.readthedocs.io/en/latest/)
+for more information.
+
 ### How do I Build the Code?
 
 The compilation process is handled via CMake following general standard
@@ -105,8 +110,6 @@ variable! You will probably have to restart your system after this.
 
 7. At this point things get choppy. There have been some success building from
 terminal manually, some with VS code, but mostly with CLion.
-
-
 
 
 After running those commands, you should have a fully build EVT-core including
