@@ -19,7 +19,7 @@ look at the layers that make up EVT-core.
 Currently EVT-core is made up of essentially three major components. As
 EVT-core continues to grow, more components will be added.
 
-The MCU is the micrcontroller itself. Currently EVT-core supports only the
+The MCU is the microcontroller itself. Currently EVT-core supports only the
 STM32f302x8, in the future we hope to expand to other platforms.
 
 HAL or Hardware Abstraction Layer is generally provided by vendors and
