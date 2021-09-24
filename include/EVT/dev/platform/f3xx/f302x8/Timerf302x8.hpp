@@ -20,6 +20,10 @@ public:
     void startTimer(uint32_t timerPeriod, void (*irqHandler)()) override;
 
     void stopTimer() override;
+
+private:
+//    // Instance of the HAL Timer instance
+//    TIM_HandleTypeDef halTimer;
 };
 
 }  // namespace EVT::core::DEV
