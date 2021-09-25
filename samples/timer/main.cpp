@@ -11,30 +11,39 @@ namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
 
 IO::GPIO* ledGPIO;
-IO::GPIO* interruptGPIO;
+IO::GPIO* interruptGPIO2Hz;
+IO::GPIO* interruptGPIOStopStart;
 
-void timerIRQHandler(TIM_HandleTypeDef *htim) {
+void timer2IRQHandler(TIM_HandleTypeDef *htim) {
     IO::GPIO::State state = ledGPIO->readPin();
     IO::GPIO::State toggleState = state == IO::GPIO::State::HIGH ? IO::GPIO::State::LOW : IO::GPIO::State::HIGH;
     ledGPIO->writePin(toggleState);
-    interruptGPIO->writePin(toggleState);
+    interruptGPIO2Hz->writePin(toggleState);
+}
+
+void timer15IRQHandler(TIM_HandleTypeDef *htim) {
+    IO::GPIO::State state = interruptGPIOStopStart->readPin();
+    IO::GPIO::State toggleState = state == IO::GPIO::State::HIGH ? IO::GPIO::State::LOW : IO::GPIO::State::HIGH;
+    interruptGPIOStopStart->writePin(toggleState);
 }
 
 int main() {
     // Initialize system
     IO::init();
 
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-
     // Setup GPIO
     ledGPIO = &IO::getGPIO<IO::Pin::LED>();
-    interruptGPIO = &IO::getGPIO<IO::Pin::PC_3>(IO::GPIO::Direction::OUTPUT);
+    interruptGPIO2Hz = &IO::getGPIO<IO::Pin::PC_3>(IO::GPIO::Direction::OUTPUT);
+    interruptGPIOStopStart = &IO::getGPIO<IO::Pin::PC_2>(IO::GPIO::Direction::OUTPUT);
 
     // Setup the Timer
-    auto timer = DEV::Timerf302x8(500, timerIRQHandler);
+    auto timer2 = DEV::Timerf302x8(TIM2, 500, timer2IRQHandler);
+    auto timer15 = DEV::Timerf302x8(TIM15, 1000, timer15IRQHandler);
 
     while (1) {
-        uart.printf("Still Running...\n\r");
-        EVT::core::time::wait(1000);
+        EVT::core::time::wait(2666);
+        timer15.stopTimer();
+        EVT::core::time::wait(2666);
+        timer15.startTimer();
     }
 }

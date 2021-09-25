@@ -16,11 +16,13 @@ public:
     /**
      * Will initialize the timer device on the STM with the given period and the given IRQ Handler
      * that triggers with the given period.  Starts the timer
+     * @param timerPeripheral The timer peripheral to configure.  Possible options for this board are
+     * TIM2, TIM15, TIM16, TIM17.  It is up to the user to verify that resource conflicts
+     * do not occur.
      * @param clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
      * @param irqHandler Function pointer to the IRQ Handler desired for the given timer.
      */
-    explicit Timerf302x8(uint32_t clockPeriod, void (*irqHandler)(TIM_HandleTypeDef *htim));
-    // TODO: Set it up so you can configure which timer device is initialized
+    explicit Timerf302x8(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod, void (*irqHandler)(TIM_HandleTypeDef *htim));
 
     void startTimer(void (*irqHandler)(TIM_HandleTypeDef *htim)) override;
 
@@ -29,8 +31,8 @@ public:
     void stopTimer() override;
 
 private:
-//    // Instance of the HAL Timer instance
-//    TIM_HandleTypeDef halTimer;
+    // Pointer to the halTimer struct stored in the global of Timerf302x8.cpp
+    TIM_HandleTypeDef *halTimer;
 
     // Timer clock period
     uint32_t clockPeriod;
@@ -39,7 +41,7 @@ private:
      * Handles the initialization of the timer module.  Actually configures the device and enables it.
      * @param clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
      */
-    void initTimer(uint32_t clockPeriod);
+    void initTimer(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod);
 };
 
 }  // namespace EVT::core::DEV
