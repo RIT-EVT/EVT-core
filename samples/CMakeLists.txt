@@ -2,6 +2,7 @@
 add_subdirectory(adc)
 add_subdirectory(blink)
 add_subdirectory(can)
+add_subdirectory(canopen)
 add_subdirectory(echo)
 add_subdirectory(gpio_interrupt)
 add_subdirectory(i2c)

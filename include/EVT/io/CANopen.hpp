@@ -14,7 +14,6 @@ namespace EVT::core::IO {
     *
     * @param can[in] The CAN interface that will be used for the stack driver
     * @param canDriver[out] The CANopen stack driver to populate
-    * @return pointer to the CAN driver
     */
     void getCANopenDriver(CAN& can, CO_IF_CAN_DRV* canDriver);
 
