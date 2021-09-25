@@ -11,10 +11,9 @@ class Timer{
 public:
     /**
      * Starts the given timer and registers the given interrupt pointer to trigger when the timer overflows
-     * @param timerPeriod The counter period in milliseconds
      * @param irqHandler The IRQ Handler function pointer
      */
-    virtual void startTimer(uint32_t timerPeriod, void (*irqHandler)()) = 0;
+    virtual void startTimer(void (*irqHandler)()) = 0;
     // TODO: Determine if we want timer to always act on repeat, or if we want one shot timer
     // TODO: Implement to work for any General Purpose Timers on the device instead of using a default one
 
