@@ -75,11 +75,20 @@ add_compile_definitions(STM32F302x8)
 add_compile_definitions(USE_HAL_DRIVER)
 
 add_subdirectory(libs/HALf3/)
+add_subdirectory(libs/canopen/)
+
+target_include_directories(Canopen PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs/canopen/Canopen/include/>
+    $<INSTALL_INTERFACE:include/canopen>
+)
+install(TARGETS Canopen EXPORT Canopen-config)
+install(EXPORT Canopen-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Canopen)
 
 # Later this will be handled dynamically, either the HALf3 or the HALf4 will
 # be linked to
 target_link_libraries(${PROJECT_NAME}
     PUBLIC HALf3
+    PUBLIC Canopen
 )
 
 ###############################################################################
