@@ -1,7 +1,7 @@
 #ifndef EVT_TIMER302X8_H
 #define EVT_TIMER302X8_H
 
-#include <EVT/dev/platform/Timer.hpp>
+#include <EVT/dev/Timer.hpp>
 #include <cstdint>
 #include <HALf3/stm32f3xx_hal_tim.h>
 
