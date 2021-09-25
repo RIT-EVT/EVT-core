@@ -30,6 +30,8 @@ public:
 
     void stopTimer() override;
 
+    void reloadTimer() override;
+
 private:
     // Pointer to the halTimer struct stored in the global of Timerf302x8.cpp
     TIM_HandleTypeDef *halTimer;

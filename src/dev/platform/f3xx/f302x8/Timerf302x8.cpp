@@ -159,4 +159,8 @@ void Timerf302x8::startTimer() {
     stopTimer();  // Stop timer in case it was already running
     initTimer(this->halTimer->Instance, this->clockPeriod);
 }
+
+void Timerf302x8::reloadTimer() {
+    this->halTimer->Instance->CNT &= ~(0xFFFFFFFF);  // Clear the Counter register to reset the timer
+}
 }  // namespace EVT::core::DEV

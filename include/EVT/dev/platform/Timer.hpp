@@ -14,11 +14,10 @@ class Timer{
 public:
     /**
      * Starts the given timer and registers the given interrupt pointer to trigger when the timer overflows
-     * @param irqHandler The IRQ Handler function pointer
+     * @param irqHandler The IRQ Handler function pointer.  Sets a new interrupt handler function
      */
     virtual void startTimer(void (*irqHandler)(TIM_HandleTypeDef *htim)) = 0;
     // TODO: Determine if we want timer to always act on repeat, or if we want one shot timer
-    // TODO: Implement to work for any General Purpose Timers on the device instead of using a default one
 
     /**
      * Starts the given timer using the IRQ Handler already assigned to that timer.
@@ -29,6 +28,11 @@ public:
      * Stops the current timer from running.  Does not complete its current counting sequence.
      */
     virtual void stopTimer() = 0;
+
+    /**
+     * Resets the timer counter.
+     */
+    virtual void reloadTimer() = 0;
 };
 
 }  // namespace EVT::core::DEV
