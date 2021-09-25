@@ -47,6 +47,7 @@ int main() {
 
     // Setup the Timer
     auto timer2 = DEV::Timerf302x8(TIM2, 500, timer2IRQHandler);
+    timer2.reloadTimer();  // Added so cpplint does not complain about unused variable
     auto timer15 = DEV::Timerf302x8(TIM15, 100, timer15IRQHandler);
     auto timer16 = DEV::Timerf302x8(TIM16, 200, timer16IRQHandler);
 

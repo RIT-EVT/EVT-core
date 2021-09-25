@@ -31,6 +31,8 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim) {
     } else if (peripheral == TIM17) {
         __HAL_RCC_TIM17_CLK_ENABLE();
         irqNum = TIM17_IRQn;
+    } else {
+        return;  // Should never reach, but if an invalid peripheral is passed in then simply return
     }
 
     HAL_NVIC_SetPriority(irqNum, 0, 0);
@@ -53,6 +55,8 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *htim) {
     } else if (peripheral == TIM17) {
         __HAL_RCC_TIM17_CLK_DISABLE();
         irqNum = TIM17_IRQn;
+    } else {
+        return;  // Should never reach, but if an invalid peripheral is passed in then simply return
     }
 
     HAL_NVIC_DisableIRQ(irqNum);
@@ -103,8 +107,6 @@ uint8_t getTimerInterruptIndex(TIM_TypeDef *peripheral) {
     }
 
     return interruptIdx;
-
-
 }
 
 namespace EVT::core::DEV {

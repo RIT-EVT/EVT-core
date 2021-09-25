@@ -16,11 +16,11 @@ public:
     /**
      * Will initialize the timer device on the STM with the given period and the given IRQ Handler
      * that triggers with the given period.  Starts the timer
-     * @param timerPeripheral The timer peripheral to configure.  Possible options for this board are
+     * @param timerPeripheral[in] The timer peripheral to configure.  Possible options for this board are
      * TIM2, TIM15, TIM16, TIM17.  It is up to the user to verify that resource conflicts
      * do not occur.
-     * @param clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
-     * @param irqHandler Function pointer to the IRQ Handler desired for the given timer.
+     * @param clockPeriod[in] the clock period in ms.  An interrupt will be triggered at that frequency.
+     * @param irqHandler[in] Function pointer to the IRQ Handler desired for the given timer.
      */
     explicit Timerf302x8(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod, void (*irqHandler)(TIM_HandleTypeDef *htim));
 
@@ -41,7 +41,9 @@ private:
 
     /**
      * Handles the initialization of the timer module.  Actually configures the device and enables it.
-     * @param clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
+     * @param timerPeripheral[in]  The timer peripheral to configure.  Possible options for this board are
+     * TIM2, TIM15, TIM16, TIM17.  It is up to the user to verify that resource conflicts
+     * @param clockPeriod[in] the clock period in ms.  An interrupt will be triggered at that frequency.
      */
     void initTimer(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod);
 };
