@@ -1,6 +1,9 @@
 #ifndef EVT_TIMER_HPP
 #define EVT_TIMER_HPP
 
+#include<HALf3/stm32f3xx.h>
+#include<HALf3/stm32f3xx_hal_def.h>
+
 namespace EVT::core::DEV {
 
 /**
@@ -13,9 +16,14 @@ public:
      * Starts the given timer and registers the given interrupt pointer to trigger when the timer overflows
      * @param irqHandler The IRQ Handler function pointer
      */
-    virtual void startTimer(void (*irqHandler)()) = 0;
+    virtual void startTimer(void (*irqHandler)(TIM_HandleTypeDef *htim)) = 0;
     // TODO: Determine if we want timer to always act on repeat, or if we want one shot timer
     // TODO: Implement to work for any General Purpose Timers on the device instead of using a default one
+
+    /**
+     * Starts the given timer using the IRQ Handler already assigned to that timer.
+     */
+    virtual void startTimer() = 0;
 
     /**
      * Stops the current timer from running.  Does not complete its current counting sequence.
