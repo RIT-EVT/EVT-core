@@ -20,60 +20,60 @@ UARTf302x8::UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate)
     uint8_t numOfPins = 2;
     uint8_t alt_id = 7;
 
-    // // Determine portID
-    // uint8_t portID = 1;
+    // Determine portID
+    uint8_t portID = 1;
 
-    // switch (txPin) {
-    //     case Pin::PA_9:
-    //     case Pin::PB_6:
-    //     case Pin::PC_4:
-    //         portID = 1;
-    //         break;
-    //     case Pin::PA_2:
-    //     case Pin::PA_14:
-    //     case Pin::PB_3:
-    //         portID = 2;
-    //         break;
-    //     case Pin::PB_9:
-    //     case Pin::PB_10:
-    //     case Pin::PC_10:
-    //         portID = 3;
-    //         break;
-    //     default:
-    //         break;
-    // }
+    switch (txPin) {
+        case Pin::PA_9:
+        case Pin::PB_6:
+        case Pin::PC_4:
+            portID = 1;
+            break;
+        case Pin::PA_2:
+        case Pin::PA_14:
+        case Pin::PB_3:
+            portID = 2;
+            break;
+        case Pin::PB_9:
+        case Pin::PB_10:
+        case Pin::PC_10:
+            portID = 3;
+            break;
+        default:
+            break;
+    }
 
-    // switch (portID) {
-    //     case 1:
-    //         halUART.Instance = USART1;
+    switch (portID) {
+        case 1:
+            halUART.Instance = USART1;
 
-    //         if (!(__HAL_RCC_USART1_IS_CLK_ENABLED()))
-    //             __HAL_RCC_USART1_CLK_ENABLE();
+            if (!(__HAL_RCC_USART1_IS_CLK_ENABLED()))
+                __HAL_RCC_USART1_CLK_ENABLE();
 
-    //         gpioInit.Alternate = GPIO_AF7_USART1;
+//            gpioInit.Alternate = GPIO_AF7_USART1;
 
-    //         break;
-    //     case 2:
-    //         halUART.Instance = USART2;
+            break;
+        case 2:
+            halUART.Instance = USART2;
 
-    //         if (!(__HAL_RCC_USART2_IS_CLK_ENABLED()))
-    //             __HAL_RCC_USART2_CLK_ENABLE();
+            if (!(__HAL_RCC_USART2_IS_CLK_ENABLED()))
+                __HAL_RCC_USART2_CLK_ENABLE();
 
-    //         gpioInit.Alternate = GPIO_AF7_USART2;
+//            gpioInit.Alternate = GPIO_AF7_USART2;
 
-    //         break;
-    //     case 3:
-    //         halUART.Instance = USART3;
+            break;
+        case 3:
+            halUART.Instance = USART3;
 
-    //         if (!(__HAL_RCC_USART3_IS_CLK_ENABLED()))
-    //             __HAL_RCC_USART3_CLK_ENABLE();
+            if (!(__HAL_RCC_USART3_IS_CLK_ENABLED()))
+                __HAL_RCC_USART3_CLK_ENABLE();
 
-    //         gpioInit.Alternate = GPIO_AF7_USART3;
+//            gpioInit.Alternate = GPIO_AF7_USART3;
 
-    //         break;
-    //     default:
-    //         break;
-    // }
+            break;
+        default:
+            break;
+    }
 
     // Pin myPins[2] = {txPin, rxPin};
 
