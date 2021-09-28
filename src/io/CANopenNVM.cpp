@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#define MAX_SIZE 128
+#define MAX_SIZE 64
 
 namespace {
     uint8_t testerStorage[MAX_SIZE];
