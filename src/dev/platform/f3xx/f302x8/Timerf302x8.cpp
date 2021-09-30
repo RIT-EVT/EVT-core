@@ -4,7 +4,7 @@
 #include <EVT/platform/f3xx/stm32f302x8.hpp>
 
 TIM_HandleTypeDef halTimers[4];
-void (*timerInterruptHandlers[4])(TIM_HandleTypeDef *htim) = {nullptr};
+void (*timerInterruptHandlers[4])(void *htim) = {nullptr};
 
 enum class timerInterruptIndex {
     TIM2_IDX = 0u,
@@ -112,7 +112,7 @@ uint8_t getTimerInterruptIndex(TIM_TypeDef *peripheral) {
 namespace EVT::core::DEV {
 
 Timerf302x8::Timerf302x8(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod,
-                         void (*irqHandler)(TIM_HandleTypeDef *htim)) {
+                         void (*irqHandler)(void *htim)) {
     timerInterruptHandlers[getTimerInterruptIndex(timerPeripheral)] = irqHandler;
     initTimer(timerPeripheral, clockPeriod);
     this->halTimer = &halTimers[getTimerInterruptIndex(timerPeripheral)];
@@ -146,7 +146,7 @@ void Timerf302x8::initTimer(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod) 
 }
 
 
-void Timerf302x8::startTimer(void (*irqHandler)(TIM_HandleTypeDef *htim)) {
+void Timerf302x8::startTimer(void (*irqHandler)(void *htim)) {
     TIM_TypeDef *timerPeripheral = this->halTimer->Instance;
     stopTimer();
     timerInterruptHandlers[getTimerInterruptIndex(timerPeripheral)] = irqHandler;
@@ -154,7 +154,7 @@ void Timerf302x8::startTimer(void (*irqHandler)(TIM_HandleTypeDef *htim)) {
 }
 
 void Timerf302x8::stopTimer() {
-    HAL_TIM_Base_DeInit(this->halTimer);
+    HAL_TIM_Base_Stop_IT(this->halTimer);
 }
 
 void Timerf302x8::startTimer() {

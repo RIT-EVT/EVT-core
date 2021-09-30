@@ -22,9 +22,9 @@ public:
      * @param clockPeriod[in] the clock period in ms.  An interrupt will be triggered at that frequency.
      * @param irqHandler[in] Function pointer to the IRQ Handler desired for the given timer.
      */
-    explicit Timerf302x8(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod, void (*irqHandler)(TIM_HandleTypeDef *htim));
+    explicit Timerf302x8(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod, void (*irqHandler)(void *htim));
 
-    void startTimer(void (*irqHandler)(TIM_HandleTypeDef *htim)) override;
+    void startTimer(void (*irqHandler)(void *htim)) override;
 
     void startTimer() override;
 
