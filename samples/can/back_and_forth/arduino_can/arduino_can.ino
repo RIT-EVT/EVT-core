@@ -65,11 +65,11 @@ void loop() {
   CAN.beginPacket(0x601);
   
   // Command byte
-  CAN.write(0x23);
+  CAN.write(0x2F);
 
   // Index access
-  CAN.write(0x12);
   CAN.write(0x34);
+  CAN.write(0x12);
 
   // Subindex
   CAN.write(0x00);
