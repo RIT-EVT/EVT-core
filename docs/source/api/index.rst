@@ -26,6 +26,12 @@ RTC
 .. doxygenclass:: EVT::core::DEV::RTC
    :members:
 
+Timer
+-----
+
+.. doxygenclass:: EVT::core::DEV::Timer
+   :members:
+
 IO
 ==
 

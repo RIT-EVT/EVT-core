@@ -11,3 +11,9 @@ RTC
 .. doxygenclass:: EVT::core::DEV::RTCf302x8
    :members:
 
+Timer
+=====
+
+.. doxygenclass:: EVT::core::DEV::Timerf302x8
+   :members:
+
