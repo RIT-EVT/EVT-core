@@ -30,6 +30,9 @@ uint8_t DemoErrReg = 0;
 uint8_t DemoString[] = "TEST";    /* string memory */
 uint32_t syncId = 0x80;
 
+uint32_t clientToServer = 0x601;
+uint32_t serverToClient = 0x581;
+
 CO_OBJ_STR DemoStringObj {
     .Offset = 0,
     .Start = &DemoString[0],
@@ -46,9 +49,12 @@ CO_OBJ_T canObjectDictionary[] = {
     { CO_KEY(0x1018, 3, CO_STRING|CO_OBJ____R_), CO_TSTRING, (uintptr_t)&DemoStringObj },
     { CO_KEY(0x1018, 4, CO_STRING|CO_OBJ____R_), CO_TSTRING, (uintptr_t)&DemoStringObj },
 
+    { CO_KEY(0x1200, 1, CO_UNSIGNED32|CO_OBJ____R_), 0, (uintptr_t)&clientToServer },
+    { CO_KEY(0x1200, 2, CO_UNSIGNED32|CO_OBJ____R_), 0, (uintptr_t)&serverToClient },
 
 
-    { CO_KEY(0x1234, 0, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)sampleData }
+
+    { CO_KEY(0x1234, 0, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&sampleData }
 };
 
 
@@ -156,7 +162,7 @@ int main() {
         .NodeId = 0x01,
         .Baudrate = 500000,
         .Dict = &canObjectDictionary[0],
-        .DictLen = 5,
+        .DictLen = 8,
         .EmcyCode = NULL,
         .TmrMem = NULL,
         .TmrNum = 0,
@@ -175,9 +181,7 @@ int main() {
     uart.printf("Error: %d\r\n", CONodeGetErr(&canNode));
 
     while (1) {
-        if(sampleData != 0) {
-            uart.printf("Value of my number: %d\n\r", sampleData);
-        }
+        uart.printf("Value of my number: %d\n\r", sampleData);
         CONodeProcess(&canNode);
         time::wait(10);
     }
