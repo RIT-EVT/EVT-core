@@ -73,7 +73,7 @@ endif()
 ###############################################################################
 # TODO: Decouple hardware specific flags
 set(EVT_COMMON_FLAGS        "-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 \
-                            -mfloat-abi=hard -Os -Wall -fdata-sections \
+                            -mfloat-abi=hard -Og -Wall -fdata-sections \
                             -ffunction-sections -MMD -MP -MF -ggdb -g3")
 
 set(CMAKE_C_FLAGS           "${EVT_COMMON_FLAGS} \

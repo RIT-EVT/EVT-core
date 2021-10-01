@@ -124,12 +124,17 @@ void CANf302x8::transmit(CANMessage& message) {
 
     uint32_t mailbox = CAN_TX_MAILBOX0;
 
+<<<<<<< HEAD
     // Set the message ID
     if (message.isCANExtended())
         txHeader.ExtId = message.getId();
     else
         txHeader.StdId = message.getId();
     txHeader.IDE = message.isCANExtended() ? CAN_ID_EXT: CAN_ID_STD;
+=======
+    txHeader.StdId = message.getId();
+    txHeader.IDE = CAN_ID_STD;
+>>>>>>> ff160e6 (CANopen starting without errors)
     // TODO: Consider having remote setting be part of CAN message
     txHeader.RTR = CAN_RTR_DATA;
     txHeader.DLC = message.getDataLength();

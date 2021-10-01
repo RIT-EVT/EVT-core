@@ -59,20 +59,31 @@ void setup() {
 
 void loop() {
 
-  while(!readyToSend) {
-    delay(5);
-  }
+
   Serial.print("Sending CAN message ");
 
-  CAN.beginExtendedPacket(0xabcdef);
-  CAN.write(0x01);
-  CAN.write(0x02);
-  CAN.write(0x03);
-  CAN.write(0x04);
+  CAN.beginPacket(0x601);
+  
+  // Command byte
+  CAN.write(0x23);
+
+  // Index access
+  CAN.write(0x12);
+  CAN.write(0x34);
+
+  // Subindex
+  CAN.write(0x00);
+
+  // Data
   CAN.write(0x05);
+  CAN.write(0x00);
+  CAN.write(0x00);
+  CAN.write(0x05);
+  
   CAN.endPacket();
 
   readyToSend = false;
 
+  delay(500);
   Serial.println("done");
 }
