@@ -4,6 +4,7 @@
 #include <CAN.h>
 
 bool readyToSend = true;
+int counter = 0;
 
 void onReceive(int packetSize) {
   // received a packet
@@ -75,7 +76,7 @@ void loop() {
   CAN.write(0x00);
 
   // Data
-  CAN.write(0x05);
+  CAN.write(counter);
   CAN.write(0x00);
   CAN.write(0x00);
   CAN.write(0x05);
@@ -83,6 +84,10 @@ void loop() {
   CAN.endPacket();
 
   readyToSend = false;
+
+  counter++;
+  if(counter > 128)
+    counter = 0;
 
   delay(500);
   Serial.println("done");
