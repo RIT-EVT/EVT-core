@@ -142,8 +142,8 @@ void Timerf302x8::initTimer(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod) 
     masterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
     HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
 
-    __HAL_TIM_CLEAR_IT(&htim, TIM_IT_UPDATE);   // Clear the interrupt flag so interrupt doesn't
-                                                           // trigger immediately
+    // Clear the interrupt flag so interrupt doesn't trigger immediately
+    __HAL_TIM_CLEAR_IT(&htim, TIM_IT_UPDATE);
     HAL_TIM_Base_Start_IT(&htim);
 }
 
