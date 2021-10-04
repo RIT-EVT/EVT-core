@@ -1,24 +1,24 @@
-#ifndef EVT_EEPROM_HPP
-#define EVT_EEPROM_HPP
-
-#include <EVT/io/manager.hpp>
-
+#ifndef EVT_CHIP_NAME_H
+#define EVT_CHIP_NAME_H
 
 namespace EVT::core::IO {
-/**
- * EEPROMs are a type of small non-volatile storage devices. This class
- * represents features common across all EEPROMs.
- */
-class EEPROM {
 
+
+class M24C32 : private EEPROM {
 public:
+
+    /**
+     * Empty constructor. Will startup the EEPROM.
+     */
+    M24C32();
+
     /**
      * Read 8 bits of data from the given address.
      *
      * @param[in] address The address to read from
      * @return The 8 bits of data at the address
      */
-    virtual uint8_t readByte(uint32_t address) = 0;
+    uint8_t readByte(uint32_t address);
 
     /**
      * Read 16 bits of data from the given address.
@@ -26,7 +26,7 @@ public:
      * @param[in] address The address to read from
      * @return The 16 bits of data at the address
      */
-    virtual uint16_t readHalfWord(uint32_t address) = 0;
+    uint16_t readHalfWord(uint32_t address);
 
     /**
      * Read 32 bits of data from the given address.
@@ -34,7 +34,7 @@ public:
      * @param[in] address The address to read from
      * @return The 32 bits of data at the address
      */
-    virtual uint32_t readWord(uint32_t address) = 0;
+    uint32_t readWord(uint32_t address);
 
     /**
      * Read 8 bits of data from each of the given addresses.
@@ -42,7 +42,7 @@ public:
      * @param[in] addresses The addresses to read from
      * @return A list of 8 bits of data stored at the given addresses
      */
-    virtual uint8_t * readBytes(uint8_t addresses[]) = 0;
+    uint8_t * readBytes(uint8_t addresses[]);
 
     /**
      * Read 16 bits of data from each of the given addresses.
@@ -50,7 +50,7 @@ public:
      * @param[in] addresses The addresses to read from
      * @return A list of 16 bits of data stored at the given addresses
      */
-    virtual uint16_t * readHalfWords(uint8_t addresses[]) = 0;
+    uint16_t * readHalfWords(uint8_t addresses[]);
 
     /**
      * Read 32 bits of data from each of the given addresses.
@@ -107,8 +107,9 @@ public:
      * @param[in] dataArr The data to write out
      */
     virtual void writeWords(uint8_t addresses[], uint32_t dataArr[]) = 0;
+
 };
 }
 
 
-#endif //EVT_EEPROM_HPP
+#endif //EVT_CHIP_NAME_H
