@@ -61,7 +61,7 @@ void setup() {
 void loop() {
 
 
-  Serial.print("Sending CAN message ");
+  // Serial.print("Sending CAN message ");
 
   CAN.beginPacket(0x601);
   
@@ -90,5 +90,5 @@ void loop() {
     counter = 0;
 
   delay(500);
-  Serial.println("done");
+  // Serial.println("done");
 }

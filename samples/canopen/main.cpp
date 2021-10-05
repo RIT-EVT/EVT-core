@@ -26,6 +26,7 @@ namespace time = EVT::core::time;
 // and ideally not be global variables
 ///////////////////////////////////////////////////////////////////////////////
 uint8_t sampleData = 0;
+uint8_t myCounter = 0;
 uint8_t DemoErrReg = 0;
 uint8_t DemoString[] = "TEST";    /* string memory */
 uint32_t syncId = 0x80;
@@ -52,13 +53,28 @@ CO_OBJ_T canObjectDictionary[] = {
     { CO_KEY(0x1200, 1, CO_UNSIGNED32|CO_OBJ____R_), 0, (uintptr_t)&clientToServer },
     { CO_KEY(0x1200, 2, CO_UNSIGNED32|CO_OBJ____R_), 0, (uintptr_t)&serverToClient },
 
+    { CO_KEY(0x1234, 0, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&sampleData },
+
+    // TPDO1 settings
+    { CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)1 },
+    { CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_DEFAULT(0) },
+    { CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)0xFE },
+    { CO_KEY(0x1800, 3, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (uintptr_t)1 },
+    { CO_KEY(0x1800, 5, CO_UNSIGNED16|CO_OBJ_D__R_), CO_TEVENT, (uintptr_t)0 },
+
+    // TPDO1 mapping parameters
+    { CO_KEY(0x1A00, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)1 },
+    { CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2100, 0, 8) },
 
 
-    { CO_KEY(0x1234, 0, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&sampleData }
+    // Custom elements
+    { CO_KEY(0x2100, 0, CO_UNSIGNED8|CO_OBJ___PR_), 0, (uintptr_t)&myCounter },
+
+    CO_OBJ_DIR_ENDMARK
 };
 
 
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Callbacks
@@ -100,7 +116,7 @@ extern "C" void COPdoTransmit(CO_IF_FRM *frm) {
 }
 
 extern "C" int16_t COPdoReceive(CO_IF_FRM *frm) {
-
+    return 0;
 }
 
 extern "C" void COPdoSyncUpdate(CO_RPDO *pdo) {
@@ -136,7 +152,7 @@ int main() {
     rtc.setTime(time);
 
     // Not sure if this is needed
-    uint8_t sdoBuffer[50];
+    uint8_t sdoBuffer[1][CO_SDO_BUF_BYTE];
 
     ///////////////////////////////////////////////////////////////////////////
     // Setup CAN configuration, this handles making drivers, applying settings.
@@ -162,27 +178,31 @@ int main() {
         .NodeId = 0x01,
         .Baudrate = 500000,
         .Dict = &canObjectDictionary[0],
-        .DictLen = 8,
+        .DictLen = 16,
         .EmcyCode = NULL,
         .TmrMem = NULL,
         .TmrNum = 0,
         .TmrFreq = 8000000,
         .Drv = &canStackDriver,
-        .SdoBuf = &sdoBuffer[0],
+        .SdoBuf = (uint8_t *)&sdoBuffer[0],
     };
 
     CO_NODE canNode;
 
     CONodeInit(&canNode, &canSpec);
     CONodeStart(&canNode);
+    CONmtSetMode(&canNode.Nmt, CO_OPERATIONAL);
 
     time::wait(500);
 
     uart.printf("Error: %d\r\n", CONodeGetErr(&canNode));
 
     while (1) {
+        // Trigger PDO messages
+        COTPdoTrigPdo(&canNode.TPdo[0], 0);
         uart.printf("Value of my number: %d\n\r", sampleData);
         CONodeProcess(&canNode);
+        myCounter++;
         time::wait(10);
     }
 }
