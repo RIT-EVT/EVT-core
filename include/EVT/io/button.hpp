@@ -7,25 +7,29 @@ namespace EVT::core::IO {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
-enum class Button;
 
-class BUTTON {
+class Button {
    public:
     /**
-     * Binary representation of the states the button can be in
+     * Enum to handle the button trigger states
+     *
      */
-    enum class State {
-        LOW = 0u,
-        HIGH = 1u 
-    };
 
     enum class Press {
         UNPRESSED = 0u,
         PRESSED = 1u
     };
 
-    BUTTON(Button button);
+    /**
+     * Create a new button interface
+     *
+     */
+    Button(GPIO button);
 
+    Press readButton();
+
+    protected:
+        GPIO button;
 
 };
 
