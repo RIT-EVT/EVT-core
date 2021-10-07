@@ -69,8 +69,8 @@ void loop() {
   CAN.write(0x2F);
 
   // Index access
-  CAN.write(0x34);
-  CAN.write(0x12);
+  CAN.write(0x00);
+  CAN.write(0x21);
 
   // Subindex
   CAN.write(0x00);
