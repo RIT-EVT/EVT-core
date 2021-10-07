@@ -12,11 +12,11 @@ namespace EVT::core::DEV {
     public:
 
         /**
-         * Constructor for the IWDG.
-         * @param windowSize Window size that's compared to the counter value.
-         * Must be a value between 0 and 4095
+         * Constructor for the IWDG, which also starts the watchdog timer.
+         * @param ms Time in milliseconds before the IWDG triggers a reset,
+         * must be a value between 8 and 32768 ms.
          */
-        IWDGf302x8(uint32_t windowSize);
+        IWDGf302x8(uint32_t ms);
 
         /**
          * Refreshes the IWDG to avoid a system reset
