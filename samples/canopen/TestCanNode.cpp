@@ -107,4 +107,25 @@ TestCanNode::TestCanNode() {
         .Type = 0,
         .Data = (uintptr_t)&sampleData
     };
+
+    // Place in end-of-dictionary marker
+    objectDictionary[counter++] = CO_OBJ_DIR_ENDMARK;
+
+    // At this pointer it should be that counter == OBJECT_DIRECTIONARY_SIZE + 1
+}
+
+void TestCanNode::setSampleData(uint8_t newValue) {
+    this->sampleData = newValue;
+}
+
+uint8_t TestCanNode::getSampleData() {
+    return sampleData;
+}
+
+CO_OBJ_T* TestCanNode::getObjectDictionary() {
+    return &objectDictionary[0];
+}
+
+uint8_t TestCanNode::getNumElements() {
+    return OBJECT_DIRECTIONARY_SIZE;
 }

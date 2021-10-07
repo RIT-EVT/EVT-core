@@ -33,12 +33,27 @@ public:
      */
     uint8_t getSampleData();
 
+    /**
+     * Get a pointer to the start of the object dictionary
+     * 
+     * @return Pointer to the start of the object dictionary
+     */
+    CO_OBJ_T* getObjectDictionary();
+
+    /**
+     * Get the number of elements in the object dictionary.
+     *
+     * @return The number of elements in the object dictionary
+     */
+    uint8_t getNumElements();
+
+
 private:
     /** 
      * The number of elements that will be stored by the object dictionary.
      * This will be known.
      */
-    static constexpr uint8_t OBJECT_DIRECTIONARY_SIZE = 18;
+    static constexpr uint8_t OBJECT_DIRECTIONARY_SIZE = 15;
     /**
      * The node ID used to identify the device on the CAN network.
      */
