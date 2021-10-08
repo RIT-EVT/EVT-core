@@ -3,11 +3,60 @@
 
 #include <stdint.h>
 
-// Empty namespace of required global variables
+/*
+ * Empty namespace to contain "global" variables. These will be used within
+ * the driver implementations.
+ */
 namespace {
     EVT::core::IO::CAN* can;
+    EVT::core::DEV::Timer* timer;
+    // Temporary "storage" to allow the NVM to work, do not use as actual NVM 
+    uint8_t testerStorage[64]; 
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// Forward declarations of CANopen stack CAN functions
+///////////////////////////////////////////////////////////////////////////////
+static void canInit(void);
+static void canEnable(uint32_t baudrate);
+static int16_t canSend(CO_IF_FRM *frm); 
+static int16_t canRead(CO_IF_FRM *frm);
+static void canReset(void);
+static void canClose(void);
+
+///////////////////////////////////////////////////////////////////////////////
+// Forward declarations of CANopen stack timer functions
+///////////////////////////////////////////////////////////////////////////////
+static void timerInit(uint32_t freq);
+static void timerReload(uint32_t reload);
+static void timerStart(void);
+static uint8_t timerUpdate(void); 
+static uint32_t timerDelay(void);
+static void timerStop(void);
+
+///////////////////////////////////////////////////////////////////////////////
+// Forward declarations of CANopen stack NVM functions
+///////////////////////////////////////////////////////////////////////////////
+static void nvmInit(void);
+static uint32_t nvmRead(uint32_t start, uint8_t* buffer, uint32_t size);
+static uint32_t nvmWrite(uint32_t start, uint8_t* buffer, uint32_t size);
+
+namespace EVT::core::IO {
+    void getCANopenDriver(CAN& canIntf, CO_IF_CAN_DRV* canDriver) {
+        can = &canIntf;
+
+        canDriver->Init = canInit;
+        canDriver->Enable = canEnable;
+        canDriver->Read = canRead;
+        canDriver->Send = canSend;
+        canDriver->Reset = canReset;
+        canDriver->Close = canClose;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Implementation of CANopen stack CAN drivers
+///////////////////////////////////////////////////////////////////////////////
 /**
  * Initialize the CAN driver. This doesn't do anything since the CAN interface
  * should be passed into `getCANopenDriver` pre-initialized.
@@ -76,15 +125,82 @@ static void canClose(void) {
 
 }
 
-namespace EVT::core::IO {
-    void getCANopenDriver(CAN& canIntf, CO_IF_CAN_DRV* canDriver) {
-        can = &canIntf;
+///////////////////////////////////////////////////////////////////////////////
+// Implementations of CANopen stack timer functions
+///////////////////////////////////////////////////////////////////////////////
+/**
+ * Initiailize the timer driver.
+ */
+static void timerInit(uint32_t freq) {
+    frequency = freq;
+}
 
-        canDriver->Init = canInit;
-        canDriver->Enable = canEnable;
-        canDriver->Read = canRead;
-        canDriver->Send = canSend;
-        canDriver->Reset = canReset;
-        canDriver->Close = canClose;
+static void timerReload(uint32_t reload) {
+    targetReload = reload;
+}
+
+/**
+ * Start the "timer" running
+ */
+static void timerStart(void) {
+    startTime = rtc->getTime();
+}
+
+/**
+ * Return true if the timer has gone off
+ */
+static uint8_t timerUpdate(void) {
+    uint32_t targetTime = startTime + (targetReload / frequency);
+    return rtc->getTime() >= targetTime;
+}
+
+/**
+ * Get the reload value that was set
+ */
+static uint32_t timerDelay(void) {
+    return targetReload;
+}
+
+/**
+ * Stop the timer, currently does nothing.
+ */
+static void timerStop(void) {
+    
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Implementation of CANopen stack NVM functions
+///////////////////////////////////////////////////////////////////////////////
+/**
+ * Initialize the NVM driver, does nothing
+ */
+static void nvmInit(void) {
+
+}
+
+/**
+ * Read from the temporary buffer
+ */
+static uint32_t nvmRead(uint32_t start, uint8_t* buffer, uint32_t size) {
+    uint32_t bytesRead = 0;
+
+    for(unsigned int i = 0; i < size && i + start < MAX_SIZE; i++) {
+        buffer[i] = testerStorage[i + start];
+        bytesRead++;
     }
+
+    return bytesRead;
+}
+
+/**
+ * Write to the temporary buffer
+ */
+static uint32_t nvmWrite(uint32_t start, uint8_t* buffer, uint32_t size) {
+    uint32_t bytesWrote = 0;
+
+    for(unsigned int i = 0; i < size && i + start < MAX_SIZE; i++) {
+        testerStorage[i + start] = buffer[i];
+        bytesWrote++;
+    }
+    return bytesWrote;
 }
