@@ -3,10 +3,12 @@
 
 #include <stdint.h>
 
+
 namespace EVT::core::IO {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
+enum class GPIO;
 
 class Button {
    public:
@@ -17,7 +19,7 @@ class Button {
 
     enum class Press {
         UNPRESSED = 0u,
-        PRESSED = 1u
+        PRESSED = 1u,
     };
 
     /**
@@ -26,9 +28,30 @@ class Button {
      */
     Button(GPIO button);
 
+    /**
+     * Reads the state of the button 
+     * 
+     * @return 
+     */
     Press readButton();
 
+    /**
+     * Confirms a button press due to bouncing signal
+     * 
+     * @return pressed  
+     */
+    Press debounce();
+
+    /**
+     * 
+     * 
+     * @return ledState Whether the LED is on or off 
+     */
+    Press ledState(); // May need to split since some buttons may not use LEDs
+
+
     protected:
+
         GPIO button;
 
 };
