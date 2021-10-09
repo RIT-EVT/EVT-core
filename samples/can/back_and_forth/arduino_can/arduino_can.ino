@@ -86,7 +86,7 @@ void loop() {
   readyToSend = false;
 
   counter++;
-  if(counter > 128)
+  if(counter > 100)
     counter = 0;
 
   delay(500);
