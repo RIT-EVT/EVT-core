@@ -1,7 +1,11 @@
 #include <EVT/io/CANopen.hpp>
 #include <EVT/io/types/CANMessage.hpp>
 
+#include <EVT/dev/RTC.hpp>
+
 #include <stdint.h>
+
+#define MAX_SIZE 64
 
 /*
  * Empty namespace to contain "global" variables. These will be used within
@@ -9,9 +13,14 @@
  */
 namespace {
     EVT::core::IO::CAN* can;
-    EVT::core::DEV::Timer* timer;
-    // Temporary "storage" to allow the NVM to work, do not use as actual NVM 
-    uint8_t testerStorage[64]; 
+    EVT::core::DEV::RTC* rtc;
+    // Temporary values for testing CANopen without actual timer
+    uint32_t frequency;
+    uint32_t targetReload;
+    uint32_t startTime;
+
+    // Temporary "storage" to allow the NVM to work, do not use as actual NVM
+    uint8_t testerStorage[MAX_SIZE];
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,7 +28,7 @@ namespace {
 ///////////////////////////////////////////////////////////////////////////////
 static void canInit(void);
 static void canEnable(uint32_t baudrate);
-static int16_t canSend(CO_IF_FRM *frm); 
+static int16_t canSend(CO_IF_FRM *frm);
 static int16_t canRead(CO_IF_FRM *frm);
 static void canReset(void);
 static void canClose(void);
@@ -30,7 +39,7 @@ static void canClose(void);
 static void timerInit(uint32_t freq);
 static void timerReload(uint32_t reload);
 static void timerStart(void);
-static uint8_t timerUpdate(void); 
+static uint8_t timerUpdate(void);
 static uint32_t timerDelay(void);
 static void timerStop(void);
 
@@ -42,7 +51,7 @@ static uint32_t nvmRead(uint32_t start, uint8_t* buffer, uint32_t size);
 static uint32_t nvmWrite(uint32_t start, uint8_t* buffer, uint32_t size);
 
 namespace EVT::core::IO {
-    void getCANopenDriver(CAN& canIntf, CO_IF_CAN_DRV* canDriver) {
+    void getCANopenCANDriver(CAN& canIntf, CO_IF_CAN_DRV* canDriver) {
         can = &canIntf;
 
         canDriver->Init = canInit;
@@ -52,7 +61,25 @@ namespace EVT::core::IO {
         canDriver->Reset = canReset;
         canDriver->Close = canClose;
     }
-}
+
+    void getCANopenTimerDriver(DEV::RTC& rtcIntf, CO_IF_TIMER_DRV* timerDriver) {
+        rtc = &rtcIntf;
+
+        timerDriver->Init = timerInit;
+        timerDriver->Reload = timerReload;
+        timerDriver->Delay = timerDelay;
+        timerDriver->Stop = timerStop;
+        timerDriver->Start = timerStart;
+        timerDriver->Update = timerUpdate;
+    }
+
+    void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver) {
+        nvmDriver->Init = nvmInit;
+        nvmDriver->Read = nvmRead;
+        nvmDriver->Write = nvmWrite;
+
+    }
+}  // namespace EVT::core::IO
 
 ///////////////////////////////////////////////////////////////////////////////
 // Implementation of CANopen stack CAN drivers
@@ -98,7 +125,7 @@ static int16_t canRead(CO_IF_FRM *frm) {
     EVT::core::IO::CANMessage message;
 
     // No message
-    if(!can->receive(&message)) 
+    if(!can->receive(&message))
         return ((int16_t)-1u);
 
     frm->Identifier = message.getId();
@@ -165,7 +192,7 @@ static uint32_t timerDelay(void) {
  * Stop the timer, currently does nothing.
  */
 static void timerStop(void) {
-    
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
