@@ -8,8 +8,8 @@
 #include <EVT/io/manager.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/CAN.hpp>
-#include <EVT/dev/platform/f3xx/f302x8/RTC302x8.hpp>
 #include <EVT/utils/time.hpp>
+#include <EVT/dev/platform/f3xx/f302x8/Timerf302x8.hpp>
 
 #include <EVT/io/CANopen.hpp>
 
@@ -86,21 +86,10 @@ int main() {
 
     // Intialize peripherals
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();
+    DEV::Timerf302x8 timer(TIM2, 100, nullptr);
+    timer.stopTimer();
 
     TestCanNode testCanNode;
-
-    // Start RTC and set the default time
-    time::TimeStamp time;
-    time.year = 2021;
-    time.month = 9;
-    time.day = 10;
-
-    time.hour = 13;
-    time.minute = 42;
-    time.second = 35;
-
-    DEV::RTCf302x8 rtc;
-    rtc.setTime(time);
 
     // Not sure if this is needed
     uint8_t sdoBuffer[1][CO_SDO_BUF_BYTE];
@@ -118,7 +107,7 @@ int main() {
     CO_IF_NVM_DRV nvmDriver;
 
     IO::getCANopenCANDriver(can, &canDriver);
-    IO::getCANopenTimerDriver(rtc, &timerDriver);
+    IO::getCANopenTimerDriver(timer, &timerDriver);
     IO::getCANopenNVMDriver(&nvmDriver);
 
     canStackDriver.Can = &canDriver;

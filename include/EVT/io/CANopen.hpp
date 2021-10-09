@@ -32,7 +32,7 @@ namespace EVT::core::IO {
      * @param timer[in] The timer interface to use
      * @param timerDriver[ou]t The timer driver to populate
      */
-    void getCANopenTimerDriver(DEV::RTC& rtc, CO_IF_TIMER_DRV* timerDriver);
+    void getCANopenTimerDriver(DEV::Timer& timer, CO_IF_TIMER_DRV* timerDriver);
 
     /**
      * Get an instance of the NVM (non-volitile memory) that can be used

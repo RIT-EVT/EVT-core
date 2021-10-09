@@ -13,11 +13,13 @@
  */
 namespace {
     EVT::core::IO::CAN* can;
-    EVT::core::DEV::RTC* rtc;
     // Temporary values for testing CANopen without actual timer
+    EVT::core::DEV::Timer* timer;
+
+    /** Frequency that the timer will operate at */
     uint32_t frequency;
-    uint32_t targetReload;
-    uint32_t startTime;
+    /** Represents if the timer has gone off */
+    bool timerWentOff = false;
 
     // Temporary "storage" to allow the NVM to work, do not use as actual NVM
     uint8_t testerStorage[MAX_SIZE];
@@ -62,8 +64,8 @@ namespace EVT::core::IO {
         canDriver->Close = canClose;
     }
 
-    void getCANopenTimerDriver(DEV::RTC& rtcIntf, CO_IF_TIMER_DRV* timerDriver) {
-        rtc = &rtcIntf;
+    void getCANopenTimerDriver(DEV::Timer& timerIntf, CO_IF_TIMER_DRV* timerDriver) {
+        timer = &timerIntf;
 
         timerDriver->Init = timerInit;
         timerDriver->Reload = timerReload;
@@ -155,44 +157,60 @@ static void canClose(void) {
 ///////////////////////////////////////////////////////////////////////////////
 // Implementations of CANopen stack timer functions
 ///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Interrupt handler for the timer, updates that the timer has gone off
+ */
+void timerHandler(void* halTim) {
+    timerWentOff = true;
+}
+
 /**
  * Initiailize the timer driver.
  */
 static void timerInit(uint32_t freq) {
     frequency = freq;
+    timerWentOff = false;
 }
 
 static void timerReload(uint32_t reload) {
-    targetReload = reload;
+    timer->stopTimer();
+
+    // Convert the frequency and reload value into milliseconds
+    float targetPeriod = 1 / frequency * reload * 1000;
+    timer->setPeriod(targetPeriod);
+    timer->startTimer(timerHandler);
+    timerWentOff = false;
 }
 
 /**
  * Start the "timer" running
  */
 static void timerStart(void) {
-    startTime = rtc->getTime();
+    timer->startTimer(timerHandler);
+    timerWentOff = false;
 }
 
 /**
  * Return true if the timer has gone off
  */
 static uint8_t timerUpdate(void) {
-    uint32_t targetTime = startTime + (targetReload / frequency);
-    return rtc->getTime() >= targetTime;
+    return timerWentOff ? 1 : 0;
 }
 
 /**
- * Get the reload value that was set
+ * Get the current value from the timer, not yet supported by the timer
  */
 static uint32_t timerDelay(void) {
-    return targetReload;
+    return 100;
 }
 
 /**
  * Stop the timer, currently does nothing.
  */
 static void timerStop(void) {
-
+    timer->stopTimer();
+    timerWentOff = false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
