@@ -12,8 +12,6 @@
 #include <EVT/utils/time.hpp>
 
 #include <EVT/io/CANopen.hpp>
-#include <EVT/io/CANopenNVM.hpp>
-#include <EVT/dev/CANopenTimer.hpp>
 
 #include <Canopen/co_tmr.h>
 #include <Canopen/co_if.h>
@@ -90,7 +88,7 @@ int main() {
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();
 
     TestCanNode testCanNode;
-    
+
     // Start RTC and set the default time
     time::TimeStamp time;
     time.year = 2021;
@@ -119,14 +117,14 @@ int main() {
     CO_IF_TIMER_DRV timerDriver;
     CO_IF_NVM_DRV nvmDriver;
 
-    getCANopenDriver(can, &canDriver); 
-    getCANopenTimerDriver(rtc, &timerDriver);
+    IO::getCANopenCANDriver(can, &canDriver);
+    IO::getCANopenTimerDriver(rtc, &timerDriver);
     IO::getCANopenNVMDriver(&nvmDriver);
 
     canStackDriver.Can = &canDriver;
     canStackDriver.Timer = &timerDriver;
     canStackDriver.Nvm = &nvmDriver;
-    
+
     CO_NODE_SPEC canSpec = {
         .NodeId = 0x01,
         .Baudrate = 500000,

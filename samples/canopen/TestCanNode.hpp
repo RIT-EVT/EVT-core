@@ -35,7 +35,7 @@ public:
 
     /**
      * Get a pointer to the start of the object dictionary
-     * 
+     *
      * @return Pointer to the start of the object dictionary
      */
     CO_OBJ_T* getObjectDictionary();
@@ -49,7 +49,7 @@ public:
 
 
 private:
-    /** 
+    /**
      * The number of elements that will be stored by the object dictionary.
      * This will be known.
      */
@@ -60,6 +60,14 @@ private:
     static constexpr uint8_t NODE_ID = 0x01;
 
     /**
+     * This sample data will be exposed over CAN through the object
+     * dictionary. The address of the variable will be included in the
+     * object dictionary and can be updated via SDO via a CANopen client.
+     * This device will then broadcast the value via a triggered PDO.
+     */
+    uint8_t sampleData;
+
+    /**
      * The object dictionary itself. Will be populated by this object during
      * construction.
      *
@@ -67,11 +75,4 @@ private:
      */
     CO_OBJ_T objectDictionary[OBJECT_DIRECTIONARY_SIZE + 1];
 
-    /**
-     * This sample data will be exposed over CAN through the object
-     * dictionary. The address of the variable will be included in the
-     * object dictionary and can be updated via SDO via a CANopen client.
-     * This device will then broadcast the value via a triggered PDO.
-     */
-    uint8_t sampleData;
 };

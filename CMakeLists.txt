@@ -28,7 +28,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/io/ADC.cpp
     src/io/CAN.cpp
     src/io/CANopen.cpp
-    src/io/CANopenNVM.cpp
     src/io/GPIO.cpp
     src/io/I2C.cpp
     src/io/PWM.cpp
@@ -42,11 +41,10 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/io/types/CANMessage.cpp
 
     src/dev/LED.cpp
-    src/dev/CANopenTimer.cpp
     src/dev/platform/f3xx/f302x8/RTCf302x8.cpp
     src/dev/platform/f3xx/f302x8/IWDGf302x8.cpp
     src/dev/platform/f3xx/f302x8/Timerf302x8.cpp
-    
+
     src/utils/platform/f3xx/time.cpp
 )
 
