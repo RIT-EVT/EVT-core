@@ -177,7 +177,7 @@ static void timerReload(uint32_t reload) {
     timer->stopTimer();
 
     // Convert the frequency and reload value into milliseconds
-    float targetPeriod = 1 / frequency * reload * 1000;
+    uint32_t targetPeriod = reload * 1000 / frequency;
     timer->setPeriod(targetPeriod);
     timer->startTimer(timerHandler);
     timerWentOff = false;
