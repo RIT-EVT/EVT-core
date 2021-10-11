@@ -91,8 +91,9 @@ int main() {
 
     TestCanNode testCanNode;
 
-    // Not sure if this is needed
+    // Reserved memory for CANopen stack usage
     uint8_t sdoBuffer[1][CO_SDO_BUF_BYTE];
+    CO_TMR_MEM appTmrMem[4];
 
     ///////////////////////////////////////////////////////////////////////////
     // Setup CAN configuration, this handles making drivers, applying settings.
@@ -120,8 +121,8 @@ int main() {
         .Dict = testCanNode.getObjectDictionary(),
         .DictLen = testCanNode.getNumElements(),
         .EmcyCode = NULL,
-        .TmrMem = NULL,
-        .TmrNum = 0,
+        .TmrMem = appTmrMem,
+        .TmrNum = 16,
         .TmrFreq = 8000000,
         .Drv = &canStackDriver,
         .SdoBuf = (uint8_t *)&sdoBuffer[0],
@@ -139,9 +140,10 @@ int main() {
 
     while (1) {
         // Trigger PDO messages
-        COTPdoTrigPdo(&canNode.TPdo[0], 0);
+        // COTPdoTrigPdo(&canNode.TPdo[0], 0);
         uart.printf("Value of my number: %d\n\r", testCanNode.getSampleData());
         CONodeProcess(&canNode);
+        COTmrProcess(&canNode.Tmr);
         time::wait(10);
     }
 }
