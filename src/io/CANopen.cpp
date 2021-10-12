@@ -202,7 +202,7 @@ static uint8_t timerUpdate(void) {
  * Get the current value from the timer, not yet supported by the timer
  */
 static uint32_t timerDelay(void) {
-    return 100;
+    return 0;
 }
 
 /**
