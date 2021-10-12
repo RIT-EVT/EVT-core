@@ -143,6 +143,7 @@ int main() {
         // COTPdoTrigPdo(&canNode.TPdo[0], 0);
         uart.printf("Value of my number: %d\n\r", testCanNode.getSampleData());
         CONodeProcess(&canNode);
+        COTmrService(&canNode.Tmr);
         COTmrProcess(&canNode.Tmr);
         time::wait(10);
     }
