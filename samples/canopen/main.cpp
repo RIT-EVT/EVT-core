@@ -123,7 +123,7 @@ int main() {
         .EmcyCode = NULL,
         .TmrMem = appTmrMem,
         .TmrNum = 16,
-        .TmrFreq = 8000000,
+        .TmrFreq = 100,
         .Drv = &canStackDriver,
         .SdoBuf = (uint8_t *)&sdoBuffer[0],
     };
