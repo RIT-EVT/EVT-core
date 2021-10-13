@@ -16,10 +16,10 @@ namespace {
     // Temporary values for testing CANopen without actual timer
     EVT::core::DEV::Timer* timer;
 
-    /** Frequency that the timer will operate at */
-    uint32_t frequency;
-    /** Represents if the timer has gone off */
-    bool timerWentOff = false;
+    /** Countes the number of interrupts that have taken place */
+    uint32_t timerCounter = 0;
+    /** The target value for the counter */
+    uint32_t counterTarget = 0;
 
     // Temporary "storage" to allow the NVM to work, do not use as actual NVM
     uint8_t testerStorage[MAX_SIZE];
@@ -162,25 +162,22 @@ static void canClose(void) {
  * Interrupt handler for the timer, updates that the timer has gone off
  */
 void timerHandler(void* halTim) {
-    timerWentOff = true;
+    timerCounter++;
 }
 
 /**
  * Initiailize the timer driver.
  */
 static void timerInit(uint32_t freq) {
-    frequency = freq;
-    timerWentOff = false;
+    timerCounter = 0;
+    timer->setPeriod(100);
 }
 
 static void timerReload(uint32_t reload) {
     timer->stopTimer();
-
-    // Convert the frequency and reload value into milliseconds
-    uint32_t targetPeriod = reload * 1000 / frequency;
-    timer->setPeriod(targetPeriod);
+    timer->setPeriod(100);
     timer->startTimer(timerHandler);
-    timerWentOff = false;
+    timerCounter = reload;
 }
 
 /**
@@ -188,15 +185,15 @@ static void timerReload(uint32_t reload) {
  */
 static void timerStart(void) {
     timer->startTimer(timerHandler);
-    timerWentOff = false;
+    timerCounter = 0;
 }
 
 /**
  * Return true if the timer has gone off
  */
 static uint8_t timerUpdate(void) {
-    int result = timerWentOff ? 1 : 0;
-    timerWentOff = false;
+    int result = timerCounter >= counterTarget ? 1 : 0;
+    timerCounter = 0;
     return result;
 }
 
@@ -212,7 +209,7 @@ static uint32_t timerDelay(void) {
  */
 static void timerStop(void) {
     timer->stopTimer();
-    timerWentOff = false;
+    timerCounter = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
