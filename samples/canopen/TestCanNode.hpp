@@ -147,7 +147,7 @@ private:
         {
             .Key = CO_KEY(0x1800, 5, CO_UNSIGNED16|CO_OBJ_D__R_),
             .Type = CO_TEVENT,
-            .Data = (uintptr_t)0x64
+            .Data = (uintptr_t)100
         },
 
         // TPDO0 mapping, determins the PDO messages to send when TPDO1 is triggered

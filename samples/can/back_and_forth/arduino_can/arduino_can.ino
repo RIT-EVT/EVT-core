@@ -5,8 +5,15 @@
 
 bool readyToSend = true;
 int counter = 0;
+long timeSinceLastReceive = 0;
 
 void onReceive(int packetSize) {
+  if(CAN.packetId() != 0x701)
+    return;
+
+  long timeDelta = millis() - timeSinceLastReceive;
+  timeSinceLastReceive = millis();
+  
   // received a packet
   Serial.print("Received ");
 
@@ -27,7 +34,10 @@ void onReceive(int packetSize) {
     Serial.println(CAN.packetDlc());
   } else {
     Serial.print(" and length ");
-    Serial.println(packetSize);
+    Serial.print(packetSize);
+
+    Serial.print(" and time delta ");
+    Serial.println(timeDelta);
 
     // only print packet data for non-RTR packets
     while (CAN.available()) {

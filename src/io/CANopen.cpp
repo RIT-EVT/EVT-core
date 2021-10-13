@@ -195,7 +195,9 @@ static void timerStart(void) {
  * Return true if the timer has gone off
  */
 static uint8_t timerUpdate(void) {
-    return timerWentOff ? 1 : 0;
+    int result = timerWentOff ? 1 : 0;
+    timerWentOff = false;
+    return result;
 }
 
 /**
