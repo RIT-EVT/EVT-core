@@ -111,9 +111,7 @@ uint8_t getTimerInterruptIndex(TIM_TypeDef *peripheral) {
 
 namespace EVT::core::DEV {
 
-Timerf302x8::Timerf302x8(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod,
-                         void (*irqHandler)(void *htim)) {
-    timerInterruptHandlers[getTimerInterruptIndex(timerPeripheral)] = irqHandler;
+Timerf302x8::Timerf302x8(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod) {
     initTimer(timerPeripheral, clockPeriod);
     this->halTimer = &halTimers[getTimerInterruptIndex(timerPeripheral)];
 }
@@ -141,10 +139,6 @@ void Timerf302x8::initTimer(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod) 
     masterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
     masterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
     HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
-
-    // Clear the interrupt flag so interrupt doesn't trigger immediately
-    __HAL_TIM_CLEAR_IT(&htim, TIM_IT_UPDATE);
-    HAL_TIM_Base_Start_IT(&htim);
 }
 
 
@@ -152,7 +146,7 @@ void Timerf302x8::startTimer(void (*irqHandler)(void *htim)) {
     TIM_TypeDef *timerPeripheral = this->halTimer->Instance;
     stopTimer();
     timerInterruptHandlers[getTimerInterruptIndex(timerPeripheral)] = irqHandler;
-    initTimer(timerPeripheral, this->clockPeriod);
+    startTimer();
 }
 
 void Timerf302x8::stopTimer() {
@@ -161,10 +155,19 @@ void Timerf302x8::stopTimer() {
 
 void Timerf302x8::startTimer() {
     stopTimer();  // Stop timer in case it was already running
-    initTimer(this->halTimer->Instance, this->clockPeriod);
+
+    auto htim = this->halTimer;
+    // Clear the interrupt flag so interrupt doesn't trigger immediately
+    __HAL_TIM_CLEAR_IT(htim, TIM_IT_UPDATE);
+    HAL_TIM_Base_Start_IT(htim);
 }
 
 void Timerf302x8::reloadTimer() {
     this->halTimer->Instance->CNT &= ~(0xFFFFFFFF);  // Clear the Counter register to reset the timer
+}
+
+void Timerf302x8::setPeriod(uint32_t clockPeriod) {
+    stopTimer();
+    initTimer(this->halTimer->Instance, clockPeriod);
 }
 }  // namespace EVT::core::DEV

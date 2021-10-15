@@ -20,9 +20,8 @@ public:
      * TIM2, TIM15, TIM16, TIM17.  It is up to the user to verify that resource conflicts
      * do not occur.
      * @param clockPeriod[in] the clock period in ms.  An interrupt will be triggered at that frequency.
-     * @param irqHandler[in] Function pointer to the IRQ Handler desired for the given timer.
      */
-    explicit Timerf302x8(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod, void (*irqHandler)(void *htim));
+    explicit Timerf302x8(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod);
 
     void startTimer(void (*irqHandler)(void *htim)) override;
 
@@ -31,6 +30,8 @@ public:
     void stopTimer() override;
 
     void reloadTimer() override;
+
+    virtual void setPeriod(uint32_t clockPeriod);
 
 private:
     // Pointer to the halTimer struct stored in the global of Timerf302x8.cpp

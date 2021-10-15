@@ -32,6 +32,13 @@ public:
      * Resets the timer counter.
      */
     virtual void reloadTimer() = 0;
+
+    /**
+     * Set the clock period for the timer.  Will stop the timer, re-initialize the device with the updated period.
+     * You must call startTimer again to continue timer operation.
+     * @param clockPeriod[in] the clock period in ms.  An interrupt will be triggered at that frequency.
+     */
+    virtual void setPeriod(uint32_t clockPeriod) = 0;
 };
 
 }  // namespace EVT::core::DEV

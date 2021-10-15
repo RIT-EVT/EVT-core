@@ -44,12 +44,14 @@ int main() {
     interruptGPIOStopStart = &IO::getGPIO<IO::Pin::PC_2>(IO::GPIO::Direction::OUTPUT);
     reloadGPIO = &IO::getGPIO<IO::Pin::PC_0>(IO::GPIO::Direction::OUTPUT);
 
-
     // Setup the Timer
-    auto timer2 = DEV::Timerf302x8(TIM2, 500, timer2IRQHandler);
-    timer2.reloadTimer();  // Added so cpplint does not complain about unused variable
-    auto timer15 = DEV::Timerf302x8(TIM15, 100, timer15IRQHandler);
-    auto timer16 = DEV::Timerf302x8(TIM16, 200, timer16IRQHandler);
+    auto timer2 = DEV::Timerf302x8(TIM2, 500);
+    auto timer15 = DEV::Timerf302x8(TIM15, 100);
+    auto timer16 = DEV::Timerf302x8(TIM16, 200);
+
+    timer2.startTimer(timer2IRQHandler);
+    timer15.startTimer(timer15IRQHandler);
+    timer16.startTimer(timer16IRQHandler);
 
     while (1) {
         EVT::core::time::wait(500);
