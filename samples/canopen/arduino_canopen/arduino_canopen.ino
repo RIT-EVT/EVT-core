@@ -4,8 +4,16 @@
 #include <CAN.h>
 
 bool readyToSend = true;
+int counter = 0;
+long timeSinceLastReceive = 0;
 
 void onReceive(int packetSize) {
+  if(CAN.packetId() != 0x180)
+    return;
+
+  long timeDelta = millis() - timeSinceLastReceive;
+  timeSinceLastReceive = millis();
+  
   // received a packet
   Serial.print("Received ");
 
@@ -26,7 +34,10 @@ void onReceive(int packetSize) {
     Serial.println(CAN.packetDlc());
   } else {
     Serial.print(" and length ");
-    Serial.println(packetSize);
+    Serial.print(packetSize);
+
+    Serial.print(" and time delta ");
+    Serial.println(timeDelta);
 
     // only print packet data for non-RTR packets
     while (CAN.available()) {
@@ -59,20 +70,35 @@ void setup() {
 
 void loop() {
 
-  while(!readyToSend) {
-    delay(5);
-  }
-  Serial.print("Sending CAN message ");
 
-  CAN.beginExtendedPacket(0xabcdef);
-  CAN.write(0x01);
-  CAN.write(0x02);
-  CAN.write(0x03);
-  CAN.write(0x04);
+  // Serial.print("Sending CAN message ");
+
+  CAN.beginPacket(0x601);
+  
+  // Command byte
+  CAN.write(0x2F);
+
+  // Index access
+  CAN.write(0x00);
+  CAN.write(0x21);
+
+  // Subindex
+  CAN.write(0x00);
+
+  // Data
+  CAN.write(counter);
+  CAN.write(0x00);
+  CAN.write(0x00);
   CAN.write(0x05);
+  
   CAN.endPacket();
 
   readyToSend = false;
 
-  Serial.println("done");
+  counter++;
+  if(counter > 100)
+    counter = 0;
+
+  delay(500);
+  // Serial.println("done");
 }

@@ -23,7 +23,6 @@ namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
 namespace time = EVT::core::time;
 
-IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Callbacks
@@ -45,7 +44,7 @@ extern "C" int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId) {
 }
 
 extern "C" void CONmtModeChange(CO_NMT *nmt, CO_MODE mode) {
-    uart.printf("mode is now: %d\r\n", mode);
+
 }
 
 extern "C" void CONmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId) {
@@ -87,6 +86,7 @@ int main() {
     // Intialize peripherals
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();
     DEV::Timerf302x8 timer(TIM2, 100, nullptr);
+    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
     timer.stopTimer();
 
     TestCanNode testCanNode;
@@ -139,12 +139,14 @@ int main() {
     uart.printf("Error: %d\r\n", CONodeGetErr(&canNode));
 
     while (1) {
-        // Trigger PDO messages
-        // COTPdoTrigPdo(&canNode.TPdo[0], 0);
         uart.printf("Value of my number: %d\n\r", testCanNode.getSampleData());
+        // Process in coming CAN messages
         CONodeProcess(&canNode);
+        // Update the state of timer based events
         COTmrService(&canNode.Tmr);
+        // Handle executing timer events that have elapsed
         COTmrProcess(&canNode.Tmr);
+        // Wait for new data to come in
         time::wait(10);
     }
 }
