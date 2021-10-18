@@ -170,14 +170,15 @@ void timerHandler(void* halTim) {
  */
 static void timerInit(uint32_t freq) {
     timerCounter = 0;
-    timer->setPeriod(100);
+    timer->setPeriod(10);
 }
 
 static void timerReload(uint32_t reload) {
     timer->stopTimer();
-    timer->setPeriod(100);
+    timer->setPeriod(10);
     timer->startTimer(timerHandler);
-    timerCounter = reload;
+    timerCounter = 0;
+    counterTarget = reload;
 }
 
 /**
@@ -193,7 +194,8 @@ static void timerStart(void) {
  */
 static uint8_t timerUpdate(void) {
     int result = timerCounter >= counterTarget ? 1 : 0;
-    timerCounter = 0;
+    //if(result)
+    //    timerCounter = 0;
     return result;
 }
 
@@ -201,7 +203,7 @@ static uint8_t timerUpdate(void) {
  * Get the current value from the timer, not yet supported by the timer
  */
 static uint32_t timerDelay(void) {
-    return 0;
+    return timerCounter > counterTarget ? 0 : counterTarget - timerCounter;
 }
 
 /**
