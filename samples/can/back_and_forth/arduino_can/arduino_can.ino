@@ -8,7 +8,7 @@ int counter = 0;
 long timeSinceLastReceive = 0;
 
 void onReceive(int packetSize) {
-  if(CAN.packetId() != 0x701)
+  if(CAN.packetId() != 0x180)
     return;
 
   long timeDelta = millis() - timeSinceLastReceive;
