@@ -116,7 +116,7 @@ void ADCf302x8::initDMA() {
 
     HAL_DMA_Init(&halDMA);
 
-    HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 4, 0);
     HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 
     __HAL_LINKDMA(&halADC, DMA_Handle, halDMA);

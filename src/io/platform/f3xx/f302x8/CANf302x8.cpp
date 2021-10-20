@@ -120,7 +120,7 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
 
     // Intialize interrupts
     HAL_CAN_ActivateNotification(&halCAN, CAN_IT_RX_FIFO0_MSG_PENDING);
-    HAL_NVIC_SetPriority(CAN_RX0_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(CAN_RX0_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(CAN_RX0_IRQn);
 
     /* By default - filter that accepts all incoming messages */
