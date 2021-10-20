@@ -35,7 +35,7 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim) {
         return;  // Should never reach, but if an invalid peripheral is passed in then simply return
     }
 
-    HAL_NVIC_SetPriority(irqNum, 0, 0);
+    HAL_NVIC_SetPriority(irqNum, 5, 5);
     HAL_NVIC_EnableIRQ(irqNum);
 }
 
