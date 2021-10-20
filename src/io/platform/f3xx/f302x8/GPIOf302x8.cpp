@@ -125,29 +125,30 @@ void GPIOf302x8::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO *pin)) {
     auto pin_index = static_cast<uint8_t>(this->pin) & 0x0F;
     INTERRUPT_HANDLERS[pin_index] = irqHandler;
     INTERRUPT_GPIOS[pin_index] = this;
+    IRQn_Type irqNum;
 
     switch (this -> halPin) {
         case GPIO_PIN_0:
-            HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+            irqNum = EXTI0_IRQn;
             break;
         case GPIO_PIN_1:
-            HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+            irqNum = EXTI1_IRQn;
             break;
         case GPIO_PIN_2:
-            HAL_NVIC_EnableIRQ(EXTI2_TSC_IRQn);
+            irqNum = EXTI2_TSC_IRQn;
             break;
         case GPIO_PIN_3:
-            HAL_NVIC_EnableIRQ(EXTI3_IRQn);
+            irqNum = EXTI3_IRQn;
             break;
         case GPIO_PIN_4:
-            HAL_NVIC_EnableIRQ(EXTI4_IRQn);
+            irqNum = EXTI4_IRQn;
             break;
         case GPIO_PIN_5:
         case GPIO_PIN_6:
         case GPIO_PIN_7:
         case GPIO_PIN_8:
         case GPIO_PIN_9:
-            HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+            irqNum = EXTI9_5_IRQn;
             break;
         case GPIO_PIN_10:
         case GPIO_PIN_11:
@@ -155,12 +156,15 @@ void GPIOf302x8::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO *pin)) {
         case GPIO_PIN_13:
         case GPIO_PIN_14:
         case GPIO_PIN_15:
-            HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+            irqNum = EXTI15_10_IRQn;
             break;
 
         default:
             break;  // Shouldn't get here
     }
+
+    HAL_NVIC_SetPriority(irqNum, 10, 0);
+    HAL_NVIC_EnableIRQ(irqNum);
 }
 
 }  // namespace EVT::core::IO
