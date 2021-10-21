@@ -33,14 +33,14 @@ class Button {
      * 
      * @return The button state.
      */
-    Press readButton();
+    virtual Press readButton();
 
     /**
      * Confirms a button press due to bouncing signal
      * 
      * @return Confirmation of a press  
      */
-    Press debounce();
+    virtual void debounce();
 
 
     /**
@@ -48,14 +48,14 @@ class Button {
      * 
      * @return The state to write to the LED
      */
-    Press writeLED();
+    virtual void writeLED();
 
     /**
      * Read whether an LED is on or off
      * 
      * @return ledState Read whether the LED is on or off 
      */
-    Press readLED(); // May need to split since some buttons may not use LEDs
+    virtual Press readLED(); // May need to split since some buttons may not use LEDs
 
 
     protected:
