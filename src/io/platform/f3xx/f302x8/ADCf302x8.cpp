@@ -127,7 +127,7 @@ void ADCf302x8::addChannel(uint8_t rank) {
     GPIO_InitTypeDef gpioInit;
     Pin myPins[1] = {pin};
 
-    GPIOf302x8::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
+    GPIOf302x8::gpioStateInit(&gpioInit, myPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;
 
