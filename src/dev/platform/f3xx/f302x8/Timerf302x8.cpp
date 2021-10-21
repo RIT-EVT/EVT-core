@@ -1,6 +1,5 @@
 #include <EVT/dev/platform/f3xx/f302x8/Timerf302x8.hpp>
 #include <HALf3/stm32f3xx_hal_conf.h>
-#include <HALf3/stm32f3xx_it.h>
 #include <EVT/platform/f3xx/stm32f302x8.hpp>
 
 TIM_HandleTypeDef halTimers[4];
@@ -35,7 +34,7 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim) {
         return;  // Should never reach, but if an invalid peripheral is passed in then simply return
     }
 
-    HAL_NVIC_SetPriority(irqNum, 5, 5);
+    HAL_NVIC_SetPriority(irqNum, EVT::core::platform::TIMER_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(irqNum);
 }
 
