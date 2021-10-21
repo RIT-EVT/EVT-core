@@ -54,7 +54,7 @@ int main() {
     ///////////////////////////////////////////////////////////////////////////
     uart.printf("Queue of Numbers, no overwritting\n\r");
     // First a queue of numbers, max capacity of 10 and no over writting
-    types::FixedQueue<int> numberQueue(10);
+    types::FixedQueue<10, int> numberQueue;
     // Check if it is empty, should be empty
     uart.printf("numberQueue.isEmpty() -> %d\r\n", numberQueue.isEmpty());
 
@@ -87,7 +87,7 @@ int main() {
     // Test a queue of numbers, with overwritting
     ///////////////////////////////////////////////////////////////////////////
     uart.printf("\r\n\r\nQueue of Numbers, with overwritting\n\r");
-    types::FixedQueue<int> numberQueueOverwrite(10, true);
+    types::FixedQueue<10, int> numberQueueOverwrite(10);
 
     // Add ten numbers, should be full after
     for (int i = 0; i < 10; i++) {
@@ -114,10 +114,10 @@ int main() {
     // Test a queue of custom types
     ///////////////////////////////////////////////////////////////////////////
     uart.printf("\r\n\r\nQueue of Custom Objects, no overwritting\n\r");
-    types::FixedQueue<TestClass> customQueue(10);
+    types::FixedQueue<15, TestClass> customQueue(10);
 
     // Add ten objects to the queue
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 15; i++) {
         TestClass element(i * 1, i * 2, i * 3);
         uart.printf("customQueue.append(");
         element.print(&uart);
@@ -126,7 +126,7 @@ int main() {
     }
 
     // Print out all of the elements
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 15; i++) {
         TestClass element;
         customQueue.pop(&element);
         uart.printf("numberQueueOverwrite.pop() -> ");
