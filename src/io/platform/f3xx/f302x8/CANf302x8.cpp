@@ -11,6 +11,7 @@
 #include <HALf3/stm32f3xx.h>
 
 #include <EVT/io/platform/f3xx/f302x8/CANf302x8.hpp>
+#include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
 #include <EVT/utils/time.hpp>
 #include <EVT/utils/types/FixedQueue.hpp>
 
@@ -61,38 +62,8 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
 
     // Setup GPIO
     GPIO_InitTypeDef gpioInit = {0};
-    Pin canPins[] = {txPin, rxPin};
-    gpioInit.Pin = static_cast<uint32_t>(1 <<
-        (static_cast<uint32_t>(canPins[0]) & 0x0F));
-    gpioInit.Pin |= static_cast<uint32_t>(1 <<
-        (static_cast<uint32_t>(canPins[1]) & 0x0F));
-    gpioInit.Mode = GPIO_MODE_AF_OD;
-    gpioInit.Pull = GPIO_PULLUP;
-    gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
-    gpioInit.Alternate = GPIO_AF9_CAN;
-
-    for (uint8_t i = 0; i < 2; i++) {
-        switch ((static_cast<uint8_t>(canPins[i]) & 0xF0) >> 4) {
-            case 0x0:
-                __HAL_RCC_GPIOA_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOA, &gpioInit);
-                break;
-            case 0x1:
-                __HAL_RCC_GPIOB_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOB, &gpioInit);
-                break;
-            case 0x2:
-                __HAL_RCC_GPIOC_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOC, &gpioInit);
-                break;
-            case 0x3:
-                __HAL_RCC_GPIOD_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOC, &gpioInit);
-                break;
-            default:
-                break;  // Should never get here
-        }
-    }
+    Pin canPins[2] = {txPin, rxPin};
+    GPIOf302x8::gpioStateInit(&gpioInit, canPins, GPIO_MODE_AF_OD, GPIO_PULLUP, GPIO_SPEED_FREQ_HIGH, GPIO_AF9_CAN);
 
     // Initialize HAL CAN
     // Bit timing values calculated from the website
