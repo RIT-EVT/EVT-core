@@ -5,6 +5,7 @@
 
 #include <HALf3/stm32f3xx_hal_adc.h>
 #include <HALf3/stm32f3xx_hal_adc_ex.h>
+#include <EVT/platform/f3xx/stm32f302x8.hpp>
 
 
 namespace {
@@ -116,7 +117,7 @@ void ADCf302x8::initDMA() {
 
     HAL_DMA_Init(&halDMA);
 
-    HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 4, 0);
+    HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, EVT::core::platform::ADC_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 
     __HAL_LINKDMA(&halADC, DMA_Handle, halDMA);

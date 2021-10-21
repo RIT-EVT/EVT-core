@@ -7,6 +7,7 @@
 
 #include <HALf3/stm32f3xx_hal_rcc.h>
 #include <HALf3/stm32f3xx_hal_gpio.h>
+#include <EVT/platform/f3xx/stm32f302x8.hpp>
 
 
 void (*INTERRUPT_HANDLERS[16])(EVT::core::IO::GPIO *pin) = {nullptr};
@@ -160,10 +161,10 @@ void GPIOf302x8::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO *pin)) {
             break;
 
         default:
-            break;  // Shouldn't get here
+            return;  // Shouldn't get here
     }
 
-    HAL_NVIC_SetPriority(irqNum, 10, 0);
+    HAL_NVIC_SetPriority(irqNum, EVT::core::platform::GPIO_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(irqNum);
 }
 
