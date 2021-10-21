@@ -31,27 +31,34 @@ class Button {
     /**
      * Reads the state of the button 
      * 
-     * @return 
+     * @return The button state.
      */
     Press readButton();
 
     /**
      * Confirms a button press due to bouncing signal
      * 
-     * @return pressed  
+     * @return Confirmation of a press  
      */
     Press debounce();
 
+
     /**
+     * Tells an LED to be on or off
      * 
-     * 
-     * @return ledState Whether the LED is on or off 
+     * @return The state to write to the LED
      */
-    Press ledState(); // May need to split since some buttons may not use LEDs
+    Press writeLED();
+
+    /**
+     * Read whether an LED is on or off
+     * 
+     * @return ledState Read whether the LED is on or off 
+     */
+    Press readLED(); // May need to split since some buttons may not use LEDs
 
 
     protected:
-
         GPIO button;
 
 };
