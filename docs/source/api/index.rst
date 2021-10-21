@@ -114,6 +114,15 @@ on. Platform specific code such as system setup is included here. For example,
 placing the microcontroller into a "low power mode" is specific to the
 microcontroller itself.
 
+STM32f302x8
+^^^^^^^^^^^
+
+Interrupt priorities are configured with priorities defined by
+`stm32f302x8.hpp`.  A lower number corresponds to a higher priority.
+Interrupts of higher priority may interrupt those of lower priority.
+
+.. doxygenfile:: EVT/platform/f3xx/stm32f302x8.hpp
+
 Utils
 =====
 
