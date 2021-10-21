@@ -5,7 +5,7 @@
 
 namespace EVT::core::IO {
 
-CANMessage::CANMessage(uint32_t id, uint8_t dataLength, uint8_t* payload) {
+CANMessage::CANMessage(uint32_t id, uint8_t dataLength, uint8_t* payload, bool isExtended) {
     this->id = id;
     // TODO: Should include way to notify user of invalid CAN frame,
     // to be added to error manager later.
@@ -15,6 +15,8 @@ CANMessage::CANMessage(uint32_t id, uint8_t dataLength, uint8_t* payload) {
     // Copy contents of provided payload into message's payload
     for (int i = 0; i < this->dataLength; i++)
         this->payload[i] = payload[i];
+
+    this->isExtended = isExtended;
 }
 
 CANMessage::CANMessage() {
@@ -51,6 +53,10 @@ CANMessage& CANMessage::operator=(const CANMessage& other) {
     this->dataLength = other.dataLength;
     this->setPayload(other.payload);
     return *this;
+}
+
+bool CANMessage::isCANExtended() {
+    return this->isExtended;
 }
 
 }  // namespace EVT::core::IO
