@@ -24,7 +24,7 @@ public:
      * @param dataLength[in] The size of the payload (<= CAN_MAX_PAYLOAD_SIZE)
      * @param payload[in] The data in the CAN message
      */
-    CANMessage(uint32_t id, uint8_t dataLength, uint8_t* payload);
+    CANMessage(uint32_t id, uint8_t dataLength, uint8_t* payload, bool isExtended);
 
     /**
      * Create an empty CANMessage, the id will be 0, dataLength will be 0 and
@@ -84,6 +84,13 @@ public:
      */
     CANMessage& operator= (const CANMessage& other);
 
+    /**
+     * Get if the CAN message is extended or no
+     *
+     * @return True if the message is extended
+     */
+    bool isCANExtended();
+
 private:
     /** ID of the CAN message */
     uint32_t id;
@@ -91,6 +98,8 @@ private:
     uint8_t dataLength;
     /** The data stored in the CAN message */
     uint8_t payload[CAN_MAX_PAYLOAD_SIZE];
+    /** Flag that represents if the message is extended */
+    bool isExtended;
 };
 
 }  // namespace EVT::core::IO

@@ -47,7 +47,9 @@ extern "C" void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
     HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rxHeader, payload);
 
     // Construct the CANmessage
-    EVT::core::IO::CANMessage message(rxHeader.ExtId, rxHeader.DLC, payload);
+    bool isExtended = rxHeader.IDE == CAN_ID_EXT;
+    uint32_t id = isExtended ? rxHeader.ExtId: rxHeader.StdId;
+    EVT::core::IO::CANMessage message(id, rxHeader.DLC, payload, isExtended);
 
     // Check to see if a user defined IRQ has been provided
     if(canIntf->triggerIRQ(message))
@@ -149,8 +151,12 @@ void CANf302x8::transmit(CANMessage& message) {
 
     uint32_t mailbox = CAN_TX_MAILBOX0;
 
-    txHeader.ExtId = message.getId();
-    txHeader.IDE = CAN_ID_EXT;
+    // Set the message ID
+    if(message.isCANExtended())
+        txHeader.ExtId = message.getId();
+    else
+        txHeader.StdId = message.getId();
+    txHeader.IDE = message.isCANExtended() ? CAN_ID_EXT: CAN_ID_STD;
     // TODO: Consider having remote setting be part of CAN message
     txHeader.RTR = CAN_RTR_DATA;
     txHeader.DLC = message.getDataLength();
