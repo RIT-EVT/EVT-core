@@ -63,9 +63,10 @@ GPIOf302x8::GPIOf302x8(Pin pin, GPIO::Direction direction)
     : GPIO(pin, direction) {
 
     GPIO_InitTypeDef gpioInit;
-    Pin myPins[1] = {pin};
+    Pin myPins[] = {pin};
+    uint8_t numOfPins = 1;
 
-    gpioStateInit(&gpioInit, myPins, static_cast<uint32_t>(direction), GPIO_PULLDOWN, GPIO_SPEED_FREQ_HIGH);
+    gpioStateInit(&gpioInit, myPins, numOfPins, static_cast<uint32_t>(direction), GPIO_PULLDOWN, GPIO_SPEED_FREQ_HIGH);
 
     this->halPin = 1 << (static_cast<uint16_t>(this->pin) & 0x0F);
     this->writePin(GPIO::State::LOW);  // Output set low by default
@@ -86,9 +87,10 @@ GPIO::State GPIOf302x8::readPin() {
 
 void GPIOf302x8::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO *pin)) {
     GPIO_InitTypeDef gpioInit;
-    Pin myPins[1] = {pin};
+    Pin myPins[] = {pin};
+    uint8_t numOfPins = 1;
 
-    gpioStateInit(&gpioInit, myPins, GPIOf302x8::GPIO_TRIGGER_INTERRUPT_BASE | (static_cast<uint32_t>(edge) << GPIO_MODE_IT_SHIFT), 
+    gpioStateInit(&gpioInit, myPins, numOfPins, GPIOf302x8::GPIO_TRIGGER_INTERRUPT_BASE | (static_cast<uint32_t>(edge) << GPIO_MODE_IT_SHIFT), 
         GPIO_PULLDOWN, GPIO_SPEED_FREQ_HIGH);
 
     auto pin_index = static_cast<uint8_t>(this->pin) & 0x0F;
@@ -132,10 +134,13 @@ void GPIOf302x8::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO *pin)) {
     }
 }
 
-void GPIOf302x8::gpioStateInit(GPIO_InitTypeDef *targetGpio, Pin *pins, uint32_t mode, uint32_t pull, uint32_t speed, uint8_t alternate){
-
-    targetGpio->Pin = static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[0]) & 0x0F)) |
+void GPIOf302x8::gpioStateInit(GPIO_InitTypeDef *targetGpio, Pin *pins, uint8_t numOfPins, uint32_t mode, uint32_t pull, uint32_t speed, uint8_t alternate){
+    if (numOfPins == 2){
+        targetGpio->Pin = static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[0]) & 0x0F)) |
                      static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[1]) & 0x0F));
+    } else{
+        targetGpio->Pin = static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[0]) & 0x0F));
+    }
 
     targetGpio->Mode = mode;
 
@@ -147,8 +152,6 @@ void GPIOf302x8::gpioStateInit(GPIO_InitTypeDef *targetGpio, Pin *pins, uint32_t
     if(alternate != 0x0DU){
         targetGpio->Alternate = alternate;
     }
-
-    uint8_t numOfPins = sizeof(pins)/sizeof(pins[0]);
 
     for(uint8_t i = 0; i < numOfPins; i++){
         switch((static_cast<uint8_t>(pins[i]) & 0xF0) >> 4){

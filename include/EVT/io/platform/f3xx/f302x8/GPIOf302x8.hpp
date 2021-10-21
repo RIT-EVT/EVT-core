@@ -63,12 +63,13 @@ public:
      * Condenses gpio settings initialization into a single function.
      * @param targetGpio gpio instance to initialize
      * @param pins array of pins used by gpio instance
+     * @param numOfPins size of the pin array (either 1 or 2)
      * @param mode gpio configuration mode
      * @param pull pull-up or pull-down activation
      * @param speed maximum gpio output frequency
      * @param alternate gpio alternate function selection
      */
-    static void gpioStateInit(GPIO_InitTypeDef *targetGpio, Pin *pins, uint32_t mode, 
+    static void gpioStateInit(GPIO_InitTypeDef *targetGpio, Pin *pins, uint8_t numOfPins, uint32_t mode, 
         uint32_t pull, uint32_t speed, uint8_t alternate = 0x0DU);
    
 private:

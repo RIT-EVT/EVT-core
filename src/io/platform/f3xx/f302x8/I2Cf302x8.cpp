@@ -69,9 +69,10 @@ I2Cf302x8::I2Cf302x8(Pin sclPin, Pin sdaPin) : I2C(sclPin, sdaPin) {
             break;
     }
 
-    Pin i2cPins[2]   = {sclPin, sdaPin};
+    Pin i2cPins[] = {sclPin, sdaPin};
+    uint8_t numOfPins = 2;
 
-    GPIOf302x8::gpioStateInit(&gpioInit, i2cPins, GPIO_MODE_AF_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+    GPIOf302x8::gpioStateInit(&gpioInit, i2cPins, numOfPins, GPIO_MODE_AF_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
 
     // 8MHz = 0x00310309; 16MHz = 0x10320309; 48MHz = 0x50330309
     halI2C.Init.Timing           = 0x00310309;
