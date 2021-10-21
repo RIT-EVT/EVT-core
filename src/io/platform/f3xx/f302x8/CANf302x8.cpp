@@ -15,7 +15,6 @@
 #include <EVT/utils/types/FixedQueue.hpp>
 #include <EVT/platform/f3xx/stm32f302x8.hpp>
 
-
 namespace {
 
 // Pointer to a queue element that will store the CAN messages. This is made
@@ -25,7 +24,7 @@ namespace {
 //
 // NOTE: Part of the reason this works is because the STM32F3xx only supports
 // a single CAN interface at a time.
-EVT::core::types::FixedQueue<EVT::core::IO::CANMessage>* canMessageQueue;
+EVT::core::types::FixedQueue<CAN_MESSAGE_QUEUE_SIZE, EVT::core::IO::CANMessage>* canMessageQueue;
 // Pointer to the CAN interface, made global for similar reasons to the
 // variable above.
 CAN_HandleTypeDef* hcan;

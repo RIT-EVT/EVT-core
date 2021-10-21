@@ -9,6 +9,8 @@
 #include <EVT/io/CAN.hpp>
 #include <EVT/utils/types/FixedQueue.hpp>
 
+#define CAN_MESSAGE_QUEUE_SIZE 100
+
 namespace EVT::core::IO {
 
 /**
@@ -63,7 +65,7 @@ private:
     /** Instance of the HAL can interface */
     CAN_HandleTypeDef halCAN;
     /** Queue which holds received CAN messages */
-    EVT::core::types::FixedQueue<CANMessage> messageQueue;
+    EVT::core::types::FixedQueue<CAN_MESSAGE_QUEUE_SIZE, CANMessage> messageQueue;
 
 };
 

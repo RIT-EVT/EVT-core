@@ -18,15 +18,10 @@
 
 #include <stdint.h>
 
-// The most number of elements in the queue, the user can provide a
-// value that is less then this number to reduce the apparent capacity.
-// Note that doing so will not reduce the size of the instance.
-#define QUEUE_MAX_CAPACITY 512
-
 namespace EVT::core::types
 {
 
-template<class Element>
+template<size_t maxSize, class Element>
 class FixedQueue {
 public:
 
@@ -34,18 +29,12 @@ public:
      * Makes a queue without the need for dynamic memory allocation. The
      * queue will start out as empty.
      *
-     * @param maxCapacity The maximum size that the queue can be, must be
-     *      between 0 and QUEUE_MAX_CAPACITY. Defaults to QUEUE_MAX_CAPACITY
      * @param withOverwrite If true, when the queue is full, the oldest
      *      data is overwritten when another element is added.
      *      Defaults to false
      */
-    FixedQueue(size_t maxCapacity = QUEUE_MAX_CAPACITY,
-            bool withOverwrite = false) {
-
-        if (maxCapacity > QUEUE_MAX_CAPACITY)
-            maxCapacity = QUEUE_MAX_CAPACITY;
-        this->maxCapacity = maxCapacity;
+    FixedQueue(bool withOverwrite = false) {
+        this->maxCapacity = maxSize;
         this->front = &elements[0];
         this->back = &elements[0];
         this->end = &elements[maxCapacity];
@@ -143,7 +132,7 @@ public:
 
 private:
     /** The elements stored in the queue */
-    Element elements[QUEUE_MAX_CAPACITY];
+    Element elements[maxSize];
     /**
      * The max number of elements that are stored (can be any value between
      * 0 and QUEUE_MAX_CAPACITY).
