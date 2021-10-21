@@ -61,6 +61,38 @@ public:
      */
     CANMessage* receive(CANMessage* message, bool blocking=false);
 
+    /**
+     * Add an interrupt handler for CAN messages. This will be called with
+     * the provided private data when a new CAN message comes in.
+     *
+     * NOTE: Having an interrupt handler will bypass the CAN's internal
+     * storage queue thus making CAN::receive ineffective.
+     *
+     * @param handler[in] The interrupt handler. Takes in a CANmessage and some other parameter
+     * @param priv[in] The private data to pass into the handler
+     */
+    void addIRQHandler(void (*handler)(CANMessage&, void* priv), void* priv);
+
+    /**
+     * Add a message to the CAN receive queue.
+     *
+     * NOTE: This is public for use with the STM HAL interrupt handler. This
+     * method should not be used outside of that application.
+     *
+     * @param message[in] The CANmessage to add to the receive queue
+     */
+    void addCANMessage(CANMessage& message);
+
+    /**
+     * Manually trigger the user specified interrupt handler. This is intended
+     * to be used by the STM HAL interrupt handler and generally should
+     * not be used beyound that use case.
+     *
+     * @param message[in] The message to pass to the interrupt handler
+     * @return True if the interrupt handler exists and has handled the message
+     */
+    bool triggerIRQ(CANMessage& message);
+
 private:
     /** Instance of the HAL can interface */
     CAN_HandleTypeDef halCAN;

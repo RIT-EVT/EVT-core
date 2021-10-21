@@ -17,14 +17,12 @@
 
 namespace {
 
-// Pointer to a queue element that will store the CAN messages. This is made
-// global so that the CAN interrupts can have access to the queue. In a more
-// ideal situation, the passed in HAL CAN instance would contain the queue
-// as "private data". This should be considered for the future.
+// Pointer to the CANf302r8 interface
 //
 // NOTE: Part of the reason this works is because the STM32F3xx only supports
 // a single CAN interface at a time.
-EVT::core::types::FixedQueue<CAN_MESSAGE_QUEUE_SIZE, EVT::core::IO::CANMessage>* canMessageQueue;
+EVT::core::IO::CANf302x8* canIntf;
+
 // Pointer to the CAN interface, made global for similar reasons to the
 // variable above.
 CAN_HandleTypeDef* hcan;
@@ -48,10 +46,15 @@ extern "C" void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
 
     HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rxHeader, payload);
 
+    // Construct the CANmessage
     EVT::core::IO::CANMessage message(rxHeader.ExtId, rxHeader.DLC, payload);
+
+    // Check to see if a user defined IRQ has been provided
+    if(canIntf->triggerIRQ(message))
+        return;
+
     // TODO: Part of an error system should log when the CAN buffer has filled
-    if (canMessageQueue->canInsert())
-        canMessageQueue->append(message);
+    canIntf->addCANMessage(message);
 }
 
 namespace EVT::core::IO {
@@ -113,7 +116,7 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
 
     // Setup global variables
     hcan = &this->halCAN;
-    canMessageQueue = &this->messageQueue;
+    canIntf = this;
 
     __HAL_RCC_CAN1_CLK_ENABLE();
     HAL_CAN_Init(&halCAN);
@@ -184,6 +187,18 @@ CANMessage* CANf302x8::receive(CANMessage* message, bool blocking) {
     } else {
         return nullptr;
     }
+}
+
+void CANf302x8::addCANMessage(CANMessage& message) {
+    if(messageQueue.canInsert())
+        messageQueue.append(message);
+}
+
+bool CANf302x8::triggerIRQ(CANMessage& message) {
+    if(handler == nullptr)
+        return false;
+    handler(message, priv);
+    return true;
 }
 
 }  // namespace EVT::core::IO
