@@ -18,6 +18,7 @@ public:
      * @return The state to write to the LED
      */
     LED writeLED();
+    
 private:
     /**
      * Read whether an LED is on or off

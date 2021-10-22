@@ -10,6 +10,7 @@ namespace EVT::core::IO
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
 enum class GPIO;
+bool activeHigh;
 
 class Button 
 {
@@ -44,10 +45,6 @@ enum class Press
      * @return Confirmation of a press  
      */
     Press debounce();
-
-
-
-
 
 protected:
     GPIO button;
