@@ -4,10 +4,18 @@
 #include <stdint.h>
 #include "GPIO.hpp"
 
+#define SPI_MSB_FIRST 1
+#define SPI_LSB_FIRST 0
+
+#define SPIMode0 0x01
+#define SPIMode1 0x02
+#define SPIMode2 0x04
+#define SPIMode3 0x08
+
 namespace EVT::core::IO {
-// Forward declarations:
-// The different pins are hardware specific. Forward declaration to allow
-// at compilation time the decision of which pins should be used.
+    // Forward declarations:
+    // The different pins are hardware specific. Forward declaration to allow
+    // at compilation time the decision of which pins should be used.
     enum class Pin;
 
     class SPI {
@@ -34,10 +42,12 @@ namespace EVT::core::IO {
         void writeReg(uint8_t device, uint8_t reg, uint8_t byte);
 
         uint8_t readReg(uint8_t device, uint8_t reg);
-
+        
+        virtual void configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order);
+    
     private:
-        GPIO* _csPins;
-        uint8_t _csPinsLength;
+        GPIO* CSPins;
+        uint8_t CSPinsLength;
         /** The SPI clock line */
         Pin sckPin;
         /** The MOSI data line*/

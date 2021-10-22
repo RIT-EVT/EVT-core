@@ -47,5 +47,4 @@ namespace EVT::core::IO {
         return data;
     }
 
-
-}
+} // namespace EVT::core::IO
