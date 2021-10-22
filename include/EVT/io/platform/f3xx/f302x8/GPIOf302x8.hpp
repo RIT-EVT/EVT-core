@@ -67,6 +67,7 @@ public:
      * @param mode gpio configuration mode
      * @param pull pull-up or pull-down activation
      * @param speed maximum gpio output frequency
+     * Possible values for Mode, Pull, and Speed can be found in "stm32f3xx_hal_gpio.h"
      * @param alternate gpio alternate function selection
      */
     static void gpioStateInit(GPIO_InitTypeDef *targetGpio, Pin *pins, uint8_t numOfPins, uint32_t mode, 

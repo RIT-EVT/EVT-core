@@ -18,7 +18,7 @@ UARTf302x8::UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate)
     GPIO_InitTypeDef gpioInit;
     Pin myPins[] = {txPin, rxPin};
     uint8_t numOfPins = 2;
-    uint8_t alt_id = 7;
+    uint8_t alt_id;
 
     // Determine portID
     uint8_t portID = 1;
@@ -50,6 +50,8 @@ UARTf302x8::UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate)
             if (!(__HAL_RCC_USART1_IS_CLK_ENABLED()))
                 __HAL_RCC_USART1_CLK_ENABLE();
 
+            alt_id = GPIO_AF7_USART1;
+
             break;
         case 2:
             halUART.Instance = USART2;
@@ -57,12 +59,16 @@ UARTf302x8::UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate)
             if (!(__HAL_RCC_USART2_IS_CLK_ENABLED()))
                 __HAL_RCC_USART2_CLK_ENABLE();
 
+            alt_id = GPIO_AF7_USART2;
+
             break;
         case 3:
             halUART.Instance = USART3;
 
             if (!(__HAL_RCC_USART3_IS_CLK_ENABLED()))
                 __HAL_RCC_USART3_CLK_ENABLE();
+
+            alt_id = GPIO_AF7_USART3;
 
             break;
         default:
