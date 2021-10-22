@@ -56,7 +56,6 @@ public:
         RISING_FALLING  = 3u
     };
 
-
     /**
      * Create a new GPIO interface on a specific pin. The direction will not
      * be set and will have to be set manually.
