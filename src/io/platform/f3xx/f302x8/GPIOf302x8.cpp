@@ -64,38 +64,13 @@ GPIOf302x8::GPIOf302x8(Pin pin, GPIO::Direction direction)
     : GPIO(pin, direction) {
 
     GPIO_InitTypeDef gpioInit;
+    Pin myPins[] = {pin};
+    uint8_t numOfPins = 1;
+
+    gpioStateInit(&gpioInit, myPins, numOfPins,
+        static_cast<uint32_t>(direction), GPIO_PULLDOWN, GPIO_SPEED_FREQ_HIGH);
 
     this->halPin = 1 << (static_cast<uint16_t>(this->pin) & 0x0F);
-    switch ((static_cast<uint8_t>(pin) & 0xF0) >> 4) {
-        case 0x0:
-            this->port = GPIOA;
-            __HAL_RCC_GPIOA_CLK_ENABLE();
-            break;
-        case 0x1:
-            this->port = GPIOB;
-            __HAL_RCC_GPIOB_CLK_ENABLE();
-            break;
-        case 0x2:
-            this->port = GPIOC;
-            __HAL_RCC_GPIOC_CLK_ENABLE();
-            break;
-        case 0x3:
-            this->port = GPIOD;
-            __HAL_RCC_GPIOD_CLK_ENABLE();
-            break;
-        case 0x5:
-            this->port = GPIOF;
-            __HAL_RCC_GPIOF_CLK_ENABLE();
-            break;
-        default:
-            break;  // Should never get here
-    }
-
-    gpioInit.Pin = this->halPin;
-    gpioInit.Mode = static_cast<uint32_t>(direction);
-    gpioInit.Pull = GPIO_PULLDOWN;
-    gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(this->port, &gpioInit);
     this->writePin(GPIO::State::LOW);  // Output set low by default
 }
 
@@ -114,14 +89,13 @@ GPIO::State GPIOf302x8::readPin() {
 
 void GPIOf302x8::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO *pin)) {
     GPIO_InitTypeDef gpioInit;
+    Pin myPins[] = {pin};
+    uint8_t numOfPins = 1;
 
-    gpioInit.Pin = this -> halPin;
-    gpioInit.Mode = GPIOf302x8::GPIO_TRIGGER_INTERRUPT_BASE |
-            (static_cast<uint32_t>(edge) << GPIO_MODE_IT_SHIFT);
-    gpioInit.Pull = GPIO_PULLDOWN;
-    gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
-
-    HAL_GPIO_Init(this -> port, &gpioInit);
+    gpioStateInit(&gpioInit, myPins, numOfPins,
+                    GPIOf302x8::GPIO_TRIGGER_INTERRUPT_BASE |
+                    (static_cast<uint32_t>(edge) << GPIO_MODE_IT_SHIFT),
+                    GPIO_PULLDOWN, GPIO_SPEED_FREQ_HIGH);
 
     auto pin_index = static_cast<uint8_t>(this->pin) & 0x0F;
     INTERRUPT_HANDLERS[pin_index] = irqHandler;
@@ -168,4 +142,54 @@ void GPIOf302x8::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO *pin)) {
     HAL_NVIC_EnableIRQ(irqNum);
 }
 
+void GPIOf302x8::gpioStateInit(GPIO_InitTypeDef *targetGpio, Pin *pins,
+                                uint8_t numOfPins, uint32_t mode, uint32_t pull,
+                                uint32_t speed, uint8_t alternate) {
+    if (numOfPins == 2) {
+        targetGpio->Pin =
+            static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[0]) & 0x0F)) |
+            static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[1]) & 0x0F));
+    } else {
+        targetGpio->Pin =
+            static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[0]) & 0x0F));
+    }
+
+    targetGpio->Mode = mode;
+
+    targetGpio->Pull = pull;
+
+    targetGpio->Speed = speed;
+
+    // 0x0DU is not used by the F302x8 as an alternate value
+    if (alternate != 0x0DU) {
+        targetGpio->Alternate = alternate;
+    }
+
+    for (uint8_t i = 0; i < numOfPins; i++) {
+        switch ((static_cast<uint8_t>(pins[i]) & 0xF0) >> 4) {
+            case 0x0:
+                __HAL_RCC_GPIOA_CLK_ENABLE();
+                HAL_GPIO_Init(GPIOA, targetGpio);
+                break;
+            case 0x1:
+                __HAL_RCC_GPIOB_CLK_ENABLE();
+                HAL_GPIO_Init(GPIOB, targetGpio);
+                break;
+            case 0x2:
+                __HAL_RCC_GPIOC_CLK_ENABLE();
+                HAL_GPIO_Init(GPIOC, targetGpio);
+                break;
+            case 0x3:
+                __HAL_RCC_GPIOD_CLK_ENABLE();
+                HAL_GPIO_Init(GPIOD, targetGpio);
+                break;
+            case 0x5:
+                __HAL_RCC_GPIOF_CLK_ENABLE();
+                HAL_GPIO_Init(GPIOF, targetGpio);
+                break;
+            default:
+                break;  // Should never get here
+        }
+    }
+}
 }  // namespace EVT::core::IO

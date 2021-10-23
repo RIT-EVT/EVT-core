@@ -1,4 +1,5 @@
 #include <EVT/io/platform/f3xx/f302x8/PWMf302x8.hpp>
+#include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
 
 namespace EVT::core::IO {
 
@@ -211,33 +212,12 @@ PWMf302x8::PWMf302x8(Pin pin) : PWM(pin) {
 
     // Setup GPIO pin for PMW
     GPIO_InitTypeDef gpioInit = {0};
-    gpioInit.Pin = static_cast<uint32_t>(
-            1 << (static_cast<uint32_t>(pin) & 0x0F));
-    gpioInit.Mode = GPIO_MODE_AF_PP;
-    gpioInit.Pull = GPIO_NOPULL;
-    gpioInit.Speed = GPIO_SPEED_FREQ_LOW;
-    gpioInit.Alternate = alternateFunction;
+    Pin myPins[] = {pin};
+    uint8_t numOfPins = 1;
 
-    switch ((static_cast<uint8_t>(pin) & 0xF0) >> 4) {
-        case 0x0:
-            __HAL_RCC_GPIOA_CLK_ENABLE();
-            HAL_GPIO_Init(GPIOA, &gpioInit);
-            break;
-        case 0x1:
-            __HAL_RCC_GPIOB_CLK_ENABLE();
-            HAL_GPIO_Init(GPIOB, &gpioInit);
-            break;
-        case 0x2:
-            __HAL_RCC_GPIOC_CLK_ENABLE();
-            HAL_GPIO_Init(GPIOC, &gpioInit);
-            break;
-        case 0x03:
-            __HAL_RCC_GPIOD_CLK_ENABLE();
-            HAL_GPIO_Init(GPIOD, &gpioInit);
-            break;
-        default:
-            break;
-    }
+    GPIOf302x8::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP,
+                                GPIO_NOPULL, GPIO_SPEED_FREQ_LOW,
+                                alternateFunction);
 }
 
 void PWMf302x8::setDutyCycle(float dutyCycle) {
