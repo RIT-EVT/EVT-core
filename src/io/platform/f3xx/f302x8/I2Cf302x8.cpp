@@ -147,4 +147,14 @@ void I2Cf302x8::read(uint8_t addr, uint8_t* bytes, uint8_t length) {
             DEFAULT_I2C_TIMEOUT);
 }
 
+void I2Cf302x8::writeMemReg(uint8_t addr, uint32_t memAddress, uint8_t byte, uint16_t memAddSize) {
+    uint16_t memAddress16 = memAddress;
+    HAL_I2C_Mem_Write(&halI2C, addr << 1, memAddress16, memAddSize, &byte, 1, DEFAULT_I2C_TIMEOUT);
+}
+
+uint8_t I2Cf302x8::readMemReg(uint8_t addr, uint32_t memAddress, uint8_t* byte, uint16_t memAddSize) {
+    uint16_t memAddress16 = memAddress;
+    return HAL_I2C_Mem_Read(&halI2C, addr << 1, memAddress16, memAddSize, byte, 1, DEFAULT_I2C_TIMEOUT);
+}
+
 }  // namespace EVT::core::IO
