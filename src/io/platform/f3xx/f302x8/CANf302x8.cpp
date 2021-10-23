@@ -52,7 +52,7 @@ extern "C" void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
     EVT::core::IO::CANMessage message(id, rxHeader.DLC, payload, isExtended);
 
     // Check to see if a user defined IRQ has been provided
-    if(canIntf->triggerIRQ(message))
+    if (canIntf->triggerIRQ(message))
         return;
 
     // TODO: Part of an error system should log when the CAN buffer has filled
@@ -152,7 +152,7 @@ void CANf302x8::transmit(CANMessage& message) {
     uint32_t mailbox = CAN_TX_MAILBOX0;
 
     // Set the message ID
-    if(message.isCANExtended())
+    if (message.isCANExtended())
         txHeader.ExtId = message.getId();
     else
         txHeader.StdId = message.getId();
@@ -196,12 +196,12 @@ CANMessage* CANf302x8::receive(CANMessage* message, bool blocking) {
 }
 
 void CANf302x8::addCANMessage(CANMessage& message) {
-    if(messageQueue.canInsert())
+    if (messageQueue.canInsert())
         messageQueue.append(message);
 }
 
 bool CANf302x8::triggerIRQ(CANMessage& message) {
-    if(handler == nullptr)
+    if (handler == nullptr)
         return false;
     handler(message, priv);
     return true;

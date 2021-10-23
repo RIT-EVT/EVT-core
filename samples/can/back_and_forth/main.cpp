@@ -45,7 +45,7 @@ int main() {
     while (true) {
         // Transmit every second
         can.transmit(transmit_message);
-        time::wait(1000);    
+        time::wait(1000);
     }
 
     return 0;
