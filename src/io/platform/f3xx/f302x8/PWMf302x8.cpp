@@ -215,7 +215,9 @@ PWMf302x8::PWMf302x8(Pin pin) : PWM(pin) {
     Pin myPins[] = {pin};
     uint8_t numOfPins = 1;
 
-    GPIOf302x8::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, alternateFunction);
+    GPIOf302x8::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP,
+                                GPIO_NOPULL, GPIO_SPEED_FREQ_LOW,
+                                alternateFunction);
 }
 
 void PWMf302x8::setDutyCycle(float dutyCycle) {

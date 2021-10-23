@@ -64,7 +64,8 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
     GPIO_InitTypeDef gpioInit = {0};
     Pin canPins[] = {txPin, rxPin};
     uint8_t numOfPins = 2;
-    GPIOf302x8::gpioStateInit(&gpioInit, canPins, numOfPins, GPIO_MODE_AF_OD, GPIO_PULLUP, GPIO_SPEED_FREQ_HIGH, GPIO_AF9_CAN);
+    GPIOf302x8::gpioStateInit(&gpioInit, canPins, numOfPins, GPIO_MODE_AF_OD,
+                            GPIO_PULLUP, GPIO_SPEED_FREQ_HIGH, GPIO_AF9_CAN);
 
     // Initialize HAL CAN
     // Bit timing values calculated from the website

@@ -75,7 +75,8 @@ UARTf302x8::UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate)
             break;
     }
 
-    GPIOf302x8::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, alt_id);
+    GPIOf302x8::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP,
+        GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, alt_id);
 
     halUART.Init.BaudRate     = baudrate;
     halUART.Init.WordLength   = UART_WORDLENGTH_8B;
