@@ -85,7 +85,7 @@ int main() {
 
     // Intialize peripherals
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();
-    DEV::Timerf302x8 timer(TIM2, 100, nullptr);
+    DEV::Timerf302x8 timer(TIM2, 100);
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
     timer.stopTimer();
 
