@@ -110,7 +110,7 @@ static void canEnable(uint32_t baudrate) {
  * @return sizeof(CO_IF_FRM) on success, ((int16_t)-1u) on failure
  */
 static int16_t canSend(CO_IF_FRM *frm) {
-    EVT::core::IO::CANMessage message(frm->Identifier, frm->DLC, frm->Data);
+    EVT::core::IO::CANMessage message(frm->Identifier, frm->DLC, frm->Data, false);
     can->transmit(message);
 
     return sizeof(CO_IF_FRM);
