@@ -10,6 +10,8 @@
 #include <EVT/io/CAN.hpp>
 #include <EVT/utils/time.hpp>
 #include <EVT/dev/platform/f3xx/f302x8/Timerf302x8.hpp>
+#include <EVT/utils/types/FixedQueue.hpp>
+#include <EVT/io/types/CANMessage.hpp>
 
 #include <EVT/io/CANopen.hpp>
 
@@ -23,69 +25,73 @@ namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
 namespace time = EVT::core::time;
 
+///////////////////////////////////////////////////////////////////////////////
+// EVT-core CAN callback and CAN setup. This will include logic to set
+// aside CANopen messages into a specific queue
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Interrupt handler to get CAN messages. A function pointer to this function
+ * will be passed to the EVT-core CAN interface which will in turn call this
+ * function each time a new CAN message comes in.
+ *
+ * NOTE: For this sample, every non-extended (so 11 bit CAN IDs) will be
+ * assummed to be intended to be passed as a CANopen message.
+ *
+ * @param message[in] The passed in CAN message that was read.
+ */
+void canInterrupt(IO::CANMessage& message, void* priv) {
+    EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* queue =
+        (EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*)priv;
+    if(queue != nullptr)
+        queue->append(message);
+}
 
 ///////////////////////////////////////////////////////////////////////////////
-// Callbacks
+// CANopen specific Callbacks. Need to be defined in some location
 ///////////////////////////////////////////////////////////////////////////////
-extern "C" void CONodeFatalError(void) {
+extern "C" void CONodeFatalError(void) { }
 
-}
+extern "C" void COIfCanReceive(CO_IF_FRM *frm) { }
 
-extern "C" void COIfCanReceive(CO_IF_FRM *frm) {
+extern "C" int16_t COLssStore(uint32_t baudrate, uint8_t nodeId) { return 0; }
 
-}
+extern "C" int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId) { return 0; }
 
-extern "C" int16_t COLssStore(uint32_t baudrate, uint8_t nodeId) {
-    return 0;
-}
+extern "C" void CONmtModeChange(CO_NMT *nmt, CO_MODE mode) { }
 
-extern "C" int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId) {
-    return 0;
-}
+extern "C" void CONmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId) { }
 
-extern "C" void CONmtModeChange(CO_NMT *nmt, CO_MODE mode) {
+extern "C" void CONmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode) { }
 
-}
+extern "C" int16_t COParaDefault(CO_PARA *pg) { return 0; }
 
-extern "C" void CONmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId) {
+extern "C" void COPdoTransmit(CO_IF_FRM *frm) { }
 
-}
+extern "C" int16_t COPdoReceive(CO_IF_FRM *frm) { return 0; }
 
-extern "C" void CONmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode) {
+extern "C" void COPdoSyncUpdate(CO_RPDO *pdo) { }
 
-}
+extern "C" void COTmrLock(void) { }
 
-extern "C" int16_t COParaDefault(CO_PARA *pg) {
-    return 0;
-}
-
-extern "C" void COPdoTransmit(CO_IF_FRM *frm) {
-
-}
-
-extern "C" int16_t COPdoReceive(CO_IF_FRM *frm) {
-    return 0;
-}
-
-extern "C" void COPdoSyncUpdate(CO_RPDO *pdo) {
-
-}
-
-extern "C" void COTmrLock(void) {
-
-}
-
-extern "C" void COTmrUnlock(void) {
-
-}
+extern "C" void COTmrUnlock(void) { }
 
 int main() {
     // Initialize system
     IO::init();
+    
+    // Will store CANopen messages that will be populated by the EVT-core CAN
+    // interrupt
+    EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage> canOpenQueue;
 
-    // Intialize peripherals
+    // Intialize CAN, add an IRQ which will add messages to the queue above
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();
+    can.addIRQHandler(canInterrupt, (void*)&canOpenQueue);
+
+    // Initialize the timer
     DEV::Timerf302x8 timer(TIM2, 100);
+
+    // UART for testing
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
     timer.stopTimer();
 
@@ -107,7 +113,7 @@ int main() {
     CO_IF_TIMER_DRV timerDriver;
     CO_IF_NVM_DRV nvmDriver;
 
-    IO::getCANopenCANDriver(can, &canDriver);
+    IO::getCANopenCANDriver(can, &canOpenQueue, &canDriver);
     IO::getCANopenTimerDriver(timer, &timerDriver);
     IO::getCANopenNVMDriver(&nvmDriver);
 

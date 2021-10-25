@@ -11,6 +11,10 @@
 #include <EVT/io/CAN.hpp>
 #include <EVT/dev/Timer.hpp>
 #include <EVT/dev/RTC.hpp>
+#include <EVT/utils/types/FixedQueue.hpp>
+#include <EVT/io/types/CANMessage.hpp>
+
+#define CANOPEN_QUEUE_SIZE 15
 
 namespace EVT::core::IO {
 
@@ -20,9 +24,12 @@ namespace EVT::core::IO {
     * handle CAN operations.
     *
     * @param can[in] The CAN interface that will be used for the stack driver
+    * @param messageQueue[in] Queue that will be read from for receiveing CAN messages
     * @param canDriver[out] The CANopen stack driver to populate
     */
-    void getCANopenCANDriver(CAN& can, CO_IF_CAN_DRV* canDriver);
+    void getCANopenCANDriver(CAN& can,
+        types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* messageQueue,
+        CO_IF_CAN_DRV* canDriver);
 
     /**
      * Get an instance of the timer driver that can be used with the

@@ -1,5 +1,6 @@
 #include <EVT/io/CANopen.hpp>
 #include <EVT/io/types/CANMessage.hpp>
+#include <EVT/utils/types/FixedQueue.hpp>
 
 #include <EVT/dev/RTC.hpp>
 
@@ -23,6 +24,9 @@ namespace {
 
     // Temporary "storage" to allow the NVM to work, do not use as actual NVM
     uint8_t testerStorage[MAX_SIZE];
+
+    // Queue that stores the CAN messages to send to the CANopen parser
+    EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, EVT::core::IO::CANMessage>* canQueue;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,9 +57,9 @@ static uint32_t nvmRead(uint32_t start, uint8_t* buffer, uint32_t size);
 static uint32_t nvmWrite(uint32_t start, uint8_t* buffer, uint32_t size);
 
 namespace EVT::core::IO {
-    void getCANopenCANDriver(CAN& canIntf, CO_IF_CAN_DRV* canDriver) {
-        can = &canIntf;
-
+    void getCANopenCANDriver(IO::CAN& canInf, EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* messageQueue, CO_IF_CAN_DRV* canDriver) {
+        can = &canInf;
+        canQueue = messageQueue;
         canDriver->Init = canInit;
         canDriver->Enable = canEnable;
         canDriver->Read = canRead;
@@ -127,9 +131,9 @@ static int16_t canRead(CO_IF_FRM *frm) {
     EVT::core::IO::CANMessage message;
 
     // No message
-    if(!can->receive(&message))
+    if(!canQueue->pop(&message))
         return ((int16_t)-1u);
-
+    
     frm->Identifier = message.getId();
     frm->DLC = message.getDataLength();
     // Copy contents into payload buffer
