@@ -43,7 +43,7 @@ namespace time = EVT::core::time;
 void canInterrupt(IO::CANMessage& message, void* priv) {
     EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* queue =
         (EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*)priv;
-    if(queue != nullptr)
+    if (queue != nullptr)
         queue->append(message);
 }
 
@@ -79,14 +79,14 @@ extern "C" void COTmrUnlock(void) { }
 int main() {
     // Initialize system
     IO::init();
-    
+
     // Will store CANopen messages that will be populated by the EVT-core CAN
     // interrupt
     EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage> canOpenQueue;
 
     // Intialize CAN, add an IRQ which will add messages to the queue above
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();
-    can.addIRQHandler(canInterrupt, (void*)&canOpenQueue);
+    can.addIRQHandler(canInterrupt, reinterpret_cast<void*>(&canOpenQueue));
 
     // Initialize the timer
     DEV::Timerf302x8 timer(TIM2, 100);
@@ -113,8 +113,8 @@ int main() {
     CO_IF_TIMER_DRV timerDriver;
     CO_IF_NVM_DRV nvmDriver;
 
-    IO::getCANopenCANDriver(can, &canOpenQueue, &canDriver);
-    IO::getCANopenTimerDriver(timer, &timerDriver);
+    IO::getCANopenCANDriver(&can, &canOpenQueue, &canDriver);
+    IO::getCANopenTimerDriver(&timer, &timerDriver);
     IO::getCANopenNVMDriver(&nvmDriver);
 
     canStackDriver.Can = &canDriver;
@@ -131,7 +131,7 @@ int main() {
         .TmrNum = 16,
         .TmrFreq = 100,
         .Drv = &canStackDriver,
-        .SdoBuf = (uint8_t *)&sdoBuffer[0],
+        .SdoBuf = reinterpret_cast<uint8_t*>(&sdoBuffer[0]),
     };
 
     CO_NODE canNode;
