@@ -27,7 +27,7 @@ namespace {
 
     // Queue that stores the CAN messages to send to the CANopen parser
     EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, EVT::core::IO::CANMessage>* canQueue;
-}
+}  // namespace
 
 ///////////////////////////////////////////////////////////////////////////////
 // Forward declarations of CANopen stack CAN functions
@@ -57,8 +57,10 @@ static uint32_t nvmRead(uint32_t start, uint8_t* buffer, uint32_t size);
 static uint32_t nvmWrite(uint32_t start, uint8_t* buffer, uint32_t size);
 
 namespace EVT::core::IO {
-    void getCANopenCANDriver(IO::CAN& canInf, EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* messageQueue, CO_IF_CAN_DRV* canDriver) {
-        can = &canInf;
+    void getCANopenCANDriver(IO::CAN* canInf,
+            EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* messageQueue,
+            CO_IF_CAN_DRV* canDriver) {
+        can = canInf;
         canQueue = messageQueue;
         canDriver->Init = canInit;
         canDriver->Enable = canEnable;
@@ -68,8 +70,8 @@ namespace EVT::core::IO {
         canDriver->Close = canClose;
     }
 
-    void getCANopenTimerDriver(DEV::Timer& timerIntf, CO_IF_TIMER_DRV* timerDriver) {
-        timer = &timerIntf;
+    void getCANopenTimerDriver(DEV::Timer* timerIntf, CO_IF_TIMER_DRV* timerDriver) {
+        timer = timerIntf;
 
         timerDriver->Init = timerInit;
         timerDriver->Reload = timerReload;
@@ -83,7 +85,6 @@ namespace EVT::core::IO {
         nvmDriver->Init = nvmInit;
         nvmDriver->Read = nvmRead;
         nvmDriver->Write = nvmWrite;
-
     }
 }  // namespace EVT::core::IO
 
@@ -95,7 +96,6 @@ namespace EVT::core::IO {
  * should be passed into `getCANopenDriver` pre-initialized.
  */
 static void canInit(void) {
-
 }
 
 /**
@@ -131,13 +131,13 @@ static int16_t canRead(CO_IF_FRM *frm) {
     EVT::core::IO::CANMessage message;
 
     // No message
-    if(!canQueue->pop(&message))
+    if (!canQueue->pop(&message))
         return ((int16_t)-1u);
-    
+
     frm->Identifier = message.getId();
     frm->DLC = message.getDataLength();
     // Copy contents into payload buffer
-    for(int i = 0; i < message.getDataLength(); i++) {
+    for (int i = 0; i < message.getDataLength(); i++) {
         frm->Data[i] = message.getPayload()[i];
     }
 
@@ -148,14 +148,12 @@ static int16_t canRead(CO_IF_FRM *frm) {
  * Reset the CAN interface. This does nothing at the moment.
  */
 static void canReset(void) {
-
 }
 
 /**
  * Close the CAN connection. This does nothing at the moment.
  */
 static void canClose(void) {
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -198,8 +196,6 @@ static void timerStart(void) {
  */
 static uint8_t timerUpdate(void) {
     int result = timerCounter >= counterTarget ? 1 : 0;
-    //if(result)
-    //    timerCounter = 0;
     return result;
 }
 
@@ -225,7 +221,6 @@ static void timerStop(void) {
  * Initialize the NVM driver, does nothing
  */
 static void nvmInit(void) {
-
 }
 
 /**
@@ -234,7 +229,7 @@ static void nvmInit(void) {
 static uint32_t nvmRead(uint32_t start, uint8_t* buffer, uint32_t size) {
     uint32_t bytesRead = 0;
 
-    for(unsigned int i = 0; i < size && i + start < MAX_SIZE; i++) {
+    for (unsigned int i = 0; i < size && i + start < MAX_SIZE; i++) {
         buffer[i] = testerStorage[i + start];
         bytesRead++;
     }
@@ -248,7 +243,7 @@ static uint32_t nvmRead(uint32_t start, uint8_t* buffer, uint32_t size) {
 static uint32_t nvmWrite(uint32_t start, uint8_t* buffer, uint32_t size) {
     uint32_t bytesWrote = 0;
 
-    for(unsigned int i = 0; i < size && i + start < MAX_SIZE; i++) {
+    for (unsigned int i = 0; i < size && i + start < MAX_SIZE; i++) {
         testerStorage[i + start] = buffer[i];
         bytesWrote++;
     }

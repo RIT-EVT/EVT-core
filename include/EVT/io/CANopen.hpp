@@ -27,7 +27,7 @@ namespace EVT::core::IO {
     * @param messageQueue[in] Queue that will be read from for receiveing CAN messages
     * @param canDriver[out] The CANopen stack driver to populate
     */
-    void getCANopenCANDriver(CAN& can,
+    void getCANopenCANDriver(CAN* can,
         types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* messageQueue,
         CO_IF_CAN_DRV* canDriver);
 
@@ -39,7 +39,7 @@ namespace EVT::core::IO {
      * @param timer[in] The timer interface to use
      * @param timerDriver[ou]t The timer driver to populate
      */
-    void getCANopenTimerDriver(DEV::Timer& timer, CO_IF_TIMER_DRV* timerDriver);
+    void getCANopenTimerDriver(DEV::Timer* timer, CO_IF_TIMER_DRV* timerDriver);
 
     /**
      * Get an instance of the NVM (non-volitile memory) that can be used
