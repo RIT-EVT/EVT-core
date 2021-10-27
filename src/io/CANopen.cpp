@@ -17,7 +17,7 @@ namespace {
     // Temporary values for testing CANopen without actual timer
     EVT::core::DEV::Timer* timer;
 
-    /** Countes the number of interrupts that have taken place */
+    /** Counts the number of interrupts that have taken place */
     uint32_t timerCounter = 0;
     /** The target value for the counter */
     uint32_t counterTarget = 0;
@@ -200,7 +200,7 @@ static uint8_t timerUpdate(void) {
 }
 
 /**
- * Get the current value from the timer, not yet supported by the timer
+ * Get the difference between the current value and the target value
  */
 static uint32_t timerDelay(void) {
     return timerCounter > counterTarget ? 0 : counterTarget - timerCounter;

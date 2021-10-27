@@ -123,7 +123,7 @@ int main() {
 
     CO_NODE_SPEC canSpec = {
         .NodeId = 0x01,
-        .Baudrate = 500000,
+        .Baudrate = IO::CAN::DEFAULT_BAUD,
         .Dict = testCanNode.getObjectDictionary(),
         .DictLen = testCanNode.getNumElements(),
         .EmcyCode = NULL,
@@ -146,7 +146,7 @@ int main() {
 
     while (1) {
         uart.printf("Value of my number: %d\n\r", testCanNode.getSampleData());
-        // Process in coming CAN messages
+        // Process incoming CAN messages
         CONodeProcess(&canNode);
         // Update the state of timer based events
         COTmrService(&canNode.Tmr);
