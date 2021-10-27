@@ -70,6 +70,11 @@ public:
      */
     void addIRQHandler(void (*handler)(CANMessage&, void* priv), void* priv);
 
+    /**
+     * Default CAN baudrate.
+     */
+    static constexpr uint32_t DEFAULT_BAUD 500000;
+
 private:
     /** The CAN transmit pin */
     Pin txPin;
