@@ -27,20 +27,15 @@ int main() {
     uart.printf("Starting I2C test\n\r");
 
 
-    i2c.writeMemReg(I2C_SLAVE_ADDR, 0x00, 0xaa, 2);
-    i2c.writeMemReg(I2C_SLAVE_ADDR, 0x01, 0xbb, 2);
+    uint8_t buffer = 0xff;
+    uint8_t buffer2 = 0xff;
 
-    //while (1) {
-    uart.printf("Requesting first byte\n\r");
-    uint8_t buffer = 0x00;
-    uint8_t buffer2 = 0x00;
-    uart.printf("Error: %#x\n\r", i2c.readMemReg(I2C_SLAVE_ADDR, 0x00, &buffer, 2));
-    uart.printf("Error: %#x\n\r", i2c.readMemReg(I2C_SLAVE_ADDR, 0x01, &buffer2, 2));
+    i2c.writeMemReg(I2C_SLAVE_ADDR, 0x00, 0xaa, I2C_MEMADD_SIZE_16BIT);
+    i2c.writeMemReg(I2C_SLAVE_ADDR, 0x01, 0xbb, I2C_MEMADD_SIZE_16BIT);
 
-    uart.printf("Byte Read: %#x\n\r", buffer);
-    uart.printf("Byte Read: %#x\n\r", buffer2);
 
-    // Wait 2 seconds before repeating the test
-    time::wait(2000);
-    //}
+    uart.printf("Error 0: %#x\n\r", i2c.readMemReg(I2C_SLAVE_ADDR, 0x00, &buffer, 2));
+    uart.printf("Byte Read 0: %#x\n\r", buffer);
+    uart.printf("Error 1: %#x\n\r", i2c.readMemReg(I2C_SLAVE_ADDR, 0x01, &buffer2, 2));
+    uart.printf("Byte Read 1: %#x\n\r", buffer2);
 }
