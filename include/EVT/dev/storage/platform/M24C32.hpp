@@ -1,16 +1,20 @@
-#ifndef EVT_CHIP_NAME_H
-#define EVT_CHIP_NAME_H
+#ifndef EVT_M24C32
+#define EVT_M24C32
 
-namespace EVT::core::IO {
+namespace EVT::core::DEV {
 
 
 class M24C32 : private EEPROM {
 public:
 
     /**
-     * Empty constructor. Will startup the EEPROM.
+     * Start up the EEPROM with a slave address of i2cSlaveAddress and
+     * I2C instance i2c
+     *
+     * @param i2cSlaveAddress Slave address to use for I2C communication
+     * @param i2c I2C instance to communicate over
      */
-    M24C32();
+    M24C32(uint8_t i2cSlaveAddress, IO::I2C &i2c);
 
     /**
      * Read 8 bits of data from the given address.
@@ -108,8 +112,11 @@ public:
      */
     virtual void writeWords(uint8_t addresses[], uint32_t dataArr[]) = 0;
 
+private:
+    uint8_t i2cSlaveAddress;
+    IO::I2C &i2c;
 };
 }
 
 
-#endif //EVT_CHIP_NAME_H
+#endif //EVT_M24C32

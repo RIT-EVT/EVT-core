@@ -4,7 +4,7 @@
 #include <EVT/io/manager.hpp>
 
 
-namespace EVT::core::IO {
+namespace EVT::core::DEV {
 /**
  * EEPROMs are a type of small non-volatile storage devices. This class
  * represents features common across all EEPROMs.
