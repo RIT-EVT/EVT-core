@@ -73,7 +73,7 @@ public:
     /**
      * Default CAN baudrate.
      */
-    static constexpr uint32_t DEFAULT_BAUD 500000;
+    static constexpr uint32_t DEFAULT_BAUD = 500000;
 
 private:
     /** The CAN transmit pin */
