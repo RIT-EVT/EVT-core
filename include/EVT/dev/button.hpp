@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 
-namespace EVT::core::IO 
+namespace EVT::core::DEV 
 {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
@@ -30,23 +30,26 @@ enum class Press
      * Create a new button interface
      *
      */
-    Button(GPIO button);
+    Button(GPIO button, uint32_t debounce);
 
     /**
      * Reads the state of the button 
      * 
      * @return The button state.
      */
-    Press readButton();
+    bool readButton();
+    // bool readButton(); 
 
     /**
-     * Confirms a button press due to bouncing signal
+     * Time how long the button is in a high state
      * 
-     * @return Confirmation of a press  
+     * @return Time in milliseconds
      */
-    Press debounce();
+    uint32_t debounce();
 
-protected:
+    bool setDebounce(uint32_t debounce);
+
+private:
     GPIO button;
 
 };
