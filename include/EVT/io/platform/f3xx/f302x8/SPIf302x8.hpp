@@ -14,11 +14,19 @@ namespace EVT::core::IO {
         SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin);
         SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin);
         void configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order);
-        void startTransmition(uint8_t device);
-        void endTransmition(uint8_t device);
+
+        void write(uint8_t device, uint8_t* bytes, uint8_t length);
+
+        void read(uint8_t device, uint8_t* bytes, uint8_t length);
+
+    private:
+        bool startTransmition(uint8_t device);
+        bool endTransmition(uint8_t device);
         void write(uint8_t byte);
         uint8_t read();
-    private:
+        void togglePin(GPIO* pin);
+
+        constexpr static uint32_t DEFAULT_SPI_TIMEOUT = 100;
         SPI_HandleTypeDef halSPI;
     };
 }

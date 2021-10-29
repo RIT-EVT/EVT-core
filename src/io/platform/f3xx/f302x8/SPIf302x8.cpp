@@ -137,6 +137,12 @@ namespace EVT::core::IO {
 
     }
 
+    /**
+     * Configures the SPI transmit mode
+     * @param baudRate the baudrate to transmit at
+     * @param mode The SPIMode to use when sending
+     * @param order MSB first or LSB first
+     */
     void SPIf302x8::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order) {
         //set the CPOL and CPHA depending on the SPI mode
         switch(mode){
@@ -187,20 +193,88 @@ namespace EVT::core::IO {
         HAL_SPI_Init(&halSPI);
     }
 
-    void SPIf302x8::startTransmition(uint8_t device) {
-
+    /**
+     * toggles a GPIO pin's state
+     * @param pin the pin to toggle the state of
+     */
+    void SPIf302x8::togglePin(GPIO* pin){
+        switch (pin->readPin()) {
+            case GPIO::State::HIGH:
+                pin->writePin(GPIO::State::LOW);
+                break;
+            case GPIO::State::LOW:
+                pin->writePin(GPIO::State::HIGH);
+                break;
+        }
+    }
+    /**
+     * toggle the state of the chip select pin of a device at the start of a transmission.
+     * @param device device the device index in the CSPins
+     * @return true if valid device, false if device not in CSPins
+     */
+    bool SPIf302x8::startTransmition(uint8_t device) {
+        if(device < CSPinsLength){
+            togglePin(&CSPins[device]);
+            return true;
+        }
+        return false;
     }
 
-    void SPIf302x8::endTransmition(uint8_t device) {
-
+    /**
+     * toggle the state of the chip select pin of a device back at the end of a transmission.
+     * @param device the device index in the CSPins
+     * @return true if valid device, false if device not in CSPins
+     */
+    bool SPIf302x8::endTransmition(uint8_t device) {
+        if(device < CSPinsLength){
+            togglePin(&CSPins[device]);
+            return true;
+        }
+        return false;
     }
 
+    /**
+     * Writes a single byte out to the SPI device
+     * @param byte the byte to write
+     */
     void SPIf302x8::write(uint8_t byte) {
-
+        HAL_SPI_Transmit(&halSPI, &byte, 1, DEFAULT_SPI_TIMEOUT);
     }
 
+    /**
+     * reads a single byte from a SPI device
+     * @return the byte read
+     */
     uint8_t SPIf302x8::read() {
-        return 0;
+        uint8_t data;
+        HAL_SPI_Receive(&halSPI,&data,1,DEFAULT_SPI_TIMEOUT);
+        return data;
+    }
+
+    /**
+     * writes an array of bytes to the SPI device
+     * @param device the device to write to in CSPins
+     * @param bytes an array of bytes of length n to write to SPI device
+     * @param length the length of the array
+     */
+    void SPIf302x8::write(uint8_t device, uint8_t *bytes, uint8_t length) {
+        if(startTransmition(device)) {
+            HAL_SPI_Transmit(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
+            endTransmition(device);
+        }
+    }
+
+    /**
+     * reads an array of bytes from a SPI device
+     * @param device the device to write to in CSPins
+     * @param bytes an array of length n to receive the bytes from an SPI device
+     * @param length the number of bytes to recive
+     */
+    void SPIf302x8::read(uint8_t device, uint8_t *bytes, uint8_t length) {
+        if(startTransmition(device)) {
+            HAL_SPI_Receive(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
+            endTransmition(device);
+        }
     }
 }
 

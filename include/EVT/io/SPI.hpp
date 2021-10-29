@@ -46,8 +46,6 @@ namespace EVT::core::IO {
         virtual void configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order);
     
     private:
-        GPIO* CSPins;
-        uint8_t CSPinsLength;
         /** The SPI clock line */
         Pin sckPin;
         /** The MOSI data line*/
@@ -55,10 +53,14 @@ namespace EVT::core::IO {
         /** The MISO data line */
         Pin misoPin;
 
-        virtual void startTransmition(uint8_t device) = 0;
-        virtual void endTransmition(uint8_t device) = 0;
+        virtual bool startTransmition(uint8_t device) = 0;
+        virtual bool endTransmition(uint8_t device) = 0;
         virtual void write(uint8_t byte) = 0;
         virtual uint8_t read() = 0;
+
+    protected:
+        uint8_t CSPinsLength;
+        GPIO* CSPins;
     };
 
 }  // namespace EVT::core::IO
