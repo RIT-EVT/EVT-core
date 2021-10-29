@@ -1,8 +1,7 @@
 #ifndef EVT_EEPROM_HPP
 #define EVT_EEPROM_HPP
 
-#include <EVT/io/manager.hpp>
-
+#include <stdint.h>
 
 namespace EVT::core::DEV {
 /**

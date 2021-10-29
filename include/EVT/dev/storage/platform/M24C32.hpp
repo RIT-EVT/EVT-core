@@ -1,6 +1,9 @@
 #ifndef EVT_M24C32
 #define EVT_M24C32
 
+#include <EVT/dev/storage/EEPROM.hpp>
+#include <EVT/io/I2C.hpp>
+
 namespace EVT::core::DEV {
 
 
@@ -62,7 +65,7 @@ public:
      * @param[in] addresses The addresses to read from
      * @return A list of 32 bits of data stored at the given addresses
      */
-    virtual uint32_t * readWords(uint8_t addresses[]) = 0;
+    uint32_t * readWords(uint8_t addresses[]);
 
     /**
      * Write 8 bits of data to the given address.
@@ -70,7 +73,7 @@ public:
      * @param[in] address The address to write to
      * @param[in] data The data to write out
      */
-    virtual void writeByte(uint32_t address, uint8_t data) = 0;
+    void writeByte(uint32_t address, uint8_t data);
 
     /**
      * Write 16 bits of data to the given address.
@@ -78,7 +81,7 @@ public:
      * @param[in] address The address to write to
      * @param[in] data The data to write out
      */
-    virtual void writeHalfWord(uint32_t address, uint16_t data) = 0;
+    void writeHalfWord(uint32_t address, uint16_t data);
 
     /**
      * Write 32 bits of data to the given address.
@@ -86,7 +89,7 @@ public:
      * @param[in] address The address to write to
      * @param[in] data The data to write out
      */
-    virtual void writeWord(uint32_t address, uint32_t data) = 0;
+    void writeWord(uint32_t address, uint32_t data);
 
     /**
      * Write 8 bits of data to each of the given addresses.
@@ -94,7 +97,7 @@ public:
      * @param addresses The addresses to write to
      * @param[in] dataArr The data to write out
      */
-    virtual void writeBytes(uint8_t addresses[], uint8_t dataArr[]) = 0;
+    void writeBytes(uint8_t addresses[], uint8_t dataArr[]);
 
     /**
      * Write 16 bits of data to each of the given addresses.
@@ -102,7 +105,7 @@ public:
      * @param addresses The addresses to write to
      * @param[in] dataArr The data to write out
      */
-    virtual void writeHalfWords(uint8_t addresses[], uint16_t dataArr[]) = 0;
+    void writeHalfWords(uint8_t addresses[], uint16_t dataArr[]);
 
     /**
      * Write 32 bits of data to each of the given addresses.
@@ -110,9 +113,14 @@ public:
      * @param addresses The addresses to write to
      * @param[in] dataArr The data to write out
      */
-    virtual void writeWords(uint8_t addresses[], uint32_t dataArr[]) = 0;
+    void writeWords(uint8_t addresses[], uint32_t dataArr[]);
 
 private:
+    /**
+     * Size of the memory address of this EEPROM
+     * The value is 2 because it has 2-byte addresses
+     */
+    static constexpr int MEM_ADDRESS_SIZE = 2;
     uint8_t i2cSlaveAddress;
     IO::I2C &i2c;
 };
