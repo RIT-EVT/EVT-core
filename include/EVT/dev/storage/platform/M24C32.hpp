@@ -120,7 +120,11 @@ private:
      * Size of the memory address of this EEPROM
      * The value is 2 because it has 2-byte addresses
      */
-    static constexpr int MEM_ADDRESS_SIZE = 2;
+    static constexpr uint8_t MEM_ADDRESS_SIZE = 2;
+    /**
+     * Maximum time to write a single byte of this EEPROM
+     */
+    static constexpr uint8_t MAX_WRITE_TIME = 5;
     uint8_t i2cSlaveAddress;
     IO::I2C &i2c;
 };

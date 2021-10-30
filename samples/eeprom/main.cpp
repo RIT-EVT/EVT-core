@@ -24,6 +24,7 @@ constexpr uint8_t I2C_SLAVE_ADDR = 0x50;
 
 constexpr uint8_t ADDRESS_0 = 0x00;
 constexpr uint8_t ADDRESS_1 = 0x01;
+constexpr uint8_t ADDRESS_2 = 0x02;
 
 constexpr uint8_t DATA_0 = 0xaa;
 constexpr uint8_t DATA_1 = 0xbb;
@@ -41,6 +42,20 @@ int main() {
     eeprom.writeByte(ADDRESS_0, DATA_0);
     eeprom.writeByte(ADDRESS_1, DATA_1);
 
-    uart.printf("Byte Read 0: %#x\n\r", eeprom.readByte(0x00));
-    uart.printf("Byte Read 1: %#x\n\r", eeprom.readByte(0x01));
+    uint16_t longData = DATA_0;
+    longData = (longData << 8) + DATA_1;
+    eeprom.writeHalfWord(ADDRESS_2, longData);
+    uint32_t data = 0xabcdef01;
+    eeprom.writeWord(0x04, data);
+
+    uart.printf("Byte Read 0: %#x\n\r", eeprom.readByte(ADDRESS_0));
+    uart.printf("Byte Read 1: %#x\n\r", eeprom.readByte(ADDRESS_1));
+    uart.printf("Half Word Read: %#x\n\r", eeprom.readHalfWord(ADDRESS_1));
+    uart.printf("Word Read: %#x\n\r", eeprom.readWord(0x04));
+
+    uint8_t addresses[3] = {0x00, 0x04, 0x08};
+    uint8_t *results = eeprom.readBytes(addresses);
+    for (int i = 0; i < sizeof results; ++i) {
+        uart.printf("Byte Read: %#x\n\r", results[i]);
+    }
 }

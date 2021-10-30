@@ -98,17 +98,17 @@ public:
             uint8_t* bytes, uint8_t length);
 
     /**
-     * Read a single byte from a register in memory.
+     * Write a single byte to a register in memory.
      *
      * @param addr[in] The 7 bit unshifted I2C address to write to
      * @param memAddress[in] The word containing the register to write to
      * @param byte[in] The data to write out
      * @param memAddSize[in] The number of bytes in the memory address (1 or 2)
      */
-    virtual void writeMemReg(uint8_t addr, uint32_t memAddress, uint8_t byte, uint16_t memAddSize) = 0;
+    virtual void writeMemReg(uint8_t addr, uint32_t memAddress, uint8_t byte, uint16_t memAddSize, uint8_t maxWriteTime) = 0;
 
     /**
-     * Write a single byte to a register in memory.
+     * Read a single byte from a register in memory.
      *
      * @param addr[in] The 7 bit unshifted I2C address to read from
      * @param memAddress[in] The word containing the register to read from
@@ -116,6 +116,28 @@ public:
      * @param memAddSize[in] The number of bytes in the memory address (1 or 2)
      */
     virtual uint8_t readMemReg(uint8_t addr, uint32_t memAddress, uint8_t* byte, uint16_t memAddSize) = 0;
+
+    /**
+     * Write a number of bytes to consecutive registers in memory, starting at a specified register.
+     *
+     * @param addr[in] The 7 bit unshifted I2C address to write to
+     * @param memAddress[in] The word containing the register to start writing to
+     * @param byte[in] The list of data to write out
+     * @param size[in] The number of bytes to be written
+     * @param memAddSize[in] The number of bytes in the memory address (1 or 2)
+     */
+    virtual void writeMemReg(uint8_t addr, uint32_t memAddress, uint8_t* byte, uint8_t size, uint16_t memAddSize, uint8_t maxWriteTime) = 0;
+
+    /**
+     * Read a number of consecutive bytes, starting at a specified register in memory.
+     *
+     * @param addr[in] The 7 bit unshifted I2C address to read from
+     * @param memAddress[in] The word containing the register to start reading from
+     * @param byte[out] The list of bytes read from memory
+     * @param size[in] The number of bytes to be read
+     * @param memAddSize[in] The number of bytes in the memory address (1 or 2)
+     */
+    virtual uint8_t readMemReg(uint8_t addr, uint32_t memAddress, uint8_t* byte, uint8_t size, uint16_t memAddSize) = 0;
 
 private:
     /** The I2C clock line */
