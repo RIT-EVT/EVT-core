@@ -55,14 +55,14 @@ namespace EVT::core::IO {
      * @param misoPin 
      */
     SPIf302x8::SPIf302x8(GPIO **CSPins, uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) :
-                        SPI(CSPins, pinLength, sckPin, mosiPin, misoPin) {
+            SPI(CSPins, pinLength, sckPin, mosiPin, misoPin) {
 
         uint8_t mosiPort = getMOSIPortID(mosiPin);
         uint8_t misoPort = getMISOPortID(misoPin);
         uint8_t sckPort = getSCKPortID(sckPin);
         GPIO_InitTypeDef GPIOInit = {0};
         if (mosiPort == misoPort && misoPort == sckPort) {
-            switch (mosiPort){
+            switch (mosiPort) {
                 case 2:
                     halSPI.Instance == SPI2;
                     if (!__HAL_RCC_SPI2_IS_CLK_ENABLED()) {
@@ -89,7 +89,7 @@ namespace EVT::core::IO {
 
             for (uint8_t i = 0; i < 3; i++) {
                 GPIOInit.Pin = static_cast<uint32_t>(1
-                                << (static_cast<uint32_t>(spiPins[i]) & 0x0F));
+                        << (static_cast<uint32_t>(spiPins[i]) & 0x0F));
                 switch ((static_cast<uint8_t>(spiPins[i]) & 0xF0) >> 4) {
                     case 0x0:
                         __HAL_RCC_GPIOA_CLK_ENABLE();
@@ -119,8 +119,8 @@ namespace EVT::core::IO {
             halSPI.Init.Mode = SPI_MODE_MASTER;
             halSPI.Init.Direction = SPI_DIRECTION_2LINES;
             halSPI.Init.DataSize = SPI_DATASIZE_8BIT;
-            
-            //advanced settings
+
+            // advanced settings
             halSPI.Init.TIMode = SPI_TIMODE_DISABLE;
             halSPI.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
             halSPI.Init.CRCPolynomial = 7;
@@ -131,9 +131,8 @@ namespace EVT::core::IO {
     }
 
 
-
     SPIf302x8::SPIf302x8(GPIO **CSPins, uint8_t pinLength, Pin sckPin, Pin mosiPin) :
-            SPI(CSPins,pinLength,sckPin, mosiPin) {
+            SPI(CSPins, pinLength, sckPin, mosiPin) {
 
     }
 
@@ -144,8 +143,8 @@ namespace EVT::core::IO {
      * @param order MSB first or LSB first
      */
     void SPIf302x8::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order) {
-        //set the CPOL and CPHA depending on the SPI mode
-        switch(mode){
+        // set the CPOL and CPHA depending on the SPI mode
+        switch (mode) {
             case SPIMode0:
                 halSPI.Init.CLKPolarity = SPI_POLARITY_LOW;
                 halSPI.Init.CLKPhase = SPI_PHASE_1EDGE;
@@ -164,29 +163,29 @@ namespace EVT::core::IO {
                 break;
         }
 
-        //configure the clock prescaler to the closest baudrate to the requested
+        // configure the clock prescaler to the closest baudrate to the requested
         if (baudRate >= SPI_MAX_BAUD) {
             halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-        } else if (baudRate >= SPI_MAX_BAUD/2) {
+        } else if (baudRate >= SPI_MAX_BAUD / 2) {
             halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
-        } else if (baudRate >= SPI_MAX_BAUD/4) {
+        } else if (baudRate >= SPI_MAX_BAUD / 4) {
             halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
-        } else if (baudRate >= SPI_MAX_BAUD/8) {
+        } else if (baudRate >= SPI_MAX_BAUD / 8) {
             halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
-        } else if (baudRate >= SPI_MAX_BAUD/16) {
+        } else if (baudRate >= SPI_MAX_BAUD / 16) {
             halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
-        } else if (baudRate >= SPI_MAX_BAUD/32) {
+        } else if (baudRate >= SPI_MAX_BAUD / 32) {
             halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
-        } else if (baudRate >= SPI_MAX_BAUD/64) {
+        } else if (baudRate >= SPI_MAX_BAUD / 64) {
             halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
         } else {
             halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
         }
 
-        //configure the bit order of the data; MSB or LSB
-        if(order){
+        // configure the bit order of the data; MSB or LSB
+        if (order) {
             halSPI.Init.FirstBit = SPI_FIRSTBIT_MSB;
-        }else{
+        } else {
             halSPI.Init.FirstBit = SPI_FIRSTBIT_LSB;
         }
 
@@ -197,7 +196,7 @@ namespace EVT::core::IO {
      * toggles a GPIO pin's state
      * @param pin the pin to toggle the state of
      */
-    void SPIf302x8::togglePin(GPIO* pin){
+    void SPIf302x8::togglePin(GPIO *pin) {
         switch (pin->readPin()) {
             case GPIO::State::HIGH:
                 pin->writePin(GPIO::State::LOW);
@@ -207,13 +206,14 @@ namespace EVT::core::IO {
                 break;
         }
     }
+
     /**
      * toggle the state of the chip select pin of a device at the start of a transmission.
      * @param device device the device index in the CSPins
      * @return true if valid device, false if device not in CSPins
      */
     bool SPIf302x8::startTransmition(uint8_t device) {
-        if(device < CSPinsLength){
+        if (device < CSPinsLength) {
             togglePin(&CSPins[device]);
             return true;
         }
@@ -226,7 +226,7 @@ namespace EVT::core::IO {
      * @return true if valid device, false if device not in CSPins
      */
     bool SPIf302x8::endTransmition(uint8_t device) {
-        if(device < CSPinsLength){
+        if (device < CSPinsLength) {
             togglePin(&CSPins[device]);
             return true;
         }
@@ -247,7 +247,7 @@ namespace EVT::core::IO {
      */
     uint8_t SPIf302x8::read() {
         uint8_t data;
-        HAL_SPI_Receive(&halSPI,&data,1,DEFAULT_SPI_TIMEOUT);
+        HAL_SPI_Receive(&halSPI, &data, 1, DEFAULT_SPI_TIMEOUT);
         return data;
     }
 
@@ -258,7 +258,7 @@ namespace EVT::core::IO {
      * @param length the length of the array
      */
     void SPIf302x8::write(uint8_t device, uint8_t *bytes, uint8_t length) {
-        if(startTransmition(device)) {
+        if (startTransmition(device)) {
             HAL_SPI_Transmit(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
             endTransmition(device);
         }
@@ -271,10 +271,10 @@ namespace EVT::core::IO {
      * @param length the number of bytes to recive
      */
     void SPIf302x8::read(uint8_t device, uint8_t *bytes, uint8_t length) {
-        if(startTransmition(device)) {
+        if (startTransmition(device)) {
             HAL_SPI_Receive(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
             endTransmition(device);
         }
     }
-}
+} // namespace EVT::core::IO
 

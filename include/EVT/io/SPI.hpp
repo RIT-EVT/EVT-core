@@ -28,23 +28,24 @@ namespace EVT::core::IO {
          * @param mosiPin[in] The mosi pin (data out)
          * @param misoPin[in] The miso pin (data in)[optional]
          */
-        SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin);
-        SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin);
+        SPI(GPIO **CSPins, uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin);
+
+        SPI(GPIO **CSPins, uint8_t pinLength, Pin sckPin, Pin mosiPin);
 
         void write(uint8_t device, uint8_t byte);
 
         uint8_t read(uint8_t device);
 
-        void write(uint8_t device, uint8_t* bytes, uint8_t length);
+        void write(uint8_t device, uint8_t *bytes, uint8_t length);
 
-        void read(uint8_t device, uint8_t* bytes, uint8_t length);
+        void read(uint8_t device, uint8_t *bytes, uint8_t length);
 
         void writeReg(uint8_t device, uint8_t reg, uint8_t byte);
 
         uint8_t readReg(uint8_t device, uint8_t reg);
-        
-        virtual void configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order);
-    
+
+        virtual void configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order) = 0;
+
     private:
         /** The SPI clock line */
         Pin sckPin;
@@ -54,13 +55,16 @@ namespace EVT::core::IO {
         Pin misoPin;
 
         virtual bool startTransmition(uint8_t device) = 0;
+
         virtual bool endTransmition(uint8_t device) = 0;
+
         virtual void write(uint8_t byte) = 0;
+
         virtual uint8_t read() = 0;
 
     protected:
         uint8_t CSPinsLength;
-        GPIO* CSPins;
+        GPIO *CSPins;
     };
 
 }  // namespace EVT::core::IO
