@@ -53,9 +53,21 @@ int main() {
     uart.printf("Half Word Read: %#x\n\r", eeprom.readHalfWord(ADDRESS_1));
     uart.printf("Word Read: %#x\n\r", eeprom.readWord(0x04));
 
-    uint8_t addresses[3] = {0x00, 0x04, 0x08};
-    uint8_t *results = eeprom.readBytes(addresses);
-    for (int i = 0; i < sizeof results; ++i) {
-        uart.printf("Byte Read: %#x\n\r", results[i]);
+    uint8_t byteBuf[8];
+    eeprom.readBytes(ADDRESS_0, 8, byteBuf);
+    for (uint8_t i : byteBuf) {
+        uart.printf("Byte Read: %#x\n\r", i);
+    }
+
+    uint16_t hWordBuf[4];
+    eeprom.readHalfWords(ADDRESS_0, 4, hWordBuf);
+    for (uint16_t i : hWordBuf) {
+        uart.printf("Half Word Read: %#x\n\r", i);
+    }
+
+    uint32_t wordBuf[2];
+    eeprom.readWords(ADDRESS_0, 2, wordBuf);
+    for (uint32_t i : wordBuf) {
+        uart.printf("Word Read: %#x\n\r", i);
     }
 }

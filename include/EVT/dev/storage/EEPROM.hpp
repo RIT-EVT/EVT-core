@@ -36,28 +36,31 @@ public:
     virtual uint32_t readWord(uint32_t address) = 0;
 
     /**
-     * Read 8 bits of data from each of the given addresses.
+     * Read a number of consecutive bytes starting at a given memory address.
      *
-     * @param[in] addresses The addresses to read from
-     * @return A list of 8 bits of data stored at the given addresses
+     * @param[in] address The memory address to start reading from
+     * @param[in] numBytes The number of bytes to read
+     * @param[out] buffer Buffer to output bytes to
      */
-    virtual uint8_t * readBytes(uint8_t addresses[]) = 0;
+    virtual void readBytes(uint8_t address, uint8_t numBytes, uint8_t* buffer) = 0;
 
     /**
-     * Read 16 bits of data from each of the given addresses.
+     * Read a number of consecutive half words starting at a given memory address.
      *
-     * @param[in] addresses The addresses to read from
-     * @return A list of 16 bits of data stored at the given addresses
+     * @param[in] address The memory address to start reading from
+     * @param[in] numHWords The number of half words to read
+     * @param[out] buffer Buffer to output half words to
      */
-    virtual uint16_t * readHalfWords(uint8_t addresses[]) = 0;
+    virtual void readHalfWords(uint8_t address, uint8_t numHWords, uint16_t* buffer) = 0;
 
     /**
-     * Read 32 bits of data from each of the given addresses.
+     * Read a number of consecutive words starting at a given memory address.
      *
-     * @param[in] addresses The addresses to read from
-     * @return A list of 32 bits of data stored at the given addresses
+     * @param[in] address The memory address to start reading from
+     * @param[in] numHWords The number of words to read
+     * @param[out] buffer Buffer to output words to
      */
-    virtual uint32_t * readWords(uint8_t addresses[]) = 0;
+    virtual void readWords(uint8_t address, uint8_t numWords, uint32_t* buffer) = 0;
 
     /**
      * Write 8 bits of data to the given address.
@@ -84,28 +87,28 @@ public:
     virtual void writeWord(uint32_t address, uint32_t data) = 0;
 
     /**
-     * Write 8 bits of data to each of the given addresses.
+     * Write a number of consecutive bytes to a given memory address.
      *
-     * @param addresses The addresses to write to
-     * @param[in] dataArr The data to write out
+     * @param address The address to start writing to
+     * @param[in] dataArr The array of bytes to write out
      */
-    virtual void writeBytes(uint8_t addresses[], uint8_t dataArr[]) = 0;
+    virtual void writeBytes(uint8_t address, uint8_t* dataArr) = 0;
 
     /**
-     * Write 16 bits of data to each of the given addresses.
+     * Write a number of consecutive half words to a given memory address.
      *
-     * @param addresses The addresses to write to
-     * @param[in] dataArr The data to write out
+     * @param address The address to start writing to
+     * @param[in] dataArr The array of half words to write out
      */
-    virtual void writeHalfWords(uint8_t addresses[], uint16_t dataArr[]) = 0;
+    virtual void writeHalfWords(uint8_t address, uint16_t* dataArr) = 0;
 
     /**
-     * Write 32 bits of data to each of the given addresses.
+     * Write a number of consecutive words to a given memory address.
      *
-     * @param addresses The addresses to write to
-     * @param[in] dataArr The data to write out
+     * @param address The address to start writing to
+     * @param[in] dataArr The array of words to write out
      */
-    virtual void writeWords(uint8_t addresses[], uint32_t dataArr[]) = 0;
+    virtual void writeWords(uint8_t address, uint32_t* dataArr) = 0;
 };
 }
 
