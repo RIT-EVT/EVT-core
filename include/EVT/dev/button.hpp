@@ -2,7 +2,7 @@
 #define _EVT_BUTTON_
 
 #include <stdint.h>
-
+#include <EVT/io/GPIO.hpp>
 
 namespace EVT::core::DEV 
 {
@@ -15,16 +15,17 @@ bool activeHigh;
 class Button 
 {
 public:
-/**
- * Enum to handle the button trigger states
- *
- */
+    /**
+     * Enum to handle the button trigger states
+     *
+     */
 
-enum class Press 
-{
-    UNPRESSED = 0u,
-    PRESSED = 1u,
-};
+
+    enum class ButtonState 
+    {
+        UNPRESSED = 0u,
+        PRESSED = 1u,
+    };
 
     /**
      * Create a new button interface
@@ -38,7 +39,6 @@ enum class Press
      * @return The button state.
      */
     bool readButton();
-    // bool readButton(); 
 
     /**
      * Time how long the button is in a high state
