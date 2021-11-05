@@ -7,12 +7,10 @@
 #include <stdint.h>
 
 #include <EVT/io/manager.hpp>
-#include <EVT/utils/time.hpp>
 #include <EVT/dev/storage/platform/M24C32.hpp>
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
-namespace time = EVT::core::time;
 
 /**
  * The address of the EEPROM listening for reads/writes
@@ -22,52 +20,63 @@ namespace time = EVT::core::time;
  * */
 constexpr uint8_t I2C_SLAVE_ADDR = 0x50;
 
-constexpr uint8_t ADDRESS_0 = 0x00;
-constexpr uint8_t ADDRESS_1 = 0x01;
-constexpr uint8_t ADDRESS_2 = 0x02;
+constexpr uint8_t BYTE_ADDRESS = 0x00;
+constexpr uint8_t HALF_WORD_ADDRESS = 0x01;
+constexpr uint8_t WORD_ADDRESS = 0x03;
+constexpr uint8_t BYTE_ARR_ADDRESS = 0x07;
+constexpr uint8_t HALF_WORD_ARR_ADDRESS = 0x09;
+constexpr uint8_t WORD_ARR_ADDRESS = 0x13;
 
-constexpr uint8_t DATA_0 = 0xaa;
-constexpr uint8_t DATA_1 = 0xbb;
+constexpr uint8_t BYTE_DATA = 0xaa;
+constexpr uint16_t HALF_WORD_DATA = 0xabcd;
+constexpr uint32_t WORD_DATA = 0xfedcba98;
+constexpr uint8_t BYTE_ARR_LENGTH = 2;
+uint8_t BYTE_ARR_DATA[BYTE_ARR_LENGTH] = {0xab, 0xba};
+constexpr uint8_t HALF_WORD_ARR_LENGTH = 2;
+uint16_t HALF_WORD_ARR_DATA[HALF_WORD_ARR_LENGTH] = {0xbbbb, 0xcccc};
+constexpr uint8_t WORD_ARR_LENGTH = 2;
+uint32_t WORD_ARR_DATA[WORD_ARR_LENGTH] = {0x01234567, 0x89abcdef};
 
 int main() {
     // Initialize system
     IO::init();
 
-    IO::I2C& i2c = IO::getI2C<IO::Pin::PB_8, IO::Pin::PB_9>();
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    IO::I2C &i2c = IO::getI2C<IO::Pin::PB_8, IO::Pin::PB_9>();
+    IO::UART &uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
     DEV::M24C32 eeprom = DEV::M24C32(I2C_SLAVE_ADDR, i2c);
+
 
     uart.printf("Starting EEPROM test\n\r");
 
-    eeprom.writeByte(ADDRESS_0, DATA_0);
-    eeprom.writeByte(ADDRESS_1, DATA_1);
 
-    uint16_t longData = DATA_0;
-    longData = (longData << 8) + DATA_1;
-    eeprom.writeHalfWord(ADDRESS_2, longData);
-    uint32_t data = 0xabcdef01;
-    eeprom.writeWord(0x04, data);
+    eeprom.writeByte(BYTE_ADDRESS, BYTE_DATA);
+    eeprom.writeHalfWord(HALF_WORD_ADDRESS, HALF_WORD_DATA);
+    eeprom.writeWord(WORD_ADDRESS, WORD_DATA);
 
-    uart.printf("Byte Read 0: %#x\n\r", eeprom.readByte(ADDRESS_0));
-    uart.printf("Byte Read 1: %#x\n\r", eeprom.readByte(ADDRESS_1));
-    uart.printf("Half Word Read: %#x\n\r", eeprom.readHalfWord(ADDRESS_1));
-    uart.printf("Word Read: %#x\n\r", eeprom.readWord(0x04));
+    eeprom.writeBytes(BYTE_ARR_ADDRESS, BYTE_ARR_DATA, BYTE_ARR_LENGTH);
+    eeprom.writeHalfWords(HALF_WORD_ARR_ADDRESS, HALF_WORD_ARR_DATA, HALF_WORD_ARR_LENGTH);
+    eeprom.writeWords(WORD_ARR_ADDRESS, WORD_ARR_DATA, WORD_ARR_LENGTH);
 
-    uint8_t byteBuf[8];
-    eeprom.readBytes(ADDRESS_0, 8, byteBuf);
-    for (uint8_t i : byteBuf) {
+
+    uart.printf("Byte Read: %#x\n\r", eeprom.readByte(BYTE_ADDRESS));
+    uart.printf("Half Word Read: %#x\n\r", eeprom.readHalfWord(HALF_WORD_ADDRESS));
+    uart.printf("Word Read: %#x\n\r", eeprom.readWord(WORD_ADDRESS));
+
+    uint8_t byteBuf[BYTE_ARR_LENGTH];
+    eeprom.readBytes(BYTE_ARR_ADDRESS, BYTE_ARR_LENGTH, byteBuf);
+    for (uint8_t i: byteBuf) {
         uart.printf("Byte Read: %#x\n\r", i);
     }
 
-    uint16_t hWordBuf[4];
-    eeprom.readHalfWords(ADDRESS_0, 4, hWordBuf);
-    for (uint16_t i : hWordBuf) {
+    uint16_t hWordBuf[HALF_WORD_ARR_LENGTH];
+    eeprom.readHalfWords(HALF_WORD_ARR_ADDRESS, HALF_WORD_ARR_LENGTH, hWordBuf);
+    for (uint16_t i: hWordBuf) {
         uart.printf("Half Word Read: %#x\n\r", i);
     }
 
-    uint32_t wordBuf[2];
-    eeprom.readWords(ADDRESS_0, 2, wordBuf);
-    for (uint32_t i : wordBuf) {
+    uint32_t wordBuf[WORD_ARR_LENGTH];
+    eeprom.readWords(WORD_ARR_ADDRESS, WORD_ARR_LENGTH, wordBuf);
+    for (uint32_t i: wordBuf) {
         uart.printf("Word Read: %#x\n\r", i);
     }
 }

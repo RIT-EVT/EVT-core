@@ -89,26 +89,29 @@ public:
     /**
      * Write a number of consecutive bytes to a given memory address.
      *
-     * @param address The address to start writing to
+     * @param[in] address The address to start writing to
      * @param[in] dataArr The array of bytes to write out
+     * @param[in] numBytes The number of bytes to write out
      */
-    virtual void writeBytes(uint8_t address, uint8_t* dataArr) = 0;
+    virtual void writeBytes(uint8_t address, uint8_t* dataArr, uint8_t numBytes) = 0;
 
     /**
      * Write a number of consecutive half words to a given memory address.
      *
-     * @param address The address to start writing to
+     * @param[in] address The address to start writing to
      * @param[in] dataArr The array of half words to write out
+     * @param[in] numHWords The number of half words to write out
      */
-    virtual void writeHalfWords(uint8_t address, uint16_t* dataArr) = 0;
+    virtual void writeHalfWords(uint8_t address, uint16_t* dataArr, uint8_t numHWords) = 0;
 
     /**
      * Write a number of consecutive words to a given memory address.
      *
-     * @param address The address to start writing to
+     * @param[in] address The address to start writing to
      * @param[in] dataArr The array of words to write out
+     * @param[in] numWords The number of words to write out
      */
-    virtual void writeWords(uint8_t address, uint32_t* dataArr) = 0;
+    virtual void writeWords(uint8_t address, uint32_t* dataArr, uint8_t numWords) = 0;
 };
 }
 

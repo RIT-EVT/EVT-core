@@ -100,7 +100,7 @@ public:
      * @param address The address to start writing to
      * @param[in] dataArr The array of bytes to write out
      */
-    void writeBytes(uint8_t address, uint8_t* dataArr);
+    void writeBytes(uint8_t address, uint8_t* dataArr, uint8_t numBytes);
 
     /**
      * Write a number of consecutive half words to a given memory address.
@@ -108,7 +108,7 @@ public:
      * @param address The address to start writing to
      * @param[in] dataArr The array of half words to write out
      */
-    void writeHalfWords(uint8_t address, uint16_t* dataArr);
+    void writeHalfWords(uint8_t address, uint16_t* dataArr, uint8_t numHWords);
 
     /**
      * Write a number of consecutive words to a given memory address.
@@ -116,7 +116,7 @@ public:
      * @param address The address to start writing to
      * @param[in] dataArr The array of words to write out
      */
-    void writeWords(uint8_t address, uint32_t* dataArr);
+    void writeWords(uint8_t address, uint32_t* dataArr, uint8_t numWords);
 
 private:
     /**
