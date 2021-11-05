@@ -64,14 +64,14 @@ namespace EVT::core::IO {
         if (mosiPort == misoPort && misoPort == sckPort) {
             switch (mosiPort) {
                 case 2:
-                    halSPI.Instance == SPI2;
+                    halSPI.Instance = SPI2;
                     if (!__HAL_RCC_SPI2_IS_CLK_ENABLED()) {
                         __HAL_RCC_SPI2_CLK_ENABLE();
                     }
                     GPIOInit.Alternate = GPIO_AF5_SPI2;
                     break;
                 case 3:
-                    halSPI.Instance == SPI3;
+                    halSPI.Instance = SPI3;
                     if (!__HAL_RCC_SPI3_IS_CLK_ENABLED()) {
                         __HAL_RCC_SPI3_CLK_ENABLE();
                     }

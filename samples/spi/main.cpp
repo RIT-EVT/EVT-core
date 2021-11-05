@@ -17,9 +17,9 @@ namespace time = EVT::core::time;
 
 constexpr uint32_t SPI_SPEED = 4000000; // 4MHz
 /** The address of the arduino listening for I2C requests */
-constexpr uint8_t SINGLE_BYTE = 0x48;
+constexpr uint8_t SINGLE_BYTE = 0x40;
 uint8_t BYTE_MULTIPLE[] = {0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F};
-constexpr uint8_t BYTE_MULTIPLE_LENGTH = sizeof BYTE_MULTIPLE;
+constexpr uint8_t BYTE_MULTIPLE_LENGTH = 8;
 
 constexpr uint8_t deviceCount = 1;
 
@@ -31,6 +31,7 @@ int main() {
     IO::init();
 
     devices[0] = &IO::getGPIO<IO::Pin::PB_4>(EVT::core::IO::GPIO::Direction::OUTPUT);
+    devices[0]->writePin(EVT::core::IO::GPIO::State::HIGH);
 
     IO::SPI& spi = IO::getSPI<IO::Pin::PB_3, EVT::core::IO::Pin::PC_12, EVT::core::IO::Pin::PC_11>(devices, deviceCount);
     spi.configureSPI(SPI_SPEED, SPIMode0, SPI_MSB_FIRST);
@@ -39,9 +40,9 @@ int main() {
     uart.printf("Starting SPI test\n\r");
 
     while (1) {
-        uart.printf("sending single byte");
+        uart.printf("sending single byte\n\r");
         spi.write(0, SINGLE_BYTE);
-        uart.printf("sending multiple bytes");
+        uart.printf("sending multiple bytes\n\r");
         spi.write(0, BYTE_MULTIPLE, BYTE_MULTIPLE_LENGTH);
         //uart.printf("sending single byte");
         //uart.printf("sending single byte");
