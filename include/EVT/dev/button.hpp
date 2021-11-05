@@ -47,10 +47,24 @@ public:
      */
     uint32_t debounce();
 
-    bool setDebounce(uint32_t debounce);
+    /**
+     * @brief Set the Button State object
+     * 
+     * @return Boolean if button has been in active high for a certain amount of time
+     */
+    bool debounceState(uint32_t debounce);
+
+
+    /**
+     * Set the Button State object
+     * 
+     * @param debounceState 
+     */
+    void setButtonState(bool debounceState)
 
 private:
     GPIO button;
+    int state;
 
 };
 
