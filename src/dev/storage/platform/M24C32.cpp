@@ -24,11 +24,11 @@ uint32_t M24C32::readWord(uint32_t address) {
     return *out;
 }
 
-void M24C32::readBytes(uint8_t address, uint8_t numBytes, uint8_t* buffer) {
+void M24C32::readBytes(uint8_t address, uint8_t* buffer, uint8_t numBytes) {
     i2c.readMemReg(i2cSlaveAddress, address, buffer, numBytes, MEM_ADDRESS_SIZE);
 }
 
-void M24C32::readHalfWords(uint8_t address, uint8_t numHWords, uint16_t* buffer) {
+void M24C32::readHalfWords(uint8_t address, uint16_t* buffer, uint8_t numHWords) {
     uint8_t numBytes = numHWords * 2;
     uint8_t tempBuf[numBytes];
     i2c.readMemReg(i2cSlaveAddress, address, tempBuf, numBytes, MEM_ADDRESS_SIZE);
@@ -36,7 +36,7 @@ void M24C32::readHalfWords(uint8_t address, uint8_t numHWords, uint16_t* buffer)
     for (int i = 0; i < numHWords; i++) buffer[i] = convertedBuf[i];
 }
 
-void M24C32::readWords(uint8_t address, uint8_t numWords, uint32_t* buffer) {
+void M24C32::readWords(uint8_t address, uint32_t* buffer, uint8_t numWords) {
     uint8_t numBytes = numWords * 4;
     uint8_t tempBuf[numBytes];
     i2c.readMemReg(i2cSlaveAddress, address, tempBuf, numBytes, MEM_ADDRESS_SIZE);
@@ -64,11 +64,13 @@ void M24C32::writeBytes(uint8_t address, uint8_t* dataArr, uint8_t numBytes) {
 
 void M24C32::writeHalfWords(uint8_t address, uint16_t dataArr[], uint8_t numHWords) {
     auto* tempDataArr = reinterpret_cast<uint8_t *>(dataArr);
-    i2c.writeMemReg(i2cSlaveAddress, address, tempDataArr, numHWords * 2, MEM_ADDRESS_SIZE, MAX_WRITE_TIME);
+    i2c.writeMemReg(i2cSlaveAddress, address, tempDataArr, numHWords * 2, MEM_ADDRESS_SIZE,
+                    MAX_WRITE_TIME);
 }
 
 void M24C32::writeWords(uint8_t address, uint32_t* dataArr, uint8_t numWords) {
     auto* tempDataArr = reinterpret_cast<uint8_t *>(dataArr);
-    i2c.writeMemReg(i2cSlaveAddress, address, tempDataArr, numWords * 4, MEM_ADDRESS_SIZE, MAX_WRITE_TIME);
+    i2c.writeMemReg(i2cSlaveAddress, address, tempDataArr, numWords * 4, MEM_ADDRESS_SIZE,
+                    MAX_WRITE_TIME);
 }
 }

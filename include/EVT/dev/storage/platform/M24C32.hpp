@@ -25,15 +25,15 @@ public:
      * @param address[in] The address to read from
      * @return The 8 bits of data at the address
      */
-    uint8_t readByte(uint32_t address);
+    uint8_t readByte(uint32_t address) override;
 
     /**
      * Read 16 bits of data from the given address.
      *
-     * @param[in] address The address to read from
+     * @param address[in] The address to read from
      * @return The 16 bits of data at the address
      */
-    uint16_t readHalfWord(uint32_t address);
+    uint16_t readHalfWord(uint32_t address) override;
 
     /**
      * Read 32 bits of data from the given address.
@@ -41,34 +41,34 @@ public:
      * @param address[in] The address to read from
      * @return The 32 bits of data at the address
      */
-    uint32_t readWord(uint32_t address);
+    uint32_t readWord(uint32_t address) override;
 
     /**
      * Read a number of consecutive bytes starting at a given memory address.
      *
      * @param address[in] The memory address to start reading from
-     * @param numBytes[in] The number of bytes to read
      * @param buffer[out] Buffer to output bytes to
+     * @param numBytes[in] The number of bytes to read
      */
-    void readBytes(uint8_t address, uint8_t numBytes, uint8_t* buffer);
+    void readBytes(uint8_t address, uint8_t* buffer, uint8_t numBytes) override;
 
     /**
      * Read a number of consecutive half words starting at a given memory address.
      *
      * @param address[in] The memory address to start reading from
-     * @param numHWords[in] The number of half words to read
      * @param buffer[out] Buffer to output half words to
+     * @param numHWords[in] The number of half words to read
      */
-    void readHalfWords(uint8_t address, uint8_t numHWords, uint16_t* buffer);
+    void readHalfWords(uint8_t address, uint16_t* buffer, uint8_t numHWords) override;
 
     /**
      * Read a number of consecutive words starting at a given memory address.
      *
      * @param address[in] The memory address to start reading from
-     * @param numHWords[in] The number of words to read
      * @param buffer[out] Buffer to output words to
+     * @param numHWords[in] The number of words to read
      */
-    void readWords(uint8_t address, uint8_t numWords, uint32_t* buffer);
+    void readWords(uint8_t address, uint32_t* buffer, uint8_t numWords) override;
 
     /**
      * Write 8 bits of data to the given address.
@@ -76,7 +76,7 @@ public:
      * @param address[in] The address to write to
      * @param data[in] The data to write out
      */
-    void writeByte(uint32_t address, uint8_t data);
+    void writeByte(uint32_t address, uint8_t data) override;
 
     /**
      * Write 16 bits of data to the given address.
@@ -84,7 +84,7 @@ public:
      * @param address[in] The address to write to
      * @param data[in] The data to write out
      */
-    void writeHalfWord(uint32_t address, uint16_t data);
+    void writeHalfWord(uint32_t address, uint16_t data) override;
 
     /**
      * Write 32 bits of data to the given address.
@@ -92,31 +92,34 @@ public:
      * @param address[in] The address to write to
      * @param data[in] The data to write out
      */
-    void writeWord(uint32_t address, uint32_t data);
+    void writeWord(uint32_t address, uint32_t data) override;
 
     /**
      * Write a number of consecutive bytes to a given memory address.
      *
      * @param address[in] The address to start writing to
      * @param dataArr[in] The array of bytes to write out
+     * @param numBytes[in] The number of bytes to write out
      */
-    void writeBytes(uint8_t address, uint8_t* dataArr, uint8_t numBytes);
+    void writeBytes(uint8_t address, uint8_t* dataArr, uint8_t numBytes) override;
 
     /**
      * Write a number of consecutive half words to a given memory address.
      *
      * @param address[in] The address to start writing to
      * @param dataArr[in] The array of half words to write out
+     * @param numHWords[in] The number of half words to write out
      */
-    void writeHalfWords(uint8_t address, uint16_t* dataArr, uint8_t numHWords);
+    void writeHalfWords(uint8_t address, uint16_t* dataArr, uint8_t numHWords) override;
 
     /**
      * Write a number of consecutive words to a given memory address.
      *
      * @param address[in] The address to start writing to
      * @param dataArr[in] The array of words to write out
+     * @param numWords[in] The number of words to write out
      */
-    void writeWords(uint8_t address, uint32_t* dataArr, uint8_t numWords);
+    void writeWords(uint8_t address, uint32_t* dataArr, uint8_t numWords) override;
 
 private:
     /**

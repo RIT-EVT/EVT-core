@@ -62,19 +62,19 @@ int main() {
     uart.printf("Word Read: %#x\n\r", eeprom.readWord(WORD_ADDRESS));
 
     uint8_t byteBuf[BYTE_ARR_LENGTH];
-    eeprom.readBytes(BYTE_ARR_ADDRESS, BYTE_ARR_LENGTH, byteBuf);
+    eeprom.readBytes(BYTE_ARR_ADDRESS, byteBuf, BYTE_ARR_LENGTH);
     for (uint8_t i: byteBuf) {
         uart.printf("Byte Read: %#x\n\r", i);
     }
 
     uint16_t hWordBuf[HALF_WORD_ARR_LENGTH];
-    eeprom.readHalfWords(HALF_WORD_ARR_ADDRESS, HALF_WORD_ARR_LENGTH, hWordBuf);
+    eeprom.readHalfWords(HALF_WORD_ARR_ADDRESS, hWordBuf, HALF_WORD_ARR_LENGTH);
     for (uint16_t i: hWordBuf) {
         uart.printf("Half Word Read: %#x\n\r", i);
     }
 
     uint32_t wordBuf[WORD_ARR_LENGTH];
-    eeprom.readWords(WORD_ARR_ADDRESS, WORD_ARR_LENGTH, wordBuf);
+    eeprom.readWords(WORD_ARR_ADDRESS, wordBuf, WORD_ARR_LENGTH);
     for (uint32_t i: wordBuf) {
         uart.printf("Word Read: %#x\n\r", i);
     }
