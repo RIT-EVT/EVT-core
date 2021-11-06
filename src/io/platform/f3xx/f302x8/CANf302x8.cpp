@@ -11,20 +11,19 @@
 #include <HALf3/stm32f3xx.h>
 
 #include <EVT/io/platform/f3xx/f302x8/CANf302x8.hpp>
+#include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
 #include <EVT/utils/time.hpp>
 #include <EVT/utils/types/FixedQueue.hpp>
-
+#include <EVT/platform/f3xx/stm32f302x8.hpp>
 
 namespace {
 
-// Pointer to a queue element that will store the CAN messages. This is made
-// global so that the CAN interrupts can have access to the queue. In a more
-// ideal situation, the passed in HAL CAN instance would contain the queue
-// as "private data". This should be considered for the future.
+// Pointer to the CANf302r8 interface
 //
 // NOTE: Part of the reason this works is because the STM32F3xx only supports
 // a single CAN interface at a time.
-EVT::core::types::FixedQueue<EVT::core::IO::CANMessage>* canMessageQueue;
+EVT::core::IO::CANf302x8* canIntf;
+
 // Pointer to the CAN interface, made global for similar reasons to the
 // variable above.
 CAN_HandleTypeDef* hcan;
@@ -48,10 +47,17 @@ extern "C" void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
 
     HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rxHeader, payload);
 
-    EVT::core::IO::CANMessage message(rxHeader.ExtId, rxHeader.DLC, payload);
+    // Construct the CANmessage
+    bool isExtended = rxHeader.IDE == CAN_ID_EXT;
+    uint32_t id = isExtended ? rxHeader.ExtId: rxHeader.StdId;
+    EVT::core::IO::CANMessage message(id, rxHeader.DLC, payload, isExtended);
+
+    // Check to see if a user defined IRQ has been provided
+    if (canIntf->triggerIRQ(message))
+        return;
+
     // TODO: Part of an error system should log when the CAN buffer has filled
-    if (canMessageQueue->canInsert())
-        canMessageQueue->append(message);
+    canIntf->addCANMessage(message);
 }
 
 namespace EVT::core::IO {
@@ -62,37 +68,9 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
     // Setup GPIO
     GPIO_InitTypeDef gpioInit = {0};
     Pin canPins[] = {txPin, rxPin};
-    gpioInit.Pin = static_cast<uint32_t>(1 <<
-        (static_cast<uint32_t>(canPins[0]) & 0x0F));
-    gpioInit.Pin |= static_cast<uint32_t>(1 <<
-        (static_cast<uint32_t>(canPins[1]) & 0x0F));
-    gpioInit.Mode = GPIO_MODE_AF_OD;
-    gpioInit.Pull = GPIO_PULLUP;
-    gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
-    gpioInit.Alternate = GPIO_AF9_CAN;
-
-    for (uint8_t i = 0; i < 2; i++) {
-        switch ((static_cast<uint8_t>(canPins[i]) & 0xF0) >> 4) {
-            case 0x0:
-                __HAL_RCC_GPIOA_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOA, &gpioInit);
-                break;
-            case 0x1:
-                __HAL_RCC_GPIOB_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOB, &gpioInit);
-                break;
-            case 0x2:
-                __HAL_RCC_GPIOC_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOC, &gpioInit);
-                break;
-            case 0x3:
-                __HAL_RCC_GPIOD_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOC, &gpioInit);
-                break;
-            default:
-                break;  // Should never get here
-        }
-    }
+    uint8_t numOfPins = 2;
+    GPIOf302x8::gpioStateInit(&gpioInit, canPins, numOfPins, GPIO_MODE_AF_OD,
+                            GPIO_PULLUP, GPIO_SPEED_FREQ_HIGH, GPIO_AF9_CAN);
 
     // Initialize HAL CAN
     // Bit timing values calculated from the website
@@ -113,14 +91,14 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
 
     // Setup global variables
     hcan = &this->halCAN;
-    canMessageQueue = &this->messageQueue;
+    canIntf = this;
 
     __HAL_RCC_CAN1_CLK_ENABLE();
     HAL_CAN_Init(&halCAN);
 
     // Intialize interrupts
     HAL_CAN_ActivateNotification(&halCAN, CAN_IT_RX_FIFO0_MSG_PENDING);
-    HAL_NVIC_SetPriority(CAN_RX0_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(CAN_RX0_IRQn, EVT::core::platform::CAN_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(CAN_RX0_IRQn);
 
     /* By default - filter that accepts all incoming messages */
@@ -146,8 +124,12 @@ void CANf302x8::transmit(CANMessage& message) {
 
     uint32_t mailbox = CAN_TX_MAILBOX0;
 
-    txHeader.ExtId = message.getId();
-    txHeader.IDE = CAN_ID_EXT;
+    // Set the message ID
+    if (message.isCANExtended())
+        txHeader.ExtId = message.getId();
+    else
+        txHeader.StdId = message.getId();
+    txHeader.IDE = message.isCANExtended() ? CAN_ID_EXT: CAN_ID_STD;
     // TODO: Consider having remote setting be part of CAN message
     txHeader.RTR = CAN_RTR_DATA;
     txHeader.DLC = message.getDataLength();
@@ -184,6 +166,18 @@ CANMessage* CANf302x8::receive(CANMessage* message, bool blocking) {
     } else {
         return nullptr;
     }
+}
+
+void CANf302x8::addCANMessage(CANMessage& message) {
+    if (messageQueue.canInsert())
+        messageQueue.append(message);
+}
+
+bool CANf302x8::triggerIRQ(CANMessage& message) {
+    if (handler == nullptr)
+        return false;
+    handler(message, priv);
+    return true;
 }
 
 }  // namespace EVT::core::IO

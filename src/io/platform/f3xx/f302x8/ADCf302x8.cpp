@@ -1,10 +1,12 @@
 #include <EVT/io/platform/f3xx/f302x8/ADCf302x8.hpp>
 #include <EVT/io/pin.hpp>
+#include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
 
 #include <HALf3/stm32f3xx.h>
 
 #include <HALf3/stm32f3xx_hal_adc.h>
 #include <HALf3/stm32f3xx_hal_adc_ex.h>
+#include <EVT/platform/f3xx/stm32f302x8.hpp>
 
 
 namespace {
@@ -116,7 +118,7 @@ void ADCf302x8::initDMA() {
 
     HAL_DMA_Init(&halDMA);
 
-    HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, EVT::core::platform::ADC_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 
     __HAL_LINKDMA(&halADC, DMA_Handle, halDMA);
@@ -124,30 +126,13 @@ void ADCf302x8::initDMA() {
 
 void ADCf302x8::addChannel(uint8_t rank) {
     GPIO_InitTypeDef gpioInit;
+    Pin myPins[] = {pin};
+    uint8_t numOfPins = 1;
+
+    GPIOf302x8::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG,
+                                GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
+
     ADC_ChannelConfTypeDef adcChannel;
-
-    // Configure GPIO for ADC
-    gpioInit.Pin  = (static_cast<uint8_t>(pin) & 0x0F) + 1;
-    gpioInit.Mode = GPIO_MODE_ANALOG;
-    gpioInit.Pull = GPIO_NOPULL;
-
-    // Which GPIO bank?
-    switch ((static_cast<uint8_t>(pin) & 0xF0) >> 4) {
-        case 0x0:
-            __HAL_RCC_GPIOA_CLK_ENABLE();
-            HAL_GPIO_Init(GPIOA, &gpioInit);
-            break;
-        case 0x1:
-            __HAL_RCC_GPIOB_CLK_ENABLE();
-            HAL_GPIO_Init(GPIOB, &gpioInit);
-            break;
-        case 0x2:
-            __HAL_RCC_GPIOC_CLK_ENABLE();
-            HAL_GPIO_Init(GPIOC, &gpioInit);
-            break;
-        default:
-            break;  // Should never get here
-    }
 
     switch (pin) {
         case Pin::PA_0:

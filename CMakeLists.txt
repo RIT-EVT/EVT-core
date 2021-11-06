@@ -27,6 +27,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 
     src/io/ADC.cpp
     src/io/CAN.cpp
+    src/io/CANopen.cpp
     src/io/GPIO.cpp
     src/io/I2C.cpp
     src/io/PWM.cpp
@@ -41,8 +42,10 @@ target_sources(${PROJECT_NAME} PRIVATE
 
     src/dev/LED.cpp
     src/dev/platform/f3xx/f302x8/RTCf302x8.cpp
+    src/dev/platform/f3xx/f302x8/IWDGf302x8.cpp
+    src/dev/platform/f3xx/f302x8/Timerf302x8.cpp
     src/dev/storage/platform/M24C32.cpp
-    
+
     src/utils/platform/f3xx/time.cpp
 )
 
@@ -74,11 +77,16 @@ add_compile_definitions(STM32F302x8)
 add_compile_definitions(USE_HAL_DRIVER)
 
 add_subdirectory(libs/HALf3/)
+add_subdirectory(libs/canopen/canopen/)
+
+install(TARGETS Canopen EXPORT Canopen-config)
+install(EXPORT Canopen-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Canopen)
 
 # Later this will be handled dynamically, either the HALf3 or the HALf4 will
 # be linked to
 target_link_libraries(${PROJECT_NAME}
     PUBLIC HALf3
+    PUBLIC Canopen
 )
 
 ###############################################################################

@@ -6,6 +6,8 @@
 #include <EVT/io/pin.hpp>
 #include <EVT/io/platform/f3xx/f302x8/UARTf302x8.hpp>
 
+#include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
+
 #include <HALf3/stm32f3xx.h>
 
 namespace EVT::core::IO {
@@ -14,6 +16,9 @@ UARTf302x8::UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate)
     : UART(txPin, rxPin, baudrate) {
 
     GPIO_InitTypeDef gpioInit;
+    Pin myPins[] = {txPin, rxPin};
+    uint8_t numOfPins = 2;
+    uint8_t alt_id;
 
     // Determine portID
     uint8_t portID = 1;
@@ -45,7 +50,7 @@ UARTf302x8::UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate)
             if (!(__HAL_RCC_USART1_IS_CLK_ENABLED()))
                 __HAL_RCC_USART1_CLK_ENABLE();
 
-            gpioInit.Alternate = GPIO_AF7_USART1;
+            alt_id = GPIO_AF7_USART1;
 
             break;
         case 2:
@@ -54,7 +59,7 @@ UARTf302x8::UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate)
             if (!(__HAL_RCC_USART2_IS_CLK_ENABLED()))
                 __HAL_RCC_USART2_CLK_ENABLE();
 
-            gpioInit.Alternate = GPIO_AF7_USART2;
+            alt_id = GPIO_AF7_USART2;
 
             break;
         case 3:
@@ -63,45 +68,15 @@ UARTf302x8::UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate)
             if (!(__HAL_RCC_USART3_IS_CLK_ENABLED()))
                 __HAL_RCC_USART3_CLK_ENABLE();
 
-            gpioInit.Alternate = GPIO_AF7_USART3;
+            alt_id = GPIO_AF7_USART3;
 
             break;
         default:
             break;
     }
 
-    Pin myPins[2] = {txPin, rxPin};
-
-    gpioInit.Pin = static_cast<uint32_t>(1 <<
-            (static_cast<uint32_t>(myPins[0]) & 0x0F));
-    gpioInit.Pin |= static_cast<uint32_t>(1 <<
-            (static_cast<uint32_t>(myPins[1]) & 0x0F));
-    gpioInit.Mode = GPIO_MODE_AF_PP;
-    gpioInit.Pull = GPIO_NOPULL;
-    gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
-
-    for (uint8_t i = 0; i < 2; i++) {
-        switch ((static_cast<uint8_t>(myPins[i]) & 0xF0) >> 4) {
-            case 0x0:
-                __HAL_RCC_GPIOA_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOA, &gpioInit);
-                break;
-            case 0x1:
-                __HAL_RCC_GPIOB_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOB, &gpioInit);
-                break;
-            case 0x2:
-                __HAL_RCC_GPIOC_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOC, &gpioInit);
-                break;
-            case 0x3:
-                __HAL_RCC_GPIOD_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOD, &gpioInit);
-                break;
-            default:
-                break;
-        }
-    }
+    GPIOf302x8::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP,
+        GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, alt_id);
 
     halUART.Init.BaudRate     = baudrate;
     halUART.Init.WordLength   = UART_WORDLENGTH_8B;

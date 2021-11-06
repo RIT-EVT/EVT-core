@@ -9,6 +9,8 @@
 #include <EVT/io/CAN.hpp>
 #include <EVT/utils/types/FixedQueue.hpp>
 
+#define CAN_MESSAGE_QUEUE_SIZE 100
+
 namespace EVT::core::IO {
 
 /**
@@ -34,36 +36,48 @@ public:
     CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled=false);
 
     /**
-     * Send a message over CAN
-     *
-     * @param message[in] The message to send over CAN.
+     * @copydoc EVT::core::IO::CAN::receive
      */
     void transmit(CANMessage& message);
 
     /**
-     * Receive a message over CAN. The user can either receive in blocking or
-     * non-blocking mode. In blocking mode, the code will hang until a message
-     * is received then return a pointer to the message that was passed in.
-     * In non-blocking, a nullptr will be returned if no message is currently
-     * in the mailbox.
-     *
-     * NOTE: If you add your own custom callback. This method will alway
-     * return a nullptr. If you leave this as blocking, then the program will
-     * always block.
-     *
-     * @param message[out] The message to populate with data
-     * @param blocking[in] Used to determine if received should block or not, by
-     *      default receive is blocking
-     * @return A pointer to the passed in message, nullptr if message not
-     *      received.
+     * @copydoc EVT::core::IO::CAN::receive
      */
     CANMessage* receive(CANMessage* message, bool blocking=false);
+
+    /**
+     * @copydoc EVT::core::IO::CAN::addIRQHandler
+     */
+    void addIRQHandler(void (*handler)(CANMessage&, void* priv), void* priv);
+
+    /**
+     * Add a message to the CAN receive queue.
+     *
+     * NOTE: This is public for use with the STM HAL interrupt handler. This
+     * method should not be used outside of that application.
+     *
+     * @param message[in] The CANmessage to add to the receive queue
+     */
+    void addCANMessage(CANMessage& message);
+
+    /**
+     * Manually trigger the user specified interrupt handler. This is intended
+     * to be used by the STM HAL interrupt handler and generally should
+     * not be used beyound that use case.
+     *
+     * NOTE: This is public for use with the STM HAL interrupt handler. This
+     * method should not be used outside of that application.
+     *
+     * @param message[in] The message to pass to the interrupt handler
+     * @return True if the interrupt handler exists and has handled the message
+     */
+    bool triggerIRQ(CANMessage& message);
 
 private:
     /** Instance of the HAL can interface */
     CAN_HandleTypeDef halCAN;
     /** Queue which holds received CAN messages */
-    EVT::core::types::FixedQueue<CANMessage> messageQueue;
+    EVT::core::types::FixedQueue<CAN_MESSAGE_QUEUE_SIZE, CANMessage> messageQueue;
 
 };
 

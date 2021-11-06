@@ -58,6 +58,23 @@ public:
      */
     virtual CANMessage* receive(CANMessage* message, bool blocking=false) = 0;
 
+    /**
+     * Add an interrupt handler for CAN messages. This will be called with
+     * the provided private data when a new CAN message comes in.
+     *
+     * NOTE: Having an interrupt handler will bypass the CAN's internal
+     * storage queue thus making CAN::receive ineffective.
+     *
+     * @param handler[in] The interrupt handler. Takes in a CANmessage and some other parameter
+     * @param priv[in] The private data to pass into the handler
+     */
+    void addIRQHandler(void (*handler)(CANMessage&, void* priv), void* priv);
+
+    /**
+     * Default CAN baudrate.
+     */
+    static constexpr uint32_t DEFAULT_BAUD = 500000;
+
 private:
     /** The CAN transmit pin */
     Pin txPin;
@@ -67,6 +84,11 @@ private:
     bool filtering;
     /** If CAN should operate in loop back mode */
     bool loopbackEnabled;
+protected:
+    /** Function pointer to call for the interrupt handler */
+    void (*handler)(CANMessage&, void* priv);
+    /** Private data to pass into the IRQ handler */
+    void* priv;
 };
 }  // namespace EVT::core::IO
 
