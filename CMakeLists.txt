@@ -44,6 +44,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/dev/platform/f3xx/f302x8/RTCf302x8.cpp
     src/dev/platform/f3xx/f302x8/IWDGf302x8.cpp
     src/dev/platform/f3xx/f302x8/Timerf302x8.cpp
+    src/dev/storage/platform/M24C32.cpp
 
     src/utils/platform/f3xx/time.cpp
 )
