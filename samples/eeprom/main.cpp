@@ -16,7 +16,6 @@ namespace DEV = EVT::core::DEV;
  * The address of the EEPROM listening for reads/writes
  * Set up for M24C23 with all enable values set to 0
  * Docs can be found here: https://www.st.com/content/ccc/resource/technical/document/datasheet/80/4e/8c/54/f2/63/4c/4a/CD00001012.pdf/files/CD00001012.pdf/jcr:content/translations/en.CD00001012.pdf
- * TODO: Find better way to share the docs
  * */
 constexpr uint8_t I2C_SLAVE_ADDR = 0x50;
 
