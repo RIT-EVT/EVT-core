@@ -16,9 +16,11 @@ namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
 
 /** The address of the arduino listening for I2C requests */
-constexpr uint8_t I2C_SLAVE_ADDR = 0x50;
+constexpr uint8_t I2C_SLAVE_ADDR = 0x04;
 /** The "register" location of the "o" byte */
-constexpr uint8_t O_REGISTER = 0x12;
+constexpr uint8_t O_REGISTER = 0x00;
+/** The "register" location of the "k" byte */
+constexpr uint8_t K_REGISTER = 0x01;
 
 int main() {
     // Initialize system
@@ -29,21 +31,15 @@ int main() {
 
     uart.printf("Starting I2C test\n\r");
 
-    //i2c.writeReg(I2C_SLAVE_ADDR, O_REGISTER, 0xfa);
-    uint8_t reg[] = {0x00,0x00, 0xfa};
-    i2c.write(I2C_SLAVE_ADDR, reg, 3);
-
     while (1) {
-
-
         uart.printf("Requesting first byte\n\r");
-        uint8_t regOnly[] = {0x00,0x00};
-        i2c.write(I2C_SLAVE_ADDR, regOnly, 2);
-        uint8_t oValue = i2c.read(I2C_SLAVE_ADDR);
+        uint8_t oValue = i2c.readReg(I2C_SLAVE_ADDR, O_REGISTER);
+        uart.printf("Reading second bytes\n\r");
+        uint8_t kValue = i2c.readReg(I2C_SLAVE_ADDR, K_REGISTER);
 
-        uart.printf("Byte Read: %#x\n\r", oValue);
+        uart.printf("Bytes Read: %c %c\n\r", oValue, kValue);
 
         // Wait half a second before repeating the test
-        time::wait(2000);
+        time::wait(500);
     }
 }
