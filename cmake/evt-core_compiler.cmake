@@ -85,4 +85,4 @@ set(CMAKE_CXX_FLAGS         "${EVT_COMMON_FLAGS} \
 # TODO: Check for platform to decide which linker script to use
 set(CMAKE_EXE_LINKER_FLAGS  "-mfloat-abi=hard -specs=nano.specs -specs=nosys.specs \
                             -T ${EVT_CORE_DIR}/libs/HALf3/STM32F302C8Tx_FLASH.ld \
-                            -lc -lm -lnosys")
+                            -lc -lm -lnosys -Wl,--gc-section")
