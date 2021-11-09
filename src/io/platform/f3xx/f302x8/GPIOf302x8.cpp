@@ -70,6 +70,26 @@ GPIOf302x8::GPIOf302x8(Pin pin, GPIO::Direction direction)
     gpioStateInit(&gpioInit, myPins, numOfPins,
         static_cast<uint32_t>(direction), GPIO_PULLDOWN, GPIO_SPEED_FREQ_HIGH);
 
+    switch ((static_cast<uint8_t>(pin) & 0xF0) >> 4) {
+        case 0x0:
+            this->port = GPIOA;
+            break;
+        case 0x1:
+            this->port = GPIOB;
+            break;
+        case 0x2:
+            this->port = GPIOC;
+            break;
+        case 0x3:
+            this->port = GPIOD;
+            break;
+        case 0x5:
+            this->port = GPIOF;
+            break;
+        default:
+            break;  // Should never get here
+    }
+
     this->halPin = 1 << (static_cast<uint16_t>(this->pin) & 0x0F);
     this->writePin(GPIO::State::LOW);  // Output set low by default
 }
