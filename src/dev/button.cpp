@@ -3,33 +3,17 @@
 
 namespace EVT::core::DEV {
 
-// Button::Button(GPIO button, uint32_t debounce) : gpio(gpio) {
-
-// }
-
-uint32_t button::debounce() {
-
-
-
-    return debounce_val
-}
-
-
-bool button::debounceState(uint32_t debounce_val) {
-    if debounce_val > 10 {
-        return true
+void button::setButtonState(EVT::core::IO::GPIO::State state) {
+    if (this->activeState == ActiveState::HIGH) {
+        this->gpio.writePin(state);
     } else {
-        return false
-    }
-
-}
-
-bool button::readButton(class ButtonState) {
-    if ButtonState == PRESSED {
-        return true
-    } else {
-        return false
+        if (state == EVT::core::IO::GPIO::State::HIGH) {
+            this->gpio.writePin(EVT::core::IO::GPIO::State::LOW);
+        } else {
+            this->gpio.writePin(EVT::core::IO::GPIO::State::HIGH);
+        }
     }
 }
+
 
 }  // namespace EVT::core::DEV
