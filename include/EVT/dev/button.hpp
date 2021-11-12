@@ -21,17 +21,19 @@ public:
      */
 
 
-    enum class ButtonState 
+    enum class ActiveState 
     {
-        UNPRESSED = 0u,
-        PRESSED = 1u,
+        HIGH = 0u,
+        LOW = 1u,
     };
 
     /**
-     * Create a new button interface
+     * Create an instance of the LED based on the given GPIO pin.
      *
+     * @param gpio[in] GPIO pin
+     * @param activeState[in] Represents if the LED is active high or active low
      */
-    Button(GPIO button, uint32_t debounce);
+    Button(EVT::core::IO::GPIO& gpio, ActiveState activeState);
 
     /**
      * Reads the state of the button 
