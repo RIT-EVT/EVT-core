@@ -42,12 +42,13 @@ namespace EVT::core::log {
         void setClock(dev::RTC* rtc);
 
         /**
-         * Write logStatement to the serial logger if the logger log level reaches this level
+         * Write the formatted string to the serial logger if the logger log level reaches this level
          *
          * @param level[in] Log level of this statement
-         * @param logStatement[in] String to be printed to the logger
+         * @param format[in] Format string to be logged
+         * @param ...[in] Variables to be formatted into the log statement
          */
-        void log(LogLevel level, const char *logStatement);
+        void log(LogLevel level, const char* format, ...);
 
     private:
         IO::UART* uart;
@@ -55,6 +56,8 @@ namespace EVT::core::log {
         dev::RTC* clock;
     };
 
+    // Ensures exactly 1 instance of LOGGER is created instead of creating a new one each time this
+    // header is included
     extern Logger LOGGER;
 }
 

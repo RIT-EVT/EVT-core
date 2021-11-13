@@ -1,4 +1,6 @@
 #include <EVT/utils/log.hpp>
+#include <cstdarg>
+#include <cstdio>
 
 namespace IO = EVT::core::IO;
 
@@ -8,7 +10,7 @@ namespace EVT::core::log {
      *
      * @param uart[in] UART to be used for logging
      */
-    void Logger::setUART(IO::UART *loggingUART) {
+    void Logger::setUART(IO::UART* loggingUART) {
         uart = loggingUART;
     }
 
@@ -26,17 +28,18 @@ namespace EVT::core::log {
      *
      * @param rtc Clock to be used for timestamps
      */
-    void Logger::setClock(dev::RTC *rtc) {
+    void Logger::setClock(dev::RTC* rtc) {
         clock = rtc;
     }
 
     /**
-     * Write logStatement to the serial logger if the logger log level reaches this level
+     * Write the formatted string to the serial logger if the logger log level reaches this level
      *
      * @param level[in] Log level of this statement
-     * @param logStatement[in] String to be printed to the logger
+     * @param format[in] Format string to be logged
+     * @param ...[in] Variables to be formatted into the log statement
      */
-    void Logger::log(LogLevel level, const char *logStatement) {
+    void Logger::log(LogLevel level, const char* format, ...) {
         // If there isn't a UART interface, cannot print
         // If the level of this statement is less than the logger's minLevel, shouldn't print
         if (!uart || level < minLevel)
@@ -64,7 +67,17 @@ namespace EVT::core::log {
                 break;
         }
 
-        uart->printf(logStatement);
+        // Initialize variable argument list
+        va_list args;
+        va_start(args, format);
+
+        // Apply print formatting from the variable argument list to format and print it
+        char logString[200];
+        vsprintf(logString, format, args);
+        uart->printf("%s\r\n", logString);
+
+        // Closes the variable argument list
+        va_end(args);
     }
 
     Logger LOGGER;

@@ -10,7 +10,6 @@
 namespace IO = EVT::core::IO;
 namespace log = EVT::core::log;
 namespace DEV = EVT::core::DEV;
-namespace time = EVT::core::time;
 
 int main() {
     // Initialize system
@@ -21,12 +20,14 @@ int main() {
     uart.printf("Starting log test\n\r");
 
     log::LOGGER.setUART(&uart);
-    log::LOGGER.setLogLevel(log::Logger::LogLevel::WARNING);
+    log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
     auto* rtc = new DEV::RTCf302x8();
     log::LOGGER.setClock(rtc);
 
-    log::LOGGER.log(log::Logger::LogLevel::DEBUG,"Log 1\n\r");
-    log::LOGGER.log(log::Logger::LogLevel::INFO,"Log 2\n\r");
-    log::LOGGER.log(log::Logger::LogLevel::WARNING,"Log 3\n\r");
-    log::LOGGER.log(log::Logger::LogLevel::ERROR,"Log 4\n\r");
+    uint8_t testData = 0xab;
+
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Log 1");
+    log::LOGGER.log(log::Logger::LogLevel::INFO, "Log 2 - %c", testData);
+    log::LOGGER.log(log::Logger::LogLevel::WARNING, "Log 3 - %x", testData);
+    log::LOGGER.log(log::Logger::LogLevel::ERROR, "Log 4 - %d", testData);
 }
