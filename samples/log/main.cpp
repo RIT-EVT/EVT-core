@@ -1,5 +1,8 @@
 /**
- * TODO: Explanation of this sample
+ * Example that logs sample statements with some sample data.
+ *
+ * The sample will log only the info, warning, and error statements because the logger's level has
+ * been set to info.
  */
 #include <cstdint>
 
@@ -17,17 +20,22 @@ int main() {
 
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
+    // Print directly to the UART to show that the file has been run despite any problems with the
+    // Logger
     uart.printf("Starting log test\n\r");
 
+    // Set up the logger with a UART, logLevel, and clock
+    // If timestamps aren't needed, don't set the logger's clock
     log::LOGGER.setUART(&uart);
-    log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
+    log::LOGGER.setLogLevel(log::Logger::LogLevel::INFO);
     auto* rtc = new DEV::RTCf302x8();
     log::LOGGER.setClock(rtc);
 
-    uint8_t testData = 0xab;
+    uint8_t sampleData = 0xab;
 
-    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Log 1");
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "Log 2 - %c", testData);
-    log::LOGGER.log(log::Logger::LogLevel::WARNING, "Log 3 - %x", testData);
-    log::LOGGER.log(log::Logger::LogLevel::ERROR, "Log 4 - %d", testData);
+    // Attempt to log a statement at each log level
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Log 0");
+    log::LOGGER.log(log::Logger::LogLevel::INFO, "Log 1");
+    log::LOGGER.log(log::Logger::LogLevel::WARNING, "Log 2 - %x", sampleData);
+    log::LOGGER.log(log::Logger::LogLevel::ERROR, "Log 3 - %d", sampleData);
 }

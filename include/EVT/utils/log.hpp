@@ -51,13 +51,17 @@ namespace EVT::core::log {
         void log(LogLevel level, const char* format, ...);
 
     private:
+        /** UART to be used for logging */
         IO::UART* uart;
+        /** Minimum log level to be displayed by the logger */
         LogLevel minLevel;
+        /** Clock to be used for timestamps */
         dev::RTC* clock;
     };
 
-    // Ensures exactly 1 instance of LOGGER is created instead of creating a new one each time this
-    // header is included
+    // extern keyword ensures exactly 1 instance of LOGGER is created instead of creating a new one
+    // each time this header is included
+    /** Global Logger instance */
     extern Logger LOGGER;
 }
 
