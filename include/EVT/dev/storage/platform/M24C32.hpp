@@ -127,6 +127,8 @@ private:
     static constexpr uint8_t MEM_ADDRESS_SIZE = 2;
     /** Maximum time to write a single byte of this EEPROM */
     static constexpr uint8_t MAX_WRITE_TIME = 5;
+    /** Number of bytes that make up a page size */
+    static constexpr uint8_t PAGE_SIZE = 32;
     /** Slave address for this device to be used for I2C communication */
     uint8_t i2cSlaveAddress;
     /** I2C instance to be used for I2C communication */

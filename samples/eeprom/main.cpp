@@ -22,19 +22,27 @@ constexpr uint8_t I2C_SLAVE_ADDR = 0x50;
 constexpr uint8_t BYTE_ADDRESS = 0x00;
 constexpr uint8_t HALF_WORD_ADDRESS = 0x01;
 constexpr uint8_t WORD_ADDRESS = 0x03;
-constexpr uint8_t BYTE_ARR_ADDRESS = 0x07;
 constexpr uint8_t HALF_WORD_ARR_ADDRESS = 0x09;
 constexpr uint8_t WORD_ARR_ADDRESS = 0x13;
+
+/**
+ * NOTE: This address is picked to highlight a potential issue. The EEPROM
+ * only allows writing on a page boundary (32 bytes in size), attempting
+ * to write beyound the page size will cause a wrap around of writing. This
+ * issue should now be address in the EVT-core driver.
+ */
+constexpr uint8_t BYTE_ARR_ADDRESS = 0x3C;
 
 constexpr uint8_t BYTE_DATA = 0xaa;
 constexpr uint16_t HALF_WORD_DATA = 0xabcd;
 constexpr uint32_t WORD_DATA = 0xfedcba98;
-constexpr uint8_t BYTE_ARR_LENGTH = 2;
-uint8_t BYTE_ARR_DATA[BYTE_ARR_LENGTH] = {0xab, 0xba};
+constexpr uint8_t BYTE_ARR_LENGTH = 7;
+uint8_t BYTE_ARR_DATA[BYTE_ARR_LENGTH] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
 constexpr uint8_t HALF_WORD_ARR_LENGTH = 2;
 uint16_t HALF_WORD_ARR_DATA[HALF_WORD_ARR_LENGTH] = {0xbbbb, 0xcccc};
 constexpr uint8_t WORD_ARR_LENGTH = 2;
 uint32_t WORD_ARR_DATA[WORD_ARR_LENGTH] = {0x01234567, 0x89abcdef};
+
 
 int main() {
     // Initialize system
