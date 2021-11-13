@@ -14,10 +14,10 @@ namespace EVT::core::log {
         * The level at which messages should be logged
         */
         enum class LogLevel {
-            DEBUG = 1u,
-            INFO = 2u,
-            WARNING = 3u,
-            ERROR = 4u,
+            DEBUG = 0u,
+            INFO = 1u,
+            WARNING = 2u,
+            ERROR = 3u,
         };
 
         /**
@@ -28,9 +28,9 @@ namespace EVT::core::log {
         void setUART(IO::UART* uart);
 
         /**
-         * Set the maximum log level to be displayed by the logger
+         * Set the minimum log level to be displayed by the logger
          *
-         * @param level[in] Maximum log level to be displayed by the logger
+         * @param level[in] Minimum log level to be displayed by the logger
          */
         void setLogLevel(LogLevel level);
 
@@ -51,7 +51,7 @@ namespace EVT::core::log {
 
     private:
         IO::UART* uart;
-        LogLevel maxLevel;
+        LogLevel minLevel;
         dev::RTC* clock;
     };
 

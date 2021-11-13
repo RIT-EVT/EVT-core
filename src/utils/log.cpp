@@ -13,12 +13,12 @@ namespace EVT::core::log {
     }
 
     /**
-    * Set the maximum log level to be displayed by the logger
+    * Set the minimum log level to be displayed by the logger
     *
-    * @param level[in] Maximum log level to be displayed by the logger
+    * @param level[in] Minimum log level to be displayed by the logger
     */
     void Logger::setLogLevel(Logger::LogLevel level) {
-        maxLevel = level;
+        minLevel = level;
     }
 
     /**
@@ -38,10 +38,11 @@ namespace EVT::core::log {
      */
     void Logger::log(LogLevel level, const char *logStatement) {
         // If there isn't a UART interface, cannot print
-        // If the logger's maxLevel is less than the level of this statement, it shouldn't print
-        if (!uart || level > maxLevel)
+        // If the level of this statement is less than the logger's minLevel, shouldn't print
+        if (!uart || level < minLevel)
             return;
 
+        // If the clock has been set, print the timestamp
         if (clock) {
             uint32_t time = clock->getTime();
             uart->printf("%d ", time);
