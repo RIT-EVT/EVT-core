@@ -14,7 +14,7 @@
 #include <EVT/io/types/CANMessage.hpp>
 #include <EVT/utils/types/FixedQueue.hpp>
 
-#define CANOPEN_QUEUE_SIZE 15
+#define CANOPEN_QUEUE_SIZE 300
 
 namespace EVT::core::IO {
 
