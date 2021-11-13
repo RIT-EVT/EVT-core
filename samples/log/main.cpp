@@ -16,7 +16,10 @@ int main() {
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     log::LOGGER.setUART(&uart);
+    log::LOGGER.setLogLevel(log::Logger::LogLevel::WARNING);
 
-    log::LOGGER.log("Log\n\r");
-    log::LOGGER.log("Log part 2\n\r");
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG,"Log 1\n\r");
+    log::LOGGER.log(log::Logger::LogLevel::INFO,"Log 2\n\r");
+    log::LOGGER.log(log::Logger::LogLevel::WARNING,"Log 3\n\r");
+    log::LOGGER.log(log::Logger::LogLevel::ERROR,"Log 4\n\r");
 }
