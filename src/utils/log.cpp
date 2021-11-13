@@ -11,7 +11,9 @@ namespace EVT::core::log {
      * @param uart[in] UART to be used for logging
      */
     void Logger::setUART(IO::UART* loggingUART) {
+    #ifdef EVT_CORE_LOG_ENABLE
         uart = loggingUART;
+    #endif
     }
 
     /**
@@ -20,7 +22,9 @@ namespace EVT::core::log {
     * @param level[in] Minimum log level to be displayed by the logger
     */
     void Logger::setLogLevel(Logger::LogLevel level) {
+    #ifdef EVT_CORE_LOG_ENABLE
         minLevel = level;
+    #endif
     }
 
     /**
@@ -29,7 +33,9 @@ namespace EVT::core::log {
      * @param rtc Clock to be used for timestamps
      */
     void Logger::setClock(dev::RTC* rtc) {
+    #ifdef EVT_CORE_LOG_ENABLE
         clock = rtc;
+    #endif
     }
 
     /**
@@ -40,6 +46,7 @@ namespace EVT::core::log {
      * @param ...[in] Variables to be formatted into the log statement
      */
     void Logger::log(LogLevel level, const char* format, ...) {
+        #ifdef EVT_CORE_LOG_ENABLE
         // If there isn't a UART interface, cannot print
         // If the level of this statement is less than the logger's minLevel, shouldn't print
         if (!uart || level < minLevel)
@@ -78,6 +85,7 @@ namespace EVT::core::log {
 
         // Closes the variable argument list
         va_end(args);
+        #endif
     }
 
     Logger LOGGER;
