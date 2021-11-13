@@ -3,7 +3,9 @@
 
 #include <cstdint>
 #include <EVT/io/UART.hpp>
+#include <EVT/dev/RTC.hpp>
 
+namespace dev = EVT::core::DEV;
 
 namespace EVT::core::log {
     class Logger {
@@ -33,6 +35,13 @@ namespace EVT::core::log {
         void setLogLevel(LogLevel level);
 
         /**
+         * Set the clock to be used for timestamps
+         *
+         * @param rtc Clock to be used for timestamps
+         */
+        void setClock(dev::RTC* rtc);
+
+        /**
          * Write logStatement to the serial logger if the logger log level reaches this level
          *
          * @param level[in] Log level of this statement
@@ -43,6 +52,7 @@ namespace EVT::core::log {
     private:
         IO::UART* uart;
         LogLevel maxLevel;
+        dev::RTC* clock;
     };
 
     extern Logger LOGGER;

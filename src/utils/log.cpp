@@ -1,5 +1,4 @@
 #include <EVT/utils/log.hpp>
-#include <cstdio>
 
 namespace IO = EVT::core::IO;
 
@@ -23,6 +22,15 @@ namespace EVT::core::log {
     }
 
     /**
+     * Set the clock to be used for timestamps
+     *
+     * @param rtc Clock to be used for timestamps
+     */
+    void Logger::setClock(dev::RTC *rtc) {
+        clock = rtc;
+    }
+
+    /**
      * Write logStatement to the serial logger if the logger log level reaches this level
      *
      * @param level[in] Log level of this statement
@@ -34,8 +42,13 @@ namespace EVT::core::log {
         if (!uart || level > maxLevel)
             return;
 
+        if (clock) {
+            uint32_t time = clock->getTime();
+            uart->printf("%d ", time);
+        }
+
         // Print the level of this log statement
-        switch(level) {
+        switch (level) {
             case LogLevel::DEBUG:
                 uart->printf("DEBUG::");
                 break;
