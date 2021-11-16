@@ -76,7 +76,6 @@ cmake_dependent_option(EVT_BUILD_SAMPLES
 # TODO: This should be set by the user of this library
 add_compile_definitions(STM32F302x8)
 add_compile_definitions(USE_HAL_DRIVER)
-add_compile_definitions(EVT_CORE_LOG_ENABLE)
 
 add_subdirectory(libs/HALf3/)
 add_subdirectory(libs/canopen/canopen/)
