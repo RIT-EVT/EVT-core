@@ -47,6 +47,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/dev/storage/platform/M24C32.cpp
 
     src/utils/platform/f3xx/time.cpp
+    src/utils/log.cpp
 )
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
