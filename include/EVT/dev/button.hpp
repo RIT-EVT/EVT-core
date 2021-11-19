@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <EVT/io/GPIO.hpp>
 
-namespace EVT::core::DEV 
+namespace EVT::core::dev;
 {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
@@ -19,8 +19,6 @@ public:
      * Enum to handle the button trigger states
      *
      */
-
-
     enum class ActiveState 
     {
         HIGH = 0u,
@@ -40,7 +38,7 @@ public:
      * 
      * @return The button state.
      */
-    bool readButton();
+    IO::GPIO::State readButton();
 
     /**
      * Time how long the button is in a high state
@@ -56,17 +54,9 @@ public:
      */
     bool debounceState(uint32_t debounce);
 
-
-    /**
-     * Set the Button State object
-     * 
-     * @param debounceState 
-     */
-    void setButtonState(bool debounceState)
-
 private:
     GPIO button;
-    int state;
+    ActiveState activeState;
 
 };
 

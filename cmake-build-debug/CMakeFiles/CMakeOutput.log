@@ -1,0 +1,38 @@
+The target system is: Generic -  - arm
+The host system is: Windows - 10.0.19042 - AMD64
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.07/bin/arm-none-eabi-g++.exe 
+Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-mfloat-abi=hard;-Og;-Wall;-fdata-sections;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-ffunction-sections;-MMD;-MP;-MF;-ggdb;-g3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-fno-rtti;-Wvla
+Id flags: -c 
+
+The output was:
+0
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "-ggdb"
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.o"
+
+The CXX compiler identification is GNU, found in "C:/Users/firen/Documents/GitHub/Electric-Vehicle-Team/EVT-core/cmake-build-debug/CMakeFiles/3.20.2/CompilerIdCXX/CMakeCXXCompilerId.o"
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.07/bin/arm-none-eabi-gcc.exe 
+Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-mfloat-abi=hard;-Og;-Wall;-fdata-sections;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-ffunction-sections;-MMD;-MP;-MF;-ggdb;-g3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-std=gnu99
+Id flags: -c 
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "-ggdb"
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
+
+The C compiler identification is GNU, found in "C:/Users/firen/Documents/GitHub/Electric-Vehicle-Team/EVT-core/cmake-build-debug/CMakeFiles/3.20.2/CompilerIdC/CMakeCCompilerId.o"
+
+Checking whether the ASM compiler is GNU using "--version" matched "(GNU assembler)|(GCC)|(Free Software Foundation)":
+arm-none-eabi-gcc.exe (GNU Arm Embedded Toolchain 10.3-2021.07) 10.3.1 20210621 (release)
+Copyright (C) 2020 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
