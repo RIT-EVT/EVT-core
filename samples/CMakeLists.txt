@@ -1,6 +1,7 @@
 # Add all samples
 add_subdirectory(adc)
 add_subdirectory(blink)
+add_subdirectory(button)
 add_subdirectory(can)
 add_subdirectory(echo)
 add_subdirectory(gpio_interrupt)

@@ -39,6 +39,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/io/platform/f3xx/f302x8/UARTf302x8.cpp
     src/io/types/CANMessage.cpp
 
+    src/dev/button.cpp
     src/dev/LED.cpp
     src/dev/platform/f3xx/f302x8/RTCf302x8.cpp
     

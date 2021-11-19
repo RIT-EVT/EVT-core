@@ -1,29 +1,23 @@
-#include <EVT\dev\button.hpp>
-#include <EVT\utils\time.hpp>
+#include <EVT/dev/button.hpp>
 
 namespace EVT::core::DEV {
-
-Button::Button(EVT::core::IO::GPIO& gpio, LED::ActiveState activeState)
-    : gpio(gpio) {
-    this->setState(EVT::core::IO::GPIO::State::LOW);
+Button::Button(EVT::core::IO::GPIO& gpio, Button::ActiveState activeState) : gpio(gpio), activeState(activeState) {
 }
-)
 
 
 
-    void LED::readButtonState(EVT::core::IO::GPIO::State state) {
-        if (this->activeState == Button::ActiveState::HIGH) {
-            return this->gpio.readPin(state);
+
+IO::GPIO::State Button::readButton() {
+    if (this->activeState == Button::ActiveState::HIGH) {
+        return this->gpio.readPin();
+    } else {
+        auto state = gpio.readPin();
+        if (state == EVT::core::IO::GPIO::State::HIGH) {
+            return EVT::core::IO::GPIO::State::LOW;
         } else {
-            auto state = gpio.readPin();
-            if (state == EVT::core::IO::GPIO::State::HIGH) {
-                return EVT::core::IO::GPIO::State::LOW;
-            } else {
-                return EVT::core::IO::GPIO::State::HIGH;
-            }
+            return EVT::core::IO::GPIO::State::HIGH;
         }
     }
-}
 }
 
 }  // namespace EVT::core::DEV

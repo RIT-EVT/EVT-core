@@ -4,13 +4,10 @@
 #include <stdint.h>
 #include <EVT/io/GPIO.hpp>
 
-namespace EVT::core::dev;
-{
+namespace EVT::core::DEV {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
-enum class GPIO;
-bool activeHigh;
 
 class Button 
 {
@@ -29,9 +26,9 @@ public:
      * Create an instance of the LED based on the given GPIO pin.
      *
      * @param gpio[in] GPIO pin
-     * @param activeState[in] Represents if the LED is active high or active low
+     * @param activeState[in] Represents if the button is active high or active low
      */
-    Button(EVT::core::IO::GPIO& gpio, ActiveState activeState);
+    Button(EVT::core::IO::GPIO& gpio, Button::ActiveState activeState);
 
     /**
      * Reads the state of the button 
@@ -55,7 +52,7 @@ public:
     bool debounceState(uint32_t debounce);
 
 private:
-    GPIO button;
+    EVT::core::IO::GPIO& gpio;
     ActiveState activeState;
 
 };
