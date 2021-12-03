@@ -18,8 +18,8 @@ public:
      */
     enum class ActiveState 
     {
-        HIGH = 0u,
-        LOW = 1u,
+        LOW = 0u,
+        HIGH = 1u,
     };
 
     /**
