@@ -102,3 +102,6 @@ if(EVT_BUILD_SAMPLES)
     # Add the sample code sub directory
     add_subdirectory(samples)
 endif()
+
+set(EVT_CORE_FORMATTING true)
+include(cmake/evt-core_clang_tools.cmake)
