@@ -32,13 +32,49 @@ namespace EVT::core::IO {
 
         SPI(GPIO **CSPins, uint8_t pinLength, Pin sckPin, Pin mosiPin);
 
-        void write(uint8_t device, uint8_t byte);
+        /**
+         * begin a device transmission. Call before each set of read and write interactions.
+         * @param device the device number in the CSPins array
+         * @return true if valid device, false if device not in CSPins
+         */
+        virtual bool startTransmition(uint8_t device) = 0;
 
-        uint8_t read(uint8_t device);
+        /**
+        * toggle the state of the chip select pin of a device back at the end of a transmission. Call when finished
+        * reading or writing a data packet.
+        * @param device the device index in the CSPins
+        * @return true if valid device, false if device not in CSPins
+        */
+        virtual bool endTransmition(uint8_t device) = 0;
 
-        void write(uint8_t device, uint8_t *bytes, uint8_t length);
+        /**
+         * Writes a single byte out to the SPI device. Call startTransmition() first to initiate device communication.
+         * @param byte the byte to write
+         */
+        virtual void write(uint8_t byte) = 0;
 
-        void read(uint8_t device, uint8_t *bytes, uint8_t length);
+        /**
+         * reads a single byte from a SPI device. Call startTransmition() first to initiate device communication.
+         * @return the byte read
+         */
+        virtual uint8_t read() = 0;
+
+//        void write(uint8_t device, uint8_t byte);
+//
+//        uint8_t read(uint8_t device);
+        /**
+         * writes an array of bytes to the SPI device. Call startTransmition() first to initiate device communication.
+         * @param bytes an array of bytes of length n to write to SPI device
+         * @param length the length of the array
+         */
+        void write(uint8_t *bytes, uint8_t length);
+
+        /**
+        * reads an array of bytes from a SPI device. Call startTransmition() first to initiate device communication.
+        * @param bytes an array of length n to receive the bytes from an SPI device
+        * @param length the number of bytes to recive
+        */
+        void read(uint8_t *bytes, uint8_t length);
 
         void writeReg(uint8_t device, uint8_t reg, uint8_t byte);
 
@@ -53,14 +89,6 @@ namespace EVT::core::IO {
         Pin mosiPin;
         /** The MISO data line */
         Pin misoPin;
-
-        virtual bool startTransmition(uint8_t device) = 0;
-
-        virtual bool endTransmition(uint8_t device) = 0;
-
-        virtual void write(uint8_t byte) = 0;
-
-        virtual uint8_t read() = 0;
 
     protected:
         uint8_t CSPinsLength;

@@ -257,11 +257,11 @@ namespace EVT::core::IO {
      * @param bytes an array of bytes of length n to write to SPI device
      * @param length the length of the array
      */
-    void SPIf302x8::write(uint8_t device, uint8_t *bytes, uint8_t length) {
-        if (startTransmition(device)) {
+    void SPIf302x8::write(uint8_t *bytes, uint8_t length) {
+        //if (startTransmition(device)) {
             HAL_SPI_Transmit(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
-            endTransmition(device);
-        }
+        //    endTransmition(device);
+        //}
     }
 
     /**
@@ -270,11 +270,11 @@ namespace EVT::core::IO {
      * @param bytes an array of length n to receive the bytes from an SPI device
      * @param length the number of bytes to recive
      */
-    void SPIf302x8::read(uint8_t device, uint8_t *bytes, uint8_t length) {
-        if (startTransmition(device)) {
+    void SPIf302x8::read(uint8_t *bytes, uint8_t length) {
+        //if (startTransmition(device)) {
             HAL_SPI_Receive(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
-            endTransmition(device);
-        }
+        //    endTransmition(device);
+        //}
     }
 } // namespace EVT::core::IO
 

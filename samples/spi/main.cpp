@@ -46,35 +46,44 @@ int main() {
     uint8_t byte;
 
     while (1) {
-    //     uart.printf("Begin test\n\r");
-    //     //write a single byte
-    //     spi.write(0, SINGLE_BYTE);
-    //     uart.printf("sending single byte %X\n\r", SINGLE_BYTE);
+        uart.printf("Begin test\n\r");
+        uart.printf("sending single byte %X\n\r", SINGLE_BYTE);
 
-    //     //read a single byte
-    //     byte = spi.read(0);
-    //     uart.printf("reading single byte %X\n\r", byte);
+        spi.startTransmition(0);
+        //write a single byte
+        spi.write(SINGLE_BYTE);
+        //read a single byte
+        byte = spi.read();
 
-    //    //write an array of data
-    //    spi.write(0, BYTE_MULTIPLE, BYTE_MULTIPLE_LENGTH);
-    //    uart.printf("sending %u bytes\n\r", BYTE_MULTIPLE_LENGTH);
+        spi.endTransmition(0);
+        uart.printf("reading single byte %X\n\r", byte);
 
-    //    //read an array of data
-    //    uint8_t readData[BYTE_MULTIPLE_LENGTH];
-    //    spi.write(0, READ_MULTIPLE_BYTE);
-    //    spi.read(0, readData, BYTE_MULTIPLE_LENGTH-1);
-    //    uart.printf("reading %u bytes\n\r[", BYTE_MULTIPLE_LENGTH-1);
-    //    for(int i = 0; i<BYTE_MULTIPLE_LENGTH; i++){
-    //        uart.printf("%X, ", readData[i]);
-    //    }
+        //write an array of data
+        spi.startTransmition(0);
+        spi.write(BYTE_MULTIPLE, BYTE_MULTIPLE_LENGTH);
+        spi.endTransmition(0);
+        uart.printf("sending %u bytes\n\r", BYTE_MULTIPLE_LENGTH);
 
-       uart.printf("\n\rtesting combined register read and write\n\r");
+        //read an array of data
+        uint8_t readData[BYTE_MULTIPLE_LENGTH];
+        spi.startTransmition(0);
+        spi.write(READ_MULTIPLE_BYTE);
+        spi.read(readData, BYTE_MULTIPLE_LENGTH-1);
+        spi.endTransmition(0);
 
-       spi.writeReg(0, WRITE_REG, WRITE_REG_BYTE);
-       uart.printf("sending register byte %X\n\r", SINGLE_BYTE);
+        uart.printf("reading %u bytes\n\r[", BYTE_MULTIPLE_LENGTH-1);
+        for(int i = 0; i<BYTE_MULTIPLE_LENGTH-1; i++){
+            uart.printf("%X, ", readData[i]);
+        }
+        //uart.printf("\n\r\n\r");
 
-       byte = spi.readReg(0, READ_REG);
-       uart.printf("reading register byte %X\n\r\n\r", byte);
+        uart.printf("\n\rtesting combined register read and write\n\r");
+
+        spi.writeReg(0, WRITE_REG, WRITE_REG_BYTE);
+        uart.printf("sending register byte %X\n\r", SINGLE_BYTE);
+
+        byte = spi.readReg(0, READ_REG);
+        uart.printf("reading register byte %X\n\r\n\r", byte);
 
         // Wait five seconds before repeating the test
         time::wait(1000);

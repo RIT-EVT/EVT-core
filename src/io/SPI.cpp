@@ -11,36 +11,30 @@ namespace EVT::core::IO {
     SPI::SPI(GPIO **CSPins, uint8_t pinLength, Pin sckPin, Pin mosiPin) :
             CSPins(*CSPins), CSPinsLength(pinLength), sckPin(sckPin), mosiPin(mosiPin) {}
 
-    void SPI::write(uint8_t device, uint8_t byte) {
-        if (startTransmition(device)) {
-            write(byte);
-            endTransmition(device);
-        }
+//    void SPI::write(uint8_t device, uint8_t byte) {
+//        if (startTransmition(device)) {
+//            write(byte);
+//            endTransmition(device);
+//        }
+//    }
+//
+//    uint8_t SPI::read(uint8_t device) {
+//        uint8_t data = 0;
+//        if (startTransmition(device)) {
+//            data = read();
+//            endTransmition(device);
+//        }
+//        return data;
+//    }
+
+    void SPI::write(uint8_t *bytes, uint8_t length) {
+        for (int i = 0; i < length; i++)
+            write(bytes[i]);
     }
 
-    uint8_t SPI::read(uint8_t device) {
-        uint8_t data = 0;
-        if (startTransmition(device)) {
-            data = read();
-            endTransmition(device);
-        }
-        return data;
-    }
-
-    void SPI::write(uint8_t device, uint8_t *bytes, uint8_t length) {
-        if (startTransmition(device)) {
-            for (int i = 0; i < length; i++)
-                write(bytes[i]);
-            endTransmition(device);
-        }
-    }
-
-    void SPI::read(uint8_t device, uint8_t *bytes, uint8_t length) {
-        if (startTransmition(device)) {
-            for (int i = 0; i < length; i++)
-                bytes[i] = read();
-            endTransmition(device);
-        }
+    void SPI::read(uint8_t *bytes, uint8_t length) {
+        for (int i = 0; i < length; i++)
+            bytes[i] = read();
     }
 
     void SPI::writeReg(uint8_t device, uint8_t reg, uint8_t byte) {
