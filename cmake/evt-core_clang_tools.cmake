@@ -11,7 +11,7 @@ message(${CLANG_FORMAT})
 if(CLANG_FORMAT)
     message(APPLYING)
     execute_process(
-            COMMAND /usr/bin/clang-format-12
+            COMMAND ${CLANG_FORMAT}
             -i
             -style=file
             ${ALL_CXX_SOURCE_FILES}
