@@ -103,8 +103,9 @@ if(EVT_BUILD_SAMPLES)
     add_subdirectory(samples)
 endif()
 
-message(ATTEMPT)
+###############################################################################
+# Handle applying formatting
+###############################################################################
 if(EVT_APPLY_FORMATTING)
-    message(INSIDE)
-    include(cmake/evt-core_clang_tools.cmake)
+    include(cmake/evt-core_clang-format.cmake)
 endif()
