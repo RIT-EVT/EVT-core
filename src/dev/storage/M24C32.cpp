@@ -24,7 +24,7 @@ uint32_t M24C32::readWord(uint32_t address) {
     return *out;
 }
 
-void M24C32::readBytes(uint8_t address, uint8_t* buffer, uint8_t numBytes) {
+void M24C32::readBytes(uint32_t address, uint8_t* buffer, uint8_t numBytes) {
     uint16_t currentAddress = address;
     uint8_t bytesRead = 0;
 
@@ -74,7 +74,7 @@ void M24C32::writeWord(uint32_t address, uint32_t data) {
     writeBytes(address, dataArr, 4);
 }
 
-void M24C32::writeBytes(uint8_t address, uint8_t* dataArr, uint8_t numBytes) {
+void M24C32::writeBytes(uint32_t address, uint8_t* dataArr, uint8_t numBytes) {
     uint16_t currentAddress = address;
     uint8_t bytesWritten = 0;
 

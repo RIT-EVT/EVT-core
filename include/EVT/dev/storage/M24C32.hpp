@@ -48,7 +48,7 @@ public:
      * @param buffer[out] Buffer to output bytes to
      * @param numBytes[in] The number of bytes to read
      */
-    void readBytes(uint8_t address, uint8_t* buffer, uint8_t numBytes) override;
+    void readBytes(uint32_t address, uint8_t* buffer, uint8_t numBytes) override;
 
     /**
      * Read a number of consecutive half words starting at a given memory address.
@@ -99,7 +99,7 @@ public:
      * @param dataArr[in] The array of bytes to write out
      * @param numBytes[in] The number of bytes to write out
      */
-    void writeBytes(uint8_t address, uint8_t* dataArr, uint8_t numBytes) override;
+    void writeBytes(uint32_t address, uint8_t* dataArr, uint8_t numBytes) override;
 
     /**
      * Write a number of consecutive half words to a given memory address.
