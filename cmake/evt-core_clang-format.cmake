@@ -12,16 +12,14 @@ file(GLOB_RECURSE
         )
 
 # Get the path to clang-format
-message(STATUS "PATH=$ENV{PATH}")
 find_program(CLANG_FORMAT "clang-format")
-message(STATUS ${CLANG_FORMAT})
 # Run the formatting if clang-format is found
 if (CLANG_FORMAT)
     message(STATUS "Found clang-format: ${CLANG_FORMAT}")
     execute_process(
             COMMAND ${CLANG_FORMAT}
             -i
-            -style=file # Sets the style to operate off the .clangformat file
+            -style=file # Sets the style to operate off the .clang-format file
             ${ALL_CXX_SOURCE_FILES}
     )
     message(STATUS "Formatting done")
