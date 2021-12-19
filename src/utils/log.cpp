@@ -62,18 +62,18 @@ void Logger::log(LogLevel level, const char* format, ...) {
 
     // Print the level of this log statement
     switch (level) {
-        case LogLevel::DEBUG:
-            uart->printf("DEBUG::");
-            break;
-        case LogLevel::INFO:
-            uart->printf("INFO::");
-            break;
-        case LogLevel::WARNING:
-            uart->printf("WARNING::");
-            break;
-        case LogLevel::ERROR:
-            uart->printf("ERROR::");
-            break;
+    case LogLevel::DEBUG:
+        uart->printf("DEBUG::");
+        break;
+    case LogLevel::INFO:
+        uart->printf("INFO::");
+        break;
+    case LogLevel::WARNING:
+        uart->printf("WARNING::");
+        break;
+    case LogLevel::ERROR:
+        uart->printf("ERROR::");
+        break;
     }
 
     // Initialize variable argument list
@@ -92,4 +92,4 @@ void Logger::log(LogLevel level, const char* format, ...) {
 }
 
 Logger LOGGER;
-}  // namespace EVT::core::log
+}// namespace EVT::core::log

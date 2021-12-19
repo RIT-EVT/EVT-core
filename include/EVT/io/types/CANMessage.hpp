@@ -3,17 +3,14 @@
 
 #include <stdint.h>
 
-namespace EVT::core::IO
-{
+namespace EVT::core::IO {
 
 /**
  * Represents a generic CAN message which can be sent and received
  * over a CAN bus.
  */
-class CANMessage
-{
+class CANMessage {
 public:
-
     /** Represents the maximum payload size of a CAN message */
     static constexpr uint8_t CAN_MAX_PAYLOAD_SIZE = 8;
 
@@ -76,13 +73,13 @@ public:
      * @param payload[in] The payload to copy over
      */
     void setPayload(const uint8_t* payload);
-    
+
     /**
      * Assignment operator where the contents of the CANMessage is copied into
      * this message.
      * @param other The CANMessage to copy from
      */
-    CANMessage& operator= (const CANMessage& other);
+    CANMessage& operator=(const CANMessage& other);
 
     /**
      * Get if the CAN message is extended or no
@@ -102,7 +99,6 @@ private:
     bool isExtended;
 };
 
-}  // namespace EVT::core::IO
-
+}// namespace EVT::core::IO
 
 #endif

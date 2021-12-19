@@ -37,49 +37,49 @@ public:
      * @param parity[in] The parity settings to use.
      * @param numStopBits[in] The number of stop bits (1-2)
      */
-    void setFormat(WordLength wordLength=WordLength::EIGHT,
-            Parity parity=Parity::NONE,
-            NumStopBits numStopBits=NumStopBits::ONE);
+    void setFormat(WordLength wordLength = WordLength::EIGHT,
+                   Parity parity = Parity::NONE,
+                   NumStopBits numStopBits = NumStopBits::ONE);
 
     /**
      * Sends a serial break condition over UART.
      */
-     void sendBreak();
+    void sendBreak();
 
     /**
      * Determins if the UART is currently readable.
      *
      * @return True if the UART is readable.
      */
-     bool isReadable();
+    bool isReadable();
 
     /**
      * Determins if the UART is currently writable.
      *
      * @return True if the UART is writable
      */
-     bool isWritable();
+    bool isWritable();
 
     /**
      * Put a single character to the UART module.
      *
      * @param c[in] The character to send over UART.
      */
-     void putc(char c);
+    void putc(char c);
 
     /**
      * Put a null-terminal string out over UART.
      *
      * @param s[in] The null-terminated string to put over UART.
      */
-     void puts(const char* s);
+    void puts(const char* s);
 
     /**
      * Blocking call to read a single character from the UART module.
      *
      * @return The character read in over UART.
      */
-     char getc();
+    char getc();
 
     /**
      * Print a formatted string over UART, not great performance so best in
@@ -87,21 +87,21 @@ public:
      *
      * @param format[in] The format string to print out.
      */
-     void printf(const char* format, ...);
+    void printf(const char* format, ...);
 
     /**
      * Write out a single byte over UART.
      *
      * @param byte[in] The byte to write out over UART.
      */
-     void write(uint8_t byte);
+    void write(uint8_t byte);
 
     /**
      * Blocking reading of a single byte from the UART.
      *
      * @return The byte read in from UART.
      */
-     uint8_t read();
+    uint8_t read();
 
     /**
      * Write an arbitrary number of bytes out over UART.
@@ -109,7 +109,7 @@ public:
      * @param bytes[in] The data to send out over UART
      * @param size[in] The number of bytes to send out over UART.
      */
-     void writeBytes(uint8_t* bytes, size_t size);
+    void writeBytes(uint8_t* bytes, size_t size);
 
     /**
      * Blocking reading of an arbitrary number of bytes in over UART.
@@ -117,11 +117,11 @@ public:
      * @param bytes[out] The data buffer to fill
      * @param size[in] The number of bytes to read in.
      */
-     void readBytes(uint8_t* bytes, size_t size);
+    void readBytes(uint8_t* bytes, size_t size);
 
 private:
-     /// HAL representation of the UART
-     UART_HandleTypeDef halUART;
+    /// HAL representation of the UART
+    UART_HandleTypeDef halUART;
 };
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO
 #endif

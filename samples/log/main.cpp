@@ -6,9 +6,9 @@
  */
 #include <cstdint>
 
+#include <EVT/dev/platform/f3xx/f302x8/RTC302x8.hpp>
 #include <EVT/io/manager.hpp>
 #include <EVT/utils/log.hpp>
-#include <EVT/dev/platform/f3xx/f302x8/RTC302x8.hpp>
 
 namespace IO = EVT::core::IO;
 namespace log = EVT::core::log;

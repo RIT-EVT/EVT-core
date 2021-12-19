@@ -113,7 +113,6 @@ public:
      */
     virtual void writeWords(uint8_t address, uint32_t* dataArr, uint8_t numWords) = 0;
 };
-}
+}// namespace EVT::core::DEV
 
-
-#endif //EVT_EEPROM_HPP
+#endif//EVT_EEPROM_HPP

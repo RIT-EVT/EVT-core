@@ -6,9 +6,9 @@
  * The code will setup a GPIO pin as an output then setup an LED using that
  * GPIO.
  */
+#include <EVT/dev/LED.hpp>
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/manager.hpp>
-#include <EVT/dev/LED.hpp>
 #include <EVT/io/pin.hpp>
 #include <EVT/utils/time.hpp>
 

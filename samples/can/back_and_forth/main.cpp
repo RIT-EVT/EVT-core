@@ -13,7 +13,7 @@ namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
 
 void canIRQHandler(IO::CANMessage& message, void* priv) {
-    IO::UART* uart = (IO::UART*)priv;
+    IO::UART* uart = (IO::UART*) priv;
     uart->printf("Message received\r\n");
     uart->printf("Message id: %d \r\n", message.getId());
     uart->printf("Message length: %d\r\n", message.getDataLength());
@@ -36,7 +36,7 @@ int main() {
     can.addIRQHandler(canIRQHandler, &uart);
 
     // CAN message that will be sent
-    uint8_t payload[] = { 0xDE, 0xAD, 0xBE, 0xBE, 0xEF, 0x00, 0x01, 0x02 };
+    uint8_t payload[] = {0xDE, 0xAD, 0xBE, 0xBE, 0xEF, 0x00, 0x01, 0x02};
     IO::CANMessage transmit_message(1, 8, &payload[0], true);
     IO::CANMessage received_message;
 

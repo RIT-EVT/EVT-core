@@ -23,39 +23,38 @@ public:
      *
      * @param dutyCycle[in] Duty cycle to set the pin to.
      */
-     void setDutyCycle(float dutyCycle);
+    void setDutyCycle(float dutyCycle);
 
     /**
      * Set the period for the PWM.
      *
      * @param period[in] The period of the PWM in seconds.
      */
-     void setPeriod(float period);
+    void setPeriod(float period);
 
     /**
      * Get the current duty cycle.
      *
      * @return The duty cycle the PWM is operating at.
      */
-     float getDutyCycle();
+    float getDutyCycle();
 
     /**
      * Get the current period.
      *
      * @return The period the PWM is operating at.
      */
-     uint32_t getPeriod();
+    uint32_t getPeriod();
 
 private:
-     /// HAL timer representation
-     TIM_HandleTypeDef halTIM;
-     /// Channel identification
-     uint32_t halTIMChannelID;
-     /// HAL channel representation
-     TIM_OC_InitTypeDef halChannel;
+    /// HAL timer representation
+    TIM_HandleTypeDef halTIM;
+    /// Channel identification
+    uint32_t halTIMChannelID;
+    /// HAL channel representation
+    TIM_OC_InitTypeDef halChannel;
 };
 
-
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO
 
 #endif

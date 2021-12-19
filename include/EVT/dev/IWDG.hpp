@@ -3,18 +3,18 @@
 
 namespace EVT::core::DEV {
 
-    /**
+/**
      * The IWDG is the independent watchdog, which is used to detect software failures.
      * This class represents features common to watchdog timers.
      */
-    class IWDG {
-    public:
-        /**
+class IWDG {
+public:
+    /**
          * Refreshes the watchdog timer.
          */
-        virtual void refresh() = 0;
-    };
+    virtual void refresh() = 0;
+};
 
-} // namespace EVT::core::DEV
+}// namespace EVT::core::DEV
 
 #endif

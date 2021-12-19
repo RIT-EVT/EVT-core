@@ -82,7 +82,7 @@ public:
      * @param length[in] The number of bytes in the data
      */
     void writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
-            uint8_t* bytes, uint8_t length);
+                  uint8_t* bytes, uint8_t length);
 
     /**
      * Read a value from a register.
@@ -94,7 +94,7 @@ public:
      * @param length[in] The size of the data returned by the register in bytes
      */
     void readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
-            uint8_t* bytes, uint8_t length);
+                 uint8_t* bytes, uint8_t length);
 
     /**
      * Write a single byte to a register in memory.
@@ -158,6 +158,6 @@ private:
     I2C_HandleTypeDef halI2C;
 };
 
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO
 
 #endif

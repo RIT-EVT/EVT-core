@@ -1,10 +1,10 @@
 /**
  * This sample will demo the basic functionality for the timer driver
  */
+#include <EVT/dev/platform/f3xx/f302x8/Timerf302x8.hpp>
+#include <EVT/io/UART.hpp>
 #include <EVT/io/manager.hpp>
 #include <EVT/io/pin.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/dev/platform/f3xx/f302x8/Timerf302x8.hpp>
 #include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
@@ -15,20 +15,20 @@ IO::GPIO* interruptGPIO2Hz;
 IO::GPIO* interruptGPIOStopStart;
 IO::GPIO* reloadGPIO;
 
-void timer2IRQHandler(void *htim) {
+void timer2IRQHandler(void* htim) {
     IO::GPIO::State state = ledGPIO->readPin();
     IO::GPIO::State toggleState = state == IO::GPIO::State::HIGH ? IO::GPIO::State::LOW : IO::GPIO::State::HIGH;
     ledGPIO->writePin(toggleState);
     interruptGPIO2Hz->writePin(toggleState);
 }
 
-void timer15IRQHandler(void *htim) {
+void timer15IRQHandler(void* htim) {
     IO::GPIO::State state = interruptGPIOStopStart->readPin();
     IO::GPIO::State toggleState = state == IO::GPIO::State::HIGH ? IO::GPIO::State::LOW : IO::GPIO::State::HIGH;
     interruptGPIOStopStart->writePin(toggleState);
 }
 
-void timer16IRQHandler(void *htim) {
+void timer16IRQHandler(void* htim) {
     IO::GPIO::State state = reloadGPIO->readPin();
     IO::GPIO::State toggleState = state == IO::GPIO::State::HIGH ? IO::GPIO::State::LOW : IO::GPIO::State::HIGH;
     reloadGPIO->writePin(toggleState);

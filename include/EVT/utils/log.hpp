@@ -1,9 +1,9 @@
 #ifndef INCLUDE_EVT_UTILS_LOG_HPP_
 #define INCLUDE_EVT_UTILS_LOG_HPP_
 
-#include <cstdint>
-#include <EVT/io/UART.hpp>
 #include <EVT/dev/RTC.hpp>
+#include <EVT/io/UART.hpp>
+#include <cstdint>
 
 namespace dev = EVT::core::DEV;
 
@@ -65,7 +65,6 @@ private:
 // creating a new one each time this header is included
 /** Global Logger instance */
 extern Logger LOGGER;
-}  // namespace EVT::core::log
+}// namespace EVT::core::log
 
-
-#endif  // INCLUDE_EVT_UTILS_LOG_HPP_
+#endif// INCLUDE_EVT_UTILS_LOG_HPP_
