@@ -8,6 +8,7 @@ set(EVT_CORE_DIR     ${CMAKE_CURRENT_SOURCE_DIR})
 include(CMakeDependentOption)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_compiler.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_install.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_clang-format.cmake)
 
 ###############################################################################
 # Project Setup
@@ -101,11 +102,4 @@ install_and_expose(${PROJECT_NAME})
 if(EVT_BUILD_SAMPLES)
     # Add the sample code sub directory
     add_subdirectory(samples)
-endif()
-
-###############################################################################
-# Handle applying formatting
-###############################################################################
-if(EVT_APPLY_FORMATTING)
-    include(cmake/evt-core_clang-format.cmake)
 endif()

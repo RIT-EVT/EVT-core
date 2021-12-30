@@ -1,7 +1,6 @@
 #[[
-CMake include file that applies standardized formatting to all C++ files in the
-project.
-Only include this file when new formatting is desired.
+CMake include file that creates a custom target to apply standardized formatting to all C++ files in
+the project.
 Requires: clang-format (v. 12 or higher) is downloaded
 ]]#
 
@@ -13,24 +12,26 @@ file(GLOB_RECURSE
 
 # Get the path to clang-format
 find_program(CLANG_FORMAT "clang-format")
-# Run the formatting if clang-format is found
-if (CLANG_FORMAT)
+# Create the formatting target if clang-format is found
+if(CLANG_FORMAT)
     message(STATUS "Found clang-format: ${CLANG_FORMAT}")
-    execute_process(
-            COMMAND ${CLANG_FORMAT}
-            -i
-            -style=file # Sets the style to operate off the .clang-format file
-            ${ALL_CXX_SOURCE_FILES}
-    )
-    message(STATUS "Formatting done")
+
+    add_custom_target(clang-format)
+    # Loop through each file and create a separate command because Windows has a 128-character limit
+    # on its commands
+    foreach(src_file ${ALL_CXX_SOURCE_FILES})
+        add_custom_command(TARGET clang-format
+                COMMAND ${CLANG_FORMAT} -i -style=file ${src_file}
+        )
+    endforeach()
 else()
     message(WARNING "clang-format not found")
-endif ()
+endif()
 
 
-################################################################################
+####################################################################################################
 # How to set up clang-format
-################################################################################
+####################################################################################################
 
 #[[
 Linux:
