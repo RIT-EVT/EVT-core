@@ -18,7 +18,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
       # Download the compiler
       - name: arm-none-eabi-gcc
         uses: carlosperate/arm-none-eabi-gcc-action@v1.3.0
