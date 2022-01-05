@@ -13,29 +13,29 @@
  * the driver implementations.
  */
 namespace {
-    EVT::core::IO::CAN* can;
-    // Temporary values for testing CANopen without actual timer
-    EVT::core::DEV::Timer* timer;
+EVT::core::IO::CAN* can;
+// Temporary values for testing CANopen without actual timer
+EVT::core::DEV::Timer* timer;
 
-    /** Counts the number of interrupts that have taken place */
-    uint32_t timerCounter = 0;
-    /** The target value for the counter */
-    uint32_t counterTarget = 0;
+/** Counts the number of interrupts that have taken place */
+uint32_t timerCounter = 0;
+/** The target value for the counter */
+uint32_t counterTarget = 0;
 
-    // Temporary "storage" to allow the NVM to work, do not use as actual NVM
-    uint8_t testerStorage[MAX_SIZE];
+// Temporary "storage" to allow the NVM to work, do not use as actual NVM
+uint8_t testerStorage[MAX_SIZE];
 
-    // Queue that stores the CAN messages to send to the CANopen parser
-    EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, EVT::core::IO::CANMessage>* canQueue;
-}  // namespace
+// Queue that stores the CAN messages to send to the CANopen parser
+EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, EVT::core::IO::CANMessage>* canQueue;
+}// namespace
 
 ///////////////////////////////////////////////////////////////////////////////
 // Forward declarations of CANopen stack CAN functions
 ///////////////////////////////////////////////////////////////////////////////
 static void canInit(void);
 static void canEnable(uint32_t baudrate);
-static int16_t canSend(CO_IF_FRM *frm);
-static int16_t canRead(CO_IF_FRM *frm);
+static int16_t canSend(CO_IF_FRM* frm);
+static int16_t canRead(CO_IF_FRM* frm);
 static void canReset(void);
 static void canClose(void);
 
@@ -57,36 +57,36 @@ static uint32_t nvmRead(uint32_t start, uint8_t* buffer, uint32_t size);
 static uint32_t nvmWrite(uint32_t start, uint8_t* buffer, uint32_t size);
 
 namespace EVT::core::IO {
-    void getCANopenCANDriver(IO::CAN* canInf,
-            EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* messageQueue,
-            CO_IF_CAN_DRV* canDriver) {
-        can = canInf;
-        canQueue = messageQueue;
-        canDriver->Init = canInit;
-        canDriver->Enable = canEnable;
-        canDriver->Read = canRead;
-        canDriver->Send = canSend;
-        canDriver->Reset = canReset;
-        canDriver->Close = canClose;
-    }
+void getCANopenCANDriver(IO::CAN* canInf,
+                         EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* messageQueue,
+                         CO_IF_CAN_DRV* canDriver) {
+    can = canInf;
+    canQueue = messageQueue;
+    canDriver->Init = canInit;
+    canDriver->Enable = canEnable;
+    canDriver->Read = canRead;
+    canDriver->Send = canSend;
+    canDriver->Reset = canReset;
+    canDriver->Close = canClose;
+}
 
-    void getCANopenTimerDriver(DEV::Timer* timerIntf, CO_IF_TIMER_DRV* timerDriver) {
-        timer = timerIntf;
+void getCANopenTimerDriver(DEV::Timer* timerIntf, CO_IF_TIMER_DRV* timerDriver) {
+    timer = timerIntf;
 
-        timerDriver->Init = timerInit;
-        timerDriver->Reload = timerReload;
-        timerDriver->Delay = timerDelay;
-        timerDriver->Stop = timerStop;
-        timerDriver->Start = timerStart;
-        timerDriver->Update = timerUpdate;
-    }
+    timerDriver->Init = timerInit;
+    timerDriver->Reload = timerReload;
+    timerDriver->Delay = timerDelay;
+    timerDriver->Stop = timerStop;
+    timerDriver->Start = timerStart;
+    timerDriver->Update = timerUpdate;
+}
 
-    void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver) {
-        nvmDriver->Init = nvmInit;
-        nvmDriver->Read = nvmRead;
-        nvmDriver->Write = nvmWrite;
-    }
-}  // namespace EVT::core::IO
+void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver) {
+    nvmDriver->Init = nvmInit;
+    nvmDriver->Read = nvmRead;
+    nvmDriver->Write = nvmWrite;
+}
+}// namespace EVT::core::IO
 
 ///////////////////////////////////////////////////////////////////////////////
 // Implementation of CANopen stack CAN drivers
@@ -113,7 +113,7 @@ static void canEnable(uint32_t baudrate) {
  * @param frm[in] The message to send over cat
  * @return sizeof(CO_IF_FRM) on success, ((int16_t)-1u) on failure
  */
-static int16_t canSend(CO_IF_FRM *frm) {
+static int16_t canSend(CO_IF_FRM* frm) {
     EVT::core::IO::CANMessage message(frm->Identifier, frm->DLC, frm->Data, false);
     can->transmit(message);
 
@@ -127,12 +127,12 @@ static int16_t canSend(CO_IF_FRM *frm) {
  * @param frm[out] The message to populate with CAN data
  * @return sizeof(CO_IF_FMR) on success, ((int16_t)-1u) on failure
  */
-static int16_t canRead(CO_IF_FRM *frm) {
+static int16_t canRead(CO_IF_FRM* frm) {
     EVT::core::IO::CANMessage message;
 
     // No message
     if (!canQueue->pop(&message))
-        return ((int16_t)-1u);
+        return ((int16_t) -1u);
 
     frm->Identifier = message.getId();
     frm->DLC = message.getDataLength();

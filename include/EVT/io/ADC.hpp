@@ -48,6 +48,6 @@ protected:
     Pin pin;
 };
 
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO
 
 #endif

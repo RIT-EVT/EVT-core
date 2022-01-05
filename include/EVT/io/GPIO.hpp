@@ -3,13 +3,11 @@
 
 #include <stdint.h>
 
-namespace EVT::core::IO
-{
+namespace EVT::core::IO {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
 enum class Pin;
-
 
 /**
  * Interface for interacting with GPIO pins on a device. GPIO pins can have
@@ -23,37 +21,32 @@ enum class Pin;
  * NOTE: You cannot directly make an instance of this class via a constructor.
  * To make an instance, use the GPIO::getInstance method.
  */
-class GPIO
-{
+class GPIO {
 public:
-
     /**
      * Binary representation of the states the GPIO can be in
      */
-    enum class State
-    {
-        LOW     = 0u,
-        HIGH    = 1u
+    enum class State {
+        LOW = 0u,
+        HIGH = 1u
     };
 
     /**
      * Binary representation of the flow of information, either input or
      * output.
      */
-    enum class Direction
-    {
-        INPUT   = 0u,
-        OUTPUT  = 1u
+    enum class Direction {
+        INPUT = 0u,
+        OUTPUT = 1u
     };
 
     /**
      * Enum to handler the possible GPIO trigger states
      */
-    enum class TriggerEdge
-    {
-        RISING          = 1u,
-        FALLING         = 2u,
-        RISING_FALLING  = 3u
+    enum class TriggerEdge {
+        RISING = 1u,
+        FALLING = 2u,
+        RISING_FALLING = 3u
     };
 
     /**
@@ -99,7 +92,7 @@ public:
      * @param edge[in] The edge trigger event to trigger the interrupt
      * @param irqHandler[in] The function pointer to handle the GPIO interrupt
      */
-    virtual void registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO *pin)) = 0;
+    virtual void registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin)) = 0;
 
 protected:
     /// The pin the GPIO instance is attached to
@@ -108,5 +101,5 @@ protected:
     Direction direction;
 };
 
-}  // EVT::core::IO
+}// namespace EVT::core::IO
 #endif

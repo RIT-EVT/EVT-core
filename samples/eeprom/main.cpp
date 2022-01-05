@@ -6,8 +6,8 @@
  */
 #include <stdint.h>
 
-#include <EVT/io/manager.hpp>
 #include <EVT/dev/storage/platform/M24C32.hpp>
+#include <EVT/io/manager.hpp>
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
@@ -40,13 +40,11 @@ int main() {
     // Initialize system
     IO::init();
 
-    IO::I2C &i2c = IO::getI2C<IO::Pin::PB_8, IO::Pin::PB_9>();
-    IO::UART &uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    IO::I2C& i2c = IO::getI2C<IO::Pin::PB_8, IO::Pin::PB_9>();
+    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
     DEV::M24C32 eeprom = DEV::M24C32(I2C_SLAVE_ADDR, i2c);
 
-
     uart.printf("Starting EEPROM test\n\r");
-
 
     eeprom.writeByte(BYTE_ADDRESS, BYTE_DATA);
     eeprom.writeHalfWord(HALF_WORD_ADDRESS, HALF_WORD_DATA);
@@ -56,26 +54,25 @@ int main() {
     eeprom.writeHalfWords(HALF_WORD_ARR_ADDRESS, HALF_WORD_ARR_DATA, HALF_WORD_ARR_LENGTH);
     eeprom.writeWords(WORD_ARR_ADDRESS, WORD_ARR_DATA, WORD_ARR_LENGTH);
 
-
     uart.printf("Byte Read: %#x\n\r", eeprom.readByte(BYTE_ADDRESS));
     uart.printf("Half Word Read: %#x\n\r", eeprom.readHalfWord(HALF_WORD_ADDRESS));
     uart.printf("Word Read: %#x\n\r", eeprom.readWord(WORD_ADDRESS));
 
     uint8_t byteBuf[BYTE_ARR_LENGTH];
     eeprom.readBytes(BYTE_ARR_ADDRESS, byteBuf, BYTE_ARR_LENGTH);
-    for (uint8_t i: byteBuf) {
+    for (uint8_t i : byteBuf) {
         uart.printf("Byte Read: %#x\n\r", i);
     }
 
     uint16_t hWordBuf[HALF_WORD_ARR_LENGTH];
     eeprom.readHalfWords(HALF_WORD_ARR_ADDRESS, hWordBuf, HALF_WORD_ARR_LENGTH);
-    for (uint16_t i: hWordBuf) {
+    for (uint16_t i : hWordBuf) {
         uart.printf("Half Word Read: %#x\n\r", i);
     }
 
     uint32_t wordBuf[WORD_ARR_LENGTH];
     eeprom.readWords(WORD_ARR_ADDRESS, wordBuf, WORD_ARR_LENGTH);
-    for (uint32_t i: wordBuf) {
+    for (uint32_t i : wordBuf) {
         uart.printf("Word Read: %#x\n\r", i);
     }
 }

@@ -6,10 +6,8 @@
 
 namespace EVT::core::DEV {
 
-
 class M24C32 : private EEPROM {
 public:
-
     /**
      * Start up the EEPROM with a slave address of i2cSlaveAddress and
      * I2C instance i2c
@@ -17,7 +15,7 @@ public:
      * @param i2cSlaveAddress[in] Slave address to use for I2C communication
      * @param i2c[in] I2C instance to communicate over
      */
-    M24C32(uint8_t i2cSlaveAddress, IO::I2C &i2c);
+    M24C32(uint8_t i2cSlaveAddress, IO::I2C& i2c);
 
     /**
      * Read 8 bits of data from the given address.
@@ -132,9 +130,8 @@ private:
     /** Slave address for this device to be used for I2C communication */
     uint8_t i2cSlaveAddress;
     /** I2C instance to be used for I2C communication */
-    IO::I2C &i2c;
+    IO::I2C& i2c;
 };
-}
+}// namespace EVT::core::DEV
 
-
-#endif //EVT_M24C32
+#endif//EVT_M24C32
