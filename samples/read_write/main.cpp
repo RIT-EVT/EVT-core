@@ -3,10 +3,10 @@
  * setup as an input and the state of that GPIO is reflected in the state of
  * the other GPIO connected to an LED.
  */
+#include <EVT/dev/LED.hpp>
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/manager.hpp>
 #include <EVT/io/pin.hpp>
-#include <EVT/dev/LED.hpp>
 #include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
@@ -19,7 +19,7 @@ int main() {
 
     // Setup the GPIO input pin
     IO::GPIO& inputGPIO = IO::getGPIO<IO::Pin::PC_3>(
-            IO::GPIO::Direction::INPUT);
+        IO::GPIO::Direction::INPUT);
 
     // Setup the GPIO output pin
     IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();

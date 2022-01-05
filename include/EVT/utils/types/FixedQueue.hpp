@@ -18,13 +18,11 @@
 
 #include <stdint.h>
 
-namespace EVT::core::types
-{
+namespace EVT::core::types {
 
 template<size_t maxSize, class Element>
 class FixedQueue {
 public:
-
     /**
      * Makes a queue without the need for dynamic memory allocation. The
      * queue will start out as empty.
@@ -55,7 +53,7 @@ public:
      *      is full and overwritting is disabled.
      */
     bool append(Element& element) {
-        if(size == maxCapacity && !withOverwrite)
+        if (size == maxCapacity && !withOverwrite)
             return false;
 
         // Assumed use of copy assignment operator
@@ -129,7 +127,6 @@ public:
         return withOverwrite || !isFull();
     }
 
-
 private:
     /** The elements stored in the queue */
     Element elements[maxSize];
@@ -148,9 +145,8 @@ private:
     size_t size;
     /** Represents if oldest data is allowed to be overwritten when full */
     bool withOverwrite;
-
 };
 
-}  // namespace EVT::core::types
+}// namespace EVT::core::types
 
 #endif

@@ -7,10 +7,10 @@
  */
 #include <stdint.h>
 
-#include <EVT/io/manager.hpp>
-#include <EVT/utils/time.hpp>
 #include <EVT/io/I2C.hpp>
 #include <EVT/io/UART.hpp>
+#include <EVT/io/manager.hpp>
+#include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;

@@ -25,7 +25,6 @@ namespace EVT::core::IO {
  */
 class CANf302x8 : public CAN {
 public:
-
     /**
      * Create a new instance of an STM32f302x8 CAN interface
      *
@@ -33,7 +32,7 @@ public:
      * @param rxPin[in] The pin to receive CAN messages on
      * @param loopbackEnabled[in] Flag for enabling CAN loop back
      */
-    CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled=false);
+    CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled = false);
 
     /**
      * @copydoc EVT::core::IO::CAN::receive
@@ -43,7 +42,7 @@ public:
     /**
      * @copydoc EVT::core::IO::CAN::receive
      */
-    CANMessage* receive(CANMessage* message, bool blocking=false);
+    CANMessage* receive(CANMessage* message, bool blocking = false);
 
     /**
      * @copydoc EVT::core::IO::CAN::addIRQHandler
@@ -78,10 +77,8 @@ private:
     CAN_HandleTypeDef halCAN;
     /** Queue which holds received CAN messages */
     EVT::core::types::FixedQueue<CAN_MESSAGE_QUEUE_SIZE, CANMessage> messageQueue;
-
 };
 
-
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO
 
 #endif

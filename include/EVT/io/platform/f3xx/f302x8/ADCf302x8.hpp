@@ -10,7 +10,6 @@ namespace EVT::core::IO {
 
 class ADCf302x8 : public ADC {
 public:
-
     /**
      * Setup the given pin for ADC usage
      *
@@ -40,7 +39,6 @@ public:
      * @return The ADC value as a percentage
      */
     float readPercentage();
-
 
 private:
     // Max number of channels supported by the ADC
@@ -79,7 +77,6 @@ private:
     void addChannel(uint8_t rank);
 };
 
-
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO
 
 #endif

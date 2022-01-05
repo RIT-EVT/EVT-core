@@ -4,8 +4,8 @@
  * UART.
  */
 #include <EVT/io/ADC.hpp>
-#include <EVT/io/manager.hpp>
 #include <EVT/io/UART.hpp>
+#include <EVT/io/manager.hpp>
 #include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;

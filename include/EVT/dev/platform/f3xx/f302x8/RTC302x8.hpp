@@ -7,16 +7,14 @@
 
 namespace EVT::core::DEV {
 
-
 /**
  * RTC implementation that makes use of the on-board real time clock
  * on the STM32f302x8.
  *
  * The onboard RTC can be kept up to date with a coin cell battery.
  */
-class RTCf302x8: public RTC {
+class RTCf302x8 : public RTC {
 public:
-
     /**
      * Empty constructor. Will startup the RTC.
      */
@@ -46,10 +44,8 @@ public:
 private:
     /** Instance of the HAL RTC interface */
     RTC_HandleTypeDef halRTC;
-
 };
 
-
-}  // namespace EVT::core::DEV
+}// namespace EVT::core::DEV
 
 #endif

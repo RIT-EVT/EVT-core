@@ -5,9 +5,9 @@
  *
  * @author Collin Bolles
  */
+#include <EVT/io/UART.hpp>
 #include <EVT/io/manager.hpp>
 #include <EVT/io/pin.hpp>
-#include <EVT/io/UART.hpp>
 #include <EVT/utils/types/FixedQueue.hpp>
 
 namespace IO = EVT::core::IO;
@@ -17,14 +17,14 @@ namespace types = EVT::core::types;
  * Test class for showing off having a custom class in the FixedQueue.
  */
 class TestClass {
- private:
+private:
     int a;
     int b;
     int c;
 
- public:
+public:
     TestClass(int a, int b, int c) : a(a), b(b), c(c) {}
-    TestClass(): a(0), b(0), c(0) {}
+    TestClass() : a(0), b(0), c(0) {}
 
     // Copy operator, important to have
     TestClass& operator=(const TestClass& other) {
@@ -81,7 +81,7 @@ int main() {
     // Try to pop from empty queue
     int value;
     uart.printf("numberQueue.pop() success ? ->%d\r\n",
-            numberQueue.pop(&value));
+                numberQueue.pop(&value));
 
     ///////////////////////////////////////////////////////////////////////////
     // Test a queue of numbers, with overwritting
@@ -95,9 +95,9 @@ int main() {
         numberQueueOverwrite.append(i);
     }
     uart.printf("numberQueueOverwrite.isFull() -> %d\r\n",
-            numberQueueOverwrite.isFull());
+                numberQueueOverwrite.isFull());
     uart.printf("numberQueueOverwrite.canInsert() -> %d\r\n",
-            numberQueueOverwrite.canInsert());
+                numberQueueOverwrite.canInsert());
 
     // Add ten more numbers
     for (int i = 10; i < 20; i++) {

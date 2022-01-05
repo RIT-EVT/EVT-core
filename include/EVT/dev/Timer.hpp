@@ -1,8 +1,8 @@
 #ifndef EVT_TIMER_HPP
 #define EVT_TIMER_HPP
 
-#include<HALf3/stm32f3xx.h>
-#include<HALf3/stm32f3xx_hal_def.h>
+#include <HALf3/stm32f3xx.h>
+#include <HALf3/stm32f3xx_hal_def.h>
 
 namespace EVT::core::DEV {
 
@@ -10,13 +10,13 @@ namespace EVT::core::DEV {
  * This class will represent an internal general purpose timer device for the STM32.
  * It is capable of triggering interrupts with a given frequency
  */
-class Timer{
+class Timer {
 public:
     /**
      * Starts the given timer and registers the given interrupt pointer to trigger when the timer overflows
      * @param irqHandler[in] The IRQ Handler function pointer.  Sets a new interrupt handler function
      */
-    virtual void startTimer(void (*irqHandler)(void *htim)) = 0;
+    virtual void startTimer(void (*irqHandler)(void* htim)) = 0;
 
     /**
      * Starts the given timer using the IRQ Handler already assigned to that timer.
@@ -41,6 +41,6 @@ public:
     virtual void setPeriod(uint32_t clockPeriod) = 0;
 };
 
-}  // namespace EVT::core::DEV
+}// namespace EVT::core::DEV
 
-#endif //EVT_TIMER_HPP
+#endif//EVT_TIMER_HPP
