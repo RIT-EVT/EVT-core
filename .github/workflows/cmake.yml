@@ -16,6 +16,8 @@ jobs:
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ubuntu-latest
+    env:
+      GCC_ARM_TOOLS_PATH: /usr/bin
 
     steps:
       - name: Checkout Repository
@@ -25,10 +27,8 @@ jobs:
 
       # Download the compiler
       - name: arm-none-eabi-gcc
-        uses: carlosperate/arm-none-eabi-gcc-action@v1.3.0
-        with:
-          release: 'latest'
-          path-env-var: 'GCC_ARM_TOOLS_PATH'
+        run: sudo apt-get install gcc-arm-none-eabi
+
 
       - name: clang-format
         run: |
