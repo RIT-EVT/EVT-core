@@ -52,6 +52,8 @@ jobs:
           else
             echo 'Formatting changes applied:'
             git diff --raw
+            git config --global user.email "N/A"
+            git config --global user.name "GitHub Build"
             git commit -a -m "Applied Formatting Changes During GitHub Build"
             git push origin
           fi
