@@ -44,5 +44,16 @@ jobs:
         # Build your program with the given configuration
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-      - name: Apply Formatting
-        run: cmake --build ${{github.workspace}}/build --target clang-format
+      - name: Apply Formatting and Commit
+        run: |
+          cmake --build ${{github.workspace}}/build --target clang-format
+          if git diff-files --quiet; then
+            echo 'No formatting changes'
+          else
+            echo 'Formatting changes applied:'
+            git diff --raw
+            git commit -a -m "Applied Formatting Changes During GitHub Build"
+            git push origin
+          fi
+
+    # git commit -a -m "Applied clang-format Formatting" && git push origin
