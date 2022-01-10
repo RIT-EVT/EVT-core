@@ -6,8 +6,8 @@
  */
 #include <stdint.h>
 
-#include <EVT/dev/storage/platform/M24C32.hpp>
 #include <EVT/io/manager.hpp>
+#include <EVT/dev/storage/M24C32.hpp>
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
