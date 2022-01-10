@@ -22,6 +22,7 @@ constexpr uint8_t I2C_SLAVE_ADDR = 0x50;
 constexpr uint8_t BYTE_ADDRESS = 0x00;
 constexpr uint8_t HALF_WORD_ADDRESS = 0x01;
 constexpr uint8_t WORD_ADDRESS = 0x03;
+constexpr uint8_t BYTE_ARR_ADDRESS = 0x07;
 constexpr uint8_t HALF_WORD_ARR_ADDRESS = 0x09;
 constexpr uint8_t WORD_ARR_ADDRESS = 0x13;
 
@@ -31,13 +32,15 @@ constexpr uint8_t WORD_ARR_ADDRESS = 0x13;
  * to write beyound the page size will cause a wrap around of writing. This
  * issue should now be address in the EVT-core driver.
  */
-constexpr uint8_t BYTE_ARR_ADDRESS = 0x3C;
+constexpr uint8_t PAGE_BREAK_EXAMPLE_ADDRESS = 0x3C;
+constexpr uint8_t PAGE_BREAK_EXAMPLE_LENGTH = 7;
+uint8_t PAGE_BREAK_EXAMPLE_DATA[PAGE_BREAK_EXAMPLE_LENGTH] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
 
 constexpr uint8_t BYTE_DATA = 0xaa;
 constexpr uint16_t HALF_WORD_DATA = 0xabcd;
 constexpr uint32_t WORD_DATA = 0xfedcba98;
-constexpr uint8_t BYTE_ARR_LENGTH = 7;
-uint8_t BYTE_ARR_DATA[BYTE_ARR_LENGTH] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
+constexpr uint8_t BYTE_ARR_LENGTH = 2;
+uint8_t BYTE_ARR_DATA[BYTE_ARR_LENGTH] = {0xab, 0xba};
 constexpr uint8_t HALF_WORD_ARR_LENGTH = 2;
 uint16_t HALF_WORD_ARR_DATA[HALF_WORD_ARR_LENGTH] = {0xbbbb, 0xcccc};
 constexpr uint8_t WORD_ARR_LENGTH = 2;
@@ -82,5 +85,13 @@ int main() {
     eeprom.readWords(WORD_ARR_ADDRESS, wordBuf, WORD_ARR_LENGTH);
     for (uint32_t i : wordBuf) {
         uart.printf("Word Read: %#x\n\r", i);
+    }
+
+    // Page break test
+    uint8_t pageBreakBuf[PAGE_BREAK_EXAMPLE_LENGTH];
+    eeprom.writeBytes(PAGE_BREAK_EXAMPLE_ADDRESS, PAGE_BREAK_EXAMPLE_DATA, PAGE_BREAK_EXAMPLE_LENGTH);
+    eeprom.readBytes(PAGE_BREAK_EXAMPLE_ADDRESS, pageBreakBuf, PAGE_BREAK_EXAMPLE_LENGTH);
+    for (uint8_t i: pageBreakBuf) {
+        uart.printf("Byte Read: %#x\n\r", i);
     }
 }
