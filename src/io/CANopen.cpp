@@ -4,8 +4,6 @@
 
 #include <EVT/dev/RTC.hpp>
 
-#include <EVT/dev/RTC.hpp>
-
 #include <stdint.h>
 
 #define MAX_SIZE 64

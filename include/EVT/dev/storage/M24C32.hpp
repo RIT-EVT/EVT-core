@@ -6,7 +6,7 @@
 
 namespace EVT::core::DEV {
 
-class M24C32 : private EEPROM {
+class M24C32 : public EEPROM {
 public:
     /**
      * Start up the EEPROM with a slave address of i2cSlaveAddress and

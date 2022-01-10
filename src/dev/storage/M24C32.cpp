@@ -1,4 +1,4 @@
-#include <EVT/dev/storage/platform/M24C32.hpp>
+#include <EVT/dev/storage/M24C32.hpp>
 
 namespace EVT::core::DEV {
 
@@ -12,15 +12,15 @@ uint8_t M24C32::readByte(uint32_t address) {
 
 uint16_t M24C32::readHalfWord(uint32_t address) {
     uint8_t buffer[2];
-    i2c.readMemReg(i2cSlaveAddress, address, buffer, 2, MEM_ADDRESS_SIZE);
-    auto* out = reinterpret_cast<uint16_t*>(buffer);
+    readBytes(address, buffer, 2);
+    auto* out = reinterpret_cast<uint16_t *>(buffer);
     return *out;
 }
 
 uint32_t M24C32::readWord(uint32_t address) {
     uint8_t buffer[4];
-    i2c.readMemReg(i2cSlaveAddress, address, buffer, 4, MEM_ADDRESS_SIZE);
-    auto* out = reinterpret_cast<uint32_t*>(buffer);
+    readBytes(address, buffer, 4);
+    auto* out = reinterpret_cast<uint32_t *>(buffer);
     return *out;
 }
 
@@ -31,7 +31,6 @@ void M24C32::readBytes(uint8_t address, uint8_t* buffer, uint8_t numBytes) {
     uint8_t* currentBufferPtr = buffer;
 
     while (bytesRead < numBytes) {
-        uint8_t bytesRemaining = numBytes - bytesRead;
         uint8_t maxBytes = PAGE_SIZE - (address % PAGE_SIZE);
 
         uint8_t bytesToRead = maxBytes > numBytes ? numBytes : maxBytes;
@@ -64,13 +63,13 @@ void M24C32::writeByte(uint32_t address, uint8_t data) {
 }
 
 void M24C32::writeHalfWord(uint32_t address, uint16_t data) {
-    auto* dataArr = reinterpret_cast<uint8_t*>(&data);
-    i2c.writeMemReg(i2cSlaveAddress, address, dataArr, 2, MEM_ADDRESS_SIZE, MAX_WRITE_TIME);
+    auto* dataArr = reinterpret_cast<uint8_t *>(&data);
+    writeBytes(address, dataArr, 2);
 }
 
 void M24C32::writeWord(uint32_t address, uint32_t data) {
-    auto* dataArr = reinterpret_cast<uint8_t*>(&data);
-    i2c.writeMemReg(i2cSlaveAddress, address, dataArr, 4, MEM_ADDRESS_SIZE, MAX_WRITE_TIME);
+    auto* dataArr = reinterpret_cast<uint8_t *>(&data);
+    writeBytes(address, dataArr, 4);
 }
 
 void M24C32::writeBytes(uint8_t address, uint8_t* dataArr, uint8_t numBytes) {
@@ -80,8 +79,6 @@ void M24C32::writeBytes(uint8_t address, uint8_t* dataArr, uint8_t numBytes) {
     uint8_t* currentBufferPtr = dataArr;
 
     while (bytesWritten < numBytes) {
-        uint8_t bytesRemaining = numBytes - bytesWritten;
-
         uint8_t maxBytes = PAGE_SIZE - (address % PAGE_SIZE);
 
         uint8_t bytesToWrite = maxBytes > numBytes ? numBytes : maxBytes;
