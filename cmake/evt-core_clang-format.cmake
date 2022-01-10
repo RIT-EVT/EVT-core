@@ -37,11 +37,9 @@ endif()
 Linux:
 $ sudo apt-get install clang-format
 $ sudo apt-get install clang-format-12
-$ sudo update-alternatives --install /usr/bin/clang-format clang-format
-           /usr/bin/clang-format-12 100
+$ sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-12 100
 
 Windows:
 1. Download the installer from https://llvm.org/builds/.
-2. Run the installer, making sure you choose the option to add to the PATH
-       variable.
+2. Run the installer, making sure you choose the option to add to the PATH variable.
 ]]#
