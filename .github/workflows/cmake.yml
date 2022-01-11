@@ -23,8 +23,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
+          ref: ${{ github.event.pull_request.head.ref }}
           submodules: recursive
-          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Do it
+        run: |
+          git branch --show-current
+          echo ${{ github.event.pull_request.head.ref }}
+      #git checkout ${{ github.event.pull_request.head.ref }}
 
       # Install the gcc-arm tools and clang-format, and ensure clang-format 12 is being used
       - name: Install Compiler and Linter
