@@ -19,6 +19,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Fail
+        run: cmake fail
+
       # Checkout the repository, including all submodules
       - name: Checkout Repository
         uses: actions/checkout@v2
