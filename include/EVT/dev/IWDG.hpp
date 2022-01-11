@@ -12,7 +12,7 @@ public:
     /**
          * Refreshes the watchdog timer.
          */
-    virtual void refresh() = 0;
+virtual void refresh() = 0;
 };
 
 }// namespace EVT::core::DEV
