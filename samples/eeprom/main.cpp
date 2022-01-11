@@ -6,8 +6,8 @@
  */
 #include <stdint.h>
 
-#include <EVT/io/manager.hpp>
 #include <EVT/dev/storage/M24C32.hpp>
+#include <EVT/io/manager.hpp>
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
@@ -45,7 +45,6 @@ constexpr uint8_t HALF_WORD_ARR_LENGTH = 2;
 uint16_t HALF_WORD_ARR_DATA[HALF_WORD_ARR_LENGTH] = {0xbbbb, 0xcccc};
 constexpr uint8_t WORD_ARR_LENGTH = 2;
 uint32_t WORD_ARR_DATA[WORD_ARR_LENGTH] = {0x01234567, 0x89abcdef};
-
 
 int main() {
     // Initialize system
@@ -91,7 +90,7 @@ int main() {
     uint8_t pageBreakBuf[PAGE_BREAK_EXAMPLE_LENGTH];
     eeprom.writeBytes(PAGE_BREAK_EXAMPLE_ADDRESS, PAGE_BREAK_EXAMPLE_DATA, PAGE_BREAK_EXAMPLE_LENGTH);
     eeprom.readBytes(PAGE_BREAK_EXAMPLE_ADDRESS, pageBreakBuf, PAGE_BREAK_EXAMPLE_LENGTH);
-    for (uint8_t i: pageBreakBuf) {
+    for (uint8_t i : pageBreakBuf) {
         uart.printf("Byte Read: %#x\n\r", i);
     }
 }
