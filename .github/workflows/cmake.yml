@@ -8,7 +8,6 @@ name: CMake
 on:
   pull_request:
     branches: [ main ]
-    test:
 
 # Set necessary environment variables
 env:
