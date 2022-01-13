@@ -16,7 +16,7 @@ public:
      * Enum to handle the button trigger states
      *
      */
-    enum class ActiveState 
+    enum class LogicLevelOnPress
     {
         LOW = 0u,
         HIGH = 1u,
@@ -28,7 +28,7 @@ public:
      * @param gpio[in] GPIO pin
      * @param activeState[in] Represents if the button is active high or active low
      */
-    Button(EVT::core::IO::GPIO& gpio, Button::ActiveState activeState);
+    Button(EVT::core::IO::GPIO& gpio, Button::LogicLevelOnPress logicLevelOnPress);
 
     /**
      * Reads the state of the button 
@@ -47,13 +47,13 @@ public:
     /**
      * @brief Set the Button State object
      * 
-     * @return Boolean if button has been in active high for a certain amount of time
+     * @return Boolean if button has been in logic level high for a certain amount of time
      */
     bool debounceState(uint32_t debounce);
 
 private:
     EVT::core::IO::GPIO& gpio;
-    ActiveState activeState;
+    LogicLevelOnPress logicLevelOnPress;
 
 };
 
