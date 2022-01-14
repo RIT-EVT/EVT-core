@@ -1,0 +1,568 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-e95576f27dbe7968b0d8.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "libs/HALf3",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-libs.HALf3-Debug-d014e6647ec2117f0cfc.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "libs/HALf3",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "samples",
+					"childIndexes" : 
+					[
+						3,
+						4,
+						5,
+						6,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15
+					],
+					"jsonFile" : "directory-samples-Debug-026e8de27727d40e5852.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "samples"
+				},
+				{
+					"build" : "samples/adc",
+					"jsonFile" : "directory-samples.adc-Debug-650982385be188eeb5a0.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 2,
+					"source" : "samples/adc",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "samples/blink",
+					"jsonFile" : "directory-samples.blink-Debug-f9bb27b21d3dda8658b1.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 3,
+					"source" : "samples/blink",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "samples/button",
+					"jsonFile" : "directory-samples.button-Debug-497189657911e25002ea.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 4,
+					"source" : "samples/button",
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"build" : "samples/can",
+					"childIndexes" : 
+					[
+						7,
+						8
+					],
+					"jsonFile" : "directory-samples.can-Debug-3b43ba43700fa345a370.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 0,
+					"source" : "samples/can"
+				},
+				{
+					"build" : "samples/can/loopback",
+					"jsonFile" : "directory-samples.can.loopback-Debug-11ac137e1c89b156f1af.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"parentIndex" : 6,
+					"projectIndex" : 5,
+					"source" : "samples/can/loopback",
+					"targetIndexes" : 
+					[
+						9
+					]
+				},
+				{
+					"build" : "samples/can/back_and_forth",
+					"jsonFile" : "directory-samples.can.back_and_forth-Debug-f43e2f4da6c6b0ad9531.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"parentIndex" : 6,
+					"projectIndex" : 6,
+					"source" : "samples/can/back_and_forth",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "samples/echo",
+					"jsonFile" : "directory-samples.echo-Debug-66b0769792531143c451.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 7,
+					"source" : "samples/echo",
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"build" : "samples/gpio_interrupt",
+					"jsonFile" : "directory-samples.gpio_interrupt-Debug-ba40ec3d6ee87e79c4ff.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 8,
+					"source" : "samples/gpio_interrupt",
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"build" : "samples/i2c",
+					"jsonFile" : "directory-samples.i2c-Debug-ffd292a42bb05119660b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 9,
+					"source" : "samples/i2c",
+					"targetIndexes" : 
+					[
+						8
+					]
+				},
+				{
+					"build" : "samples/pwm",
+					"jsonFile" : "directory-samples.pwm-Debug-fdaf0798fd9eccd347a8.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 10,
+					"source" : "samples/pwm",
+					"targetIndexes" : 
+					[
+						10
+					]
+				},
+				{
+					"build" : "samples/queue",
+					"jsonFile" : "directory-samples.queue-Debug-6739cd1d037f6ca012d2.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 11,
+					"source" : "samples/queue",
+					"targetIndexes" : 
+					[
+						11
+					]
+				},
+				{
+					"build" : "samples/read_write",
+					"jsonFile" : "directory-samples.read_write-Debug-75768e335e9b9d885128.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 12,
+					"source" : "samples/read_write",
+					"targetIndexes" : 
+					[
+						12
+					]
+				},
+				{
+					"build" : "samples/rtc",
+					"jsonFile" : "directory-samples.rtc-Debug-8bfcba6e0d10800f5c80.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 13,
+					"source" : "samples/rtc",
+					"targetIndexes" : 
+					[
+						13
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						2,
+						6
+					],
+					"name" : "EVT",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "HALf3",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3
+					],
+					"name" : "adc",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						4
+					],
+					"name" : "blink",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						5
+					],
+					"name" : "button",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						7
+					],
+					"name" : "loopback",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						9
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						8
+					],
+					"name" : "back_and_forth",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						9
+					],
+					"name" : "echo",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						10
+					],
+					"name" : "gpio_interrupt",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						11
+					],
+					"name" : "i2c",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						8
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						12
+					],
+					"name" : "pwm",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						10
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						13
+					],
+					"name" : "queue",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						11
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						14
+					],
+					"name" : "read_write",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						12
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						15
+					],
+					"name" : "rtc",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						13
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "EVT::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-EVT-Debug-bd062d225276fd4d5566.json",
+					"name" : "EVT",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "HALf3::@296391d3a4cc57be463c",
+					"jsonFile" : "target-HALf3-Debug-de275748631e82b4d897.json",
+					"name" : "HALf3",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "adc::@811977669b489df69713",
+					"jsonFile" : "target-adc-Debug-ceecf41eb56199a6afda.json",
+					"name" : "adc",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "back_and_forth::@107feffe3299c4926653",
+					"jsonFile" : "target-back_and_forth-Debug-8e825eb90dfd76eddbfa.json",
+					"name" : "back_and_forth",
+					"projectIndex" : 6
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "blink::@91764cc0cb1342ecb15a",
+					"jsonFile" : "target-blink-Debug-1ee4f12735ae1e35ecfa.json",
+					"name" : "blink",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "button::@383629bc57f77a0bb05c",
+					"jsonFile" : "target-button-Debug-14533bf39b06698f52fa.json",
+					"name" : "button",
+					"projectIndex" : 4
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "echo::@ad21976fd8bfb5b1211d",
+					"jsonFile" : "target-echo-Debug-2020286911ea5297e017.json",
+					"name" : "echo",
+					"projectIndex" : 7
+				},
+				{
+					"directoryIndex" : 10,
+					"id" : "gpio_interrupt::@6213bb78f1b3e4e9e6ee",
+					"jsonFile" : "target-gpio_interrupt-Debug-be65b4f2b6da6e51dc5a.json",
+					"name" : "gpio_interrupt",
+					"projectIndex" : 8
+				},
+				{
+					"directoryIndex" : 11,
+					"id" : "i2c::@8f4136bc2232223f7e75",
+					"jsonFile" : "target-i2c-Debug-6509af78d947b1e72bbe.json",
+					"name" : "i2c",
+					"projectIndex" : 9
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "loopback::@0ab5ea96f6aa2d1559af",
+					"jsonFile" : "target-loopback-Debug-7e6660c3f5552b251b94.json",
+					"name" : "loopback",
+					"projectIndex" : 5
+				},
+				{
+					"directoryIndex" : 12,
+					"id" : "pwm::@6d95a7b346e6abf86280",
+					"jsonFile" : "target-pwm-Debug-5413c3731722cea2854d.json",
+					"name" : "pwm",
+					"projectIndex" : 10
+				},
+				{
+					"directoryIndex" : 13,
+					"id" : "queue::@9543999f363fec7c4a13",
+					"jsonFile" : "target-queue-Debug-c4b865fa473db61b3276.json",
+					"name" : "queue",
+					"projectIndex" : 11
+				},
+				{
+					"directoryIndex" : 14,
+					"id" : "read_write::@e1007cb5cdd09cc38365",
+					"jsonFile" : "target-read_write-Debug-cf2b9c9482b3393f83f4.json",
+					"name" : "read_write",
+					"projectIndex" : 12
+				},
+				{
+					"directoryIndex" : 15,
+					"id" : "rtc::@9ec8720f43f258ae3e82",
+					"jsonFile" : "target-rtc-Debug-817cdd658d2aa04e2d87.json",
+					"name" : "rtc",
+					"projectIndex" : 13
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/Electric-Vehicle-Team/EVT-core/cmake-build-debug",
+		"source" : "D:/Electric-Vehicle-Team/EVT-core"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}

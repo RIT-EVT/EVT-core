@@ -1,36 +1,27 @@
-/home/aarc/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/213.6461.75/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/home/aarc/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/213.6461.75/bin/ninja/linux/ninja -DCMAKE_C_COMPILER=/usr/bin/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER=/usr/bin/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-g++ -G Ninja /run/media/aarc/DevFiles/Electric-Vehicle-Team/EVT-core
-CMake Warning at cmake/evt-core_compiler.cmake:8 (message):
-  Set your environment variables you frickin' hecker.  --Shane Snover
+C:\Users\firen\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\213.6461.75\bin\cmake\win\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=C:/Users/firen/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/213.6461.75/bin/ninja/win/ninja.exe "-DCMAKE_C_COMPILER=C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/bin" "-DCMAKE_CXX_COMPILER=C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/bin" -G Ninja D:\Electric-Vehicle-Team\EVT-core
+CMake Warning (dev) at C:/Users/firen/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/213.6461.75/bin/cmake/win/share/cmake-3.21/Modules/GNUInstallDirs.cmake:236 (message):
+  Unable to determine default CMAKE_INSTALL_LIBDIR directory because no
+  target architecture is known.  Please enable at least one language before
+  including GNUInstallDirs.
 Call Stack (most recent call first):
+  cmake/evt-core_compiler.cmake:55 (include)
   CMakeLists.txt:9 (include)
+This warning is for project developers.  Use -Wno-dev to suppress it.
 
-
--- The CXX compiler identification is unknown
--- The C compiler identification is unknown
-CMake Error at CMakeLists.txt:17 (project):
-  The CMAKE_CXX_COMPILER:
-
-    /arm-none-eabi-g++
-
-  is not a full path to an existing compiler tool.
-
-  Tell CMake where to find the compiler by setting either the environment
-  variable "CXX" or the CMake cache entry CMAKE_CXX_COMPILER to the full path
-  to the compiler, or to the compiler name if it is in the PATH.
-
-
-CMake Error at CMakeLists.txt:17 (project):
-  The CMAKE_C_COMPILER:
-
-    /arm-none-eabi-gcc
-
-  is not a full path to an existing compiler tool.
-
-  Tell CMake where to find the compiler by setting either the environment
-  variable "CC" or the CMake cache entry CMAKE_C_COMPILER to the full path to
-  the compiler, or to the compiler name if it is in the PATH.
-
-
--- Configuring incomplete, errors occurred!
-See also "/run/media/aarc/DevFiles/Electric-Vehicle-Team/EVT-core/cmake-build-debug/CMakeFiles/CMakeOutput.log".
-See also "/run/media/aarc/DevFiles/Electric-Vehicle-Team/EVT-core/cmake-build-debug/CMakeFiles/CMakeError.log".
+-- The CXX compiler identification is GNU 10.3.1
+-- The C compiler identification is GNU 10.3.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/bin/arm-none-eabi-g++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/bin/arm-none-eabi-gcc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- The ASM compiler identification is GNU
+-- Found assembler: C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/bin/arm-none-eabi-gcc.exe
+-- Configuring done
+-- Generating done
+-- Build files have been written to: D:/Electric-Vehicle-Team/EVT-core/cmake-build-debug

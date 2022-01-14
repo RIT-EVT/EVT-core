@@ -26,7 +26,7 @@ public:
      * Create an instance of the LED based on the given GPIO pin.
      *
      * @param gpio[in] GPIO pin
-     * @param activeState[in] Represents if the button is active high or active low
+     * @param logicLevelOnPress[in] Represents if the button is active high or active low
      */
     Button(EVT::core::IO::GPIO& gpio, Button::LogicLevelOnPress logicLevelOnPress);
 
