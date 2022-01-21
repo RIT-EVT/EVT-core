@@ -10,11 +10,9 @@ namespace EVT::core::IO {
 // at compilation time the decision of which pins should be used.
 enum class Pin;
 
-class PWM
-{
+class PWM {
 
 public:
-
     /**
      * Setup the given pin for PWM usage.
      *
@@ -59,7 +57,6 @@ protected:
     uint32_t period;
 };
 
-
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO
 
 #endif

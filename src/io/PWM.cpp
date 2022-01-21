@@ -8,4 +8,4 @@ PWM::PWM(Pin pin) {
     this->period = 0;
 }
 
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO

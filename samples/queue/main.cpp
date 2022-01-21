@@ -5,9 +5,9 @@
  *
  * @author Collin Bolles
  */
+#include <EVT/io/UART.hpp>
 #include <EVT/io/manager.hpp>
 #include <EVT/io/pin.hpp>
-#include <EVT/io/UART.hpp>
 #include <EVT/utils/types/FixedQueue.hpp>
 
 namespace IO = EVT::core::IO;
@@ -17,14 +17,14 @@ namespace types = EVT::core::types;
  * Test class for showing off having a custom class in the FixedQueue.
  */
 class TestClass {
- private:
+private:
     int a;
     int b;
     int c;
 
- public:
+public:
     TestClass(int a, int b, int c) : a(a), b(b), c(c) {}
-    TestClass(): a(0), b(0), c(0) {}
+    TestClass() : a(0), b(0), c(0) {}
 
     // Copy operator, important to have
     TestClass& operator=(const TestClass& other) {
@@ -54,7 +54,7 @@ int main() {
     ///////////////////////////////////////////////////////////////////////////
     uart.printf("Queue of Numbers, no overwritting\n\r");
     // First a queue of numbers, max capacity of 10 and no over writting
-    types::FixedQueue<int> numberQueue(10);
+    types::FixedQueue<10, int> numberQueue;
     // Check if it is empty, should be empty
     uart.printf("numberQueue.isEmpty() -> %d\r\n", numberQueue.isEmpty());
 
@@ -81,13 +81,13 @@ int main() {
     // Try to pop from empty queue
     int value;
     uart.printf("numberQueue.pop() success ? ->%d\r\n",
-            numberQueue.pop(&value));
+                numberQueue.pop(&value));
 
     ///////////////////////////////////////////////////////////////////////////
     // Test a queue of numbers, with overwritting
     ///////////////////////////////////////////////////////////////////////////
     uart.printf("\r\n\r\nQueue of Numbers, with overwritting\n\r");
-    types::FixedQueue<int> numberQueueOverwrite(10, true);
+    types::FixedQueue<10, int> numberQueueOverwrite(10);
 
     // Add ten numbers, should be full after
     for (int i = 0; i < 10; i++) {
@@ -95,9 +95,9 @@ int main() {
         numberQueueOverwrite.append(i);
     }
     uart.printf("numberQueueOverwrite.isFull() -> %d\r\n",
-            numberQueueOverwrite.isFull());
+                numberQueueOverwrite.isFull());
     uart.printf("numberQueueOverwrite.canInsert() -> %d\r\n",
-            numberQueueOverwrite.canInsert());
+                numberQueueOverwrite.canInsert());
 
     // Add ten more numbers
     for (int i = 10; i < 20; i++) {
@@ -114,10 +114,10 @@ int main() {
     // Test a queue of custom types
     ///////////////////////////////////////////////////////////////////////////
     uart.printf("\r\n\r\nQueue of Custom Objects, no overwritting\n\r");
-    types::FixedQueue<TestClass> customQueue(10);
+    types::FixedQueue<15, TestClass> customQueue(10);
 
     // Add ten objects to the queue
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 15; i++) {
         TestClass element(i * 1, i * 2, i * 3);
         uart.printf("customQueue.append(");
         element.print(&uart);
@@ -126,7 +126,7 @@ int main() {
     }
 
     // Print out all of the elements
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 15; i++) {
         TestClass element;
         customQueue.pop(&element);
         uart.printf("numberQueueOverwrite.pop() -> ");

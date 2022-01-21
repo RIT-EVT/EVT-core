@@ -5,8 +5,7 @@
 
 #include <EVT/io/types/CANMessage.hpp>
 
-namespace EVT::core::IO
-{
+namespace EVT::core::IO {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
@@ -34,7 +33,7 @@ public:
      * @param rxPin[in] The pin to use for receiving data
      * @param loopbackEnabled[in] Flag to enable CAN loop back functionality
      */
-    CAN(Pin txPin, Pin rxPin, bool loopbackEnabled=false);
+    CAN(Pin txPin, Pin rxPin, bool loopbackEnabled = false);
 
     /**
      * Transmit the message over CAN.
@@ -56,7 +55,24 @@ public:
      * @return A pointer to the passed in message, nullptr if message not
      *      received.
      */
-    virtual CANMessage* receive(CANMessage* message, bool blocking=false) = 0;
+    virtual CANMessage* receive(CANMessage* message, bool blocking = false) = 0;
+
+    /**
+     * Add an interrupt handler for CAN messages. This will be called with
+     * the provided private data when a new CAN message comes in.
+     *
+     * NOTE: Having an interrupt handler will bypass the CAN's internal
+     * storage queue thus making CAN::receive ineffective.
+     *
+     * @param handler[in] The interrupt handler. Takes in a CANmessage and some other parameter
+     * @param priv[in] The private data to pass into the handler
+     */
+    void addIRQHandler(void (*handler)(CANMessage&, void* priv), void* priv);
+
+    /**
+     * Default CAN baudrate.
+     */
+    static constexpr uint32_t DEFAULT_BAUD = 500000;
 
 private:
     /** The CAN transmit pin */
@@ -67,7 +83,13 @@ private:
     bool filtering;
     /** If CAN should operate in loop back mode */
     bool loopbackEnabled;
+
+protected:
+    /** Function pointer to call for the interrupt handler */
+    void (*handler)(CANMessage&, void* priv);
+    /** Private data to pass into the IRQ handler */
+    void* priv;
 };
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO
 
 #endif

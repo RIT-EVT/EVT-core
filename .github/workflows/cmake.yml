@@ -1,0 +1,55 @@
+# This file defines a GitHub Workflow which is used to test building EVT-Core and other EVT code.
+# When a pull request is made to the main branch, this Workflow will be automatically run on the
+# requested changes to ensure the repository still builds successfully and all files fit the team's
+# formatting standard. This workflow is designed to work only on a linux server.
+name: CMake
+
+# Define the workflow's triggers
+on:
+  pull_request:
+    branches: [ main ]
+
+# Set necessary environment variables
+env:
+  GCC_ARM_TOOLS_PATH: /usr/bin
+
+jobs:
+  build:
+    # Select the server's operating system
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository, including all submodules
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          submodules: recursive
+
+      # Install the gcc-arm tools and clang-format, and ensure clang-format 12 is being used
+      - name: Install Compiler and Linter
+        run: |
+          sudo apt-get install gcc-arm-none-eabi
+          sudo apt-get install clang-format-12
+          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-12 10000
+
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build
+
+      # Apply clang-format formatting to the branch and create a new commit if any files are changed
+      - name: Apply Formatting
+        run: |
+          cmake --build ${{github.workspace}}/build --target clang-format
+          if git diff-files --quiet; then
+            echo 'No formatting changes'
+          else
+            echo 'Formatting changes applied:'
+            git diff --raw
+            git config --global user.email "N/A"
+            git config --global user.name "GitHub Build"
+            git commit -a -m "Applied Formatting Changes During GitHub Build"
+            git push origin
+          fi

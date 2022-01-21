@@ -1,20 +1,23 @@
-#include <stdint.h>
 #include <cstring>
+#include <stdint.h>
 
 #include <EVT/io/types/CANMessage.hpp>
 
 namespace EVT::core::IO {
 
-CANMessage::CANMessage(uint32_t id, uint8_t dataLength, uint8_t* payload) {
+CANMessage::CANMessage(uint32_t id, uint8_t dataLength, uint8_t* payload, bool isExtended) {
     this->id = id;
     // TODO: Should include way to notify user of invalid CAN frame,
     // to be added to error manager later.
     this->dataLength = dataLength <= CAN_MAX_PAYLOAD_SIZE ?
-        dataLength : CAN_MAX_PAYLOAD_SIZE;
+        dataLength :
+        CAN_MAX_PAYLOAD_SIZE;
 
     // Copy contents of provided payload into message's payload
     for (int i = 0; i < this->dataLength; i++)
         this->payload[i] = payload[i];
+
+    this->isExtended = isExtended;
 }
 
 CANMessage::CANMessage() {
@@ -42,7 +45,7 @@ void CANMessage::setDataLength(uint8_t size) {
     this->dataLength = size;
 }
 
-void CANMessage::setPayload(const uint8_t *payload) {
+void CANMessage::setPayload(const uint8_t* payload) {
     std::memcpy(this->payload, payload, CAN_MAX_PAYLOAD_SIZE);
 }
 
@@ -53,4 +56,8 @@ CANMessage& CANMessage::operator=(const CANMessage& other) {
     return *this;
 }
 
-}  // namespace EVT::core::IO
+bool CANMessage::isCANExtended() {
+    return this->isExtended;
+}
+
+}// namespace EVT::core::IO
