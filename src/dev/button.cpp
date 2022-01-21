@@ -1,11 +1,10 @@
 #include <EVT/dev/button.hpp>
 
-
 namespace EVT::core::DEV {
-Button::Button(EVT::core::IO::GPIO& gpio, Button::LogicLevelOnPress logicLevelOnPress) : gpio(gpio), logicLevelOnPress(logicLevelOnPress) {
-}
+Button::Button(EVT::core::IO::GPIO& gpio, Button::LogicLevelOnPress logicLevelOnPress) : gpio(gpio), logicLevelOnPress(logicLevelOnPress) {}
 
 IO::GPIO::State Button::readButton() {
+
     if (this->logicLevelOnPress == Button::LogicLevelOnPress::HIGH) {
         return this->gpio.readPin();
     } else {

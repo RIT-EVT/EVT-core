@@ -12,7 +12,6 @@ int main() {
 
     // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-
     IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();
     IO::GPIO& buttonGPIO = IO::getGPIO<IO::Pin::PC_3>();
 
