@@ -17,4 +17,4 @@ IO::GPIO::State Button::readButton() {
     }
 }
 
-}  // namespace EVT::core::DEV
+}// namespace EVT::core::DEV

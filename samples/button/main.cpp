@@ -1,7 +1,7 @@
-#include <EVT/dev/button.hpp>
 #include <EVT/dev/LED.hpp>
-#include <EVT/io/manager.hpp>
+#include <EVT/dev/button.hpp>
 #include <EVT/io/UART.hpp>
+#include <EVT/io/manager.hpp>
 
 namespace DEV = EVT::core::DEV;
 namespace IO = EVT::core::IO;
@@ -25,7 +25,6 @@ int main() {
 
         led.setState(buttonStatus);
     }
-
 
     return 0;
 }
