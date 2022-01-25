@@ -87,9 +87,9 @@ void ADCf302x8::initADC() {
     halADC.Init.Resolution = ADC_RESOLUTION_12B;
     halADC.Init.DataAlign = ADC_DATAALIGN_RIGHT;
     halADC.Init.ScanConvMode = ADC_SCAN_ENABLE;
-    halADC.Init.EOCSelection = ADC_EOC_SEQ_CONV;  // Trigger end-of-conversion only after entire sequence
-                                                  // Causes DMA interrupt to trigger.  Only DMA once per sequence
-    halADC.Init.LowPowerAutoWait = DISABLE;
+    halADC.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+    halADC.Init.LowPowerAutoWait = ENABLE;  // Wait for the previous value to be written by DMA before beginning
+                                            // next transfer
     halADC.Init.ContinuousConvMode = ENABLE;
     halADC.Init.NbrOfConversion = MAX_CHANNELS;
     halADC.Init.DiscontinuousConvMode = DISABLE;
