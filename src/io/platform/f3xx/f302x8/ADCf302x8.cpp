@@ -46,6 +46,7 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
 
         halADCisInit = true;
     } else {
+        // TODO: May not be necessary
         HAL_ADC_Stop_DMA(&halADC);
         HAL_DMA_DeInit(&halDMA);
     }
