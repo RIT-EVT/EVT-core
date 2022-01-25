@@ -41,26 +41,20 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
 
         initADC();
 
-        initDMA();
-
         dmaHandle = &this->halDMA;
         adcHandle = &this->halADC;
 
         halADCisInit = true;
+    } else {
+        HAL_ADC_Stop_DMA(&halADC);
+        HAL_DMA_DeInit(&halDMA);
     }
 
     addChannel(rank);
 
-//    HAL_ADC_Stop_DMA(&halADC);
-    static int num = 1;
-    if (num > 1) {
-        initDMA();
-        HAL_ADC_Start_DMA(&halADC, (uint32_t *) (&buffer[0]),
-                          MAX_CHANNELS);
-    }
-    else {
-        num++;
-    }
+    initDMA();
+    HAL_ADC_Start_DMA(&halADC, (uint32_t *) (&buffer[0]),
+                      MAX_CHANNELS);
 
     rank++;
 }
