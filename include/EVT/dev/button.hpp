@@ -18,6 +18,7 @@ public:
     enum class LogicLevelOnPress {
         LOW = 0u,
         HIGH = 1u,
+        UNDETERMINED = 2u,
     };
 
     /**
@@ -36,11 +37,11 @@ public:
     IO::GPIO::State readButton();
 
     /**
-         * Time how long the button is in a high state
+         * Determine whether a button was pressed
          *
-         * @return Time in milliseconds
+         * @return Confirmation of a button press
          */
-    uint32_t debounce();
+    DEV::Button::LogicLevelOnPress debounce();
 
     /**
          * @brief Set the Button State object

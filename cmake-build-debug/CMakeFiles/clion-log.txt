@@ -1,0 +1,46 @@
+/home/aarc/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/213.6461.75/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/usr/bin/make -DCMAKE_C_COMPILER=/usr/bin/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER=/usr/bin/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-g++ -G "CodeBlocks - Unix Makefiles" /run/media/aarc/DevFiles/Electric-Vehicle-Team/EVT-core
+CMake Warning at cmake/evt-core_compiler.cmake:8 (message):
+  Set your environment variables you frickin' hecker.  --Shane Snover
+Call Stack (most recent call first):
+  CMakeLists.txt:9 (include)
+
+
+CMake Warning (dev) at /home/aarc/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/213.6461.75/bin/cmake/linux/share/cmake-3.21/Modules/GNUInstallDirs.cmake:236 (message):
+  Unable to determine default CMAKE_INSTALL_LIBDIR directory because no
+  target architecture is known.  Please enable at least one language before
+  including GNUInstallDirs.
+Call Stack (most recent call first):
+  cmake/evt-core_compiler.cmake:55 (include)
+  CMakeLists.txt:9 (include)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Found clang-format: /usr/bin/clang-format
+-- The CXX compiler identification is unknown
+-- The C compiler identification is unknown
+CMake Error at CMakeLists.txt:18 (project):
+  The CMAKE_CXX_COMPILER:
+
+    /arm-none-eabi-g++
+
+  is not a full path to an existing compiler tool.
+
+  Tell CMake where to find the compiler by setting either the environment
+  variable "CXX" or the CMake cache entry CMAKE_CXX_COMPILER to the full path
+  to the compiler, or to the compiler name if it is in the PATH.
+
+
+CMake Error at CMakeLists.txt:18 (project):
+  The CMAKE_C_COMPILER:
+
+    /arm-none-eabi-gcc
+
+  is not a full path to an existing compiler tool.
+
+  Tell CMake where to find the compiler by setting either the environment
+  variable "CC" or the CMake cache entry CMAKE_C_COMPILER to the full path to
+  the compiler, or to the compiler name if it is in the PATH.
+
+
+-- Configuring incomplete, errors occurred!
+See also "/run/media/aarc/DevFiles/Electric-Vehicle-Team/EVT-core/cmake-build-debug/CMakeFiles/CMakeOutput.log".
+See also "/run/media/aarc/DevFiles/Electric-Vehicle-Team/EVT-core/cmake-build-debug/CMakeFiles/CMakeError.log".

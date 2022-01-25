@@ -20,7 +20,7 @@ project(EVT
     LANGUAGES CXX C
 )
 
-add_library(${PROJECT_NAME} STATIC)
+add_library(${PROJECT_NAME} STATIC samples/button_debounce/main.cpp)
 
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE

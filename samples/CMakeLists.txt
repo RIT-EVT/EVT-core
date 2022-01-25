@@ -2,6 +2,7 @@
 add_subdirectory(adc)
 add_subdirectory(blink)
 add_subdirectory(button)
+add_subdirectory(button_debounce)
 add_subdirectory(can)
 add_subdirectory(canopen)
 add_subdirectory(echo)
