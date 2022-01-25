@@ -1,7 +1,10 @@
 #include <EVT/dev/button.hpp>
+#include <HALf3/stm32f3xx_hal.h>
 
 namespace EVT::core::DEV {
-Button::Button(EVT::core::IO::GPIO& gpio, Button::LogicLevelOnPress logicLevelOnPress) : gpio(gpio), logicLevelOnPress(logicLevelOnPress) {}
+    Button::Button(EVT::core::IO::GPIO &gpio, Button::LogicLevelOnPress logicLevelOnPress) : gpio(gpio),
+                                                                                             logicLevelOnPress(
+                                                                                                     logicLevelOnPress) {}
 
     /**
      * Reads the button state and returns it
@@ -28,19 +31,18 @@ Button::Button(EVT::core::IO::GPIO& gpio, Button::LogicLevelOnPress logicLevelOn
      * @param logicLevelOnPress
      * @return bool representing a confirmed press
      */
-    Button::LogicLevelOnPress Button::debounce(LogicLevelOnPress logicLevelOnPress, uint32_t debounceTimeReq) {
-        uint32_t debounceStart = HAL_GET_TICK();
 
+    IO::GPIO::State Button::debounce(uint32_t debounceStart, uint32_t debounceTimeReq) {
         if (HAL_GetTick() - debounceStart > debounceTimeReq) {
-            return logicLevelOnPress;
+            return this->readButton();
         } else {
-            if (logicLevelOnPress == LogicLevelOnPress::HIGH) {
-                return LogicLevelOnPress::LOW;
+            if (this->readButton() == EVT::core::IO::GPIO::State::HIGH) {
+                return EVT::core::IO::GPIO::State::LOW;
+
             } else {
-                return LogicLevelOnPress::HIGH;
+                return EVT::core::IO::GPIO::State::HIGH;
             }
         }
-
     }
 
 

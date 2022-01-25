@@ -41,7 +41,7 @@ public:
          *
          * @return Confirmation of a button press
          */
-    DEV::Button::LogicLevelOnPress debounce();
+    IO::GPIO::State debounce(uint32_t debounceStart, uint32_t debounceTimeReq);
 
     /**
          * @brief Set the Button State object
