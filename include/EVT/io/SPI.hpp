@@ -12,6 +12,7 @@
 #define SPIMode2 0x04
 #define SPIMode3 0x08
 
+
 namespace EVT::core::IO {
     // Forward declarations:
     // The different pins are hardware specific. Forward declaration to allow
@@ -37,7 +38,7 @@ namespace EVT::core::IO {
          * @param device the device number in the CSPins array
          * @return true if valid device, false if device not in CSPins
          */
-        virtual bool startTransmition(uint8_t device) = 0;
+        virtual bool startTransmission(uint8_t device) = 0;
 
         /**
         * toggle the state of the chip select pin of a device back at the end of a transmission. Call when finished
@@ -45,16 +46,16 @@ namespace EVT::core::IO {
         * @param device the device index in the CSPins
         * @return true if valid device, false if device not in CSPins
         */
-        virtual bool endTransmition(uint8_t device) = 0;
+        virtual bool endTransmission(uint8_t device) = 0;
 
         /**
-         * Writes a single byte out to the SPI device. Call startTransmition() first to initiate device communication.
+         * Writes a single byte out to the SPI device. Call startTransmission() first to initiate device communication.
          * @param byte the byte to write
          */
         virtual void write(uint8_t byte) = 0;
 
         /**
-         * reads a single byte from a SPI device. Call startTransmition() first to initiate device communication.
+         * reads a single byte from a SPI device. Call startTransmission() first to initiate device communication.
          * @return the byte read
          */
         virtual uint8_t read() = 0;
@@ -63,14 +64,14 @@ namespace EVT::core::IO {
 //
 //        uint8_t read(uint8_t device);
         /**
-         * writes an array of bytes to the SPI device. Call startTransmition() first to initiate device communication.
+         * writes an array of bytes to the SPI device. Call startTransmission() first to initiate device communication.
          * @param bytes an array of bytes of length n to write to SPI device
          * @param length the length of the array
          */
         void write(uint8_t *bytes, uint8_t length);
 
         /**
-        * reads an array of bytes from a SPI device. Call startTransmition() first to initiate device communication.
+        * reads an array of bytes from a SPI device. Call startTransmission() first to initiate device communication.
         * @param bytes an array of length n to receive the bytes from an SPI device
         * @param length the number of bytes to recive
         */

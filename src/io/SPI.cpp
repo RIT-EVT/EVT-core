@@ -12,17 +12,17 @@ namespace EVT::core::IO {
             CSPins(*CSPins), CSPinsLength(pinLength), sckPin(sckPin), mosiPin(mosiPin) {}
 
 //    void SPI::write(uint8_t device, uint8_t byte) {
-//        if (startTransmition(device)) {
+//        if (startTransmission(device)) {
 //            write(byte);
-//            endTransmition(device);
+//            endTransmission(device);
 //        }
 //    }
 //
 //    uint8_t SPI::read(uint8_t device) {
 //        uint8_t data = 0;
-//        if (startTransmition(device)) {
+//        if (startTransmission(device)) {
 //            data = read();
-//            endTransmition(device);
+//            endTransmission(device);
 //        }
 //        return data;
 //    }
@@ -38,19 +38,19 @@ namespace EVT::core::IO {
     }
 
     void SPI::writeReg(uint8_t device, uint8_t reg, uint8_t byte) {
-        if (startTransmition(device)) {
+        if (startTransmission(device)) {
             write(reg);
             write(byte);
-            endTransmition(device);
+            endTransmission(device);
         }
     }
 
     uint8_t SPI::readReg(uint8_t device, uint8_t reg) {
         uint8_t data = 0;
-        if (startTransmition(device)) {
+        if (startTransmission(device)) {
             write(reg);
             data = read();
-            endTransmition(device);
+            endTransmission(device);
         }
         return data;
     }

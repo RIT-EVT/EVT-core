@@ -20,8 +20,8 @@ namespace EVT::core::IO {
         void read(uint8_t* bytes, uint8_t length);
 
     private:
-        bool startTransmition(uint8_t device);
-        bool endTransmition(uint8_t device);
+        bool startTransmission(uint8_t device);
+        bool endTransmission(uint8_t device);
         void write(uint8_t byte);
         uint8_t read();
         void togglePin(GPIO* pin);

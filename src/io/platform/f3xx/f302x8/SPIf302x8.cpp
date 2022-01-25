@@ -212,7 +212,7 @@ namespace EVT::core::IO {
      * @param device device the device index in the CSPins
      * @return true if valid device, false if device not in CSPins
      */
-    bool SPIf302x8::startTransmition(uint8_t device) {
+    bool SPIf302x8::startTransmission(uint8_t device) {
         if (device < CSPinsLength) {
             togglePin(&CSPins[device]);
             return true;
@@ -225,7 +225,7 @@ namespace EVT::core::IO {
      * @param device the device index in the CSPins
      * @return true if valid device, false if device not in CSPins
      */
-    bool SPIf302x8::endTransmition(uint8_t device) {
+    bool SPIf302x8::endTransmission(uint8_t device) {
         if (device < CSPinsLength) {
             togglePin(&CSPins[device]);
             return true;
@@ -258,9 +258,9 @@ namespace EVT::core::IO {
      * @param length the length of the array
      */
     void SPIf302x8::write(uint8_t *bytes, uint8_t length) {
-        //if (startTransmition(device)) {
+        //if (startTransmission(device)) {
             HAL_SPI_Transmit(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
-        //    endTransmition(device);
+        //    endTransmission(device);
         //}
     }
 
@@ -271,9 +271,9 @@ namespace EVT::core::IO {
      * @param length the number of bytes to recive
      */
     void SPIf302x8::read(uint8_t *bytes, uint8_t length) {
-        //if (startTransmition(device)) {
+        //if (startTransmission(device)) {
             HAL_SPI_Receive(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
-        //    endTransmition(device);
+        //    endTransmission(device);
         //}
     }
 } // namespace EVT::core::IO
