@@ -52,8 +52,15 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
     addChannel(rank);
     initDMA();
 
-    HAL_ADC_Start_DMA(&halADC, (uint32_t *)(&buffer[0]),
-                      MAX_CHANNELS);
+//    HAL_ADC_Stop_DMA(&halADC);
+    static int num = 1;
+    if (num > 1) {
+        HAL_ADC_Start_DMA(&halADC, (uint32_t *) (&buffer[0]),
+                          MAX_CHANNELS);
+    }
+    else {
+        num++;
+    }
 
     rank++;
 }
@@ -80,18 +87,20 @@ float ADCf302x8::readPercentage() {
 void ADCf302x8::initADC() {
     halADC.Instance = ADC1;  // Only ADC the F3 supports
 
+    // TODO: Figure out ADC calibration
+
     halADC.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
     halADC.Init.Resolution = ADC_RESOLUTION_12B;
     halADC.Init.DataAlign = ADC_DATAALIGN_RIGHT;
     halADC.Init.ScanConvMode = ADC_SCAN_ENABLE;
-    halADC.Init.EOCSelection = DISABLE;
+    halADC.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
     halADC.Init.LowPowerAutoWait = DISABLE;
     halADC.Init.ContinuousConvMode = ENABLE;
-    halADC.Init.NbrOfConversion = 1;
+    halADC.Init.NbrOfConversion = MAX_CHANNELS;
     halADC.Init.DiscontinuousConvMode = DISABLE;
-    halADC.Init.NbrOfDiscConversion = 1;
+    halADC.Init.NbrOfDiscConversion = 1;  // Parameter discarded when Discontinuous Conv Mode is Disabled
     halADC.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-    halADC.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+    halADC.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;  // Parameter discared when set to ADC_SOFTWARE_START
     halADC.Init.DMAContinuousRequests = ENABLE;
     halADC.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
 
@@ -190,6 +199,7 @@ void ADCf302x8::addChannel(uint8_t rank) {
     adcChannel.Offset = 0;
     adcChannel.SingleDiff = ADC_SINGLE_ENDED;
     adcChannel.OffsetNumber = ADC_OFFSET_NONE;
+    adcChannel.Offset = 0x000;
 
     HAL_ADC_ConfigChannel(&halADC, &adcChannel);
 }
