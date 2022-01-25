@@ -35,7 +35,7 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
     static uint8_t rank = 1;
 
     // Initialization of the HAL ADC should only take place once since there is
-    // only one ADC device which has muliple channels supported.
+    // only one ADC device which has multiple channels supported.
     if (!halADCisInit) {
         __HAL_RCC_DMA1_CLK_ENABLE();
 
@@ -52,7 +52,7 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
     addChannel(rank);
     initDMA();
 
-    HAL_ADC_Start_DMA(&halADC, reinterpret_cast<uint32_t*>(&buffer[0]),
+    HAL_ADC_Start_DMA(&halADC, (uint32_t *)(&buffer[0]),
                       MAX_CHANNELS);
 
     rank++;
@@ -78,7 +78,7 @@ float ADCf302x8::readPercentage() {
 }
 
 void ADCf302x8::initADC() {
-    halADC.Instance = ADC1;// Only ADC the F3 supportes
+    halADC.Instance = ADC1;  // Only ADC the F3 supports
 
     halADC.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
     halADC.Init.Resolution = ADC_RESOLUTION_12B;
@@ -87,7 +87,7 @@ void ADCf302x8::initADC() {
     halADC.Init.EOCSelection = DISABLE;
     halADC.Init.LowPowerAutoWait = DISABLE;
     halADC.Init.ContinuousConvMode = ENABLE;
-    halADC.Init.NbrOfConversion = MAX_CHANNELS;
+    halADC.Init.NbrOfConversion = 1;
     halADC.Init.DiscontinuousConvMode = DISABLE;
     halADC.Init.NbrOfDiscConversion = 1;
     halADC.Init.ExternalTrigConv = ADC_SOFTWARE_START;
@@ -188,6 +188,8 @@ void ADCf302x8::addChannel(uint8_t rank) {
     adcChannel.Rank = rank;
     adcChannel.SamplingTime = ADC_SAMPLETIME_601CYCLES_5;
     adcChannel.Offset = 0;
+    adcChannel.SingleDiff = ADC_SINGLE_ENDED;
+    adcChannel.OffsetNumber = ADC_OFFSET_NONE;
 
     HAL_ADC_ConfigChannel(&halADC, &adcChannel);
 }
