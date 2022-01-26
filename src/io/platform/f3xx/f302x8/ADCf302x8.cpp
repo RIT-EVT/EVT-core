@@ -33,7 +33,13 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
     // Flag representing if the ADC has been configured yet
     static bool halADCisInit = false;
     // "Rank" represents the order in which the channels are added
+    // Also represents the total number of added channels
     static uint8_t rank = 1;
+
+    // Maximum number of ADC channels have already been added
+    if (rank == MAX_CHANNELS) {
+        return;
+    }
 
     // Initialization of the HAL ADC should only take place once since there is
     // only one ADC device which has multiple channels supported.
@@ -89,7 +95,7 @@ void ADCf302x8::initADC(uint8_t num_channels) {
     halADC.Init.ScanConvMode = ADC_SCAN_ENABLE;
     halADC.Init.EOCSelection = ADC_EOC_SEQ_CONV;
     halADC.Init.LowPowerAutoWait = DISABLE;  // Wait for the previous value to be written by DMA before beginning
-                                            // next transfer
+                                             // next transfer.  Not recommended for DMA.
     halADC.Init.ContinuousConvMode = ENABLE;
     halADC.Init.NbrOfConversion = num_channels;
     halADC.Init.DiscontinuousConvMode = DISABLE;
