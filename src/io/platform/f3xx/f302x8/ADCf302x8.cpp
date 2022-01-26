@@ -50,7 +50,6 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
         __HAL_RCC_DMA1_CLK_ENABLE();
         halADCisInit = true;
     }
-
     initADC(rank);
 
     dmaHandle = &this->halDMA;
@@ -67,7 +66,7 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
 
 float ADCf302x8::read() {
     float percentage = readPercentage();
-    return percentage * MAX_VOLTAGE;
+    return percentage * VREF_POS;
 }
 
 uint32_t ADCf302x8::readRaw() {
