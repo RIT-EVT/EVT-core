@@ -18,6 +18,7 @@ ADC_HandleTypeDef* adcHandle;
 
 extern "C" void DMA1_Channel1_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle);
+    HAL_ADC_IRQHandler(adcHandle);
 }
 
 namespace EVT::core::IO {
@@ -36,26 +37,24 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
 
     // Initialization of the HAL ADC should only take place once since there is
     // only one ADC device which has multiple channels supported.
-    if (!halADCisInit) {
-        __HAL_RCC_DMA1_CLK_ENABLE();
-
-        initADC();
-
-        dmaHandle = &this->halDMA;
-        adcHandle = &this->halADC;
-
-        halADCisInit = true;
-    } else {
-        // TODO: May not be necessary
+    if (halADCisInit) {
         HAL_ADC_Stop_DMA(&halADC);
         HAL_DMA_DeInit(&halDMA);
+    } else {
+        __HAL_RCC_DMA1_CLK_ENABLE();
+        halADCisInit = true;
     }
+
+    initADC(rank);
+
+    dmaHandle = &this->halDMA;
+    adcHandle = &this->halADC;
 
     addChannel(rank);
 
     initDMA();
     HAL_ADC_Start_DMA(&halADC, (uint32_t *) (&buffer[0]),
-                      MAX_CHANNELS);
+                      rank);
 
     rank++;
 }
@@ -79,7 +78,7 @@ float ADCf302x8::readPercentage() {
     return static_cast<float>(raw / MAX_RAW);
 }
 
-void ADCf302x8::initADC() {
+void ADCf302x8::initADC(uint8_t num_channels) {
     halADC.Instance = ADC1;  // Only ADC the F3 supports
 
     // TODO: Figure out ADC calibration
@@ -88,11 +87,11 @@ void ADCf302x8::initADC() {
     halADC.Init.Resolution = ADC_RESOLUTION_12B;
     halADC.Init.DataAlign = ADC_DATAALIGN_RIGHT;
     halADC.Init.ScanConvMode = ADC_SCAN_ENABLE;
-    halADC.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
-    halADC.Init.LowPowerAutoWait = ENABLE;  // Wait for the previous value to be written by DMA before beginning
+    halADC.Init.EOCSelection = ADC_EOC_SEQ_CONV;
+    halADC.Init.LowPowerAutoWait = DISABLE;  // Wait for the previous value to be written by DMA before beginning
                                             // next transfer
     halADC.Init.ContinuousConvMode = ENABLE;
-    halADC.Init.NbrOfConversion = MAX_CHANNELS;
+    halADC.Init.NbrOfConversion = num_channels;
     halADC.Init.DiscontinuousConvMode = DISABLE;
     halADC.Init.NbrOfDiscConversion = 1;  // Parameter discarded when Discontinuous Conv Mode is Disabled
     halADC.Init.ExternalTrigConv = ADC_SOFTWARE_START;

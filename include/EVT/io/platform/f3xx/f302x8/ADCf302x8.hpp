@@ -61,7 +61,7 @@ private:
     /**
      * Initialize the HAL ADC handler. This should only have to be run once
      */
-    void initADC();
+    void initADC(uint8_t num_channels);
 
     /**
      * Initialize the HALD DMA for the ADC, should only have to be run once
