@@ -84,7 +84,7 @@ float ADCf302x8::readPercentage() {
 }
 
 void ADCf302x8::initADC(uint8_t num_channels) {
-    halADC.Instance = ADC1;  // Only ADC the F3 supports
+    halADC.Instance = ADC1;// Only ADC the F3 supports
 
     // TODO: Figure out ADC calibration
 
@@ -93,14 +93,14 @@ void ADCf302x8::initADC(uint8_t num_channels) {
     halADC.Init.DataAlign = ADC_DATAALIGN_RIGHT;
     halADC.Init.ScanConvMode = ADC_SCAN_ENABLE;
     halADC.Init.EOCSelection = ADC_EOC_SEQ_CONV;
-    halADC.Init.LowPowerAutoWait = DISABLE;  // Wait for the previous value to be written by DMA before beginning
-                                             // next transfer.  Not recommended for DMA.
+    halADC.Init.LowPowerAutoWait = DISABLE;// Wait for the previous value to be written by DMA before beginning
+                                           // next transfer.  Not recommended for DMA.
     halADC.Init.ContinuousConvMode = ENABLE;
     halADC.Init.NbrOfConversion = num_channels;
     halADC.Init.DiscontinuousConvMode = DISABLE;
-    halADC.Init.NbrOfDiscConversion = 1;  // Parameter discarded when Discontinuous Conv Mode is Disabled
+    halADC.Init.NbrOfDiscConversion = 1;// Parameter discarded when Discontinuous Conv Mode is Disabled
     halADC.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-    halADC.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;  // Parameter discared when set to ADC_SOFTWARE_START
+    halADC.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;// Parameter discared when set to ADC_SOFTWARE_START
     halADC.Init.DMAContinuousRequests = ENABLE;
     halADC.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
 
