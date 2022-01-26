@@ -58,7 +58,7 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
     addChannel(rank);
 
     initDMA();
-    HAL_ADC_Start_DMA(&halADC, (uint32_t *) (&buffer[0]),
+    HAL_ADC_Start_DMA(&halADC, reinterpret_cast<uint32_t*>(&buffer[0]),
                       rank);
 
     rank++;
