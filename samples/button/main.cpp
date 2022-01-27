@@ -2,9 +2,12 @@
 #include <EVT/dev/button.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/manager.hpp>
+#include <EVT/utils/time.hpp>
+
 
 namespace DEV = EVT::core::DEV;
 namespace IO = EVT::core::IO;
+namespace time = EVT::core::time;
 
 int main() {
     // Initialize system
@@ -24,6 +27,8 @@ int main() {
         uart.printf("Button Status: %d \n", buttonStatus);
 
         led.setState(buttonStatus);
+
+        time::wait(1);
     }
 
     return 0;

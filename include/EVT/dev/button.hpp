@@ -11,44 +11,44 @@ namespace EVT::core::DEV {
 
 class Button {
 public:
-    /**
-         * Enum to handle the button trigger states
-         *
-         */
-    enum class LogicLevelOnPress {
-        LOW = 0u,
-        HIGH = 1u,
-        UNDETERMINED = 2u,
-    };
+/**
+     * Enum to handle the button trigger states
+     *
+     */
+enum class LogicLevelOnPress {
+    LOW = 0u,
+    HIGH = 1u,
+    UNDETERMINED = 2u,
+};
 
-    /**
-         * Create an instance of the LED based on the given GPIO pin.
-         *
-         * @param gpio[in] GPIO pin
-         * @param logicLevelOnPress[in] Represents if the button is active high or active low
-         */
-    Button(EVT::core::IO::GPIO& gpio, Button::LogicLevelOnPress logicLevelOnPress);
+/**
+     * Create an instance of the button based on the given GPIO pin.
+     *
+     * @param gpio[in] GPIO pin
+     * @param logicLevelOnPress[in] Represents if the button is active high or active low
+     */
+Button(EVT::core::IO::GPIO& gpio, Button::LogicLevelOnPress logicLevelOnPress);
 
-    /**
-         * Reads the state of the button
-         *
-         * @return The button state.
-         */
-    IO::GPIO::State readButton();
+/**
+     * Reads the state of the button
+     *
+     * @return The button state.
+     */
+IO::GPIO::State readButton();
 
-    /**
-         * Determine whether a button was pressed
-         *
-         * @return Confirmation of a button press
-         */
-    IO::GPIO::State debounce(uint32_t debounceStart, uint32_t debounceTimeReq);
+/**
+     * Determine whether a button was pressed
+     *
+     * @return Confirmation of a button press
+     */
+IO::GPIO::State debounce(IO::GPIO::State prevState, uint32_t debounceTimeStart, uint32_t debounceTimeReq);
 
-    /**
-         * @brief Set the Button State object
-         *
-         * @return Boolean if button has been in logic level high for a certain amount of time
-         */
-    bool debounceState(uint32_t debounce);
+/**
+     * @brief Set the Button State object
+     *
+     * @return Boolean if button has been in logic level high for a certain amount of time
+     */
+bool debounceState(uint32_t debounce);
 
 private:
     EVT::core::IO::GPIO& gpio;
