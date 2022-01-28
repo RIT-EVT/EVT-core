@@ -4,10 +4,15 @@ the project.
 Requires: clang-format (v. 12 or higher) is downloaded
 ]]#
 
-# Get all project files
+include_guard(GLOBAL)
+
+# Get all project files for for the current project only
 file(GLOB_RECURSE
         ALL_CXX_SOURCE_FILES
-        *.[chi]pp *.[chi]xx *.cc *.hh *.ii *.[CHI]
+        ${CMAKE_SOURCE_DIR}/src/*.[ch]pp      ${CMAKE_SOURCE_DIR}/src/*.[CH]
+        ${CMAKE_SOURCE_DIR}/include/*.[ch]pp  ${CMAKE_SOURCE_DIR}/include/*.[CH]
+        ${CMAKE_SOURCE_DIR}/targets/*.[ch]pp  ${CMAKE_SOURCE_DIR}/targets/*.[CH]
+        ${CMAKE_SOURCE_DIR}/samples/*.[ch]pp  ${CMAKE_SOURCE_DIR}/samples/*.[CH]
         )
 
 # Get the path to clang-format
@@ -22,7 +27,7 @@ if(CLANG_FORMAT)
     foreach(src_file ${ALL_CXX_SOURCE_FILES})
         add_custom_command(TARGET clang-format
                 COMMAND ${CLANG_FORMAT} -i -style=file ${src_file}
-        )
+                )
     endforeach()
 else()
     message(WARNING "clang-format not found")
