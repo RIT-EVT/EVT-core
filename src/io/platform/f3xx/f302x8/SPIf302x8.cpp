@@ -6,8 +6,12 @@
 #include <EVT/io/platform/f3xx/f302x8/SPIf302x8.hpp>
 
 namespace EVT::core::IO {
-
-    static uint8_t getMOSIPortID(Pin mosiPin) {
+    /**
+     * gets the corresponding SPI port from the mosi pin
+     * @param mosiPin the pin to use for the mosi signal
+     * @return the SPI port to use, 0 if invalid
+     */
+    uint8_t SPIf302x8::getMOSIPortID(Pin mosiPin) {
         switch (mosiPin) {
             case Pin::PA_11:
             case Pin::PB_15:
@@ -20,7 +24,12 @@ namespace EVT::core::IO {
         }
     }
 
-    static uint8_t getMISOPortID(Pin misoPin) {
+    /**
+     * gets the corresponding SPI port from the miso pin
+     * @param misoPin the pin to use for the miso signal
+     * @return the SPI port to use, 0 if invalid
+     */
+    uint8_t SPIf302x8::getMISOPortID(Pin misoPin) {
         switch (misoPin) {
             case Pin::PA_10:
             case Pin::PB_14:
@@ -33,7 +42,12 @@ namespace EVT::core::IO {
         }
     }
 
-    static uint8_t getSCKPortID(Pin sckPin) {
+    /**
+     * gets the corresponding SPI port from the sck pin
+     * @param sckPin the pin to use for the sck signal
+     * @return the SPI port to use, 0 if invalid
+     */
+    uint8_t SPIf302x8::getSCKPortID(Pin sckPin) {
         switch (sckPin) {
             case Pin::PA_10:
             case Pin::PF_1:
@@ -47,16 +61,15 @@ namespace EVT::core::IO {
     }
 
     /**
-     * 
-     * @param CSPins 
-     * @param pinLength 
-     * @param sckPin 
-     * @param mosiPin 
-     * @param misoPin 
+     * Constructs a send and receive SPI object
+     * @param CSPins an array of chip select pins for selecting which device to communicate with.
+     * @param pinLength the number of pins in the chip select array
+     * @param sckPin the pin for the clk line
+     * @param mosiPin the mosi pin for sending data
+     * @param misoPin the miso pin for receiving data
      */
     SPIf302x8::SPIf302x8(GPIO **CSPins, uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) :
             SPI(CSPins, pinLength, sckPin, mosiPin, misoPin) {
-
         uint8_t mosiPort = getMOSIPortID(mosiPin);
         uint8_t misoPort = getMISOPortID(misoPin);
         uint8_t sckPort = getSCKPortID(sckPin);
@@ -130,34 +143,103 @@ namespace EVT::core::IO {
         }
     }
 
-
     SPIf302x8::SPIf302x8(GPIO **CSPins, uint8_t pinLength, Pin sckPin, Pin mosiPin) :
             SPI(CSPins, pinLength, sckPin, mosiPin) {
 
+        uint8_t mosiPort = getMOSIPortID(mosiPin);
+        uint8_t sckPort = getSCKPortID(sckPin);
+        GPIO_InitTypeDef GPIOInit = {0};
+        if (mosiPort == sckPort) {
+            switch (mosiPort) {
+                case 2:
+                    halSPI.Instance = SPI2;
+                    if (!__HAL_RCC_SPI2_IS_CLK_ENABLED()) {
+                        __HAL_RCC_SPI2_CLK_ENABLE();
+                    }
+                    GPIOInit.Alternate = GPIO_AF5_SPI2;
+                    break;
+                case 3:
+                    halSPI.Instance = SPI3;
+                    if (!__HAL_RCC_SPI3_IS_CLK_ENABLED()) {
+                        __HAL_RCC_SPI3_CLK_ENABLE();
+                    }
+                    GPIOInit.Alternate = GPIO_AF6_SPI3;
+                    break;
+                default:
+                    break;
+            }
+
+            Pin spiPins[] = {mosiPin, sckPin};
+
+            GPIOInit.Mode = GPIO_MODE_AF_PP;
+            GPIOInit.Pull = GPIO_NOPULL;
+            GPIOInit.Speed = GPIO_SPEED_FREQ_HIGH;
+
+            for (uint8_t i = 0; i < 2; i++) {
+                GPIOInit.Pin = static_cast<uint32_t>(1
+                        << (static_cast<uint32_t>(spiPins[i]) & 0x0F));
+                switch ((static_cast<uint8_t>(spiPins[i]) & 0xF0) >> 4) {
+                    case 0x0:
+                        __HAL_RCC_GPIOA_CLK_ENABLE();
+                        HAL_GPIO_Init(GPIOA, &GPIOInit);
+                        break;
+                    case 0x1:
+                        __HAL_RCC_GPIOB_CLK_ENABLE();
+                        HAL_GPIO_Init(GPIOB, &GPIOInit);
+                        break;
+                    case 0x2:
+                        __HAL_RCC_GPIOC_CLK_ENABLE();
+                        HAL_GPIO_Init(GPIOC, &GPIOInit);
+                        break;
+                    case 0x3:
+                        __HAL_RCC_GPIOD_CLK_ENABLE();
+                        HAL_GPIO_Init(GPIOD, &GPIOInit);
+                        break;
+                    case 0x5:
+                        __HAL_RCC_GPIOF_CLK_ENABLE();
+                        HAL_GPIO_Init(GPIOF, &GPIOInit);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            halSPI.Init.Mode = SPI_MODE_MASTER;
+            halSPI.Init.Direction = SPI_DIRECTION_1LINE;
+            halSPI.Init.DataSize = SPI_DATASIZE_8BIT;
+
+            // advanced settings
+            halSPI.Init.TIMode = SPI_TIMODE_DISABLE;
+            halSPI.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+            halSPI.Init.CRCPolynomial = 7;
+            halSPI.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+            halSPI.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
+            halSPI.Init.NSS = SPI_NSS_SOFT;
+        }
     }
 
     /**
      * Configures the SPI transmit mode
-     * @param baudRate the baudrate to transmit at
-     * @param mode The SPIMode to use when sending
+     * @param baudRate the baudrate to transmit at (4MHz to 31.25KHz)
+     * @param mode The SPIMode to use when sending (0-3)
      * @param order MSB first or LSB first
      */
     void SPIf302x8::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order) {
         // set the CPOL and CPHA depending on the SPI mode
         switch (mode) {
-            case SPIMode0:
+            case SPI_MODE0:
                 halSPI.Init.CLKPolarity = SPI_POLARITY_LOW;
                 halSPI.Init.CLKPhase = SPI_PHASE_1EDGE;
                 break;
-            case SPIMode1:
+            case SPI_MODE1:
                 halSPI.Init.CLKPolarity = SPI_POLARITY_LOW;
                 halSPI.Init.CLKPhase = SPI_PHASE_2EDGE;
                 break;
-            case SPIMode2:
+            case SPI_MODE2:
                 halSPI.Init.CLKPolarity = SPI_POLARITY_HIGH;
                 halSPI.Init.CLKPhase = SPI_PHASE_1EDGE;
                 break;
-            case SPIMode3:
+            case SPI_MODE3:
                 halSPI.Init.CLKPolarity = SPI_POLARITY_HIGH;
                 halSPI.Init.CLKPhase = SPI_PHASE_2EDGE;
                 break;
