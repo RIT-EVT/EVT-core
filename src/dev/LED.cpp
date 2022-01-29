@@ -30,4 +30,4 @@ void LED::setState(EVT::core::IO::GPIO::State state) {
     }
 }
 
-}  // namespace EVT::core::DEV
+}// namespace EVT::core::DEV

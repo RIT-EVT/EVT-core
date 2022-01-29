@@ -1,10 +1,10 @@
 /**
  * This sample will demo the basic functionality for the timer driver
  */
+#include <EVT/dev/platform/f3xx/f302x8/Timerf302x8.hpp>
+#include <EVT/io/UART.hpp>
 #include <EVT/io/manager.hpp>
 #include <EVT/io/pin.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/dev/platform/f3xx/f302x8/Timerf302x8.hpp>
 #include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
@@ -15,20 +15,20 @@ IO::GPIO* interruptGPIO2Hz;
 IO::GPIO* interruptGPIOStopStart;
 IO::GPIO* reloadGPIO;
 
-void timer2IRQHandler(void *htim) {
+void timer2IRQHandler(void* htim) {
     IO::GPIO::State state = ledGPIO->readPin();
     IO::GPIO::State toggleState = state == IO::GPIO::State::HIGH ? IO::GPIO::State::LOW : IO::GPIO::State::HIGH;
     ledGPIO->writePin(toggleState);
     interruptGPIO2Hz->writePin(toggleState);
 }
 
-void timer15IRQHandler(void *htim) {
+void timer15IRQHandler(void* htim) {
     IO::GPIO::State state = interruptGPIOStopStart->readPin();
     IO::GPIO::State toggleState = state == IO::GPIO::State::HIGH ? IO::GPIO::State::LOW : IO::GPIO::State::HIGH;
     interruptGPIOStopStart->writePin(toggleState);
 }
 
-void timer16IRQHandler(void *htim) {
+void timer16IRQHandler(void* htim) {
     IO::GPIO::State state = reloadGPIO->readPin();
     IO::GPIO::State toggleState = state == IO::GPIO::State::HIGH ? IO::GPIO::State::LOW : IO::GPIO::State::HIGH;
     reloadGPIO->writePin(toggleState);
@@ -44,12 +44,14 @@ int main() {
     interruptGPIOStopStart = &IO::getGPIO<IO::Pin::PC_2>(IO::GPIO::Direction::OUTPUT);
     reloadGPIO = &IO::getGPIO<IO::Pin::PC_0>(IO::GPIO::Direction::OUTPUT);
 
-
     // Setup the Timer
-    auto timer2 = DEV::Timerf302x8(TIM2, 500, timer2IRQHandler);
-    timer2.reloadTimer();  // Added so cpplint does not complain about unused variable
-    auto timer15 = DEV::Timerf302x8(TIM15, 100, timer15IRQHandler);
-    auto timer16 = DEV::Timerf302x8(TIM16, 200, timer16IRQHandler);
+    auto timer2 = DEV::Timerf302x8(TIM2, 500);
+    auto timer15 = DEV::Timerf302x8(TIM15, 100);
+    auto timer16 = DEV::Timerf302x8(TIM16, 200);
+
+    timer2.startTimer(timer2IRQHandler);
+    timer15.startTimer(timer15IRQHandler);
+    timer16.startTimer(timer16IRQHandler);
 
     while (1) {
         EVT::core::time::wait(500);

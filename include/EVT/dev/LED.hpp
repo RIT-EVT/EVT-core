@@ -3,18 +3,14 @@
 
 #include <EVT/io/GPIO.hpp>
 
-namespace EVT::core::DEV
-{
+namespace EVT::core::DEV {
 
-class LED
-{
+class LED {
 public:
-
     /**
      * Represents if the LED is active high or active low.
      */
-    enum class ActiveState
-    {
+    enum class ActiveState {
         HIGH = 0u,
         LOW = 1u
     };
@@ -46,6 +42,6 @@ private:
     ActiveState activeState;
 };
 
-}
+}// namespace EVT::core::DEV
 
 #endif

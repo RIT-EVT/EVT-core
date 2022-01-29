@@ -11,44 +11,43 @@
 
 #include <HALf3/stm32f3xx_hal.h>
 
-namespace EVT::core::time
-{
-    /**
+namespace EVT::core::time {
+/**
      * Function to have the program hold for a set amount of time before
      * continuing.
      *
      * @param ms The number of milliseconds to wait for
      */
-    void wait(uint32_t ms);
+void wait(uint32_t ms);
 
-    /**
+/**
      * Struct representing a timestamp.
      */
-    struct TimeStamp {
-        /**
+struct TimeStamp {
+    /**
          * The current year
          */
-        uint16_t year;
-        /**
+    uint16_t year;
+    /**
          * The current month (1-12)
          */
-        uint8_t month;
-        /**
+    uint8_t month;
+    /**
          * The current day (1-31)
          */
-        uint8_t day;
-        /**
+    uint8_t day;
+    /**
          * The hour in a 24 hour timeframe
          */
-        uint8_t hour;
-        /**
+    uint8_t hour;
+    /**
          * The minute (0-59)
          */
-        uint8_t minute;
-        /**
+    uint8_t minute;
+    /**
          * The second (0-59)
          */
-        uint8_t second;
-    };
-}
+    uint8_t second;
+};
+}// namespace EVT::core::time
 #endif
