@@ -102,18 +102,18 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
     HAL_NVIC_EnableIRQ(CAN_RX0_IRQn);
 
     /* By default - filter that accepts all incoming messages */
-    CAN_FilterTypeDef defaultFilter;
-    defaultFilter.FilterIdHigh = 0;
-    defaultFilter.FilterIdLow = 0;
-    defaultFilter.FilterMaskIdHigh = 0;
-    defaultFilter.FilterMaskIdLow = 0;
-    defaultFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-    defaultFilter.FilterBank = 0;
-    defaultFilter.FilterMode = CAN_FILTERMODE_IDMASK;
-    defaultFilter.FilterScale = CAN_FILTERSCALE_32BIT;
-    defaultFilter.FilterActivation = ENABLE;
+    // CAN_FilterTypeDef defaultFilter;
+    // defaultFilter.FilterIdHigh = 0;
+    // defaultFilter.FilterIdLow = 0;
+    // defaultFilter.FilterMaskIdHigh = 0;
+    // defaultFilter.FilterMaskIdLow = 0;
+    // defaultFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+    // defaultFilter.FilterBank = 0;
+    // defaultFilter.FilterMode = CAN_FILTERMODE_IDMASK;
+    // defaultFilter.FilterScale = CAN_FILTERSCALE_32BIT;
+    // defaultFilter.FilterActivation = ENABLE;
 
-    HAL_CAN_ConfigFilter(&halCAN, &defaultFilter);
+    // HAL_CAN_ConfigFilter(&halCAN, &defaultFilter);
 
     // /* Test filter for CANopen emergency code */
     // CAN_FilterTypeDef emergencyFilter;
@@ -127,21 +127,21 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
     // emergencyFilter.FilterScale = CAN_FILTERSCALE_16BIT;
     // emergencyFilter.FilterActivation = ENABLE;
 
-    // HAL_CAN_ConfigFilter(&halCan, &emergencyFilter);
+    // HAL_CAN_ConfigFilter(&halCAN, &emergencyFilter);
 
-    // /* Test filter for 7-bit device id */
-    // CAN_FilterTypeDef deviceFilter;
-    // deviceFilter.FilterIdHigh = nodeId;
-    // deviceFilter.FilterIdLow = 0x0000;
-    // deviceFilter.FilterMaskIdHigh = 0x0FE0;
-    // deviceFilter.FilterMaskIdLow = 0x0000;
-    // deviceFilter.FilterFIFOAssignment = CAN_FILTER_FIFO1;
-    // deviceFilter.FilterBank = 2;
-    // deviceFilter.FilterMode = CAN_FILTERMODE_IDMASK;
-    // deviceFilter.FilterScale = CAN_FILTERSCALE_16BIT;
-    // deviceFilter.FilterActivation = ENABLE;
+    /* Test filter for 7-bit device id */
+    CAN_FilterTypeDef deviceFilter;
+    deviceFilter.FilterIdHigh = 0x0000; //nodeId;
+    deviceFilter.FilterIdLow = 0x0000;
+    deviceFilter.FilterMaskIdHigh = 0xFFFF; // 0000 1111 1100 0000
+    deviceFilter.FilterMaskIdLow = 0xFFFF; // 0000 0000 0000 0000
+    deviceFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+    deviceFilter.FilterBank = 1;
+    deviceFilter.FilterMode = CAN_FILTERMODE_IDMASK;
+    deviceFilter.FilterScale = CAN_FILTERSCALE_16BIT;
+    deviceFilter.FilterActivation = ENABLE;
 
-    // HAL_CAN_ConfigFilter(&halCan, &deviceFilter)
+    HAL_CAN_ConfigFilter(&halCAN, &deviceFilter);
 
     HAL_CAN_Start(&halCAN);
 }
