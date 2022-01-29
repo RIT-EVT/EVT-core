@@ -1,3 +1,2 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/evt-core_build.cmake)
-
-make_exe(spi main.cpp)
+add_subdirectory(ADXL345)
+add_subdirectory(SPI_With_Arduino)

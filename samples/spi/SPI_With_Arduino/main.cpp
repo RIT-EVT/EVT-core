@@ -1,7 +1,6 @@
 /**
- * Example that handles SPI communication between an Arduino and a
- * EVT-Core device.
- *
+ * Example that handles SPI communication between an EVT-Core
+ * device and the ADXL345 accelerometer
  *
  */
 #include <stdint.h>
@@ -15,10 +14,10 @@
 namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
 
-constexpr uint32_t SPI_SPEED = 4000000; // 4MHz
+constexpr uint32_t SPI_SPEED = SPI_SPEED_4MHZ;  // 4MHz
+
 /** The address of the arduino listening for I2C requests */
 constexpr uint8_t SINGLE_BYTE = 0x10;
-
 constexpr uint8_t READ_MULTIPLE_BYTE = 0x11;
 uint8_t BYTE_MULTIPLE[] = {0x40, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F};
 constexpr uint8_t BYTE_MULTIPLE_LENGTH = 9;
@@ -34,48 +33,50 @@ IO::GPIO* devices[deviceCount];
 int main() {
     // Initialize system
     IO::init();
-
+    // CS: D5
     devices[0] = &IO::getGPIO<IO::Pin::PB_4>(EVT::core::IO::GPIO::Direction::OUTPUT);
     devices[0]->writePin(EVT::core::IO::GPIO::State::HIGH);
 
+    // CLK: D3
+    // MOSI: CN7-3
+    // MISO: CN7-2
     IO::SPI& spi = IO::getSPI<IO::Pin::PB_3, EVT::core::IO::Pin::PC_12, EVT::core::IO::Pin::PC_11>(devices, deviceCount);
-    spi.configureSPI(SPI_SPEED, SPIMode0, SPI_MSB_FIRST);
+
+    spi.configureSPI(SPI_SPEED, SPI_MODE3, SPI_MSB_FIRST);
+
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     uart.printf("Starting SPI test\n\r");
     uint8_t byte;
-
     while (1) {
-        uart.printf("Begin test\n\r");
-        uart.printf("sending single byte %X\n\r", SINGLE_BYTE);
-
-        spi.startTransmition(0);
-        //write a single byte
+        uart.printf("Test Start\n\r");
+        spi.startTransmission(0);
+        // write a single byte
         spi.write(SINGLE_BYTE);
-        //read a single byte
+        // read a single byte
         byte = spi.read();
 
-        spi.endTransmition(0);
+        spi.endTransmission(0);
         uart.printf("reading single byte %X\n\r", byte);
 
-        //write an array of data
-        spi.startTransmition(0);
+        // write an array of data
+        spi.startTransmission(0);
         spi.write(BYTE_MULTIPLE, BYTE_MULTIPLE_LENGTH);
-        spi.endTransmition(0);
+        spi.endTransmission(0);
         uart.printf("sending %u bytes\n\r", BYTE_MULTIPLE_LENGTH);
 
-        //read an array of data
+        // read an array of data
         uint8_t readData[BYTE_MULTIPLE_LENGTH];
-        spi.startTransmition(0);
+        spi.startTransmission(0);
         spi.write(READ_MULTIPLE_BYTE);
         spi.read(readData, BYTE_MULTIPLE_LENGTH-1);
-        spi.endTransmition(0);
+        spi.endTransmission(0);
 
         uart.printf("reading %u bytes\n\r[", BYTE_MULTIPLE_LENGTH-1);
-        for(int i = 0; i<BYTE_MULTIPLE_LENGTH-1; i++){
+        for(int i = 0; i < BYTE_MULTIPLE_LENGTH-1; i++) {
             uart.printf("%X, ", readData[i]);
         }
-        //uart.printf("\n\r\n\r");
+        // uart.printf("\n\r\n\r");
 
         uart.printf("\n\rtesting combined register read and write\n\r");
 
@@ -86,6 +87,6 @@ int main() {
         uart.printf("reading register byte %X\n\r\n\r", byte);
 
         // Wait five seconds before repeating the test
-        time::wait(1000);
+        time::wait(500);
     }
 }
