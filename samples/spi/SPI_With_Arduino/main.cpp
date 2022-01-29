@@ -5,16 +5,16 @@
  */
 #include <stdint.h>
 
-#include <EVT/io/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <EVT/io/GPIO.hpp>
 #include <EVT/io/I2C.hpp>
 #include <EVT/io/UART.hpp>
-#include <EVT/io/GPIO.hpp>
+#include <EVT/io/manager.hpp>
+#include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
 
-constexpr uint32_t SPI_SPEED = SPI_SPEED_4MHZ;  // 4MHz
+constexpr uint32_t SPI_SPEED = SPI_SPEED_4MHZ;// 4MHz
 
 /** The address of the arduino listening for I2C requests */
 constexpr uint8_t SINGLE_BYTE = 0x10;
@@ -26,7 +26,6 @@ constexpr uint8_t WRITE_REG_BYTE = 0xF3;
 constexpr uint8_t READ_REG = 0x28;
 
 constexpr uint8_t deviceCount = 1;
-
 
 IO::GPIO* devices[deviceCount];
 
@@ -69,11 +68,11 @@ int main() {
         uint8_t readData[BYTE_MULTIPLE_LENGTH];
         spi.startTransmission(0);
         spi.write(READ_MULTIPLE_BYTE);
-        spi.read(readData, BYTE_MULTIPLE_LENGTH-1);
+        spi.read(readData, BYTE_MULTIPLE_LENGTH - 1);
         spi.endTransmission(0);
 
-        uart.printf("reading %u bytes\n\r[", BYTE_MULTIPLE_LENGTH-1);
-        for(int i = 0; i < BYTE_MULTIPLE_LENGTH-1; i++) {
+        uart.printf("reading %u bytes\n\r[", BYTE_MULTIPLE_LENGTH - 1);
+        for (int i = 0; i < BYTE_MULTIPLE_LENGTH - 1; i++) {
             uart.printf("%X, ", readData[i]);
         }
         // uart.printf("\n\r\n\r");

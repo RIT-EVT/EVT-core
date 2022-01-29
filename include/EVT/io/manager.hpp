@@ -16,8 +16,8 @@
     #include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/I2Cf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/PWMf302x8.hpp>
-    #include <EVT/io/platform/f3xx/f302x8/UARTf302x8.hpp>
     #include <EVT/io/platform/f3xx/f302x8/SPIf302x8.hpp>
+    #include <EVT/io/platform/f3xx/f302x8/UARTf302x8.hpp>
 #endif
 
 namespace EVT::core::IO {
@@ -117,13 +117,13 @@ UART& getUART(uint32_t baudrate) {
 }
 
 template<Pin sckPin, Pin mosiPin, Pin misoPin>
-    SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
+SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 #ifdef STM32F302x8
-        static SPIf302x8 spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
-        return spi;
+    static SPIf302x8 spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
+    return spi;
 #endif
-    }
-    
+}
+
 }// namespace EVT::core::IO
 
 #endif
