@@ -10,7 +10,7 @@ namespace DEV = EVT::core::DEV;
 int main() {
     IO::init();
 
-    IO::UART &uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     //Specific implementation of DEV::RTC, clock type can vary
     DEV::RTCf302x8 clock;
@@ -24,10 +24,10 @@ int main() {
     time::wait(1000);
     uart.printf("Stopped...\n");
     timer.stopTimer();
-    uart.printf("Current time: %d\n", timer.getTime()); // should be same
+    uart.printf("Current time: %d\n", timer.getTime());// should be same
     uart.printf("Waiting...\n");
     time::wait(1000);
-    uart.printf("Current time: %d\n", timer.getTime()); // should be same
+    uart.printf("Current time: %d\n", timer.getTime());// should be same
     timer.startTimer();
 
     while (1) {
@@ -39,5 +39,4 @@ int main() {
             timer.startTimer();
         }
     }
-
 }

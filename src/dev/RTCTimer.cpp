@@ -44,5 +44,4 @@ bool RTCTimer::hasGoneOff() {
     return getTime() >= clockPeriod;
 }
 
-}
-
+}// namespace EVT::core::DEV

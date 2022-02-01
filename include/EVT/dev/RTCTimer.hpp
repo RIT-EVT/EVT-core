@@ -1,9 +1,9 @@
 #ifndef EVT_TIMER_H
 #define EVT_TIMER_H
 
+#include <EVT/dev/RTC.hpp>
 #include <EVT/dev/Timer.hpp>
 #include <EVT/utils/time.hpp>
-#include <EVT/dev/RTC.hpp>
 
 namespace time = EVT::core::time;
 
@@ -32,7 +32,7 @@ public:
      *
      * @param irqHandler[in] The IRQ Handler function pointer.  Sets a new interrupt handler function
      */
-    void startTimer(void (*irqHandler)(void *htim)) override {}
+    void startTimer(void (*irqHandler)(void* htim)) override {}
 
     /**
      * Starts the given timer.
@@ -91,6 +91,6 @@ private:
     bool bTimerStopped;
 };
 
-}
+}// namespace EVT::core::DEV
 
-#endif //EVT_TIMER_H
+#endif//EVT_TIMER_H
