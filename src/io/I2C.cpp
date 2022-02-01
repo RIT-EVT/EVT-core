@@ -18,7 +18,7 @@ I2C::I2CStatus I2C::write(uint8_t addr, uint8_t* bytes, uint8_t length) {
 
 I2C::I2CStatus I2C::read(uint8_t addr, uint8_t* bytes, uint8_t length) {
     for (int i = 0; i < length; i++)
-       I2C_RETURN_IF_ERR(read(addr, &bytes[i]));
+        I2C_RETURN_IF_ERR(read(addr, &bytes[i]));
     return I2C::I2CStatus::OK;
 }
 
@@ -52,7 +52,7 @@ I2C::I2CStatus I2C::writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
  * starting with the LSB.
  */
 I2C::I2CStatus I2C::readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
-                  uint8_t* bytes, uint8_t length) {
+                            uint8_t* bytes, uint8_t length) {
     // Write out register address
     for (int i = 0; i < regLength; i++)
         I2C_RETURN_IF_ERR(write(addr, reg[i]));

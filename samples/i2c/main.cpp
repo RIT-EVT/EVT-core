@@ -39,7 +39,7 @@ int main() {
         IO::I2C::I2CStatus status = i2c.readReg(I2C_SLAVE_ADDR, O_REGISTER, &oValue);
         if (status != IO::I2C::I2CStatus::OK) {
             uart.printf("Failed read 'o' register with I2C::I2CStatus: %d\n\r",
-                    status);
+                        status);
             break;
         }
 
@@ -50,7 +50,7 @@ int main() {
         status = i2c.readReg(I2C_SLAVE_ADDR, K_REGISTER, &kValue);
         if (status != IO::I2C::I2CStatus::OK) {
             uart.printf("Failed read 'k' register with I2C::I2CStatus: %d\n\r",
-                    status);
+                        status);
             break;
         }
 

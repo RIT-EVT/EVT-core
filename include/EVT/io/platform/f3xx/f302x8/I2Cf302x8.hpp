@@ -21,11 +21,11 @@ public:
 
     I2C::I2CStatus write(uint8_t addr, uint8_t byte) override;
 
-    I2C::I2CStatus read(uint8_t addr, uint8_t*output) override;
+    I2C::I2CStatus read(uint8_t addr, uint8_t* output) override;
 
     I2C::I2CStatus write(uint8_t addr, uint8_t* bytes, uint8_t length);
 
-    I2C::I2CStatus read(uint8_t addr, uint8_t*bytes, uint8_t length);
+    I2C::I2CStatus read(uint8_t addr, uint8_t* bytes, uint8_t length);
 
     I2C::I2CStatus writeMemReg(uint8_t addr, uint32_t memAddress,
                                uint8_t byte, uint16_t memAddSize,
