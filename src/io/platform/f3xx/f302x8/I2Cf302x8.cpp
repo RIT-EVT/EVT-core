@@ -112,7 +112,7 @@ I2C::I2CStatus I2Cf302x8::read(uint8_t addr, uint8_t* output) {
 I2C::I2CStatus I2Cf302x8::write(uint8_t addr, uint8_t* bytes, uint8_t length) {
     HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&halI2C, addr << 1,
                                                        bytes, length,
-                                                        DEFAULT_I2C_TIMEOUT);
+                                                       DEFAULT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
@@ -121,10 +121,10 @@ I2C::I2CStatus I2Cf302x8::write(uint8_t addr, uint8_t* bytes, uint8_t length) {
  * this via the HAL.
  */
 I2C::I2CStatus I2Cf302x8::read(uint8_t addr, uint8_t* bytes, uint8_t length) {
-     HAL_StatusTypeDef status = HAL_I2C_Master_Receive(&halI2C, addr << 1,
-                                                       bytes, length,
-                                                       DEFAULT_I2C_TIMEOUT);
-     return halToI2CStatus(status);
+    HAL_StatusTypeDef status = HAL_I2C_Master_Receive(&halI2C, addr << 1,
+                                                      bytes, length,
+                                                      DEFAULT_I2C_TIMEOUT);
+    return halToI2CStatus(status);
 }
 
 I2C::I2CStatus I2Cf302x8::writeMemReg(uint8_t addr, uint32_t memAddress,
@@ -152,10 +152,10 @@ I2C::I2CStatus I2Cf302x8::writeMemReg(uint8_t addr, uint32_t memAddress,
                                       uint16_t memAddSize,
                                       uint8_t maxWriteTime) {
     uint16_t memAddress16 = memAddress;
-    HAL_StatusTypeDef status =  HAL_I2C_Mem_Write(&halI2C, addr << 1,
-                                                  memAddress16, memAddSize,
-                                                  bytes, size,
-                                                  DEFAULT_I2C_TIMEOUT);
+    HAL_StatusTypeDef status = HAL_I2C_Mem_Write(&halI2C, addr << 1,
+                                                 memAddress16, memAddSize,
+                                                 bytes, size,
+                                                 DEFAULT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
@@ -171,18 +171,18 @@ I2C::I2CStatus I2Cf302x8::readMemReg(uint8_t addr, uint32_t memAddress,
 }
 
 I2C::I2CStatus I2Cf302x8::halToI2CStatus(HAL_StatusTypeDef halStatus) {
-    switch(halStatus) {
-        case HAL_OK:
-            return I2C::I2CStatus::OK;
-        case HAL_ERROR:
-            return I2C::I2CStatus::ERROR;
-        case HAL_BUSY:
-            return I2C::I2CStatus::BUSY;
-        case HAL_TIMEOUT:
-            return I2C::I2CStatus::TIMEOUT;
-        // Should not get here
-        default:
-            return I2C::I2CStatus::ERROR;
+    switch (halStatus) {
+    case HAL_OK:
+        return I2C::I2CStatus::OK;
+    case HAL_ERROR:
+        return I2C::I2CStatus::ERROR;
+    case HAL_BUSY:
+        return I2C::I2CStatus::BUSY;
+    case HAL_TIMEOUT:
+        return I2C::I2CStatus::TIMEOUT;
+    // Should not get here
+    default:
+        return I2C::I2CStatus::ERROR;
     }
 }
 

@@ -3,12 +3,13 @@
 
 #include <stdint.h>
 
-#define I2C_RETURN_IF_ERR(func) {\
-    I2C::I2CStatus status = func;\
-    if (status != I2C::I2CStatus::OK) {\
-        return status;\
-    }\
-}
+#define I2C_RETURN_IF_ERR(func)             \
+    {                                       \
+        I2C::I2CStatus status = func;       \
+        if (status != I2C::I2CStatus::OK) { \
+            return status;                  \
+        }                                   \
+    }
 
 namespace EVT::core::IO {
 // Forward declarations:
@@ -109,7 +110,7 @@ public:
      * @return The status of attempting to write out to the register
      */
     I2CStatus writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
-                  uint8_t* bytes, uint8_t length);
+                       uint8_t* bytes, uint8_t length);
 
     /**
      * Read a value from a register.
@@ -122,7 +123,7 @@ public:
      * @return The status of reading from the register
      */
     I2CStatus readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
-                 uint8_t* bytes, uint8_t length);
+                      uint8_t* bytes, uint8_t length);
 
     /**
      * Write a single byte to a register in memory.
