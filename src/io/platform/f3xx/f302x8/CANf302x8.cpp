@@ -131,12 +131,12 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
 
     /* Test filter for 7-bit device id */
     CAN_FilterTypeDef deviceFilter;
-    deviceFilter.FilterIdHigh = 0x0000; //nodeId;
-    deviceFilter.FilterIdLow = 0x0000;
-    deviceFilter.FilterMaskIdHigh = 0xFFFF; // 0000 1111 1100 0000
-    deviceFilter.FilterMaskIdLow = 0xFFFF; // 0000 0000 0000 0000
+    deviceFilter.FilterIdHigh = 0b00010000011 << 5;
+    deviceFilter.FilterIdLow = 0xFFFF;
+    deviceFilter.FilterMaskIdHigh = 0b1111111111100000;
+    deviceFilter.FilterMaskIdLow = 0xFFFF;
     deviceFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-    deviceFilter.FilterBank = 1;
+    deviceFilter.FilterBank = 2;
     deviceFilter.FilterMode = CAN_FILTERMODE_IDMASK;
     deviceFilter.FilterScale = CAN_FILTERSCALE_16BIT;
     deviceFilter.FilterActivation = ENABLE;
