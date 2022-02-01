@@ -70,7 +70,7 @@ int main() {
         }
         uart.printf("\r\n\r\n");
 
-        time::wait(1000);
+        time::wait(2000);
     }
 
     return 0;
