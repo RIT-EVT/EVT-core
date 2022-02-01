@@ -66,7 +66,6 @@ uint32_t RTCf302x8::getTime() {
     uint32_t min = ts.minute;
     uint32_t s = ts.second;
 
-
     // Get number of days since epoch
     // This algorithm is used to convert a date/time to an epoch.
     // This algorithm was taken from http://howardhinnant.github.io/date_algorithms.html
