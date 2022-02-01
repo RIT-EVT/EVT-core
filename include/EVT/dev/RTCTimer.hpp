@@ -15,15 +15,15 @@ public:
      * Create instance of RTCTimer.
      * clock period defaults to 1s.
      *
-     * @param rtc
+     * @param r
      */
     RTCTimer(RTC& r);
 
     /**
      * Create instance of RTCTimer.
      *
-     * @param rtc Instance of on-board
-     * @param clockPeriod Amount of time it takes for the time to go off in ms
+     * @param r Instance of on-board
+     * @param clock Amount of time it takes for the time to go off in ms
      */
     RTCTimer(RTC& r, uint32_t clock);
 
@@ -53,9 +53,9 @@ public:
      * Set the clock period for the timer.  Will stop the timer, re-initialize the device with the updated period.
      * You must call startTimer again to continue timer operation.
      *
-     * @param clockPeriod[in] the clock period in MILLISECONDS.  An interrupt will be triggered at that frequency.
+     * @param clock[in] the clock period in MILLISECONDS.  An interrupt will be triggered at that frequency.
      */
-    void setPeriod(uint32_t clockPeriod) override;
+    void setPeriod(uint32_t clock) override;
 
     /**
      * Gets the time since the RTC clock began in seconds
@@ -73,7 +73,7 @@ public:
 
 private:
     /** Instance of on-board*/
-    RTC* rtc;
+    RTC& rtc;
 
     /**
      * The amount of seconds that have elapsed while the timer is running.
