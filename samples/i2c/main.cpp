@@ -38,16 +38,19 @@ int main() {
         uint8_t oValue;
         IO::I2C::I2CStatus status = i2c.readReg(I2C_SLAVE_ADDR, O_REGISTER, &oValue);
         if (status != IO::I2C::I2CStatus::OK) {
-            uart.printf("Failed read 'o' register\n\r");
+            uart.printf("Failed read 'o' register with I2C::I2CStatus: %d\n\r",
+                    status);
             break;
         }
 
-
         uart.printf("Reading second bytes\n\r");
+
+        // Read the value of 'k'
         uint8_t kValue;
         status = i2c.readReg(I2C_SLAVE_ADDR, K_REGISTER, &kValue);
         if (status != IO::I2C::I2CStatus::OK) {
-            uart.printf("Failed to read 'k' register\n\r");
+            uart.printf("Failed read 'k' register with I2C::I2CStatus: %d\n\r",
+                    status);
             break;
         }
 
