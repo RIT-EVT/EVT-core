@@ -2,46 +2,46 @@
 
 namespace EVT::core::DEV {
 
-RTCTimer::RTCTimer(RTC& rtc) {
-    m_rtc = &rtc;
-    m_time = 0;
+RTCTimer::RTCTimer(RTC& r) {
+    rtc = &r;
+    time = 0;
     setPeriod(1000);
-    m_startTime = m_rtc->getTime();
+    startTime = rtc->getTime();
 }
 
-RTCTimer::RTCTimer(RTC& rtc, uint32_t clockPeriod) {
-    m_rtc = &rtc;
-    m_time = 0;
-    setPeriod(clockPeriod);
-    m_startTime = m_rtc->getTime();
+RTCTimer::RTCTimer(RTC& r, uint32_t clock) {
+    rtc = &r;
+    time = 0;
+    setPeriod(clock);
+    startTime = rtc->getTime();
 }
 
 void RTCTimer::startTimer() {
-    m_startTime = m_rtc->getTime();
-    m_bTimerStopped = false;
+    startTime = rtc->getTime();
+    bTimerStopped = false;
 }
 
 void RTCTimer::stopTimer() {
-    m_time += m_rtc->getTime() - m_startTime;
-    m_bTimerStopped = true;
+    time += rtc->getTime() - startTime;
+    bTimerStopped = true;
 }
 
 void RTCTimer::reloadTimer() {
-    m_time = 0;
-    m_startTime = m_rtc->getTime();
-    m_bTimerStopped = false;
+    time = 0;
+    startTime = rtc->getTime();
+    bTimerStopped = false;
 }
 
 void RTCTimer::setPeriod(uint32_t clockPeriod) {
-    m_clockPeriod = clockPeriod / 1000;
+    clockPeriod = clockPeriod / 1000;
 }
 
 uint32_t RTCTimer::getTime() {
-    return m_bTimerStopped ? m_time : m_time + m_rtc->getTime() - m_startTime;
+    return bTimerStopped ? time : time + rtc->getTime() - startTime;
 }
 
 bool RTCTimer::hasGoneOff() {
-    return getTime() >= m_clockPeriod;
+    return getTime() >= clockPeriod;
 }
 
 }

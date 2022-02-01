@@ -17,7 +17,7 @@ public:
      *
      * @param rtc
      */
-    RTCTimer(RTC& rtc);
+    RTCTimer(RTC& r);
 
     /**
      * Create instance of RTCTimer.
@@ -25,7 +25,7 @@ public:
      * @param rtc Instance of on-board
      * @param clockPeriod Amount of time it takes for the time to go off in ms
      */
-    RTCTimer(RTC& rtc, uint32_t clockPeriod);
+    RTCTimer(RTC& r, uint32_t clock);
 
     /**
      * not implemented.
@@ -73,22 +73,22 @@ public:
 
 private:
     /** Instance of on-board*/
-    RTC* m_rtc;
+    RTC* rtc;
 
     /**
      * The amount of seconds that have elapsed while the timer is running.
      * Only updates when stopTimer() is called.
      */
-    uint32_t m_time;
+    uint32_t time;
 
     /** The amount of time it takes the timer to go off in SECONDS */
-    uint32_t m_clockPeriod;
+    uint32_t clockPeriod;
 
     /** The epoc time the clock started */
-    uint32_t m_startTime;
+    uint32_t startTime;
 
     /** true if timer has been stopped */
-    bool m_bTimerStopped;
+    bool bTimerStopped;
 };
 
 }
