@@ -19,5 +19,5 @@ constexpr uint32_t GPIO_INTERRUPT_PRIORITY = 10;
  */
 void stm32f302x8_init();
 
-}  // namespace EVT::core::platform
+}// namespace EVT::core::platform
 #endif

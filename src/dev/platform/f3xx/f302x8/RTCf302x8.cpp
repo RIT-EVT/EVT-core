@@ -4,17 +4,16 @@
 
 namespace EVT::core::DEV {
 
-
 RTCf302x8::RTCf302x8() {
-    halRTC.Instance             = RTC1;
+    halRTC.Instance = RTC1;
 
     // Numbers generated from STMCubeMX
-    halRTC.Init.HourFormat      = RTC_HOURFORMAT_24;
-    halRTC.Init.AsynchPrediv    = 127;
-    halRTC.Init.SynchPrediv     = 255;
-    halRTC.Init.OutPut          = RTC_OUTPUT_DISABLE;
-    halRTC.Init.OutPutType      = RTC_OUTPUT_TYPE_PUSHPULL;
-    halRTC.Init.OutPutPolarity  = RTC_OUTPUT_POLARITY_HIGH;
+    halRTC.Init.HourFormat = RTC_HOURFORMAT_24;
+    halRTC.Init.AsynchPrediv = 127;
+    halRTC.Init.SynchPrediv = 255;
+    halRTC.Init.OutPut = RTC_OUTPUT_DISABLE;
+    halRTC.Init.OutPutType = RTC_OUTPUT_TYPE_PUSHPULL;
+    halRTC.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
 
     RCC_OscInitTypeDef RCC_OscInitStruct;
     RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
@@ -70,10 +69,10 @@ uint32_t RTCf302x8::getTime() {
     // This algorithm is used to convert a date/time to an epoch.
     // This algorithm was taken from http://howardhinnant.github.io/date_algorithms.html
     y -= m <= 2;
-    const uint32_t era = (y >= 0 ? y : y-399) / 400;
+    const uint32_t era = (y >= 0 ? y : y - 399) / 400;
     const uint32_t yoe = static_cast<uint32_t>(y - era * 400);
-    const uint32_t doy = (153*(m + (m > 2 ? -3 : 9)) + 2)/5 + d-1;
-    const uint32_t doe = yoe * 365 + yoe/4 - yoe/100 + doy;
+    const uint32_t doy = (153 * (m + (m > 2 ? -3 : 9)) + 2) / 5 + d - 1;
+    const uint32_t doe = yoe * 365 + yoe / 4 - yoe / 100 + doy;
     uint32_t time = era * 146097 + static_cast<int32_t>(doe) - 719468;
 
     // Convert to seconds
@@ -90,20 +89,20 @@ void RTCf302x8::setTime(EVT::core::time::TimeStamp& time) {
     RTC_TimeTypeDef rtcTime;
 
     rtcDate.WeekDay = time.day;
-    rtcDate.Month   = static_cast<uint8_t>(time.month);
-    rtcDate.Date    = time.day;
-    rtcDate.Year    = time.year % 100;
+    rtcDate.Month = static_cast<uint8_t>(time.month);
+    rtcDate.Date = time.day;
+    rtcDate.Year = time.year % 100;
 
     // RTC struct for the time
-    rtcTime.Hours           = time.hour;
-    rtcTime.Minutes         = time.minute;
-    rtcTime.TimeFormat      = RTC_HOURFORMAT_24;
-    rtcTime.Seconds         = time.second;
-    rtcTime.DayLightSaving  = RTC_DAYLIGHTSAVING_NONE;
-    rtcTime.StoreOperation  = RTC_STOREOPERATION_RESET;
+    rtcTime.Hours = time.hour;
+    rtcTime.Minutes = time.minute;
+    rtcTime.TimeFormat = RTC_HOURFORMAT_24;
+    rtcTime.Seconds = time.second;
+    rtcTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+    rtcTime.StoreOperation = RTC_STOREOPERATION_RESET;
 
     HAL_RTC_SetDate(&halRTC, &rtcDate, RTC_FORMAT_BIN);
     HAL_RTC_SetTime(&halRTC, &rtcTime, RTC_FORMAT_BIN);
 }
 
-}  // namespace EVT::core::DEV
+}// namespace EVT::core::DEV

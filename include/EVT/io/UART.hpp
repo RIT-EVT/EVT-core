@@ -28,7 +28,6 @@ enum class Pin;
  */
 class UART {
 public:
-
     /**
      * Represents the options for the parity settings that may be used when
      * setting up a UART.
@@ -85,9 +84,9 @@ public:
      * @param parity[in] The parity settings to use.
      * @param numStopBits[in] The number of stop bits (1-2)
      */
-    virtual void setFormat(WordLength wordLength=WordLength::EIGHT,
-            Parity parity=Parity::NONE,
-            NumStopBits numStopBits=NumStopBits::ONE) = 0;
+    virtual void setFormat(WordLength wordLength = WordLength::EIGHT,
+                           Parity parity = Parity::NONE,
+                           NumStopBits numStopBits = NumStopBits::ONE) = 0;
 
     /**
      * Sends a serial break condition over UART.
@@ -179,7 +178,6 @@ public:
      */
     virtual void readBytes(uint8_t* bytes, size_t size) = 0;
 
-
 protected:
     /// The TX pin used by the UART interface
     Pin txPin;
@@ -191,6 +189,6 @@ protected:
     constexpr static uint32_t DEFAULT_TIMEOUT = 100;
 };
 
-}
+}// namespace EVT::core::IO
 
 #endif

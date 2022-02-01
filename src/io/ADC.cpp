@@ -6,4 +6,4 @@ ADC::ADC(Pin pin) {
     this->pin = pin;
 }
 
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO

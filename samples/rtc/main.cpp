@@ -2,10 +2,10 @@
  * This example prints out the time as read in from the RTC
  * every second.
  */
-#include <EVT/io/manager.hpp>
-#include <EVT/utils/time.hpp>
 #include <EVT/dev/platform/f3xx/f302x8/RTC302x8.hpp>
 #include <EVT/io/UART.hpp>
+#include <EVT/io/manager.hpp>
+#include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
@@ -39,8 +39,8 @@ int main() {
         rtc.getTime(time);
 
         uart.printf("%d/%d/%d %d:%d:%d\r\n",
-                time.day, time.month, time.year,
-                time.hour, time.minute, time.second);
+                    time.day, time.month, time.year,
+                    time.hour, time.minute, time.second);
 
         epochTime = rtc.getTime();
         uart.printf("Timestamp since Epoch: %d\r\n\r\n", epochTime);

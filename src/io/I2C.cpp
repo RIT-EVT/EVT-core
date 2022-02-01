@@ -8,7 +8,7 @@
 
 namespace EVT::core::IO {
 
-I2C::I2C(Pin sclPin, Pin sdaPin): sclPin(sclPin), sdaPin(sdaPin) {}
+I2C::I2C(Pin sclPin, Pin sdaPin) : sclPin(sclPin), sdaPin(sdaPin) {}
 
 void I2C::write(uint8_t addr, uint8_t* bytes, uint8_t length) {
     for (int i = 0; i < length; i++)
@@ -35,7 +35,7 @@ uint8_t I2C::readReg(uint8_t addr, uint8_t reg) {
 }
 
 void I2C::writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
-        uint8_t* bytes, uint8_t length) {
+                   uint8_t* bytes, uint8_t length) {
     write(addr, reg, regLength);
     write(addr, bytes, length);
 }
@@ -47,7 +47,7 @@ void I2C::writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
  * starting with the LSB.
  */
 void I2C::readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
-        uint8_t* bytes, uint8_t length) {
+                  uint8_t* bytes, uint8_t length) {
     // Write out register address
     for (int i = 0; i < regLength; i++)
         write(addr, reg[i]);
@@ -56,4 +56,4 @@ void I2C::readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
         bytes[i] = read(addr);
 }
 
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO

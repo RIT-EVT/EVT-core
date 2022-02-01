@@ -1,7 +1,7 @@
-#include <stdint.h>
-#include <string.h>
-#include <stdio.h>
 #include <stdarg.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
 
 #include <EVT/io/pin.hpp>
 #include <EVT/io/platform/f3xx/f302x8/UARTf302x8.hpp>
@@ -24,66 +24,66 @@ UARTf302x8::UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate)
     uint8_t portID = 1;
 
     switch (txPin) {
-        case Pin::PA_9:
-        case Pin::PB_6:
-        case Pin::PC_4:
-            portID = 1;
-            break;
-        case Pin::PA_2:
-        case Pin::PA_14:
-        case Pin::PB_3:
-            portID = 2;
-            break;
-        case Pin::PB_9:
-        case Pin::PB_10:
-        case Pin::PC_10:
-            portID = 3;
-            break;
-        default:
-            break;
+    case Pin::PA_9:
+    case Pin::PB_6:
+    case Pin::PC_4:
+        portID = 1;
+        break;
+    case Pin::PA_2:
+    case Pin::PA_14:
+    case Pin::PB_3:
+        portID = 2;
+        break;
+    case Pin::PB_9:
+    case Pin::PB_10:
+    case Pin::PC_10:
+        portID = 3;
+        break;
+    default:
+        break;
     }
 
     switch (portID) {
-        case 1:
-            halUART.Instance = USART1;
+    case 1:
+        halUART.Instance = USART1;
 
-            if (!(__HAL_RCC_USART1_IS_CLK_ENABLED()))
-                __HAL_RCC_USART1_CLK_ENABLE();
+        if (!(__HAL_RCC_USART1_IS_CLK_ENABLED()))
+            __HAL_RCC_USART1_CLK_ENABLE();
 
-            alt_id = GPIO_AF7_USART1;
+        alt_id = GPIO_AF7_USART1;
 
-            break;
-        case 2:
-            halUART.Instance = USART2;
+        break;
+    case 2:
+        halUART.Instance = USART2;
 
-            if (!(__HAL_RCC_USART2_IS_CLK_ENABLED()))
-                __HAL_RCC_USART2_CLK_ENABLE();
+        if (!(__HAL_RCC_USART2_IS_CLK_ENABLED()))
+            __HAL_RCC_USART2_CLK_ENABLE();
 
-            alt_id = GPIO_AF7_USART2;
+        alt_id = GPIO_AF7_USART2;
 
-            break;
-        case 3:
-            halUART.Instance = USART3;
+        break;
+    case 3:
+        halUART.Instance = USART3;
 
-            if (!(__HAL_RCC_USART3_IS_CLK_ENABLED()))
-                __HAL_RCC_USART3_CLK_ENABLE();
+        if (!(__HAL_RCC_USART3_IS_CLK_ENABLED()))
+            __HAL_RCC_USART3_CLK_ENABLE();
 
-            alt_id = GPIO_AF7_USART3;
+        alt_id = GPIO_AF7_USART3;
 
-            break;
-        default:
-            break;
+        break;
+    default:
+        break;
     }
 
     GPIOf302x8::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP,
-        GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, alt_id);
+                              GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, alt_id);
 
-    halUART.Init.BaudRate     = baudrate;
-    halUART.Init.WordLength   = UART_WORDLENGTH_8B;
-    halUART.Init.StopBits     = UART_STOPBITS_1;
-    halUART.Init.Parity       = UART_PARITY_NONE;
-    halUART.Init.HwFlowCtl    = UART_HWCONTROL_NONE;
-    halUART.Init.Mode         = UART_MODE_TX_RX;
+    halUART.Init.BaudRate = baudrate;
+    halUART.Init.WordLength = UART_WORDLENGTH_8B;
+    halUART.Init.StopBits = UART_STOPBITS_1;
+    halUART.Init.Parity = UART_PARITY_NONE;
+    halUART.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    halUART.Init.Mode = UART_MODE_TX_RX;
     halUART.Init.OverSampling = UART_OVERSAMPLING_16;
 
     HAL_UART_Init(&halUART);
@@ -95,7 +95,7 @@ void UARTf302x8::setBaudrate(uint32_t baudrate) {
 }
 
 void UARTf302x8::setFormat(WordLength wordLength, Parity parity,
-        NumStopBits numStopBits) {
+                           NumStopBits numStopBits) {
     halUART.Init.WordLength = static_cast<uint32_t>(wordLength);
     halUART.Init.Parity = static_cast<uint32_t>(parity);
     halUART.Init.Parity = static_cast<uint32_t>(numStopBits);
@@ -115,7 +115,7 @@ bool UARTf302x8::isWritable() {
 
 void UARTf302x8::putc(char c) {
     uint8_t* data = reinterpret_cast<uint8_t*>(&c);
-    HAL_UART_Transmit(&halUART, data, 1 , DEFAULT_TIMEOUT);
+    HAL_UART_Transmit(&halUART, data, 1, DEFAULT_TIMEOUT);
 }
 
 void UARTf302x8::puts(const char* s) {
@@ -132,7 +132,7 @@ char UARTf302x8::getc() {
     return static_cast<char>(c);
 }
 
-void UARTf302x8::printf(const char *format, ...) {
+void UARTf302x8::printf(const char* format, ...) {
     va_list args;
     va_start(args, format);
 
@@ -140,7 +140,7 @@ void UARTf302x8::printf(const char *format, ...) {
     uint8_t* data = reinterpret_cast<uint8_t*>(&string);
     if (0 < vsprintf(string, format, args)) {
         HAL_UART_Transmit(&halUART, data,
-                strlen(string), DEFAULT_TIMEOUT);
+                          strlen(string), DEFAULT_TIMEOUT);
     }
 
     va_end(args);
@@ -162,4 +162,4 @@ void UARTf302x8::readBytes(uint8_t* bytes, size_t size) {
     HAL_UART_Receive(&halUART, bytes, size, DEFAULT_TIMEOUT);
 }
 
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO

@@ -9,8 +9,8 @@ IWDGf302x8::IWDGf302x8(uint32_t ms) {
     uint32_t windowSize = ms / 8;
 
     halIWDG.Instance = IWDG1;
-    halIWDG.Init.Reload = windowSize-1;
-    halIWDG.Init.Window = windowSize-1;
+    halIWDG.Init.Reload = windowSize - 1;
+    halIWDG.Init.Window = windowSize - 1;
     halIWDG.Init.Prescaler = IWDG_PRESCALER_256;
 
     HAL_IWDG_Init(&halIWDG);
@@ -20,4 +20,4 @@ void IWDGf302x8::refresh() {
     HAL_IWDG_Refresh(&halIWDG);
 }
 
-} // namespace EVT::core::DEV
+}// namespace EVT::core::DEV

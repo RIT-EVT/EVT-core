@@ -12,9 +12,9 @@
 
 #include <EVT/io/platform/f3xx/f302x8/CANf302x8.hpp>
 #include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
+#include <EVT/platform/f3xx/stm32f302x8.hpp>
 #include <EVT/utils/time.hpp>
 #include <EVT/utils/types/FixedQueue.hpp>
-#include <EVT/platform/f3xx/stm32f302x8.hpp>
 
 namespace {
 
@@ -28,7 +28,7 @@ EVT::core::IO::CANf302x8* canIntf;
 // variable above.
 CAN_HandleTypeDef* hcan;
 
-}  // namespace
+}// namespace
 
 extern "C" void CAN_RX0_IRQHandler(void) {
     HAL_CAN_IRQHandler(hcan);
@@ -49,7 +49,7 @@ extern "C" void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
 
     // Construct the CANmessage
     bool isExtended = rxHeader.IDE == CAN_ID_EXT;
-    uint32_t id = isExtended ? rxHeader.ExtId: rxHeader.StdId;
+    uint32_t id = isExtended ? rxHeader.ExtId : rxHeader.StdId;
     EVT::core::IO::CANMessage message(id, rxHeader.DLC, payload, isExtended);
 
     // Check to see if a user defined IRQ has been provided
@@ -70,24 +70,24 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
     Pin canPins[] = {txPin, rxPin};
     uint8_t numOfPins = 2;
     GPIOf302x8::gpioStateInit(&gpioInit, canPins, numOfPins, GPIO_MODE_AF_OD,
-                            GPIO_PULLUP, GPIO_SPEED_FREQ_HIGH, GPIO_AF9_CAN);
+                              GPIO_PULLUP, GPIO_SPEED_FREQ_HIGH, GPIO_AF9_CAN);
 
     // Initialize HAL CAN
     // Bit timing values calculated from the website
     // http://www.bittiming.can-wiki.info/
     uint32_t mode = loopbackEnabled ? CAN_MODE_LOOPBACK : CAN_MODE_NORMAL;
-    halCAN.Instance                     = CAN1;
-    halCAN.Init.Prescaler               = 1;
-    halCAN.Init.Mode                    = mode;
-    halCAN.Init.SyncJumpWidth           = CAN_SJW_1TQ;
-    halCAN.Init.TimeSeg1                = CAN_BS1_13TQ;
-    halCAN.Init.TimeSeg2                = CAN_BS2_2TQ;
-    halCAN.Init.TimeTriggeredMode       = DISABLE;
-    halCAN.Init.AutoBusOff              = DISABLE;
-    halCAN.Init.AutoWakeUp              = DISABLE;
-    halCAN.Init.AutoRetransmission      = DISABLE;
-    halCAN.Init.ReceiveFifoLocked       = DISABLE;
-    halCAN.Init.TransmitFifoPriority    = DISABLE;
+    halCAN.Instance = CAN1;
+    halCAN.Init.Prescaler = 1;
+    halCAN.Init.Mode = mode;
+    halCAN.Init.SyncJumpWidth = CAN_SJW_1TQ;
+    halCAN.Init.TimeSeg1 = CAN_BS1_13TQ;
+    halCAN.Init.TimeSeg2 = CAN_BS2_2TQ;
+    halCAN.Init.TimeTriggeredMode = DISABLE;
+    halCAN.Init.AutoBusOff = DISABLE;
+    halCAN.Init.AutoWakeUp = DISABLE;
+    halCAN.Init.AutoRetransmission = DISABLE;
+    halCAN.Init.ReceiveFifoLocked = DISABLE;
+    halCAN.Init.TransmitFifoPriority = DISABLE;
 
     // Setup global variables
     hcan = &this->halCAN;
@@ -103,15 +103,15 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
 
     /* By default - filter that accepts all incoming messages */
     CAN_FilterTypeDef defaultFilter;
-    defaultFilter.FilterIdHigh         = 0;
-    defaultFilter.FilterIdLow          = 0;
-    defaultFilter.FilterMaskIdHigh     = 0;
-    defaultFilter.FilterMaskIdLow      = 0;
+    defaultFilter.FilterIdHigh = 0;
+    defaultFilter.FilterIdLow = 0;
+    defaultFilter.FilterMaskIdHigh = 0;
+    defaultFilter.FilterMaskIdLow = 0;
     defaultFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-    defaultFilter.FilterBank           = 0;
-    defaultFilter.FilterMode           = CAN_FILTERMODE_IDMASK;
-    defaultFilter.FilterScale          = CAN_FILTERSCALE_32BIT;
-    defaultFilter.FilterActivation     = ENABLE;
+    defaultFilter.FilterBank = 0;
+    defaultFilter.FilterMode = CAN_FILTERMODE_IDMASK;
+    defaultFilter.FilterScale = CAN_FILTERSCALE_32BIT;
+    defaultFilter.FilterActivation = ENABLE;
 
     HAL_CAN_ConfigFilter(&halCAN, &defaultFilter);
 
@@ -129,7 +129,7 @@ void CANf302x8::transmit(CANMessage& message) {
         txHeader.ExtId = message.getId();
     else
         txHeader.StdId = message.getId();
-    txHeader.IDE = message.isCANExtended() ? CAN_ID_EXT: CAN_ID_STD;
+    txHeader.IDE = message.isCANExtended() ? CAN_ID_EXT : CAN_ID_STD;
     // TODO: Consider having remote setting be part of CAN message
     txHeader.RTR = CAN_RTR_DATA;
     txHeader.DLC = message.getDataLength();
@@ -180,4 +180,4 @@ bool CANf302x8::triggerIRQ(CANMessage& message) {
     return true;
 }
 
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO

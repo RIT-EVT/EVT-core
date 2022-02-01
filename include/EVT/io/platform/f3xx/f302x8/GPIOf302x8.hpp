@@ -6,14 +6,10 @@
 #include <EVT/io/GPIO.hpp>
 #include <HALf3/stm32f3xx.h>
 
+namespace EVT::core::IO {
 
-namespace EVT::core::IO
-{
-
-class GPIOf302x8 : public GPIO
-{
+class GPIOf302x8 : public GPIO {
 public:
-    
     /**
      * Create an instance of the STMF3xx GPIO pin using the provided pin. The
      * direction will have to be set manually before use.
@@ -57,7 +53,7 @@ public:
      * @param edge[in] the trigger edge
      * @param irqHandler[in] the function pointer to the handler
      */
-    void registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO *pin)) override;
+    void registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin)) override;
 
     /**
      * Condenses gpio settings initialization into a single function.
@@ -70,10 +66,10 @@ public:
      * Possible values for Mode, Pull, and Speed can be found in "stm32f3xx_hal_gpio.h"
      * @param alternate gpio alternate function selection
      */
-    static void gpioStateInit(GPIO_InitTypeDef *targetGpio, Pin *pins, 
-                                uint8_t numOfPins, uint32_t mode, uint32_t pull, 
-                                uint32_t speed, uint8_t alternate = 0x0DU);
-   
+    static void gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins,
+                              uint8_t numOfPins, uint32_t mode, uint32_t pull,
+                              uint32_t speed, uint8_t alternate = 0x0DU);
+
 private:
     // See stm32f3xx_hal_gpio -> GPIO_mode for info on derivations
     constexpr static int GPIO_MODE_IT_SHIFT = 20;
@@ -82,9 +78,9 @@ private:
     /// Pin representing the underlying HAL pin identifer
     uint16_t halPin;
     /// Represents the GPIO port of the pin (A, B, C, D, E, or F)
-    GPIO_TypeDef * port;
+    GPIO_TypeDef* port;
 };
-    
-}
+
+}// namespace EVT::core::IO
 
 #endif
