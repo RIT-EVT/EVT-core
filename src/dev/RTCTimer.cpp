@@ -3,7 +3,6 @@
 namespace EVT::core::DEV {
 
 RTCTimer::RTCTimer(RTC& r) : rtc(r) {
-    rtc = r;
     time = 0;
     setPeriod(1000);
     startTime = rtc.getTime();
