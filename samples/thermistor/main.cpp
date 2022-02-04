@@ -1,6 +1,5 @@
 /**
- * This example prints out the time as read in from the RTC
- * every second.
+ * This example prints out temperature reading from a thermistor
  */
 #include <EVT/dev/Thermistor.hpp>
 #include <EVT/io/ADC.hpp>
