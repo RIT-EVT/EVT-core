@@ -18,6 +18,7 @@ ADC_HandleTypeDef* adcHandle;
 
 extern "C" void DMA1_Channel1_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle);
+    HAL_ADC_IRQHandler(adcHandle);
 }
 
 namespace EVT::core::IO {
@@ -87,7 +88,7 @@ void ADCf302x8::initADC(uint8_t num_channels) {
 
     // TODO: Figure out ADC calibration
 
-    halADC.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
+    halADC.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV1;  // Use AHB clock (8MHz) w/o division for ADC clock
     halADC.Init.Resolution = ADC_RESOLUTION_12B;
     halADC.Init.DataAlign = ADC_DATAALIGN_RIGHT;
     halADC.Init.ScanConvMode = ADC_SCAN_ENABLE;
