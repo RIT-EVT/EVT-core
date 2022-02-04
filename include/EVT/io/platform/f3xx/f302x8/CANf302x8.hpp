@@ -45,6 +45,11 @@ public:
     CANMessage* receive(CANMessage* message, bool blocking = false);
 
     /**
+     * @copydoc EVT::core::IO::CAN::setCANFilterId 
+     */
+    void setCANFilterId(uint32_t identifier);
+
+    /**
      * @copydoc EVT::core::IO::CAN::addIRQHandler
      */
     void addIRQHandler(void (*handler)(CANMessage&, void* priv), void* priv);
@@ -77,6 +82,8 @@ private:
     CAN_HandleTypeDef halCAN;
     /** Queue which holds received CAN messages */
     EVT::core::types::FixedQueue<CAN_MESSAGE_QUEUE_SIZE, CANMessage> messageQueue;
+    /** CAN filtering identifier */
+    uint32_t identifier;
 };
 
 }// namespace EVT::core::IO

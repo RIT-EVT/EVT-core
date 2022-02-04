@@ -58,6 +58,13 @@ public:
     virtual CANMessage* receive(CANMessage* message, bool blocking = false) = 0;
 
     /**
+     * Sets the 11-bit CAN ID that will be sent to the receive buffer.
+     *
+     * @param identifier[in] The 11-bit CAN ID 
+     */
+    virtual void setCANFilterId(uint32_t identifier);
+
+    /**
      * Add an interrupt handler for CAN messages. This will be called with
      * the provided private data when a new CAN message comes in.
      *
