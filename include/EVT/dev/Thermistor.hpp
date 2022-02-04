@@ -32,8 +32,6 @@ private:
     uint32_t (*conversion)(uint32_t);
 };
 
-}
-
-
+}// namespace EVT::core::DEV
 
 #endif
