@@ -14,6 +14,7 @@ class ADCMux {
 
         IO::ADC& adc;
 
+
     public:
         ADCMux(EVT::core::IO::GPIO& ctrlGPIO1, EVT::core::IO::GPIO& ctrlGPIO2, IO::ADC& adc) : ctrlGPIO1(ctrlGPIO1), ctrlGPIO2(ctrlGPIO2), adc(adc) {
         }
