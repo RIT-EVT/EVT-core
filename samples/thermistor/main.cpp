@@ -14,7 +14,7 @@ namespace time = EVT::core::time;
 
 /**
  * Note, this conversion function is just to show off how a conversion
- * function will loook like. In actuality, this will be determined through
+ * function will look like. In actuality, this will be determined through
  * testing/reading the thermistor datasheet.
  */
 uint32_t convert(uint32_t voltage) {
