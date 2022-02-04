@@ -88,7 +88,7 @@ void ADCf302x8::initADC(uint8_t num_channels) {
 
     // TODO: Figure out ADC calibration
 
-    halADC.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV1;  // Use AHB clock (8MHz) w/o division for ADC clock
+    halADC.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV1;// Use AHB clock (8MHz) w/o division for ADC clock
     halADC.Init.Resolution = ADC_RESOLUTION_12B;
     halADC.Init.DataAlign = ADC_DATAALIGN_RIGHT;
     halADC.Init.ScanConvMode = ADC_SCAN_ENABLE;
