@@ -47,6 +47,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/dev/platform/f3xx/f302x8/IWDGf302x8.cpp
     src/dev/platform/f3xx/f302x8/Timerf302x8.cpp
     src/dev/storage/M24C32.cpp
+    src/dev/Thermistor.cpp
 
     src/utils/platform/f3xx/time.cpp
     src/utils/log.cpp
