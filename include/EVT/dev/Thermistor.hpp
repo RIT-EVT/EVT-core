@@ -1,6 +1,8 @@
 #ifndef _EVT_THERMISTOR_
 #define _EVT_THERMISTOR_
 
+#include <stdint.h>
+
 #include <EVT/io/ADC.hpp>
 
 namespace EVT::core::DEV {
@@ -16,19 +18,18 @@ public:
      * pass those values through the conversion to produce a temperature
      * reading.
      */
-    Thermistor(EVT::core::IO::ADC& adc, float (*conversion)(float));
+    Thermistor(EVT::core::IO::ADC& adc, uint32_t (*conversion)(uint32_t));
 
     /**
-     * Return the temperature in celcius of the thermistor
+     * Return the temperature in milli celcius of the thermistor
      */
-    float getTempCelcius();
+    uint32_t getTempCelcius();
 
 private:
     /// The ADC interface to read from
     EVT::core::IO::ADC& adc;
-    /// Function which can take the voltage input from the ADC and produce
-    /// a temperature. The function should return the temperature in Celcius
-    float (*conversion)(float);
+    /// Funtion that converts raw ADC values into milli Celcius
+    uint32_t (*conversion)(uint32_t);
 };
 
 }
