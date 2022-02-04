@@ -18,7 +18,6 @@ ADC_HandleTypeDef* adcHandle;
 
 extern "C" void DMA1_Channel1_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle);
-    HAL_ADC_IRQHandler(adcHandle);
 }
 
 namespace EVT::core::IO {
