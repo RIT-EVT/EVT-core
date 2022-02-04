@@ -2,14 +2,14 @@
 
 namespace EVT::core::DEV {
 
-Thermistor::Thermistor(EVT::core::IO::ADC& adc, float (*conversion)(float)) :
+Thermistor::Thermistor(EVT::core::IO::ADC& adc, uint32_t (*conversion)(uint32_t)) :
     adc(adc),
     conversion(conversion) {
 
 }
 
-float Thermistor::getTempCelcius() {
-    return conversion(adc.read());
+uint32_t Thermistor::getTempCelcius() {
+    return conversion(adc.readRaw());
 }
 
 }
