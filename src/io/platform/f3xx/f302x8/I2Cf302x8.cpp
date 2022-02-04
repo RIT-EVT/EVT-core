@@ -153,10 +153,10 @@ I2C::I2CStatus I2Cf302x8::writeMemReg(uint8_t addr, uint32_t memAddress,
                                       uint16_t memAddSize,
                                       uint8_t maxWriteTime) {
     uint16_t memAddress16 = memAddress;
-    HAL_StatusTypeDef status =  HAL_I2C_Mem_Write(&halI2C, addr << 1,
-                                                  memAddress16, memAddSize,
-                                                  bytes, size,
-                                                  DEFAULT_I2C_TIMEOUT);
+    HAL_StatusTypeDef status = HAL_I2C_Mem_Write(&halI2C, addr << 1,
+                                                 memAddress16, memAddSize,
+                                                 bytes, size,
+                                                 DEFAULT_I2C_TIMEOUT);
     HAL_Delay(maxWriteTime);
     return halToI2CStatus(status);
 }
