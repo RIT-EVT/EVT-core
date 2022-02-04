@@ -137,25 +137,25 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
 
     HAL_CAN_ConfigFilter(&halCAN, &defaultFilter);
 
-    // /* Test filter for CANopen emergency code */
-    // CAN_FilterTypeDef emergencyFilter;
-    // emergencyFilter.FilterIdHigh = 0x1000;
-    // emergencyFilter.FilterIdLow = 0x0000;
-    // emergencyFilter.FilterMaskIdHigh = 0xF000;
-    // emergencyFilter.FilterMaskIdLow = 0x0000;
-    // emergencyFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-    // emergencyFilter.FilterBank = 1;
-    // emergencyFilter.FilterMode = CAN_FILTERMODE_IDMASK;
-    // emergencyFilter.FilterScale = CAN_FILTERSCALE_16BIT;
-    // emergencyFilter.FilterActivation = ENABLE;
+    /* Test filter for CANopen emergency code */
+    CAN_FilterTypeDef emergencyFilter;
+    emergencyFilter.FilterIdHigh = 0x100 << 5;
+    emergencyFilter.FilterIdLow = 0xFFFF;
+    emergencyFilter.FilterMaskIdHigh = 0xF00;
+    emergencyFilter.FilterMaskIdLow = 0xFFFF;
+    emergencyFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+    emergencyFilter.FilterBank = 1;
+    emergencyFilter.FilterMode = CAN_FILTERMODE_IDMASK;
+    emergencyFilter.FilterScale = CAN_FILTERSCALE_16BIT;
+    emergencyFilter.FilterActivation = ENABLE;
 
-    // HAL_CAN_ConfigFilter(&halCAN, &emergencyFilter);
+    HAL_CAN_ConfigFilter(&halCAN, &emergencyFilter);
 
     /* Test filter for 7-bit device id */
     CAN_FilterTypeDef deviceFilter;
-    deviceFilter.FilterIdHigh = 0b00010000011 << 5;
+    deviceFilter.FilterIdHigh = this->identifier << 5;
     deviceFilter.FilterIdLow = 0xFFFF;
-    deviceFilter.FilterMaskIdHigh = 0b1111111111100000;
+    deviceFilter.FilterMaskIdHigh = 0xFE0;
     deviceFilter.FilterMaskIdLow = 0xFFFF;
     deviceFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
     deviceFilter.FilterBank = 2;
@@ -214,4 +214,20 @@ CANMessage* CANf302x8::receive(CANMessage* message, bool blocking) {
     }
 }
 
-}  // namespace EVT::core::IO
+void CANf302x8::setCANFilterId(uint32_t identifier) {
+    this->identifier = identifier;
+}
+
+void CANf302x8::addCANMessage(CANMessage& message) {
+    if (messageQueue.canInsert())
+        messageQueue.append(message);
+}
+
+bool CANf302x8::triggerIRQ(CANMessage& message) {
+    if (handler == nullptr)
+        return false;
+    handler(message, priv);
+    return true;
+}
+
+}// namespace EVT::core::IO

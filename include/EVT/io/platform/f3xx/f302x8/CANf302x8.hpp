@@ -31,7 +31,27 @@ public:
      * @param rxPin[in] The pin to receive CAN messages on
      * @param loopbackEnabled[in] Flag for enabling CAN loop back
      */
-    CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled=false);
+    CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled = false);
+
+    /**
+     * @copydoc EVT::core::IO::CAN::receive
+     */
+    void transmit(CANMessage& message);
+
+    /**
+     * @copydoc EVT::core::IO::CAN::receive
+     */
+    CANMessage* receive(CANMessage* message, bool blocking = false);
+
+    /**
+     * @copydoc EVT::core::IO::CAN::setCANFilterId 
+     */
+    void setCANFilterId(uint32_t identifier);
+
+    /**
+     * @copydoc EVT::core::IO::CAN::addIRQHandler
+     */
+    void addIRQHandler(void (*handler)(CANMessage&, void* priv), void* priv);
 
     /**
      * Send a message over CAN
@@ -63,8 +83,9 @@ private:
     /** Instance of the HAL can interface */
     CAN_HandleTypeDef halCAN;
     /** Queue which holds received CAN messages */
-    EVT::core::types::FixedQueue<CANMessage> messageQueue;
-
+    EVT::core::types::FixedQueue<CAN_MESSAGE_QUEUE_SIZE, CANMessage> messageQueue;
+    /** CAN filtering identifier */
+    uint32_t identifier;
 };
 
 
