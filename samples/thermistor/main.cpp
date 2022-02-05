@@ -30,10 +30,6 @@ int main() {
 
     IO::ADC& adc = IO::getADC<IO::Pin::PA_0>();
 
-    // TODO: Remove this once the ADC works on a single channel
-    IO::ADC& adc0 = IO::getADC<IO::Pin::PA_1>();
-    uart.printf("Read in ADC: %d\r\n", adc0.readRaw());
-
     time::wait(500);
 
     // Setup the thermistor device
