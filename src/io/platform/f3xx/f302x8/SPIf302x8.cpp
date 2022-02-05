@@ -68,7 +68,7 @@ uint8_t SPIf302x8::getSCKPortID(Pin sckPin) {
  * @param mosiPin the mosi pin for sending data
  * @param misoPin the miso pin for receiving data
  */
-SPIf302x8::SPIf302x8(GPIO** CSPins, uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : SPI(CSPins, pinLength, sckPin, mosiPin, misoPin) {
+SPIf302x8::SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : SPI(CSPins, pinLength, sckPin, mosiPin, misoPin) {
     uint8_t mosiPort = getMOSIPortID(mosiPin);
     uint8_t misoPort = getMISOPortID(misoPin);
     uint8_t sckPort = getSCKPortID(sckPin);
@@ -149,7 +149,7 @@ SPIf302x8::SPIf302x8(GPIO** CSPins, uint8_t pinLength, Pin sckPin, Pin mosiPin, 
  * @param sckPin the pin for the clk line
  * @param mosiPin the mosi pin for sending data
  */
-SPIf302x8::SPIf302x8(GPIO** CSPins, uint8_t pinLength, Pin sckPin, Pin mosiPin) : SPI(CSPins, pinLength, sckPin, mosiPin) {
+SPIf302x8::SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : SPI(CSPins, pinLength, sckPin, mosiPin) {
 
     uint8_t mosiPort = getMOSIPortID(mosiPin);
     uint8_t sckPort = getSCKPortID(sckPin);
@@ -301,7 +301,7 @@ void SPIf302x8::togglePin(GPIO* pin) {
  */
 bool SPIf302x8::startTransmission(uint8_t device) {
     if (device < CSPinsLength) {
-        togglePin(&CSPins[device]);
+        togglePin(CSPins[device]);
         return true;
     }
     return false;
@@ -314,7 +314,7 @@ bool SPIf302x8::startTransmission(uint8_t device) {
  */
 bool SPIf302x8::endTransmission(uint8_t device) {
     if (device < CSPinsLength) {
-        togglePin(&CSPins[device]);
+        togglePin(CSPins[device]);
         return true;
     }
     return false;

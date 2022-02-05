@@ -37,7 +37,7 @@ public:
      * @param mosiPin the mosi pin for sending data
      * @param misoPin the miso pin for receiving data
      */
-    SPI(GPIO** CSPins, uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin);
+    SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin);
 
     /**
      * Constructs an SPI instance in half duplex mode to only send data
@@ -46,7 +46,7 @@ public:
      * @param sckPin the pin for the clk line
      * @param mosiPin the mosi pin for sending data
      */
-    SPI(GPIO** CSPins, uint8_t pinLength, Pin sckPin, Pin mosiPin);
+    SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin);
 
     /**
      * begin a device transmission. Call before each set of read and write interactions.
@@ -141,8 +141,9 @@ private:
     Pin misoPin;
 
 protected:
+    static constexpr uint8_t MAX_PINS = 5;
     uint8_t CSPinsLength;
-    GPIO* CSPins;
+    GPIO* CSPins[MAX_PINS];
 };
 
 }// namespace EVT::core::IO

@@ -14,7 +14,7 @@
 namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
 
-constexpr uint32_t SPI_SPEED = SPI_SPEED_4MHZ;// 4MHz
+constexpr uint32_t SPI_SPEED = SPI_SPEED_4MHZ; // 4MHz
 
 /** The address of the arduino listening for I2C requests */
 constexpr uint8_t SINGLE_BYTE = 0x10;
