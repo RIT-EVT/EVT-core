@@ -5,7 +5,7 @@
 #include <EVT/io/SPI.hpp>
 
 namespace EVT::core::IO {
-SPI::SPI(GPIO *CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : CSPinsLength(pinLength),
+SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : CSPinsLength(pinLength),
                                                                                     sckPin(sckPin),
                                                                                     mosiPin(mosiPin),
                                                                                     misoPin(misoPin) {
@@ -18,7 +18,7 @@ SPI::SPI(GPIO *CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin
 }
 
 SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : CSPinsLength(pinLength), sckPin(sckPin),
-    mosiPin(mosiPin) {
+                                                                       mosiPin(mosiPin) {
     if (pinLength >= MAX_PINS) {
         CSPinsLength = MAX_PINS;
     }
@@ -71,4 +71,4 @@ void SPI::readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length) {
     }
 }
 
-} // namespace EVT::core::IO
+}// namespace EVT::core::IO

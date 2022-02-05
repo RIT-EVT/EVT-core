@@ -3,6 +3,7 @@
 //
 
 #include <EVT/io/pin.hpp>
+#include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
 #include <EVT/io/platform/f3xx/f302x8/SPIf302x8.hpp>
 
 namespace EVT::core::IO {
@@ -73,6 +74,8 @@ SPIf302x8::SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin,
     uint8_t misoPort = getMISOPortID(misoPin);
     uint8_t sckPort = getSCKPortID(sckPin);
     GPIO_InitTypeDef GPIOInit = {0};
+    uint8_t altId = 0x00U;
+
     if (mosiPort == misoPort && misoPort == sckPort) {
         switch (mosiPort) {
         case 2:
@@ -80,53 +83,31 @@ SPIf302x8::SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin,
             if (!__HAL_RCC_SPI2_IS_CLK_ENABLED()) {
                 __HAL_RCC_SPI2_CLK_ENABLE();
             }
-            GPIOInit.Alternate = GPIO_AF5_SPI2;
+            altId = GPIO_AF5_SPI2;
             break;
         case 3:
             halSPI.Instance = SPI3;
             if (!__HAL_RCC_SPI3_IS_CLK_ENABLED()) {
                 __HAL_RCC_SPI3_CLK_ENABLE();
             }
-            GPIOInit.Alternate = GPIO_AF6_SPI3;
+            altId = GPIO_AF6_SPI3;
             break;
         default:
             break;
         }
 
-        Pin spiPins[] = {mosiPin, misoPin, sckPin};
+        // gpioStateInit only supports initializing up to 2 pins, so this must be done
+        // init mosiPin and misoPin
+        Pin spiPins[] = {mosiPin, misoPin};
+        uint8_t numOfPins = 2;
 
-        GPIOInit.Mode = GPIO_MODE_AF_PP;
-        GPIOInit.Pull = GPIO_NOPULL;
-        GPIOInit.Speed = GPIO_SPEED_FREQ_HIGH;
-
-        for (uint8_t i = 0; i < 3; i++) {
-            GPIOInit.Pin = static_cast<uint32_t>(1
-                                                 << (static_cast<uint32_t>(spiPins[i]) & 0x0F));
-            switch ((static_cast<uint8_t>(spiPins[i]) & 0xF0) >> 4) {
-            case 0x0:
-                __HAL_RCC_GPIOA_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOA, &GPIOInit);
-                break;
-            case 0x1:
-                __HAL_RCC_GPIOB_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOB, &GPIOInit);
-                break;
-            case 0x2:
-                __HAL_RCC_GPIOC_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOC, &GPIOInit);
-                break;
-            case 0x3:
-                __HAL_RCC_GPIOD_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOD, &GPIOInit);
-                break;
-            case 0x5:
-                __HAL_RCC_GPIOF_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOF, &GPIOInit);
-                break;
-            default:
-                break;
-            }
-        }
+        GPIOf302x8::gpioStateInit(&GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP,
+                                  GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+        // init sckPin
+        spiPins[0] = sckPin;
+        numOfPins = 1;
+        GPIOf302x8::gpioStateInit(&GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP,
+                                  GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
 
         halSPI.Init.Mode = SPI_MODE_MASTER;
         halSPI.Init.Direction = SPI_DIRECTION_2LINES;
@@ -150,10 +131,11 @@ SPIf302x8::SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin,
  * @param mosiPin the mosi pin for sending data
  */
 SPIf302x8::SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : SPI(CSPins, pinLength, sckPin, mosiPin) {
-
     uint8_t mosiPort = getMOSIPortID(mosiPin);
     uint8_t sckPort = getSCKPortID(sckPin);
     GPIO_InitTypeDef GPIOInit = {0};
+    uint8_t altId = 0x00U;
+
     if (mosiPort == sckPort) {
         switch (mosiPort) {
         case 2:
@@ -161,53 +143,24 @@ SPIf302x8::SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin)
             if (!__HAL_RCC_SPI2_IS_CLK_ENABLED()) {
                 __HAL_RCC_SPI2_CLK_ENABLE();
             }
-            GPIOInit.Alternate = GPIO_AF5_SPI2;
+            altId = GPIO_AF5_SPI2;
             break;
         case 3:
             halSPI.Instance = SPI3;
             if (!__HAL_RCC_SPI3_IS_CLK_ENABLED()) {
                 __HAL_RCC_SPI3_CLK_ENABLE();
             }
-            GPIOInit.Alternate = GPIO_AF6_SPI3;
+            altId = GPIO_AF6_SPI3;
             break;
         default:
             break;
         }
 
         Pin spiPins[] = {mosiPin, sckPin};
+        uint8_t numOfPins = 2;
 
-        GPIOInit.Mode = GPIO_MODE_AF_PP;
-        GPIOInit.Pull = GPIO_NOPULL;
-        GPIOInit.Speed = GPIO_SPEED_FREQ_HIGH;
-
-        for (uint8_t i = 0; i < 2; i++) {
-            GPIOInit.Pin = static_cast<uint32_t>(1
-                                                 << (static_cast<uint32_t>(spiPins[i]) & 0x0F));
-            switch ((static_cast<uint8_t>(spiPins[i]) & 0xF0) >> 4) {
-            case 0x0:
-                __HAL_RCC_GPIOA_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOA, &GPIOInit);
-                break;
-            case 0x1:
-                __HAL_RCC_GPIOB_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOB, &GPIOInit);
-                break;
-            case 0x2:
-                __HAL_RCC_GPIOC_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOC, &GPIOInit);
-                break;
-            case 0x3:
-                __HAL_RCC_GPIOD_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOD, &GPIOInit);
-                break;
-            case 0x5:
-                __HAL_RCC_GPIOF_CLK_ENABLE();
-                HAL_GPIO_Init(GPIOF, &GPIOInit);
-                break;
-            default:
-                break;
-            }
-        }
+        GPIOf302x8::gpioStateInit(&GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP,
+                                  GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
 
         halSPI.Init.Mode = SPI_MODE_MASTER;
         halSPI.Init.Direction = SPI_DIRECTION_1LINE;
