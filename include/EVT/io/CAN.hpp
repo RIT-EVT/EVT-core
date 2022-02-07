@@ -58,7 +58,7 @@ public:
     virtual CANMessage* receive(CANMessage* message, bool blocking = false) = 0;
 
     /**
-     * Sets the 11-bit CAN ID that will be sent to the receive buffer.
+     * Sets the 11-bit CAN ID that will be allowed through to the receive buffer.
      *
      * @param identifier[in] The 11-bit CAN ID 
      */

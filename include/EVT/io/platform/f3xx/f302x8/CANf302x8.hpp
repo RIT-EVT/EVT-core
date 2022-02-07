@@ -35,7 +35,7 @@ public:
     CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled = false);
 
     /**
-     * @copydoc EVT::core::IO::CAN::receive
+     * @copydoc EVT::core::IO::CAN::transmit
      */
     void transmit(CANMessage& message);
 

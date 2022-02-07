@@ -23,7 +23,7 @@ int main() {
     IO::CANMessage transmit_message(0x186, 8, &payload[0], false);
     IO::CANMessage received_message;
 
-    can.setCANFilterId(0b00010000011);
+    can.setCANFilterId(0x83);
 
     uart.printf("Starting CAN testing\r\n");
 
