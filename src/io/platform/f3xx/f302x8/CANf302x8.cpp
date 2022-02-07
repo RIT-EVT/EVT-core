@@ -123,26 +123,11 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
     HAL_NVIC_SetPriority(CAN_RX0_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(CAN_RX0_IRQn);
 
-    /* By default - filter that accepts all incoming messages */
-    CAN_FilterTypeDef defaultFilter;
-    defaultFilter.FilterIdHigh         = 0;
-    defaultFilter.FilterIdLow          = 0;
-    defaultFilter.FilterMaskIdHigh     = 0;
-    defaultFilter.FilterMaskIdLow      = 0;
-    defaultFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-    defaultFilter.FilterBank           = 0;
-    defaultFilter.FilterMode           = CAN_FILTERMODE_IDMASK;
-    defaultFilter.FilterScale          = CAN_FILTERSCALE_32BIT;
-    defaultFilter.FilterActivation     = ENABLE;
-
-    HAL_CAN_ConfigFilter(&halCAN, &defaultFilter);
-
-    /* Test filter for CANopen emergency code */
     CAN_FilterTypeDef emergencyFilter;
-    emergencyFilter.FilterIdHigh = 0x100 << 5;
-    emergencyFilter.FilterIdLow = 0xFFFF;
-    emergencyFilter.FilterMaskIdHigh = 0xF00;
-    emergencyFilter.FilterMaskIdLow = 0xFFFF;
+    emergencyFilter.FilterIdHigh = 0x100 << 5; //only 0001 (emergency code) allowed
+    emergencyFilter.FilterIdLow = 0x0000;
+    emergencyFilter.FilterMaskIdHigh = 0xF000; //1111000000000000 Only looking for 4-bit code
+    emergencyFilter.FilterMaskIdLow = 0xFFFF; //block off second filter with all 1s
     emergencyFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
     emergencyFilter.FilterBank = 1;
     emergencyFilter.FilterMode = CAN_FILTERMODE_IDMASK;
@@ -151,12 +136,11 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
 
     HAL_CAN_ConfigFilter(&halCAN, &emergencyFilter);
 
-    /* Test filter for 7-bit device id */
     CAN_FilterTypeDef deviceFilter;
-    deviceFilter.FilterIdHigh = this->identifier << 5;
-    deviceFilter.FilterIdLow = 0xFFFF;
-    deviceFilter.FilterMaskIdHigh = 0xFE0;
-    deviceFilter.FilterMaskIdLow = 0xFFFF;
+    deviceFilter.FilterIdHigh = this->identifier << 5; //must shift 11-bits to MSB of 16-bits
+    deviceFilter.FilterIdLow = 0x0000;
+    deviceFilter.FilterMaskIdHigh = 0xFE0; //0000111111100000 Only looking for 7-bit device id
+    deviceFilter.FilterMaskIdLow = 0xFFFF; //block off second filter with all 1s
     deviceFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
     deviceFilter.FilterBank = 2;
     deviceFilter.FilterMode = CAN_FILTERMODE_IDMASK;

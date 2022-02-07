@@ -23,6 +23,7 @@ int main() {
     IO::CANMessage transmit_message(0b00010011010, 8, &payload[0], false);
     IO::CANMessage received_message;
 
+<<<<<<< HEAD
     IO::CAN::CANStatus result;
 
     // Attempt to join the CAN network
@@ -32,6 +33,9 @@ int main() {
     can.addCANFilter(0b00000011010, 0b0000111111100000, 2);
     can.addCANFilter(0b00001010111, 0b0000111111100000, 3);
     can.enableEmergencyFilter(ENABLE);
+=======
+    can.setCANFilterId(0x83);
+>>>>>>> 3b6da0a... Changed some values to hex and added clarifying comments
 
     uart.printf("Starting CAN testing\r\n");
 
