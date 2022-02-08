@@ -42,9 +42,15 @@ int main() {
 
     uart.printf("Starting CAN testing\r\n");
 
+    IO::CAN::CANStatus result;
     while (true) {
         // Transmit every second
-        can.transmit(transmit_message);
+        result = can.transmit(transmit_message);
+        if (result != IO::CAN::CANStatus::OK) {
+            uart.printf("Failed to transmit message\r\n");
+            return 1;
+        }
+
         time::wait(1000);
     }
 

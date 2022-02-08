@@ -25,9 +25,20 @@ int main() {
 
     uart.printf("Starting CAN testing\r\n");
 
+    IO::CAN::CANStatus result;
+
     while (true) {
-        can.transmit(transmit_message);
-        can.receive(&received_message, true);
+        result = can.transmit(transmit_message);
+        if (result != IO::CAN::CANStatus::OK) {
+            uart.printf("Failed to transmit message\r\n");
+            return 1;
+        }
+
+        result = can.receive(&received_message, true);
+        if (result != IO::CAN::CANStatus::OK) {
+            uart.printf("Failed to receive message\r\n");
+            return 1;
+        }
 
         uart.printf("Message received\r\n");
         uart.printf("Message id: %d \r\n", received_message.getId());
