@@ -5,6 +5,7 @@
 namespace EVT::core::IO {
 /**
  * Gets the corresponding SPI port from the mosi pin
+ *
  * @param mosiPin the pin to use for the mosi signal
  * @return the SPI port to use, 0 if invalid
  */
@@ -23,6 +24,7 @@ uint8_t SPIf302x8::getMOSIPortID(Pin mosiPin) {
 
 /**
  * Gets the corresponding SPI port from the miso pin
+ *
  * @param misoPin the pin to use for the miso signal
  * @return the SPI port to use, 0 if invalid
  */
@@ -41,6 +43,7 @@ uint8_t SPIf302x8::getMISOPortID(Pin misoPin) {
 
 /**
  * Gets the corresponding SPI port from the sck pin
+ *
  * @param sckPin the pin to use for the sck signal
  * @return the SPI port to use, 0 if invalid
  */
@@ -59,6 +62,7 @@ uint8_t SPIf302x8::getSCKPortID(Pin sckPin) {
 
 /**
  * Constructs a send and receive SPI object
+ *
  * @param CSPins an array of chip select pins for selecting which device to communicate with.
  * @param pinLength the number of pins in the chip select array
  * @param sckPin the pin for the clk line
@@ -121,6 +125,7 @@ SPIf302x8::SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin,
 
 /**
  * Constructs a sending only SPI object
+ *
  * @param CSPins an array of chip select pins for selecting which device to communicate with.
  * @param pinLength the number of pins in the chip select array
  * @param sckPin the pin for the clk line
@@ -174,6 +179,7 @@ SPIf302x8::SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin)
 
 /**
  * Configures the SPI transmit mode
+ *
  * @param baudRate the baudrate to transmit at (4MHz to 31.25KHz)
  * @param mode The SPIMode to use when sending (0-3)
  * @param order MSB first or LSB first
@@ -230,6 +236,7 @@ void SPIf302x8::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order) {
 
 /**
  * Toggles a GPIO pin's state
+ *
  * @param pin the pin to toggle the state of
  */
 void SPIf302x8::togglePin(GPIO* pin) {
@@ -245,6 +252,7 @@ void SPIf302x8::togglePin(GPIO* pin) {
 
 /**
  * Toggle the state of the chip select pin of a device at the start of a transmission.
+ *
  * @param device device the device index in the CSPins
  * @return true if valid device, false if device not in CSPins
  */
@@ -258,6 +266,7 @@ bool SPIf302x8::startTransmission(uint8_t device) {
 
 /**
  * Toggle the state of the chip select pin of a device back at the end of a transmission.
+ *
  * @param device the device index in the CSPins
  * @return true if valid device, false if device not in CSPins
  */
@@ -270,7 +279,8 @@ bool SPIf302x8::endTransmission(uint8_t device) {
 }
 
 /**
- * Writes a single byte out to the SPI device
+ * Writes a single byte out to the SPI device.
+ *
  * @param byte the byte to write
  */
 void SPIf302x8::write(uint8_t byte) {
@@ -278,7 +288,8 @@ void SPIf302x8::write(uint8_t byte) {
 }
 
 /**
- * Reads a single byte from a SPI device
+ * Reads a single byte from a SPI device.
+ *
  * @return the byte read
  */
 uint8_t SPIf302x8::read() {
@@ -288,7 +299,8 @@ uint8_t SPIf302x8::read() {
 }
 
 /**
- * Writes an array of bytes to the SPI device
+ * Writes an array of bytes to the SPI device.
+ *
  * @param device the device to write to in CSPins
  * @param bytes an array of bytes of length n to write to SPI device
  * @param length the length of the array
@@ -298,7 +310,8 @@ void SPIf302x8::write(uint8_t* bytes, uint8_t length) {
 }
 
 /**
- * Reads an array of bytes from a SPI device
+ * Reads an array of bytes from a SPI device.
+ *
  * @param device the device to write to in CSPins
  * @param bytes an array of length n to receive the bytes from an SPI device
  * @param length the number of bytes to recive
