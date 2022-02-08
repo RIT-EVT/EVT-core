@@ -34,9 +34,9 @@ public:
      */
     CANf3xx(Pin txPin, Pin rxPin, bool loopbackEnabled = false);
 
-    void transmit(CANMessage& message);
+    CANStatus transmit(CANMessage& message);
 
-    CANMessage* receive(CANMessage* message, bool blocking = false);
+    CANStatus receive(CANMessage* message, bool blocking = false);
 
     void addIRQHandler(void (*handler)(CANMessage&, void* priv), void* priv);
 

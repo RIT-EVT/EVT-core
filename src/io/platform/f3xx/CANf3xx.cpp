@@ -118,7 +118,7 @@ CANf3xx::CANf3xx(Pin txPin, Pin rxPin, bool loopbackEnabled)
     HAL_CAN_Start(&halCAN);
 }
 
-void CANf3xx::transmit(CANMessage& message) {
+CAN::CANStatus CANf3xx::transmit(CANMessage& message) {
     CAN_TxHeaderTypeDef txHeader = {0};
     uint8_t payload[CANMessage::CAN_MAX_PAYLOAD_SIZE] = {0};
 
@@ -143,11 +143,20 @@ void CANf3xx::transmit(CANMessage& message) {
         time::wait(1);
     }
 
-    HAL_CAN_AddTxMessage(&halCAN, &txHeader, payload, &mailbox);
+    HAL_StatusTypeDef result = HAL_CAN_AddTxMessage(&halCAN, &txHeader, payload, &mailbox);
+
+    switch (result) {
+        case HAL_OK:
+            return CAN::CANStatus::OK;
+        case HAL_TIMEOUT:
+            return CAN::CANStatus::TIMEOUT;
+        default:
+            return CAN::CANStatus::ERROR;
+    }
 }
 
 // TODO: Use both RxFifo0 and RxFif1
-CANMessage* CANf3xx::receive(CANMessage* message, bool blocking) {
+CAN::CANStatus CANf3xx::receive(CANMessage* message, bool blocking) {
     bool hasMessage = false;
 
     // Check to make sure a message is available, if blocking, wait until
@@ -156,15 +165,15 @@ CANMessage* CANf3xx::receive(CANMessage* message, bool blocking) {
         hasMessage = !messageQueue.isEmpty();
         // If the user does not want to wait for a message, return nullptr
         if (!blocking && !hasMessage)
-            return nullptr;
+            return CANStatus::TIMEOUT;
         time::wait(1);
     } while (!hasMessage);
 
     // Return the message from the queue;
     if (messageQueue.pop(message)) {
-        return message;
+        return CANStatus::OK;
     } else {
-        return nullptr;
+        return CANStatus::TIMEOUT;
     }
 }
 

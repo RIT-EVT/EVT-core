@@ -26,6 +26,16 @@ enum class Pin;
 class CAN {
 public:
     /**
+     * Represents potential errors that may take place when using the CAN
+     * interface.
+     */
+    enum class CANStatus {
+        TIMEOUT = 0,
+        ERROR = 1,
+        OK = 3
+    };
+
+    /**
      * Creates a new instance of the CAN interface which will use the given
      * transmit and receive pins.
      *
@@ -39,8 +49,9 @@ public:
      * Transmit the message over CAN.
      *
      * @param[in] message The message to send over CAN.
+     * @return The status associated with sending the message
      */
-    virtual void transmit(CANMessage& message) = 0;
+    virtual CANStatus transmit(CANMessage& message) = 0;
 
     /**
      * Receive a message over CAN. The user can either receive in blocking or
@@ -52,10 +63,10 @@ public:
      * @param[out] message The message to populate with data
      * @param[in] blocking Used to determine if received should block or not, by
      *      default receive is blocking
-     * @return A pointer to the passed in message, nullptr if message not
-     *      received.
+     * @return The status of the receive call, CANStatus::TIMEOUT returned if
+     *      no message received
      */
-    virtual CANMessage* receive(CANMessage* message, bool blocking = false) = 0;
+    virtual CANStatus receive(CANMessage* message, bool blocking = false) = 0;
 
     /**
      * Add an interrupt handler for CAN messages. This will be called with
