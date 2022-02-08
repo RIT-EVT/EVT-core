@@ -1,7 +1,3 @@
-//
-// Created by matth on 10/2/2021.
-//
-
 #include <EVT/io/SPI.hpp>
 
 namespace EVT::core::IO {

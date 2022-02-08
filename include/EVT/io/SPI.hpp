@@ -1,7 +1,7 @@
 #ifndef _EVT_SPI_
 #define _EVT_SPI_
 
-#include "GPIO.hpp"
+#include <EVT/io/GPIO.hpp>
 #include <stdint.h>
 
 #define SPI_MSB_FIRST 1
@@ -49,14 +49,14 @@ public:
     SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin);
 
     /**
-     * begin a device transmission. Call before each set of read and write interactions.
+     * Begin a device transmission. Call before each set of read and write interactions.
      * @param device the device number in the CSPins array
      * @return true if valid device, false if device not in CSPins
      */
     virtual bool startTransmission(uint8_t device) = 0;
 
     /**
-     * toggle the state of the chip select pin of a device back at the end of a transmission. Call when finished
+     * Toggle the state of the chip select pin of a device back at the end of a transmission. Call when finished
      * reading or writing a data packet.
      * @param device the device index in the CSPins
      * @return true if valid device, false if device not in CSPins
@@ -70,27 +70,27 @@ public:
     virtual void write(uint8_t byte) = 0;
 
     /**
-     * reads a single byte from a SPI device. Call startTransmission() first to initiate device communication.
+     * Reads a single byte from a SPI device. Call startTransmission() first to initiate device communication.
      * @return the byte read
      */
     virtual uint8_t read() = 0;
 
     /**
-     * writes an array of bytes to the SPI device. Call startTransmission() first to initiate device communication.
+     * Writes an array of bytes to the SPI device. Call startTransmission() first to initiate device communication.
      * @param bytes an array of bytes of length n to write to SPI device
      * @param length the length of the array
      */
     void write(uint8_t* bytes, uint8_t length);
 
     /**
-     * reads an array of bytes from a SPI device. Call startTransmission() first to initiate device communication.
+     * Reads an array of bytes from a SPI device. Call startTransmission() first to initiate device communication.
      * @param bytes an array of length n to receive the bytes from an SPI device
      * @param length the number of bytes to recive
      */
     void read(uint8_t* bytes, uint8_t length);
 
     /**
-     * writes a byte of data to a register of a device
+     * Writes a byte of data to a register of a device
      * @param device the device index in the CSPins
      * @param reg the register address to write to
      * @param byte the byte of data to write
@@ -98,7 +98,7 @@ public:
     void writeReg(uint8_t device, uint8_t reg, uint8_t byte);
 
     /**
-     * reads a byte of data from a register from a device
+     * Reads a byte of data from a register from a device
      * @param device the device index in the CSPins
      * @param reg the register address to read from
      * @return the byte of data from the device
@@ -116,7 +116,7 @@ public:
     void writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length);
 
     /**
-     * reads a series of bytes from a device's registers starting at a specific one.
+     * Reads a series of bytes from a device's registers starting at a specific one.
      * @param device the device index in the CSPins
      * @param reg the register address to start the read from
      * @param bytes an array of bytes of length n to store the byte from an SPI device

@@ -1,14 +1,10 @@
-//
-// Created by Matthew H on 10/2/2021.
-//
-
 #include <EVT/io/pin.hpp>
 #include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
 #include <EVT/io/platform/f3xx/f302x8/SPIf302x8.hpp>
 
 namespace EVT::core::IO {
 /**
- * gets the corresponding SPI port from the mosi pin
+ * Gets the corresponding SPI port from the mosi pin
  * @param mosiPin the pin to use for the mosi signal
  * @return the SPI port to use, 0 if invalid
  */
@@ -26,7 +22,7 @@ uint8_t SPIf302x8::getMOSIPortID(Pin mosiPin) {
 }
 
 /**
- * gets the corresponding SPI port from the miso pin
+ * Gets the corresponding SPI port from the miso pin
  * @param misoPin the pin to use for the miso signal
  * @return the SPI port to use, 0 if invalid
  */
@@ -44,7 +40,7 @@ uint8_t SPIf302x8::getMISOPortID(Pin misoPin) {
 }
 
 /**
- * gets the corresponding SPI port from the sck pin
+ * Gets the corresponding SPI port from the sck pin
  * @param sckPin the pin to use for the sck signal
  * @return the SPI port to use, 0 if invalid
  */
@@ -233,7 +229,7 @@ void SPIf302x8::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order) {
 }
 
 /**
- * toggles a GPIO pin's state
+ * Toggles a GPIO pin's state
  * @param pin the pin to toggle the state of
  */
 void SPIf302x8::togglePin(GPIO* pin) {
@@ -248,7 +244,7 @@ void SPIf302x8::togglePin(GPIO* pin) {
 }
 
 /**
- * toggle the state of the chip select pin of a device at the start of a transmission.
+ * Toggle the state of the chip select pin of a device at the start of a transmission.
  * @param device device the device index in the CSPins
  * @return true if valid device, false if device not in CSPins
  */
@@ -261,7 +257,7 @@ bool SPIf302x8::startTransmission(uint8_t device) {
 }
 
 /**
- * toggle the state of the chip select pin of a device back at the end of a transmission.
+ * Toggle the state of the chip select pin of a device back at the end of a transmission.
  * @param device the device index in the CSPins
  * @return true if valid device, false if device not in CSPins
  */
@@ -282,7 +278,7 @@ void SPIf302x8::write(uint8_t byte) {
 }
 
 /**
- * reads a single byte from a SPI device
+ * Reads a single byte from a SPI device
  * @return the byte read
  */
 uint8_t SPIf302x8::read() {
@@ -292,7 +288,7 @@ uint8_t SPIf302x8::read() {
 }
 
 /**
- * writes an array of bytes to the SPI device
+ * Writes an array of bytes to the SPI device
  * @param device the device to write to in CSPins
  * @param bytes an array of bytes of length n to write to SPI device
  * @param length the length of the array
@@ -302,7 +298,7 @@ void SPIf302x8::write(uint8_t* bytes, uint8_t length) {
 }
 
 /**
- * reads an array of bytes from a SPI device
+ * Reads an array of bytes from a SPI device
  * @param device the device to write to in CSPins
  * @param bytes an array of length n to receive the bytes from an SPI device
  * @param length the number of bytes to recive
