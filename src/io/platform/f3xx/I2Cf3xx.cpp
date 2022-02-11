@@ -1,6 +1,6 @@
 #include <EVT/io/pin.hpp>
-#include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
-#include <EVT/io/platform/f3xx/f302x8/I2Cf302x8.hpp>
+#include <EVT/io/platform/f3xx/f3xx/GPIOf3xx.hpp>
+#include <EVT/io/platform/f3xx/f3xx/I2Cf3xx.hpp>
 
 namespace EVT::core::IO {
 
@@ -33,7 +33,7 @@ static uint8_t getPortID(Pin sclPin) {
     return 0;// Should not get here, unless bad pin given
 }
 
-I2Cf302x8::I2Cf302x8(Pin sclPin, Pin sdaPin) : I2C(sclPin, sdaPin) {
+I2Cf3xx::I2Cf3xx(Pin sclPin, Pin sdaPin) : I2C(sclPin, sdaPin) {
     GPIO_InitTypeDef gpioInit;
     uint8_t altId = 0x00U;
 
@@ -72,7 +72,7 @@ I2Cf302x8::I2Cf302x8(Pin sclPin, Pin sdaPin) : I2C(sclPin, sdaPin) {
     Pin i2cPins[] = {sclPin, sdaPin};
     uint8_t numOfPins = 2;
 
-    GPIOf302x8::gpioStateInit(&gpioInit, i2cPins, numOfPins, GPIO_MODE_AF_OD,
+    GPIOf3xx::gpioStateInit(&gpioInit, i2cPins, numOfPins, GPIO_MODE_AF_OD,
                               GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
 
     // 8MHz = 0x00310309; 16MHz = 0x10320309; 48MHz = 0x50330309
@@ -91,14 +91,14 @@ I2Cf302x8::I2Cf302x8(Pin sclPin, Pin sdaPin) : I2C(sclPin, sdaPin) {
     HAL_I2C_Init(&halI2C);
 }
 
-I2C::I2CStatus I2Cf302x8::write(uint8_t addr, uint8_t byte) {
+I2C::I2CStatus I2Cf3xx::write(uint8_t addr, uint8_t byte) {
     HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&halI2C, addr << 1,
                                                        &byte, 1,
                                                        DEFAULT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
-I2C::I2CStatus I2Cf302x8::read(uint8_t addr, uint8_t* output) {
+I2C::I2CStatus I2Cf3xx::read(uint8_t addr, uint8_t* output) {
     HAL_StatusTypeDef status = HAL_I2C_Master_Receive(&halI2C, addr << 1,
                                                       output, 1,
                                                       DEFAULT_I2C_TIMEOUT);
@@ -109,7 +109,7 @@ I2C::I2CStatus I2Cf302x8::read(uint8_t addr, uint8_t* output) {
  * Override the default multi byte write since the F302x8 supports doing
  * this via the HAL.
  */
-I2C::I2CStatus I2Cf302x8::write(uint8_t addr, uint8_t* bytes, uint8_t length) {
+I2C::I2CStatus I2Cf3xx::write(uint8_t addr, uint8_t* bytes, uint8_t length) {
     HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&halI2C, addr << 1,
                                                        bytes, length,
                                                        DEFAULT_I2C_TIMEOUT);
@@ -120,14 +120,14 @@ I2C::I2CStatus I2Cf302x8::write(uint8_t addr, uint8_t* bytes, uint8_t length) {
  * Override the default multi byte read since the F302x8 supports doing
  * this via the HAL.
  */
-I2C::I2CStatus I2Cf302x8::read(uint8_t addr, uint8_t* bytes, uint8_t length) {
+I2C::I2CStatus I2Cf3xx::read(uint8_t addr, uint8_t* bytes, uint8_t length) {
     HAL_StatusTypeDef status = HAL_I2C_Master_Receive(&halI2C, addr << 1,
                                                       bytes, length,
                                                       DEFAULT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
-I2C::I2CStatus I2Cf302x8::writeMemReg(uint8_t addr, uint32_t memAddress,
+I2C::I2CStatus I2Cf3xx::writeMemReg(uint8_t addr, uint32_t memAddress,
                                       uint8_t byte, uint16_t memAddSize,
                                       uint8_t maxWriteTime) {
     uint16_t memAddress16 = memAddress;
@@ -138,7 +138,7 @@ I2C::I2CStatus I2Cf302x8::writeMemReg(uint8_t addr, uint32_t memAddress,
     return halToI2CStatus(status);
 }
 
-I2C::I2CStatus I2Cf302x8::readMemReg(uint8_t addr, uint32_t memAddress,
+I2C::I2CStatus I2Cf3xx::readMemReg(uint8_t addr, uint32_t memAddress,
                                      uint8_t* byte,
                                      uint16_t memAddSize) {
     uint16_t memAddress16 = memAddress;
@@ -148,7 +148,7 @@ I2C::I2CStatus I2Cf302x8::readMemReg(uint8_t addr, uint32_t memAddress,
     return halToI2CStatus(status);
 }
 
-I2C::I2CStatus I2Cf302x8::writeMemReg(uint8_t addr, uint32_t memAddress,
+I2C::I2CStatus I2Cf3xx::writeMemReg(uint8_t addr, uint32_t memAddress,
                                       uint8_t* bytes, uint8_t size,
                                       uint16_t memAddSize,
                                       uint8_t maxWriteTime) {
@@ -161,7 +161,7 @@ I2C::I2CStatus I2Cf302x8::writeMemReg(uint8_t addr, uint32_t memAddress,
     return halToI2CStatus(status);
 }
 
-I2C::I2CStatus I2Cf302x8::readMemReg(uint8_t addr, uint32_t memAddress,
+I2C::I2CStatus I2Cf3xx::readMemReg(uint8_t addr, uint32_t memAddress,
                                      uint8_t* bytes, uint8_t size,
                                      uint16_t memAddSize) {
     uint16_t memAddress16 = memAddress;
@@ -172,7 +172,7 @@ I2C::I2CStatus I2Cf302x8::readMemReg(uint8_t addr, uint32_t memAddress,
     return halToI2CStatus(status);
 }
 
-I2C::I2CStatus I2Cf302x8::halToI2CStatus(HAL_StatusTypeDef halStatus) {
+I2C::I2CStatus I2Cf3xx::halToI2CStatus(HAL_StatusTypeDef halStatus) {
     switch (halStatus) {
     case HAL_OK:
         return I2C::I2CStatus::OK;

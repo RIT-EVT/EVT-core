@@ -1,5 +1,5 @@
-#ifndef _EVT_I2Cf302x8_
-#define _EVT_I2Cf302x8_
+#ifndef _EVT_I2Cf3xx_
+#define _EVT_I2Cf3xx_
 
 #include <stdint.h>
 
@@ -8,7 +8,7 @@
 
 namespace EVT::core::IO {
 
-class I2Cf302x8 : public I2C {
+class I2Cf3xx : public I2C {
 public:
     /**
      * Make an instance of an I2C interface for the F3. Will determine
@@ -17,7 +17,7 @@ public:
      * @param sclPin[in] The I2C clock pin
      * @param sdaPin[in] The I2C data pin
      */
-    I2Cf302x8(Pin sclPin, Pin sdaPin);
+    I2Cf3xx(Pin sclPin, Pin sdaPin);
 
     I2C::I2CStatus write(uint8_t addr, uint8_t byte) override;
 

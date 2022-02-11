@@ -1,10 +1,10 @@
 #include <EVT/io/pin.hpp>
-#include <EVT/io/platform/f3xx/f302x8/ADCf302x8.hpp>
-#include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
+#include <EVT/io/platform/f3xx/f3xx/ADCf3xx.hpp>
+#include <EVT/io/platform/f3xx/f3xx/GPIOf3xx.hpp>
 
 #include <HALf3/stm32f3xx.h>
 
-#include <EVT/platform/f3xx/stm32f302x8.hpp>
+#include <EVT/platform/f3xx/stm32f3xx.hpp>
 #include <HALf3/stm32f3xx_hal_adc.h>
 #include <HALf3/stm32f3xx_hal_adc_ex.h>
 
@@ -24,12 +24,12 @@ extern "C" void DMA1_Channel1_IRQHandler(void) {
 namespace EVT::core::IO {
 
 // Init static member variables
-ADC_HandleTypeDef ADCf302x8::halADC = {0};
-Pin ADCf302x8::channels[MAX_CHANNELS];
-uint16_t ADCf302x8::buffer[MAX_CHANNELS];
-DMA_HandleTypeDef ADCf302x8::halDMA = {0};
+ADC_HandleTypeDef ADCf3xx::halADC = {0};
+Pin ADCf3xx::channels[MAX_CHANNELS];
+uint16_t ADCf3xx::buffer[MAX_CHANNELS];
+DMA_HandleTypeDef ADCf3xx::halDMA = {0};
 
-ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
+ADCf3xx::ADCf3xx(Pin pin) : ADC(pin) {
     // Flag representing if the ADC has been configured yet
     static bool halADCisInit = false;
     // "Rank" represents the order in which the channels are added
@@ -64,12 +64,12 @@ ADCf302x8::ADCf302x8(Pin pin) : ADC(pin) {
     rank++;
 }
 
-float ADCf302x8::read() {
+float ADCf3xx::read() {
     float percentage = readPercentage();
     return percentage * VREF_POS;
 }
 
-uint32_t ADCf302x8::readRaw() {
+uint32_t ADCf3xx::readRaw() {
     // Search through list of channels to determine which DMA buffer index to
     // use
     uint8_t channelNum = 0;
@@ -78,12 +78,12 @@ uint32_t ADCf302x8::readRaw() {
     return buffer[channelNum];
 }
 
-float ADCf302x8::readPercentage() {
+float ADCf3xx::readPercentage() {
     float raw = static_cast<float>(readRaw());
     return static_cast<float>(raw / MAX_RAW);
 }
 
-void ADCf302x8::initADC(uint8_t num_channels) {
+void ADCf3xx::initADC(uint8_t num_channels) {
     halADC.Instance = ADC1;// Only ADC the F3 supports
 
     // TODO: Figure out ADC calibration
@@ -108,7 +108,7 @@ void ADCf302x8::initADC(uint8_t num_channels) {
     HAL_ADC_Init(&halADC);
 }
 
-void ADCf302x8::initDMA() {
+void ADCf3xx::initDMA() {
     // HAL_ADC_Stop(&halADC);
 
     // TODO: Add some way of selecting the next available DMA channel
@@ -131,12 +131,12 @@ void ADCf302x8::initDMA() {
     __HAL_LINKDMA(&halADC, DMA_Handle, halDMA);
 }
 
-void ADCf302x8::addChannel(uint8_t rank) {
+void ADCf3xx::addChannel(uint8_t rank) {
     GPIO_InitTypeDef gpioInit;
     Pin myPins[] = {pin};
     uint8_t numOfPins = 1;
 
-    GPIOf302x8::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG,
+    GPIOf3xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG,
                               GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;

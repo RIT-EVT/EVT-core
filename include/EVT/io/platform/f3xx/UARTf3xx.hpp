@@ -1,5 +1,5 @@
-#ifndef _EVT_UARTf302x8_
-#define _EVT_UARTf302x8_
+#ifndef _EVT_UARTf3xx_
+#define _EVT_UARTf3xx_
 
 #include <stdint.h>
 
@@ -9,7 +9,7 @@
 
 namespace EVT::core::IO {
 
-class UARTf302x8 : public UART {
+class UARTf3xx : public UART {
 public:
     /**
      * Create an instance of the STMF302x8 UART interface using the provided
@@ -19,7 +19,7 @@ public:
      * @param rxPin[in] THe UART RX pin.
      * @param baudrate[in] The baudrate to operate the UART with/
      */
-    UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate);
+    UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate);
 
     /**
      * Set the baudrate that the UART will operate with.

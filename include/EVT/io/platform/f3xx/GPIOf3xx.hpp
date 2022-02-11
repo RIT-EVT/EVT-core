@@ -1,5 +1,5 @@
-#ifndef _EVT_GPIOf302x8_
-#define _EVT_GPIOf302x8_
+#ifndef _EVT_GPIOf3xx_
+#define _EVT_GPIOf3xx_
 
 #include <cstdint>
 
@@ -8,7 +8,7 @@
 
 namespace EVT::core::IO {
 
-class GPIOf302x8 : public GPIO {
+class GPIOf3xx : public GPIO {
 public:
     /**
      * Create an instance of the STMF3xx GPIO pin using the provided pin. The
@@ -16,7 +16,7 @@ public:
      *
      * @parm pin[in] The pin for the GPIO instance to use.
      */
-    GPIOf302x8(Pin pin);
+    GPIOf3xx(Pin pin);
 
     /**
      * Create an instance of the STMF3xx GPIO pin using the provided pin
@@ -25,7 +25,7 @@ public:
      * @param pin[in] The pin for the GPIO instance to use.
      * @param direction[in] The flow of data (either input or output).
      */
-    GPIOf302x8(Pin pin, Direction direction);
+    GPIOf3xx(Pin pin, Direction direction);
 
     /**
      * Set the direction of the pin.
