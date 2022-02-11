@@ -33,12 +33,12 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/io/I2C.cpp
     src/io/PWM.cpp
     src/io/UART.cpp
-    src/io/platform/f3xx/f302x8/ADCf302x8.cpp
-    src/io/platform/f3xx/f302x8/CANf302x8.cpp
-    src/io/platform/f3xx/f302x8/GPIOf302x8.cpp
-    src/io/platform/f3xx/f302x8/I2Cf302x8.cpp
-    src/io/platform/f3xx/f302x8/PWMf302x8.cpp
-    src/io/platform/f3xx/f302x8/UARTf302x8.cpp
+    src/io/platform/f3xx/ADCf3xx.cpp
+    src/io/platform/f3xx/CANf3xx.cpp
+    src/io/platform/f3xx/GPIOf3xx.cpp
+    src/io/platform/f3xx/I2Cf3xx.cpp
+    src/io/platform/f3xx/PWMf3xx.cpp
+    src/io/platform/f3xx/UARTf3xx.cpp
     src/io/types/CANMessage.cpp
 
     src/dev/LED.cpp

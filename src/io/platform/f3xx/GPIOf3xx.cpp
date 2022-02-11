@@ -1,4 +1,4 @@
-#include <EVT/io/platform/f3xx/f3xx/GPIOf3xx.hpp>
+#include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
 
 #include <stdint.h>
 

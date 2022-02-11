@@ -1,5 +1,5 @@
-#include <EVT/io/platform/f3xx/f3xx/GPIOf3xx.hpp>
-#include <EVT/io/platform/f3xx/f3xx/PWMf3xx.hpp>
+#include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
+#include <EVT/io/platform/f3xx/PWMf3xx.hpp>
 
 namespace EVT::core::IO {
 

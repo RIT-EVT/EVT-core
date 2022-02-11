@@ -20,12 +20,12 @@ file(GLOB HALf3_C_SRC_FILES src/*.c)
 
 # Handle assembly file
 set_source_files_properties(
-    src/startup_stm32f302x8.s 
+    src/startup_stm32f302x8.s
     PROPERTIES COMPILE_FLAGS "-x assembler-with-cpp"
 )
 
 # Add C and Assembly source files
-target_sources(${PROJECT_NAME} PRIVATE 
+target_sources(${PROJECT_NAME} PRIVATE
     ${HALf3_C_SRC_FILES}
     src/startup_stm32f302x8.s
 )
@@ -41,7 +41,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE include/HALf3/)
 # Add flags for specific version of hardware
 set(HALf3_HARDWARE_FLAGS "-mthumb -mcpu=cortex-m4")
 
-add_compile_definitions(STM32F302x8)
 add_compile_definitions(USE_HAL_DRIVER)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${HALf3_HARDWARE_FLAGS}")

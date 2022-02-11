@@ -1,6 +1,6 @@
 #include <EVT/io/pin.hpp>
-#include <EVT/io/platform/f3xx/f3xx/ADCf3xx.hpp>
-#include <EVT/io/platform/f3xx/f3xx/GPIOf3xx.hpp>
+#include <EVT/io/platform/f3xx/ADCf3xx.hpp>
+#include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
 
 #include <HALf3/stm32f3xx.h>
 

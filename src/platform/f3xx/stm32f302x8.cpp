@@ -2,11 +2,11 @@
 #include <HALf3/stm32f3xx_hal.h>
 #include <HALf3/stm32f3xx_it.h>
 
-#include <EVT/platform/f3xx/stm32f302x8.hpp>
+#include <EVT/platform/f3xx/stm32f3xx.hpp>
 
 namespace EVT::core::platform {
 
-void stm32f302x8_init() {
+void stm32f3xx_init() {
     HAL_Init();
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
