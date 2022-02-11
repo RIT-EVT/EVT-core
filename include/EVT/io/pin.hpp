@@ -8,7 +8,7 @@
 
 namespace EVT::core::IO {
 // STM32F302R8 pin names
-#ifdef STM32F302x8
+#ifdef STM32F3xx
 
 /**
      * Pin mapping information. These values are generated via a combination of the GPIO bank that

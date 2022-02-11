@@ -18,16 +18,22 @@ add_library(${PROJECT_NAME} STATIC)
 # Glob together all C source files
 file(GLOB HALf3_C_SRC_FILES src/*.c)
 
+if(TARGET_DEV STREQUAL "STM32F302x8")
+    set(STARTUP_ASSEMBLY src/startup_stm32f302x8.s)
+elseif(TARGET_DEV STREQUAL "STM32F334x8")
+    set(STARTUP_ASSEMBLY src/startup_stm32f334x8.s)
+endif()
+
 # Handle assembly file
 set_source_files_properties(
-    src/startup_stm32f302x8.s
+    ${STARTUP_ASSEMBLY}
     PROPERTIES COMPILE_FLAGS "-x assembler-with-cpp"
 )
 
 # Add C and Assembly source files
 target_sources(${PROJECT_NAME} PRIVATE
     ${HALf3_C_SRC_FILES}
-    src/startup_stm32f302x8.s
+    ${STARTUP_ASSEMBLY}
 )
 
 # Add headers privately.
