@@ -17,6 +17,8 @@ namespace EVT::core::IO {
  * @return
  */
 static uint8_t getPortID(Pin sclPin) {
+#ifdef STM32F302x8
+
     switch (sclPin) {
     case Pin::PB_8:
     case Pin::PB_6:
@@ -31,6 +33,59 @@ static uint8_t getPortID(Pin sclPin) {
         return 0;
     }
     return 0;// Should not get here, unless bad pin given
+#endif
+
+#ifdef STM32F334x8
+    return 1;
+#endif
+}
+
+/**
+ * Get the target I2C instance based on the version of the STM32f3
+ *
+ * The STM32F302r8 supports 3 I2C instances, the STM32F334x8 supports
+ * 1 I2C instance
+ *
+ * @param portId The target port, for the STM32f334 this is always 1
+ */
+static void getInstance(uint8_t portID, I2C_TypeDef** instance, uint8_t* altId) {
+#ifdef STM32F302x8
+    switch (portID) {
+    case 1:
+        *instance = I2C1;
+
+        if (!(__HAL_RCC_I2C1_IS_CLK_ENABLED()))
+            __HAL_RCC_I2C1_CLK_ENABLE();
+
+        *altId = GPIO_AF4_I2C1;
+
+        break;
+    case 2:
+        *instance = I2C2;
+
+        if (!(__HAL_RCC_I2C2_IS_CLK_ENABLED()))
+            __HAL_RCC_I2C2_CLK_ENABLE();
+
+        *altId = GPIO_AF4_I2C2;
+
+        break;
+    case 3:
+        *instance = I2C3;
+
+        if (!(__HAL_RCC_I2C3_IS_CLK_ENABLED()))
+            __HAL_RCC_I2C3_CLK_ENABLE();
+
+        *altId = GPIO_AF2_I2C3;
+        break;
+    default:
+        break;
+    }
+#endif
+
+#ifdef STM32F334x8
+    *instance = I2C1;
+    *altId = GPIO_AF4_I2C1;
+#endif
 }
 
 I2Cf3xx::I2Cf3xx(Pin sclPin, Pin sdaPin) : I2C(sclPin, sdaPin) {
@@ -38,42 +93,13 @@ I2Cf3xx::I2Cf3xx(Pin sclPin, Pin sdaPin) : I2C(sclPin, sdaPin) {
     uint8_t altId = 0x00U;
 
     uint8_t portId = getPortID(sclPin);
-    switch (portId) {
-    case 1:
-        halI2C.Instance = I2C1;
-
-        if (!(__HAL_RCC_I2C1_IS_CLK_ENABLED()))
-            __HAL_RCC_I2C1_CLK_ENABLE();
-
-        altId = GPIO_AF4_I2C1;
-
-        break;
-    case 2:
-        halI2C.Instance = I2C2;
-
-        if (!(__HAL_RCC_I2C2_IS_CLK_ENABLED()))
-            __HAL_RCC_I2C2_CLK_ENABLE();
-
-        altId = GPIO_AF4_I2C2;
-
-        break;
-    case 3:
-        halI2C.Instance = I2C3;
-
-        if (!(__HAL_RCC_I2C3_IS_CLK_ENABLED()))
-            __HAL_RCC_I2C3_CLK_ENABLE();
-
-        altId = GPIO_AF2_I2C3;
-        break;
-    default:
-        break;
-    }
+    getInstance(portId, &halI2C.Instance, &altId);
 
     Pin i2cPins[] = {sclPin, sdaPin};
     uint8_t numOfPins = 2;
 
     GPIOf3xx::gpioStateInit(&gpioInit, i2cPins, numOfPins, GPIO_MODE_AF_OD,
-                              GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+                            GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
 
     // 8MHz = 0x00310309; 16MHz = 0x10320309; 48MHz = 0x50330309
     halI2C.Init.Timing = 0x00310309;
@@ -128,8 +154,8 @@ I2C::I2CStatus I2Cf3xx::read(uint8_t addr, uint8_t* bytes, uint8_t length) {
 }
 
 I2C::I2CStatus I2Cf3xx::writeMemReg(uint8_t addr, uint32_t memAddress,
-                                      uint8_t byte, uint16_t memAddSize,
-                                      uint8_t maxWriteTime) {
+                                    uint8_t byte, uint16_t memAddSize,
+                                    uint8_t maxWriteTime) {
     uint16_t memAddress16 = memAddress;
     HAL_StatusTypeDef status = HAL_I2C_Mem_Write(&halI2C, addr << 1,
                                                  memAddress16, memAddSize,
@@ -139,8 +165,8 @@ I2C::I2CStatus I2Cf3xx::writeMemReg(uint8_t addr, uint32_t memAddress,
 }
 
 I2C::I2CStatus I2Cf3xx::readMemReg(uint8_t addr, uint32_t memAddress,
-                                     uint8_t* byte,
-                                     uint16_t memAddSize) {
+                                   uint8_t* byte,
+                                   uint16_t memAddSize) {
     uint16_t memAddress16 = memAddress;
     HAL_StatusTypeDef status = HAL_I2C_Mem_Read(&halI2C, addr << 1,
                                                 memAddress16, memAddSize, byte,
@@ -149,9 +175,9 @@ I2C::I2CStatus I2Cf3xx::readMemReg(uint8_t addr, uint32_t memAddress,
 }
 
 I2C::I2CStatus I2Cf3xx::writeMemReg(uint8_t addr, uint32_t memAddress,
-                                      uint8_t* bytes, uint8_t size,
-                                      uint16_t memAddSize,
-                                      uint8_t maxWriteTime) {
+                                    uint8_t* bytes, uint8_t size,
+                                    uint16_t memAddSize,
+                                    uint8_t maxWriteTime) {
     uint16_t memAddress16 = memAddress;
     HAL_StatusTypeDef status = HAL_I2C_Mem_Write(&halI2C, addr << 1,
                                                  memAddress16, memAddSize,
@@ -162,8 +188,8 @@ I2C::I2CStatus I2Cf3xx::writeMemReg(uint8_t addr, uint32_t memAddress,
 }
 
 I2C::I2CStatus I2Cf3xx::readMemReg(uint8_t addr, uint32_t memAddress,
-                                     uint8_t* bytes, uint8_t size,
-                                     uint16_t memAddSize) {
+                                   uint8_t* bytes, uint8_t size,
+                                   uint16_t memAddSize) {
     uint16_t memAddress16 = memAddress;
     HAL_StatusTypeDef status = HAL_I2C_Mem_Read(&halI2C, addr << 1,
                                                 memAddress16, memAddSize,
