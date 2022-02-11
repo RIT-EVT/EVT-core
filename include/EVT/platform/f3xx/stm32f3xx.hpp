@@ -1,5 +1,5 @@
-#ifndef _EVT_STM32F302x8_
-#define _EVT_STM32F302x8_
+#ifndef _EVT_STM32F3xx_
+#define _EVT_STM32F3xx_
 
 namespace EVT::core::platform {
 
@@ -17,7 +17,7 @@ constexpr uint32_t GPIO_INTERRUPT_PRIORITY = 10;
  * series of calls into the HAL to enable system peripherals and enable
  * all required clock.
  */
-void stm32f302x8_init();
+void stm32f3xx_init();
 
 }// namespace EVT::core::platform
 #endif

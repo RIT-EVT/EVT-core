@@ -9,14 +9,14 @@
 #include <EVT/io/PWM.hpp>
 
 #ifdef STM32F302x8
-    #include <EVT/platform/f3xx/stm32f302x8.hpp>
+    #include <EVT/platform/f3xx/stm32f3xx.hpp>
 
-    #include <EVT/io/platform/f3xx/f302x8/ADCf302x8.hpp>
-    #include <EVT/io/platform/f3xx/f302x8/CANf302x8.hpp>
-    #include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
-    #include <EVT/io/platform/f3xx/f302x8/I2Cf302x8.hpp>
-    #include <EVT/io/platform/f3xx/f302x8/PWMf302x8.hpp>
-    #include <EVT/io/platform/f3xx/f302x8/UARTf302x8.hpp>
+    #include <EVT/io/platform/f3xx/ADCf3xx.hpp>
+    #include <EVT/io/platform/f3xx/CANf3xx.hpp>
+    #include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
+    #include <EVT/io/platform/f3xx/I2Cf3xx.hpp>
+    #include <EVT/io/platform/f3xx/PWMf3xx.hpp>
+    #include <EVT/io/platform/f3xx/UARTf3xx.hpp>
 #endif
 
 namespace EVT::core::IO {
@@ -28,7 +28,7 @@ namespace EVT::core::IO {
  */
 void init() {
 #ifdef STM32F302x8
-    EVT::core::platform::stm32f302x8_init();
+    EVT::core::platform::stm32f3xx_init();
 #endif
 }
 
@@ -40,7 +40,7 @@ void init() {
 template<Pin pin>
 ADC& getADC() {
 #ifdef STM32F302x8
-    static ADCf302x8 adc(pin);
+    static ADCf3xx adc(pin);
     return adc;
 #endif
 }
@@ -54,7 +54,7 @@ ADC& getADC() {
 template<Pin txPin, Pin rxPin>
 CAN& getCAN(bool loopbackEnabled = false) {
 #ifdef STM32F302x8
-    static CANf302x8 can(txPin, rxPin, loopbackEnabled);
+    static CANf3xx can(txPin, rxPin, loopbackEnabled);
     return can;
 #endif
 }
@@ -68,7 +68,7 @@ CAN& getCAN(bool loopbackEnabled = false) {
 template<Pin pin>
 GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT) {
 #ifdef STM32F302x8
-    static GPIOf302x8 gpioPin(pin, direction);
+    static GPIOf3xx gpioPin(pin, direction);
     return gpioPin;
 #endif
 }
@@ -82,7 +82,7 @@ GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT) {
 template<Pin scl, Pin sda>
 I2C& getI2C() {
 #ifdef STM32F302x8
-    static I2Cf302x8 i2c(scl, sda);
+    static I2Cf3xx i2c(scl, sda);
     return i2c;
 #endif
 }
@@ -95,7 +95,7 @@ I2C& getI2C() {
 template<Pin pin>
 PWM& getPWM() {
 #ifdef STM32F302x8
-    static PWMf302x8 pwm(pin);
+    static PWMf3xx pwm(pin);
     return pwm;
 #endif
 }
@@ -110,7 +110,7 @@ PWM& getPWM() {
 template<Pin txPin, Pin rxPin>
 UART& getUART(uint32_t baudrate) {
 #ifdef STM32F302x8
-    static UARTf302x8 uart(txPin, rxPin, baudrate);
+    static UARTf3xx uart(txPin, rxPin, baudrate);
     return uart;
 #endif
 }

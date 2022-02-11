@@ -4,9 +4,9 @@
 #include <string.h>
 
 #include <EVT/io/pin.hpp>
-#include <EVT/io/platform/f3xx/f3xx/UARTf3xx.hpp>
+#include <EVT/io/platform/f3xx/UARTf3xx.hpp>
 
-#include <EVT/io/platform/f3xx/f3xx/GPIOf3xx.hpp>
+#include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
 
 #include <HALf3/stm32f3xx.h>
 
