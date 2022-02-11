@@ -1,5 +1,5 @@
-#ifndef _EVT_ADCf302x8_
-#define _EVT_ADCf302x8_
+#ifndef _EVT_ADCf3xx_
+#define _EVT_ADCf3xx_
 
 #include <HALf3/stm32f3xx.h>
 #include <HALf3/stm32f3xx_hal.h>
@@ -8,14 +8,14 @@
 
 namespace EVT::core::IO {
 
-class ADCf302x8 : public ADC {
+class ADCf3xx : public ADC {
 public:
     /**
      * Setup the given pin for ADC usage
      *
      * @param pin[in] The pin to setup for ADC
      */
-    ADCf302x8(Pin pin);
+    ADCf3xx(Pin pin);
 
     /**
      * Read the value on the ADC in volts.

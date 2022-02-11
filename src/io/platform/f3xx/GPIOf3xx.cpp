@@ -1,11 +1,11 @@
-#include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
+#include <EVT/io/platform/f3xx/f3xx/GPIOf3xx.hpp>
 
 #include <stdint.h>
 
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/pin.hpp>
 
-#include <EVT/platform/f3xx/stm32f302x8.hpp>
+#include <EVT/platform/f3xx/stm32f3xx.hpp>
 #include <HALf3/stm32f3xx_hal_gpio.h>
 #include <HALf3/stm32f3xx_hal_rcc.h>
 
@@ -59,7 +59,7 @@ extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 
 namespace EVT::core::IO {
 
-GPIOf302x8::GPIOf302x8(Pin pin, GPIO::Direction direction)
+GPIOf3xx::GPIOf3xx(Pin pin, GPIO::Direction direction)
     : GPIO(pin, direction) {
 
     GPIO_InitTypeDef gpioInit;
@@ -93,26 +93,26 @@ GPIOf302x8::GPIOf302x8(Pin pin, GPIO::Direction direction)
     this->writePin(GPIO::State::LOW);// Output set low by default
 }
 
-void GPIOf302x8::setDirection(GPIO::Direction direction) {
+void GPIOf3xx::setDirection(GPIO::Direction direction) {
     // TODO: Add implementation of resetting the direction
 }
 
-void GPIOf302x8::writePin(GPIO::State state) {
+void GPIOf3xx::writePin(GPIO::State state) {
     HAL_GPIO_WritePin(this->port, this->halPin,
                       static_cast<GPIO_PinState>(state));
 }
 
-GPIO::State GPIOf302x8::readPin() {
+GPIO::State GPIOf3xx::readPin() {
     return static_cast<GPIO::State>(HAL_GPIO_ReadPin(this->port, this->halPin));
 }
 
-void GPIOf302x8::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin)) {
+void GPIOf3xx::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin)) {
     GPIO_InitTypeDef gpioInit;
     Pin myPins[] = {pin};
     uint8_t numOfPins = 1;
 
     gpioStateInit(&gpioInit, myPins, numOfPins,
-                  GPIOf302x8::GPIO_TRIGGER_INTERRUPT_BASE | (static_cast<uint32_t>(edge) << GPIO_MODE_IT_SHIFT),
+                  GPIOf3xx::GPIO_TRIGGER_INTERRUPT_BASE | (static_cast<uint32_t>(edge) << GPIO_MODE_IT_SHIFT),
                   GPIO_PULLDOWN, GPIO_SPEED_FREQ_HIGH);
 
     auto pin_index = static_cast<uint8_t>(this->pin) & 0x0F;
@@ -160,7 +160,7 @@ void GPIOf302x8::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin)) {
     HAL_NVIC_EnableIRQ(irqNum);
 }
 
-void GPIOf302x8::gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins,
+void GPIOf3xx::gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins,
                                uint8_t numOfPins, uint32_t mode, uint32_t pull,
                                uint32_t speed, uint8_t alternate) {
     if (numOfPins == 2) {

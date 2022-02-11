@@ -1,5 +1,5 @@
-#include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
-#include <EVT/io/platform/f3xx/f302x8/PWMf302x8.hpp>
+#include <EVT/io/platform/f3xx/f3xx/GPIOf3xx.hpp>
+#include <EVT/io/platform/f3xx/f3xx/PWMf3xx.hpp>
 
 namespace EVT::core::IO {
 
@@ -172,7 +172,7 @@ static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
     }
 }
 
-PWMf302x8::PWMf302x8(Pin pin) : PWM(pin) {
+PWMf3xx::PWMf3xx(Pin pin) : PWM(pin) {
     TIM_TypeDef* instance;
     uint32_t alternateFunction;
     getInstance(pin, &instance, &halTIMChannelID, &alternateFunction);
@@ -215,12 +215,12 @@ PWMf302x8::PWMf302x8(Pin pin) : PWM(pin) {
     Pin myPins[] = {pin};
     uint8_t numOfPins = 1;
 
-    GPIOf302x8::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP,
+    GPIOf3xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP,
                               GPIO_NOPULL, GPIO_SPEED_FREQ_LOW,
                               alternateFunction);
 }
 
-void PWMf302x8::setDutyCycle(float dutyCycle) {
+void PWMf3xx::setDutyCycle(float dutyCycle) {
     this->dutyCycle = dutyCycle;
 
     TIM_OC_InitTypeDef sConfigOC = {0};
@@ -236,7 +236,7 @@ void PWMf302x8::setDutyCycle(float dutyCycle) {
     HAL_TIM_PWM_Start(&halTIM, halTIMChannelID);
 }
 
-void PWMf302x8::setPeriod(float period) {
+void PWMf3xx::setPeriod(float period) {
     this->period = period;
     HAL_TIM_PWM_Stop(&halTIM, halTIMChannelID);
 
@@ -260,11 +260,11 @@ void PWMf302x8::setPeriod(float period) {
     setDutyCycle(this->dutyCycle);
 }
 
-float PWMf302x8::getDutyCycle() {
+float PWMf3xx::getDutyCycle() {
     return dutyCycle;
 }
 
-uint32_t PWMf302x8::getPeriod() {
+uint32_t PWMf3xx::getPeriod() {
     return period;
 }
 

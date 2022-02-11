@@ -1,5 +1,5 @@
-#ifndef _EVT_CANf302x8_
-#define _EVT_CANf302x8_
+#ifndef _EVT_CANf3xx_
+#define _EVT_CANf3xx_
 
 #include <stdint.h>
 
@@ -14,7 +14,7 @@
 namespace EVT::core::IO {
 
 /**
- * STMF302x8 implementation of the CAN protocol. The STM32f302x8 has an on
+ * STMF302x8 implementation of the CAN protocol. The STM32f3xx has an on
  * board CAN controller which adds additional features.
  *
  * 1. Ability to generate interrupts which allows users to add custom call
@@ -23,16 +23,16 @@ namespace EVT::core::IO {
  * 2. Hardware based message filtering which allows the filtering of messages
  * to be handled by hardware not software.
  */
-class CANf302x8 : public CAN {
+class CANf3xx : public CAN {
 public:
     /**
-     * Create a new instance of an STM32f302x8 CAN interface
+     * Create a new instance of an STM32f3xx CAN interface
      *
      * @param txPin[in] The pin to trasmit CAN messages on
      * @param rxPin[in] The pin to receive CAN messages on
      * @param loopbackEnabled[in] Flag for enabling CAN loop back
      */
-    CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled = false);
+    CANf3xx(Pin txPin, Pin rxPin, bool loopbackEnabled = false);
 
     /**
      * @copydoc EVT::core::IO::CAN::receive

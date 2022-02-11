@@ -4,15 +4,15 @@
 #include <string.h>
 
 #include <EVT/io/pin.hpp>
-#include <EVT/io/platform/f3xx/f302x8/UARTf302x8.hpp>
+#include <EVT/io/platform/f3xx/f3xx/UARTf3xx.hpp>
 
-#include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
+#include <EVT/io/platform/f3xx/f3xx/GPIOf3xx.hpp>
 
 #include <HALf3/stm32f3xx.h>
 
 namespace EVT::core::IO {
 
-UARTf302x8::UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate)
+UARTf3xx::UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate)
     : UART(txPin, rxPin, baudrate) {
 
     GPIO_InitTypeDef gpioInit;
@@ -75,7 +75,7 @@ UARTf302x8::UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate)
         break;
     }
 
-    GPIOf302x8::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP,
+    GPIOf3xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP,
                               GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, alt_id);
 
     halUART.Init.BaudRate = baudrate;
@@ -89,50 +89,50 @@ UARTf302x8::UARTf302x8(Pin txPin, Pin rxPin, uint32_t baudrate)
     HAL_UART_Init(&halUART);
 }
 
-void UARTf302x8::setBaudrate(uint32_t baudrate) {
+void UARTf3xx::setBaudrate(uint32_t baudrate) {
     this->halUART.Init.BaudRate = baudrate;
     this->baudrate = baudrate;
 }
 
-void UARTf302x8::setFormat(WordLength wordLength, Parity parity,
+void UARTf3xx::setFormat(WordLength wordLength, Parity parity,
                            NumStopBits numStopBits) {
     halUART.Init.WordLength = static_cast<uint32_t>(wordLength);
     halUART.Init.Parity = static_cast<uint32_t>(parity);
     halUART.Init.Parity = static_cast<uint32_t>(numStopBits);
 }
 
-void UARTf302x8::sendBreak() {
+void UARTf3xx::sendBreak() {
     HAL_LIN_SendBreak(&halUART);
 }
 
-bool UARTf302x8::isReadable() {
+bool UARTf3xx::isReadable() {
     return halUART.pRxBuffPtr != NULL;
 }
 
-bool UARTf302x8::isWritable() {
+bool UARTf3xx::isWritable() {
     return halUART.pTxBuffPtr == NULL;
 }
 
-void UARTf302x8::putc(char c) {
+void UARTf3xx::putc(char c) {
     uint8_t* data = reinterpret_cast<uint8_t*>(&c);
     HAL_UART_Transmit(&halUART, data, 1, DEFAULT_TIMEOUT);
 }
 
-void UARTf302x8::puts(const char* s) {
+void UARTf3xx::puts(const char* s) {
     char buf[100];
     strncpy(buf, s, 100);
     uint8_t* data = reinterpret_cast<uint8_t*>(buf);
     HAL_UART_Transmit(&halUART, data, strlen(buf), DEFAULT_TIMEOUT);
 }
 
-char UARTf302x8::getc() {
+char UARTf3xx::getc() {
     uint8_t c;
     while (HAL_UART_Receive(&halUART, &c, 1, DEFAULT_TIMEOUT) == HAL_TIMEOUT) {
     }
     return static_cast<char>(c);
 }
 
-void UARTf302x8::printf(const char* format, ...) {
+void UARTf3xx::printf(const char* format, ...) {
     va_list args;
     va_start(args, format);
 
@@ -146,19 +146,19 @@ void UARTf302x8::printf(const char* format, ...) {
     va_end(args);
 }
 
-void UARTf302x8::write(uint8_t byte) {
+void UARTf3xx::write(uint8_t byte) {
     putc(static_cast<uint8_t>(byte));
 }
 
-uint8_t UARTf302x8::read() {
+uint8_t UARTf3xx::read() {
     return static_cast<uint8_t>(getc());
 }
 
-void UARTf302x8::writeBytes(uint8_t* bytes, size_t size) {
+void UARTf3xx::writeBytes(uint8_t* bytes, size_t size) {
     HAL_UART_Transmit(&halUART, bytes, size, DEFAULT_TIMEOUT);
 }
 
-void UARTf302x8::readBytes(uint8_t* bytes, size_t size) {
+void UARTf3xx::readBytes(uint8_t* bytes, size_t size) {
     HAL_UART_Receive(&halUART, bytes, size, DEFAULT_TIMEOUT);
 }
 
