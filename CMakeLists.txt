@@ -76,8 +76,20 @@ cmake_dependent_option(EVT_BUILD_SAMPLES
 # Handle dependencies
 ###############################################################################
 
-# TODO: This should be set by the user of this library
-add_compile_definitions(STM32F302x8)
+option(TARGET_DEV "Target device" "STM32F302x8")
+if(NOT TARGET_DEV)
+    set(TARGET_DEV "STM32F302x8")
+endif()
+
+
+if(TARGET_DEV STREQUAL "STM32F302x8")
+    add_compile_definitions(STM32F302x8)
+elseif(TARGET_DEV STREQUAL "STM32F334x8")
+    add_compile_definitions(STM32F334x8)
+else()
+    message(FATAL_ERROR "The target device is not supported")
+endif()
+
 add_compile_definitions(USE_HAL_DRIVER)
 
 add_subdirectory(libs/HALf3/)
