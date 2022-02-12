@@ -76,7 +76,7 @@ UARTf3xx::UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate)
     }
 
     GPIOf3xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP,
-                              GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, alt_id);
+                            GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, alt_id);
 
     halUART.Init.BaudRate = baudrate;
     halUART.Init.WordLength = UART_WORDLENGTH_8B;
@@ -95,7 +95,7 @@ void UARTf3xx::setBaudrate(uint32_t baudrate) {
 }
 
 void UARTf3xx::setFormat(WordLength wordLength, Parity parity,
-                           NumStopBits numStopBits) {
+                         NumStopBits numStopBits) {
     halUART.Init.WordLength = static_cast<uint32_t>(wordLength);
     halUART.Init.Parity = static_cast<uint32_t>(parity);
     halUART.Init.Parity = static_cast<uint32_t>(numStopBits);
