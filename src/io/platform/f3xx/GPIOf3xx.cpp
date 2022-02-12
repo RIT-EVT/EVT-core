@@ -161,8 +161,8 @@ void GPIOf3xx::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin)) {
 }
 
 void GPIOf3xx::gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins,
-                               uint8_t numOfPins, uint32_t mode, uint32_t pull,
-                               uint32_t speed, uint8_t alternate) {
+                             uint8_t numOfPins, uint32_t mode, uint32_t pull,
+                             uint32_t speed, uint8_t alternate) {
     if (numOfPins == 2) {
         targetGpio->Pin =
             static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[0]) & 0x0F)) | static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[1]) & 0x0F));

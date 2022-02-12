@@ -70,7 +70,7 @@ CANf3xx::CANf3xx(Pin txPin, Pin rxPin, bool loopbackEnabled)
     Pin canPins[] = {txPin, rxPin};
     uint8_t numOfPins = 2;
     GPIOf3xx::gpioStateInit(&gpioInit, canPins, numOfPins, GPIO_MODE_AF_OD,
-                              GPIO_PULLUP, GPIO_SPEED_FREQ_HIGH, GPIO_AF9_CAN);
+                            GPIO_PULLUP, GPIO_SPEED_FREQ_HIGH, GPIO_AF9_CAN);
 
     // Initialize HAL CAN
     // Bit timing values calculated from the website

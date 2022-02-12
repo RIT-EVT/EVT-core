@@ -137,7 +137,7 @@ void ADCf3xx::addChannel(uint8_t rank) {
     uint8_t numOfPins = 1;
 
     GPIOf3xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG,
-                              GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
+                            GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;
 
