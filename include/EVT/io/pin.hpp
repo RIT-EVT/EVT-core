@@ -102,7 +102,7 @@ enum class Pin {
     D15 = PB_8,
 
     // Common Configured Pins
-    LED = PB_13,
+    LED = PA_5,
     UART_TX = PA_2,
     UART_RX = PA_3
 };

@@ -20,8 +20,11 @@ file(GLOB HALf3_C_SRC_FILES src/*.c)
 
 if(TARGET_DEV STREQUAL "STM32F302x8")
     set(STARTUP_ASSEMBLY src/startup_stm32f302x8.s)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -TSTM32F302C8Tx_FLASH.ld")
+
 elseif(TARGET_DEV STREQUAL "STM32F334x8")
     set(STARTUP_ASSEMBLY src/startup_stm32f334x8.s)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -TSTM32F334R8TX_FLASH.ld")
 endif()
 
 # Handle assembly file
@@ -50,7 +53,6 @@ set(HALf3_HARDWARE_FLAGS "-mthumb -mcpu=cortex-m4")
 add_compile_definitions(USE_HAL_DRIVER)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${HALf3_HARDWARE_FLAGS}")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -TSTM32F302C8Tx_FLASH.ld")
 
 ###############################################################################
 # Expose library
