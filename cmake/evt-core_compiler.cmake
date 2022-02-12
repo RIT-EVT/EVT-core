@@ -82,7 +82,14 @@ set(CMAKE_C_FLAGS           "${EVT_COMMON_FLAGS} \
 set(CMAKE_CXX_FLAGS         "${EVT_COMMON_FLAGS} \
                             -fno-rtti -Wvla")
 
-# TODO: Check for platform to decide which linker script to use
-set(CMAKE_EXE_LINKER_FLAGS  "-mfloat-abi=hard -specs=nano.specs -specs=nosys.specs \
-                            -T ${EVT_CORE_DIR}/libs/HALf3/STM32F302C8Tx_FLASH.ld \
+if(TARGET_DEV STREQUAL "STM32F302x8")
+    set(CMAKE_EXE_LINKER_FLAGS "-T ${EVT_CORE_DIR}/libs/HALf3/STM32F302C8Tx_FLASH.ld")
+elseif(TARGET_DEV STREQUAL "STM32F334x8")
+    set(CMAKE_EXE_LINKER_FLAGS "-T ${EVT_CORE_DIR}/libs/HALf3/STM32F334R8TX_FLASH.ld")
+else()
+    message(FATAL_ERROR "The target device is not supported")
+endif()
+
+set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -mfloat-abi=hard \
+                            -specs=nano.specs -specs=nosys.specs \
                             -lc -lm -lnosys -Wl,--gc-section")
