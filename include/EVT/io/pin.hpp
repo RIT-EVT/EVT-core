@@ -102,7 +102,12 @@ enum class Pin {
     D15 = PB_8,
 
     // Common Configured Pins
+    #ifdef STM32F302x8
+    LED = PB_13,
+    #endif
+    #ifdef STM32F334x8
     LED = PA_5,
+    #endif
     UART_TX = PA_2,
     UART_RX = PA_3
 };
