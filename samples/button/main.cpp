@@ -20,7 +20,7 @@ int main() {
 
     DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
 
-    DEV::Button button = DEV::Button(buttonGPIO, DEV::Button::LogicLevelOnPress::HIGH);
+    DEV::Button button = DEV::Button(buttonGPIO);
 
     while (true) {
         IO::GPIO::State buttonStatus = button.getState();
