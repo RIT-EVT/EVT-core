@@ -8,22 +8,22 @@
 namespace EVT::core::DEV {
 
 /**
-     * Implementation of the independent watchdog for the STM32f302x8, which
-     * uses the low-speed internal RC oscillator to detect software failures and
-     * trigger a reset.
-     */
+ * Implementation of the independent watchdog for the STM32f302x8, which
+ * uses the low-speed internal RC oscillator to detect software failures and
+ * trigger a reset.
+ */
 class IWDGf302x8 : public IWDG {
 public:
     /**
-         * Constructor for the IWDG, which also starts the watchdog timer.
-         * @param ms Time in milliseconds before the IWDG triggers a reset,
-         * must be a value between 8 and 32768 ms.
-         */
+     * Constructor for the IWDG, which also starts the watchdog timer.
+     * @param ms Time in milliseconds before the IWDG triggers a reset,
+     * must be a value between 8 and 32768 ms.
+     */
     IWDGf302x8(uint32_t ms);
 
     /**
-         * Refreshes the IWDG to avoid a system reset
-         */
+     * Refreshes the IWDG to avoid a system reset
+     */
     void refresh();
 
 private:

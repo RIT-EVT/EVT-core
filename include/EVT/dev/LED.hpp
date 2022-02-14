@@ -18,8 +18,8 @@ public:
     /**
      * Create an instance of the LED based on the given GPIO pin.
      *
-     * @param gpio[in] GPIO pin
-     * @param activeState[in] Represents if the LED is active high or active low
+     * @param[in] gpio GPIO pin
+     * @param[in] activeState Represents if the LED is active high or active low
      */
     LED(EVT::core::IO::GPIO& gpio, ActiveState activeState);
 
@@ -31,7 +31,7 @@ public:
     /**
      * Set the current state of the LED.
      *
-     * @param state[in] The state to set the LED to.
+     * @param[in] state The state to set the LED to.
      */
     void setState(EVT::core::IO::GPIO::State state);
 

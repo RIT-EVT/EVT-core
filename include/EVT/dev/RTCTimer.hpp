@@ -22,8 +22,8 @@ public:
     /**
      * Create instance of RTCTimer.
      *
-     * @param r Instance of on-board
-     * @param clock Amount of time it takes for the time to go off in ms
+     * @param[in] r Instance of on-board
+     * @param[in] clock Amount of time it takes for the time to go off in ms
      */
     RTCTimer(RTC& r, uint32_t clock);
 
@@ -35,25 +35,22 @@ public:
     void startTimer(void (*irqHandler)(void* htim)) override {}
 
     /**
-     * Starts the given timer.
+     * @inheritdoc
      */
     void startTimer() override;
 
     /**
-     * Stops the current timer from running.  Does not complete its current counting sequence.
+     * @inheritdoc
      */
     void stopTimer() override;
 
     /**
-     * Resets the timer counter.
+     * @inheritdoc
      */
     void reloadTimer() override;
 
     /**
-     * Set the clock period for the timer.  Will stop the timer, re-initialize the device with the updated period.
-     * You must call startTimer again to continue timer operation.
-     *
-     * @param clock[in] the clock period in MILLISECONDS.  An interrupt will be triggered at that frequency.
+     * @inheritdoc
      */
     void setPeriod(uint32_t clock) override;
 
