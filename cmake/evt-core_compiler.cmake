@@ -54,20 +54,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "") # works
 
 include(GNUInstallDirs)
 
-# EVT Linking option, linting revolves around cpplint which is a tool that
-# conforms to Google's C++ style guide. cpplint needs to be installed.
-option(EVT_LINT
-    "Lint source code, need to have cpplint installed"
-    OFF
-)
-
-if(EVT_LINT)
-    # TODO: In the future these filter settings sound be included in cfg
-    # files.
-    set(CMAKE_CXX_CPPLINT "cpplint;--filter=-legal/copyright, \
-                          -readability/todo,-build/include_order;--linelength=120")
-endif()
-
 ###############################################################################
 # Set compiler and linker flags
 ###############################################################################
