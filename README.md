@@ -136,37 +136,35 @@ will be needed. PuTTY on Windows is a good tool. Linux and MacOS will have some
 built in tools for serial console and gtkterm is worth looking into.
 But when in doubt, the Arduino serial console will also work!
 
-## Features Supported
+## Supported Platform Features
 
-Below is the state of supported features on each platform.
+Below is the supported features associated with each board
 
-NOTE: In these early releases testing is not fully verbose.
-
-| Platform    | I2C                | SPI | PWM                | CAN                | ADC                | Flash | RTC | UART                | GPIO                |
-|-------------|--------------------|-----|--------------------|--------------------|--------------------|-------|-----|---------------------|---------------------|
-| STM32F302R8 | :heavy_check_mark: | :x: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :x:   | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark:  |
-| STM32F446RE | :x:                | :x: | :x:                | :x:                | :x:                | :x:   | :x: | :x:                 | :x:                 |
+| Feature  | STM32F302R8        | STM32F334R8        |
+|----------|--------------------|--------------------|
+| ADC      | :heavy_check_mark: | :heavy_check_mark: |
+| CAN      | :heavy_check_mark: | :heavy_check_mark: |
+| CANopen  | :heavy_check_mark: | :heavy_check_mark: |
+| GPIO     | :heavy_check_mark: | :heavy_check_mark: |
+| I2C      | :heavy_check_mark: | :x:                |
+| PWM      | :heavy_check_mark: | :heavy_check_mark: |
+| RTC      | :heavy_check_mark: | :x:                |
+| SPI      | :x:                | :x:                |
+| Timer    | :heavy_check_mark: | :x:                |
+| UART     | :heavy_check_mark: | :heavy_check_mark: |
+| Watchdog | :heavy_check_mark: | :x:                |
 
 ## Future Features
 
 EVT-Core is heavily a work in progress, below is a running list of the features
 or concepts that EVT-Core should support.
 
-* STM32F446RE HAL
 * SPI
-* Flash
 * Test Platform
 * System Initialization Function
     * Calling HAL init
     * Clock settings
 * Ability for users of code to interject their own pin mappings
-
-## TODO
-
-* Add ability to prune out un-used code by adding the linker argument
-`-Wl,--gc-sections` without removing the handler functions. This can half by
-accomplished by calling the target handler once from main code execution.
-* Style checking should be part of the build process.
 
 ## Links and Resources
 
