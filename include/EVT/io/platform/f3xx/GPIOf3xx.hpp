@@ -14,7 +14,7 @@ public:
      * Create an instance of the STMF3xx GPIO pin using the provided pin. The
      * direction will have to be set manually before use.
      *
-     * @parm pin[in] The pin for the GPIO instance to use.
+     * @param[in] pin The pin for the GPIO instance to use.
      */
     GPIOf3xx(Pin pin);
 
@@ -22,37 +22,17 @@ public:
      * Create an instance of the STMF3xx GPIO pin using the provided pin
      * and direction.
      *
-     * @param pin[in] The pin for the GPIO instance to use.
-     * @param direction[in] The flow of data (either input or output).
+     * @param[in] pin The pin for the GPIO instance to use.
+     * @param[in] direction The flow of data (either input or output).
      */
     GPIOf3xx(Pin pin, Direction direction);
 
-    /**
-     * Set the direction of the pin.
-     *
-     * @param direction[in] The direction of information.
-     */
-    void setDirection(Direction direction);
+    void setDirection(Direction direction) override;
 
-    /**
-     * Used for writing a state to a pin.
-     *
-     * @param state[in] The sate to write to the pin.
-     */
-    void writePin(State state);
+    void writePin(State state) override;
 
-    /**
-     * Used for reading the state of the pin.
-     *
-     * @return The state of the pin.
-     */
-    State readPin();
+    State readPin() override;
 
-    /**
-     * Used to register an IRQ Handler for the GPIO instance
-     * @param edge[in] the trigger edge
-     * @param irqHandler[in] the function pointer to the handler
-     */
     void registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin)) override;
 
     /**

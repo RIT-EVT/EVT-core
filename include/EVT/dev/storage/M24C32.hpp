@@ -17,64 +17,28 @@ public:
      */
     M24C32(uint8_t i2cSlaveAddress, IO::I2C& i2c);
 
-    /**
-     * @inheritdoc
-     */
     uint8_t readByte(uint32_t address) override;
 
-    /**
-     * @inheritdoc
-     */
     uint16_t readHalfWord(uint32_t address) override;
 
-    /**
-     * @inheritdoc
-     */
     uint32_t readWord(uint32_t address) override;
 
-    /**
-     * @inheritdoc
-     */
     void readBytes(uint32_t address, uint8_t* buffer, uint8_t numBytes) override;
 
-    /**
-     * @inheritdoc
-     */
     void readHalfWords(uint8_t address, uint16_t* buffer, uint8_t numHWords) override;
 
-    /**
-     * @inheritdoc
-     */
     void readWords(uint8_t address, uint32_t* buffer, uint8_t numWords) override;
 
-    /**
-     * @inheritdoc
-     */
     void writeByte(uint32_t address, uint8_t data) override;
 
-    /**
-     * @inheritdoc
-     */
     void writeHalfWord(uint32_t address, uint16_t data) override;
 
-    /**
-     * @inheritdoc
-     */
     void writeWord(uint32_t address, uint32_t data) override;
 
-    /**
-     * @inheritdoc
-     */
     void writeBytes(uint32_t address, uint8_t* dataArr, uint8_t numBytes) override;
 
-    /**
-     * @inheritdoc
-     */
     void writeHalfWords(uint8_t address, uint16_t* dataArr, uint8_t numHWords) override;
 
-    /**
-     * @inheritdoc
-     */
     void writeWords(uint8_t address, uint32_t* dataArr, uint8_t numWords) override;
 
 private:

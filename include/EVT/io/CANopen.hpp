@@ -23,9 +23,9 @@ namespace EVT::core::IO {
     * stack. This will populate a struct with function pointers that can
     * handle CAN operations.
     *
-    * @param can[in] The CAN interface that will be used for the stack driver
-    * @param messageQueue[in] Queue that will be read from for receiveing CAN messages
-    * @param canDriver[out] The CANopen stack driver to populate
+    * @param[in] can The CAN interface that will be used for the stack driver
+    * @param[in] messageQueue Queue that will be read from for receiveing CAN messages
+    * @param[out] canDriver The CANopen stack driver to populate
     */
 void getCANopenCANDriver(CAN* can,
                          types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* messageQueue,
@@ -36,8 +36,8 @@ void getCANopenCANDriver(CAN* can,
      * CANopen stack. This will populate a struct with function pointers
      * that will handler timer operations.
      *
-     * @param timer[in] The timer interface to use
-     * @param timerDriver[ou]t The timer driver to populate
+     * @param[in] timer The timer interface to use
+     * @param[out] timerDriver The timer driver to populate
      */
 void getCANopenTimerDriver(DEV::Timer* timer, CO_IF_TIMER_DRV* timerDriver);
 
@@ -48,7 +48,7 @@ void getCANopenTimerDriver(DEV::Timer* timer, CO_IF_TIMER_DRV* timerDriver);
      *
      * CURRENTLY ONLY FOR TESTING USE ONLY, NOT ACTUALLY NVM.
      *
-     * @param nvmDriver[out] The NVM driver to populate
+     * @param[out] nvmDriver The NVM driver to populate
      */
 void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver);
 

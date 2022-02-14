@@ -21,9 +21,6 @@ public:
      */
     IWDGf302x8(uint32_t ms);
 
-    /**
-     * Refreshes the IWDG to avoid a system reset
-     */
     void refresh();
 
 private:

@@ -38,6 +38,12 @@ Timer
 .. doxygenclass:: EVT::core::DEV::Timer
    :members:
 
+EEPROM
+------
+
+.. doxygenclass:: EVT::core::DEV::EEPROM
+   :members:
+
 IO
 ==
 

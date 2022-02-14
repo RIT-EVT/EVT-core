@@ -53,29 +53,29 @@ public:
      * Create a new GPIO interface on a specific pin. The direction will not
      * be set and will have to be set manually.
      *
-     * @param pin[in] The pin for the GPIO instance to use.
+     * @param[in] pin The pin for the GPIO instance to use.
      */
     GPIO(Pin pin);
 
     /**
      * Create a new GPIO instance on a specific pin with a given direction.
      *
-     * @param pin[in] The pin for the GPIO instance to use.
-     * @param direction[in] The directional flow of data.
+     * @param[in] pin The pin for the GPIO instance to use.
+     * @param[in] direction The directional flow of data.
      */
     GPIO(Pin pin, Direction direction);
 
     /**
      * Set the direction of the pin.
      *
-     * @param direction[in] The direction of information.
+     * @param[in] direction The direction of information.
      */
     virtual void setDirection(Direction direction) = 0;
 
     /**
      * Used for writing a state to a pin.
      *
-     * @param state[in] The state to write to the pin
+     * @param[in] state The state to write to the pin
      */
     virtual void writePin(State state) = 0;
 
@@ -89,8 +89,8 @@ public:
     /**
      * Registers the IRQHandler for this instances GPIO pin on the given edge
      * condition.
-     * @param edge[in] The edge trigger event to trigger the interrupt
-     * @param irqHandler[in] The function pointer to handle the GPIO interrupt
+     * @param[in] edge The edge trigger event to trigger the interrupt
+     * @param[in] irqHandler The function pointer to handle the GPIO interrupt
      */
     virtual void registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin)) = 0;
 

@@ -18,7 +18,9 @@ public:
      * @param timerPeripheral[in] The timer peripheral to configure.  Possible options for this board are
      * TIM2, TIM15, TIM16, TIM17.  It is up to the user to verify that resource conflicts
      * do not occur.
-     * @param clockPeriod[in] the clock period in ms.  An interrupt will be triggered at that frequency.
+     *
+     * @param[in] timerPeripheral The timer to use
+     * @param[in] clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
      */
     explicit Timerf302x8(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod);
 
@@ -43,7 +45,7 @@ private:
      * Handles the initialization of the timer module.  Actually configures the device and enables it.
      * @param timerPeripheral[in]  The timer peripheral to configure.  Possible options for this board are
      * TIM2, TIM15, TIM16, TIM17.  It is up to the user to verify that resource conflicts
-     * @param clockPeriod[in] the clock period in ms.  An interrupt will be triggered at that frequency.
+     * @param[in] clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
      */
     void initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod);
 };

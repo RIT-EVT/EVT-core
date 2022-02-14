@@ -14,8 +14,8 @@ public:
      * Make an instance of an I2C interface for the F3. Will determine
      * which I2C bus of the STM to use based on the provided pins.
      *
-     * @param sclPin[in] The I2C clock pin
-     * @param sdaPin[in] The I2C data pin
+     * @param[in] sclPin The I2C clock pin
+     * @param[in] sdaPin The I2C data pin
      */
     I2Cf3xx(Pin sclPin, Pin sdaPin);
 
@@ -54,7 +54,7 @@ private:
     /**
      * Convert the STM HAL status to an I2C::I2CStatus
      *
-     * @param The HAL status
+     * @param[in] The HAL status
      * @return The I2C::I2CStatus
      */
     I2C::I2CStatus halToI2CStatus(HAL_StatusTypeDef halStatus);
