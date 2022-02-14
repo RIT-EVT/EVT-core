@@ -14,10 +14,12 @@ namespace EVT::core::DEV {
         Button(IO::GPIO &gpio);
 
         IO::GPIO::State getState();
+        bool debounce(int debounceTime);
 
 
     private:
         IO::GPIO &gpio;
+        int timeSinceLastPress;
 
     }; // namespace EVT::core::DEV
 }
