@@ -23,12 +23,12 @@ int main() {
     DEV::Button button = DEV::Button(buttonGPIO, DEV::Button::LogicLevelOnPress::HIGH);
 
     while (true) {
-        IO::GPIO::State buttonStatus = button.readButton();
+        IO::GPIO::State buttonStatus = button.getState();
         uart.printf("Button Status: %d \n", buttonStatus);
 
         led.setState(buttonStatus);
 
-        time::wait(1);
+        time::wait(100);
     }
 
     return 0;
