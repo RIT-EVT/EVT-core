@@ -29,16 +29,16 @@ public:
      * Creates a new instance of the CAN interface which will use the given
      * transmit and receive pins.
      *
-     * @param txPin[in] The pin to use for transmitting data
-     * @param rxPin[in] The pin to use for receiving data
-     * @param loopbackEnabled[in] Flag to enable CAN loop back functionality
+     * @param[in] txPin The pin to use for transmitting data
+     * @param[in] rxPin The pin to use for receiving data
+     * @param[in] loopbackEnabled Flag to enable CAN loop back functionality
      */
     CAN(Pin txPin, Pin rxPin, bool loopbackEnabled = false);
 
     /**
      * Transmit the message over CAN.
      *
-     * @param message[in] The message to send over CAN.
+     * @param[in] message The message to send over CAN.
      */
     virtual void transmit(CANMessage& message) = 0;
 
@@ -49,8 +49,8 @@ public:
      * In non-blocking, a nullptr will be returned if no message is currently
      * in the mailbox.
      *
-     * @param message[out] The message to populate with data
-     * @param blocking[in] Used to determine if received should block or not, by
+     * @param[out] message The message to populate with data
+     * @param[in] blocking Used to determine if received should block or not, by
      *      default receive is blocking
      * @return A pointer to the passed in message, nullptr if message not
      *      received.
@@ -64,8 +64,8 @@ public:
      * NOTE: Having an interrupt handler will bypass the CAN's internal
      * storage queue thus making CAN::receive ineffective.
      *
-     * @param handler[in] The interrupt handler. Takes in a CANmessage and some other parameter
-     * @param priv[in] The private data to pass into the handler
+     * @param[in] handler The interrupt handler. Takes in a CANmessage and some other parameter
+     * @param[in] priv The private data to pass into the handler
      */
     void addIRQHandler(void (*handler)(CANMessage&, void* priv), void* priv);
 

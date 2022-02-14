@@ -30,28 +30,16 @@ public:
     /**
      * not implemented.
      *
-     * @param irqHandler[in] The IRQ Handler function pointer.  Sets a new interrupt handler function
+     * @param[in] irqHandler The IRQ Handler function pointer.  Sets a new interrupt handler function
      */
     void startTimer(void (*irqHandler)(void* htim)) override {}
 
-    /**
-     * @inheritdoc
-     */
     void startTimer() override;
 
-    /**
-     * @inheritdoc
-     */
     void stopTimer() override;
 
-    /**
-     * @inheritdoc
-     */
     void reloadTimer() override;
 
-    /**
-     * @inheritdoc
-     */
     void setPeriod(uint32_t clock) override;
 
     /**

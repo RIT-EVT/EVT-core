@@ -11,10 +11,10 @@ namespace EVT::core::IO {
 #ifdef STM32F3xx
 
 /**
-     * Pin mapping information. These values are generated via a combination of the GPIO bank that
-     * the pin is on and the number of the pin. We referenced MBed's documentation for generating
-     * these values.
-     */
+ * Pin mapping information. These values are generated via a combination of the GPIO bank that
+ * the pin is on and the number of the pin. We referenced MBed's documentation for generating
+ * these values.
+ */
 enum class Pin {
     PA_0 = 0x00,
     PA_1 = 0x01,

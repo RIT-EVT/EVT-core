@@ -14,7 +14,7 @@
 namespace EVT::core::IO {
 
 /**
- * STMF302x8 implementation of the CAN protocol. The STM32f3xx has an on
+ * STMF3xx implementation of the CAN protocol. The STM32f3xx has an on
  * board CAN controller which adds additional features.
  *
  * 1. Ability to generate interrupts which allows users to add custom call
@@ -28,25 +28,16 @@ public:
     /**
      * Create a new instance of an STM32f3xx CAN interface
      *
-     * @param txPin[in] The pin to trasmit CAN messages on
-     * @param rxPin[in] The pin to receive CAN messages on
-     * @param loopbackEnabled[in] Flag for enabling CAN loop back
+     * @param[in] txPin The pin to trasmit CAN messages on
+     * @param[in] rxPin The pin to receive CAN messages on
+     * @param[in] loopbackEnabled Flag for enabling CAN loop back
      */
     CANf3xx(Pin txPin, Pin rxPin, bool loopbackEnabled = false);
 
-    /**
-     * @copydoc EVT::core::IO::CAN::receive
-     */
     void transmit(CANMessage& message);
 
-    /**
-     * @copydoc EVT::core::IO::CAN::receive
-     */
     CANMessage* receive(CANMessage* message, bool blocking = false);
 
-    /**
-     * @copydoc EVT::core::IO::CAN::addIRQHandler
-     */
     void addIRQHandler(void (*handler)(CANMessage&, void* priv), void* priv);
 
     /**
@@ -55,7 +46,7 @@ public:
      * NOTE: This is public for use with the STM HAL interrupt handler. This
      * method should not be used outside of that application.
      *
-     * @param message[in] The CANmessage to add to the receive queue
+     * @param[in] message The CANmessage to add to the receive queue
      */
     void addCANMessage(CANMessage& message);
 
@@ -67,7 +58,7 @@ public:
      * NOTE: This is public for use with the STM HAL interrupt handler. This
      * method should not be used outside of that application.
      *
-     * @param message[in] The message to pass to the interrupt handler
+     * @param[in] message The message to pass to the interrupt handler
      * @return True if the interrupt handler exists and has handled the message
      */
     bool triggerIRQ(CANMessage& message);

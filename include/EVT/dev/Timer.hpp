@@ -14,7 +14,7 @@ class Timer {
 public:
     /**
      * Starts the given timer and registers the given interrupt pointer to trigger when the timer overflows
-     * @param irqHandler[in] The IRQ Handler function pointer.  Sets a new interrupt handler function
+     * @param[in] irqHandler The IRQ Handler function pointer.  Sets a new interrupt handler function
      */
     virtual void startTimer(void (*irqHandler)(void* htim)) = 0;
 

@@ -18,32 +18,12 @@ public:
      */
     PWMf3xx(Pin pin);
 
-    /**
-     * Set the duty cycle for the pin to operate at.
-     *
-     * @param dutyCycle[in] Duty cycle to set the pin to.
-     */
     void setDutyCycle(float dutyCycle);
 
-    /**
-     * Set the period for the PWM.
-     *
-     * @param period[in] The period of the PWM in seconds.
-     */
     void setPeriod(float period);
 
-    /**
-     * Get the current duty cycle.
-     *
-     * @return The duty cycle the PWM is operating at.
-     */
     float getDutyCycle();
 
-    /**
-     * Get the current period.
-     *
-     * @return The period the PWM is operating at.
-     */
     uint32_t getPeriod();
 
 private:

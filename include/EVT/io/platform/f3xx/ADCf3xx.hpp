@@ -13,31 +13,14 @@ public:
     /**
      * Setup the given pin for ADC usage
      *
-     * @param pin[in] The pin to setup for ADC
+     * @param[in] pin The pin to setup for ADC
      */
     ADCf3xx(Pin pin);
 
-    /**
-     * Read the value on the ADC in volts.
-     *
-     * @return The voltage in volts
-     */
     float read();
 
-    /**
-     * Read the raw value from the ADC
-     *
-     * @return The raw value from the ADC
-     */
     uint32_t readRaw();
 
-    /**
-     * Read the value from the ADC as a percentage of the possible values
-     * from 0 to 1. This is based on the maximum possible value the ADC
-     * can read.
-     *
-     * @return The ADC value as a percentage
-     */
     float readPercentage();
 
 private:

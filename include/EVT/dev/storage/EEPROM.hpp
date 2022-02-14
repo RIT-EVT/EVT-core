@@ -58,7 +58,7 @@ public:
      *
      * @param[in] address The memory address to start reading from
      * @param[out] buffer Buffer to output words to
-     * @param[in] numHWords The number of words to read
+     * @param[in] numWords The number of words to read
      */
     virtual void readWords(uint8_t address, uint32_t* buffer, uint8_t numWords) = 0;
 
@@ -109,7 +109,7 @@ public:
      *
      * @param[in] address The address to start writing to
      * @param[in] dataArr The array of half words to write out
-     * @param[in] numHWords The number of half words to write out
+     * @param[in] numWords The number of half words to write out
      */
     virtual void writeWords(uint8_t address, uint32_t* dataArr, uint8_t numWords) = 0;
 };

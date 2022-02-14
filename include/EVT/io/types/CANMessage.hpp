@@ -17,9 +17,9 @@ public:
     /**
      * Create an instance of a CANMessage
      *
-     * @param id[in] The id of the CAN Message
-     * @param dataLength[in] The size of the payload (<= CAN_MAX_PAYLOAD_SIZE)
-     * @param payload[in] The data in the CAN message
+     * @param[in] id The id of the CAN Message
+     * @param[in] dataLength The size of the payload (<= CAN_MAX_PAYLOAD_SIZE)
+     * @param[in] payload The data in the CAN message
      */
     CANMessage(uint32_t id, uint8_t dataLength, uint8_t* payload, bool isExtended);
 
@@ -53,14 +53,14 @@ public:
     /**
      * Set the id of the CAN Message
      *
-     * @param id[in] The id of the CAN message
+     * @param[in] id The id of the CAN message
      */
     void setId(uint32_t id);
 
     /**
      * Set the size of the payload in bytes
      *
-     * @param size[in] The size of the payload in bytes
+     * @param[in] size The size of the payload in bytes
      */
     void setDataLength(uint8_t size);
 
@@ -70,14 +70,14 @@ public:
      *
      * NOTE: Will copy over CAN_MAX_PAYLOAD_SIZE number of bytes over
      *
-     * @param payload[in] The payload to copy over
+     * @param[in] payload The payload to copy over
      */
     void setPayload(const uint8_t* payload);
 
     /**
      * Assignment operator where the contents of the CANMessage is copied into
      * this message.
-     * @param other The CANMessage to copy from
+     * @param[in] other The CANMessage to copy from
      */
     CANMessage& operator=(const CANMessage& other);
 
