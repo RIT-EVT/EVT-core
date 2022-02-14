@@ -9,18 +9,17 @@ namespace EVT::core::DEV {
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
 
-    class Button {
-    public:
-        Button(IO::GPIO &gpio);
+class Button {
+public:
+    Button(IO::GPIO& gpio);
 
-        IO::GPIO::State getState();
-        bool debounce(int debounceTime);
+    IO::GPIO::State getState();
+    bool debounce(int debounceTime);
 
+private:
+    IO::GPIO& gpio;
+    int timeSinceLastPress;
 
-    private:
-        IO::GPIO &gpio;
-        int timeSinceLastPress;
-
-    }; // namespace EVT::core::DEV
-}
+};// namespace EVT::core::DEV
+}// namespace EVT::core::DEV
 #endif

@@ -2,8 +2,8 @@
 #include <EVT/dev/button.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/manager.hpp>
-#include <HALf3/stm32f3xx_hal.h>
 #include <EVT/utils/time.hpp>
+#include <HALf3/stm32f3xx_hal.h>
 
 namespace DEV = EVT::core::DEV;
 namespace IO = EVT::core::IO;
@@ -18,7 +18,6 @@ int main() {
     IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();
     IO::GPIO& buttonGPIO = IO::getGPIO<IO::Pin::PC_3>();
     uint32_t debounceStart = HAL_GetTick();
-
 
     DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
 
@@ -35,7 +34,6 @@ int main() {
 
         time::wait(1000);
     }
-
 
     return 0;
 }
