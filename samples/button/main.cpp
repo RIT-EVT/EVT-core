@@ -4,7 +4,6 @@
 #include <EVT/io/manager.hpp>
 #include <EVT/utils/time.hpp>
 
-
 namespace DEV = EVT::core::DEV;
 namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
