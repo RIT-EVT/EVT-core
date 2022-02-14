@@ -17,11 +17,16 @@ public:
      * Create a new thermistor which will use the provided ADC and
      * pass those values through the conversion to produce a temperature
      * reading.
+     *
+     * @param[in] adc The ADC to use to convert ADC values into temperature
+     * @param[in] conversion The conversion function
      */
     Thermistor(EVT::core::IO::ADC& adc, uint32_t (*conversion)(uint32_t));
 
     /**
      * Return the temperature in milli celcius of the thermistor
+     *
+     * @return The conversion of the ADC value into temperature
      */
     uint32_t getTempCelcius();
 
