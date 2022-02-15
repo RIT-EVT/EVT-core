@@ -1,0 +1,2 @@
+add_subdirectory(ADXL345)
+add_subdirectory(SPI_With_Arduino)

@@ -16,6 +16,7 @@
     #include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
     #include <EVT/io/platform/f3xx/I2Cf3xx.hpp>
     #include <EVT/io/platform/f3xx/PWMf3xx.hpp>
+    #include <EVT/io/platform/f3xx/SPIf3xx.hpp>
     #include <EVT/io/platform/f3xx/UARTf3xx.hpp>
 #endif
 
@@ -115,5 +116,14 @@ UART& getUART(uint32_t baudrate) {
 #endif
 }
 
+template<Pin sckPin, Pin mosiPin, Pin misoPin>
+SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
+#ifdef STM32F3xx
+    static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
+    return spi;
+#endif
+}
+
 }// namespace EVT::core::IO
+
 #endif

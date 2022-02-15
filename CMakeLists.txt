@@ -49,12 +49,14 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/io/I2C.cpp
     src/io/PWM.cpp
     src/io/UART.cpp
+    src/io/SPI.cpp
     src/io/platform/f3xx/ADCf3xx.cpp
     src/io/platform/f3xx/CANf3xx.cpp
     src/io/platform/f3xx/GPIOf3xx.cpp
     src/io/platform/f3xx/I2Cf3xx.cpp
     src/io/platform/f3xx/PWMf3xx.cpp
     src/io/platform/f3xx/UARTf3xx.cpp
+    src/io/platform/f3xx/SPIf3xx.cpp
     src/io/types/CANMessage.cpp
 
     src/dev/LED.cpp
