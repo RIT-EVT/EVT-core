@@ -270,6 +270,9 @@ ProcessorCount_cmd_nproc:FILEPATH=/usr/bin/nproc
 //Path to a program.
 ProcessorCount_cmd_sysctl:FILEPATH=/usr/bin/sysctl
 
+//Target device
+TARGET_DEV:BOOL=OFF
+
 
 ########################
 # INTERNAL cache entries

@@ -2,22 +2,13 @@
 CMake Warning at cmake/evt-core_compiler.cmake:8 (message):
   Set your environment variables you frickin' hecker.  --Shane Snover
 Call Stack (most recent call first):
-  CMakeLists.txt:9 (include)
+  CMakeLists.txt:25 (include)
 
-
-CMake Warning (dev) at /home/aarc/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/213.6777.58/bin/cmake/linux/share/cmake-3.21/Modules/GNUInstallDirs.cmake:236 (message):
-  Unable to determine default CMAKE_INSTALL_LIBDIR directory because no
-  target architecture is known.  Please enable at least one language before
-  including GNUInstallDirs.
-Call Stack (most recent call first):
-  cmake/evt-core_compiler.cmake:55 (include)
-  CMakeLists.txt:9 (include)
-This warning is for project developers.  Use -Wno-dev to suppress it.
 
 -- Found clang-format: /usr/bin/clang-format
 -- The CXX compiler identification is unknown
 -- The C compiler identification is unknown
-CMake Error at CMakeLists.txt:18 (project):
+CMake Error at CMakeLists.txt:34 (project):
   The CMAKE_CXX_COMPILER:
 
     /arm-none-eabi-g++
@@ -29,7 +20,7 @@ CMake Error at CMakeLists.txt:18 (project):
   to the compiler, or to the compiler name if it is in the PATH.
 
 
-CMake Error at CMakeLists.txt:18 (project):
+CMake Error at CMakeLists.txt:34 (project):
   The CMAKE_C_COMPILER:
 
     /arm-none-eabi-gcc

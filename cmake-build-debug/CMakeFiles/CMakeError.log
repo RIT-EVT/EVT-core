@@ -438,3 +438,223 @@ No such file or directory
 
 Checking whether the C compiler is IAR using "" did not match "IAR .+ Compiler":
 Checking whether the C compiler is IAR using "" did not match "IAR .+ Compiler":
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /arm-none-eabi-g++ 
+Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-mfloat-abi=hard;-Og;-Wall;-fdata-sections;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-ffunction-sections;-MMD;-MP;-MF;-ggdb;-g3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-fno-rtti;-Wvla
+Id flags:  
+
+The output was:
+No such file or directory
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /arm-none-eabi-g++ 
+Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-mfloat-abi=hard;-Og;-Wall;-fdata-sections;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-ffunction-sections;-MMD;-MP;-MF;-ggdb;-g3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-fno-rtti;-Wvla
+Id flags: -c 
+
+The output was:
+No such file or directory
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /arm-none-eabi-g++ 
+Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-mfloat-abi=hard;-Og;-Wall;-fdata-sections;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-ffunction-sections;-MMD;-MP;-MF;-ggdb;-g3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-fno-rtti;-Wvla
+Id flags: --c++ 
+
+The output was:
+No such file or directory
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /arm-none-eabi-g++ 
+Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-mfloat-abi=hard;-Og;-Wall;-fdata-sections;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-ffunction-sections;-MMD;-MP;-MF;-ggdb;-g3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-fno-rtti;-Wvla
+Id flags: --ec++ 
+
+The output was:
+No such file or directory
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /arm-none-eabi-g++ 
+Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-mfloat-abi=hard;-Og;-Wall;-fdata-sections;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-ffunction-sections;-MMD;-MP;-MF;-ggdb;-g3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-fno-rtti;-Wvla
+Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
+
+The output was:
+No such file or directory
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /arm-none-eabi-g++ 
+Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-mfloat-abi=hard;-Og;-Wall;-fdata-sections;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-ffunction-sections;-MMD;-MP;-MF;-ggdb;-g3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-fno-rtti;-Wvla
+Id flags: -c;-I__does_not_exist__ 
+
+The output was:
+No such file or directory
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /arm-none-eabi-g++ 
+Build flags: 
+Id flags:  
+
+The output was:
+No such file or directory
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /arm-none-eabi-g++ 
+Build flags: 
+Id flags: -c 
+
+The output was:
+No such file or directory
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /arm-none-eabi-g++ 
+Build flags: 
+Id flags: --c++ 
+
+The output was:
+No such file or directory
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /arm-none-eabi-g++ 
+Build flags: 
+Id flags: --ec++ 
+
+The output was:
+No such file or directory
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /arm-none-eabi-g++ 
+Build flags: 
+Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
+
+The output was:
+No such file or directory
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /arm-none-eabi-g++ 
+Build flags: 
+Id flags: -c;-I__does_not_exist__ 
+
+The output was:
+No such file or directory
+
+
+Checking whether the CXX compiler is IAR using "" did not match "IAR .+ Compiler":
+Checking whether the CXX compiler is IAR using "" did not match "IAR .+ Compiler":
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /arm-none-eabi-gcc 
+Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-mfloat-abi=hard;-Og;-Wall;-fdata-sections;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-ffunction-sections;-MMD;-MP;-MF;-ggdb;-g3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-std=gnu99
+Id flags:  
+
+The output was:
+No such file or directory
+
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /arm-none-eabi-gcc 
+Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-mfloat-abi=hard;-Og;-Wall;-fdata-sections;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-ffunction-sections;-MMD;-MP;-MF;-ggdb;-g3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-std=gnu99
+Id flags: -c 
+
+The output was:
+No such file or directory
+
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /arm-none-eabi-gcc 
+Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-mfloat-abi=hard;-Og;-Wall;-fdata-sections;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-ffunction-sections;-MMD;-MP;-MF;-ggdb;-g3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-std=gnu99
+Id flags: -Aa 
+
+The output was:
+No such file or directory
+
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /arm-none-eabi-gcc 
+Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-mfloat-abi=hard;-Og;-Wall;-fdata-sections;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-ffunction-sections;-MMD;-MP;-MF;-ggdb;-g3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-std=gnu99
+Id flags: -D__CLASSIC_C__ 
+
+The output was:
+No such file or directory
+
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /arm-none-eabi-gcc 
+Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-mfloat-abi=hard;-Og;-Wall;-fdata-sections;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-ffunction-sections;-MMD;-MP;-MF;-ggdb;-g3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-std=gnu99
+Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
+
+The output was:
+No such file or directory
+
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /arm-none-eabi-gcc 
+Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-mfloat-abi=hard;-Og;-Wall;-fdata-sections;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-ffunction-sections;-MMD;-MP;-MF;-ggdb;-g3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-std=gnu99
+Id flags: -c;-I__does_not_exist__ 
+
+The output was:
+No such file or directory
+
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /arm-none-eabi-gcc 
+Build flags: 
+Id flags:  
+
+The output was:
+No such file or directory
+
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /arm-none-eabi-gcc 
+Build flags: 
+Id flags: -c 
+
+The output was:
+No such file or directory
+
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /arm-none-eabi-gcc 
+Build flags: 
+Id flags: -Aa 
+
+The output was:
+No such file or directory
+
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /arm-none-eabi-gcc 
+Build flags: 
+Id flags: -D__CLASSIC_C__ 
+
+The output was:
+No such file or directory
+
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /arm-none-eabi-gcc 
+Build flags: 
+Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
+
+The output was:
+No such file or directory
+
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /arm-none-eabi-gcc 
+Build flags: 
+Id flags: -c;-I__does_not_exist__ 
+
+The output was:
+No such file or directory
+
+
+Checking whether the C compiler is IAR using "" did not match "IAR .+ Compiler":
+Checking whether the C compiler is IAR using "" did not match "IAR .+ Compiler":
