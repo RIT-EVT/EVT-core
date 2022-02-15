@@ -1,5 +1,5 @@
-#ifndef _EVT_SPIf302x8_
-#define _EVT_SPIf302x8_
+#ifndef _EVT_SPIf3xx_
+#define _EVT_SPIf3xx_
 
 #include <stdint.h>
 
@@ -9,10 +9,10 @@
 #define SPI_MAX_BAUD 4000000
 
 namespace EVT::core::IO {
-class SPIf302x8 : public SPI {
+class SPIf3xx : public SPI {
 public:
-    SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin);
-    SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin);
+    SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin);
+    SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin);
     void configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order);
 
     bool startTransmission(uint8_t device);

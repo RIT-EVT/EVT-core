@@ -1,6 +1,6 @@
 #include <EVT/io/pin.hpp>
-#include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
-#include <EVT/io/platform/f3xx/f302x8/SPIf302x8.hpp>
+#include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
+#include <EVT/io/platform/f3xx/SPIf3xx.hpp>
 
 namespace EVT::core::IO {
 /**
@@ -9,7 +9,7 @@ namespace EVT::core::IO {
  * @param mosiPin the pin to use for the mosi signal
  * @return the SPI port to use, 0 if invalid
  */
-uint8_t SPIf302x8::getMOSIPortID(Pin mosiPin) {
+uint8_t SPIf3xx::getMOSIPortID(Pin mosiPin) {
     switch (mosiPin) {
     case Pin::PA_11:
     case Pin::PB_15:
@@ -28,7 +28,7 @@ uint8_t SPIf302x8::getMOSIPortID(Pin mosiPin) {
  * @param misoPin the pin to use for the miso signal
  * @return the SPI port to use, 0 if invalid
  */
-uint8_t SPIf302x8::getMISOPortID(Pin misoPin) {
+uint8_t SPIf3xx::getMISOPortID(Pin misoPin) {
     switch (misoPin) {
     case Pin::PA_10:
     case Pin::PB_14:
@@ -47,7 +47,7 @@ uint8_t SPIf302x8::getMISOPortID(Pin misoPin) {
  * @param sckPin the pin to use for the sck signal
  * @return the SPI port to use, 0 if invalid
  */
-uint8_t SPIf302x8::getSCKPortID(Pin sckPin) {
+uint8_t SPIf3xx::getSCKPortID(Pin sckPin) {
     switch (sckPin) {
     case Pin::PA_10:
     case Pin::PF_1:
@@ -69,7 +69,7 @@ uint8_t SPIf302x8::getSCKPortID(Pin sckPin) {
  * @param mosiPin the mosi pin for sending data
  * @param misoPin the miso pin for receiving data
  */
-SPIf302x8::SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : SPI(CSPins, pinLength, sckPin, mosiPin, misoPin) {
+SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : SPI(CSPins, pinLength, sckPin, mosiPin, misoPin) {
     uint8_t mosiPort = getMOSIPortID(mosiPin);
     uint8_t misoPort = getMISOPortID(misoPin);
     uint8_t sckPort = getSCKPortID(sckPin);
@@ -101,13 +101,13 @@ SPIf302x8::SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin,
         Pin spiPins[] = {mosiPin, misoPin};
         uint8_t numOfPins = 2;
 
-        GPIOf302x8::gpioStateInit(&GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP,
-                                  GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+        GPIOf3xx::gpioStateInit(&GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP,
+                                GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
         // init sckPin
         spiPins[0] = sckPin;
         numOfPins = 1;
-        GPIOf302x8::gpioStateInit(&GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP,
-                                  GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+        GPIOf3xx::gpioStateInit(&GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP,
+                                GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
 
         halSPI.Init.Mode = SPI_MODE_MASTER;
         halSPI.Init.Direction = SPI_DIRECTION_2LINES;
@@ -131,7 +131,7 @@ SPIf302x8::SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin,
  * @param sckPin the pin for the clk line
  * @param mosiPin the mosi pin for sending data
  */
-SPIf302x8::SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : SPI(CSPins, pinLength, sckPin, mosiPin) {
+SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : SPI(CSPins, pinLength, sckPin, mosiPin) {
     uint8_t mosiPort = getMOSIPortID(mosiPin);
     uint8_t sckPort = getSCKPortID(sckPin);
     GPIO_InitTypeDef GPIOInit = {0};
@@ -160,8 +160,8 @@ SPIf302x8::SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin)
         Pin spiPins[] = {mosiPin, sckPin};
         uint8_t numOfPins = 2;
 
-        GPIOf302x8::gpioStateInit(&GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP,
-                                  GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+        GPIOf3xx::gpioStateInit(&GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP,
+                                GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
 
         halSPI.Init.Mode = SPI_MODE_MASTER;
         halSPI.Init.Direction = SPI_DIRECTION_1LINE;
@@ -184,7 +184,7 @@ SPIf302x8::SPIf302x8(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin)
  * @param mode The SPIMode to use when sending (0-3)
  * @param order MSB first or LSB first
  */
-void SPIf302x8::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order) {
+void SPIf3xx::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order) {
     // set the CPOL and CPHA depending on the SPI mode
     switch (mode) {
     case SPI_MODE0:
@@ -239,7 +239,7 @@ void SPIf302x8::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order) {
  *
  * @param pin the pin to toggle the state of
  */
-void SPIf302x8::togglePin(GPIO* pin) {
+void SPIf3xx::togglePin(GPIO* pin) {
     switch (pin->readPin()) {
     case GPIO::State::HIGH:
         pin->writePin(GPIO::State::LOW);
@@ -256,7 +256,7 @@ void SPIf302x8::togglePin(GPIO* pin) {
  * @param device device the device index in the CSPins
  * @return true if valid device, false if device not in CSPins
  */
-bool SPIf302x8::startTransmission(uint8_t device) {
+bool SPIf3xx::startTransmission(uint8_t device) {
     if (device < CSPinsLength) {
         togglePin(CSPins[device]);
         return true;
@@ -270,7 +270,7 @@ bool SPIf302x8::startTransmission(uint8_t device) {
  * @param device the device index in the CSPins
  * @return true if valid device, false if device not in CSPins
  */
-bool SPIf302x8::endTransmission(uint8_t device) {
+bool SPIf3xx::endTransmission(uint8_t device) {
     if (device < CSPinsLength) {
         togglePin(CSPins[device]);
         return true;
@@ -283,7 +283,7 @@ bool SPIf302x8::endTransmission(uint8_t device) {
  *
  * @param byte the byte to write
  */
-void SPIf302x8::write(uint8_t byte) {
+void SPIf3xx::write(uint8_t byte) {
     HAL_SPI_Transmit(&halSPI, &byte, 1, DEFAULT_SPI_TIMEOUT);
 }
 
@@ -292,7 +292,7 @@ void SPIf302x8::write(uint8_t byte) {
  *
  * @return the byte read
  */
-uint8_t SPIf302x8::read() {
+uint8_t SPIf3xx::read() {
     uint8_t data;
     HAL_SPI_Receive(&halSPI, &data, 1, DEFAULT_SPI_TIMEOUT);
     return data;
@@ -305,7 +305,7 @@ uint8_t SPIf302x8::read() {
  * @param bytes an array of bytes of length n to write to SPI device
  * @param length the length of the array
  */
-void SPIf302x8::write(uint8_t* bytes, uint8_t length) {
+void SPIf3xx::write(uint8_t* bytes, uint8_t length) {
     HAL_SPI_Transmit(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
 }
 
@@ -316,7 +316,7 @@ void SPIf302x8::write(uint8_t* bytes, uint8_t length) {
  * @param bytes an array of length n to receive the bytes from an SPI device
  * @param length the number of bytes to recive
  */
-void SPIf302x8::read(uint8_t* bytes, uint8_t length) {
+void SPIf3xx::read(uint8_t* bytes, uint8_t length) {
     HAL_SPI_Receive(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
 }
 }// namespace EVT::core::IO
