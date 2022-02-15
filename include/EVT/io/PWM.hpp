@@ -53,8 +53,10 @@ protected:
     Pin pin;
     /// The duty cycle of the PWM
     uint32_t dutyCycle;
-    /// The period of the PWM
+    /// The period of the PWM in microseconds
     uint32_t period;
+    /// The amount of microseconds in a second
+    const uint32_t MICROSECONDS_IN_SECOND = 1000000;
 };
 
 }// namespace EVT::core::IO
