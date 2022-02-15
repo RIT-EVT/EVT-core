@@ -1,5 +1,5 @@
 #include <EVT/dev/platform/f3xx/f302x8/Timerf302x8.hpp>
-#include <EVT/platform/f3xx/stm32f302x8.hpp>
+#include <EVT/platform/f3xx/stm32f3xx.hpp>
 #include <HALf3/stm32f3xx_hal_conf.h>
 
 TIM_HandleTypeDef halTimers[4];

@@ -10,34 +10,39 @@ namespace EVT::core::IO {
 
 I2C::I2C(Pin sclPin, Pin sdaPin) : sclPin(sclPin), sdaPin(sdaPin) {}
 
-void I2C::write(uint8_t addr, uint8_t* bytes, uint8_t length) {
+I2C::I2CStatus I2C::write(uint8_t addr, uint8_t* bytes, uint8_t length) {
     for (int i = 0; i < length; i++)
-        write(addr, bytes[i]);
+        I2C_RETURN_IF_ERR(write(addr, bytes[i]));
+    return I2C::I2CStatus::OK;
 }
 
-void I2C::read(uint8_t addr, uint8_t* bytes, uint8_t length) {
+I2C::I2CStatus I2C::read(uint8_t addr, uint8_t* bytes, uint8_t length) {
     for (int i = 0; i < length; i++)
-        bytes[i] = read(addr);
+        I2C_RETURN_IF_ERR(read(addr, &bytes[i]));
+    return I2C::I2CStatus::OK;
 }
 
-void I2C::writeReg(uint8_t addr, uint8_t reg, uint8_t byte) {
-    write(addr, reg);
-    write(addr, byte);
+I2C::I2CStatus I2C::writeReg(uint8_t addr, uint8_t reg, uint8_t byte) {
+
+    I2C_RETURN_IF_ERR(write(addr, reg));
+    I2C_RETURN_IF_ERR(write(addr, byte));
+
+    return I2C::I2CStatus::OK;
 }
 
 /**
  * Reading a register usually involves writing out a byte then reading
  * a byte.
  */
-uint8_t I2C::readReg(uint8_t addr, uint8_t reg) {
-    write(addr, reg);
-    return read(addr);
+I2C::I2CStatus I2C::readReg(uint8_t addr, uint8_t reg, uint8_t* output) {
+    I2C_RETURN_IF_ERR(write(addr, reg));
+    return read(addr, output);
 }
 
-void I2C::writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
-                   uint8_t* bytes, uint8_t length) {
-    write(addr, reg, regLength);
-    write(addr, bytes, length);
+I2C::I2CStatus I2C::writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
+                             uint8_t* bytes, uint8_t length) {
+    I2C_RETURN_IF_ERR(write(addr, reg, regLength));
+    return write(addr, bytes, length);
 }
 
 /**
@@ -46,14 +51,15 @@ void I2C::writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
  * of 8 bytes starting with the MSB. Reading the response is also done
  * starting with the LSB.
  */
-void I2C::readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
-                  uint8_t* bytes, uint8_t length) {
+I2C::I2CStatus I2C::readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
+                            uint8_t* bytes, uint8_t length) {
     // Write out register address
     for (int i = 0; i < regLength; i++)
-        write(addr, reg[i]);
+        I2C_RETURN_IF_ERR(write(addr, reg[i]));
     // Read in response
     for (int i = 0; i < length; i++)
-        bytes[i] = read(addr);
+        I2C_RETURN_IF_ERR(read(addr, &bytes[i]));
+    return I2C::I2CStatus::OK;
 }
 
 }// namespace EVT::core::IO

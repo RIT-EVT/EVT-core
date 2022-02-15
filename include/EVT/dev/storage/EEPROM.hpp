@@ -42,7 +42,7 @@ public:
      * @param buffer[out] Buffer to output bytes to
      * @param numBytes[in] The number of bytes to read
      */
-    virtual void readBytes(uint8_t address, uint8_t* buffer, uint8_t numBytes) = 0;
+    virtual void readBytes(uint32_t address, uint8_t* buffer, uint8_t numBytes) = 0;
 
     /**
      * Read a number of consecutive half words starting at a given memory address.
@@ -93,7 +93,7 @@ public:
      * @param dataArr[in] The array of bytes to write out
      * @param numBytes[in] The number of bytes to write out
      */
-    virtual void writeBytes(uint8_t address, uint8_t* dataArr, uint8_t numBytes) = 0;
+    virtual void writeBytes(uint32_t address, uint8_t* dataArr, uint8_t numBytes) = 0;
 
     /**
      * Write a number of consecutive half words to a given memory address.
