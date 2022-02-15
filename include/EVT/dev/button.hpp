@@ -29,7 +29,6 @@ public:
      * Confirms a button press based on a user defined debounce time
      *
      * @param debounceTime
-     *
      * @return Confirmation of a button press
      */
     bool debounce(uint32_t debounceTime);
