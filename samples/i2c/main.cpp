@@ -33,9 +33,26 @@ int main() {
 
     while (1) {
         uart.printf("Requesting first byte\n\r");
-        uint8_t oValue = i2c.readReg(I2C_SLAVE_ADDR, O_REGISTER);
+
+        // Read the value of 'o'
+        uint8_t oValue;
+        IO::I2C::I2CStatus status = i2c.readReg(I2C_SLAVE_ADDR, O_REGISTER, &oValue);
+        if (status != IO::I2C::I2CStatus::OK) {
+            uart.printf("Failed read 'o' register with I2C::I2CStatus: %d\n\r",
+                        status);
+            break;
+        }
+
         uart.printf("Reading second bytes\n\r");
-        uint8_t kValue = i2c.readReg(I2C_SLAVE_ADDR, K_REGISTER);
+
+        // Read the value of 'k'
+        uint8_t kValue;
+        status = i2c.readReg(I2C_SLAVE_ADDR, K_REGISTER, &kValue);
+        if (status != IO::I2C::I2CStatus::OK) {
+            uart.printf("Failed read 'k' register with I2C::I2CStatus: %d\n\r",
+                        status);
+            break;
+        }
 
         uart.printf("Bytes Read: %c %c\n\r", oValue, kValue);
 

@@ -10,9 +10,9 @@
 
 #include <HALf3/stm32f3xx.h>
 
-#include <EVT/io/platform/f3xx/f302x8/CANf302x8.hpp>
-#include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
-#include <EVT/platform/f3xx/stm32f302x8.hpp>
+#include <EVT/io/platform/f3xx/CANf3xx.hpp>
+#include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
+#include <EVT/platform/f3xx/stm32f3xx.hpp>
 #include <EVT/utils/time.hpp>
 #include <EVT/utils/types/FixedQueue.hpp>
 
@@ -22,7 +22,7 @@ namespace {
 //
 // NOTE: Part of the reason this works is because the STM32F3xx only supports
 // a single CAN interface at a time.
-EVT::core::IO::CANf302x8* canIntf;
+EVT::core::IO::CANf3xx* canIntf;
 
 // Pointer to the CAN interface, made global for similar reasons to the
 // variable above.
@@ -62,15 +62,15 @@ extern "C" void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
 
 namespace EVT::core::IO {
 
-CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
+CANf3xx::CANf3xx(Pin txPin, Pin rxPin, bool loopbackEnabled)
     : CAN(txPin, rxPin, loopbackEnabled) {
 
     // Setup GPIO
     GPIO_InitTypeDef gpioInit = {0};
     Pin canPins[] = {txPin, rxPin};
     uint8_t numOfPins = 2;
-    GPIOf302x8::gpioStateInit(&gpioInit, canPins, numOfPins, GPIO_MODE_AF_OD,
-                              GPIO_PULLUP, GPIO_SPEED_FREQ_HIGH, GPIO_AF9_CAN);
+    GPIOf3xx::gpioStateInit(&gpioInit, canPins, numOfPins, GPIO_MODE_AF_OD,
+                            GPIO_PULLUP, GPIO_SPEED_FREQ_HIGH, GPIO_AF9_CAN);
 
     // Initialize HAL CAN
     // Bit timing values calculated from the website
@@ -118,7 +118,7 @@ CANf302x8::CANf302x8(Pin txPin, Pin rxPin, bool loopbackEnabled)
     HAL_CAN_Start(&halCAN);
 }
 
-void CANf302x8::transmit(CANMessage& message) {
+void CANf3xx::transmit(CANMessage& message) {
     CAN_TxHeaderTypeDef txHeader = {0};
     uint8_t payload[CANMessage::CAN_MAX_PAYLOAD_SIZE] = {0};
 
@@ -147,7 +147,7 @@ void CANf302x8::transmit(CANMessage& message) {
 }
 
 // TODO: Use both RxFifo0 and RxFif1
-CANMessage* CANf302x8::receive(CANMessage* message, bool blocking) {
+CANMessage* CANf3xx::receive(CANMessage* message, bool blocking) {
     bool hasMessage = false;
 
     // Check to make sure a message is available, if blocking, wait until
@@ -168,12 +168,12 @@ CANMessage* CANf302x8::receive(CANMessage* message, bool blocking) {
     }
 }
 
-void CANf302x8::addCANMessage(CANMessage& message) {
+void CANf3xx::addCANMessage(CANMessage& message) {
     if (messageQueue.canInsert())
         messageQueue.append(message);
 }
 
-bool CANf302x8::triggerIRQ(CANMessage& message) {
+bool CANf3xx::triggerIRQ(CANMessage& message) {
     if (handler == nullptr)
         return false;
     handler(message, priv);

@@ -8,16 +8,16 @@
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/PWM.hpp>
 
-#ifdef STM32F302x8
-    #include <EVT/platform/f3xx/stm32f302x8.hpp>
+#ifdef STM32F3xx
+    #include <EVT/platform/f3xx/stm32f3xx.hpp>
 
-    #include <EVT/io/platform/f3xx/f302x8/ADCf302x8.hpp>
-    #include <EVT/io/platform/f3xx/f302x8/CANf302x8.hpp>
-    #include <EVT/io/platform/f3xx/f302x8/GPIOf302x8.hpp>
-    #include <EVT/io/platform/f3xx/f302x8/I2Cf302x8.hpp>
-    #include <EVT/io/platform/f3xx/f302x8/PWMf302x8.hpp>
-    #include <EVT/io/platform/f3xx/f302x8/SPIf302x8.hpp>
-    #include <EVT/io/platform/f3xx/f302x8/UARTf302x8.hpp>
+    #include <EVT/io/platform/f3xx/ADCf3xx.hpp>
+    #include <EVT/io/platform/f3xx/CANf3xx.hpp>
+    #include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
+    #include <EVT/io/platform/f3xx/I2Cf3xx.hpp>
+    #include <EVT/io/platform/f3xx/PWMf3xx.hpp>
+    #include <EVT/io/platform/f3xx/UARTf3xx.hpp>
+    #include <EVT/io/platform/f3xx/SPIf3xx.hpp>
 #endif
 
 namespace EVT::core::IO {
@@ -28,8 +28,8 @@ namespace EVT::core::IO {
  * init logic.
  */
 void init() {
-#ifdef STM32F302x8
-    EVT::core::platform::stm32f302x8_init();
+#ifdef STM32F3xx
+    EVT::core::platform::stm32f3xx_init();
 #endif
 }
 
@@ -40,8 +40,8 @@ void init() {
  */
 template<Pin pin>
 ADC& getADC() {
-#ifdef STM32F302x8
-    static ADCf302x8 adc(pin);
+#ifdef STM32F3xx
+    static ADCf3xx adc(pin);
     return adc;
 #endif
 }
@@ -54,8 +54,8 @@ ADC& getADC() {
  */
 template<Pin txPin, Pin rxPin>
 CAN& getCAN(bool loopbackEnabled = false) {
-#ifdef STM32F302x8
-    static CANf302x8 can(txPin, rxPin, loopbackEnabled);
+#ifdef STM32F3xx
+    static CANf3xx can(txPin, rxPin, loopbackEnabled);
     return can;
 #endif
 }
@@ -68,8 +68,8 @@ CAN& getCAN(bool loopbackEnabled = false) {
  */
 template<Pin pin>
 GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT) {
-#ifdef STM32F302x8
-    static GPIOf302x8 gpioPin(pin, direction);
+#ifdef STM32F3xx
+    static GPIOf3xx gpioPin(pin, direction);
     return gpioPin;
 #endif
 }
@@ -82,8 +82,8 @@ GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT) {
  */
 template<Pin scl, Pin sda>
 I2C& getI2C() {
-#ifdef STM32F302x8
-    static I2Cf302x8 i2c(scl, sda);
+#ifdef STM32F3xx
+    static I2Cf3xx i2c(scl, sda);
     return i2c;
 #endif
 }
@@ -95,8 +95,8 @@ I2C& getI2C() {
  */
 template<Pin pin>
 PWM& getPWM() {
-#ifdef STM32F302x8
-    static PWMf302x8 pwm(pin);
+#ifdef STM32F3xx
+    static PWMf3xx pwm(pin);
     return pwm;
 #endif
 }
@@ -110,8 +110,8 @@ PWM& getPWM() {
  */
 template<Pin txPin, Pin rxPin>
 UART& getUART(uint32_t baudrate) {
-#ifdef STM32F302x8
-    static UARTf302x8 uart(txPin, rxPin, baudrate);
+#ifdef STM32F3xx
+    static UARTf3xx uart(txPin, rxPin, baudrate);
     return uart;
 #endif
 }

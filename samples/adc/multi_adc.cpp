@@ -26,12 +26,12 @@ int main() {
 
     while (1) {
         uart.printf("--------------------\r\n");
-        uart.printf("ADC0 : %.2fV\r\n", adc0.read());
-        uart.printf("ADC0: %.2f%%\r\n", adc0.readPercentage() * 100);
+        uart.printf("ADC0 : %d mV\r\n", static_cast<uint32_t>(adc0.read() * 1000));
+        uart.printf("ADC0: %d%%\r\n", static_cast<uint32_t>(adc0.readPercentage() * 100));
         uart.printf("ADC0 raw: %d\r\n\r\n", adc0.readRaw());
 
-        uart.printf("ADC1: %.2fV\r\n", adc1.read());
-        uart.printf("ADC1: %.2f%%\r\n", adc1.readPercentage());
+        uart.printf("ADC1 : %d mV\r\n", static_cast<uint32_t>(adc1.read() * 1000));
+        uart.printf("ADC1: %d%%\r\n", static_cast<uint32_t>(adc1.readPercentage() * 100));
         uart.printf("ADC1 raw: %d\r\n", adc1.readRaw());
 
         uart.printf("--------------------\r\n\r\n");

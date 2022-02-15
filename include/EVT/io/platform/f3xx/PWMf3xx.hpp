@@ -1,5 +1,5 @@
-#ifndef _EVT_PWMf302x8_
-#define _EVT_PWMf302x8_
+#ifndef _EVT_PWMf3xx_
+#define _EVT_PWMf3xx_
 
 #include <stdint.h>
 
@@ -9,14 +9,14 @@
 
 namespace EVT::core::IO {
 
-class PWMf302x8 : public PWM {
+class PWMf3xx : public PWM {
 public:
     /**
      * Setup the given pin for PWM usage.
      *
      * @param pin[in] The pin to setup for PWM
      */
-    PWMf302x8(Pin pin);
+    PWMf3xx(Pin pin);
 
     /**
      * Set the duty cycle for the pin to operate at.
