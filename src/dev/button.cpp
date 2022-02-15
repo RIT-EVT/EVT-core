@@ -11,7 +11,7 @@ IO::GPIO::State Button::getState() {
     return this->gpio.readPin();
 }
 
-bool Button::debounce(int debounceTime) {
+bool Button::debounce(uint32_t debounceTime) {
     if (HAL_GetTick() - this->timeSinceLastPress > debounceTime) {
         if (this->getState() == IO::GPIO::State::HIGH) {
             this->timeSinceLastPress = HAL_GetTick();

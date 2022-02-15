@@ -29,14 +29,14 @@ public:
      * @param debounceTime
      * @return Confirmation of a button press
      */
-    bool debounce(int debounceTime);
+    bool debounce(uint32_t debounceTime);
 
 private:
     // The GPIO pin that the button is connected to
     IO::GPIO& gpio;
 
     // The time since the button was last pressed
-    int timeSinceLastPress;
+    uint32_t timeSinceLastPress;
 
 };// namespace EVT::core::DEV
 }// namespace EVT::core::DEV
