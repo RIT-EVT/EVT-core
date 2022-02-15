@@ -12,21 +12,24 @@ namespace EVT::core::DEV {
 class Button {
 public:
     /**
-     * @brief Construct a new Button object
-     * @param gpio
+     * Create an instance of the Button based on the given GPIO pin.
+     *
+     * @param gpio[in] GPIO pin
      */
     Button(IO::GPIO& gpio);
 
     /**
-     * @brief Gets the button's GPIO Pin state
+     * Gets the button's GPIO Pin state
+     *
      * @return The state of the pin
      */
     IO::GPIO::State getState();
 
     /**
-     * @brief Confirms a button press
-     * based on a user defined debounce time
+     * Confirms a button press based on a user defined debounce time
+     *
      * @param debounceTime
+     *
      * @return Confirmation of a button press
      */
     bool debounce(uint32_t debounceTime);
