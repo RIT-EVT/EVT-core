@@ -220,7 +220,7 @@ PWMf3xx::PWMf3xx(Pin pin) : PWM(pin) {
                             alternateFunction);
 }
 
-void PWMf3xx::setDutyCycle(float dutyCycle) {
+void PWMf3xx::setDutyCycle(uint32_t dutyCycle) {
     this->dutyCycle = dutyCycle;
 
     TIM_OC_InitTypeDef sConfigOC = {0};
@@ -236,7 +236,7 @@ void PWMf3xx::setDutyCycle(float dutyCycle) {
     HAL_TIM_PWM_Start(&halTIM, halTIMChannelID);
 }
 
-void PWMf3xx::setPeriod(float period) {
+void PWMf3xx::setPeriod(uint32_t period) {
     this->period = period;
     HAL_TIM_PWM_Stop(&halTIM, halTIMChannelID);
 
