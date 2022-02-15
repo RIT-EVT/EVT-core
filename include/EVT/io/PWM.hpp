@@ -6,7 +6,7 @@
 namespace EVT::core::IO {
 
 // Forward declarations:
-// The diferent pins are hardware specific. Forward declarations to allow
+// The different pins are hardware specific. Forward declarations to allow
 // at compilation time the decision of which pins should be used.
 enum class Pin;
 
@@ -39,7 +39,7 @@ public:
      *
      * @return The duty cycle the PWM is operating at.
      */
-    virtual float getDutyCycle() = 0;
+    virtual uint32_t getDutyCycle() = 0;
 
     /**
      * Get the current period.
@@ -52,7 +52,7 @@ protected:
     /// The pin the PWM is attached to
     Pin pin;
     /// The duty cycle of the PWM
-    float dutyCycle;
+    uint32_t dutyCycle;
     /// The period of the PWM
     uint32_t period;
 };

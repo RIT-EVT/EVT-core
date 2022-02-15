@@ -37,7 +37,7 @@ public:
      *
      * @return The duty cycle the PWM is operating at.
      */
-    float getDutyCycle();
+    uint32_t getDutyCycle();
 
     /**
      * Get the current period.
