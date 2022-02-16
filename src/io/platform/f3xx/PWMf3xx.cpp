@@ -260,7 +260,7 @@ void PWMf3xx::setPeriod(uint32_t period) {
     setDutyCycle(this->dutyCycle);
 }
 
-uint32_t PWMf3xx::getDutyCycle() {
+float PWMf3xx::getDutyCycle() {
     return dutyCycle;
 }
 
