@@ -115,7 +115,6 @@ protected:
     void* priv;
     /** If CAN should operate in loop back mode */
     bool loopbackEnabled;
-
 };
 }// namespace EVT::core::IO
 

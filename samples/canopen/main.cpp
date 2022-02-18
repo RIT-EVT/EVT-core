@@ -88,7 +88,6 @@ int main() {
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();
     can.addIRQHandler(canInterrupt, reinterpret_cast<void*>(&canOpenQueue));
 
-
     // Initialize the timer
     DEV::Timerf302x8 timer(TIM2, 100);
 
@@ -105,7 +104,7 @@ int main() {
     // Attempt to join the CAN network
     IO::CAN::CANStatus result = can.connect();
 
-    if(result != IO::CAN::CANStatus::OK) {
+    if (result != IO::CAN::CANStatus::OK) {
         uart.printf("Failed to connect to CAN network\r\n");
         return 1;
     }
