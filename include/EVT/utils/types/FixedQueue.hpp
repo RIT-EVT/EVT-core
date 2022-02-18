@@ -18,7 +18,6 @@
 
 #include <stdint.h>
 
-
 namespace EVT::core::types {
 
 template<size_t maxSize, class Element>
