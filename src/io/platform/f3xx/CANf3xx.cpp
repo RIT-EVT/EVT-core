@@ -115,11 +115,11 @@ CAN::CANStatus CANf3xx::connect() {
     defaultFilter.FilterScale = CAN_FILTERSCALE_32BIT;
     defaultFilter.FilterActivation = ENABLE;
 
-    if(HAL_CAN_ConfigFilter(&halCAN, &defaultFilter) != HAL_OK) {
+    if (HAL_CAN_ConfigFilter(&halCAN, &defaultFilter) != HAL_OK) {
         return CANStatus::ERROR;
     }
 
-    if(HAL_CAN_Start(&halCAN) != HAL_OK) {
+    if (HAL_CAN_Start(&halCAN) != HAL_OK) {
         return CANStatus::ERROR;
     }
 
@@ -127,7 +127,7 @@ CAN::CANStatus CANf3xx::connect() {
 }
 
 CAN::CANStatus CANf3xx::disconnect() {
-    if(HAL_CAN_Stop(&halCAN) != HAL_OK) {
+    if (HAL_CAN_Stop(&halCAN) != HAL_OK) {
         return CANStatus::ERROR;
     }
     return CANStatus::OK;
@@ -161,12 +161,12 @@ CAN::CANStatus CANf3xx::transmit(CANMessage& message) {
     HAL_StatusTypeDef result = HAL_CAN_AddTxMessage(&halCAN, &txHeader, payload, &mailbox);
 
     switch (result) {
-        case HAL_OK:
-            return CAN::CANStatus::OK;
-        case HAL_TIMEOUT:
-            return CAN::CANStatus::TIMEOUT;
-        default:
-            return CAN::CANStatus::ERROR;
+    case HAL_OK:
+        return CAN::CANStatus::OK;
+    case HAL_TIMEOUT:
+        return CAN::CANStatus::TIMEOUT;
+    default:
+        return CAN::CANStatus::ERROR;
     }
 }
 
