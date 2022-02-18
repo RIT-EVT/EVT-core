@@ -18,6 +18,7 @@
 
 #include <stdint.h>
 
+
 namespace EVT::core::types {
 
 template<size_t maxSize, class Element>
@@ -59,7 +60,7 @@ public:
         // Assumed use of copy assignment operator
         *back = element;
         back++;
-        if (back > end)
+        if (back >= end)
             back = &elements[0];
 
         // Check if overwritting took place
@@ -90,7 +91,7 @@ public:
 
         *element = *front;
         front++;
-        if (front > end)
+        if (front >= end)
             front = &elements[0];
         size--;
         return true;
