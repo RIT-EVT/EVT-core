@@ -34,6 +34,26 @@ public:
      */
     CANf3xx(Pin txPin, Pin rxPin, bool loopbackEnabled = false);
 
+    /**
+     * Attempt to join the CAN network.
+     *
+     * For the STM32f3xx this involves attempting to startup the CAN
+     * interface. This chould cause an error in the case of invalid
+     * parameters.
+     *
+     * @return CANStatus::OK on success, CANStatus::ERROR otherwise
+     */
+    CANStatus connect();
+
+    /**
+     * Disconnect from the CAN network.
+     *
+     * For the STM32f3xx this involves disconnect from the CAN interface.
+     *
+     * @return CANStatus::OK if we successfully de-init the CAN interface
+     */
+    CANStatus disconnect();
+
     CANStatus transmit(CANMessage& message);
 
     CANStatus receive(CANMessage* message, bool blocking = false);

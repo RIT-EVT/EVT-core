@@ -88,6 +88,7 @@ int main() {
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();
     can.addIRQHandler(canInterrupt, reinterpret_cast<void*>(&canOpenQueue));
 
+
     // Initialize the timer
     DEV::Timerf302x8 timer(TIM2, 100);
 
@@ -100,6 +101,14 @@ int main() {
     // Reserved memory for CANopen stack usage
     uint8_t sdoBuffer[1][CO_SDO_BUF_BYTE];
     CO_TMR_MEM appTmrMem[4];
+
+    // Attempt to join the CAN network
+    IO::CAN::CANStatus result = can.connect();
+
+    if(result != IO::CAN::CANStatus::OK) {
+        uart.printf("Failed to connect to CAN network\r\n");
+        return 1;
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // Setup CAN configuration, this handles making drivers, applying settings.

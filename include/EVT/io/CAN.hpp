@@ -46,6 +46,21 @@ public:
     CAN(Pin txPin, Pin rxPin, bool loopbackEnabled = false);
 
     /**
+     * Join the CAN network. Will attempt to connect to the CAN network
+     * and return the cooresponding status.
+     *
+     * @return The status associated with the success of joing the network
+     */
+    virtual CANStatus connect() = 0;
+
+    /**
+     * Disconnect from the CAN network.
+     *
+     * @return The status associated with attempting to disconnect
+     */
+    virtual CANStatus disconnect() = 0;
+
+    /**
      * Transmit the message over CAN.
      *
      * @param[in] message The message to send over CAN.
@@ -92,14 +107,15 @@ private:
     Pin rxPin;
     /** Represents if filtering should take place for CAN ids */
     bool filtering;
-    /** If CAN should operate in loop back mode */
-    bool loopbackEnabled;
 
 protected:
     /** Function pointer to call for the interrupt handler */
     void (*handler)(CANMessage&, void* priv);
     /** Private data to pass into the IRQ handler */
     void* priv;
+    /** If CAN should operate in loop back mode */
+    bool loopbackEnabled;
+
 };
 }// namespace EVT::core::IO
 
