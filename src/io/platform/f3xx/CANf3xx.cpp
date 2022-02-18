@@ -71,7 +71,9 @@ CANf3xx::CANf3xx(Pin txPin, Pin rxPin, bool loopbackEnabled)
     uint8_t numOfPins = 2;
     GPIOf3xx::gpioStateInit(&gpioInit, canPins, numOfPins, GPIO_MODE_AF_OD,
                             GPIO_PULLUP, GPIO_SPEED_FREQ_HIGH, GPIO_AF9_CAN);
+}
 
+CAN::CANStatus CANf3xx::connect() {
     // Initialize HAL CAN
     // Bit timing values calculated from the website
     // http://www.bittiming.can-wiki.info/
@@ -113,9 +115,22 @@ CANf3xx::CANf3xx(Pin txPin, Pin rxPin, bool loopbackEnabled)
     defaultFilter.FilterScale = CAN_FILTERSCALE_32BIT;
     defaultFilter.FilterActivation = ENABLE;
 
-    HAL_CAN_ConfigFilter(&halCAN, &defaultFilter);
+    if(HAL_CAN_ConfigFilter(&halCAN, &defaultFilter) != HAL_OK) {
+        return CANStatus::ERROR;
+    }
 
-    HAL_CAN_Start(&halCAN);
+    if(HAL_CAN_Start(&halCAN) != HAL_OK) {
+        return CANStatus::ERROR;
+    }
+
+    return CANStatus::OK;
+}
+
+CAN::CANStatus CANf3xx::disconnect() {
+    if(HAL_CAN_Stop(&halCAN) != HAL_OK) {
+        return CANStatus::ERROR;
+    }
+    return CANStatus::OK;
 }
 
 CAN::CANStatus CANf3xx::transmit(CANMessage& message) {

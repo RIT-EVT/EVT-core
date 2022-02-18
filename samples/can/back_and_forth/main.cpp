@@ -43,6 +43,15 @@ int main() {
     uart.printf("Starting CAN testing\r\n");
 
     IO::CAN::CANStatus result;
+
+    // Attempt to join the CAN network
+    result = can.connect();
+
+    if(result != IO::CAN::CANStatus::OK) {
+        uart.printf("Failed to connect to the CAN network\r\n");
+        return 1;
+    }
+
     while (true) {
         // Transmit every second
         result = can.transmit(transmit_message);

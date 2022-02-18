@@ -27,6 +27,14 @@ int main() {
 
     IO::CAN::CANStatus result;
 
+    // Attempt to join the CAN network
+    result = can.connect();
+
+    if(result != IO::CAN::CANStatus::OK) {
+        uart.printf("Failed to connect to CAN network\r\n");
+        return 1;
+    }
+
     while (true) {
         result = can.transmit(transmit_message);
         if (result != IO::CAN::CANStatus::OK) {
