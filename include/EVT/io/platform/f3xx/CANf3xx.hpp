@@ -38,7 +38,7 @@ public:
      * Attempt to join the CAN network.
      *
      * For the STM32f3xx this involves attempting to startup the CAN
-     * interface. This chould cause an error in the case of invalid
+     * interface. This could cause an error in the case of invalid
      * parameters.
      *
      * @return CANStatus::OK on success, CANStatus::ERROR otherwise

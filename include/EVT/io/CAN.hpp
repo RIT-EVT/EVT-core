@@ -30,9 +30,9 @@ public:
      * interface.
      */
     enum class CANStatus {
-        TIMEOUT = 0,
-        ERROR = 1,
-        OK = 3
+        OK = 0,
+        TIMEOUT = 1,
+        ERROR = 2
     };
 
     /**
