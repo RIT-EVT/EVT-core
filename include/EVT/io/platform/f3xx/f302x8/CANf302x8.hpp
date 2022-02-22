@@ -89,12 +89,6 @@ private:
     CAN_HandleTypeDef halCAN;
     /** Queue which holds received CAN messages */
     EVT::core::types::FixedQueue<CAN_MESSAGE_QUEUE_SIZE, CANMessage> messageQueue;
-    /** CAN filtering identifier */
-    uint32_t explicitFilter;
-    /** CAN filtering mask */
-    uint32_t filterMask;
-    /** CANopen emergency code filter toggle */
-    uint32_t emergencyFilterState;
 };
 
 
