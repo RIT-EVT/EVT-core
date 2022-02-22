@@ -44,9 +44,14 @@ public:
     CANMessage* receive(CANMessage* message, bool blocking = false);
 
     /**
-     * @copydoc EVT::core::IO::CAN::setCANFilterId 
+     * @copydoc EVT::core::IO::CAN::addCANFilter
      */
-    void setCANFilterId(uint32_t identifier);
+    void addCANFilter(uint16_t filterExplicitId, uint16_t filterMask, uint8_t filterBank);
+
+    /**
+     * @copydoc EVT::core::IO::CAN::enableEmergencyFilter
+     */
+    void enableEmergencyFilter(uint32_t state);
 
     /**
      * @copydoc EVT::core::IO::CAN::addIRQHandler
@@ -85,7 +90,11 @@ private:
     /** Queue which holds received CAN messages */
     EVT::core::types::FixedQueue<CAN_MESSAGE_QUEUE_SIZE, CANMessage> messageQueue;
     /** CAN filtering identifier */
-    uint32_t identifier;
+    uint32_t explicitFilter;
+    /** CAN filtering mask */
+    uint32_t filterMask;
+    /** CANopen emergency code filter toggle */
+    uint32_t emergencyFilterState;
 };
 
 

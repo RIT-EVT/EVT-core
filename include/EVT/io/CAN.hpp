@@ -84,11 +84,23 @@ public:
     virtual CANStatus enableEmergencyFilter(uint32_t state);
 
     /**
-     * Sets the 11-bit CAN ID that will be allowed through to the receive buffer.
-     *
-     * @param identifier[in] The 11-bit CAN ID 
+     * Instantiates a new CAN filter using the 16-bit ID-Mask mode. If a filter bank
+     * that is already in use is provided, the existing filter will be overwritten.
+     * A second pair of filter Id and mask can be given to the same filter bank.
+     * 
+     * @param[in] filterExplicitId 11-bit identifier that must be an exact match to pass
+     * @param[in] filterMask 16-bit mask where [1] means care and [0] means don't care
+     * @param[in] filterBank value between 0-13 where the filter info is stored
      */
-    virtual void setCANFilterId(uint32_t identifier);
+    virtual void addCANFilter(uint16_t filterExplicitId, uint16_t filterMask, uint8_t filterBank);
+
+    /**
+     * Enable or disable a filter that lets through any CAN messages that, following the CANopen
+     * standard, begin with the Emergency code of 001
+     * 
+     * @param[in] state Enum passed to set filter functional state
+     */
+    virtual void enableEmergencyFilter(uint32_t state);
 
     /**
      * Add an interrupt handler for CAN messages. This will be called with
