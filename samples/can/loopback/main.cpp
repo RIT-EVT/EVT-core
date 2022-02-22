@@ -20,10 +20,13 @@ int main() {
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     uint8_t payload[] = {0xDE, 0xAD, 0xBE, 0xBE, 0xEF, 0x00, 0x01, 0x02};
-    IO::CANMessage transmit_message(0x186, 8, &payload[0], false);
+    IO::CANMessage transmit_message(0b00001010111, 8, &payload[0], false);
     IO::CANMessage received_message;
 
-    can.setCANFilterId(0x83);
+//    can.addCANFilter(0, 0, 0);    //This filter allows all messages through
+    can.addCANFilter(0b00000011010, 0b0000111111100000, 2);
+    can.addCANFilter(0b00001010111, 0b0000111111100000, 3);
+    can.enableEmergencyFilter(ENABLE);
 
     uart.printf("Starting CAN testing\r\n");
 
