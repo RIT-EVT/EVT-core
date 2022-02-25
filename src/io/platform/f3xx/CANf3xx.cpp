@@ -229,38 +229,7 @@ CAN::CANStatus CANf3xx::enableEmergencyFilter(uint32_t state) {
     return CANStatus::OK;
 }
 
-CAN::CANStatus CANf302x8::addCANFilter(uint16_t filterExplicitId, uint16_t filterMask, uint8_t filterBank) {
-    CAN_FilterTypeDef newFilter;
-    newFilter.FilterIdHigh = filterExplicitId << 5; //must shift 11-bits to MSB of 16-bits
-    newFilter.FilterIdLow = 0;
-    newFilter.FilterMaskIdHigh = filterMask;
-    newFilter.FilterMaskIdLow = 0xFFFF;
-    newFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-    newFilter.FilterBank = filterBank;
-    newFilter.FilterMode = CAN_FILTERMODE_IDMASK;
-    newFilter.FilterScale = CAN_FILTERSCALE_16BIT;
-    newFilter.FilterActivation = ENABLE;
-
-    HAL_CAN_ConfigFilter(&halCAN, &newFilter);
-}
-
-CAN::CANStatus CANf302x8::enableEmergencyFilter(uint32_t state) {
-    CAN_FilterTypeDef emergencyFilter;
-
-    emergencyFilter.FilterIdHigh = 0b00010000000 << 5; //only 0001 (emergency code) allowed
-    emergencyFilter.FilterIdLow = 0x0000;
-    emergencyFilter.FilterMaskIdHigh = 0xF000; //1111000000000000 Only looking for 4-bit code
-    emergencyFilter.FilterMaskIdLow = 0xFFFF; //block off second filter with all 1s
-    emergencyFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-    emergencyFilter.FilterBank = 1;
-    emergencyFilter.FilterMode = CAN_FILTERMODE_IDMASK;
-    emergencyFilter.FilterScale = CAN_FILTERSCALE_16BIT;
-    emergencyFilter.FilterActivation = state;
-
-    HAL_CAN_ConfigFilter(&halCAN, &emergencyFilter);
-}
-
-void CANf302x8::addCANMessage(CANMessage& message) {
+void CANf3xx::addCANMessage(CANMessage& message) {
     if (messageQueue.canInsert())
         messageQueue.append(message);
 }
