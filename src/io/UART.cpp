@@ -16,7 +16,7 @@ char* UART::gets(char* buf, size_t size) {
     size_t buf_index = 0;
     memset(buf, 0, size);
 
-    while (ret != '\r' && ret != '\n' && ret != '\4') {  // '\4' is EOF
+    while (ret != '\r' && ret != '\n' && ret != '\4') {// '\4' is EOF
         ret = getc();
 
         // Check if backspace key is entered
@@ -28,7 +28,7 @@ char* UART::gets(char* buf, size_t size) {
                 putc('\b');
             }
         } else if (buf_index < (size - 1)
-                && ret != '\r' && ret != '\n' && ret != '\4') {
+                   && ret != '\r' && ret != '\n' && ret != '\4') {
             buf[buf_index++] = ret;
             putc(ret);
         }
@@ -37,4 +37,4 @@ char* UART::gets(char* buf, size_t size) {
     return buf;
 }
 
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO

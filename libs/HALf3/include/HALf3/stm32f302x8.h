@@ -770,7 +770,7 @@ typedef struct
 #define TIM6                ((TIM_TypeDef *) TIM6_BASE)
 #define RTC1                 ((RTC_TypeDef *) RTC_BASE)
 #define WWDG                ((WWDG_TypeDef *) WWDG_BASE)
-#define IWDG                ((IWDG_TypeDef *) IWDG_BASE)
+#define IWDG1                ((IWDG_TypeDef *) IWDG_BASE)
 #define I2S2ext             ((SPI_TypeDef *) I2S2ext_BASE)
 #define SPI2                ((SPI_TypeDef *) SPI2_BASE)
 #define SPI3                ((SPI_TypeDef *) SPI3_BASE)
@@ -828,6 +828,11 @@ typedef struct
 /** @addtogroup Exported_constants
   * @{
   */
+
+/** @addtogroup Hardware_Constant_Definition
+  * @{
+  */
+#define LSI_STARTUP_TIME 85U /*!< LSI Maximum startup time in us */
 
   /** @addtogroup Peripheral_Registers_Bits_Definition
   * @{

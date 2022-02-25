@@ -5,8 +5,7 @@
 
 #include <EVT/io/types/CANMessage.hpp>
 
-namespace EVT::core::IO
-{
+namespace EVT::core::IO {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
@@ -27,21 +26,47 @@ enum class Pin;
 class CAN {
 public:
     /**
+     * Represents potential errors that may take place when using the CAN
+     * interface.
+     */
+    enum class CANStatus {
+        OK = 0,
+        TIMEOUT = 1,
+        ERROR = 2
+    };
+
+    /**
      * Creates a new instance of the CAN interface which will use the given
      * transmit and receive pins.
      *
-     * @param txPin[in] The pin to use for transmitting data
-     * @param rxPin[in] The pin to use for receiving data
-     * @param loopbackEnabled[in] Flag to enable CAN loop back functionality
+     * @param[in] txPin The pin to use for transmitting data
+     * @param[in] rxPin The pin to use for receiving data
+     * @param[in] loopbackEnabled Flag to enable CAN loop back functionality
      */
-    CAN(Pin txPin, Pin rxPin, bool loopbackEnabled=false);
+    CAN(Pin txPin, Pin rxPin, bool loopbackEnabled = false);
+
+    /**
+     * Join the CAN network. Will attempt to connect to the CAN network
+     * and return the cooresponding status.
+     *
+     * @return The status associated with the success of joing the network
+     */
+    virtual CANStatus connect() = 0;
+
+    /**
+     * Disconnect from the CAN network.
+     *
+     * @return The status associated with attempting to disconnect
+     */
+    virtual CANStatus disconnect() = 0;
 
     /**
      * Transmit the message over CAN.
      *
-     * @param message[in] The message to send over CAN.
+     * @param[in] message The message to send over CAN.
+     * @return The status associated with sending the message
      */
-    virtual void transmit(CANMessage& message) = 0;
+    virtual CANStatus transmit(CANMessage& message) = 0;
 
     /**
      * Receive a message over CAN. The user can either receive in blocking or
@@ -50,13 +75,11 @@ public:
      * In non-blocking, a nullptr will be returned if no message is currently
      * in the mailbox.
      *
-     * @param message[out] The message to populate with data
-     * @param blocking[in] Used to determine if received should block or not, by
+     * @param[out] message The message to populate with data
+     * @param[in] blocking Used to determine if received should block or not, by
      *      default receive is blocking
-<<<<<<< HEAD
      * @return A pointer to the passed in message, nullptr if message not
      *      received.
-=======
      * @return The status of the receive call, CANStatus::TIMEOUT returned if
      *      no message received
      */
@@ -92,9 +115,13 @@ public:
      *
      * @param[in] handler The interrupt handler. Takes in a CANmessage and some other parameter
      * @param[in] priv The private data to pass into the handler
->>>>>>> 6375521... Updated CAN filtering with new F3xx nomeclature
      */
-    virtual CANMessage* receive(CANMessage* message, bool blocking=false) = 0;
+    void addIRQHandler(void (*handler)(CANMessage&, void* priv), void* priv);
+
+    /**
+     * Default CAN baudrate.
+     */
+    static constexpr uint32_t DEFAULT_BAUD = 500000;
 
 private:
     /** The CAN transmit pin */
@@ -103,9 +130,15 @@ private:
     Pin rxPin;
     /** Represents if filtering should take place for CAN ids */
     bool filtering;
+
+protected:
+    /** Function pointer to call for the interrupt handler */
+    void (*handler)(CANMessage&, void* priv);
+    /** Private data to pass into the IRQ handler */
+    void* priv;
     /** If CAN should operate in loop back mode */
     bool loopbackEnabled;
 };
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO
 
 #endif

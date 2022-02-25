@@ -3,7 +3,7 @@
 namespace EVT::core::IO {
 
 // Setup instance variables
-GPIO::GPIO(Pin pin)  {
+GPIO::GPIO(Pin pin) {
     this->pin = pin;
 }
 
@@ -12,4 +12,4 @@ GPIO::GPIO(Pin pin, Direction direction) {
     this->direction = direction;
 }
 
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO

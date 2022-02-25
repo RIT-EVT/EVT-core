@@ -52,8 +52,6 @@ int main() {
             uart.printf("Failed to receive message\r\n");
             continue;
         }
-        can.transmit(transmit_message);
-        can.receive(&received_message, false);
 
         if(received_message.getDataLength() == 0) {
             uart.printf("Message filtered out!");

@@ -31,9 +31,8 @@ public:
      * @param[in] time The time to set the RTC to use.
      */
     virtual void setTime(EVT::core::time::TimeStamp& time) = 0;
-
 };
 
-}  // namespace EVT::core::DEV
+}// namespace EVT::core::DEV
 
 #endif

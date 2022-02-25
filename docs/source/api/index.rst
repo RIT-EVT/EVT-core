@@ -14,6 +14,12 @@ Devices, representation of hardware that can be interfaced with. In
 general, devices are communicated with via some sort of IO interface, but that
 is not strictly a rule. An LED is a simplistic example of a device.
 
+IWDG
+---
+
+.. doxygenclass:: EVT::core::DEV::IWDG
+   :members:
+
 LED
 ---
 
@@ -30,6 +36,12 @@ Timer
 -----
 
 .. doxygenclass:: EVT::core::DEV::Timer
+   :members:
+
+EEPROM
+------
+
+.. doxygenclass:: EVT::core::DEV::EEPROM
    :members:
 
 IO
@@ -95,9 +107,9 @@ Platform Implementations
 .. toctree::
    :maxdepth: 2
    :caption: Supported Platforms:
- 
-   stm32f302x8/stm32f302x8_dev.rst
-   stm32f302x8/stm32f302x8_io.rst
+
+   stm32f3xx/stm32f302x8_dev.rst
+   stm32f3xx/stm32f3xx_io.rst
 
 
 Platform
@@ -107,6 +119,15 @@ Platform represents the microcontroller that the code is running
 on. Platform specific code such as system setup is included here. For example,
 placing the microcontroller into a "low power mode" is specific to the
 microcontroller itself.
+
+STM32f3xx
+^^^^^^^^^
+
+Interrupt priorities are configured with priorities defined by
+`stm32f3xx.hpp`.  A lower number corresponds to a higher priority.
+Interrupts of higher priority may interrupt those of lower priority.
+
+.. doxygenfile:: EVT/platform/f3xx/stm32f3xx.hpp
 
 Utils
 =====

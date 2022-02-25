@@ -18,34 +18,21 @@
 
 #include <stdint.h>
 
-// The most number of elements in the queue, the user can provide a
-// value that is less then this number to reduce the apparent capacity.
-// Note that doing so will not reduce the size of the instance.
-#define QUEUE_MAX_CAPACITY 512
+namespace EVT::core::types {
 
-namespace EVT::core::types
-{
-
-template<class Element>
+template<size_t maxSize, class Element>
 class FixedQueue {
 public:
-
     /**
      * Makes a queue without the need for dynamic memory allocation. The
      * queue will start out as empty.
      *
-     * @param maxCapacity The maximum size that the queue can be, must be
-     *      between 0 and QUEUE_MAX_CAPACITY. Defaults to QUEUE_MAX_CAPACITY
      * @param withOverwrite If true, when the queue is full, the oldest
      *      data is overwritten when another element is added.
      *      Defaults to false
      */
-    FixedQueue(size_t maxCapacity = QUEUE_MAX_CAPACITY,
-            bool withOverwrite = false) {
-
-        if (maxCapacity > QUEUE_MAX_CAPACITY)
-            maxCapacity = QUEUE_MAX_CAPACITY;
-        this->maxCapacity = maxCapacity;
+    FixedQueue(bool withOverwrite = false) {
+        this->maxCapacity = maxSize;
         this->front = &elements[0];
         this->back = &elements[0];
         this->end = &elements[maxCapacity];
@@ -66,13 +53,13 @@ public:
      *      is full and overwritting is disabled.
      */
     bool append(Element& element) {
-        if(size == maxCapacity && !withOverwrite)
+        if (size == maxCapacity && !withOverwrite)
             return false;
 
         // Assumed use of copy assignment operator
         *back = element;
         back++;
-        if (back > end)
+        if (back >= end)
             back = &elements[0];
 
         // Check if overwritting took place
@@ -103,7 +90,7 @@ public:
 
         *element = *front;
         front++;
-        if (front > end)
+        if (front >= end)
             front = &elements[0];
         size--;
         return true;
@@ -140,10 +127,9 @@ public:
         return withOverwrite || !isFull();
     }
 
-
 private:
     /** The elements stored in the queue */
-    Element elements[QUEUE_MAX_CAPACITY];
+    Element elements[maxSize];
     /**
      * The max number of elements that are stored (can be any value between
      * 0 and QUEUE_MAX_CAPACITY).
@@ -159,9 +145,8 @@ private:
     size_t size;
     /** Represents if oldest data is allowed to be overwritten when full */
     bool withOverwrite;
-
 };
 
-}  // namespace EVT::core::types
+}// namespace EVT::core::types
 
 #endif

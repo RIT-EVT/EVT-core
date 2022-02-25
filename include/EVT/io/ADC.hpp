@@ -16,7 +16,7 @@ public:
     /**
      * Setup the given pin for ADC (analog to digital) usage
      *
-     * @param pin The pin to setup for ADC
+     * @param[in] pin The pin to setup for ADC
      */
     ADC(Pin pin);
 
@@ -48,6 +48,6 @@ protected:
     Pin pin;
 };
 
-}  // namespace EVT::core::IO
+}// namespace EVT::core::IO
 
 #endif

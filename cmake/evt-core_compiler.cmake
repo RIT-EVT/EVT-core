@@ -11,6 +11,24 @@ if(NOT DEFINED ENV{GCC_ARM_TOOLS_PATH})
             )
 endif()
 
+# Handle Selection of the target device
+option(TARGET_DEV "Target device" "STM32F302x8")
+if(NOT TARGET_DEV)
+    set(TARGET_DEV "STM32F302x8")
+endif()
+
+
+if(TARGET_DEV STREQUAL "STM32F302x8")
+    add_compile_definitions(STM32F302x8)
+    add_compile_definitions(STM32F3xx)
+elseif(TARGET_DEV STREQUAL "STM32F334x8")
+    add_compile_definitions(STM32F334x8)
+    add_compile_definitions(STM32F3xx)
+else()
+    message(FATAL_ERROR "The target device is not supported")
+endif()
+
+
 # Flags to skip compiler check
 set(CMAKE_C_COMPILER_WORKS 1)
 set(CMAKE_CXX_COMPILER_WORKS 1)
@@ -54,20 +72,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "") # works
 
 include(GNUInstallDirs)
 
-# EVT Linking option, linting revolves around cpplint which is a tool that
-# conforms to Google's C++ style guide. cpplint needs to be installed.
-option(EVT_LINT
-    "Lint source code, need to have cpplint installed"
-    OFF
-)
-
-if(EVT_LINT)
-    # TODO: In the future these filter settings sound be included in cfg
-    # files.
-    set(CMAKE_CXX_CPPLINT "cpplint;--filter=-legal/copyright, \
-                          -readability/todo,-build/include_order;--linelength=120")
-endif()
-
 ###############################################################################
 # Set compiler and linker flags
 ###############################################################################
@@ -82,7 +86,14 @@ set(CMAKE_C_FLAGS           "${EVT_COMMON_FLAGS} \
 set(CMAKE_CXX_FLAGS         "${EVT_COMMON_FLAGS} \
                             -fno-rtti -Wvla")
 
-# TODO: Check for platform to decide which linker script to use
-set(CMAKE_EXE_LINKER_FLAGS  "-mfloat-abi=hard -specs=nano.specs -specs=nosys.specs \
-                            -T ${EVT_CORE_DIR}/libs/HALf3/STM32F302C8Tx_FLASH.ld \
-                            -lc -lm -lnosys -u _printf_float")
+if(TARGET_DEV STREQUAL "STM32F302x8")
+    set(CMAKE_EXE_LINKER_FLAGS "-T ${EVT_CORE_DIR}/libs/HALf3/STM32F302C8Tx_FLASH.ld")
+elseif(TARGET_DEV STREQUAL "STM32F334x8")
+    set(CMAKE_EXE_LINKER_FLAGS "-T ${EVT_CORE_DIR}/libs/HALf3/STM32F334R8TX_FLASH.ld")
+else()
+    message(FATAL_ERROR "The target device is not supported")
+endif()
+
+set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -mfloat-abi=hard \
+                            -specs=nano.specs -specs=nosys.specs \
+                            -lc -lm -lnosys -Wl,--gc-section")
