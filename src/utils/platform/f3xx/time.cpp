@@ -10,8 +10,8 @@
 
 namespace EVT::core::time {
 /**
-     * Calls HAL wait, assumes HAL_Init() has been called
-     */
+ * Calls HAL wait, assumes HAL_Init() has been called
+ */
 void wait(uint32_t ms) {
     // TODO: Remove need for this first time call
     static bool isFirst = true;
@@ -21,5 +21,12 @@ void wait(uint32_t ms) {
     }
 
     HAL_Delay(ms);
+}
+
+/**
+ * Reads the system ticks from HAL_GetTicks
+ */
+uint32_t millis() {
+    return HAL_GetTick();
 }
 }// namespace EVT::core::time
