@@ -8,9 +8,9 @@
  */
 #include <EVT/dev/LED.hpp>
 #include <EVT/io/GPIO.hpp>
+#include <EVT/io/UART.hpp>
 #include <EVT/io/manager.hpp>
 #include <EVT/io/pin.hpp>
-#include <EVT/io/UART.hpp>
 #include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;

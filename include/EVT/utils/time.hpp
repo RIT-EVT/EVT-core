@@ -27,7 +27,6 @@ void wait(uint32_t ms);
  */
 uint32_t millis();
 
-
 /**
  * Struct representing a timestamp.
  */
