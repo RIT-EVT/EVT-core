@@ -1,10 +1,6 @@
 /**
- * This example is the basic LED blink sample. This samples shows how the
- * device level drivers (the LED in this case) can be established by providing
- * the driver with the cooresponding IO level driver (GPIO in this case).
- *
- * The code will setup a GPIO pin as an output then setup an LED using that
- * GPIO.
+ * This example calls the millis function and prints out the result. Each
+ * result should be ~500ms off from each other
  */
 #include <EVT/dev/LED.hpp>
 #include <EVT/io/GPIO.hpp>
