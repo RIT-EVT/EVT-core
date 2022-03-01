@@ -95,7 +95,7 @@ public:
      * @param[in] filterBank value between 0-13 where the filter info is stored
      * @return The status associated with adding a new CAN message filter
      */
-    virtual CANStatus addCANFilter(uint16_t filterExplicitId, uint16_t filterMask, uint8_t filterBank);
+    virtual CANStatus addCANFilter(uint16_t filterExplicitId, uint16_t filterMask, uint8_t filterBank) = 0;
 
     /**
      * Enable or disable a filter that lets through any CAN messages that, following the CANopen
@@ -104,7 +104,7 @@ public:
      * @param[in] state Enum passed to set filter functional state
      * @return The status associated with setting the energency filter state
      */
-    virtual CANStatus enableEmergencyFilter(uint32_t state);
+    virtual CANStatus enableEmergencyFilter(uint32_t state) = 0;
 
     /**
      * Add an interrupt handler for CAN messages. This will be called with
