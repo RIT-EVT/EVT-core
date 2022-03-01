@@ -27,8 +27,8 @@ int main() {
 
     // Attempt to join the CAN network
     result = can.connect();
-    
-//  can.addCANFilter(0, 0, 13);  //This would create a filter that allows all messages through
+
+    //  can.addCANFilter(0, 0, 13);  //This would create a filter that allows all messages through
     can.addCANFilter(0b00000011010, 0b0000111111100000, 2);
     can.addCANFilter(0b00001010111, 0b0000111111100000, 3);
     can.enableEmergencyFilter(ENABLE);
@@ -53,7 +53,7 @@ int main() {
             continue;
         }
 
-        if(received_message.getDataLength() == 0) {
+        if (received_message.getDataLength() == 0) {
             uart.printf("Message filtered out!");
         } else {
             uart.printf("Message received\r\n");

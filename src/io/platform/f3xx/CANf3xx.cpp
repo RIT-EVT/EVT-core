@@ -194,10 +194,10 @@ CAN::CANStatus CANf3xx::receive(CANMessage* message, bool blocking) {
 
 CAN::CANStatus CANf3xx::addCANFilter(uint16_t filterExplicitId, uint16_t filterMask, uint8_t filterBank) {
     CAN_FilterTypeDef newFilter;
-    newFilter.FilterIdHigh = filterExplicitId << 5; //must shift 11-bits to MSB of 16-bits
+    newFilter.FilterIdHigh = filterExplicitId << 5;//must shift 11-bits to MSB of 16-bits
     newFilter.FilterIdLow = 0;
     newFilter.FilterMaskIdHigh = filterMask;
-    newFilter.FilterMaskIdLow = 0xFFFF; //block off second filter with all 1s
+    newFilter.FilterMaskIdLow = 0xFFFF;//block off second filter with all 1s
     newFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
     newFilter.FilterBank = filterBank;
     newFilter.FilterMode = CAN_FILTERMODE_IDMASK;
@@ -213,9 +213,9 @@ CAN::CANStatus CANf3xx::addCANFilter(uint16_t filterExplicitId, uint16_t filterM
 CAN::CANStatus CANf3xx::enableEmergencyFilter(uint32_t state) {
     CAN_FilterTypeDef emergencyFilter;
 
-    emergencyFilter.FilterIdHigh = 0x1000; //only 0001 (emergency code) allowed
+    emergencyFilter.FilterIdHigh = 0x1000;//only 0001 (emergency code) allowed
     emergencyFilter.FilterIdLow = 0;
-    emergencyFilter.FilterMaskIdHigh = 0xF000; //1111000000000000 Only looking for 4-bit code
+    emergencyFilter.FilterMaskIdHigh = 0xF000;//1111000000000000 Only looking for 4-bit code
     emergencyFilter.FilterMaskIdLow = 0xFFFF; //block off second filter with all 1s
     emergencyFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
     emergencyFilter.FilterBank = 1;
