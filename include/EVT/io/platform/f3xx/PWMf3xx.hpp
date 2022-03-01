@@ -22,7 +22,7 @@ public:
 
     void setPeriod(float period);
 
-    float getDutyCycle();
+    uint32_t getDutyCycle();
 
     uint32_t getPeriod();
 
