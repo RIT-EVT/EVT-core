@@ -18,9 +18,9 @@ public:
      */
     PWMf3xx(Pin pin);
 
-    void setDutyCycle(float dutyCycle);
+    void setDutyCycle(uint32_t dutyCycle);
 
-    void setPeriod(float period);
+    void setPeriod(uint32_t period);
 
     uint32_t getDutyCycle();
 
