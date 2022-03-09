@@ -58,6 +58,10 @@ public:
 
     CANStatus receive(CANMessage* message, bool blocking = false);
 
+    CANStatus addCANFilter(uint16_t filterExplicitId, uint16_t filterMask, uint8_t filterBank);
+
+    CANStatus enableEmergencyFilter(uint32_t state);
+
     void addIRQHandler(void (*handler)(CANMessage&, void* priv), void* priv);
 
     /**
