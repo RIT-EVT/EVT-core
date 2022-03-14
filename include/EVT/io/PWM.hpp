@@ -32,7 +32,7 @@ public:
      *
      * @param[in] period The period of the PWM in seconds.
      */
-    virtual void setPeriod(float period) = 0;
+    virtual void setPeriod(uint32_t period) = 0;
 
     /**
      * Get the current duty cycle.

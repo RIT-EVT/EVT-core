@@ -236,7 +236,7 @@ void PWMf3xx::setDutyCycle(float dutyCycle) {
     HAL_TIM_PWM_Start(&halTIM, halTIMChannelID);
 }
 
-void PWMf3xx::setPeriod(float period) {
+void PWMf3xx::setPeriod(uint32_t period) {
     this->period = period;
     HAL_TIM_PWM_Stop(&halTIM, halTIMChannelID);
 
@@ -248,7 +248,7 @@ void PWMf3xx::setPeriod(float period) {
     // autoreload value into a valid range.
     do {
         prescaler++;
-        autoReload = period * clockFrequency / (prescaler + 1) - 1;
+        autoReload =  clockFrequency / (prescaler + 1) - 1 / period;
     } while (autoReload > 65535);
 
     halTIM.Init.Period = autoReload;

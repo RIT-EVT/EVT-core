@@ -20,7 +20,7 @@ public:
 
     void setDutyCycle(float dutyCycle);
 
-    void setPeriod(float period);
+    void setPeriod(uint32_t period);
 
     uint32_t getDutyCycle();
 
