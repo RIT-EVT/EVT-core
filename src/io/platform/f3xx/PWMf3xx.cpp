@@ -237,6 +237,10 @@ void PWMf3xx::setDutyCycle(uint32_t dutyCycle) {
 }
 
 void PWMf3xx::setPeriod(uint32_t period) {
+    if (period == 0) {
+        period = 1;
+    }
+
     this->period = period;
     HAL_TIM_PWM_Stop(&halTIM, halTIMChannelID);
 

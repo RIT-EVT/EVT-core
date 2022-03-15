@@ -23,14 +23,14 @@ public:
     /**
      * Set the duty cycle for the pin to operate at.
      *
-     * @param[in] dutyCycle Duty cycle to set the pin to.
+     * @param[in] dutyCycle Duty cycle as a whole number to set the pin to.
      */
     virtual void setDutyCycle(uint32_t dutyCycle) = 0;
 
     /**
-     * Set the period for the PWM in seconds.
+     * Set the period for the PWM in microseconds.
      *
-     * @param[in] period The period of the PWM in seconds.
+     * @param[in] period The period of the PWM in microseconds.
      */
     virtual void setPeriod(uint32_t period) = 0;
 
@@ -44,7 +44,7 @@ public:
     /**
      * Get the current period.
      *
-     * @return The period the PWM is operating at in seconds.
+     * @return The period the PWM is operating at in microseconds.
      */
     virtual uint32_t getPeriod() = 0;
 
