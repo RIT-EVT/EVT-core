@@ -14,10 +14,11 @@ int main() {
     IO::init();
 
     IO::PWM& pwm = IO::getPWM<IO::Pin::PC_0>();
-    // 1 second period
-    pwm.setPeriod(1);
+    // 1000000 microseconds (1 second) period
+    pwm.setPeriod(1000000);
     // 50 % duty cycle
-    pwm.setDutyCycle(50000);
+    pwm.setDutyCycle(50);
+
     while (1) {
         time::wait(10);
     }
