@@ -220,12 +220,12 @@ PWMf3xx::PWMf3xx(Pin pin) : PWM(pin) {
                             alternateFunction);
 }
 
-void PWMf3xx::setDutyCycle(float dutyCycle) {
+void PWMf3xx::setDutyCycle(uint32_t dutyCycle) {
     this->dutyCycle = dutyCycle;
 
     TIM_OC_InitTypeDef sConfigOC = {0};
     sConfigOC.OCMode = TIM_OCMODE_PWM1;
-    sConfigOC.Pulse = dutyCycle * halTIM.Init.Period;
+    sConfigOC.Pulse = dutyCycle * (halTIM.Init.Period + 1) / 100;
     sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
     sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
     sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
