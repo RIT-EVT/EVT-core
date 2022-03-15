@@ -26,7 +26,7 @@ int main() {
     uart.printf("Debounce Start: %d\n", debounceStart);
 
     while (1) {
-        uart.printf("HAL GetTick: %d\n", time::millis());
+        uart.printf("Tick: %d\n", time::millis());
         if (button.debounce(300)) {
             uart.printf("Button Pressed\n");
             led.toggle();
