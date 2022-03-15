@@ -1,4 +1,5 @@
 #include <EVT/dev/button.hpp>
+#include <EVT/utils/time.hpp>
 #include <HALf3/stm32f3xx_hal.h>
 
 namespace EVT::core::DEV {
@@ -14,7 +15,7 @@ IO::GPIO::State Button::getState() {
 bool Button::debounce(uint32_t debounceTime) {
     if (HAL_GetTick() - this->timeSinceLastPress > debounceTime) {
         if (this->getState() == IO::GPIO::State::HIGH) {
-            this->timeSinceLastPress = HAL_GetTick();
+            this->timeSinceLastPress = time::millis();
             return true;
         }
     }
