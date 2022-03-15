@@ -18,6 +18,7 @@ int main() {
     pwm.setPeriod(1000000);
     // 50 % duty cycle
     pwm.setDutyCycle(50);
+  
     while (1) {
         time::wait(10);
     }
