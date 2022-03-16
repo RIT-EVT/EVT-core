@@ -1,5 +1,5 @@
 #include <EVT/dev/button.hpp>
-#include <HALf3/stm32f3xx_hal.h>
+#include <EVT/utils/time.hpp>
 
 namespace EVT::core::DEV {
 Button::Button(IO::GPIO& gpio) : gpio(gpio) {
@@ -12,9 +12,9 @@ IO::GPIO::State Button::getState() {
 }
 
 bool Button::debounce(uint32_t debounceTime) {
-    if (HAL_GetTick() - this->timeSinceLastPress > debounceTime) {
+    if (time::millis() - this->timeSinceLastPress > debounceTime) {
         if (this->getState() == IO::GPIO::State::HIGH) {
-            this->timeSinceLastPress = HAL_GetTick();
+            this->timeSinceLastPress = time::millis();
             return true;
         }
     }
