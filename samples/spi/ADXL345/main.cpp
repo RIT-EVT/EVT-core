@@ -26,6 +26,7 @@ IO::GPIO* devices[deviceCount];
 int main() {
     // Initialize system
     IO::init();
+#ifdef STM32F302x8
     //CS: D5
     devices[0] = &IO::getGPIO<IO::Pin::PB_4>(EVT::core::IO::GPIO::Direction::OUTPUT);
     devices[0]->writePin(EVT::core::IO::GPIO::State::HIGH);
@@ -34,6 +35,17 @@ int main() {
     //MOSI: CN7-3
     //MISO: CN7-2
     IO::SPI& spi = IO::getSPI<IO::Pin::PB_3, EVT::core::IO::Pin::PC_12, EVT::core::IO::Pin::PC_11>(devices, deviceCount);
+#endif
+#ifdef STM32F334x8
+    //CS: D7
+    devices[0] = &IO::getGPIO<IO::Pin::PB_10>(EVT::core::IO::GPIO::Direction::OUTPUT);
+    devices[0]->writePin(EVT::core::IO::GPIO::State::HIGH);
+
+    //CLK: D3
+    //MOSI: D4
+    //MISO: D5
+    IO::SPI& spi = IO::getSPI<IO::Pin::PB_3, EVT::core::IO::Pin::PB_5, EVT::core::IO::Pin::PB_4>(devices, deviceCount);
+#endif
 
     spi.configureSPI(SPI_SPEED, SPI_MODE3, SPI_MSB_FIRST);
 
