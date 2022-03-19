@@ -10,6 +10,7 @@ namespace EVT::core::IO {
  * @return the SPI port to use, 0 if invalid
  */
 uint8_t SPIf3xx::getMOSIPortID(Pin mosiPin) {
+#ifdef STM32F302x8
     switch (mosiPin) {
     case Pin::PA_11:
     case Pin::PB_15:
@@ -20,6 +21,16 @@ uint8_t SPIf3xx::getMOSIPortID(Pin mosiPin) {
     default:
         return 0;
     }
+#endif
+#ifdef STM32F334x8
+    switch (mosiPin) {
+    case Pin::PA_7:
+    case Pin::PB_5:
+        return 1;
+    default:
+        return 0;
+    }
+#endif
 }
 
 /**
@@ -29,6 +40,7 @@ uint8_t SPIf3xx::getMOSIPortID(Pin mosiPin) {
  * @return the SPI port to use, 0 if invalid
  */
 uint8_t SPIf3xx::getMISOPortID(Pin misoPin) {
+#ifdef STM32F302x8
     switch (misoPin) {
     case Pin::PA_10:
     case Pin::PB_14:
@@ -39,6 +51,16 @@ uint8_t SPIf3xx::getMISOPortID(Pin misoPin) {
     default:
         return 0;
     }
+#endif
+#ifdef STM32F334x8
+    switch (misoPin) {
+    case Pin::PA_6:
+    case Pin::PB_4:
+        return 1;
+    default:
+        return 0;
+    }
+#endif
 }
 
 /**
@@ -48,6 +70,7 @@ uint8_t SPIf3xx::getMISOPortID(Pin misoPin) {
  * @return the SPI port to use, 0 if invalid
  */
 uint8_t SPIf3xx::getSCKPortID(Pin sckPin) {
+#ifdef STM32F302x8
     switch (sckPin) {
     case Pin::PA_10:
     case Pin::PF_1:
@@ -58,6 +81,16 @@ uint8_t SPIf3xx::getSCKPortID(Pin sckPin) {
     default:
         return 0;
     }
+#endif
+#ifdef STM32F334x8
+    switch (sckPin) {
+    case Pin::PA_5:
+    case Pin::PB_3:
+        return 1;
+    default:
+        return 0;
+    }
+#endif
 }
 
 /**
@@ -78,6 +111,16 @@ SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin
 
     if (mosiPort == misoPort && misoPort == sckPort) {
         switch (mosiPort) {
+#ifdef STM32F334x8
+        case 1:
+            halSPI.Instance = SPI1;
+            if (!__HAL_RCC_SPI1_IS_CLK_ENABLED()) {
+                __HAL_RCC_SPI1_CLK_ENABLE();
+            }
+            altId = GPIO_AF5_SPI1;
+            break;
+#endif
+#ifdef STM32F302x8
         case 2:
             halSPI.Instance = SPI2;
             if (!__HAL_RCC_SPI2_IS_CLK_ENABLED()) {
@@ -92,6 +135,7 @@ SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin
             }
             altId = GPIO_AF6_SPI3;
             break;
+#endif
         default:
             break;
         }
@@ -139,6 +183,16 @@ SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : S
 
     if (mosiPort == sckPort) {
         switch (mosiPort) {
+#ifdef STM32F334x8
+        case 1:
+            halSPI.Instance = SPI1;
+            if (!__HAL_RCC_SPI1_IS_CLK_ENABLED()) {
+                __HAL_RCC_SPI1_CLK_ENABLE();
+            }
+            altId = GPIO_AF5_SPI1;
+            break;
+#endif
+#ifdef STM32F302x8
         case 2:
             halSPI.Instance = SPI2;
             if (!__HAL_RCC_SPI2_IS_CLK_ENABLED()) {
@@ -153,6 +207,7 @@ SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : S
             }
             altId = GPIO_AF6_SPI3;
             break;
+#endif
         default:
             break;
         }
