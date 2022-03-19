@@ -125,7 +125,7 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 }
 
 template<Pin sckPin, Pin mosiPin>
-    SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
+SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 #ifdef STM32F3xx
     static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin);
     return spi;
