@@ -146,13 +146,13 @@ Below is the supported features associated with each board
 | CAN      | :heavy_check_mark: | :heavy_check_mark: |
 | CANopen  | :heavy_check_mark: | :heavy_check_mark: |
 | GPIO     | :heavy_check_mark: | :heavy_check_mark: |
-| I2C      | :heavy_check_mark: | :x:                |
+| I2C      | :heavy_check_mark: | :heavy_check_mark: |
 | PWM      | :heavy_check_mark: | :heavy_check_mark: |
 | RTC      | :heavy_check_mark: | :x:                |
 | SPI      | :x:                | :x:                |
 | Timer    | :heavy_check_mark: | :x:                |
 | UART     | :heavy_check_mark: | :heavy_check_mark: |
-| Watchdog | :heavy_check_mark: | :x:                |
+| Watchdog | :heavy_check_mark: | :heavy_check_mark: |
 
 ## Future Features
 
