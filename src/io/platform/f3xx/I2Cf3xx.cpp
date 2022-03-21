@@ -85,6 +85,8 @@ static void getInstance(uint8_t portID, I2C_TypeDef** instance, uint8_t* altId) 
 #ifdef STM32F334x8
     *instance = I2C1;
     *altId = GPIO_AF4_I2C1;
+    if (!(__HAL_RCC_I2C1_IS_CLK_ENABLED()))
+        __HAL_RCC_I2C1_CLK_ENABLE();
 #endif
 }
 
