@@ -72,7 +72,7 @@ uint8_t SPIf3xx::getMISOPortID(Pin misoPin) {
 uint8_t SPIf3xx::getSCKPortID(Pin sckPin) {
 #ifdef STM32F302x8
     switch (sckPin) {
-    case Pin::PA_10:
+    case Pin::PB_13:
     case Pin::PF_1:
         return 2;
     case Pin::PB_3:
