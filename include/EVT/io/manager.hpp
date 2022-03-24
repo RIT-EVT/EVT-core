@@ -124,6 +124,14 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 #endif
 }
 
+template<Pin sckPin, Pin mosiPin>
+SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
+#ifdef STM32F3xx
+    static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin);
+    return spi;
+#endif
+}
+
 }// namespace EVT::core::IO
 
 #endif

@@ -108,6 +108,20 @@ enum class Pin {
     #ifdef STM32F334x8
     LED = PA_5,
     #endif
+
+    #ifdef STM32F302x8
+    SPI_SCK = PB_13, //D13
+    SPI_MISO = PB_14,//D12
+    SPI_MOSI = PB_15,//D11
+    SPI_CS = PB_6,   //D10
+    #endif
+    #ifdef STM32F334x8
+    SPI_SCK = PA_5, //D13
+    SPI_MISO = PA_6,//D12
+    SPI_MOSI = PA_7,//D11
+    SPI_CS = PB_6,  //D10
+    #endif
+
     UART_TX = PA_2,
     UART_RX = PA_3
 };
