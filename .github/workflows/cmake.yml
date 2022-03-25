@@ -33,18 +33,16 @@ jobs:
           sudo apt-get install clang-format-12
           sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-12 10000
 
-      - name: Configure CMake
-        run: |
-          cmake -B ${{github.workspace}}/build
-          cmake -DTARGET_DEV=STM32F302x8 -B ${{github.workspace}}/build
-          cmake -DTARGET_DEV=STM32F334x8 -B ${{github.workspace}}/build
-
       # Build the code for all supported chips
       - name: F302 Build
-        run: cmake ${{github.workspace}}/build -DTARGET_DEV=STM32F302x8
+        run: |
+          cmake -DTARGET_DEV=STM32F302x8 -B ${{github.workspace}}/build
+          cmake --build ${{github.workspace}}/build
 
       - name: F334 Build
-        run: cmake ${{github.workspace}}/build -DTARGET_DEV=STM32F334x8
+        run: |
+          cmake -DTARGET_DEV=STM32F334x8 -B ${{github.workspace}}/build
+          cmake --build ${{github.workspace}}/build
 
       # Apply clang-format formatting to the branch and create a new commit if any files are changed
       - name: Apply Formatting
