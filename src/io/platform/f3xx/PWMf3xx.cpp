@@ -252,7 +252,7 @@ void PWMf3xx::setPeriod(uint32_t period) {
     // autoreload value into a valid range.
     do {
         prescaler++;
-        autoReload = (uint32_t) (((uint64_t) (clockFrequency / (prescaler + 1))) * 1000000 / period);
+        autoReload = clockFrequency / (prescaler + 1) / (period / (double) 1000000);
     } while (autoReload > 65535);
 
     halTIM.Init.Period = autoReload;
