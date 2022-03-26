@@ -225,7 +225,7 @@ void PWMf3xx::setDutyCycle(uint32_t dutyCycle) {
 
     TIM_OC_InitTypeDef sConfigOC = {0};
     sConfigOC.OCMode = TIM_OCMODE_PWM1;
-    sConfigOC.Pulse = dutyCycle * (halTIM.Init.Period + 1) / 100;
+    sConfigOC.Pulse = dutyCycle * halTIM.Init.Period / 100;
     sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
     sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
     sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
@@ -252,7 +252,7 @@ void PWMf3xx::setPeriod(uint32_t period) {
     // autoreload value into a valid range.
     do {
         prescaler++;
-        autoReload = clockFrequency / (prescaler + 1) - 1 / period;
+        autoReload = (uint32_t) (((uint64_t) (clockFrequency / (prescaler + 1))) * 1000000 / period);
     } while (autoReload > 65535);
 
     halTIM.Init.Period = autoReload;
