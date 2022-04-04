@@ -34,7 +34,7 @@ public:
     void commWrite(unsigned char data);
 
     /// drives a particular pixel on the LCD
-    void drivePixel((unsigned char page, unsigned char col_up, unsigned char col_low, unsigned char data );
+    void drivePixel(unsigned char page, unsigned char col_up, unsigned char col_low, unsigned char data);
 
     /// clears the LCD, changes are mirrores in the bitmap
     void clearLCD(unsigned char * bitMap);
