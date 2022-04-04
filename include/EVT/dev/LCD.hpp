@@ -22,28 +22,28 @@ public:
     };
 
     /// bit map to display the LCD's current state
-    uint8_t * bitMap;
+    unsigned char * bitMap;
 
     /// constructor for the LCD class
-    LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset,EVT::core::IO::GPIO& chipSelect,EVT::core::IO::SPI& spi, uint8_t * bitMap);
+    LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset,EVT::core::IO::GPIO& chipSelect,EVT::core::IO::SPI& spi, unsigned char * bitMap);
 
     /// function to write data to the LCD
-    void dataWrite(uint8_t data);
+    void dataWrite(unsigned char data);
 
    /// writes commands to the LCD 
-    void commWrite(uint8_t data);
+    void commWrite(unsigned char data);
 
     /// drives a particular pixel on the LCD
-    void drivePixel(uint8_t data);
+    void drivePixel((unsigned char page, unsigned char col_up, unsigned char col_low, unsigned char data );
 
     /// clears the LCD, changes are mirrores in the bitmap
-    void clearLCD(uint8_t * bitMap);
+    void clearLCD(unsigned char * bitMap);
 
     /// displays the map for diagnostic purposes
-    void displayMap(uint8_t * bitMap)
+    void displayMap(unsigned char * bitMap)
 
     /// initializes the LCD for operation (must be called to use the LCD)
-    void initLCD(Command command);
+    void initLCD();
 
 private:
     /// register select pin for the LCD
