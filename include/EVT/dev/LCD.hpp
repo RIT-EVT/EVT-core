@@ -15,7 +15,7 @@ public:
         COMDIRSCAN = 200;
         LCDBIASET = 162;
         POWERCONTROLSET = 47;
-        REGISTERSET = 38;
+        RESRATIOSET = 38;
         ELECTRONICVOLCOMMAND = 129;
         ELECTRONICVOLVALUE = 11;
         DISPLAYON = 175;
@@ -31,7 +31,7 @@ public:
     void dataWrite(uint8_t data);
 
    /// writes commands to the LCD 
-    void commWrite(Command command);
+    void commWrite(uint8_t data);
 
     /// drives a particular pixel on the LCD
     void drivePixel(uint8_t data);
@@ -43,7 +43,7 @@ public:
     void displayMap(uint8_t * bitMap)
 
     /// initializes the LCD for operation (must be called to use the LCD)
-    void initLCD();
+    void initLCD(Command command);
 
 private:
     /// register select pin for the LCD
