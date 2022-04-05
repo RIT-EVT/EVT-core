@@ -5,8 +5,12 @@
 #include <stdint.h>
 
 namespace EVT::core::DEV {
-
+/*
+* This class represents the structure to command a GLCD with 
+* a ST7565 controller.
+*/
 class LCD {
+
 public:
     /// represents different commands to send to the LCD
     enum class Command {
@@ -24,7 +28,13 @@ public:
     /// bit map to display the LCD's current state
     unsigned char * bitMap;
 
-    /// constructor for the LCD class
+    /// 
+    /*
+    * Constructor for the LCD class
+    *
+    * @param[in]
+    *
+    */
     LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset,EVT::core::IO::GPIO& chipSelect,EVT::core::IO::SPI& spi, unsigned char * bitMap);
 
     /// function to write data to the LCD
@@ -40,7 +50,7 @@ public:
     void clearLCD(unsigned char * bitMap);
 
     /// displays the map for diagnostic purposes
-    void displayMap(unsigned char * bitMap)
+    void displayMap(unsigned char * bitMap);
 
     /// initializes the LCD for operation (must be called to use the LCD)
     void initLCD();

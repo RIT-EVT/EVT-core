@@ -38,7 +38,7 @@ void LCD::drivePixel(unsigned char page, unsigned char col_up, unsigned char col
     this->comm_write(0x10 + col_up); //writes the first 4 bits of the column select (out of 8 bits)
     this->comm_write(0x00 + col_low); //writes the second 4 bits of the column select (out)
 
-    this->data_write(data); //writes 8 vertical bits based on value between 0-255 based on bits set ex: 01001100 is       |WHITE|
+    this->data_write(data); //writes 8 vertical bits based on value between 0-255 based on bits set ex: 01001100 is |WHITE|
                       //                                                                                            |BLACK|
                       //                                                                                            |WHITE|
                       //                                                                                            |WHITE|
