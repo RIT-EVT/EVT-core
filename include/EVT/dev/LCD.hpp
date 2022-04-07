@@ -1,7 +1,9 @@
 #ifndef _EVT_LCD_
 #define _EVT_LCD_
+#endif
 
 #include <EVT/io/GPIO.hpp>
+#include <EVT/io/SPI.hpp>
 #include <stdint.h>
 
 namespace EVT::core::DEV {
@@ -13,16 +15,16 @@ class LCD {
 
 public:
     /// represents different commands to send to the LCD
-    enum class Command {
-        ADCSELECT = 160;
-        DISPLAYOFF = 174;
-        COMDIRSCAN = 200;
-        LCDBIASET = 162;
-        POWERCONTROLSET = 47;
-        RESRATIOSET = 38;
-        ELECTRONICVOLCOMMAND = 129;
-        ELECTRONICVOLVALUE = 11;
-        DISPLAYON = 175;
+    enum class Command{
+        ADCSELECT = 160u,
+        DISPLAYOFF = 174u,
+        COMDIRSCAN = 200u,
+        LCDBIASET = 162u,
+        POWERCONTROLSET = 47u,
+        RESRATIOSET = 38u,
+        ELECTRONICVOLCOMMAND = 129u,
+        ELECTRONICVOLVALUE = 11u,
+        DISPLAYON = 175u
     };
 
     /// bit map to display the LCD's current state
@@ -66,7 +68,7 @@ private:
     EVT::core::IO::SPI& spi; 
     /// command getting send to the controller
     Command command;
+};
+
 }
 
-
-}
