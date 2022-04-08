@@ -17,7 +17,7 @@ project(EVT
         LANGUAGES CXX C
 )
 
-add_library(${PROJECT_NAME} STATIC)
+add_library(${PROJECT_NAME} STATIC src/dev/ADCMux.cpp include/EVT/dev/ADCMux.hpp samples/adc_mux/main.cpp)
 
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE
@@ -38,6 +38,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/io/types/CANMessage.cpp
     src/dev/LED.cpp
     src/utils/platform/f3xx/time.cpp
+        src/dev/ADCMux.cpp
 )
 
 ###############################################################################
