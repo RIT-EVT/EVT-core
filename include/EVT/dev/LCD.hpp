@@ -7,6 +7,16 @@
 #include <EVT/io/pin.hpp>
 #include <stdint.h>
 
+#define ADCSELECT 0xA0
+#define DISPLAYOFF 0xAE
+#define COMDIRSCAN 0xC0
+#define LCDBIASET 0xA2
+#define POWERCONTROLSET 0x2F
+#define RESRATIOSET 0x26
+#define ELECTRONICVOLCOMMAND 0x81
+#define ELECTRONICVOLVALUE 0x11
+#define DISPLAYON 0xAF
+
 namespace EVT::core::DEV {
 /*
 * This class represents the structure to command a GLCD with 
@@ -15,18 +25,6 @@ namespace EVT::core::DEV {
 class LCD {
 
 public:
-    /// represents different commands to send to the LCD
-    enum class Command{
-        ADCSELECT = 160u,
-        DISPLAYOFF = 174u,
-        COMDIRSCAN = 200u,
-        LCDBIASET = 162u,
-        POWERCONTROLSET = 47u,
-        RESRATIOSET = 38u,
-        ELECTRONICVOLCOMMAND = 129u,
-        ELECTRONICVOLVALUE = 11u,
-        DISPLAYON = 175u
-    };
 
     /// bit map to display the LCD's current state
     unsigned char * bitMap;
@@ -67,8 +65,6 @@ private:
     //EVT::core::IO::GPIO& chipSelect;
     /// SPI port for the LCD controller 
     EVT::core::IO::SPI& spi; 
-    /// command getting send to the controller
-    Command command;
 };
 
 }// namespace EVT::core::DEV

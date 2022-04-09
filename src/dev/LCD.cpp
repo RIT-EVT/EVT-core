@@ -15,10 +15,12 @@ void LCD::dataWrite(unsigned char data){
 
     data = (uint8_t)data;
     //this->CS.writePin(EVT::core::IO::GPIO::State::LOW);
-    this->regSelect.writePin(EVT::core::IO::GPIO::State::HIGH);
+    
     this->spi.startTransmission(0);
     this->spi.write(&data, 1);
     this->spi.endTransmission(0);
+    this->regSelect.writePin(EVT::core::IO::GPIO::State::HIGH);
+    this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     //this->CS.writePin(EVT::core::IO::GPIO::State::HIGH);
 }
  
@@ -73,15 +75,16 @@ void LCD::displayMap(unsigned char * bitMap){
 
 void LCD::initLCD(){
 
-    this->commWrite((unsigned int)Command::ADCSELECT);   // ADC select 
-    this->commWrite((unsigned int)Command::DISPLAYOFF);   // Display OFF
-    this->commWrite((unsigned int)Command::COMDIRSCAN);   // COM direction scan 
-    this->commWrite((unsigned int)Command::LCDBIASET);   // LCD bias set
-    this->commWrite((unsigned int)Command::POWERCONTROLSET);   // Power Control set
-    this->commWrite((unsigned int)Command::RESRATIOSET);   // Resistor Ratio Set 
-    this->commWrite((unsigned int)Command::ELECTRONICVOLCOMMAND);   // Electronic Volume Command (set contrast) Double Btye: 1 of 2
-    this->commWrite((unsigned int)Command::ELECTRONICVOLVALUE);   // Electronic Volume value (contrast value) Double Byte: 2 of 2
-    this->commWrite((unsigned int)Command::DISPLAYON);   // Display ON
+    this->commWrite(ADCSELECT);   // ADC select 
+    this->commWrite(DISPLAYOFF);   // Display OFF
+    this->commWrite(COMDIRSCAN);   // COM direction scan 
+    this->commWrite(LCDBIASET);   // LCD bias set
+    this->commWrite(POWERCONTROLSET);   // Power Control set
+    this->commWrite(RESRATIOSET);   // Resistor Ratio Set 
+    this->commWrite(ELECTRONICVOLCOMMAND);   // Electronic Volume Command (set contrast) Double Btye: 1 of 2
+    this->commWrite(ELECTRONICVOLVALUE);   // Electronic Volume value (contrast value) Double Byte: 2 of 2
+    this->commWrite(DISPLAYON);   // Display ON
+
 
 }
 

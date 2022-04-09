@@ -87,7 +87,7 @@ int main() {
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     // creates GPIO pins for LCD
-    IO::GPIO& regSelect = IO::getGPIO<IO::Pin::PC_7>(EVT::core::IO::GPIO::Direction::OUTPUT);
+    IO::GPIO& regSelect = IO::getGPIO<IO::Pin::PA_8>(EVT::core::IO::GPIO::Direction::OUTPUT);
     IO::GPIO& reset = IO::getGPIO<IO::Pin::PC_6>(EVT::core::IO::GPIO::Direction::OUTPUT);
     devices[0] = &IO::getGPIO<IO::Pin::SPI_CS>(EVT::core::IO::GPIO::Direction::OUTPUT);
     devices[0]->writePin(IO::GPIO::State::HIGH);
@@ -95,7 +95,7 @@ int main() {
     // Setup SPI 
     IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, IO::Pin::SPI_MOSI>(devices, deviceCount);
     //IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, EVT::core::IO::Pin::SPI_MOSI, EVT::core::IO::Pin::SPI_MISO>(devices, deviceCount);
-    spi.configureSPI(SPI_SPEED, SPI_MODE3, SPI_MSB_FIRST);
+    spi.configureSPI(SPI_SPEED, SPI_MODE2, SPI_MSB_FIRST);
 
     // Sets up LCD
     uart.printf("Creating LCD Object...\n\r");
