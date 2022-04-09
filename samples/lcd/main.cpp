@@ -7,7 +7,7 @@ namespace DEV = EVT::core::DEV;
 namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
 
-constexpr uint32_t SPI_SPEED = SPI_SPEED_62KHZ;// 62.5KHz
+constexpr uint32_t SPI_SPEED = SPI_SPEED_1MHZ;// 62.5KHz
 
 constexpr uint8_t deviceCount = 1;
 
@@ -84,26 +84,32 @@ int main() {
     IO::init();
 
     // Setup UART
-    //IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     // creates GPIO pins for LCD
     IO::GPIO& regSelect = IO::getGPIO<IO::Pin::PC_7>(EVT::core::IO::GPIO::Direction::OUTPUT);
     IO::GPIO& reset = IO::getGPIO<IO::Pin::PC_6>(EVT::core::IO::GPIO::Direction::OUTPUT);
     devices[0] = &IO::getGPIO<IO::Pin::SPI_CS>(EVT::core::IO::GPIO::Direction::OUTPUT);
+    devices[0]->writePin(IO::GPIO::State::HIGH);
+
     // Setup SPI 
     IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, IO::Pin::SPI_MOSI>(devices, deviceCount);
     //IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, EVT::core::IO::Pin::SPI_MOSI, EVT::core::IO::Pin::SPI_MISO>(devices, deviceCount);
     spi.configureSPI(SPI_SPEED, SPI_MODE3, SPI_MSB_FIRST);
 
     // Sets up LCD
+    uart.printf("Creating LCD Object...\n\r");
     EVT::core::DEV::LCD lcd(regSelect, reset, spi, bitMap);
-
-
+    uart.printf("Initializing LCD...\n\r");
+    lcd.initLCD();
     while (true) {
+        uart.printf("Clearing LCD...\n\r");
         lcd.clearLCD(bitMap);
 
+        uart.printf("Driving Pixel 1...\n\r");
         lcd.drivePixel(1, 1, 1, 255);
         time::wait(2000);
+        uart.printf("Driving Pixel 2...\n\r");
         lcd.drivePixel(2, 1, 1, 255);
         time::wait(2000);
     }
