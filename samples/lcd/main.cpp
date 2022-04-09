@@ -96,7 +96,7 @@ int main() {
     spi.configureSPI(SPI_SPEED, SPI_MODE3, SPI_MSB_FIRST);
 
     // Sets up LCD
-    DEV::LCD lcd(regSelect, reset, spi, bitMap);
+    EVT::core::DEV::LCD lcd(regSelect, reset, spi, bitMap);
 
 
     while (true) {
