@@ -1,11 +1,10 @@
 #ifndef _EVT_LCD_
 #define _EVT_LCD_
-#endif
 
 #include <EVT/io/GPIO.hpp>
+#include <EVT/io/UART.hpp>
 #include <EVT/io/SPI.hpp>
 #include <EVT/io/pin.hpp>
-#include <EVT/io/manager.hpp>
 #include <stdint.h>
 
 namespace EVT::core::DEV {
@@ -72,5 +71,7 @@ private:
     Command command;
 };
 
-}
+}// namespace EVT::core::DEV
+
+#endif
 
