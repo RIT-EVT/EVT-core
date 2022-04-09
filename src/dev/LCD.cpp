@@ -12,6 +12,7 @@ LCD::LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset, EVT::core::I
 }
 
 void LCD::dataWrite(unsigned char data){
+
     data = (uint8_t)data;
     //this->CS.writePin(EVT::core::IO::GPIO::State::LOW);
     this->regSelect.writePin(EVT::core::IO::GPIO::State::HIGH);
