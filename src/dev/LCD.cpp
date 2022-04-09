@@ -3,7 +3,7 @@
 namespace EVT::core::DEV {
 
 LCD::LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi, unsigned char * bitMap)
-    : regSelect(regSelect), reset(reset), chipSelect(chipSelect) spi(spi){
+    : regSelect(regSelect), reset(reset), spi(spi){
     this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->reset.writePin(EVT::core::IO::GPIO::State::LOW);
     //this->chipSelect.writePin(EVT::core::IO::GPIO::State::LOW);
@@ -14,7 +14,7 @@ LCD::LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset, EVT::core::I
 void LCD::dataWrite(unsigned char data){
     data = (uint8_t)data;
     //this->CS.writePin(EVT::core::IO::GPIO::State::LOW);
-    this->reg_select.writePin(EVT::core::IO::GPIO::State::HIGH);
+    this->regSelect.writePin(EVT::core::IO::GPIO::State::HIGH);
     this->spi.startTransmission(0);
     this->spi.write(&data, 1);
     this->spi.endTransmission(0);
@@ -25,7 +25,7 @@ void LCD::commWrite(unsigned char data){
 
     data = (uint8_t)data;
     //this->CS.writePin(EVT::core::IO::GPIO::State::LOW);
-    this->reg_select.writePin(EVT::core::IO::GPIO::State::LOW);
+    this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->spi.startTransmission(0);
     this->spi.write(&data, 1);
     this->spi.endTransmission(0);
@@ -33,12 +33,12 @@ void LCD::commWrite(unsigned char data){
 }
 
 void LCD::drivePixel(unsigned char page, unsigned char col_up, unsigned char col_low, unsigned char data){
-    this->comm_write(0x40); //line to start writing on (0 -> 64) moves set bits with it DO NOT CHANGE 
-    this->comm_write(0xB0+ page); //writes the page address (4 bits, 8 rows selcted by values 0-7 ) 
-    this->comm_write(0x10 + col_up); //writes the first 4 bits of the column select (out of 8 bits)
-    this->comm_write(0x00 + col_low); //writes the second 4 bits of the column select (out)
+    this->commWrite(0x40); //line to start writing on (0 -> 64) moves set bits with it DO NOT CHANGE 
+    this->commWrite(0xB0+ page); //writes the page address (4 bits, 8 rows selcted by values 0-7 ) 
+    this->commWrite(0x10 + col_up); //writes the first 4 bits of the column select (out of 8 bits)
+    this->commWrite(0x00 + col_low); //writes the second 4 bits of the column select (out)
 
-    this->data_write(data); //writes 8 vertical bits based on value between 0-255 based on bits set ex: 01001100 is |WHITE|
+    this->dataWrite(data); //writes 8 vertical bits based on value between 0-255 based on bits set ex: 01001100 is |WHITE|
                       //                                                                                            |BLACK|
                       //                                                                                            |WHITE|
                       //                                                                                            |WHITE|
@@ -72,15 +72,15 @@ void LCD::displayMap(unsigned char * bitMap){
 
 void LCD::initLCD(){
 
-    this->commWrite(Command::ADCSELECT);   // ADC select 
-    this->commWrite(Command::DISPLAYOFF);   // Display OFF
-    this->commWrite(Command::COMDIRSCAN);   // COM direction scan 
-    this->commWrite(Command::LCDBIASET);   // LCD bias set
-    this->commWrite(Command::POWERCONTROLSET);   // Power Control set
-    this->commWrite(Command::RESRATIOSET);   // Resistor Ratio Set 
-    this->commWrite(Command::ELECTRONICVOLCOMMAND);   // Electronic Volume Command (set contrast) Double Btye: 1 of 2
-    this->commWrite(Command::ELECTRONICVOLVALUE);   // Electronic Volume value (contrast value) Double Byte: 2 of 2
-    this->commWrite(Command::DISPLAYON);   // Display ON
+    this->commWrite((unsigned int)Command::ADCSELECT);   // ADC select 
+    this->commWrite((unsigned int)Command::DISPLAYOFF);   // Display OFF
+    this->commWrite((unsigned int)Command::COMDIRSCAN);   // COM direction scan 
+    this->commWrite((unsigned int)Command::LCDBIASET);   // LCD bias set
+    this->commWrite((unsigned int)Command::POWERCONTROLSET);   // Power Control set
+    this->commWrite((unsigned int)Command::RESRATIOSET);   // Resistor Ratio Set 
+    this->commWrite((unsigned int)Command::ELECTRONICVOLCOMMAND);   // Electronic Volume Command (set contrast) Double Btye: 1 of 2
+    this->commWrite((unsigned int)Command::ELECTRONICVOLVALUE);   // Electronic Volume value (contrast value) Double Byte: 2 of 2
+    this->commWrite((unsigned int)Command::DISPLAYON);   // Display ON
 
 }
 
