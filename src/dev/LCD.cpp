@@ -2,34 +2,34 @@
 
 namespace EVT::core::DEV {
 
-LCD::LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset,EVT::core::IO::GPIO& chipSelect,EVT::core::IO::SPI& spi, unsigned char * bitMap)
+LCD::LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi, unsigned char * bitMap)
     : regSelect(regSelect), reset(reset), chipSelect(chipSelect) spi(spi){
     this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->reset.writePin(EVT::core::IO::GPIO::State::LOW);
-    this->chipSelect.writePin(EVT::core::IO::GPIO::State::LOW);
+    //this->chipSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->spi = spi;
 
 }
 
 void LCD::dataWrite(unsigned char data){
     data = (uint8_t)data;
-    this->CS.writePin(EVT::core::IO::GPIO::State::LOW);
+    //this->CS.writePin(EVT::core::IO::GPIO::State::LOW);
     this->reg_select.writePin(EVT::core::IO::GPIO::State::HIGH);
     this->spi.startTransmission(0);
     this->spi.write(&data, 1);
     this->spi.endTransmission(0);
-    this->CS.writePin(EVT::core::IO::GPIO::State::HIGH);
+    //this->CS.writePin(EVT::core::IO::GPIO::State::HIGH);
 }
  
 void LCD::commWrite(unsigned char data){
 
     data = (uint8_t)data;
-    this->CS.writePin(EVT::core::IO::GPIO::State::LOW);
+    //this->CS.writePin(EVT::core::IO::GPIO::State::LOW);
     this->reg_select.writePin(EVT::core::IO::GPIO::State::LOW);
     this->spi.startTransmission(0);
     this->spi.write(&data, 1);
     this->spi.endTransmission(0);
-    this->CS.writePin(EVT::core::IO::GPIO::State::HIGH);
+    //this->CS.writePin(EVT::core::IO::GPIO::State::HIGH);
 }
 
 void LCD::drivePixel(unsigned char page, unsigned char col_up, unsigned char col_low, unsigned char data){

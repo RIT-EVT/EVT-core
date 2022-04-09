@@ -4,6 +4,8 @@
 
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/SPI.hpp>
+#include <EVT/io/pin.hpp>
+#include <EVT/io/manager.hpp>
 #include <stdint.h>
 
 namespace EVT::core::DEV {
@@ -37,7 +39,7 @@ public:
     * @param[in]
     *
     */
-    LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset,EVT::core::IO::GPIO& chipSelect,EVT::core::IO::SPI& spi, unsigned char * bitMap);
+    LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset,EVT::core::IO::SPI& spi, unsigned char * bitMap);
 
     /// function to write data to the LCD
     void dataWrite(unsigned char data);
@@ -63,7 +65,7 @@ private:
     /// reset pin for the lcd
     EVT::core::IO::GPIO& reset;
     /// chip select pin for the LCD
-    EVT::core::IO::GPIO& chipSelect;
+    //EVT::core::IO::GPIO& chipSelect;
     /// SPI port for the LCD controller 
     EVT::core::IO::SPI& spi; 
     /// command getting send to the controller
