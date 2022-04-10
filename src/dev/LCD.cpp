@@ -15,12 +15,10 @@ void LCD::dataWrite(unsigned char data){
 
     data = (uint8_t)data;
     //this->CS.writePin(EVT::core::IO::GPIO::State::LOW);
-    
+    this->regSelect.writePin(EVT::core::IO::GPIO::State::HIGH);
     this->spi.startTransmission(0);
     this->spi.write(&data, 1);
     this->spi.endTransmission(0);
-    this->regSelect.writePin(EVT::core::IO::GPIO::State::HIGH);
-    this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     //this->CS.writePin(EVT::core::IO::GPIO::State::HIGH);
 }
  
@@ -36,6 +34,9 @@ void LCD::commWrite(unsigned char data){
 }
 
 void LCD::drivePixel(unsigned char page, unsigned char col_up, unsigned char col_low, unsigned char data){
+    this->commWrite(0xAF);
+    this->commWrite(0xAE);
+    this->commWrite(0xAE);
     this->commWrite(0x40); //line to start writing on (0 -> 64) moves set bits with it DO NOT CHANGE 
     this->commWrite(0xB0+ page); //writes the page address (4 bits, 8 rows selcted by values 0-7 ) 
     this->commWrite(0x10 + col_up); //writes the first 4 bits of the column select (out of 8 bits)
@@ -75,6 +76,8 @@ void LCD::displayMap(unsigned char * bitMap){
 
 void LCD::initLCD(){
 
+    this->reset.writePin(EVT::core::IO::GPIO::State::HIGH);
+    EVT::core::time::wait(100);
     this->commWrite(ADCSELECT);   // ADC select 
     this->commWrite(DISPLAYOFF);   // Display OFF
     this->commWrite(COMDIRSCAN);   // COM direction scan 
@@ -84,6 +87,7 @@ void LCD::initLCD(){
     this->commWrite(ELECTRONICVOLCOMMAND);   // Electronic Volume Command (set contrast) Double Btye: 1 of 2
     this->commWrite(ELECTRONICVOLVALUE);   // Electronic Volume value (contrast value) Double Byte: 2 of 2
     this->commWrite(DISPLAYON);   // Display ON
+    
 
 
 }
