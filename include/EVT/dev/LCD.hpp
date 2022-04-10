@@ -5,11 +5,12 @@
 #include <EVT/io/UART.hpp>
 #include <EVT/io/SPI.hpp>
 #include <EVT/io/pin.hpp>
+#include <EVT/utils/time.hpp>
 #include <stdint.h>
 
 #define ADCSELECT 0xA0
 #define DISPLAYOFF 0xAE
-#define COMDIRSCAN 0xC0
+#define COMDIRSCAN 0xC8
 #define LCDBIASET 0xA2
 #define POWERCONTROLSET 0x2F
 #define RESRATIOSET 0x26
