@@ -67,9 +67,10 @@ CAN& getCAN(bool loopbackEnabled = false) {
  * @param[in] direction The direction, either input or output
  */
 template<Pin pin>
-GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT) {
+GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT,
+              GPIO::Pull pull = GPIO::Pull::PULL_DOWN) {
 #ifdef STM32F3xx
-    static GPIOf3xx gpioPin(pin, direction);
+    static GPIOf3xx gpioPin(pin, direction, pull);
     return gpioPin;
 #endif
 }

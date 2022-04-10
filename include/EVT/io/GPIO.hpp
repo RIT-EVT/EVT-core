@@ -50,6 +50,15 @@ public:
     };
 
     /**
+     * Direction for the internal resistor
+     */
+    enum class Pull {
+        NO_PULL = 0u,
+        PULL_UP = 1u,
+        PULL_DOWN = 2u,
+    };
+
+    /**
      * Create a new GPIO interface on a specific pin. The direction will not
      * be set and will have to be set manually.
      *
@@ -63,7 +72,7 @@ public:
      * @param[in] pin The pin for the GPIO instance to use.
      * @param[in] direction The directional flow of data.
      */
-    GPIO(Pin pin, Direction direction);
+    GPIO(Pin pin, Direction direction, Pull pull=Pull::PULL_DOWN);
 
     /**
      * Set the direction of the pin.
@@ -99,6 +108,8 @@ protected:
     Pin pin;
     /// Direction of the flow of information, input or output
     Direction direction;
+    /// The direction the pin is pulled internally
+    Pull pull;
 };
 
 }// namespace EVT::core::IO
