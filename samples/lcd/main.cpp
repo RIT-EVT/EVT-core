@@ -108,10 +108,13 @@ int main() {
 
         uart.printf("Driving Pixel 1...\n\r");
         lcd.drivePixel(1, 1, 1, 255);
-        time::wait(2000);
+        time::wait(500);
         uart.printf("Driving Pixel 2...\n\r");
         lcd.drivePixel(2, 1, 1, 255);
-        time::wait(2000);
+        time::wait(500);
+        uart.printf("Driving Pixel 3...\n\r");
+        lcd.drivePixel(3, 1, 1, 255);
+        time::wait(500);
     }
 
     return 0;
