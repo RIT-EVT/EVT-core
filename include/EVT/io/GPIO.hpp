@@ -72,7 +72,7 @@ public:
      * @param[in] pin The pin for the GPIO instance to use.
      * @param[in] direction The directional flow of data.
      */
-    GPIO(Pin pin, Direction direction, Pull pull=Pull::PULL_DOWN);
+    GPIO(Pin pin, Direction direction, Pull pull = Pull::PULL_DOWN);
 
     /**
      * Set the direction of the pin.
