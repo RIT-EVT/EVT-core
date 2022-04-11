@@ -107,13 +107,16 @@ int main() {
         lcd.clearLCD(bitMap);
 
         uart.printf("Driving Pixel 1...\n\r");
-        lcd.drivePixel(1, 1, 1, 255);
-        time::wait(500);
-        uart.printf("Driving Pixel 2...\n\r");
-        lcd.drivePixel(2, 1, 1, 255);
-        time::wait(500);
-        uart.printf("Driving Pixel 3...\n\r");
-        lcd.drivePixel(3, 1, 1, 255);
+        for(int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++) {
+                for(int k = 0; k < 16; k++) {
+                    lcd.drivePixel(i, j, k, 255);
+                    time::wait(8);
+                }
+                time::wait(8);
+            }
+            time::wait(8);
+        }
         time::wait(500);
     }
 
