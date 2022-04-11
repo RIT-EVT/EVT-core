@@ -13,7 +13,6 @@ LCD::LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset, EVT::core::I
 
 void LCD::dataWrite(unsigned char data){
 
-    data = (uint8_t)data;
     //this->CS.writePin(EVT::core::IO::GPIO::State::LOW);
     this->regSelect.writePin(EVT::core::IO::GPIO::State::HIGH);
     this->spi.startTransmission(0);
@@ -23,8 +22,6 @@ void LCD::dataWrite(unsigned char data){
 }
  
 void LCD::commWrite(unsigned char data){
-
-    data = (uint8_t)data;
     //this->CS.writePin(EVT::core::IO::GPIO::State::LOW);
     this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->spi.startTransmission(0);
@@ -34,22 +31,19 @@ void LCD::commWrite(unsigned char data){
 }
 
 void LCD::drivePixel(unsigned char page, unsigned char col_up, unsigned char col_low, unsigned char data){
-    this->commWrite(0xAF);
-    this->commWrite(0xAE);
-    this->commWrite(0xAE);
     this->commWrite(0x40); //line to start writing on (0 -> 64) moves set bits with it DO NOT CHANGE 
     this->commWrite(0xB0+ page); //writes the page address (4 bits, 8 rows selcted by values 0-7 ) 
     this->commWrite(0x10 + col_up); //writes the first 4 bits of the column select (out of 8 bits)
     this->commWrite(0x00 + col_low); //writes the second 4 bits of the column select (out)
 
-    this->dataWrite(data); //writes 8 vertical bits based on value between 0-255 based on bits set ex: 01001100 is |WHITE|
-                      //                                                                                            |BLACK|
-                      //                                                                                            |WHITE|
-                      //                                                                                            |WHITE|
-                      //                                                                                            |BLACK|
-                      //                                                                                            |BLACK|
-                      //                                                                                            |WHITE|
-                      //                                                                                            |WHITE|             
+    this->dataWrite(data); //writes 8 vertical bits based on value between 0-255 based on bits set ex: 01001100(0x4C) is |WHITE|
+                      //                                                                                                 |BLACK|
+                      //                                                                                                 |WHITE|
+                      //                                                                                                 |WHITE|
+                      //                                                                                                 |BLACK|
+                      //                                                                                                 |BLACK|
+                      //                                                                                                 |WHITE|
+                      //                                                                                                 |WHITE|             
 }
 
 void LCD::clearLCD(unsigned char * bitMap){
@@ -87,8 +81,9 @@ void LCD::initLCD(){
     this->commWrite(ELECTRONICVOLCOMMAND);   // Electronic Volume Command (set contrast) Double Btye: 1 of 2
     this->commWrite(ELECTRONICVOLVALUE);   // Electronic Volume value (contrast value) Double Byte: 2 of 2
     this->commWrite(DISPLAYON);   // Display ON
+    this->commWrite(0xAE);
+    this->commWrite(0xAE);
     
-
 
 }
 
