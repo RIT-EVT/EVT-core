@@ -24,6 +24,7 @@ public:
      *
      * @param[in] pin The pin for the GPIO instance to use.
      * @param[in] direction The flow of data (either input or output).
+     * @param[in] pull The direction of the internal pull resistor
      */
     GPIOf3xx(Pin pin, Direction direction, Pull pull = Pull::PULL_DOWN);
 

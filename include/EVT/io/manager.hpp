@@ -65,6 +65,7 @@ CAN& getCAN(bool loopbackEnabled = false) {
  *
  * @param[in] pin The pin to attach to the GPIO
  * @param[in] direction The direction, either input or output
+ * @param[in] pull The direction of the internal pull resistor
  */
 template<Pin pin>
 GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT,
