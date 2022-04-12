@@ -79,6 +79,7 @@ unsigned char bitMap[8192] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+
 int main() {
     // Initialize system
     IO::init();
@@ -87,9 +88,9 @@ int main() {
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     // creates GPIO pins for LCD
-    IO::GPIO& regSelect = IO::getGPIO<IO::Pin::PA_8>(EVT::core::IO::GPIO::Direction::OUTPUT);
-    IO::GPIO& reset = IO::getGPIO<IO::Pin::PB_10>(EVT::core::IO::GPIO::Direction::OUTPUT);
-    devices[0] = &IO::getGPIO<IO::Pin::SPI_CS>(EVT::core::IO::GPIO::Direction::OUTPUT);
+    IO::GPIO& regSelect = IO::getGPIO<IO::Pin::PA_3>(EVT::core::IO::GPIO::Direction::OUTPUT);
+    IO::GPIO& reset = IO::getGPIO<IO::Pin::PB_3>(EVT::core::IO::GPIO::Direction::OUTPUT);
+    devices[0] = &IO::getGPIO<IO::Pin::PB_12>(EVT::core::IO::GPIO::Direction::OUTPUT);
     devices[0]->writePin(IO::GPIO::State::HIGH);
 
     // Setup SPI 
@@ -106,7 +107,10 @@ int main() {
         uart.printf("Clearing LCD...\n\r");
         lcd.clearLCD(bitMap);
 
-        uart.printf("Driving Pixel 1...\n\r");
+        uart.printf("Writing to Screen...\n\r");
+
+        lcd.displayMap(bitMap);
+        /**
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
                 for(int k = 0; k < 16; k++) {
@@ -117,6 +121,7 @@ int main() {
             }
             time::wait(8);
         }
+        */
         time::wait(500);
     }
 
