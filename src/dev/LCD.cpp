@@ -55,12 +55,12 @@ void LCD::clearLCD(unsigned char * bitMap){
         this->commWrite(page);       //send page address
         this->commWrite(0x10);       //column address upper 4 bits + 0x10
         this->commWrite(0x00);       //column address lower 4 bits + 0x00
-    for(j=0;j<128;j++){     //128 columns wide
-        this->dataWrite(0x00);    //write clear pixels
-        bitMap++; 
+        for(j=0;j<128;j++){     //128 columns wide
+            this->dataWrite(0x00);    //write clear pixels
+            bitMap++; 
         }
         page++;         //after 128 columns, go to next page
-        }
+    }
     this->commWrite(0xAF); 
 }
 
@@ -73,12 +73,12 @@ void LCD::displayMap(unsigned char * bitMap){
         this->commWrite(page);       //send page address
         this->commWrite(0x10);       //column address upper 4 bits + 0x10
         this->commWrite(0x00);       //column address lower 4 bits + 0x00
-    for(j=0;j<128;j++){     //128 columns wide
-        this->dataWrite(*bitMap);    //write clear pixels
-        bitMap++; 
+        for(j=0;j<128;j++){     //128 columns wide
+            this->dataWrite(*bitMap);    //write clear pixels
+            bitMap++; 
         }
         page++;         //after 128 columns, go to next page
-        }
+    }
     this->commWrite(0xAF); 
 }
 
