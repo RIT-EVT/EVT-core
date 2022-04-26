@@ -22,9 +22,9 @@ namespace EVT::core::DEV {
     public:
         /**
          * Create an instance of ADCMux
-         * @param ctrlGPIO1
-         * @param ctrlGPIO2
-         * @param adc
+         * @param ctrlGPIO1 The first input pin
+         * @param ctrlGPIO2 The second input pin
+         * @param adc The adc
          */
         ADCMux(EVT::core::IO::GPIO& ctrlGPIO1, EVT::core::IO::GPIO& ctrlGPIO2, IO::ADC& adc);
 
@@ -36,7 +36,7 @@ namespace EVT::core::DEV {
 
         /**
          * Set control pins based on ADC number
-         * @param number
+         * @param number input from adc
          */
         void setOutputPin(uint8_t number);
     };

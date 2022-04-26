@@ -17,15 +17,11 @@ int main() {
 
     DEV::ADCMux mux(ctrlGPIO1, ctrlGPIO2, adc);
 
-    IO::GPIO& ctrlGPIO3 = IO::getGPIO<IO::Pin::PB_8>(IO::GPIO::Direction::OUTPUT);
-
     while(1) {
-        ctrlGPIO3.writePin(EVT::core::IO::GPIO::State::LOW);
-        mux.setOutputPin(mux.getInput());
-        time::wait(500);
-        ctrlGPIO3.writePin(EVT::core::IO::GPIO::State::HIGH);
-        mux.setOutputPin(mux.getInput());
-        time::wait(500);
+        //Checking if input is valid
+        if(mux.getInput() == 0 || mux.getInput() == 1 || mux.getInput() == 2 || mux.getInput() == 3) {
+            mux.setOutputPin(mux.getInput());
+        }
     }
 }
 

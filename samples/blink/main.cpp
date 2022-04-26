@@ -1,7 +1,7 @@
 /**
  * This example is the basic LED blink sample. This samples shows how the
  * device level drivers (the LED in this case) can be established by providing
- * the driver with the cooresponding IO level driver (GPIO in this case).
+ * the driver with the corresponding IO level driver (GPIO in this case).
  *
  * The code will setup a GPIO pin as an output then setup an LED using that
  * GPIO.
@@ -35,3 +35,7 @@ int main() {
 
     return 0;
 }
+
+
+
+

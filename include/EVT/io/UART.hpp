@@ -147,7 +147,7 @@ public:
      *
      * @param format The format string to print out.
      */
-    virtual void printf(const char* format, ...) = 0;
+    virtual void printf(int format, ...) = 0;
 
     /**
      * Write out a single byte over UART.
