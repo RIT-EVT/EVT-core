@@ -2,6 +2,50 @@
 
 Contains notable changes there were added, fixed, or removed in each release.
 
+## 1.0.0
+
+### Added
+
+* Support for the STM32f334
+    * ADC
+    * CAN
+    * GPIO
+    * I2C
+    * PWM
+    * SPI
+    * Timer
+    * UART
+    * Watchdog
+* Support for the STM32F302r8
+    * SPI
+    * Timer
+* CANopen Support via canopen-stack
+* Logging
+* Style linting
+* Device Drivers
+    * EEPROM
+        * M24C32
+    * Watchdog
+        * STM internal IWDG
+    * Button
+    * Thermistor
+* CAN ID Message Filtering
+
+### Fixed
+
+* CAN hardfault handler associated with TX queue
+* Linker flags to Remove Un-Used Code
+* Multi-Channel ADC Support
+
+### Changed
+
+* Error Handling/IO Status
+    * I2C status return value
+    * CAN status return value
+* Standardize GPIO Initialization Logic
+* Fixed Point PWM
+* Option for Internal GPIO Resistor Direction
+
 ## 0.2.0
 
 ### Added
