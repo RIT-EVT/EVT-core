@@ -86,6 +86,12 @@ PWM
 .. doxygenclass:: EVT::core::IO::PWM
    :members:
 
+SPI
+---
+
+.. doxygenclass:: EVT::core::IO::SPI
+   :members:
+
 UART
 ----
 

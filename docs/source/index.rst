@@ -55,4 +55,5 @@ be linked against in external projects.
 
    design/index.rst
    api/index.rst
+   canopen.rst
    glossary.rst
