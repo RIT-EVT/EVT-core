@@ -44,6 +44,8 @@ SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t byte) {
         write(reg);
         write(byte);
         endTransmission(device);
+    } else {
+        return SPIStatus::ERROR;
     }
 
     return SPIStatus::OK;
@@ -56,6 +58,7 @@ uint8_t SPI::readReg(uint8_t device, uint8_t reg) {
         data = read();
         endTransmission(device);
     }
+
     return data;
 }
 
@@ -64,6 +67,8 @@ SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_
         write(reg);
         write(bytes, length);
         endTransmission(device);
+    } else {
+        return SPIStatus::ERROR;
     }
 
     return SPIStatus::OK;
@@ -74,6 +79,8 @@ SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t
         write(reg);
         read(bytes, length);
         endTransmission(device);
+    } else {
+        return SPIStatus::ERROR;
     }
 
     return SPIStatus::OK;
