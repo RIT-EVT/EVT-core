@@ -63,27 +63,27 @@ uint8_t SPI::readReg(uint8_t device, uint8_t reg) {
 }
 
 SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length) {
+    bool transmitSuccess = false;
+
     if (startTransmission(device)) {
         write(reg);
         write(bytes, length);
-        endTransmission(device);
-    } else {
-        return SPIStatus::ERROR;
+        transmitSuccess = endTransmission(device);
     }
 
-    return SPIStatus::OK;
+    return transmitSuccess ? SPIStatus::OK : SPIStatus::ERROR;
 }
 
 SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length) {
+    bool transmitSuccess = false;
+
     if (startTransmission(device)) {
         write(reg);
         read(bytes, length);
-        endTransmission(device);
-    } else {
-        return SPIStatus::ERROR;
+        transmitSuccess = endTransmission(device);
     }
 
-    return SPIStatus::OK;
+    return transmitSuccess ? SPIStatus::OK : SPIStatus::ERROR;
 }
 
 }// namespace EVT::core::IO
