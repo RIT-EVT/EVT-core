@@ -30,6 +30,16 @@ enum class Pin;
 class SPI {
 public:
     /**
+     * Represents potential errors that may take place when using the SPI
+     * interface.
+     */
+     enum class SPIStatus {
+        OK = 0,
+        ERROR = 1,
+        BUSY = 2,
+    };
+
+    /**
      * Constructs an SPI instance in full duplex mode to send and receive data.
      *
      * @param CSPins an array of chip select pins for selecting which device to communicate with.
