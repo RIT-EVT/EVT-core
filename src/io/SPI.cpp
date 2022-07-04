@@ -23,22 +23,30 @@ SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : CSPinsLen
     }
 }
 
-void SPI::write(uint8_t* bytes, uint8_t length) {
-    for (int i = 0; i < length; i++)
+SPI::SPIStatus SPI::write(uint8_t* bytes, uint8_t length) {
+    for (int i = 0; i < length; i++) {
         write(bytes[i]);
+    }
+
+    return SPIStatus::OK;
 }
 
-void SPI::read(uint8_t* bytes, uint8_t length) {
-    for (int i = 0; i < length; i++)
+SPI::SPIStatus SPI::read(uint8_t* bytes, uint8_t length) {
+    for (int i = 0; i < length; i++) {
         bytes[i] = read();
+    }
+
+    return SPIStatus::OK;
 }
 
-void SPI::writeReg(uint8_t device, uint8_t reg, uint8_t byte) {
+SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t byte) {
     if (startTransmission(device)) {
         write(reg);
         write(byte);
         endTransmission(device);
     }
+
+    return SPIStatus::OK;
 }
 
 uint8_t SPI::readReg(uint8_t device, uint8_t reg) {
@@ -51,20 +59,24 @@ uint8_t SPI::readReg(uint8_t device, uint8_t reg) {
     return data;
 }
 
-void SPI::writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length) {
+SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length) {
     if (startTransmission(device)) {
         write(reg);
         write(bytes, length);
         endTransmission(device);
     }
+
+    return SPIStatus::OK;
 }
 
-void SPI::readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length) {
+SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length) {
     if (startTransmission(device)) {
         write(reg);
         read(bytes, length);
         endTransmission(device);
     }
+
+    return SPIStatus::OK;
 }
 
 }// namespace EVT::core::IO

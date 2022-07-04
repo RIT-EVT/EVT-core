@@ -97,7 +97,7 @@ public:
      * @param bytes an array of bytes of length n to write to SPI device
      * @param length the length of the array
      */
-    void write(uint8_t* bytes, uint8_t length);
+    SPI::SPIStatus write(uint8_t* bytes, uint8_t length);
 
     /**
      * Reads an array of bytes from a SPI device. Call startTransmission() first to initiate device communication.
@@ -105,7 +105,7 @@ public:
      * @param bytes an array of length n to receive the bytes from an SPI device
      * @param length the number of bytes to recive
      */
-    void read(uint8_t* bytes, uint8_t length);
+    SPI::SPIStatus read(uint8_t* bytes, uint8_t length);
 
     /**
      * Writes a byte of data to a register of a device.
@@ -114,7 +114,7 @@ public:
      * @param reg the register address to write to
      * @param byte the byte of data to write
      */
-    void writeReg(uint8_t device, uint8_t reg, uint8_t byte);
+    SPI::SPIStatus writeReg(uint8_t device, uint8_t reg, uint8_t byte);
 
     /**
      * Reads a byte of data from a register from a device.
@@ -134,7 +134,7 @@ public:
      * @param bytes an array of bytes of length n to write to SPI device
      * @param length the length of the array
      */
-    void writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length);
+    SPI::SPIStatus writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length);
 
     /**
      * Reads a series of bytes from a device's registers starting at a specific one.
@@ -144,7 +144,7 @@ public:
      * @param bytes an array of bytes of length n to store the byte from an SPI device
      * @param length the length of the array
      */
-    void readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length);
+    SPI::SPIStatus readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length);
 
     /**
      * Configures the SPI transmit mode.
