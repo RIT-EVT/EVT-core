@@ -83,7 +83,7 @@ int main() {
         spi.writeReg(0, WRITE_REG, WRITE_REG_BYTE);
         uart.printf("sending register byte %X\n\r", SINGLE_BYTE);
 
-        byte = spi.readReg(0, READ_REG);
+        IO::SPI::SPIStatus status = spi.readReg(0, READ_REG, &byte);
         uart.printf("reading register byte %X\n\r\n\r", byte);
 
         // Wait five seconds before repeating the test

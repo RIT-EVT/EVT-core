@@ -40,26 +40,30 @@ SPI::SPIStatus SPI::read(uint8_t* bytes, uint8_t length) {
 }
 
 SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t byte) {
+    bool transmitSuccess = false;
+
     if (startTransmission(device)) {
         write(reg);
         write(byte);
-        endTransmission(device);
-    } else {
-        return SPIStatus::ERROR;
+        transmitSuccess = endTransmission(device);
     }
 
-    return SPIStatus::OK;
+    return transmitSuccess ? SPIStatus::OK : SPIStatus::ERROR;
 }
 
-uint8_t SPI::readReg(uint8_t device, uint8_t reg) {
+SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, const uint8_t* out) {
+    bool transmitSuccess = false;
     uint8_t data = 0;
+
     if (startTransmission(device)) {
         write(reg);
         data = read();
-        endTransmission(device);
+        transmitSuccess = endTransmission(device);
     }
 
-    return data;
+    out = &data;
+
+    return transmitSuccess ? SPIStatus::OK : SPIStatus::ERROR;
 }
 
 SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length) {

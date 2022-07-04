@@ -121,9 +121,10 @@ public:
      *
      * @param device the device index in the CSPins
      * @param reg the register address to read from
+     * @param out the pointer to store data in
      * @return the byte of data from the device
      */
-    uint8_t readReg(uint8_t device, uint8_t reg);
+    SPI::SPIStatus readReg(uint8_t device, uint8_t reg, const uint8_t* out);
 
     /**
      * Writes a series of bytes to a device's registers starting at a specific one.
