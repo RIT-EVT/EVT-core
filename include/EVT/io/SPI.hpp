@@ -37,6 +37,7 @@ public:
         OK = 0,
         ERROR = 1,
         BUSY = 2,
+        TIMEOUT = 3,
     };
 
     /**
