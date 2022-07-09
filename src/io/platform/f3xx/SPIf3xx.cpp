@@ -337,6 +337,7 @@ bool SPIf3xx::endTransmission(uint8_t device) {
  * Writes a single byte out to the SPI device.
  *
  * @param byte the byte to write
+ * @return SPIStatus of the HAL function call
  */
 SPI::SPIStatus SPIf3xx::write(uint8_t byte) {
     HAL_StatusTypeDef halStatus = HAL_SPI_Transmit(&halSPI, &byte, 1, DEFAULT_SPI_TIMEOUT);
@@ -347,7 +348,8 @@ SPI::SPIStatus SPIf3xx::write(uint8_t byte) {
 /**
  * Reads a single byte from a SPI device.
  *
- * @return the byte read
+ * @param out the pointer to write the data to
+ * @return SPIStatus of the HAL function call
  */
 SPI::SPIStatus SPIf3xx::read(uint8_t* out) {
     HAL_StatusTypeDef halStatus = HAL_SPI_Receive(&halSPI, out, 1, DEFAULT_SPI_TIMEOUT);
@@ -358,9 +360,9 @@ SPI::SPIStatus SPIf3xx::read(uint8_t* out) {
 /**
  * Writes an array of bytes to the SPI device.
  *
- * @param device the device to write to in CSPins
  * @param bytes an array of bytes of length n to write to SPI device
  * @param length the length of the array
+ * @return SPIStatus of the HAL function call
  */
 SPI::SPIStatus SPIf3xx::write(uint8_t* bytes, uint8_t length) {
     HAL_StatusTypeDef halStatus = HAL_SPI_Transmit(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
@@ -373,7 +375,8 @@ SPI::SPIStatus SPIf3xx::write(uint8_t* bytes, uint8_t length) {
  *
  * @param device the device to write to in CSPins
  * @param bytes an array of length n to receive the bytes from an SPI device
- * @param length the number of bytes to recive
+ * @param length the number of bytes to receive
+ * @return SPIStatus of the HAL function call
  */
 SPI::SPIStatus SPIf3xx::read(uint8_t* bytes, uint8_t length) {
     HAL_StatusTypeDef halStatus = HAL_SPI_Receive(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
@@ -381,6 +384,12 @@ SPI::SPIStatus SPIf3xx::read(uint8_t* bytes, uint8_t length) {
     return halToSPIStatus(halStatus);
 }
 
+/**
+ * Converts HAL Status into EVT Core's own SPIStatus enum
+ *
+ * @param halStatus
+ * @return SPIStatus converted from halStatus
+ */
 SPI::SPIStatus SPIf3xx::halToSPIStatus(HAL_StatusTypeDef halStatus) {
     switch (halStatus) {
     case HAL_OK: return SPIStatus::OK;
