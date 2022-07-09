@@ -341,12 +341,7 @@ bool SPIf3xx::endTransmission(uint8_t device) {
 SPI::SPIStatus SPIf3xx::write(uint8_t byte) {
     HAL_StatusTypeDef halStatus = HAL_SPI_Transmit(&halSPI, &byte, 1, DEFAULT_SPI_TIMEOUT);
 
-    switch (halStatus) {
-        case HAL_OK: return SPIStatus::OK;
-        case HAL_ERROR: return SPIStatus::ERROR;
-        case HAL_BUSY: return SPIStatus::BUSY;
-        case HAL_TIMEOUT: return SPIStatus::TIMEOUT;
-    }
+
 }
 
 /**
@@ -380,5 +375,14 @@ void SPIf3xx::write(uint8_t* bytes, uint8_t length) {
  */
 void SPIf3xx::read(uint8_t* bytes, uint8_t length) {
     HAL_SPI_Receive(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
+}
+
+SPI::SPIStatus SPIf3xx::halToSPIStatus(HAL_StatusTypeDef halStatus) {
+    switch (halStatus) {
+    case HAL_OK: return SPIStatus::OK;
+    case HAL_ERROR: return SPIStatus::ERROR;
+    case HAL_BUSY: return SPIStatus::BUSY;
+    case HAL_TIMEOUT: return SPIStatus::TIMEOUT;
+    }
 }
 }// namespace EVT::core::IO

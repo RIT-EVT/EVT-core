@@ -33,6 +33,8 @@ private:
 
     constexpr static uint32_t DEFAULT_SPI_TIMEOUT = 100;
     SPI_HandleTypeDef halSPI;
+
+    SPIStatus halToSPIStatus(HAL_StatusTypeDef halStatus);
 };
 }// namespace EVT::core::IO
 
