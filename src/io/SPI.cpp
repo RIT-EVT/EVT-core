@@ -56,7 +56,7 @@ SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* out) {
 
     if (startTransmission(device)) {
         write(reg);
-        *out = read();
+        SPIStatus status = read(out);
         transmitSuccess = endTransmission(device);
     }
 

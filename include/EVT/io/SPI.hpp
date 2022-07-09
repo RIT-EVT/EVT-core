@@ -82,21 +82,24 @@ public:
      * Writes a single byte out to the SPI device. Call startTransmission() first to initiate device communication.
      *
      * @param byte the byte to write
+     * @return the status after calling the function
      */
-    virtual SPIStatus write(uint8_t byte) = 0;
+    virtual SPI::SPIStatus write(uint8_t byte) = 0;
 
     /**
      * Reads a single byte from a SPI device. Call startTransmission() first to initiate device communication.
      *
-     * @return the byte read
+     * @param out the byte read
+     * @return the status after calling the function
      */
-    virtual uint8_t read() = 0;
+    virtual SPI::SPIStatus read(uint8_t *out) = 0;
 
     /**
      * Writes an array of bytes to the SPI device. Call startTransmission() first to initiate device communication.
      *
      * @param bytes an array of bytes of length n to write to SPI device
      * @param length the length of the array
+     * @return the status after calling the function
      */
     SPI::SPIStatus write(uint8_t* bytes, uint8_t length);
 
@@ -105,6 +108,7 @@ public:
      *
      * @param bytes an array of length n to receive the bytes from an SPI device
      * @param length the number of bytes to recive
+     * @return the status after calling the function
      */
     SPI::SPIStatus read(uint8_t* bytes, uint8_t length);
 
@@ -114,6 +118,7 @@ public:
      * @param device the device index in the CSPins
      * @param reg the register address to write to
      * @param byte the byte of data to write
+     * @return the status after calling the function
      */
     SPI::SPIStatus writeReg(uint8_t device, uint8_t reg, uint8_t byte);
 
@@ -122,8 +127,8 @@ public:
      *
      * @param device the device index in the CSPins
      * @param reg the register address to read from
-     * @param out the pointer to store data in
-     * @return the byte of data from the device
+     * @param out the byte of data from the device
+     * @return the status after calling the function
      */
     SPI::SPIStatus readReg(uint8_t device, uint8_t reg, uint8_t* out);
 
@@ -135,6 +140,7 @@ public:
      * @param reg the register address to start the write at
      * @param bytes an array of bytes of length n to write to SPI device
      * @param length the length of the array
+     * @return the status after calling the function
      */
     SPI::SPIStatus writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length);
 
@@ -145,6 +151,7 @@ public:
      * @param reg the register address to start the read from
      * @param bytes an array of bytes of length n to store the byte from an SPI device
      * @param length the length of the array
+     * @return the status after calling the function
      */
     SPI::SPIStatus readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length);
 
