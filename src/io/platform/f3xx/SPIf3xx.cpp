@@ -349,10 +349,10 @@ SPI::SPIStatus SPIf3xx::write(uint8_t byte) {
  *
  * @return the byte read
  */
-uint8_t SPIf3xx::read() {
-    uint8_t data;
-    HAL_SPI_Receive(&halSPI, &data, 1, DEFAULT_SPI_TIMEOUT);
-    return data;
+SPI::SPIStatus SPIf3xx::read(uint8_t* out) {
+    HAL_StatusTypeDef halStatus = HAL_SPI_Receive(&halSPI, out, 1, DEFAULT_SPI_TIMEOUT);
+
+    return halToSPIStatus(halStatus);
 }
 
 /**
@@ -375,8 +375,10 @@ SPI::SPIStatus SPIf3xx::write(uint8_t* bytes, uint8_t length) {
  * @param bytes an array of length n to receive the bytes from an SPI device
  * @param length the number of bytes to recive
  */
-void SPIf3xx::read(uint8_t* bytes, uint8_t length) {
-    HAL_SPI_Receive(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
+SPI::SPIStatus SPIf3xx::read(uint8_t* bytes, uint8_t length) {
+    HAL_StatusTypeDef halStatus = HAL_SPI_Receive(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
+
+    return halToSPIStatus(halStatus);
 }
 
 SPI::SPIStatus SPIf3xx::halToSPIStatus(HAL_StatusTypeDef halStatus) {
