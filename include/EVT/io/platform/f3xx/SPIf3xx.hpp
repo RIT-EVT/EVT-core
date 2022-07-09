@@ -18,7 +18,7 @@ public:
     bool startTransmission(uint8_t device);
     bool endTransmission(uint8_t device);
 
-    void write(uint8_t byte);
+    SPIStatus write(uint8_t byte);
     uint8_t read();
 
     void write(uint8_t* bytes, uint8_t length);

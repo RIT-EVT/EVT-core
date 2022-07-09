@@ -338,8 +338,15 @@ bool SPIf3xx::endTransmission(uint8_t device) {
  *
  * @param byte the byte to write
  */
-void SPIf3xx::write(uint8_t byte) {
-    HAL_SPI_Transmit(&halSPI, &byte, 1, DEFAULT_SPI_TIMEOUT);
+SPI::SPIStatus SPIf3xx::write(uint8_t byte) {
+    HAL_StatusTypeDef halStatus = HAL_SPI_Transmit(&halSPI, &byte, 1, DEFAULT_SPI_TIMEOUT);
+
+    switch (halStatus) {
+        case HAL_OK: return SPIStatus::OK;
+        case HAL_ERROR: return SPIStatus::ERROR;
+        case HAL_BUSY: return SPIStatus::BUSY;
+        case HAL_TIMEOUT: return SPIStatus::TIMEOUT;
+    }
 }
 
 /**

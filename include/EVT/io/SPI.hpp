@@ -83,7 +83,7 @@ public:
      *
      * @param byte the byte to write
      */
-    virtual void write(uint8_t byte) = 0;
+    virtual SPIStatus write(uint8_t byte) = 0;
 
     /**
      * Reads a single byte from a SPI device. Call startTransmission() first to initiate device communication.
