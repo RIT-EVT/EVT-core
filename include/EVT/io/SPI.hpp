@@ -124,7 +124,7 @@ public:
      * @param out the pointer to store data in
      * @return the byte of data from the device
      */
-    SPI::SPIStatus readReg(uint8_t device, uint8_t reg, const uint8_t* out);
+    SPI::SPIStatus readReg(uint8_t device, uint8_t reg, uint8_t* out);
 
     /**
      * Writes a series of bytes to a device's registers starting at a specific one.

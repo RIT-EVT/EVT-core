@@ -51,17 +51,14 @@ SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t byte) {
     return transmitSuccess ? SPIStatus::OK : SPIStatus::ERROR;
 }
 
-SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, const uint8_t* out) {
+SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* out) {
     bool transmitSuccess = false;
-    uint8_t data = 0;
 
     if (startTransmission(device)) {
         write(reg);
-        data = read();
+        *out = read();
         transmitSuccess = endTransmission(device);
     }
-
-    out = &data;
 
     return transmitSuccess ? SPIStatus::OK : SPIStatus::ERROR;
 }
