@@ -21,7 +21,7 @@ public:
     SPIStatus write(uint8_t byte);
     uint8_t read();
 
-    void write(uint8_t* bytes, uint8_t length);
+    SPI::SPIStatus write(uint8_t* bytes, uint8_t length);
     void read(uint8_t* bytes, uint8_t length);
 
 private:
