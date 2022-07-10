@@ -27,7 +27,8 @@ SPI::SPIStatus SPI::write(uint8_t* bytes, uint8_t length) {
     SPIStatus status;
 
     for (int i = 0; i < length; i++) {
-        write(bytes[i]);
+        status = write(bytes[i]);
+        if (status != SPIStatus::OK) return status;
     }
 
     return SPIStatus::OK;
@@ -37,6 +38,7 @@ SPI::SPIStatus SPI::read(uint8_t* bytes, uint8_t length) {
     SPIStatus status;
     for (int i = 0; i < length; i++) {
         status = read(&bytes[i]);
+        if (status != SPIStatus::OK) return status;
     }
 
     return SPIStatus::OK;
@@ -49,7 +51,11 @@ SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t byte) {
 
     if (startTransmission(device)) {
         status = write(reg);
+        if (status != SPIStatus::OK) return status;
+
         status = write(byte);
+        if (status != SPIStatus::OK) return status;
+
         transmitSuccess = endTransmission(device);
     }
 
@@ -62,7 +68,11 @@ SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* out) {
 
     if (startTransmission(device)) {
         status = write(reg);
+        if (status != SPIStatus::OK) return status;
+
         status = read(out);
+        if (status != SPIStatus::OK) return status;
+
         transmitSuccess = endTransmission(device);
     }
 
@@ -75,7 +85,11 @@ SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_
 
     if (startTransmission(device)) {
         status = write(reg);
+        if (status != SPIStatus::OK) return status;
+
         status = write(bytes, length);
+        if (status != SPIStatus::OK) return status;
+
         transmitSuccess = endTransmission(device);
     }
 
@@ -88,7 +102,11 @@ SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t
 
     if (startTransmission(device)) {
         status = write(reg);
+        if (status != SPIStatus::OK) return status;
+
         status = read(bytes, length);
+        if (status != SPIStatus::OK) return status;
+
         transmitSuccess = endTransmission(device);
     }
 
