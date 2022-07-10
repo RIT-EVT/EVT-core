@@ -24,6 +24,8 @@ SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : CSPinsLen
 }
 
 SPI::SPIStatus SPI::write(uint8_t* bytes, uint8_t length) {
+    SPIStatus status;
+
     for (int i = 0; i < length; i++) {
         write(bytes[i]);
     }
@@ -32,8 +34,9 @@ SPI::SPIStatus SPI::write(uint8_t* bytes, uint8_t length) {
 }
 
 SPI::SPIStatus SPI::read(uint8_t* bytes, uint8_t length) {
+    SPIStatus status;
     for (int i = 0; i < length; i++) {
-        bytes[i] = read();
+        status = read(&bytes[i]);
     }
 
     return SPIStatus::OK;
@@ -41,10 +44,12 @@ SPI::SPIStatus SPI::read(uint8_t* bytes, uint8_t length) {
 
 SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t byte) {
     bool transmitSuccess = false;
+    SPIStatus status;
+
 
     if (startTransmission(device)) {
-        write(reg);
-        write(byte);
+        status = write(reg);
+        status = write(byte);
         transmitSuccess = endTransmission(device);
     }
 
@@ -53,10 +58,11 @@ SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t byte) {
 
 SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* out) {
     bool transmitSuccess = false;
+    SPIStatus status;
 
     if (startTransmission(device)) {
-        write(reg);
-        SPIStatus status = read(out);
+        status = write(reg);
+        status = read(out);
         transmitSuccess = endTransmission(device);
     }
 
@@ -65,10 +71,11 @@ SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* out) {
 
 SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length) {
     bool transmitSuccess = false;
+    SPIStatus status;
 
     if (startTransmission(device)) {
-        write(reg);
-        write(bytes, length);
+        status = write(reg);
+        status = write(bytes, length);
         transmitSuccess = endTransmission(device);
     }
 
@@ -77,10 +84,11 @@ SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_
 
 SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length) {
     bool transmitSuccess = false;
+    SPIStatus status;
 
     if (startTransmission(device)) {
-        write(reg);
-        read(bytes, length);
+        status = write(reg);
+        status = read(bytes, length);
         transmitSuccess = endTransmission(device);
     }
 
