@@ -33,7 +33,7 @@ public:
      * Represents potential errors that may take place when using the SPI
      * interface.
      */
-     enum class SPIStatus {
+    enum class SPIStatus {
         OK = 0,
         ERROR = 1,
         BUSY = 2,
@@ -92,7 +92,7 @@ public:
      * @param out the byte read
      * @return the status after calling the function
      */
-    virtual SPI::SPIStatus read(uint8_t *out) = 0;
+    virtual SPI::SPIStatus read(uint8_t* out) = 0;
 
     /**
      * Writes an array of bytes to the SPI device. Call startTransmission() first to initiate device communication.

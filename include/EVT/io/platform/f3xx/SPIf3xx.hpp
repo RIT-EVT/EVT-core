@@ -19,7 +19,7 @@ public:
     bool endTransmission(uint8_t device);
 
     SPI::SPIStatus write(uint8_t byte);
-    SPI::SPIStatus read(uint8_t *out);
+    SPI::SPIStatus read(uint8_t* out);
 
     SPI::SPIStatus write(uint8_t* bytes, uint8_t length);
     SPI::SPIStatus read(uint8_t* bytes, uint8_t length);
