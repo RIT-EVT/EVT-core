@@ -55,7 +55,7 @@ int main() {
         spi.write(SINGLE_BYTE);
         // read a single byte
         IO::SPI::SPIStatus status = spi.read(&byte);
-        uart.printf("SPI Status: %i", status);
+        uart.printf("SPI Status: %i\n", status);
 
         spi.endTransmission(0);
         uart.printf("reading single byte %X\n\r", byte);
@@ -85,7 +85,7 @@ int main() {
         uart.printf("sending register byte %X\n\r", SINGLE_BYTE);
 
         status = spi.readReg(0, READ_REG, &byte);
-        uart.printf("SPI Status: %i", status);
+        uart.printf("SPI Status: %i\n", status);
         uart.printf("reading register byte %X\n\r\n\r", byte);
 
         // Wait five seconds before repeating the test
