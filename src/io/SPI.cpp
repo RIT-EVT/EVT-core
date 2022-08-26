@@ -24,7 +24,7 @@ SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : CSPinsLen
 }
 
 SPI::SPIStatus SPI::write(uint8_t* bytes, uint8_t length) {
-    SPIStatus status;
+    SPIStatus status = SPIStatus::OK;
 
     for (int i = 0; i < length; i++) {
         status = write(bytes[i]);
@@ -32,7 +32,7 @@ SPI::SPIStatus SPI::write(uint8_t* bytes, uint8_t length) {
             return status;
     }
 
-    return SPIStatus::OK;
+    return status;
 }
 
 SPI::SPIStatus SPI::read(uint8_t* bytes, uint8_t length) {
