@@ -1,9 +1,9 @@
 #include <EVT/io/SPI.hpp>
 
-#define SPI_CHECK(functionCall)      \
-    status = functionCall; \
-    if (status != SPIStatus::OK)     \
-        return status
+#define SPI_CHECK(functionCall)  \
+    status = functionCall;       \
+    if (status != SPIStatus::OK) \
+    return status
 
 namespace EVT::core::IO {
 SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : CSPinsLength(pinLength),
