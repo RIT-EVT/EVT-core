@@ -1,6 +1,8 @@
 #include <EVT/io/SPI.hpp>
 
-#define SPI_CHECK if (status != SPIStatus::OK) return status;
+#define SPI_CHECK                \
+    if (status != SPIStatus::OK) \
+        return status;
 
 namespace EVT::core::IO {
 SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : CSPinsLength(pinLength),
@@ -54,7 +56,6 @@ SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t byte) {
         status = write(reg);
         SPI_CHECK
 
-
         status = write(byte);
         SPI_CHECK
 
@@ -72,10 +73,8 @@ SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* out) {
         status = write(reg);
         SPI_CHECK
 
-
         status = read(out);
         SPI_CHECK
-
 
         transmitSuccess = endTransmission(device);
     }
@@ -91,10 +90,8 @@ SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_
         status = write(reg);
         SPI_CHECK
 
-
         status = write(bytes, length);
         SPI_CHECK
-
 
         transmitSuccess = endTransmission(device);
     }
