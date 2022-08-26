@@ -8,6 +8,7 @@ if(NOT DEFINED ENV{GCC_ARM_TOOLS_PATH})
     message(WARNING
             "Set your environment variables you frickin' hecker."
             "   --Shane Snover"
+
             )
 endif()
 

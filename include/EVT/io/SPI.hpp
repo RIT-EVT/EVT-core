@@ -30,8 +30,7 @@ enum class Pin;
 class SPI {
 public:
     /**
-     * Represents potential errors that may take place when using the SPI
-     * interface.
+     * Represents the current state of using the SPI interface.
      */
     enum class SPIStatus {
         OK = 0,

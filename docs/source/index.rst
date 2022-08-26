@@ -46,7 +46,7 @@ project is built using CMake and requires an environment variable containing
 the location of the GCC ARM toolchain. The README will go over setting the
 environment variable and building EVT-core.
 
-Several samples are included in EVT-core directly. As a libary, EVT-core can
+Several samples are included in EVT-core directly. As a libzzary, EVT-core can
 be linked against in external projects.
 
 .. toctree::
