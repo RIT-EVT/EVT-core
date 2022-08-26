@@ -1,7 +1,8 @@
 #include <EVT/io/SPI.hpp>
 
-#define SPI_CHECK                \
-    if (status != SPIStatus::OK) \
+#define SPI_CHECK(functionCall)      \
+    status = functionCall; \
+    if (status != SPIStatus::OK)     \
         return status;
 
 namespace EVT::core::IO {
@@ -31,8 +32,7 @@ SPI::SPIStatus SPI::write(uint8_t* bytes, uint8_t length) {
     SPIStatus status = SPIStatus::OK;
 
     for (int i = 0; i < length; i++) {
-        status = write(bytes[i]);
-        SPI_CHECK
+        SPI_CHECK(write(bytes[i]));
     }
 
     return status;
@@ -41,8 +41,7 @@ SPI::SPIStatus SPI::write(uint8_t* bytes, uint8_t length) {
 SPI::SPIStatus SPI::read(uint8_t* bytes, uint8_t length) {
     SPIStatus status;
     for (int i = 0; i < length; i++) {
-        status = read(&bytes[i]);
-        SPI_CHECK
+        SPI_CHECK(read(&bytes[i]));
     }
 
     return SPIStatus::OK;
@@ -53,11 +52,9 @@ SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t byte) {
     SPIStatus status;
 
     if (startTransmission(device)) {
-        status = write(reg);
-        SPI_CHECK
+        SPI_CHECK(write(reg))
 
-        status = write(byte);
-        SPI_CHECK
+        SPI_CHECK(write(byte))
 
         transmitSuccess = endTransmission(device);
     }
@@ -70,11 +67,9 @@ SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* out) {
     SPIStatus status;
 
     if (startTransmission(device)) {
-        status = write(reg);
-        SPI_CHECK
+        SPI_CHECK(write(reg))
 
-        status = read(out);
-        SPI_CHECK
+        SPI_CHECK(read(out))
 
         transmitSuccess = endTransmission(device);
     }
@@ -87,11 +82,8 @@ SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_
     SPIStatus status;
 
     if (startTransmission(device)) {
-        status = write(reg);
-        SPI_CHECK
-
-        status = write(bytes, length);
-        SPI_CHECK
+        SPI_CHECK(write(reg))
+        SPI_CHECK(write(bytes, length))
 
         transmitSuccess = endTransmission(device);
     }
@@ -104,11 +96,9 @@ SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t
     SPIStatus status;
 
     if (startTransmission(device)) {
-        status = write(reg);
-        SPI_CHECK
+        SPI_CHECK(write(reg))
 
-        status = read(bytes, length);
-        SPI_CHECK
+        SPI_CHECK(read(bytes, length))
 
         transmitSuccess = endTransmission(device);
     }
