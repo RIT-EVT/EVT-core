@@ -1,9 +1,4 @@
-//#define SCK_PIN   52
-//#define MISO_PIN  50
-//#define MOSI_PIN  51
-//#define SS_PIN    53
-
-// UNO Pins
+// Arduino UNO Pins
 #define SCK_PIN   13
 #define MISO_PIN  11
 #define MOSI_PIN  12
