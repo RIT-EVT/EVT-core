@@ -3,7 +3,7 @@
 #define SPI_CHECK(functionCall)      \
     status = functionCall; \
     if (status != SPIStatus::OK)     \
-        return status;
+        return status
 
 namespace EVT::core::IO {
 SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : CSPinsLength(pinLength),
@@ -52,9 +52,9 @@ SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t byte) {
     SPIStatus status;
 
     if (startTransmission(device)) {
-        SPI_CHECK(write(reg))
+        SPI_CHECK(write(reg));
 
-        SPI_CHECK(write(byte))
+        SPI_CHECK(write(byte));
 
         transmitSuccess = endTransmission(device);
     }
@@ -67,9 +67,9 @@ SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* out) {
     SPIStatus status;
 
     if (startTransmission(device)) {
-        SPI_CHECK(write(reg))
+        SPI_CHECK(write(reg));
 
-        SPI_CHECK(read(out))
+        SPI_CHECK(read(out));
 
         transmitSuccess = endTransmission(device);
     }
@@ -82,8 +82,8 @@ SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_
     SPIStatus status;
 
     if (startTransmission(device)) {
-        SPI_CHECK(write(reg))
-        SPI_CHECK(write(bytes, length))
+        SPI_CHECK(write(reg));
+        SPI_CHECK(write(bytes, length));
 
         transmitSuccess = endTransmission(device);
     }
@@ -96,9 +96,9 @@ SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t
     SPIStatus status;
 
     if (startTransmission(device)) {
-        SPI_CHECK(write(reg))
+        SPI_CHECK(write(reg));
 
-        SPI_CHECK(read(bytes, length))
+        SPI_CHECK(read(bytes, length));
 
         transmitSuccess = endTransmission(device);
     }
