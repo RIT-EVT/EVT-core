@@ -30,11 +30,19 @@ public:
      */
     uint32_t getTempCelcius();
 
+    /**
+     *     Returns the raw ADC values
+     *
+     *     @return The raw values from the ADC
+     */
+    uint32_t getRawADC();
+
 private:
     /// The ADC interface to read from
     EVT::core::IO::ADC& adc;
     /// Funtion that converts raw ADC values into milli Celcius
     uint32_t (*conversion)(uint32_t);
+
 };
 
 }// namespace EVT::core::DEV

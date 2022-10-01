@@ -34,7 +34,7 @@ int main() {
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
     can.addIRQHandler(canIRQHandler, &uart);
-
+    can.addCANFilter(0b00000011010, 0b0000000000000000, 0);
     // CAN message that will be sent
     uint8_t payload[] = {0xDE, 0xAD, 0xBE, 0xBE, 0xEF, 0x00, 0x01, 0x02};
     IO::CANMessage transmit_message(1, 8, &payload[0], true);
@@ -50,6 +50,8 @@ int main() {
     if (result != IO::CAN::CANStatus::OK) {
         uart.printf("Failed to connect to the CAN network\r\n");
         return 1;
+    }else{
+        uart.printf("Connection Successful!\r\n");
     }
 
     while (true) {
