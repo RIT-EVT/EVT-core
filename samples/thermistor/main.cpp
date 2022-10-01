@@ -41,7 +41,7 @@ int main() {
         uart.printf("Temperature: %dmC\r\n",
                     static_cast<int>(thermistor.getTempCelcius()));
         uart.printf("Voltage: %dV\r\n",
-                     static_cast<int>(thermistor.getRawADC()));
+                    static_cast<int>(thermistor.getRawADC()));
         time::wait(100);
     }
 }
