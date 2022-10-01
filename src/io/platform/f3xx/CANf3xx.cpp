@@ -107,8 +107,8 @@ CAN::CANStatus CANf3xx::connect() {
     CAN_FilterTypeDef defaultFilter;
     defaultFilter.FilterIdHigh = 0;
     defaultFilter.FilterIdLow = 0;
-    defaultFilter.FilterMaskIdHigh = 0x0000;
-    defaultFilter.FilterMaskIdLow = 0x0000;
+    defaultFilter.FilterMaskIdHigh = 0xFFFF;
+    defaultFilter.FilterMaskIdLow = 0xFFFF;
     defaultFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
     defaultFilter.FilterBank = 0;
     defaultFilter.FilterMode = CAN_FILTERMODE_IDMASK;
