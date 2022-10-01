@@ -50,7 +50,7 @@ int main() {
     if (result != IO::CAN::CANStatus::OK) {
         uart.printf("Failed to connect to the CAN network\r\n");
         return 1;
-    }else{
+    } else {
         uart.printf("Connection Successful!\r\n");
     }
 
