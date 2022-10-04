@@ -1,15 +1,12 @@
 #include <EVT/io/SPI.hpp>
 
-
 #define CONCAT(a, b) CONCAT_INNER(a, b)
-#define CONCAT_INNER(a, b) a ## b
+#define CONCAT_INNER(a, b) a##b
 
-#define SPI_CHECK(functionCall, statusID)  \
-    SPIStatus CONCAT(status, statusID) = functionCall;       \
-    if (CONCAT(status, statusID)  != SPIStatus::OK) \
+#define SPI_CHECK(functionCall, statusID)              \
+    SPIStatus CONCAT(status, statusID) = functionCall; \
+    if (CONCAT(status, statusID) != SPIStatus::OK)     \
     return CONCAT(status, statusID)
-
-
 
 namespace EVT::core::IO {
 SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : CSPinsLength(pinLength),
