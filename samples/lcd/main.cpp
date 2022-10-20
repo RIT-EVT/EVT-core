@@ -98,37 +98,35 @@ int main() {
     IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, IO::Pin::SPI_MOSI>(devices, deviceCount);
 //    IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, EVT::core::IO::Pin::SPI_MOSI, EVT::core::IO::Pin::SPI_MISO>(devices, deviceCount);
     spi.configureSPI(SPI_SPEED, SPI_MODE0, SPI_MSB_FIRST);
-    IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::PA_2>();
-    DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
 
     // Sets up LCD
     uart.printf("Creating LCD Object...\n\r");
     EVT::core::DEV::LCD lcd(regSelect, reset, spi, bitMap);
     uart.printf("Initializing LCD...\n\r");
     lcd.initLCD();
+    lcd.displayMap(bitMap);
 
-    while (true) {
+//    while (true) {
 //        uart.printf("Clearing LCD...\n\r");
-//        lcd.clearLCD(bitMap);
-
+////        lcd.clearLCD(bitMap);
+//
 //        uart.printf("Writing to Screen...\n\r");
-
-        lcd.displayMap(bitMap);
-        /**
-        for(int i = 0; i < 8; i++) {
-            for(int j = 0; j < 8; j++) {
-                for(int k = 0; k < 16; k++) {
-                    lcd.drivePixel(i, j, k, 255);
-                    time::wait(8);
-                }
-                time::wait(8);
-            }
-            time::wait(8);
-        }
-        */
-        led.toggle();
-        time::wait(500);
-    }
+//
+//        lcd.displayMap(bitMap);
+//        /**
+//        for(int i = 0; i < 8; i++) {
+//            for(int j = 0; j < 8; j++) {
+//                for(int k = 0; k < 16; k++) {
+//                    lcd.drivePixel(i, j, k, 255);
+//                    time::wait(8);
+//                }
+//                time::wait(8);
+//            }
+//            time::wait(8);
+//        }
+//        */
+//        time::wait(500);
+//    }
 
     return 0;
 }
