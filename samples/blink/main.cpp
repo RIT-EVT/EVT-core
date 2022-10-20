@@ -23,7 +23,7 @@ int main() {
     // Setup the GPIO pin.
     // Notice that the pin used is called "LED". Each platform has a dedicated
     // LED pin, for the f3xx that is PB_13.
-    IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::PA_2>();
+    IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();
     DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
 
     while (1) {
