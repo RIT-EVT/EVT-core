@@ -109,7 +109,7 @@ int main() {
 
     while (true) {
 //        uart.printf("Clearing LCD...\n\r");
-        lcd.clearLCD(bitMap);
+//        lcd.clearLCD(bitMap);
 
 //        uart.printf("Writing to Screen...\n\r");
 
