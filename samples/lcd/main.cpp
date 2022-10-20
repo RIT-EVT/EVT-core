@@ -1,3 +1,4 @@
+#include "EVT/dev/LED.hpp"
 #include <EVT/dev/LCD.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/manager.hpp>
@@ -88,26 +89,29 @@ int main() {
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     // creates GPIO pins for LCD
-    IO::GPIO& regSelect = IO::getGPIO<IO::Pin::PB_10>(EVT::core::IO::GPIO::Direction::OUTPUT); //HUDL: PA_3
-    IO::GPIO& reset = IO::getGPIO<IO::Pin::PA_8>(EVT::core::IO::GPIO::Direction::OUTPUT); //HUDL: PB_3
-    devices[0] = &IO::getGPIO<IO::Pin::PB_6>(EVT::core::IO::GPIO::Direction::OUTPUT); //HUDL: PB_12
+    IO::GPIO& regSelect = IO::getGPIO<IO::Pin::PA_3>(EVT::core::IO::GPIO::Direction::OUTPUT); //HUDL: PA_3
+    IO::GPIO& reset = IO::getGPIO<IO::Pin::PB_3>(EVT::core::IO::GPIO::Direction::OUTPUT); //HUDL: PB_3
+    devices[0] = &IO::getGPIO<IO::Pin::PB_12>(EVT::core::IO::GPIO::Direction::OUTPUT); //HUDL: PB_12
     devices[0]->writePin(IO::GPIO::State::HIGH);
 
     // Setup SPI 
     IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, IO::Pin::SPI_MOSI>(devices, deviceCount);
-    //IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, EVT::core::IO::Pin::SPI_MOSI, EVT::core::IO::Pin::SPI_MISO>(devices, deviceCount);
+//    IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, EVT::core::IO::Pin::SPI_MOSI, EVT::core::IO::Pin::SPI_MISO>(devices, deviceCount);
     spi.configureSPI(SPI_SPEED, SPI_MODE0, SPI_MSB_FIRST);
+    IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::PA_2>();
+    DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
 
     // Sets up LCD
     uart.printf("Creating LCD Object...\n\r");
     EVT::core::DEV::LCD lcd(regSelect, reset, spi, bitMap);
     uart.printf("Initializing LCD...\n\r");
     lcd.initLCD();
+
     while (true) {
-        uart.printf("Clearing LCD...\n\r");
+//        uart.printf("Clearing LCD...\n\r");
         lcd.clearLCD(bitMap);
 
-        uart.printf("Writing to Screen...\n\r");
+//        uart.printf("Writing to Screen...\n\r");
 
         lcd.displayMap(bitMap);
         /**
@@ -122,6 +126,7 @@ int main() {
             time::wait(8);
         }
         */
+        led.toggle();
         time::wait(500);
     }
 
