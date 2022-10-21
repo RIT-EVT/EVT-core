@@ -30,31 +30,51 @@ public:
     /// bit map to display the LCD's current state
     unsigned char * bitMap;
 
-    /// 
-    /*
-    * Constructor for the LCD class
-    *
-    * @param[in]
-    *
-    */
+    /**
+     * Constructor the LCD class
+     * @param regSelect - register select pin
+     * @param reset - reset pin
+     * @param spi - SPI class for communication
+     * @param bitMap - bitmap to display to the LCD
+     */
     LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset,EVT::core::IO::SPI& spi, unsigned char * bitMap);
 
-    /// function to write data to the LCD
+    /**
+     * Writes data to the LCD
+     * @param data
+     */
     void dataWrite(unsigned char data);
 
-   /// writes commands to the LCD 
-    void commWrite(unsigned char data);
+   /**
+    * Writes commands to the LCD
+    * @param data
+    */
+    void commandWrite(unsigned char data);
 
-    /// drives a particular pixel on the LCD
+    /**
+     * Drives a particular pixel on the LCD
+     * @param page
+     * @param col_up
+     * @param col_low
+     * @param data
+     */
     void drivePixel(unsigned char page, unsigned char col_up, unsigned char col_low, unsigned char data);
 
-    /// clears the LCD, changes are mirrores in the bitmap
+    /**
+     * Clears the LCD, changes are mirrored in the bitmap
+     * @param bitMap
+     */
     void clearLCD(unsigned char * bitMap);
 
-    /// displays the map for diagnostic purposes
+    /**
+     * Displays the map for diagnostic purposes
+     * @param bitMap
+     */
     void displayMap(unsigned char * bitMap);
 
-    /// initializes the LCD for operation (must be called to use the LCD)
+    /**
+     * Initializes the LCD for operation (must be called to use the LCD)
+     */
     void initLCD();
 
 private:
