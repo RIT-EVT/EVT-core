@@ -85,7 +85,6 @@ private:
     //EVT::core::IO::GPIO& chipSelect;
     /** SPI port for the LCD controller */
     EVT::core::IO::SPI& spi;
-    /** bit map to display the LCD's current state */
 };
 
 }// namespace EVT::core::DEV
