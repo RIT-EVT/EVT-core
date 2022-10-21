@@ -45,38 +45,36 @@ void LCD::drivePixel(uint8_t page, uint8_t col_up, uint8_t col_low, uint8_t data
                           //                                                                                                 |WHITE|
 }
 
-void LCD::clearLCD(uint8_t* bitMap) {
-    unsigned int i, j;
+void LCD::clearLCD(const uint8_t* bitMap) {
     uint8_t page = 0xB0;
     this->commandWrite(0xAE);      //Display OFF
     this->commandWrite(0x40);      //Display start address + 0x40
-    for (i = 0; i < 8; i++) {      //64 pixel display / 8 pixels per page = 8 pages
+    for (int i = 0; i < 8; i++) {      //64 pixel display / 8 pixels per page = 8 pages
         this->commandWrite(page);  //send page address
         this->commandWrite(0x10);  //column address upper 4 bits + 0x10
         this->commandWrite(0x00);  //column address lower 4 bits + 0x00
-        for (j = 0; j < 128; j++) {//128 columns wide
+        for (int j = 0; j < 128; j++) { //128 columns wide
             this->dataWrite(0x00); //write clear pixels
             bitMap++;
         }
-        page++;//after 128 columns, go to next page
+        page++; //after 128 columns, go to next page
     }
     this->commandWrite(0xAF);
 }
 
-void LCD::displayMap(uint8_t* bitMap) {
-    unsigned int i, j;
+void LCD::displayMap(const uint8_t* bitMap) {
     uint8_t page = 0xB0;
     this->commandWrite(0xAE);        //Display OFF
     this->commandWrite(0x40);        //Display start address + 0x40
-    for (i = 0; i < 8; i++) {        //64 pixel display / 8 pixels per page = 8 pages
+    for (int i = 0; i < 8; i++) {        //64 pixel display / 8 pixels per page = 8 pages
         this->commandWrite(page);    //send page address
         this->commandWrite(0x10);    //column address upper 4 bits + 0x10
         this->commandWrite(0x00);    //column address lower 4 bits + 0x00
-        for (j = 0; j < 128; j++) {  //128 columns wide
-            this->dataWrite(*bitMap);//write clear pixels
+        for (int j = 0; j < 128; j++) {  //128 columns wide
+            this->dataWrite(*bitMap); //write clear pixels
             bitMap++;
         }
-        page++;//after 128 columns, go to next page
+        page++; //after 128 columns, go to next page
     }
     this->commandWrite(0xAF);
 }

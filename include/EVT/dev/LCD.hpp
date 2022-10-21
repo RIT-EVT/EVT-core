@@ -63,13 +63,13 @@ public:
      * Clears the LCD, changes are mirrored in the bitmap
      * @param bitMap
      */
-    void clearLCD(uint8_t * bitMap);
+    void clearLCD(const uint8_t * bitMap);
 
     /**
      * Displays the map for diagnostic purposes
      * @param bitMap
      */
-    void displayMap(uint8_t * bitMap);
+    void displayMap(const uint8_t * bitMap);
 
     /**
      * Initializes the LCD for operation (must be called to use the LCD)
