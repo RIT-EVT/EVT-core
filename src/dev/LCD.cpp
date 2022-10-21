@@ -7,7 +7,6 @@ LCD::LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::
     this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->reset.writePin(EVT::core::IO::GPIO::State::LOW);
     //this->chipSelect.writePin(EVT::core::IO::GPIO::State::LOW);
-    this->spi = spi;
     this->bitMap = {};
 }
 
