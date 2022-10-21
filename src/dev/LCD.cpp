@@ -24,8 +24,8 @@ void LCD::commandWrite(uint8_t data) {
 }
 
 void LCD::drivePixel(uint8_t page, uint8_t colUp, uint8_t colLow, uint8_t data) {
-    this->commandWrite(0x40);          //line to start writing on (0 -> 64) moves set bits with it DO NOT CHANGE
-    this->commandWrite(0xB0 + page);   //writes the page address (4 bits, 8 rows selected by values 0-7 )
+    this->commandWrite(0x40);         //line to start writing on (0 -> 64) moves set bits with it DO NOT CHANGE
+    this->commandWrite(0xB0 + page);  //writes the page address (4 bits, 8 rows selected by values 0-7 )
     this->commandWrite(0x10 + colUp); //writes the first 4 bits of the column select (out of 8 bits)
     this->commandWrite(0x00 + colLow);//writes the second 4 bits of the column select (out)
 
@@ -41,34 +41,34 @@ void LCD::drivePixel(uint8_t page, uint8_t colUp, uint8_t colLow, uint8_t data) 
 
 void LCD::clearLCD(const uint8_t* bitMap) {
     uint8_t page = 0xB0;
-    this->commandWrite(0xAE);      //Display OFF
-    this->commandWrite(0x40);      //Display start address + 0x40
+    this->commandWrite(0xAE);          //Display OFF
+    this->commandWrite(0x40);          //Display start address + 0x40
     for (int i = 0; i < 8; i++) {      //64 pixel display / 8 pixels per page = 8 pages
-        this->commandWrite(page);  //send page address
-        this->commandWrite(0x10);  //column address upper 4 bits + 0x10
-        this->commandWrite(0x00);  //column address lower 4 bits + 0x00
-        for (int j = 0; j < 128; j++) { //128 columns wide
-            this->dataWrite(0x00); //write clear pixels
+        this->commandWrite(page);      //send page address
+        this->commandWrite(0x10);      //column address upper 4 bits + 0x10
+        this->commandWrite(0x00);      //column address lower 4 bits + 0x00
+        for (int j = 0; j < 128; j++) {//128 columns wide
+            this->dataWrite(0x00);     //write clear pixels
             bitMap++;
         }
-        page++; //after 128 columns, go to next page
+        page++;//after 128 columns, go to next page
     }
     this->commandWrite(0xAF);
 }
 
 void LCD::displayMap(const uint8_t* bitMap) {
     uint8_t page = 0xB0;
-    this->commandWrite(0xAE);        //Display OFF
-    this->commandWrite(0x40);        //Display start address + 0x40
-    for (int i = 0; i < 8; i++) {        //64 pixel display / 8 pixels per page = 8 pages
-        this->commandWrite(page);    //send page address
-        this->commandWrite(0x10);    //column address upper 4 bits + 0x10
-        this->commandWrite(0x00);    //column address lower 4 bits + 0x00
-        for (int j = 0; j < 128; j++) {  //128 columns wide
-            this->dataWrite(*bitMap); //write clear pixels
+    this->commandWrite(0xAE);          //Display OFF
+    this->commandWrite(0x40);          //Display start address + 0x40
+    for (int i = 0; i < 8; i++) {      //64 pixel display / 8 pixels per page = 8 pages
+        this->commandWrite(page);      //send page address
+        this->commandWrite(0x10);      //column address upper 4 bits + 0x10
+        this->commandWrite(0x00);      //column address lower 4 bits + 0x00
+        for (int j = 0; j < 128; j++) {//128 columns wide
+            this->dataWrite(*bitMap);  //write clear pixels
             bitMap++;
         }
-        page++; //after 128 columns, go to next page
+        page++;//after 128 columns, go to next page
     }
     this->commandWrite(0xAF);
 }

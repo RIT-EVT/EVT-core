@@ -2,8 +2,8 @@
 #define _EVT_LCD_
 
 #include <EVT/io/GPIO.hpp>
-#include <EVT/io/UART.hpp>
 #include <EVT/io/SPI.hpp>
+#include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
 #include <EVT/utils/time.hpp>
 #include <stdint.h>
@@ -34,7 +34,7 @@ public:
      * @param[in] spi SPI class for communication
      * @param[in] bitMap bitmap to display to the LCD
      */
-    LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset,EVT::core::IO::SPI& spi);
+    LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi);
 
     /**
      * Writes data to the LCD
@@ -43,7 +43,7 @@ public:
      */
     void dataWrite(uint8_t data);
 
-   /**
+    /**
     * Writes commands to the LCD
     *
     * @param[in] data command to write to the LCD
@@ -65,14 +65,14 @@ public:
      *
      * @param[in] bitMap Bitmap to be displayed
      */
-    void clearLCD(const uint8_t * bitMap);
+    void clearLCD(const uint8_t* bitMap);
 
     /**
      * Displays the map for diagnostic purposes
      *
      * @param[in] bitMap Bitmap to be displayed
      */
-    void displayMap(const uint8_t * bitMap);
+    void displayMap(const uint8_t* bitMap);
 
     /**
      * Initializes the LCD for operation (must be called to use the LCD)
@@ -93,4 +93,3 @@ private:
 }// namespace EVT::core::DEV
 
 #endif
-
