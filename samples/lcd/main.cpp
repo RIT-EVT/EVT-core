@@ -109,29 +109,7 @@ int main() {
     lcd.initLCD();
     lcd.displayMap(bitMap);
 
-    // Commented out to keep EVT display up constantly
-    while (true) {
-//        uart.printf("Clearing LCD...\n\r");
-//        lcd.clearLCD(bitMap);
-//
-//        uart.printf("Writing to Screen...\n\r");
-//
-//        lcd.displayMap(bitMap);
-//
-//
-//        for(int i = 0; i < 8; i++) {
-//            for(int j = 0; j < 8; j++) {
-//                for(int k = 0; k < 16; k++) {
-//                    lcd.drivePixel(i, j, k, 255);
-//                    time::wait(8);
-//                }
-//                time::wait(8);
-//            }
-//            time::wait(8);
-//        }
-//
-//        time::wait(500);
-    }
+    while (1) {}
 
     return 0;
 }
