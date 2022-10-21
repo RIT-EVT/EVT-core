@@ -26,48 +26,51 @@ namespace EVT::core::DEV {
 class LCD {
 
 public:
-
-
-
     /**
      * Constructor the LCD class
-     * @param regSelect - register select pin
-     * @param reset - reset pin
-     * @param spi - SPI class for communication
-     * @param bitMap - bitmap to display to the LCD
+     *
+     * @param[in] regSelect Register select pin
+     * @param[in] reset Reset pin
+     * @param[in] spi SPI class for communication
+     * @param[in] bitMap bitmap to display to the LCD
      */
     LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset,EVT::core::IO::SPI& spi);
 
     /**
      * Writes data to the LCD
-     * @param data - data to write to the LCD
+     *
+     * @param[in] data data to write to the LCD
      */
     void dataWrite(uint8_t data);
 
    /**
     * Writes commands to the LCD
-    * @param data -
+    *
+    * @param[in] data command to write to the LCD
     */
     void commandWrite(uint8_t data);
 
     /**
      * Drives a particular pixel on the LCD
-     * @param page
-     * @param col_up
-     * @param col_low
-     * @param data
+     *
+     * @param[in] page Page address to write to
+     * @param[in] colUp Bits to write to the page address
+     * @param[in] colLow Bits to write to the column select
+     * @param[in] data Bits to write to the LCD
      */
-    void drivePixel(uint8_t page, uint8_t col_up, uint8_t col_low, uint8_t data);
+    void drivePixel(uint8_t page, uint8_t colUp, uint8_t colLow, uint8_t data);
 
     /**
      * Clears the LCD, changes are mirrored in the bitmap
-     * @param bitMap
+     *
+     * @param[in] bitMap Bitmap to be displayed
      */
     void clearLCD(const uint8_t * bitMap);
 
     /**
      * Displays the map for diagnostic purposes
-     * @param bitMap
+     *
+     * @param[in] bitMap Bitmap to be displayed
      */
     void displayMap(const uint8_t * bitMap);
 
@@ -82,7 +85,7 @@ private:
     /** reset pin for the lcd */
     EVT::core::IO::GPIO& reset;
     /** chip select pin for the LCD */
-    //EVT::core::IO::GPIO& chipSelect;
+    //EVT::core::IO::GPIO& chipSelect; // TODO: Need to figure out purpose of this
     /** SPI port for the LCD controller */
     EVT::core::IO::SPI& spi;
 };

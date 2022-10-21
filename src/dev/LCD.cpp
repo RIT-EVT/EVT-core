@@ -23,11 +23,11 @@ void LCD::commandWrite(uint8_t data) {
     this->spi.endTransmission(0);
 }
 
-void LCD::drivePixel(uint8_t page, uint8_t col_up, uint8_t col_low, uint8_t data) {
+void LCD::drivePixel(uint8_t page, uint8_t colUp, uint8_t colLow, uint8_t data) {
     this->commandWrite(0x40);          //line to start writing on (0 -> 64) moves set bits with it DO NOT CHANGE
     this->commandWrite(0xB0 + page);   //writes the page address (4 bits, 8 rows selected by values 0-7 )
-    this->commandWrite(0x10 + col_up); //writes the first 4 bits of the column select (out of 8 bits)
-    this->commandWrite(0x00 + col_low);//writes the second 4 bits of the column select (out)
+    this->commandWrite(0x10 + colUp); //writes the first 4 bits of the column select (out of 8 bits)
+    this->commandWrite(0x00 + colLow);//writes the second 4 bits of the column select (out)
 
     this->dataWrite(data);//writes 8 vertical bits based on value between 0-255 based on bits set ex: 01001100(0x4C) is |WHITE|
                           //                                                                                                 |BLACK|
