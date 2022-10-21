@@ -86,7 +86,6 @@ private:
     /** SPI port for the LCD controller */
     EVT::core::IO::SPI& spi;
     /** bit map to display the LCD's current state */
-    uint8_t * bitMap;
 };
 
 }// namespace EVT::core::DEV
