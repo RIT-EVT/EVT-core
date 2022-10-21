@@ -6,31 +6,26 @@ LCD::LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::
     : regSelect(regSelect), reset(reset), spi(spi) {
     this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->reset.writePin(EVT::core::IO::GPIO::State::LOW);
-    //this->chipSelect.writePin(EVT::core::IO::GPIO::State::LOW);
 }
 
 void LCD::dataWrite(uint8_t data) {
 
-    //this->CS.writePin(EVT::core::IO::GPIO::State::LOW);
     this->regSelect.writePin(EVT::core::IO::GPIO::State::HIGH);
     this->spi.startTransmission(0);
     this->spi.write(&data, 1);
     this->spi.endTransmission(0);
-    //this->CS.writePin(EVT::core::IO::GPIO::State::HIGH);
 }
 
 void LCD::commandWrite(uint8_t data) {
-    //this->CS.writePin(EVT::core::IO::GPIO::State::LOW);
     this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->spi.startTransmission(0);
     this->spi.write(&data, 1);
     this->spi.endTransmission(0);
-    //this->CS.writePin(EVT::core::IO::GPIO::State::HIGH);
 }
 
 void LCD::drivePixel(uint8_t page, uint8_t col_up, uint8_t col_low, uint8_t data) {
     this->commandWrite(0x40);          //line to start writing on (0 -> 64) moves set bits with it DO NOT CHANGE
-    this->commandWrite(0xB0 + page);   //writes the page address (4 bits, 8 rows selcted by values 0-7 )
+    this->commandWrite(0xB0 + page);   //writes the page address (4 bits, 8 rows selected by values 0-7 )
     this->commandWrite(0x10 + col_up); //writes the first 4 bits of the column select (out of 8 bits)
     this->commandWrite(0x00 + col_low);//writes the second 4 bits of the column select (out)
 
