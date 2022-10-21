@@ -106,7 +106,7 @@ int main() {
     lcd.initLCD();
     lcd.displayMap(bitMap);
 
-//    while (true) {
+    while (true) {
 //        uart.printf("Clearing LCD...\n\r");
 ////        lcd.clearLCD(bitMap);
 //
@@ -126,7 +126,7 @@ int main() {
 //        }
 //        */
 //        time::wait(500);
-//    }
+    }
 
     return 0;
 }
