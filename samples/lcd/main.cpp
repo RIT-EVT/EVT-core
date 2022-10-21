@@ -101,7 +101,7 @@ int main() {
 
     // Sets up LCD
     uart.printf("Creating LCD Object...\n\r");
-    EVT::core::DEV::LCD lcd(regSelect, reset, spi, bitMap);
+    EVT::core::DEV::LCD lcd(regSelect, reset, spi);
     uart.printf("Initializing LCD...\n\r");
     lcd.initLCD();
     lcd.displayMap(bitMap);

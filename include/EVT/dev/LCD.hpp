@@ -27,8 +27,7 @@ class LCD {
 
 public:
 
-    /// bit map to display the LCD's current state
-    unsigned char * bitMap;
+
 
     /**
      * Constructor the LCD class
@@ -37,19 +36,19 @@ public:
      * @param spi - SPI class for communication
      * @param bitMap - bitmap to display to the LCD
      */
-    LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset,EVT::core::IO::SPI& spi, unsigned char * bitMap);
+    LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset,EVT::core::IO::SPI& spi);
 
     /**
      * Writes data to the LCD
-     * @param data
+     * @param data - data to write to the LCD
      */
-    void dataWrite(unsigned char data);
+    void dataWrite(uint8_t data);
 
    /**
     * Writes commands to the LCD
-    * @param data
+    * @param data -
     */
-    void commandWrite(unsigned char data);
+    void commandWrite(uint8_t data);
 
     /**
      * Drives a particular pixel on the LCD
@@ -58,19 +57,19 @@ public:
      * @param col_low
      * @param data
      */
-    void drivePixel(unsigned char page, unsigned char col_up, unsigned char col_low, unsigned char data);
+    void drivePixel(uint8_t page, uint8_t col_up, uint8_t col_low, uint8_t data);
 
     /**
      * Clears the LCD, changes are mirrored in the bitmap
      * @param bitMap
      */
-    void clearLCD(unsigned char * bitMap);
+    void clearLCD(uint8_t * bitMap);
 
     /**
      * Displays the map for diagnostic purposes
      * @param bitMap
      */
-    void displayMap(unsigned char * bitMap);
+    void displayMap(uint8_t * bitMap);
 
     /**
      * Initializes the LCD for operation (must be called to use the LCD)
@@ -85,7 +84,9 @@ private:
     /** chip select pin for the LCD */
     //EVT::core::IO::GPIO& chipSelect;
     /** SPI port for the LCD controller */
-    EVT::core::IO::SPI& spi; 
+    EVT::core::IO::SPI& spi;
+    /** bit map to display the LCD's current state */
+    uint8_t * bitMap;
 };
 
 }// namespace EVT::core::DEV

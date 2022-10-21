@@ -2,7 +2,7 @@
 
 namespace EVT::core::DEV {
 
-LCD::LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi, unsigned char * bitMap)
+LCD::LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi)
     : regSelect(regSelect), reset(reset), spi(spi){
     this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->reset.writePin(EVT::core::IO::GPIO::State::LOW);
@@ -11,7 +11,7 @@ LCD::LCD(EVT::core::IO::GPIO& regSelect,EVT::core::IO::GPIO& reset, EVT::core::I
 
 }
 
-void LCD::dataWrite(unsigned char data){
+void LCD::dataWrite(uint8_t data){
 
     //this->CS.writePin(EVT::core::IO::GPIO::State::LOW);
     this->regSelect.writePin(EVT::core::IO::GPIO::State::HIGH);
@@ -21,7 +21,7 @@ void LCD::dataWrite(unsigned char data){
     //this->CS.writePin(EVT::core::IO::GPIO::State::HIGH);
 }
  
-void LCD::commandWrite(unsigned char data){
+void LCD::commandWrite(uint8_t data){
     //this->CS.writePin(EVT::core::IO::GPIO::State::LOW);
     this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->spi.startTransmission(0);
@@ -30,7 +30,7 @@ void LCD::commandWrite(unsigned char data){
     //this->CS.writePin(EVT::core::IO::GPIO::State::HIGH);
 }
 
-void LCD::drivePixel(unsigned char page, unsigned char col_up, unsigned char col_low, unsigned char data){
+void LCD::drivePixel(uint8_t page, uint8_t col_up, uint8_t col_low, uint8_t data){
     this->commandWrite(0x40); //line to start writing on (0 -> 64) moves set bits with it DO NOT CHANGE
     this->commandWrite(0xB0 + page); //writes the page address (4 bits, 8 rows selcted by values 0-7 )
     this->commandWrite(0x10 + col_up); //writes the first 4 bits of the column select (out of 8 bits)
@@ -46,9 +46,9 @@ void LCD::drivePixel(unsigned char page, unsigned char col_up, unsigned char col
                       //                                                                                                 |WHITE|             
 }
 
-void LCD::clearLCD(unsigned char * bitMap){
+void LCD::clearLCD(uint8_t * bitMap){
     unsigned int i,j;
-    unsigned char page = 0xB0;
+    uint8_t page = 0xB0;
     this->commandWrite(0xAE);          //Display OFF
     this->commandWrite(0x40);         //Display start address + 0x40
     for(i=0;i<8;i++){       //64 pixel display / 8 pixels per page = 8 pages
@@ -64,9 +64,9 @@ void LCD::clearLCD(unsigned char * bitMap){
     this->commandWrite(0xAF);
 }
 
-void LCD::displayMap(unsigned char * bitMap){
+void LCD::displayMap(uint8_t * bitMap){
     unsigned int i,j;
-    unsigned char page = 0xB0;
+    uint8_t page = 0xB0;
     this->commandWrite(0xAE);          //Display OFF
     this->commandWrite(0x40);         //Display start address + 0x40
     for(i=0;i<8;i++){       //64 pixel display / 8 pixels per page = 8 pages
