@@ -4,6 +4,10 @@
 #include <EVT/io/manager.hpp>
 #include <EVT/utils/time.hpp>
 
+/**
+ * Sample code for displaying EVT logo onto an LCD display
+ */
+
 namespace DEV = EVT::core::DEV;
 namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
