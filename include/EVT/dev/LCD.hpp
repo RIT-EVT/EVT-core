@@ -78,13 +78,13 @@ public:
     void initLCD();
 
 private:
-    /// register select pin for the LCD
+    /** register select pin for the LCD */
     EVT::core::IO::GPIO& regSelect;
-    /// reset pin for the lcd
+    /** reset pin for the lcd */
     EVT::core::IO::GPIO& reset;
-    /// chip select pin for the LCD
+    /** chip select pin for the LCD */
     //EVT::core::IO::GPIO& chipSelect;
-    /// SPI port for the LCD controller 
+    /** SPI port for the LCD controller */
     EVT::core::IO::SPI& spi; 
 };
 
