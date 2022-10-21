@@ -100,7 +100,6 @@ int main() {
 
     // Setup SPI 
     IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, IO::Pin::SPI_MOSI>(devices, deviceCount);
-//    IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, EVT::core::IO::Pin::SPI_MOSI, EVT::core::IO::Pin::SPI_MISO>(devices, deviceCount);
     spi.configureSPI(SPI_SPEED, SPI_MODE0, SPI_MSB_FIRST);
 
     // Sets up LCD
@@ -110,14 +109,16 @@ int main() {
     lcd.initLCD();
     lcd.displayMap(bitMap);
 
+    // Commented out to keep EVT display up constantly
     while (true) {
 //        uart.printf("Clearing LCD...\n\r");
-////        lcd.clearLCD(bitMap);
+//        lcd.clearLCD(bitMap);
 //
 //        uart.printf("Writing to Screen...\n\r");
 //
 //        lcd.displayMap(bitMap);
-//        /**
+//
+//
 //        for(int i = 0; i < 8; i++) {
 //            for(int j = 0; j < 8; j++) {
 //                for(int k = 0; k < 16; k++) {
@@ -128,7 +129,7 @@ int main() {
 //            }
 //            time::wait(8);
 //        }
-//        */
+//
 //        time::wait(500);
     }
 
