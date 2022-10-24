@@ -103,11 +103,11 @@ CAN::CANStatus CANf3xx::connect() {
     HAL_NVIC_SetPriority(CAN_RX0_IRQn, EVT::core::platform::CAN_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(CAN_RX0_IRQn);
 
-    // By default - filter that accepts no incoming messages
+    // By default - filter that accepts all incoming messages
     CAN_FilterTypeDef defaultFilter;
     defaultFilter.FilterIdHigh = 0;
     defaultFilter.FilterIdLow = 0;
-    defaultFilter.FilterMaskIdHigh = 0xFFFF;
+    defaultFilter.FilterMaskIdHigh = 0x0000;
     defaultFilter.FilterMaskIdLow = 0xFFFF;
     defaultFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
     defaultFilter.FilterBank = 0;
