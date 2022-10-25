@@ -22,6 +22,8 @@ uint32_t timerCounter = 0;
 /** The target value for the counter */
 uint32_t counterTarget = 0;
 
+bool timerRunning = false;
+
 // Temporary "storage" to allow the NVM to work, do not use as actual NVM
 uint8_t testerStorage[MAX_SIZE];
 
@@ -180,6 +182,7 @@ static void timerReload(uint32_t reload) {
     timer->setPeriod(10);
     timer->startTimer(timerHandler);
     timerCounter = 0;
+    timerRunning = true;
     counterTarget = reload;
 }
 
@@ -188,6 +191,7 @@ static void timerReload(uint32_t reload) {
  */
 static void timerStart(void) {
     timer->startTimer(timerHandler);
+    timerRunning = true;
     timerCounter = 0;
 }
 
@@ -195,7 +199,7 @@ static void timerStart(void) {
  * Return true if the timer has gone off
  */
 static uint8_t timerUpdate(void) {
-    int result = timerCounter >= counterTarget ? 1 : 0;
+    int result = timerCounter >= counterTarget && timerRunning ? 1 : 0;
     return result;
 }
 
@@ -211,6 +215,7 @@ static uint32_t timerDelay(void) {
  */
 static void timerStop(void) {
     timer->stopTimer();
+    timerRunning = false;
     timerCounter = 0;
 }
 
