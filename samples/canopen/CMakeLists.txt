@@ -1,1 +1,2 @@
+add_subdirectory(canopen_rpdo)
 add_subdirectory(canopen_sample)
