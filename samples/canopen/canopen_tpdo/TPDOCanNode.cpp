@@ -23,7 +23,7 @@ uint16_t TPDOCanNode::getSampleDataB() {
 
 void TPDOCanNode::update() {
     sampleDataA++;
-    if(sampleDataA % 20 == 0){
+    if (sampleDataA % 20 == 0) {
         sampleDataB *= 3;
     }
 }

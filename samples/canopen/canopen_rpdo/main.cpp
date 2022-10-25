@@ -158,7 +158,7 @@ int main() {
     uint8_t lastVal1 = 0;
     uint16_t lastVal2 = 0;
     while (1) {
-        if(lastVal1 != testCanNode.getSampleDataA() || lastVal2 != testCanNode.getSampleDataB()) {
+        if (lastVal1 != testCanNode.getSampleDataA() || lastVal2 != testCanNode.getSampleDataB()) {
             lastVal1 = testCanNode.getSampleDataA();
             lastVal2 = testCanNode.getSampleDataB();
             uart.printf("Current value: %X, %X\r\n", lastVal1, lastVal2);

@@ -42,7 +42,7 @@ namespace time = EVT::core::time;
  */
 void canInterrupt(IO::CANMessage& message, void* priv) {
     EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* queue =
-            (EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*) priv;
+        (EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*) priv;
     if (queue != nullptr)
         queue->append(message);
 }
@@ -130,16 +130,16 @@ int main() {
     canStackDriver.Nvm = &nvmDriver;
 
     CO_NODE_SPEC canSpec = {
-            .NodeId = 0x01,
-            .Baudrate = IO::CAN::DEFAULT_BAUD,
-            .Dict = testCanNode.getObjectDictionary(),
-            .DictLen = testCanNode.getNumElements(),
-            .EmcyCode = NULL,
-            .TmrMem = appTmrMem,
-            .TmrNum = 16,
-            .TmrFreq = 100,
-            .Drv = &canStackDriver,
-            .SdoBuf = reinterpret_cast<uint8_t*>(&sdoBuffer[0]),
+        .NodeId = 0x01,
+        .Baudrate = IO::CAN::DEFAULT_BAUD,
+        .Dict = testCanNode.getObjectDictionary(),
+        .DictLen = testCanNode.getNumElements(),
+        .EmcyCode = NULL,
+        .TmrMem = appTmrMem,
+        .TmrNum = 16,
+        .TmrFreq = 100,
+        .Drv = &canStackDriver,
+        .SdoBuf = reinterpret_cast<uint8_t*>(&sdoBuffer[0]),
     };
 
     CO_NODE canNode;
@@ -154,7 +154,7 @@ int main() {
 
     uint8_t lastValue = 0;
     while (1) {
-        if(testCanNode.getSampleData() != lastValue) {
+        if (testCanNode.getSampleData() != lastValue) {
             uart.printf("Value of my number: %d\n\r", testCanNode.getSampleData());
             lastValue = testCanNode.getSampleData();
         }

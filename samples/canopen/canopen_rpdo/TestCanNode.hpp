@@ -127,18 +127,13 @@ private:
         {
             .Key = CO_KEY(0x1400, 0, CO_UNSIGNED8 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = (uintptr_t) 3
-        },
-        {
-            .Key = CO_KEY(0x1400, 1,CO_UNSIGNED32 | CO_OBJ_D__R_),
-            .Type = 0,
-            .Data = (uintptr_t) CO_COBID_TPDO_DEFAULT(0)+1
-        },
-        {
-            .Key = CO_KEY(0x1400, 2, CO_UNSIGNED8 | CO_OBJ_D__R_),
-            .Type = 0,
-            .Data = (uintptr_t) 0xFE
-        },
+            .Data = (uintptr_t) 3},
+        {.Key = CO_KEY(0x1400, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
+         .Type = 0,
+         .Data = (uintptr_t) CO_COBID_TPDO_DEFAULT(0) + 1},
+        {.Key = CO_KEY(0x1400, 2, CO_UNSIGNED8 | CO_OBJ_D__R_),
+         .Type = 0,
+         .Data = (uintptr_t) 0xFE},
 
         // RPDO0 mapping, determines the PDO messages to send when RPDO1 is triggered
         // 0: The number of PDO message associated with the RPDO
@@ -164,13 +159,10 @@ private:
         {
             .Key = CO_KEY(0x2100, 0, CO_UNSIGNED8 | CO_OBJ___PRW),
             .Type = 0,
-            .Data = (uintptr_t) &sampleDataA
-        },
-        {
-            .Key = CO_KEY(0x2100, 1, CO_UNSIGNED16 | CO_OBJ___PRW),
-            .Type = 0,
-            .Data = (uintptr_t) &sampleDataB
-        },
+            .Data = (uintptr_t) &sampleDataA},
+        {.Key = CO_KEY(0x2100, 1, CO_UNSIGNED16 | CO_OBJ___PRW),
+         .Type = 0,
+         .Data = (uintptr_t) &sampleDataB},
 
         // End of dictionary marker
         CO_OBJ_DIR_ENDMARK};

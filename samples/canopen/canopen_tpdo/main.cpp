@@ -49,7 +49,7 @@ void canInterrupt(IO::CANMessage& message, void* priv) {
 
     uart.printf("Got message from %X of length %d with data: ", message.getId(), message.getDataLength());
     uint8_t* data = message.getPayload();
-    for(int i = 0; i < message.getDataLength(); i++){
+    for (int i = 0; i < message.getDataLength(); i++) {
         uart.printf("%X ", *data);
         data++;
     }
@@ -81,7 +81,7 @@ extern "C" int16_t COParaDefault(CO_PARA* pg) { return 0; }
 extern "C" void COPdoTransmit(CO_IF_FRM* frm) {
     uart.printf("Sending PDO as 0x%X with length %d and data: ", frm->Identifier, frm->DLC);
     uint8_t* data = frm->Data;
-    for(int i = 0; i < frm->DLC; i++){
+    for (int i = 0; i < frm->DLC; i++) {
         uart.printf("%X ", *data);
         data++;
     }
@@ -174,7 +174,7 @@ int main() {
     uint16_t lastVal2 = 0;
     while (1) {
         testCanNode.update();
-        if(lastVal2 != testCanNode.getSampleDataB()) {
+        if (lastVal2 != testCanNode.getSampleDataB()) {
             lastVal1 = testCanNode.getSampleDataA();
             lastVal2 = testCanNode.getSampleDataB();
             uart.printf("Current value: %X, %X\r\n", lastVal1, lastVal2);
