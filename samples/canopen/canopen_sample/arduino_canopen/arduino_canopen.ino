@@ -3,12 +3,16 @@
 
 #include <CAN.h>
 
+//#define CS_PIN    9  //CAN shield v2
+#define CS_PIN    10 //CAN shield v1.4
+#define IRQ_PIN   2
+
 bool readyToSend = true;
 int counter = 0;
 long timeSinceLastReceive = 0;
 
 void onReceive(int packetSize) {
-  if(CAN.packetId() != 0x180)
+  if(CAN.packetId() != 0x181)
     return;
 
   long timeDelta = millis() - timeSinceLastReceive;
@@ -58,6 +62,7 @@ void setup() {
 
   Serial.println("CAN Sender");
 
+  CAN.setPins(CS_PIN, IRQ_PIN);
   // start the CAN bus at 500 kbps
   if (!CAN.begin(500E3)) {
     Serial.println("Starting CAN failed!");
@@ -69,9 +74,7 @@ void setup() {
 }
 
 void loop() {
-
-
-  // Serial.print("Sending CAN message ");
+  //Serial.print("Sending CAN message ");
 
   CAN.beginPacket(0x601);
   
