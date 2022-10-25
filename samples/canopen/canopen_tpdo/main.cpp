@@ -19,7 +19,7 @@
 #include <Canopen/co_if.h>
 #include <Canopen/co_tmr.h>
 
-#include "TestCanNode.hpp"
+#include "TPDOCanNode.hpp"
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
@@ -47,7 +47,14 @@ void canInterrupt(IO::CANMessage& message, void* priv) {
     EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* queue =
         (EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*) priv;
 
-    uart.printf("Received message\r\n");
+    uart.printf("Got message from %X of length %d with data: ", message.getId(), message.getDataLength());
+    uint8_t* data = message.getPayload();
+    for(int i = 0; i < message.getDataLength(); i++){
+        uart.printf("%X ", *data);
+        data++;
+    }
+    uart.printf("\r\n");
+
     if (queue != nullptr)
         queue->append(message);
 }
@@ -71,7 +78,15 @@ extern "C" void CONmtHbConsChange(CO_NMT* nmt, uint8_t nodeId, CO_MODE mode) {}
 
 extern "C" int16_t COParaDefault(CO_PARA* pg) { return 0; }
 
-extern "C" void COPdoTransmit(CO_IF_FRM* frm) {}
+extern "C" void COPdoTransmit(CO_IF_FRM* frm) {
+    uart.printf("Sending PDO as 0x%X with length %d and data: ", frm->Identifier, frm->DLC);
+    uint8_t* data = frm->Data;
+    for(int i = 0; i < frm->DLC; i++){
+        uart.printf("%X ", *data);
+        data++;
+    }
+    uart.printf("\r\n");
+}
 
 extern "C" int16_t COPdoReceive(CO_IF_FRM* frm) { return 0; }
 
@@ -99,7 +114,7 @@ int main() {
     // UART for testing
     timer.stopTimer();
 
-    TestCanNode testCanNode;
+    TPDOCanNode testCanNode;
 
     // Reserved memory for CANopen stack usage
     uint8_t sdoBuffer[1][CO_SDO_BUF_BYTE];
@@ -134,7 +149,7 @@ int main() {
     canStackDriver.Nvm = &nvmDriver;
 
     CO_NODE_SPEC canSpec = {
-        .NodeId = 0x02,
+        .NodeId = 0x01,
         .Baudrate = IO::CAN::DEFAULT_BAUD,
         .Dict = testCanNode.getObjectDictionary(),
         .DictLen = testCanNode.getNumElements(),
@@ -158,7 +173,8 @@ int main() {
     uint8_t lastVal1 = 0;
     uint16_t lastVal2 = 0;
     while (1) {
-        if(lastVal1 != testCanNode.getSampleDataA() || lastVal2 != testCanNode.getSampleDataB()) {
+        testCanNode.update();
+        if(lastVal2 != testCanNode.getSampleDataB()) {
             lastVal1 = testCanNode.getSampleDataA();
             lastVal2 = testCanNode.getSampleDataB();
             uart.printf("Current value: %X, %X\r\n", lastVal1, lastVal2);
@@ -170,6 +186,6 @@ int main() {
         // Handle executing timer events that have elapsed
         COTmrProcess(&canNode.Tmr);
         // Wait for new data to come in
-        time::wait(10);
+        time::wait(50);
     }
 }
