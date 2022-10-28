@@ -18,7 +18,7 @@ constexpr uint8_t deviceCount = 1;
 
 IO::GPIO* devices[deviceCount];
 
-unsigned char bitMap[8192] = {
+unsigned char evtBitMap[8192] = {
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
@@ -84,12 +84,15 @@ unsigned char bitMap[8192] = {
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
+
+unsigned char bitMap[16] {0x36, 0x36, 0x7F, 0x36, 0x7F, 0x36, 0x36, 0x00};   // U+0023 (#)
+
 int main() {
     // Initialize system
     IO::init();
 
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    IO::UART& uart = IO::getUART<IO::Pin::PB_4, IO::Pin::PB_5>(9600);
 
     // Uses HUDL 1.0 Pins
     IO::GPIO& regSelect = IO::getGPIO<IO::Pin::PA_3>(EVT::core::IO::GPIO::Direction::OUTPUT);
@@ -106,9 +109,48 @@ int main() {
     EVT::core::DEV::LCD lcd(regSelect, reset, spi);
     uart.printf("Initializing LCD...\n\r");
     lcd.initLCD();
-    lcd.displayMap(bitMap);
+    lcd.clearLCD(nullptr);
+    lcd.displayBitMap(bitMap, 8, 8, 0xB0, 100);
+//    unsigned char page = 0xB0;
+//    unsigned char upperColumn = 0x00;
+//    unsigned char lowerColumn = 0x10;
 
-    while (1) {}
+//    lcd.displayBitMap(bitMap, page, upperColumn, lowerColumn);
+//    lcd.displayMap(bitMap);
+//    unsigned int j;
+//    unsigned char page = 0xB0;
+//
+//    lcd.commWrite(0xAE);           //Display OFF
+//    lcd.commWrite(0x40);           //Display start address + 0x40
+//
+//
+//    lcd.commWrite(page);       //send page address
+//    lcd.commWrite(0x10);       //column address upper 4 bits + 0x10
+//    lcd.commWrite(0x00);       //column address lower 4 bits + 0x00
+//    for (j = 0; j < 128; j++) {         //128 columns wide
+//        lcd.dataWrite(0xFF);  //write pixels from bitmap
+//    }
+//
+//    lcd.commWrite(0xAF);
+//
+        while (true) {
+            uart.printf("Clearing LCD...\n\r");
+//    //        lcd.clearLCD(bitMap);
+//
+//            uart.printf("Writing to Screen...\n\r");
+//            for(int i = 0; i < 8; i++) {
+//                for(int j = 0; j < 8; j++) {
+//                    for(int k = 0; k < 16; k++) {
+//                        lcd.drivePixel(i, j, k, 255);
+//                        time::wait(8);
+//                    }
+//                    time::wait(8);
+//                }
+//                time::wait(8);
+//            }
+//
+//            time::wait(500);
+        }
 
     return 0;
 }

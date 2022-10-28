@@ -36,27 +36,10 @@ public:
      */
     LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi);
 
-    /**
-     * Writes data to the LCD
-     *
-     * @param[in] data data to write to the LCD
-     */
-    void dataWrite(uint8_t data);
-
-    /**
-    * Writes commands to the LCD
-    *
-    * @param[in] data command to write to the LCD
-    */
-    void commandWrite(uint8_t data);
-
-    /**
-     * Drives a particular pixel on the LCD
      *
      * @param[in] page Page address to write to
      * @param[in] colUp Bits to write to the page address
      * @param[in] colLow Bits to write to the column select
-     * @param[in] data Bits to write to the LCD
      */
     void drivePixel(uint8_t page, uint8_t colUp, uint8_t colLow, uint8_t data);
 
@@ -74,9 +57,9 @@ public:
      */
     void displayMap(const uint8_t* bitMap);
 
-    /**
-     * Initializes the LCD for operation (must be called to use the LCD)
-     */
+    void displayBitMap(uint8_t * bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column);
+
+    /// initializes the LCD for operation (must be called to use the LCD)
     void initLCD();
 
 private:
@@ -88,6 +71,7 @@ private:
     //EVT::core::IO::GPIO& chipSelect; // TODO: Need to figure out purpose of this
     /** SPI port for the LCD controller */
     EVT::core::IO::SPI& spi;
+
 };
 
 }// namespace EVT::core::DEV
