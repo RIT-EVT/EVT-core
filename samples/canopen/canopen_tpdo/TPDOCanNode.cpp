@@ -33,5 +33,5 @@ CO_OBJ_T* TPDOCanNode::getObjectDictionary() {
 }
 
 uint8_t TPDOCanNode::getNumElements() {
-    return OBJECT_DIRECTIONARY_SIZE;
+    return OBJECT_DICTIONARY_SIZE;
 }

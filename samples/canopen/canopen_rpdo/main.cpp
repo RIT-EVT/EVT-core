@@ -36,18 +36,27 @@ namespace time = EVT::core::time;
  * function each time a new CAN message comes in.
  *
  * NOTE: For this sample, every non-extended (so 11 bit CAN IDs) will be
- * assummed to be intended to be passed as a CANopen message.
+ * assumed to be intended to be passed as a CANopen message.
  *
  * @param message[in] The passed in CAN message that was read.
  */
 
 IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
+// create a can interrupt handler
 void canInterrupt(IO::CANMessage& message, void* priv) {
     EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* queue =
         (EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*) priv;
 
-    uart.printf("Received message\r\n");
+    //print out raw received data
+    uart.printf("Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
+    uint8_t* data = message.getPayload();
+    for (int i = 0; i < message.getDataLength(); i++) {
+        uart.printf("%X ", *data);
+        data++;
+    }
+    uart.printf("\r\n");
+
     if (queue != nullptr)
         queue->append(message);
 }
@@ -89,7 +98,7 @@ int main() {
     // interrupt
     EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage> canOpenQueue;
 
-    // Intialize CAN, add an IRQ which will add messages to the queue above
+    // Initialize CAN, add an IRQ which will add messages to the queue above
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();
     can.addIRQHandler(canInterrupt, reinterpret_cast<void*>(&canOpenQueue));
 
@@ -99,6 +108,7 @@ int main() {
     // UART for testing
     timer.stopTimer();
 
+    //create the RPDO node
     TestCanNode testCanNode;
 
     // Reserved memory for CANopen stack usage
@@ -108,6 +118,7 @@ int main() {
     // Attempt to join the CAN network
     IO::CAN::CANStatus result = can.connect();
 
+    //test that the board is connected to the can network
     if (result != IO::CAN::CANStatus::OK) {
         uart.printf("Failed to connect to CAN network\r\n");
         return 1;
@@ -133,6 +144,7 @@ int main() {
     canStackDriver.Timer = &timerDriver;
     canStackDriver.Nvm = &nvmDriver;
 
+    //setup CANopen Node
     CO_NODE_SPEC canSpec = {
         .NodeId = 0x02,
         .Baudrate = IO::CAN::DEFAULT_BAUD,
@@ -154,10 +166,12 @@ int main() {
 
     time::wait(500);
 
+    //print any CANopen errors
     uart.printf("Error: %d\r\n", CONodeGetErr(&canNode));
     uint8_t lastVal1 = 0;
     uint16_t lastVal2 = 0;
     while (1) {
+        //Print new value when changed over CAN
         if (lastVal1 != testCanNode.getSampleDataA() || lastVal2 != testCanNode.getSampleDataB()) {
             lastVal1 = testCanNode.getSampleDataA();
             lastVal2 = testCanNode.getSampleDataB();

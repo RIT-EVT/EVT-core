@@ -2,7 +2,7 @@
  * Representation of the CAN node. Handles constructing the object
  * dictionary and other baseline settings. The idea is that each "board"
  * will have a specific object dictionary associated with it. The object
- * dicitonary itself will also need to have information on "data of interest".
+ * dictionary itself will also need to have information on "data of interest".
  * For example, a temperature management system may to expose water pump
  * flow rate in the object dictionary.
  */
@@ -15,10 +15,10 @@ public:
     TPDOCanNode();
 
     /**
-     * Expose a way to programmably update the sampleData.
+     * Expose a way to programmatically update the sampleData.
      *
      * An example use case could be temperature data that is collected
-     * then stored in this object. Under the hood, the object dicitonary
+     * then stored in this object. Under the hood, the object dictionary
      * has the address of the temperature data, so the triggered PDO
      * would also effectively be updated.
      *
@@ -36,7 +36,7 @@ public:
     uint16_t getSampleDataB();
 
     /**
-     * Count up
+     * increments counters up
      */
     void update();
 
@@ -73,7 +73,7 @@ private:
      * Have to know the size of the object dictionary for initialization
      * process.
      */
-    static constexpr uint8_t OBJECT_DIRECTIONARY_SIZE = 17;
+    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 17;
 
     /**
      * The object dictionary itself. Will be populated by this object during
@@ -81,7 +81,7 @@ private:
      *
      * The plus one is for the special "end of dictionary" marker.
      */
-    CO_OBJ_T objectDictionary[OBJECT_DIRECTIONARY_SIZE + 1] = {
+    CO_OBJ_T objectDictionary[OBJECT_DICTIONARY_SIZE + 1] = {
         // Sync ID, defaults to 0x80
         {CO_KEY(0x1005, 0, CO_UNSIGNED32 | CO_OBJ_D__R_), 0, (uintptr_t) 0x80},
 
@@ -93,18 +93,15 @@ private:
         {
             .Key = CO_KEY(0x1018, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = (uintptr_t) 0x10,
-        },
+            .Data = (uintptr_t) 0x10,},
         {
             .Key = CO_KEY(0x1018, 2, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = (uintptr_t) 0x11,
-        },
+            .Data = (uintptr_t) 0x11,},
         {
             .Key = CO_KEY(0x1018, 3, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = (uintptr_t) 0x12,
-        },
+            .Data = (uintptr_t) 0x12,},
         {
             .Key = CO_KEY(0x1018, 4, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
@@ -117,8 +114,7 @@ private:
         {
             .Key = CO_KEY(0x1200, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = (uintptr_t) 0x600 + NODE_ID,
-        },
+            .Data = (uintptr_t) 0x600 + NODE_ID,},
         {
             .Key = CO_KEY(0x1200, 2, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
@@ -135,51 +131,53 @@ private:
             .Key = CO_KEY(0x1800, 0, CO_UNSIGNED8 | CO_OBJ_D__R_),
             .Type = 0,
             .Data = (uintptr_t) 5},
-        {//180h+Node-ID
-         .Key = CO_KEY(0x1800, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
-         .Type = 0,
-         .Data = (uintptr_t) CO_COBID_TPDO_DEFAULT(0) + NODE_ID},
-        {//timer triggered
-         .Key = CO_KEY(0x1800, 2, CO_UNSIGNED8 | CO_OBJ_D__R_),
-         .Type = 0,
-         .Data = (uintptr_t) 0xFE},
-        {//no inhibit time
-         .Key = CO_KEY(0x1800, 3, CO_UNSIGNED16 | CO_OBJ_D__R_),
-         .Type = 0,
-         .Data = (uintptr_t) 0},
-        {//send every 2 seconds
-         .Key = CO_KEY(0x1800, 5, CO_UNSIGNED16 | CO_OBJ_D__R_),
-         .Type = CO_TEVENT,
-         .Data = (uintptr_t) 2000},
+        { // 180h+Node-ID
+             .Key = CO_KEY(0x1800, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
+             .Type = 0,
+             .Data = (uintptr_t) CO_COBID_TPDO_DEFAULT(0) + NODE_ID},
+        { // timer triggered
+             .Key = CO_KEY(0x1800, 2, CO_UNSIGNED8 | CO_OBJ_D__R_),
+             .Type = 0,
+             .Data = (uintptr_t) 0xFE},
+        { // no inhibit time
+             .Key = CO_KEY(0x1800, 3, CO_UNSIGNED16 | CO_OBJ_D__R_),
+             .Type = 0,
+             .Data = (uintptr_t) 0},
+        { // send every 2 seconds
+             .Key = CO_KEY(0x1800, 5, CO_UNSIGNED16 | CO_OBJ_D__R_),
+             .Type = CO_TEVENT,
+             .Data = (uintptr_t) 2000
+        },
 
-        // TPDO0 mapping, determins the PDO messages to send when TPDO1 is triggered
+        // TPDO0 mapping, determines the PDO messages to send when TPDO1 is triggered
         // 0: The number of PDO message associated with the TPDO
         // 1: Link to the first PDO message
         // n: Link to the nth PDO message
-        {
+        { // maps two objects
             .Key = CO_KEY(0x1A00, 0, CO_UNSIGNED8 | CO_OBJ_D__R_),
             .Type = 0,
             .Data = (uintptr_t) 2},
-        {
+        { // link the first byte to (0x2100, 0, 8) - sampleDataA
             .Key = CO_KEY(0x1A00, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = CO_LINK(0x2100, 0, 8)// Link to sample data position in dictionary
-        },
-        {
+            .Data = CO_LINK(0x2100, 0, 8)},
+        { // link the second byte to (0x2100, 1, 16) - sampleDataB
             .Key = CO_KEY(0x1A00, 2, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = CO_LINK(0x2100, 1, 16)// Link to sample data position in dictionary
+            .Data = CO_LINK(0x2100, 1, 16)
         },
 
         // User defined data, this will be where we put elements that can be
-        // accessed via SDO and depeneding on configuration PDO
-        {
+        // accessed via SDO and depending on configuration PDO
+        { // sampleDataA
             .Key = CO_KEY(0x2100, 0, CO_UNSIGNED8 | CO_OBJ___PRW),
             .Type = 0,
             .Data = (uintptr_t) &sampleDataA},
-        {.Key = CO_KEY(0x2100, 1, CO_UNSIGNED16 | CO_OBJ___PRW),
-         .Type = 0,
-         .Data = (uintptr_t) &sampleDataB},
+        { // sampleDataB
+            .Key = CO_KEY(0x2100, 1, CO_UNSIGNED16 | CO_OBJ___PRW),
+            .Type = 0,
+            .Data = (uintptr_t) &sampleDataB
+        },
 
         // End of dictionary marker
         CO_OBJ_DIR_ENDMARK};
