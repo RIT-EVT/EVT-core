@@ -85,15 +85,18 @@ private:
         {
             .Key = CO_KEY(0x1018, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = (uintptr_t) 0x10,},
+            .Data = (uintptr_t) 0x10,
+        },
         {
             .Key = CO_KEY(0x1018, 2, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = (uintptr_t) 0x11,},
+            .Data = (uintptr_t) 0x11,
+        },
         {
             .Key = CO_KEY(0x1018, 3, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = (uintptr_t) 0x12,},
+            .Data = (uintptr_t) 0x12,
+        },
         {
             .Key = CO_KEY(0x1018, 4, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
@@ -106,7 +109,8 @@ private:
         {
             .Key = CO_KEY(0x1200, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = (uintptr_t) 0x600 + NODE_ID,},
+            .Data = (uintptr_t) 0x600 + NODE_ID,
+        },
         {
             .Key = CO_KEY(0x1200, 2, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
@@ -122,20 +126,28 @@ private:
         {
             .Key = CO_KEY(0x1800, 0, CO_UNSIGNED8 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = (uintptr_t) 5,},
-        { // 180h+Node-ID
+            .Data = (uintptr_t) 5,
+        },
+        {
+            // 180h+Node-ID
             .Key = CO_KEY(0x1800, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = (uintptr_t) CO_COBID_TPDO_DEFAULT(0) + NODE_ID,},
-        { // timer triggered
+            .Data = (uintptr_t) CO_COBID_TPDO_DEFAULT(0) + NODE_ID,
+        },
+        {
+            // timer triggered
             .Key = CO_KEY(0x1800, 2, CO_UNSIGNED8 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = (uintptr_t) 0xFE,},
-        { // no inhibit time
+            .Data = (uintptr_t) 0xFE,
+        },
+        {
+            // no inhibit time
             .Key = CO_KEY(0x1800, 3, CO_UNSIGNED16 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = (uintptr_t) 0,},
-        { // send every 2 seconds
+            .Data = (uintptr_t) 0,
+        },
+        {
+            // send every 2 seconds
             .Key = CO_KEY(0x1800, 5, CO_UNSIGNED16 | CO_OBJ_D__R_),
             .Type = CO_TEVENT,
             .Data = (uintptr_t) 2000,
@@ -145,11 +157,14 @@ private:
         // 0: The number of PDO message associated with the TPDO
         // 1: Link to the first PDO message
         // n: Link to the nth PDO message
-        { // maps one object
+        {
+            // maps one object
             .Key = CO_KEY(0x1A00, 0, CO_UNSIGNED8 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = (uintptr_t) 1,},
-        { // link the first byte to (0x2100, 0, 8) - sampleData
+            .Data = (uintptr_t) 1,
+        },
+        {
+            // link the first byte to (0x2100, 0, 8) - sampleData
             .Key = CO_KEY(0x1A00, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
             .Data = CO_LINK(0x2100, 0, 8),
@@ -157,7 +172,8 @@ private:
 
         // User defined data, this will be where we put elements that can be
         // accessed via SDO and depending on configuration PDO
-        { // sampleData
+        {
+            // sampleData
             .Key = CO_KEY(0x2100, 0, CO_UNSIGNED8 | CO_OBJ___PRW),
             .Type = 0,
             .Data = (uintptr_t) &sampleData,
