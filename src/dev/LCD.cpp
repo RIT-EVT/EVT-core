@@ -1,4 +1,6 @@
+#include "EVT/dev/BitMapFonts.h"
 #include <EVT/dev/LCD.hpp>
+#include <cstring>
 
 namespace EVT::core::DEV {
 LCD::LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi)
@@ -105,7 +107,6 @@ void LCD::clearArea(uint8_t width, uint8_t height, uint8_t page, uint8_t column)
         page++; //after 128 columns, go to next page
     }
     this->commandWrite(0xAF);
-
 }
 
 void LCD::displayMap(const uint8_t* bitMap) {
@@ -155,4 +156,25 @@ void LCD::displayBitMap(uint8_t * bitMap, uint8_t bitMapWidth, uint8_t bitMapHei
     this->commandWrite(0xAF);
 
 }
+
+void LCD::writeText(const char* text, uint8_t page, uint8_t column) {
+    for(int x = 0; x < strlen(text); x ++) {
+        int fontIndex = (int) ((unsigned char) text[x]);
+
+        unsigned char characterMap[8] = {
+            BitMapFont::font8x8_basic[fontIndex][0],
+            BitMapFont::font8x8_basic[fontIndex][1],
+            BitMapFont::font8x8_basic[fontIndex][2],
+            BitMapFont::font8x8_basic[fontIndex][3],
+            BitMapFont::font8x8_basic[fontIndex][4],
+            BitMapFont::font8x8_basic[fontIndex][5],
+            BitMapFont::font8x8_basic[fontIndex][6],
+            BitMapFont::font8x8_basic[fontIndex][7],
+        };
+
+        displayBitMap(characterMap, 8, 8, page, column);
+        column += 8;
+    }
+}
+
 }// namespace EVT::core::DEV

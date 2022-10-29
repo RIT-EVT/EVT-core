@@ -110,29 +110,30 @@ int main() {
     uart.printf("Initializing LCD...\n\r");
     lcd.initLCD();
     lcd.clearLCD(nullptr);
-//    lcd.displayMap(evtBitMap);
+    lcd.writeText("Hello World!", 0, 0);
 
-    bool forward = true;
-    uint8_t x = 0;
-    while (true) {
-        uart.printf("Clearing LCD...\n\r");
 
-        lcd.clearArea(8, 8, 0 , x - 1);
-        lcd.displayBitMap(bitMap, 8, 8, 0, x);
-
-        if (forward) {
-            x ++;
-            if (x == 128) {
-                forward = false;
-            }
-        } else {
-            x --;
-            if (x == 0) {
-                forward = true;
-            }
-        }
-        time::wait(350);
-    }
+//    bool forward = true;
+//    uint8_t x = 0;
+//    while (true) {
+//        uart.printf("Clearing LCD...\n\r");
+//
+//        lcd.clearArea(8, 8, 0 , x - 1);
+//        lcd.displayBitMap(bitMap, 8, 8, 0, x);
+//
+//        if (forward) {
+//            x ++;
+//            if (x == 128) {
+//                forward = false;
+//            }
+//        } else {
+//            x --;
+//            if (x == 0) {
+//                forward = true;
+//            }
+//        }
+//        time::wait(350);
+//    }
 
     return 0;
 }

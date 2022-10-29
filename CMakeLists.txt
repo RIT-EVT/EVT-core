@@ -20,7 +20,7 @@ project(EVT
     LANGUAGES CXX C
 )
 
-add_library(${PROJECT_NAME} STATIC)
+add_library(${PROJECT_NAME} STATIC include/EVT/dev/BitMapFonts.h)
 
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE
