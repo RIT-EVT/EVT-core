@@ -110,47 +110,29 @@ int main() {
     uart.printf("Initializing LCD...\n\r");
     lcd.initLCD();
     lcd.clearLCD(nullptr);
-    lcd.displayBitMap(bitMap, 8, 8, 0xB0, 100);
-//    unsigned char page = 0xB0;
-//    unsigned char upperColumn = 0x00;
-//    unsigned char lowerColumn = 0x10;
+//    lcd.displayMap(evtBitMap);
 
-//    lcd.displayBitMap(bitMap, page, upperColumn, lowerColumn);
-//    lcd.displayMap(bitMap);
-//    unsigned int j;
-//    unsigned char page = 0xB0;
-//
-//    lcd.commWrite(0xAE);           //Display OFF
-//    lcd.commWrite(0x40);           //Display start address + 0x40
-//
-//
-//    lcd.commWrite(page);       //send page address
-//    lcd.commWrite(0x10);       //column address upper 4 bits + 0x10
-//    lcd.commWrite(0x00);       //column address lower 4 bits + 0x00
-//    for (j = 0; j < 128; j++) {         //128 columns wide
-//        lcd.dataWrite(0xFF);  //write pixels from bitmap
-//    }
-//
-//    lcd.commWrite(0xAF);
-//
-        while (true) {
-            uart.printf("Clearing LCD...\n\r");
-//    //        lcd.clearLCD(bitMap);
-//
-//            uart.printf("Writing to Screen...\n\r");
-//            for(int i = 0; i < 8; i++) {
-//                for(int j = 0; j < 8; j++) {
-//                    for(int k = 0; k < 16; k++) {
-//                        lcd.drivePixel(i, j, k, 255);
-//                        time::wait(8);
-//                    }
-//                    time::wait(8);
-//                }
-//                time::wait(8);
-//            }
-//
-//            time::wait(500);
+    bool forward = true;
+    uint8_t x = 0;
+    while (true) {
+        uart.printf("Clearing LCD...\n\r");
+
+        lcd.clearArea(8, 8, 0 , x - 1);
+        lcd.displayBitMap(bitMap, 8, 8, 0, x);
+
+        if (forward) {
+            x ++;
+            if (x == 128) {
+                forward = false;
+            }
+        } else {
+            x --;
+            if (x == 0) {
+                forward = true;
+            }
         }
+        time::wait(350);
+    }
 
     return 0;
 }

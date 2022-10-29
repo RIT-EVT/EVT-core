@@ -36,6 +36,13 @@ public:
      */
     LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi);
 
+    /// function to write data to the LCD
+    void dataWrite(uint8_t data);
+
+    /// writes commands to the LCD
+    void commandWrite(uint8_t data);
+
+    /**
      *
      * @param[in] page Page address to write to
      * @param[in] colUp Bits to write to the page address
@@ -49,6 +56,8 @@ public:
      * @param[in] bitMap Bitmap to be displayed
      */
     void clearLCD(const uint8_t* bitMap);
+
+    void clearArea(uint8_t width, uint8_t height, uint8_t page, uint8_t column);
 
     /**
      * Displays the map for diagnostic purposes
