@@ -104,8 +104,6 @@ int main() {
 
     // Initialize the timer
     DEV::Timerf302x8 timer(TIM2, 100);
-
-    // UART for testing
     timer.stopTimer();
 
     //create the RPDO node

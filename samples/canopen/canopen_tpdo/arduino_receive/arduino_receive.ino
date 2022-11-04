@@ -7,9 +7,6 @@
 #define CS_PIN    10 //CAN shield v1.4
 #define IRQ_PIN   2
 
-bool readyToSend = true;
-bool doSend = true;
-
 void onReceive(int packetSize) {
   // received a packet
   Serial.print("Received ");
@@ -42,8 +39,6 @@ void onReceive(int packetSize) {
   }
 
   Serial.println();
-
-  readyToSend = true;
 }
 
 void setup() {
@@ -64,30 +59,5 @@ void setup() {
 }
 
 void loop() {
-
-//  while(!readyToSend) {
-    delay(5);
-//  }
-//  if(Serial.available()){
-//    Serial.read();
-//    doSend = !doSend;
-//    Serial.print("doSend=");
-//    Serial.println(doSend ? "true" : "False");
-//  }
-
-//  if(doSend && readyToSend){
-//    Serial.print("Sending CAN message ");
-//  
-//    CAN.beginExtendedPacket(0xabcdef);
-//    CAN.write(0x01);
-//    CAN.write(0x02);
-//    CAN.write(0x03);
-//    CAN.write(0x04);
-//    CAN.write(0x05);
-//    CAN.endPacket();
-//  
-//    readyToSend = false;
-//  
-//    Serial.println("done");
-//  }
+  delay(5);
 }

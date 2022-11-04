@@ -22,6 +22,7 @@ uint32_t timerCounter = 0;
 /** The target value for the counter */
 uint32_t counterTarget = 0;
 
+/* only return timer updates while timer is running - fixes hard fault in COTmrService*/
 bool timerRunning = false;
 
 // Temporary "storage" to allow the NVM to work, do not use as actual NVM
