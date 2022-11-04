@@ -129,12 +129,14 @@ private:
             .Type = 0,
             .Data = (uintptr_t) 3,
         },
-        {// 180h+TPDO Node-ID
+        {
+            // 180h+TPDO Node-ID
             .Key = CO_KEY(0x1400, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
             .Data = (uintptr_t) CO_COBID_TPDO_DEFAULT(0) + 1,
         },
-        {// asynchronous trigger
+        {
+            // asynchronous trigger
             .Key = CO_KEY(0x1400, 2, CO_UNSIGNED8 | CO_OBJ_D__R_),
             .Type = 0,
             .Data = (uintptr_t) 0xFE,
@@ -144,17 +146,20 @@ private:
         // 0: The number of PDO message associated with the RPDO
         // 1: Link to the first PDO message
         // n: Link to the nth PDO message
-        {// maps two objects
+        {
+            // maps two objects
             .Key = CO_KEY(0x1600, 0, CO_UNSIGNED8 | CO_OBJ_D__R_),
             .Type = 0,
             .Data = (uintptr_t) 2,
         },
-        {// link the first byte to (0x2100, 0, 8) - sampleDataA
+        {
+            // link the first byte to (0x2100, 0, 8) - sampleDataA
             .Key = CO_KEY(0x1600, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
             .Data = CO_LINK(0x2100, 0, 8),
         },
-        {// link the second byte to (0x2100, 1, 16) - sampleDataB
+        {
+            // link the second byte to (0x2100, 1, 16) - sampleDataB
             .Key = CO_KEY(0x1600, 2, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
             .Data = CO_LINK(0x2100, 1, 16),
@@ -162,12 +167,14 @@ private:
 
         // User defined data, this will be where we put elements that can be
         // accessed via SDO and depending on configuration PDO
-        {// sampleDataA
+        {
+            // sampleDataA
             .Key = CO_KEY(0x2100, 0, CO_UNSIGNED8 | CO_OBJ___PRW),
             .Type = 0,
             .Data = (uintptr_t) &sampleDataA,
         },
-        {// sampleDataB
+        {
+            // sampleDataB
             .Key = CO_KEY(0x2100, 1, CO_UNSIGNED16 | CO_OBJ___PRW),
             .Type = 0,
             .Data = (uintptr_t) &sampleDataB,
