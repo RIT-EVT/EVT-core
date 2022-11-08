@@ -36,7 +36,7 @@ namespace time = EVT::core::time;
  * function each time a new CAN message comes in.
  *
  * NOTE: For this sample, every non-extended (so 11 bit CAN IDs) will be
- * assummed to be intended to be passed as a CANopen message.
+ * assumed to be intended to be passed as a CANopen message.
  *
  * @param message[in] The passed in CAN message that was read.
  */
@@ -84,7 +84,7 @@ int main() {
     // interrupt
     EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage> canOpenQueue;
 
-    // Intialize CAN, add an IRQ which will add messages to the queue above
+    // Initialize CAN, add an IRQ which will add messages to the queue above
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();
     can.addIRQHandler(canInterrupt, reinterpret_cast<void*>(&canOpenQueue));
 
@@ -129,6 +129,7 @@ int main() {
     canStackDriver.Timer = &timerDriver;
     canStackDriver.Nvm = &nvmDriver;
 
+    //setup CANopen Node
     CO_NODE_SPEC canSpec = {
         .NodeId = 0x01,
         .Baudrate = IO::CAN::DEFAULT_BAUD,
@@ -150,10 +151,15 @@ int main() {
 
     time::wait(500);
 
+    //print any CANopen errors
     uart.printf("Error: %d\r\n", CONodeGetErr(&canNode));
 
+    uint8_t lastValue = 0;
     while (1) {
-        uart.printf("Value of my number: %d\n\r", testCanNode.getSampleData());
+        if (testCanNode.getSampleData() != lastValue) {
+            uart.printf("Value of my number: %d\n\r", testCanNode.getSampleData());
+            lastValue = testCanNode.getSampleData();
+        }
         // Process incoming CAN messages
         CONodeProcess(&canNode);
         // Update the state of timer based events
