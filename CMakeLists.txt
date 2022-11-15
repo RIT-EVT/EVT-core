@@ -20,7 +20,7 @@ project(EVT
     LANGUAGES CXX C
 )
 
-add_library(${PROJECT_NAME} STATIC include/EVT/dev/BitMapFonts.h)
+add_library(${PROJECT_NAME} STATIC samples/lcd-ball/main.cpp samples/lcd-alphabet/main.cpp samples/lcd-segment/main.cpp samples/lcd-counter/main.cpp)
 
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE

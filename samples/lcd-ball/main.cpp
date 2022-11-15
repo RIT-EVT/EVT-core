@@ -1,10 +1,12 @@
+//
+// Created by Zachary Lineman on 11/14/22.
+//
+
 #include "EVT/dev/LED.hpp"
 #include <EVT/dev/LCD.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/manager.hpp>
 #include <EVT/utils/time.hpp>
-#include <string>
-
 
 /**
  * Sample code for displaying EVT logo onto an LCD display
@@ -44,18 +46,13 @@ int main() {
     lcd.initLCD();
     lcd.clearLCD();
 
-    const char* text =  R"( !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)";
-    lcd.writeText(text, 0, 0, true);
-
     uint8_t ball[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
     uint8_t col = 0;
-    uint8_t page = 4;
+    uint8_t page = 0;
 
     lcd.displayBitMap(ball, 8, 8, page, col);
 
-    uint8_t number = 0;
-
-    while (true) {
+    while(true) {
         lcd.clearArea(8, 8, page, col);
 
         col++;
@@ -63,19 +60,14 @@ int main() {
             col = 0;
             page++;
 
-            if (page > 6) {
-                page = 4;
+            if (page > 7) {
+                page = 0;
             }
         }
 
         lcd.displayBitMap(ball, 8, 8, page, col);
 
-        lcd.clearArea(16, 8, 7, 0);
-        const char* dst = std::to_string(number).c_str();
-        lcd.writeText(dst, 7, 0, true);
-
-        number ++;
-        time::wait(WAIT_TIME);
+        time::wait(300);
     }
 
     return 0;
