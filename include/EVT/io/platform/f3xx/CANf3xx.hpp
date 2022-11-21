@@ -9,7 +9,10 @@
 #include <EVT/io/CAN.hpp>
 #include <EVT/utils/types/FixedQueue.hpp>
 
-#define CAN_MESSAGE_QUEUE_SIZE 100
+//Allows for resizable CAN queue if needed
+#ifndef CAN_MESSAGE_QUEUE_SIZE
+    #define CAN_MESSAGE_QUEUE_SIZE 100
+#endif
 
 namespace EVT::core::IO {
 
