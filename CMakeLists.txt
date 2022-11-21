@@ -25,6 +25,7 @@ add_library(${PROJECT_NAME} STATIC)
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE
     src/platform/f3xx/stm32f302x8.cpp
+    src/platform/f4xx/stm32f446xx.cpp
 
     src/io/ADC.cpp
     src/io/CAN.cpp
@@ -41,6 +42,13 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/io/platform/f3xx/PWMf3xx.cpp
     src/io/platform/f3xx/UARTf3xx.cpp
     src/io/platform/f3xx/SPIf3xx.cpp
+    src/io/platform/f4xx/ADCf4xx.cpp
+    src/io/platform/f4xx/CANf4xx.cpp
+    src/io/platform/f4xx/GPIOf4xx.cpp
+    src/io/platform/f4xx/I2Cf4xx.cpp
+    src/io/platform/f4xx/PWMf4xx.cpp
+    src/io/platform/f4xx/UARTf4xx.cpp
+    src/io/platform/f4xx/SPIf4xx.cpp
     src/io/types/CANMessage.cpp
 
     src/dev/button.cpp
@@ -82,6 +90,7 @@ cmake_dependent_option(EVT_BUILD_SAMPLES
 add_compile_definitions(USE_HAL_DRIVER)
 
 add_subdirectory(libs/HALf3/)
+add_subdirectory(libs/HALf4/)
 add_subdirectory(libs/canopen/canopen/)
 
 install(TARGETS Canopen EXPORT Canopen-config)
@@ -91,6 +100,7 @@ install(EXPORT Canopen-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Canopen)
 # be linked to
 target_link_libraries(${PROJECT_NAME}
     PUBLIC HALf3
+    PUBLIC HALf4
     PUBLIC Canopen
 )
 
