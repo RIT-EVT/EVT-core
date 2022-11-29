@@ -20,7 +20,7 @@ project(EVT
     LANGUAGES CXX C
 )
 
-add_library(${PROJECT_NAME} STATIC samples/lcd/lcd-ball/main.cpp samples/lcd/lcd-alphabet/main.cpp samples/lcd/lcd-segment/main.cpp samples/lcd/lcd-counter/main.cpp)
+add_library(${PROJECT_NAME} STATIC samples/lcd-ball/main.cpp samples/lcd-alphabet/main.cpp samples/lcd-segment/main.cpp samples/lcd-counter/main.cpp)
 
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE
