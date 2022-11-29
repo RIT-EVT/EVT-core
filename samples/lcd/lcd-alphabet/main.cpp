@@ -2,12 +2,11 @@
 // Created by Zachary Lineman on 11/14/22.
 //
 
+#include "EVT/dev/LCD.hpp"
 #include "EVT/dev/LED.hpp"
-#include <EVT/dev/LCD.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/io/manager.hpp>
-#include <EVT/utils/time.hpp>
-#include <string>
+#include "EVT/io/UART.hpp"
+#include "EVT/io/manager.hpp"
+#include "EVT/utils/time.hpp"
 
 /**
  * Sample code for displaying EVT logo onto an LCD display
@@ -47,34 +46,8 @@ int main() {
     lcd.initLCD();
     lcd.clearLCD();
 
-    // The segment titles
-    char* titles[9] = {
-        "B Voltage", "Speed", "RPM",
-        "Temp 1", "Temp 2", "Temp 3",
-        "Status 1", "Pre Stat", "Torque",
-    };
-    lcd.setDefaultSections(titles);
+    const char* text =  R"( !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)";
+    lcd.writeText(text, 0, 0, true);
 
-    // Set the default
-    lcd.displaySectionHeaders();
-    lcd.setTextForSection(0, "3.2 v");
-    lcd.setTextForSection(2, "25 MPH");
-    lcd.setTextForSection(2, "3000");
-    lcd.setTextForSection(3, "40 C");
-    lcd.setTextForSection(4, "44 C");
-    lcd.setTextForSection(5, "43 C");
-    lcd.setTextForSection(6, "ON");
-    lcd.setTextForSection(7, "Ready");
-    lcd.setTextForSection(8, "100 NM");
-
-    uint8_t number = 0;
-
-    while (true) {
-        const char* numb = std::to_string(number).c_str();
-        lcd.setTextForSection(1, numb);
-
-        number ++;
-        time::wait(500);
-    }
     return 0;
 }
