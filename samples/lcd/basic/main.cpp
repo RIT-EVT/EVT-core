@@ -43,7 +43,7 @@ int main() {
     lcd.initLCD();
     lcd.clearLCD();
 
-    const char* text =  R"( !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)";
+    const char* text = R"( !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)";
     lcd.writeText(text, 0, 0, true);
 
     uint8_t ball[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
@@ -73,7 +73,7 @@ int main() {
         const char* dst = std::to_string(number).c_str();
         lcd.writeText(dst, 7, 0, true);
 
-        number ++;
+        number++;
         time::wait(500);
     }
 

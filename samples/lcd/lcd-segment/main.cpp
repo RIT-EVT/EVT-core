@@ -49,9 +49,15 @@ int main() {
 
     // The segment titles
     char* titles[9] = {
-        "B Voltage", "Speed", "RPM",
-        "Temp 1", "Temp 2", "Temp 3",
-        "Status 1", "Pre Stat", "Torque",
+        "B Voltage",
+        "Speed",
+        "RPM",
+        "Temp 1",
+        "Temp 2",
+        "Temp 3",
+        "Status 1",
+        "Pre Stat",
+        "Torque",
     };
     lcd.setDefaultSections(titles);
 
@@ -73,7 +79,7 @@ int main() {
         const char* numb = std::to_string(number).c_str();
         lcd.setTextForSection(1, numb);
 
-        number ++;
+        number++;
         time::wait(500);
     }
     return 0;

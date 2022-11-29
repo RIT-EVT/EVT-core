@@ -85,7 +85,7 @@ public:
      * @param page the page to draw the bitmap on. Range: 0-7.
      * @param column the column to draw the bitmap on. Range:0-127.
      */
-    void displayBitMap(uint8_t * bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column);
+    void displayBitMap(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column);
 
     /**
      * Writes text to the screen. Has options to wrap the text around the edge of the screen if needed.
@@ -146,9 +146,15 @@ private:
 
     /** The default section titles for the display */
     char* sectionTitles[9] = {
-        "Not Set", "Not Set", "Not Set",
-        "Not Set", "Not Set", "Not Set",
-        "Not Set", "Not Set", "Not Set",
+        "Not Set",
+        "Not Set",
+        "Not Set",
+        "Not Set",
+        "Not Set",
+        "Not Set",
+        "Not Set",
+        "Not Set",
+        "Not Set",
     };
 };
 }// namespace EVT::core::DEV

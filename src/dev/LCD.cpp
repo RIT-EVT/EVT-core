@@ -42,14 +42,14 @@ void LCD::commandWrite(uint8_t data) {
 void LCD::driveColumn(uint8_t page, uint8_t colUp, uint8_t colLow, uint8_t data) {
     this->commandWrite(0xAE);// Display OFF
 
-    this->commandWrite(0x40); // Line to start writing on (0 -> 64) moves set bits with it DO NOT CHANGE
-    this->commandWrite(0xB0 + page); // Writes the page address (4 bits, 8 rows selected by values 0-7 )
+    this->commandWrite(0x40);         // Line to start writing on (0 -> 64) moves set bits with it DO NOT CHANGE
+    this->commandWrite(0xB0 + page);  // Writes the page address (4 bits, 8 rows selected by values 0-7 )
     this->commandWrite(0x10 + colUp); // Writes the first 4 bits of the column select (out of 8 bits)
-    this->commandWrite(0x00 + colLow); // Writes the second 4 bits of the column select (out)
+    this->commandWrite(0x00 + colLow);// Writes the second 4 bits of the column select (out)
 
     this->dataWrite(data);
 
-    this->commandWrite(0xAF); // Finish Writing
+    this->commandWrite(0xAF);// Finish Writing
     /*
      * writes 8 vertical bits based on value between 0-255 based on bits set ex: 01001100(0x4C) is
      * |WHITE|
@@ -65,18 +65,18 @@ void LCD::driveColumn(uint8_t page, uint8_t colUp, uint8_t colLow, uint8_t data)
 
 void LCD::clearLCD() {
     uint8_t i, j;
-    unsigned char page = 0xB0; // The starting page
+    unsigned char page = 0xB0;// The starting page
 
-    this->commandWrite(0xAE); // Display OFF
-    this->commandWrite(0x40); // Display start address + 0x40
-    for (i = 0; i < 8; i++) { // 64 pixel display / 8 pixels per page = 8 pages
-        this->commandWrite(page); // Send page address
-        this->commandWrite(0x10); // Column address upper 4 bits + 0x10
-        this->commandWrite(0x00); // Column address lower 4 bits + 0x00
-        for (j = 0; j < screenSizeX; j++) { // 128 columns wide
-            this->dataWrite(0x00); // Write clear pixels
+    this->commandWrite(0xAE);              // Display OFF
+    this->commandWrite(0x40);              // Display start address + 0x40
+    for (i = 0; i < 8; i++) {              // 64 pixel display / 8 pixels per page = 8 pages
+        this->commandWrite(page);          // Send page address
+        this->commandWrite(0x10);          // Column address upper 4 bits + 0x10
+        this->commandWrite(0x00);          // Column address lower 4 bits + 0x00
+        for (j = 0; j < screenSizeX; j++) {// 128 columns wide
+            this->dataWrite(0x00);         // Write clear pixels
         }
-        page++; // After 128 columns, go to next page
+        page++;// After 128 columns, go to next page
     }
     this->commandWrite(0xAF);
 }
@@ -98,20 +98,20 @@ void LCD::clearArea(uint8_t width, uint8_t height, uint8_t page, uint8_t column)
         amountOfPages = 1;
     }
 
-    this->commandWrite(0xAE); // Display OFF
-    this->commandWrite(0x40); // Display start address + 0x40
-    for (i = 0; i < amountOfPages; i++) { // 64 pixel display / 8 pixels per page = 8 pages
-        this->commandWrite(0xB0 + page); // Send page address
-        this->commandWrite(0x10 + columnUpperAddress); // Column address upper 4 bits + 0x10
-        this->commandWrite(0x00 + columnLowerAddress); // Column address lower 4 bits + 0x00
+    this->commandWrite(0xAE);                         // Display OFF
+    this->commandWrite(0x40);                         // Display start address + 0x40
+    for (i = 0; i < amountOfPages; i++) {             // 64 pixel display / 8 pixels per page = 8 pages
+        this->commandWrite(0xB0 + page);              // Send page address
+        this->commandWrite(0x10 + columnUpperAddress);// Column address upper 4 bits + 0x10
+        this->commandWrite(0x00 + columnLowerAddress);// Column address lower 4 bits + 0x00
 
         for (j = 0; j < width; j++) {
-            this->dataWrite(0x00); // Write Clear Pixels
+            this->dataWrite(0x00);// Write Clear Pixels
         }
 
-        page++; // After 128 columns, go to next page
+        page++;// After 128 columns, go to next page
     }
-    this->commandWrite(0xAF); // Finish Writing
+    this->commandWrite(0xAF);// Finish Writing
 }
 
 void LCD::displayMap(const uint8_t* bitMap) {
@@ -149,21 +149,21 @@ void LCD::displayBitMap(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeig
         amountOfPages = 1;
     }
 
-    this->commandWrite(0xAE); //Display OFF
-    this->commandWrite(0x40); //Display start address + 0x40
-    for (i = 0; i < amountOfPages; i++) { // 64 pixel display / 8 pixels per page = 8 pages
-        this->commandWrite(0xB0 + page); // Send page address
-        this->commandWrite(0x10 + columnUpperAddress); // Column address upper 4 bits + 0x10
-        this->commandWrite(0x00 + columnLowerAddress); // Column address lower 4 bits + 0x00
+    this->commandWrite(0xAE);                         //Display OFF
+    this->commandWrite(0x40);                         //Display start address + 0x40
+    for (i = 0; i < amountOfPages; i++) {             // 64 pixel display / 8 pixels per page = 8 pages
+        this->commandWrite(0xB0 + page);              // Send page address
+        this->commandWrite(0x10 + columnUpperAddress);// Column address upper 4 bits + 0x10
+        this->commandWrite(0x00 + columnLowerAddress);// Column address lower 4 bits + 0x00
 
         for (j = 0; j < bitMapWidth; j++) {
-            this->dataWrite(*bitMap); // Write pixels from bitmap
-            bitMap++; // Advance the bitmap pointer by one. This means we can just grab the last one the next loop.
+            this->dataWrite(*bitMap);// Write pixels from bitmap
+            bitMap++;                // Advance the bitmap pointer by one. This means we can just grab the last one the next loop.
         }
 
-        page++; // After 128 columns, go to next page
+        page++;// After 128 columns, go to next page
     }
-    this->commandWrite(0xAF); // Finish writing
+    this->commandWrite(0xAF);// Finish writing
 }
 
 void LCD::writeText(const char* text, uint8_t page, uint8_t column, bool wrapText) {
@@ -179,11 +179,13 @@ void LCD::writeText(const char* text, uint8_t page, uint8_t column, bool wrapTex
             BitmapFont::font4x6[fontIndex][3],
         };
 
-        if (column >= screenSizeX) { return; }
+        if (column >= screenSizeX) {
+            return;
+        }
 
         // Display the character bit map at the calculated page and column.
         displayBitMap(characterMap, 4, 8, page, column);
-        column += 4; // Advance the column for the next character.
+        column += 4;// Advance the column for the next character.
 
         // If we need to wrap text, move the page forward and the column to 0.
         if (wrapText && column >= screenSizeX) {
@@ -207,7 +209,7 @@ void LCD::displaySectionHeaders() {
     uint8_t sectionWidth = screenSizeX / sectionsPerRow;
 
     for (auto title : sectionTitles) {
-        uint8_t length = strlen(title) * 4; // The length of the text, multiply by 4 because each character is 4 pixels wide.
+        uint8_t length = strlen(title) * 4;// The length of the text, multiply by 4 because each character is 4 pixels wide.
         uint8_t padding = (sectionWidth - length) / 2;
 
         column += padding;
@@ -236,11 +238,11 @@ void LCD::displaySectionHeaders() {
 
 void LCD::setTextForSection(uint8_t section, const char* text) {
     uint8_t sectionWidth = screenSizeX / sectionsPerRow;
-    uint8_t adjustedSection = section + 1; // Adjust the section so the following math operates correctly.
-    uint8_t sectionRow = section / sectionsPerRow; // Calculate the correct row for the section
+    uint8_t adjustedSection = section + 1;        // Adjust the section so the following math operates correctly.
+    uint8_t sectionRow = section / sectionsPerRow;// Calculate the correct row for the section
 
     uint8_t sectionPage = (sectionRow * 3) + 1;
-    uint8_t sectionColumn = (adjustedSection - (sectionRow * sectionsPerRow) - 1) * sectionWidth; // Calculate what the column # for the section is.
+    uint8_t sectionColumn = (adjustedSection - (sectionRow * sectionsPerRow) - 1) * sectionWidth;// Calculate what the column # for the section is.
 
     // Clear the sections area so text is not written over old text.
     clearArea(sectionWidth, 8, sectionPage, sectionColumn);
@@ -254,4 +256,4 @@ void LCD::setTextForSection(uint8_t section, const char* text) {
     // Write the text to the screen under the section header.
     writeText(text, sectionPage, sectionColumn, false);
 }
-}
+}// namespace EVT::core::DEV

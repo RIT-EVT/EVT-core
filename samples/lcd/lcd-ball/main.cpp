@@ -52,7 +52,7 @@ int main() {
 
     lcd.displayBitMap(ball, 8, 8, page, col);
 
-    while(true) {
+    while (true) {
         lcd.clearArea(8, 8, page, col);
 
         col++;

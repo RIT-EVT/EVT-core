@@ -54,7 +54,7 @@ int main() {
         const char* dst = std::to_string(number).c_str();
         lcd.writeText(dst, 7, 0, true);
 
-        number ++;
+        number++;
         time::wait(500);
     }
 
