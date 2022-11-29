@@ -1,4 +1,4 @@
-#include "EVT/dev/LED.hpp"
+#include <EVT/dev/LED.hpp>
 #include <EVT/dev/LCD.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/manager.hpp>
@@ -75,7 +75,7 @@ int main() {
         lcd.writeText(dst, 7, 0, true);
 
         number ++;
-        time::wait(WAIT_TIME);
+        time::wait(500);
     }
 
     return 0;
