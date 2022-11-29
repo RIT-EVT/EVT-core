@@ -47,6 +47,7 @@ int main() {
     lcd.initLCD();
     lcd.clearLCD();
 
+    // The segment titles
     char* titles[9] = {
         "B Voltage", "Speed", "RPM",
         "Temp 1", "Temp 2", "Temp 3",
@@ -54,6 +55,7 @@ int main() {
     };
     lcd.setDefaultSections(titles);
 
+    // Set the default
     lcd.displaySectionHeaders();
     lcd.setTextForSection(0, "3.2 v");
     lcd.setTextForSection(2, "25 MPH");
@@ -65,9 +67,7 @@ int main() {
     lcd.setTextForSection(7, "Ready");
     lcd.setTextForSection(8, "100 NM");
 
-
     uint8_t number = 0;
-    const char* endText = "MPH";
 
     while (true) {
         const char* numb = std::to_string(number).c_str();
