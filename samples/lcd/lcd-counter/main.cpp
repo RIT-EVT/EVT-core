@@ -2,13 +2,12 @@
 // Created by Zachary Lineman on 11/14/22.
 //
 
+#include "EVT/dev/LCD.hpp"
 #include "EVT/dev/LED.hpp"
-#include <EVT/dev/LCD.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/io/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include "EVT/io/UART.hpp"
+#include "EVT/io/manager.hpp"
+#include "EVT/utils/time.hpp"
 #include <string>
-
 
 /**
  * Sample code for displaying EVT logo onto an LCD display
