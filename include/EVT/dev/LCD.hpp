@@ -24,7 +24,6 @@ namespace EVT::core::DEV {
 * a ST7565 controller.
 */
 class LCD {
-
 public:
     /**
      * Constructor the LCD class
@@ -36,10 +35,17 @@ public:
      */
     LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi);
 
-    /// function to write data to the LCD
+    /**
+     * Writes data to the LCD
+     * @param data the data to write to the LCD.
+     */
     void dataWrite(uint8_t data);
 
-    /// writes commands to the LCD
+    /**
+     * Writes commands to the LCD.
+     * These commands are used to tell the display how to handle the data written by dataWrite();
+     * @param data the command to write to the LCD
+     */
     void commandWrite(uint8_t data);
 
     /**
@@ -55,6 +61,13 @@ public:
      */
     void clearLCD();
 
+    /**
+     * Clears only a certain area on the display screen.
+     * @param width the width in pixels of the area to clear. Range: 0-127
+     * @param height the height in pixels of the area to clear. Range: 0-63
+     * @param page the page to start the clearing on. Range: 0-7.
+     * @param column the column to start clearing on. Range: 0-127
+     */
     void clearArea(uint8_t width, uint8_t height, uint8_t page, uint8_t column);
 
     /**
@@ -64,39 +77,80 @@ public:
      */
     void displayMap(const uint8_t* bitMap);
 
-
+    /**
+     * Displays the given bit map at a certain height and width on the page.
+     * @param bitMap the bitmap to display.
+     * @param bitMapWidth the width of the bitmap in pixels.
+     * @param bitMapHeight the height of the bitmap in pixels.
+     * @param page the page to draw the bitmap on. Range: 0-7.
+     * @param column the column to draw the bitmap on. Range:0-127.
+     */
     void displayBitMap(uint8_t * bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column);
 
+    /**
+     * Writes text to the screen. Has options to wrap the text around the edge of the screen if needed.
+     * @param text the text to write to the screen.
+     * @param page the page to write the text too. Range 0-7.
+     * @param column the column to write the text too. Range 0-127.
+     * @param wrapText whether or not the text should be wrapped around the edge of the screen.
+     */
     void writeText(const char* text, uint8_t page, uint8_t column, bool wrapText);
+
+    /**
+     * Set the default section titles to be displayed.
+     * @param newSectionTitles an array of section titles to display.
+     */
     void setDefaultSections(char* newSectionTitles[9]);
+
+    /**
+     * Displays the section headers. Only needs to be called once unless cleared.
+     */
     void displaySectionHeaders();
+
+    /**
+     * Set the text for a certain section of the screen.
+     * @param section the section number to set the text for.
+     * @param text the text to write into the section.
+     */
     void setTextForSection(uint8_t section, const char* text);
 
-    /// initializes the LCD for operation (must be called to use the LCD)
+    /**
+     * Initializes the LCD for operation (must be called to use the LCD)
+     */
     void initLCD();
 
 private:
+    /** The total width of the screen */
     static const int screenSizeX = 128;
+
+    /** The total height of the screen */
     static const int screenSizeY = 64;
+
+    /** THe total number of sections */
     static const uint8_t numberOfSections = 9;
+
+    /** The total number of sections to display per row on the screen. Basically number of columns */
     static const uint8_t sectionsPerRow = 3;
 
-    /** register select pin for the LCD */
+    /** Register select pin for the LCD */
     EVT::core::IO::GPIO& regSelect;
-    /** reset pin for the lcd */
+
+    /** Reset pin for the lcd */
     EVT::core::IO::GPIO& reset;
-    /** chip select pin for the LCD */
+
+    /** Chip select pin for the LCD */
     //EVT::core::IO::GPIO& chipSelect; // TODO: Need to figure out purpose of this
+
     /** SPI port for the LCD controller */
     EVT::core::IO::SPI& spi;
 
+    /** The default section titles for the display */
     char* sectionTitles[9] = {
-        "B Voltage", "Speed", "RPM",
-        "Temp 1", "Temp 2", "Temp 3",
-        "Status 1", "Pre Stat", "Torque",
+        "Not Set", "Not Set", "Not Set",
+        "Not Set", "Not Set", "Not Set",
+        "Not Set", "Not Set", "Not Set",
     };
 };
-
 }// namespace EVT::core::DEV
 
 #endif
