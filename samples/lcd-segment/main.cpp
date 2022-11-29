@@ -71,7 +71,7 @@ int main() {
 
     while (true) {
         const char* numb = std::to_string(number).c_str();
-        lcd.setTextForSection(1, text);
+        lcd.setTextForSection(1, numb);
 
         number ++;
         time::wait(500);
