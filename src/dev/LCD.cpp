@@ -134,6 +134,9 @@ void LCD::displayMap(const uint8_t* bitMap) {
 
 void LCD::displayBitMap(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column) {
     uint8_t i, j;
+    // Calculate the correct column address from an 8-bit number.
+    // The issue is that the display takes 4 bit numbers, instead of 8.
+    // So you need to split it into two 4 bit numbers.
     uint8_t columnUpperAddress = column;
     columnUpperAddress >>= 4;
 
