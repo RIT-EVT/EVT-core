@@ -3,6 +3,7 @@
 #include "EVT/io/UART.hpp"
 #include "EVT/io/manager.hpp"
 #include "EVT/utils/time.hpp"
+#include <string>
 
 /**
  * Sample code for displaying a counting number on the LCD display.
