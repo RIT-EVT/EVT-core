@@ -1,7 +1,3 @@
-//
-// Created by Zachary Lineman on 11/14/22.
-//
-
 #include "EVT/dev/LCD.hpp"
 #include "EVT/dev/LED.hpp"
 #include "EVT/io/UART.hpp"
@@ -9,7 +5,7 @@
 #include "EVT/utils/time.hpp"
 
 /**
- * Sample code for displaying EVT logo onto an LCD display
+ * Sample code for displaying a moving ball animation on an LCD.
  */
 
 namespace DEV = EVT::core::DEV;

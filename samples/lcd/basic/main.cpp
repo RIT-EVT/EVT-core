@@ -3,10 +3,9 @@
 #include "EVT/io/UART.hpp"
 #include "EVT/io/manager.hpp"
 #include "EVT/utils/time.hpp"
-#include <string>
 
 /**
- * Sample code for displaying EVT logo onto an LCD display
+ * Sample code for showing all capabilities of an LCD.
  */
 
 namespace DEV = EVT::core::DEV;
@@ -79,3 +78,4 @@ int main() {
 
     return 0;
 }
+

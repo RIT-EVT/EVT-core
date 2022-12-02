@@ -121,10 +121,10 @@ public:
 
 private:
     /** The total width of the screen */
-    static const int screenSizeX = 128;
+    static const uint8_t screenSizeX = 128;
 
     /** The total height of the screen */
-    static const int screenSizeY = 64;
+    static const uint8_t screenSizeY = 64;
 
     /** THe total number of sections */
     static const uint8_t numberOfSections = 9;
