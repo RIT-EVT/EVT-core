@@ -64,16 +64,15 @@ void LCD::driveColumn(uint8_t page, uint8_t colUp, uint8_t colLow, uint8_t data)
 }
 
 void LCD::clearLCD() {
-    uint8_t i, j;
     unsigned char page = 0xB0;// The starting page
 
     this->commandWrite(0xAE);              // Display OFF
     this->commandWrite(0x40);              // Display start address + 0x40
-    for (i = 0; i < 8; i++) {              // 64 pixel display / 8 pixels per page = 8 pages
+    for (uint8_t i = 0; i < 8; i++) {              // 64 pixel display / 8 pixels per page = 8 pages
         this->commandWrite(page);          // Send page address
         this->commandWrite(0x10);          // Column address upper 4 bits + 0x10
         this->commandWrite(0x00);          // Column address lower 4 bits + 0x00
-        for (j = 0; j < screenSizeX; j++) {// 128 columns wide
+        for (uint8_t j = 0; j < screenSizeX; j++) {// 128 columns wide
             this->dataWrite(0x00);         // Write clear pixels
         }
         page++;// After 128 columns, go to next page
@@ -82,7 +81,6 @@ void LCD::clearLCD() {
 }
 
 void LCD::clearArea(uint8_t width, uint8_t height, uint8_t page, uint8_t column) {
-    uint8_t i, j;
     // Calculate the correct column address from an 8-bit number.
     // The issue is that the display takes 4 bit numbers, instead of 8.
     // So you need to split it into two 4 bit numbers.
@@ -100,12 +98,12 @@ void LCD::clearArea(uint8_t width, uint8_t height, uint8_t page, uint8_t column)
 
     this->commandWrite(0xAE);                         // Display OFF
     this->commandWrite(0x40);                         // Display start address + 0x40
-    for (i = 0; i < amountOfPages; i++) {             // 64 pixel display / 8 pixels per page = 8 pages
+    for (uint8_t i = 0; i < amountOfPages; i++) {             // 64 pixel display / 8 pixels per page = 8 pages
         this->commandWrite(0xB0 + page);              // Send page address
         this->commandWrite(0x10 + columnUpperAddress);// Column address upper 4 bits + 0x10
         this->commandWrite(0x00 + columnLowerAddress);// Column address lower 4 bits + 0x00
 
-        for (j = 0; j < width; j++) {
+        for (uint8_t j = 0; j < width; j++) {
             this->dataWrite(0x00);// Write Clear Pixels
         }
 
@@ -115,15 +113,14 @@ void LCD::clearArea(uint8_t width, uint8_t height, uint8_t page, uint8_t column)
 }
 
 void LCD::displayMap(const uint8_t* bitMap) {
-    uint8_t i, j;
     uint8_t page = 0xB0;
     this->commandWrite(0xAE);        //Display OFF
     this->commandWrite(0x40);        //Display start address + 0x40
-    for (i = 0; i < 8; i++) {        //64 pixel display / 8 pixels per page = 8 pages
+    for (uint8_t i = 0; i < 8; i++) {        //64 pixel display / 8 pixels per page = 8 pages
         this->commandWrite(page);    //send page address
         this->commandWrite(0x10);    //column address upper 4 bits + 0x10
         this->commandWrite(0x00);    //column address lower 4 bits + 0x00
-        for (j = 0; j < 128; j++) {  //128 columns wide
+        for (uint8_t j = 0; j < 128; j++) {  //128 columns wide
             this->dataWrite(*bitMap);//write pixels from bitmap
             bitMap++;                // Advance the bitmap pointer by one. This means we can just grab the last one the next loop.
         }
@@ -133,7 +130,6 @@ void LCD::displayMap(const uint8_t* bitMap) {
 }
 
 void LCD::displayBitMap(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column) {
-    uint8_t i, j;
     // Calculate the correct column address from an 8-bit number.
     // The issue is that the display takes 4 bit numbers, instead of 8.
     // So you need to split it into two 4 bit numbers.
@@ -151,12 +147,12 @@ void LCD::displayBitMap(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeig
 
     this->commandWrite(0xAE);                         //Display OFF
     this->commandWrite(0x40);                         //Display start address + 0x40
-    for (i = 0; i < amountOfPages; i++) {             // 64 pixel display / 8 pixels per page = 8 pages
+    for (uint8_t i = 0; i < amountOfPages; i++) {             // 64 pixel display / 8 pixels per page = 8 pages
         this->commandWrite(0xB0 + page);              // Send page address
         this->commandWrite(0x10 + columnUpperAddress);// Column address upper 4 bits + 0x10
         this->commandWrite(0x00 + columnLowerAddress);// Column address lower 4 bits + 0x00
 
-        for (j = 0; j < bitMapWidth; j++) {
+        for (uint8_t j = 0; j < bitMapWidth; j++) {
             this->dataWrite(*bitMap);// Write pixels from bitmap
             bitMap++;                // Advance the bitmap pointer by one. This means we can just grab the last one the next loop.
         }
@@ -169,7 +165,7 @@ void LCD::displayBitMap(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeig
 void LCD::writeText(const char* text, uint8_t page, uint8_t column, bool wrapText) {
     for (uint8_t x = 0; x < strlen(text); x++) {
         // Get the ASCII value of the character.
-        uint8_t fontIndex = (int) ((unsigned char) text[x]);
+        uint8_t fontIndex = int( uint8_t (text[x]) );
 
         // Create the character that we need to write to the screen.
         unsigned char characterMap[4] = {
