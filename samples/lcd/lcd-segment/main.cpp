@@ -3,7 +3,7 @@
 #include "EVT/io/UART.hpp"
 #include "EVT/io/manager.hpp"
 #include "EVT/utils/time.hpp"
-#include <string>
+#include <cstdio>
 
 /**
  * Sample code for displaying a segmented display on an LCD.
@@ -72,8 +72,9 @@ int main() {
     uint8_t number = 0;
 
     while (true) {
-        const char* numb = std::to_string(number).c_str();
-        lcd.setTextForSection(1, numb);
+        char buffer[128] = {};
+        snprintf(buffer, (8), "%d", (number));
+        lcd.setTextForSection(1, buffer);
 
         number++;
         time::wait(500);

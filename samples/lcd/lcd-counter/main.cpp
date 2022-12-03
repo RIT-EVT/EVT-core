@@ -3,7 +3,7 @@
 #include "EVT/io/UART.hpp"
 #include "EVT/io/manager.hpp"
 #include "EVT/utils/time.hpp"
-#include <string>
+#include <cstdio>
 
 /**
  * Sample code for displaying a counting number on the LCD display.
@@ -47,8 +47,10 @@ int main() {
 
     while (true) {
         lcd.clearArea(64, 8, 7, 0);
-        const char* dst = std::to_string(number).c_str();
-        lcd.writeText(dst, 7, 0, true);
+        char buffer[128] = {};
+        snprintf(buffer, (8), "%d", (number));
+
+        lcd.writeText(buffer, 7, 0, true);
 
         number++;
         time::wait(500);
