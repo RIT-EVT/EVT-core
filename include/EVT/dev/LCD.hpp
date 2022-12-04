@@ -6,7 +6,7 @@
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
 #include <EVT/utils/time.hpp>
-#include <cstdint>
+#include <stdint.h>
 
 #define ADCSELECT 0xA0
 #define DISPLAYOFF 0xAE
@@ -37,36 +37,42 @@ public:
 
     /**
      * Writes data to the LCD
-     * @param data the data to write to the LCD.
+     *
+     * @param[in] data the data to write to the LCD.
      */
     void dataWrite(uint8_t data);
 
     /**
      * Writes commands to the LCD.
      * These commands are used to tell the display how to handle the data written by dataWrite();
-     * @param data the command to write to the LCD
+     *
+     * @param[in] data the command to write to the LCD
      */
     void commandWrite(uint8_t data);
 
     /**
+     * Displays the data to a singular column on the display. Because the display works in 8 bit vertical columns,
+     * this is the most fine grained change you can have.
      *
      * @param[in] page Page address to write to
      * @param[in] colUp Bits to write to the page address
      * @param[in] colLow Bits to write to the column select
+     * @param[in] data Bits to write to the LCD
      */
     void driveColumn(uint8_t page, uint8_t colUp, uint8_t colLow, uint8_t data);
 
     /**
-     * Clears the LCD, changes are mirrored in the bitmap
+     * Clears the LCD. Changes are not mirrored in the bitmap.
      */
     void clearLCD();
 
     /**
      * Clears only a certain area on the display screen.
-     * @param width the width in pixels of the area to clear. Range: 0-127
-     * @param height the height in pixels of the area to clear. Range: 0-63
-     * @param page the page to start the clearing on. Range: 0-7.
-     * @param column the column to start clearing on. Range: 0-127
+     *
+     * @param[in] width the width in pixels of the area to clear. Range: 0-127
+     * @param[in] height the height in pixels of the area to clear. Range: 0-63
+     * @param[in] page the page to start the clearing on. Range: 0-7.
+     * @param[in] column the column to start clearing on. Range: 0-127
      */
     void clearArea(uint8_t width, uint8_t height, uint8_t page, uint8_t column);
 
@@ -79,26 +85,29 @@ public:
 
     /**
      * Displays the given bit map at a certain height and width on the page.
-     * @param bitMap the bitmap to display.
-     * @param bitMapWidth the width of the bitmap in pixels.
-     * @param bitMapHeight the height of the bitmap in pixels.
-     * @param page the page to draw the bitmap on. Range: 0-7.
-     * @param column the column to draw the bitmap on. Range:0-127.
+     *
+     * @param bitMap[in] the bitmap to display.
+     * @param bitMapWidth[in] the width of the bitmap in pixels.
+     * @param bitMapHeight[in] the height of the bitmap in pixels.
+     * @param page[in] the page to draw the bitmap on. Range: 0-7.
+     * @param column[in] the column to draw the bitmap on. Range:0-127.
      */
     void displayBitMap(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column);
 
     /**
      * Writes text to the screen. Has options to wrap the text around the edge of the screen if needed.
-     * @param text the text to write to the screen.
-     * @param page the page to write the text too. Range 0-7.
-     * @param column the column to write the text too. Range 0-127.
-     * @param wrapText whether or not the text should be wrapped around the edge of the screen.
+     *
+     * @param text[in] the text to write to the screen.
+     * @param page[in] the page to write the text too. Range 0-7.
+     * @param column[in] the column to write the text too. Range 0-127.
+     * @param wrapText[in] whether or not the text should be wrapped around the edge of the screen.
      */
     void writeText(const char* text, uint8_t page, uint8_t column, bool wrapText);
 
     /**
      * Set the default section titles to be displayed.
-     * @param newSectionTitles an array of section titles to display.
+     *
+     * @param[in] newSectionTitles an array of section titles to display.
      */
     void setDefaultSections(char* newSectionTitles[9]);
 
@@ -109,8 +118,9 @@ public:
 
     /**
      * Set the text for a certain section of the screen.
-     * @param section the section number to set the text for.
-     * @param text the text to write into the section.
+     *
+     * @param[in] section the section number to set the text for.
+     * @param[in] text the text to write into the section.
      */
     void setTextForSection(uint8_t section, const char* text);
 
@@ -157,6 +167,7 @@ private:
         "Not Set",
     };
 };
+
 }// namespace EVT::core::DEV
 
 #endif

@@ -1,11 +1,13 @@
-//
-// Created by Zachary Lineman on 10/29/22.
-//
+/**
+* BitMapFont is a class that holds a representation of a bitmap font. The class can hold multiple fonts, however
+ * currently it is only holding a single 4x6 font.
+*/
 
-#ifndef EVT_BITMAPFONTS_H
-#define EVT_BITMAPFONTS_H
+#ifndef EVT_BITMAPFONTS_HPP
+#define EVT_BITMAPFONTS_HPP
 
 #include <cstdint>
+
 class BitmapFont {
 public:
     constexpr static const uint8_t font4x6[235][8] {
@@ -247,5 +249,4 @@ public:
     };
 };
 
-#endif//EVT_BITMAPFONTS_H
-
+#endif//EVT_BITMAPFONTS_HPP

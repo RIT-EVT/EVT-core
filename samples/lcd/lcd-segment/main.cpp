@@ -1,13 +1,13 @@
-#include "EVT/dev/LCD.hpp"
-#include "EVT/dev/LED.hpp"
-#include "EVT/io/UART.hpp"
-#include "EVT/io/manager.hpp"
-#include "EVT/utils/time.hpp"
-#include <cstdio>
-
 /**
- * Sample code for displaying a segmented display on an LCD.
- */
+* Sample code for displaying a segmented display on an LCD.
+*/
+
+#include <EVT/dev/LCD.hpp>
+#include <EVT/dev/LED.hpp>
+#include <EVT/io/UART.hpp>
+#include <EVT/io/manager.hpp>
+#include <EVT/utils/time.hpp>
+#include <cstdio>
 
 namespace DEV = EVT::core::DEV;
 namespace IO = EVT::core::IO;

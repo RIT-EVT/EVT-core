@@ -1,4 +1,4 @@
-#include "EVT/dev/BitmapFonts.h"
+#include <EVT/dev/BitmapFonts.hpp>
 #include <EVT/dev/LCD.hpp>
 #include <cstring>
 
@@ -64,7 +64,7 @@ void LCD::driveColumn(uint8_t page, uint8_t colUp, uint8_t colLow, uint8_t data)
 }
 
 void LCD::clearLCD() {
-    unsigned char page = 0xB0;// The starting page
+    uint8_t page = 0xB0;// The starting page
 
     this->commandWrite(0xAE);                      // Display OFF
     this->commandWrite(0x40);                      // Display start address + 0x40
@@ -252,4 +252,5 @@ void LCD::setTextForSection(uint8_t section, const char* text) {
     // Write the text to the screen under the section header.
     writeText(text, sectionPage, sectionColumn, false);
 }
+
 }// namespace EVT::core::DEV
