@@ -4,7 +4,7 @@
  */
 #include <stdint.h>
 
-#include <EVT/dev/platform/f3xx/f302x8/Timerf302x8.hpp>
+#include "EVT/dev/platform/f3xx/Timerf3xx.hpp"
 #include <EVT/io/ADC.hpp>
 #include <EVT/io/CAN.hpp>
 #include <EVT/io/UART.hpp>
@@ -89,7 +89,7 @@ int main() {
     can.addIRQHandler(canInterrupt, reinterpret_cast<void*>(&canOpenQueue));
 
     // Initialize the timer
-    DEV::Timerf302x8 timer(TIM2, 100);
+    DEV::Timerf3xx timer(TIM2, 100);
 
     // UART for testing
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);

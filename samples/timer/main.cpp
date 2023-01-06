@@ -1,7 +1,7 @@
 /**
  * This sample will demo the basic functionality for the timer driver
  */
-#include <EVT/dev/platform/f3xx/f302x8/Timerf302x8.hpp>
+#include "EVT/dev/platform/f3xx/Timerf3xx.hpp"
 #include <EVT/io/UART.hpp>
 #include <EVT/io/manager.hpp>
 #include <EVT/io/pin.hpp>
@@ -45,9 +45,9 @@ int main() {
     reloadGPIO = &IO::getGPIO<IO::Pin::PC_0>(IO::GPIO::Direction::OUTPUT);
 
     // Setup the Timer
-    auto timer2 = DEV::Timerf302x8(TIM2, 500);
-    auto timer15 = DEV::Timerf302x8(TIM15, 100);
-    auto timer16 = DEV::Timerf302x8(TIM16, 200);
+    auto timer2 = DEV::Timerf3xx(TIM2, 500);
+    auto timer15 = DEV::Timerf3xx(TIM15, 100);
+    auto timer16 = DEV::Timerf3xx(TIM16, 200);
 
     timer2.startTimer(timer2IRQHandler);
     timer15.startTimer(timer15IRQHandler);

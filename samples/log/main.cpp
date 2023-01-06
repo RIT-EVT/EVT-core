@@ -6,7 +6,7 @@
  */
 #include <cstdint>
 
-#include <EVT/dev/platform/f3xx/f302x8/RTC302x8.hpp>
+#include "EVT/dev/platform/f3xx/RTCf3xx.hpp"
 #include <EVT/io/manager.hpp>
 #include <EVT/utils/log.hpp>
 
@@ -28,7 +28,7 @@ int main() {
     // If timestamps aren't needed, don't set the logger's clock
     log::LOGGER.setUART(&uart);
     log::LOGGER.setLogLevel(log::Logger::LogLevel::INFO);
-    auto* rtc = new DEV::RTCf302x8();
+    auto* rtc = new DEV::RTCf3xx();
     log::LOGGER.setClock(rtc);
 
     uint8_t sampleData = 0xab;

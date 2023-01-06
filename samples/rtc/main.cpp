@@ -2,7 +2,7 @@
  * This example prints out the time as read in from the RTC
  * every second.
  */
-#include <EVT/dev/platform/f3xx/f302x8/RTC302x8.hpp>
+#include "EVT/dev/platform/f3xx/RTCf3xx.hpp"
 #include <EVT/io/UART.hpp>
 #include <EVT/io/manager.hpp>
 #include <EVT/utils/time.hpp>
@@ -28,7 +28,7 @@ int main() {
     time.minute = 42;
     time.second = 35;
 
-    DEV::RTCf302x8 rtc;
+    DEV::RTCf3xx rtc;
     rtc.setTime(time);
 
     time::wait(500);

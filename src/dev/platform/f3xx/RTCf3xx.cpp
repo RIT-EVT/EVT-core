@@ -1,10 +1,10 @@
-#include <EVT/dev/platform/f3xx/f302x8/RTC302x8.hpp>
+#include <EVT/dev/platform/f3xx/RTCf3xx.hpp>
 
 #include <HALf3/stm32f3xx_hal_rtc.h>
 
 namespace EVT::core::DEV {
 
-RTCf302x8::RTCf302x8() {
+RTCf3xx::RTCf3xx() {
     halRTC.Instance = RTC1;
 
     // Numbers generated from STMCubeMX
@@ -18,7 +18,7 @@ RTCf302x8::RTCf302x8() {
     RCC_OscInitTypeDef RCC_OscInitStruct;
     RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
 
-    // Initialize the peripherials
+    // Initialize the peripherals
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
 
@@ -37,7 +37,7 @@ RTCf302x8::RTCf302x8() {
     HAL_RTC_Init(&halRTC);
 }
 
-void RTCf302x8::getTime(EVT::core::time::TimeStamp& time) {
+void RTCf3xx::getTime(EVT::core::time::TimeStamp& time) {
     RTC_DateTypeDef rtcDate;
     RTC_TimeTypeDef rtcTime;
 
@@ -54,7 +54,7 @@ void RTCf302x8::getTime(EVT::core::time::TimeStamp& time) {
     time.day = rtcDate.Date;
 }
 
-uint32_t RTCf302x8::getTime() {
+uint32_t RTCf3xx::getTime() {
     EVT::core::time::TimeStamp ts;
     getTime(ts);
 
@@ -84,7 +84,7 @@ uint32_t RTCf302x8::getTime() {
     return time;
 }
 
-void RTCf302x8::setTime(EVT::core::time::TimeStamp& time) {
+void RTCf3xx::setTime(EVT::core::time::TimeStamp& time) {
     RTC_DateTypeDef rtcDate;
     RTC_TimeTypeDef rtcTime;
 

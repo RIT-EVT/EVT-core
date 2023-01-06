@@ -1,8 +1,8 @@
-#include <EVT/dev/platform/f3xx/f302x8/IWDGf302x8.hpp>
+#include <EVT/dev/platform/f3xx/IWDGf3xx.hpp>
 
 namespace EVT::core::DEV {
 
-IWDGf302x8::IWDGf302x8(uint32_t ms) {
+IWDGf3xx::IWDGf3xx(uint32_t ms) {
     // According to a time formula in the documentation with the set prescaler,
     // the ratio of counter ticks to milliseconds should be about 1:8. In testing,
     // we found this to have an error of about 1 second
@@ -16,7 +16,7 @@ IWDGf302x8::IWDGf302x8(uint32_t ms) {
     HAL_IWDG_Init(&halIWDG);
 }
 
-void IWDGf302x8::refresh() {
+void IWDGf3xx::refresh() {
     HAL_IWDG_Refresh(&halIWDG);
 }
 
