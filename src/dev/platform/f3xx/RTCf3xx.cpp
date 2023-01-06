@@ -2,19 +2,22 @@
 
 #include <HALf3/stm32f3xx_hal_rtc.h>
 
+namespace time = EVT::core::time;
+
 namespace EVT::core::DEV {
 
-RTCf3xx::RTCf3xx() {
-    halRTC.Instance = RTC1;
-
-    // Numbers generated from STMCubeMX
-    halRTC.Init.HourFormat = RTC_HOURFORMAT_24;
-    halRTC.Init.AsynchPrediv = 127;
-    halRTC.Init.SynchPrediv = 255;
-    halRTC.Init.OutPut = RTC_OUTPUT_DISABLE;
-    halRTC.Init.OutPutType = RTC_OUTPUT_TYPE_PUSHPULL;
-    halRTC.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
-
+RTCf3xx::RTCf3xx() : halRTC{
+    RTC1,
+    {
+        // Numbers generated from STMCubeMX
+        RTC_HOURFORMAT_24,
+        127,
+        255,
+        RTC_OUTPUT_DISABLE,
+        RTC_OUTPUT_TYPE_PUSHPULL,
+        RTC_OUTPUT_POLARITY_HIGH,
+    },
+} {
     RCC_OscInitTypeDef RCC_OscInitStruct;
     RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
 
@@ -55,7 +58,7 @@ void RTCf3xx::getTime(EVT::core::time::TimeStamp& time) {
 }
 
 uint32_t RTCf3xx::getTime() {
-    EVT::core::time::TimeStamp ts;
+    time::TimeStamp ts{};
     getTime(ts);
 
     uint32_t y = ts.year;

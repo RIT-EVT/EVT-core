@@ -20,11 +20,11 @@ public:
      */
     RTCf3xx();
 
-    void getTime(EVT::core::time::TimeStamp& time);
+    void getTime(EVT::core::time::TimeStamp& time) override;
 
-    uint32_t getTime();
+    uint32_t getTime() override;
 
-    void setTime(EVT::core::time::TimeStamp& time);
+    void setTime(EVT::core::time::TimeStamp& time) override;
 
 private:
     /** Instance of the HAL RTC interface */

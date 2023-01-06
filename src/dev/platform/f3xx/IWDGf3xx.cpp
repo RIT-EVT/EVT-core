@@ -2,17 +2,17 @@
 
 namespace EVT::core::DEV {
 
-IWDGf3xx::IWDGf3xx(uint32_t ms) {
-    // According to a time formula in the documentation with the set prescaler,
-    // the ratio of counter ticks to milliseconds should be about 1:8. In testing,
-    // we found this to have an error of about 1 second
-    uint32_t windowSize = ms / 8;
-
-    halIWDG.Instance = IWDG1;
-    halIWDG.Init.Reload = windowSize - 1;
-    halIWDG.Init.Window = windowSize - 1;
-    halIWDG.Init.Prescaler = IWDG_PRESCALER_256;
-
+// According to a time formula in the documentation with the set prescaler,
+// the ratio of counter ticks to milliseconds should be about 1:8. In testing,
+// we found this to have an error of about 1 second
+IWDGf3xx::IWDGf3xx(uint32_t ms) : halIWDG{
+    IWDG1,
+    {
+        ms / 8 - 1,
+        ms / 8 - 1,
+        IWDG_PRESCALER_256,
+    },
+} {
     HAL_IWDG_Init(&halIWDG);
 }
 

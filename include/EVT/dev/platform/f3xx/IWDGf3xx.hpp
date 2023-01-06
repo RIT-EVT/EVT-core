@@ -21,7 +21,7 @@ public:
      */
     explicit IWDGf3xx(uint32_t ms);
 
-    void refresh();
+    void refresh() override;
 
 private:
     /** Instance of the HAL IWDG */

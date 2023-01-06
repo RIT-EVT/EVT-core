@@ -34,7 +34,7 @@ public:
 
     void reloadTimer() override;
 
-    virtual void setPeriod(uint32_t clockPeriod);
+    void setPeriod(uint32_t clockPeriod) override;
 
 private:
     // Pointer to the halTimer struct stored in the global array in Timerf3xx.cpp
