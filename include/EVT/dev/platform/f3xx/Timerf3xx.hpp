@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include <HALf3/stm32f3xx_hal_tim.h>
+#include <HALf3/stm32f3xx.h>
 
 #include <EVT/dev/Timer.hpp>
 
