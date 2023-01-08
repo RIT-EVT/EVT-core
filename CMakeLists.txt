@@ -47,9 +47,9 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/dev/LED.cpp
     src/dev/LCD.cpp
     src/dev/RTCTimer.cpp
-        src/dev/platform/f3xx/RTCf3xx.cpp
-        src/dev/platform/f3xx/IWDGf3xx.cpp
-        src/dev/platform/f3xx/Timerf3xx.cpp
+    src/dev/platform/f3xx/RTCf3xx.cpp
+    src/dev/platform/f3xx/IWDGf3xx.cpp
+    src/dev/platform/f3xx/Timerf3xx.cpp
     src/dev/storage/M24C32.cpp
     src/dev/Thermistor.cpp
 

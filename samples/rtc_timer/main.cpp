@@ -1,8 +1,8 @@
 
 #include <EVT/io/manager.hpp>
 
-#include "EVT/dev/RTCTimer.hpp"
-#include "EVT/dev/platform/f3xx/RTCf3xx.hpp"
+#include <EVT/dev/RTCTimer.hpp>
+#include <EVT/dev/platform/f3xx/RTCf3xx.hpp>
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;

@@ -6,7 +6,7 @@
  */
 #include <cstdint>
 
-#include "EVT/dev/platform/f3xx/RTCf3xx.hpp"
+#include <EVT/dev/platform/f3xx/RTCf3xx.hpp>
 #include <EVT/io/manager.hpp>
 #include <EVT/utils/log.hpp>
 

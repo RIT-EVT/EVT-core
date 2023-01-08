@@ -4,7 +4,7 @@
  */
 #include <stdint.h>
 
-#include "EVT/dev/platform/f3xx/Timerf3xx.hpp"
+#include <EVT/dev/platform/f3xx/Timerf3xx.hpp>
 #include <EVT/io/ADC.hpp>
 #include <EVT/io/CAN.hpp>
 #include <EVT/io/UART.hpp>

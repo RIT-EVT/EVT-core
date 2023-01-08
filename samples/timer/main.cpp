@@ -1,7 +1,7 @@
 /**
  * This sample will demo the basic functionality for the timer driver
  */
-#include "EVT/dev/platform/f3xx/Timerf3xx.hpp"
+#include <EVT/dev/platform/f3xx/Timerf3xx.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/manager.hpp>
 #include <EVT/io/pin.hpp>
