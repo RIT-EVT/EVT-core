@@ -46,8 +46,6 @@ public:
 
 private:
     constexpr static uint32_t DEFAULT_I2C_FREQ = 100000;
-    /** Timeout in milliseconds **/
-    constexpr static uint32_t DEFAULT_I2C_TIMEOUT = 100;
     /** Interface into the HAL */
     I2C_HandleTypeDef halI2C;
 

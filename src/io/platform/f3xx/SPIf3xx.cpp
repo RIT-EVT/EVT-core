@@ -339,7 +339,7 @@ bool SPIf3xx::endTransmission(uint8_t device) {
  * @param byte the byte to write
  */
 void SPIf3xx::write(uint8_t byte) {
-    HAL_SPI_Transmit(&halSPI, &byte, 1, DEFAULT_SPI_TIMEOUT);
+    HAL_SPI_Transmit(&halSPI, &byte, 1, EVT_SPI_TIMEOUT);
 }
 
 /**
@@ -349,7 +349,7 @@ void SPIf3xx::write(uint8_t byte) {
  */
 uint8_t SPIf3xx::read() {
     uint8_t data;
-    HAL_SPI_Receive(&halSPI, &data, 1, DEFAULT_SPI_TIMEOUT);
+    HAL_SPI_Receive(&halSPI, &data, 1, EVT_SPI_TIMEOUT);
     return data;
 }
 
@@ -361,7 +361,7 @@ uint8_t SPIf3xx::read() {
  * @param length the length of the array
  */
 void SPIf3xx::write(uint8_t* bytes, uint8_t length) {
-    HAL_SPI_Transmit(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
+    HAL_SPI_Transmit(&halSPI, bytes, length, EVT_SPI_TIMEOUT);
 }
 
 /**
@@ -372,6 +372,6 @@ void SPIf3xx::write(uint8_t* bytes, uint8_t length) {
  * @param length the number of bytes to recive
  */
 void SPIf3xx::read(uint8_t* bytes, uint8_t length) {
-    HAL_SPI_Receive(&halSPI, bytes, length, DEFAULT_SPI_TIMEOUT);
+    HAL_SPI_Receive(&halSPI, bytes, length, EVT_SPI_TIMEOUT);
 }
 }// namespace EVT::core::IO

@@ -2,7 +2,11 @@
 #define _EVT_SPI_
 
 #include <EVT/io/GPIO.hpp>
-#include <stdint.h>
+#include <cstdint>
+
+#ifndef EVT_SPI_TIMEOUT
+    #define EVT_SPI_TIMEOUT 100
+#endif
 
 #define SPI_MSB_FIRST 1
 #define SPI_LSB_FIRST 0
@@ -81,7 +85,7 @@ public:
      */
     virtual uint8_t read() = 0;
 
-    /**
+    virtual /**
      * Writes an array of bytes to the SPI device. Call startTransmission() first to initiate device communication.
      *
      * @param bytes an array of bytes of length n to write to SPI device
@@ -89,7 +93,7 @@ public:
      */
     void write(uint8_t* bytes, uint8_t length);
 
-    /**
+    virtual /**
      * Reads an array of bytes from a SPI device. Call startTransmission() first to initiate device communication.
      *
      * @param bytes an array of length n to receive the bytes from an SPI device
