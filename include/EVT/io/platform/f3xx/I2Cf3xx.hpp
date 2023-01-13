@@ -6,6 +6,10 @@
 #include <EVT/io/I2C.hpp>
 #include <HALf3/stm32f3xx.h>
 
+#ifndef EVT_I2C_TIMEOUT
+#define EVT_I2C_TIMEOUT 100
+#endif
+
 namespace EVT::core::IO {
 
 class I2Cf3xx : public I2C {

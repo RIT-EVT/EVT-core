@@ -115,19 +115,19 @@ bool UARTf3xx::isWritable() {
 
 void UARTf3xx::putc(char c) {
     uint8_t* data = reinterpret_cast<uint8_t*>(&c);
-    HAL_UART_Transmit(&halUART, data, 1, EVT_I2C_TIMEOUT);
+    HAL_UART_Transmit(&halUART, data, 1, EVT_UART_TIMEOUT);
 }
 
 void UARTf3xx::puts(const char* s) {
     char buf[100];
     strncpy(buf, s, 100);
     uint8_t* data = reinterpret_cast<uint8_t*>(buf);
-    HAL_UART_Transmit(&halUART, data, strlen(buf), EVT_I2C_TIMEOUT);
+    HAL_UART_Transmit(&halUART, data, strlen(buf), EVT_UART_TIMEOUT);
 }
 
 char UARTf3xx::getc() {
     uint8_t c;
-    while (HAL_UART_Receive(&halUART, &c, 1, EVT_I2C_TIMEOUT) == HAL_TIMEOUT) {
+    while (HAL_UART_Receive(&halUART, &c, 1, EVT_UART_TIMEOUT) == HAL_TIMEOUT) {
     }
     return static_cast<char>(c);
 }
@@ -140,7 +140,7 @@ void UARTf3xx::printf(const char* format, ...) {
     uint8_t* data = reinterpret_cast<uint8_t*>(&string);
     if (0 < vsprintf(string, format, args)) {
         HAL_UART_Transmit(&halUART, data,
-                          strlen(string), EVT_I2C_TIMEOUT);
+                          strlen(string), EVT_UART_TIMEOUT);
     }
 
     va_end(args);
@@ -155,11 +155,11 @@ uint8_t UARTf3xx::read() {
 }
 
 void UARTf3xx::writeBytes(uint8_t* bytes, size_t size) {
-    HAL_UART_Transmit(&halUART, bytes, size, EVT_I2C_TIMEOUT);
+    HAL_UART_Transmit(&halUART, bytes, size, EVT_UART_TIMEOUT);
 }
 
 void UARTf3xx::readBytes(uint8_t* bytes, size_t size) {
-    HAL_UART_Receive(&halUART, bytes, size, EVT_I2C_TIMEOUT);
+    HAL_UART_Receive(&halUART, bytes, size, EVT_UART_TIMEOUT);
 }
 
 }// namespace EVT::core::IO

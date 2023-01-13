@@ -4,8 +4,8 @@
 #include <cstdint>
 #include <cstdlib>
 
-#ifndef EVT_I2C_TIMEOUT
-#define EVT_I2C_TIMEOUT 100
+#ifndef EVT_UART_TIMEOUT
+#define EVT_UART_TIMEOUT 100
 #endif
 
 namespace EVT::core::IO {

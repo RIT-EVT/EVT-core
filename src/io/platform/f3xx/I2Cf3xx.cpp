@@ -122,14 +122,14 @@ I2Cf3xx::I2Cf3xx(Pin sclPin, Pin sdaPin) : I2C(sclPin, sdaPin) {
 I2C::I2CStatus I2Cf3xx::write(uint8_t addr, uint8_t byte) {
     HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&halI2C, addr << 1,
                                                        &byte, 1,
-                                                       DEFAULT_I2C_TIMEOUT);
+                                                       EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
 I2C::I2CStatus I2Cf3xx::read(uint8_t addr, uint8_t* output) {
     HAL_StatusTypeDef status = HAL_I2C_Master_Receive(&halI2C, addr << 1,
                                                       output, 1,
-                                                      DEFAULT_I2C_TIMEOUT);
+                                                      EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
@@ -140,7 +140,7 @@ I2C::I2CStatus I2Cf3xx::read(uint8_t addr, uint8_t* output) {
 I2C::I2CStatus I2Cf3xx::write(uint8_t addr, uint8_t* bytes, uint8_t length) {
     HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&halI2C, addr << 1,
                                                        bytes, length,
-                                                       DEFAULT_I2C_TIMEOUT);
+                                                       EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
@@ -151,7 +151,7 @@ I2C::I2CStatus I2Cf3xx::write(uint8_t addr, uint8_t* bytes, uint8_t length) {
 I2C::I2CStatus I2Cf3xx::read(uint8_t addr, uint8_t* bytes, uint8_t length) {
     HAL_StatusTypeDef status = HAL_I2C_Master_Receive(&halI2C, addr << 1,
                                                       bytes, length,
-                                                      DEFAULT_I2C_TIMEOUT);
+                                                      EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
@@ -161,7 +161,7 @@ I2C::I2CStatus I2Cf3xx::writeMemReg(uint8_t addr, uint32_t memAddress,
     uint16_t memAddress16 = memAddress;
     HAL_StatusTypeDef status = HAL_I2C_Mem_Write(&halI2C, addr << 1,
                                                  memAddress16, memAddSize,
-                                                 &byte, 1, DEFAULT_I2C_TIMEOUT);
+                                                 &byte, 1, EVT_I2C_TIMEOUT);
     HAL_Delay(maxWriteTime);
     return halToI2CStatus(status);
 }
@@ -172,7 +172,7 @@ I2C::I2CStatus I2Cf3xx::readMemReg(uint8_t addr, uint32_t memAddress,
     uint16_t memAddress16 = memAddress;
     HAL_StatusTypeDef status = HAL_I2C_Mem_Read(&halI2C, addr << 1,
                                                 memAddress16, memAddSize, byte,
-                                                1, DEFAULT_I2C_TIMEOUT);
+                                                1, EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
@@ -184,7 +184,7 @@ I2C::I2CStatus I2Cf3xx::writeMemReg(uint8_t addr, uint32_t memAddress,
     HAL_StatusTypeDef status = HAL_I2C_Mem_Write(&halI2C, addr << 1,
                                                  memAddress16, memAddSize,
                                                  bytes, size,
-                                                 DEFAULT_I2C_TIMEOUT);
+                                                 EVT_I2C_TIMEOUT);
     HAL_Delay(maxWriteTime);
     return halToI2CStatus(status);
 }
@@ -196,7 +196,7 @@ I2C::I2CStatus I2Cf3xx::readMemReg(uint8_t addr, uint32_t memAddress,
     HAL_StatusTypeDef status = HAL_I2C_Mem_Read(&halI2C, addr << 1,
                                                 memAddress16, memAddSize,
                                                 bytes, size,
-                                                DEFAULT_I2C_TIMEOUT);
+                                                EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
