@@ -8,7 +8,7 @@
 #include <EVT/io/I2C.hpp>
 
 #ifndef EVT_I2C_TIMEOUT
-#define EVT_I2C_TIMEOUT 100
+    #define EVT_I2C_TIMEOUT 100
 #endif
 
 namespace EVT::core::IO {

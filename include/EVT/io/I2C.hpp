@@ -9,7 +9,8 @@
         if (status != I2C::I2CStatus::OK) { \
             return status;                  \
         }                                   \
-    } void(0)
+    }                                       \
+    void(0)
 
 namespace EVT::core::IO {
 
@@ -117,7 +118,7 @@ public:
      * @return The status of attempting to write out to the register
      */
     virtual I2CStatus writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
-                       uint8_t* bytes, uint8_t length);
+                               uint8_t* bytes, uint8_t length);
 
     /**
      * Read a value from a register.
@@ -130,7 +131,7 @@ public:
      * @return The status of reading from the register
      */
     virtual I2CStatus readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
-                      uint8_t* bytes, uint8_t length);
+                              uint8_t* bytes, uint8_t length);
 
     /**
      * Write a single byte to a register in memory.
