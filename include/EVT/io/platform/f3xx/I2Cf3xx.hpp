@@ -1,10 +1,11 @@
 #ifndef _EVT_I2Cf3xx_
 #define _EVT_I2Cf3xx_
 
-#include <stdint.h>
+#include <cstdint>
+
+#include <HALf3/stm32f3xx.h>
 
 #include <EVT/io/I2C.hpp>
-#include <HALf3/stm32f3xx.h>
 
 #ifndef EVT_I2C_TIMEOUT
 #define EVT_I2C_TIMEOUT 100
@@ -27,39 +28,40 @@ public:
 
     I2C::I2CStatus read(uint8_t addr, uint8_t* output) override;
 
-    I2C::I2CStatus write(uint8_t addr, uint8_t* bytes, uint8_t length);
+    I2C::I2CStatus write(uint8_t addr, uint8_t* bytes, uint8_t length) override;
 
-    I2C::I2CStatus read(uint8_t addr, uint8_t* bytes, uint8_t length);
+    I2C::I2CStatus read(uint8_t addr, uint8_t* bytes, uint8_t length) override;
 
     I2C::I2CStatus writeMemReg(uint8_t addr, uint32_t memAddress,
                                uint8_t byte, uint16_t memAddSize,
-                               uint8_t maxWriteTime);
+                               uint8_t maxWriteTime) override;
 
     I2C::I2CStatus readMemReg(uint8_t addr, uint32_t memAddress,
                               uint8_t* byte,
-                              uint16_t memAddSize);
+                              uint16_t memAddSize) override;
 
     I2C::I2CStatus writeMemReg(uint8_t addr, uint32_t memAddress,
                                uint8_t* bytes, uint8_t size,
                                uint16_t memAddSize,
-                               uint8_t maxWriteTime);
+                               uint8_t maxWriteTime) override;
 
     I2C::I2CStatus readMemReg(uint8_t addr, uint32_t memAddress,
                               uint8_t* bytes, uint8_t size,
-                              uint16_t memAddSize);
+                              uint16_t memAddSize) override;
 
 private:
     constexpr static uint32_t DEFAULT_I2C_FREQ = 100000;
+
     /** Interface into the HAL */
-    I2C_HandleTypeDef halI2C;
+    I2C_HandleTypeDef halI2C = {};
 
     /**
      * Convert the STM HAL status to an I2C::I2CStatus
      *
-     * @param[in] The HAL status
+     * @param[in] halStatus The HAL status
      * @return The I2C::I2CStatus
      */
-    I2C::I2CStatus halToI2CStatus(HAL_StatusTypeDef halStatus);
+    static I2C::I2CStatus halToI2CStatus(HAL_StatusTypeDef halStatus);
 };
 
 }// namespace EVT::core::IO

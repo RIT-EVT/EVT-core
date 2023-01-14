@@ -1,7 +1,7 @@
 #ifndef _EVT_I2C_
 #define _EVT_I2C_
 
-#include <stdint.h>
+#include <cstdint>
 
 #define I2C_RETURN_IF_ERR(func)             \
     {                                       \
@@ -9,14 +9,21 @@
         if (status != I2C::I2CStatus::OK) { \
             return status;                  \
         }                                   \
-    }
+    } void(0)
 
 namespace EVT::core::IO {
+
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
 enum class Pin;
 
+/**
+ * Contains generic implementations for some of the I2C functionality.
+ * Some hardware has the ability to implement the functionality in this
+ * file so specific implementations of the I2C driver may override these
+ * methods for a hardware speedup.
+ */
 class I2C {
 public:
     /**
@@ -67,7 +74,7 @@ public:
      * @param[in] length The number of bytes to write out
      * @return The status of making the write request
      */
-    I2CStatus write(uint8_t addr, uint8_t* bytes, uint8_t length);
+    virtual I2CStatus write(uint8_t addr, uint8_t* bytes, uint8_t length);
 
     /**
      * Read multiple bytes from an I2C device.
@@ -77,7 +84,7 @@ public:
      * @param[in] length The number of bytes to read
      * @return The status of making the read request
      */
-    I2CStatus read(uint8_t addr, uint8_t* bytes, uint8_t length);
+    virtual I2CStatus read(uint8_t addr, uint8_t* bytes, uint8_t length);
 
     /**
      * Write a value to a register has that 8 bit addresses and 8 bit values.
@@ -85,9 +92,9 @@ public:
      * @param[in] addr The 7 bit unshifted I2C address to write to
      * @param[in] reg The 8 bit register
      * @param[in] byte The byte to write out
-     * @return The status of attepting to write out to a register
+     * @return The status of attempting to write out to a register
      */
-    I2CStatus writeReg(uint8_t addr, uint8_t reg, uint8_t byte);
+    virtual I2CStatus writeReg(uint8_t addr, uint8_t reg, uint8_t byte);
 
     /**
      * Read a value from a register that has an 8 bit address and 8 bit value.
@@ -97,7 +104,7 @@ public:
      * @param[out] output Will store the value of the read request
      * @return The 8 bit value of the register
      */
-    I2CStatus readReg(uint8_t addr, uint8_t reg, uint8_t* output);
+    virtual I2CStatus readReg(uint8_t addr, uint8_t reg, uint8_t* output);
 
     /**
      * Write out a multi byte register value.
@@ -109,7 +116,7 @@ public:
      * @param[in] length The number of bytes in the data
      * @return The status of attempting to write out to the register
      */
-    I2CStatus writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
+    virtual I2CStatus writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
                        uint8_t* bytes, uint8_t length);
 
     /**
@@ -122,7 +129,7 @@ public:
      * @param[in] length The size of the data returned by the register in bytes
      * @return The status of reading from the register
      */
-    I2CStatus readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
+    virtual I2CStatus readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
                       uint8_t* bytes, uint8_t length);
 
     /**

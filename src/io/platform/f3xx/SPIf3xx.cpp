@@ -1,14 +1,25 @@
-#include <EVT/io/pin.hpp>
-#include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
 #include <EVT/io/platform/f3xx/SPIf3xx.hpp>
 
+#include <EVT/io/pin.hpp>
+#include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
+
+#include <EVT/utils/log.hpp>
+
+namespace log = EVT::core::log;
+
 namespace EVT::core::IO {
-/**
- * Gets the corresponding SPI port from the mosi pin
- *
- * @param mosiPin the pin to use for the mosi signal
- * @return the SPI port to use, 0 if invalid
- */
+
+void SPIf3xx::togglePin(GPIO* pin) {
+    switch (pin->readPin()) {
+    case GPIO::State::HIGH:
+        pin->writePin(GPIO::State::LOW);
+        break;
+    case GPIO::State::LOW:
+        pin->writePin(GPIO::State::HIGH);
+        break;
+    }
+}
+
 uint8_t SPIf3xx::getMOSIPortID(Pin mosiPin) {
 #ifdef STM32F302x8
     switch (mosiPin) {
@@ -33,12 +44,6 @@ uint8_t SPIf3xx::getMOSIPortID(Pin mosiPin) {
 #endif
 }
 
-/**
- * Gets the corresponding SPI port from the miso pin
- *
- * @param misoPin the pin to use for the miso signal
- * @return the SPI port to use, 0 if invalid
- */
 uint8_t SPIf3xx::getMISOPortID(Pin misoPin) {
 #ifdef STM32F302x8
     switch (misoPin) {
@@ -63,12 +68,6 @@ uint8_t SPIf3xx::getMISOPortID(Pin misoPin) {
 #endif
 }
 
-/**
- * Gets the corresponding SPI port from the sck pin
- *
- * @param sckPin the pin to use for the sck signal
- * @return the SPI port to use, 0 if invalid
- */
 uint8_t SPIf3xx::getSCKPortID(Pin sckPin) {
 #ifdef STM32F302x8
     switch (sckPin) {
@@ -93,15 +92,6 @@ uint8_t SPIf3xx::getSCKPortID(Pin sckPin) {
 #endif
 }
 
-/**
- * Constructs a send and receive SPI object
- *
- * @param CSPins an array of chip select pins for selecting which device to communicate with.
- * @param pinLength the number of pins in the chip select array
- * @param sckPin the pin for the clk line
- * @param mosiPin the mosi pin for sending data
- * @param misoPin the miso pin for receiving data
- */
 SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : SPI(CSPins, pinLength, sckPin, mosiPin, misoPin) {
     uint8_t mosiPort = getMOSIPortID(mosiPin);
     uint8_t misoPort = getMISOPortID(misoPin);
@@ -137,6 +127,7 @@ SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin
             break;
 #endif
         default:
+            log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid SPI mosiPort");
             break;
         }
 
@@ -167,14 +158,6 @@ SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin
     }
 }
 
-/**
- * Constructs a sending only SPI object
- *
- * @param CSPins an array of chip select pins for selecting which device to communicate with.
- * @param pinLength the number of pins in the chip select array
- * @param sckPin the pin for the clk line
- * @param mosiPin the mosi pin for sending data
- */
 SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : SPI(CSPins, pinLength, sckPin, mosiPin) {
     uint8_t mosiPort = getMOSIPortID(mosiPin);
     uint8_t sckPort = getSCKPortID(sckPin);
@@ -232,13 +215,6 @@ SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : S
     }
 }
 
-/**
- * Configures the SPI transmit mode
- *
- * @param baudRate the baudrate to transmit at (4MHz to 31.25KHz)
- * @param mode The SPIMode to use when sending (0-3)
- * @param order MSB first or LSB first
- */
 void SPIf3xx::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order) {
     // set the CPOL and CPHA depending on the SPI mode
     switch (mode) {
@@ -257,6 +233,9 @@ void SPIf3xx::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order) {
     case SPI_MODE3:
         halSPI.Init.CLKPolarity = SPI_POLARITY_HIGH;
         halSPI.Init.CLKPhase = SPI_PHASE_2EDGE;
+        break;
+    default:
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid SPI Mode");
         break;
     }
 
@@ -289,28 +268,6 @@ void SPIf3xx::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order) {
     HAL_SPI_Init(&halSPI);
 }
 
-/**
- * Toggles a GPIO pin's state
- *
- * @param pin the pin to toggle the state of
- */
-void SPIf3xx::togglePin(GPIO* pin) {
-    switch (pin->readPin()) {
-    case GPIO::State::HIGH:
-        pin->writePin(GPIO::State::LOW);
-        break;
-    case GPIO::State::LOW:
-        pin->writePin(GPIO::State::HIGH);
-        break;
-    }
-}
-
-/**
- * Toggle the state of the chip select pin of a device at the start of a transmission.
- *
- * @param device device the device index in the CSPins
- * @return true if valid device, false if device not in CSPins
- */
 bool SPIf3xx::startTransmission(uint8_t device) {
     if (device < CSPinsLength) {
         togglePin(CSPins[device]);
@@ -319,12 +276,6 @@ bool SPIf3xx::startTransmission(uint8_t device) {
     return false;
 }
 
-/**
- * Toggle the state of the chip select pin of a device back at the end of a transmission.
- *
- * @param device the device index in the CSPins
- * @return true if valid device, false if device not in CSPins
- */
 bool SPIf3xx::endTransmission(uint8_t device) {
     if (device < CSPinsLength) {
         togglePin(CSPins[device]);
@@ -333,45 +284,22 @@ bool SPIf3xx::endTransmission(uint8_t device) {
     return false;
 }
 
-/**
- * Writes a single byte out to the SPI device.
- *
- * @param byte the byte to write
- */
 void SPIf3xx::write(uint8_t byte) {
     HAL_SPI_Transmit(&halSPI, &byte, 1, EVT_SPI_TIMEOUT);
 }
 
-/**
- * Reads a single byte from a SPI device.
- *
- * @return the byte read
- */
 uint8_t SPIf3xx::read() {
     uint8_t data;
     HAL_SPI_Receive(&halSPI, &data, 1, EVT_SPI_TIMEOUT);
     return data;
 }
 
-/**
- * Writes an array of bytes to the SPI device.
- *
- * @param device the device to write to in CSPins
- * @param bytes an array of bytes of length n to write to SPI device
- * @param length the length of the array
- */
 void SPIf3xx::write(uint8_t* bytes, uint8_t length) {
     HAL_SPI_Transmit(&halSPI, bytes, length, EVT_SPI_TIMEOUT);
 }
 
-/**
- * Reads an array of bytes from a SPI device.
- *
- * @param device the device to write to in CSPins
- * @param bytes an array of length n to receive the bytes from an SPI device
- * @param length the number of bytes to recive
- */
 void SPIf3xx::read(uint8_t* bytes, uint8_t length) {
     HAL_SPI_Receive(&halSPI, bytes, length, EVT_SPI_TIMEOUT);
 }
+
 }// namespace EVT::core::IO

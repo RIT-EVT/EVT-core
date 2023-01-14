@@ -1,19 +1,23 @@
-#include <stdarg.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-
-#include <EVT/io/pin.hpp>
 #include <EVT/io/platform/f3xx/UARTf3xx.hpp>
 
-#include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
+#include <cstdarg>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
 
 #include <HALf3/stm32f3xx.h>
+
+#include <EVT/io/pin.hpp>
+#include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
+#include <EVT/utils/log.hpp>
+
+namespace log = EVT::core::log;
 
 namespace EVT::core::IO {
 
 UARTf3xx::UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate)
-    : UART(txPin, rxPin, baudrate) {
+    : UART(txPin, rxPin, baudrate),
+      halUART{} {
 
     GPIO_InitTypeDef gpioInit;
     Pin myPins[] = {txPin, rxPin};
@@ -21,7 +25,7 @@ UARTf3xx::UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate)
     uint8_t alt_id;
 
     // Determine portID
-    uint8_t portID = 1;
+    uint8_t portID;
 
     switch (txPin) {
     case Pin::PA_9:
@@ -40,6 +44,8 @@ UARTf3xx::UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate)
         portID = 3;
         break;
     default:
+        portID = -1;
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid TX Pin");
         break;
     }
 
@@ -47,7 +53,7 @@ UARTf3xx::UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate)
     case 1:
         halUART.Instance = USART1;
 
-        if (!(__HAL_RCC_USART1_IS_CLK_ENABLED()))
+        if (!__HAL_RCC_USART1_IS_CLK_ENABLED())
             __HAL_RCC_USART1_CLK_ENABLE();
 
         alt_id = GPIO_AF7_USART1;
@@ -56,7 +62,7 @@ UARTf3xx::UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate)
     case 2:
         halUART.Instance = USART2;
 
-        if (!(__HAL_RCC_USART2_IS_CLK_ENABLED()))
+        if (!__HAL_RCC_USART2_IS_CLK_ENABLED())
             __HAL_RCC_USART2_CLK_ENABLE();
 
         alt_id = GPIO_AF7_USART2;
@@ -65,13 +71,15 @@ UARTf3xx::UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate)
     case 3:
         halUART.Instance = USART3;
 
-        if (!(__HAL_RCC_USART3_IS_CLK_ENABLED()))
+        if (!__HAL_RCC_USART3_IS_CLK_ENABLED())
             __HAL_RCC_USART3_CLK_ENABLE();
 
         alt_id = GPIO_AF7_USART3;
 
         break;
     default:
+        alt_id = -1;
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid Port ID");
         break;
     }
 
@@ -106,22 +114,22 @@ void UARTf3xx::sendBreak() {
 }
 
 bool UARTf3xx::isReadable() {
-    return halUART.pRxBuffPtr != NULL;
+    return halUART.pRxBuffPtr != nullptr;
 }
 
 bool UARTf3xx::isWritable() {
-    return halUART.pTxBuffPtr == NULL;
+    return halUART.pTxBuffPtr == nullptr;
 }
 
 void UARTf3xx::putc(char c) {
-    uint8_t* data = reinterpret_cast<uint8_t*>(&c);
+    auto* data = reinterpret_cast<uint8_t*>(&c);
     HAL_UART_Transmit(&halUART, data, 1, EVT_UART_TIMEOUT);
 }
 
 void UARTf3xx::puts(const char* s) {
     char buf[100];
     strncpy(buf, s, 100);
-    uint8_t* data = reinterpret_cast<uint8_t*>(buf);
+    auto* data = reinterpret_cast<uint8_t*>(buf);
     HAL_UART_Transmit(&halUART, data, strlen(buf), EVT_UART_TIMEOUT);
 }
 
@@ -137,7 +145,7 @@ void UARTf3xx::printf(const char* format, ...) {
     va_start(args, format);
 
     char string[200];
-    uint8_t* data = reinterpret_cast<uint8_t*>(&string);
+    auto* data = reinterpret_cast<uint8_t*>(&string);
     if (0 < vsprintf(string, format, args)) {
         HAL_UART_Transmit(&halUART, data,
                           strlen(string), EVT_UART_TIMEOUT);

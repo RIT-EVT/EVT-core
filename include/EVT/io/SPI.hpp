@@ -1,8 +1,9 @@
 #ifndef _EVT_SPI_
 #define _EVT_SPI_
 
-#include <EVT/io/GPIO.hpp>
 #include <cstdint>
+
+#include <EVT/io/GPIO.hpp>
 
 #ifndef EVT_SPI_TIMEOUT
     #define EVT_SPI_TIMEOUT 100
@@ -26,6 +27,7 @@
 #define SPI_SPEED_31KHZ 31250
 
 namespace EVT::core::IO {
+
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
@@ -91,15 +93,17 @@ public:
      * @param bytes an array of bytes of length n to write to SPI device
      * @param length the length of the array
      */
-    void write(uint8_t* bytes, uint8_t length);
+        void
+        write(uint8_t* bytes, uint8_t length);
 
     virtual /**
      * Reads an array of bytes from a SPI device. Call startTransmission() first to initiate device communication.
      *
      * @param bytes an array of length n to receive the bytes from an SPI device
-     * @param length the number of bytes to recive
+     * @param length the number of bytes to receive
      */
-    void read(uint8_t* bytes, uint8_t length);
+        void
+        read(uint8_t* bytes, uint8_t length);
 
     /**
      * Writes a byte of data to a register of a device.
@@ -160,7 +164,7 @@ private:
 protected:
     static constexpr uint8_t MAX_PINS = 5;
     uint8_t CSPinsLength;
-    GPIO* CSPins[MAX_PINS];
+    GPIO* CSPins[MAX_PINS] = {};
 };
 
 }// namespace EVT::core::IO
