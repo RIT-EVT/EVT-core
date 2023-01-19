@@ -87,23 +87,21 @@ public:
      */
     virtual uint8_t read() = 0;
 
-    virtual /**
+    /**
      * Writes an array of bytes to the SPI device. Call startTransmission() first to initiate device communication.
      *
      * @param bytes an array of bytes of length n to write to SPI device
      * @param length the length of the array
      */
-        void
-        write(uint8_t* bytes, uint8_t length);
+    virtual void write(uint8_t* bytes, uint8_t length);
 
-    virtual /**
+    /**
      * Reads an array of bytes from a SPI device. Call startTransmission() first to initiate device communication.
      *
      * @param bytes an array of length n to receive the bytes from an SPI device
      * @param length the number of bytes to receive
      */
-        void
-        read(uint8_t* bytes, uint8_t length);
+    virtual void read(uint8_t* bytes, uint8_t length);
 
     /**
      * Writes a byte of data to a register of a device.
