@@ -4,7 +4,7 @@
 #include <EVT/dev/Thermistor.hpp>
 #include <EVT/io/ADC.hpp>
 #include <EVT/io/UART.hpp>
-#include <EVT/io/manager.hpp>
+#include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
@@ -21,7 +21,7 @@ uint32_t convert(uint32_t voltage) {
 }
 
 int main() {
-    IO::init();
+    EVT::core::platform::init();
 
     // Setup IO
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);

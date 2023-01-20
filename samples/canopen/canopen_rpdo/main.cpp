@@ -4,12 +4,11 @@
  */
 #include <stdint.h>
 
-#include <EVT/dev/platform/f3xx/Timerf3xx.hpp>
 #include <EVT/io/ADC.hpp>
 #include <EVT/io/CAN.hpp>
 #include <EVT/io/UART.hpp>
-#include <EVT/io/manager.hpp>
 #include <EVT/io/types/CANMessage.hpp>
+#include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
 #include <EVT/utils/types/FixedQueue.hpp>
 
@@ -92,7 +91,7 @@ extern "C" void COTmrUnlock(void) {}
 
 int main() {
     // Initialize system
-    IO::init();
+    EVT::core::platform::init();
 
     // Will store CANopen messages that will be populated by the EVT-core CAN
     // interrupt
@@ -103,7 +102,7 @@ int main() {
     can.addIRQHandler(canInterrupt, reinterpret_cast<void*>(&canOpenQueue));
 
     // Initialize the timer
-    DEV::Timerf3xx timer(TIM2, 100);
+    DEV::Timer& timer = DEV::getTimer<DEV::MCUTimer::Timer2>(100);
     timer.stopTimer();
 
     //create the RPDO node

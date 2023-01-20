@@ -4,10 +4,10 @@
  * The sample will log only the info, warning, and error statements because the
  * logger's level has been set to info.
  */
+
 #include <cstdint>
 
-#include <EVT/dev/platform/f3xx/RTCf3xx.hpp>
-#include <EVT/io/manager.hpp>
+#include <EVT/manager.hpp>
 #include <EVT/utils/log.hpp>
 
 namespace IO = EVT::core::IO;
@@ -16,7 +16,7 @@ namespace DEV = EVT::core::DEV;
 
 int main() {
     // Initialize system
-    IO::init();
+    EVT::core::platform::init();
 
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
@@ -28,8 +28,8 @@ int main() {
     // If timestamps aren't needed, don't set the logger's clock
     log::LOGGER.setUART(&uart);
     log::LOGGER.setLogLevel(log::Logger::LogLevel::INFO);
-    auto* rtc = new DEV::RTCf3xx();
-    log::LOGGER.setClock(rtc);
+    DEV::RTC& rtc = DEV::getRTC();
+    log::LOGGER.setClock(&rtc);
 
     uint8_t sampleData = 0xab;
 

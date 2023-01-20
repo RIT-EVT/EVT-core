@@ -2,9 +2,8 @@
  * This example prints out the time as read in from the RTC
  * every second.
  */
-#include <EVT/dev/platform/f3xx/RTCf3xx.hpp>
 #include <EVT/io/UART.hpp>
-#include <EVT/io/manager.hpp>
+#include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
@@ -12,7 +11,7 @@ namespace DEV = EVT::core::DEV;
 namespace time = EVT::core::time;
 
 int main() {
-    IO::init();
+    EVT::core::platform::init();
 
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
@@ -28,7 +27,7 @@ int main() {
     time.minute = 42;
     time.second = 35;
 
-    DEV::RTCf3xx rtc;
+    DEV::RTC& rtc = DEV::getRTC();
     rtc.setTime(time);
 
     time::wait(500);

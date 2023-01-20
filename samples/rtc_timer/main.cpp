@@ -1,19 +1,18 @@
 
-#include <EVT/io/manager.hpp>
+#include <EVT/manager.hpp>
 
 #include <EVT/dev/RTCTimer.hpp>
-#include <EVT/dev/platform/f3xx/RTCf3xx.hpp>
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
 
 int main() {
-    IO::init();
+    EVT::core::platform::init();
 
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     //Specific implementation of DEV::RTC, clock type can vary
-    DEV::RTCf3xx clock;
+    DEV::RTC& clock = DEV::getRTC();
 
     DEV::RTCTimer timer(clock, 5000);
 

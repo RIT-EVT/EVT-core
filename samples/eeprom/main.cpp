@@ -7,7 +7,7 @@
 #include <stdint.h>
 
 #include <EVT/dev/storage/M24C32.hpp>
-#include <EVT/io/manager.hpp>
+#include <EVT/manager.hpp>
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
@@ -48,7 +48,7 @@ uint32_t WORD_ARR_DATA[WORD_ARR_LENGTH] = {0x01234567, 0x89abcdef};
 
 int main() {
     // Initialize system
-    IO::init();
+    EVT::core::platform::init();
 
     IO::I2C& i2c = IO::getI2C<IO::Pin::PB_8, IO::Pin::PB_9>();
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);

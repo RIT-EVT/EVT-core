@@ -1,10 +1,9 @@
 /**
  * This sample will demo the basic functionality for the timer driver
  */
-#include <EVT/dev/platform/f3xx/Timerf3xx.hpp>
 #include <EVT/io/UART.hpp>
-#include <EVT/io/manager.hpp>
 #include <EVT/io/pin.hpp>
+#include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
@@ -36,7 +35,7 @@ void timer16IRQHandler(void* htim) {
 
 int main() {
     // Initialize system
-    IO::init();
+    EVT::core::platform::init();
 
     // Setup GPIO
     ledGPIO = &IO::getGPIO<IO::Pin::LED>();
@@ -45,9 +44,9 @@ int main() {
     reloadGPIO = &IO::getGPIO<IO::Pin::PC_0>(IO::GPIO::Direction::OUTPUT);
 
     // Setup the Timer
-    auto timer2 = DEV::Timerf3xx(TIM2, 500);
-    auto timer15 = DEV::Timerf3xx(TIM15, 100);
-    auto timer16 = DEV::Timerf3xx(TIM16, 200);
+    DEV::Timer& timer2 = DEV::getTimer<DEV::MCUTimer::Timer2>(500);
+    DEV::Timer& timer15 = DEV::getTimer<DEV::MCUTimer::Timer15>(100);
+    DEV::Timer& timer16 = DEV::getTimer<DEV::MCUTimer::Timer16>(200);
 
     timer2.startTimer(timer2IRQHandler);
     timer15.startTimer(timer15IRQHandler);
