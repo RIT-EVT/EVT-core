@@ -50,7 +50,7 @@ int main() {
     uint8_t col = 0;
     uint8_t page = 4;
 
-    lcd.displayBitMap(ball, 8, 8, page, col);
+    lcd.displayBitMapInArea(ball, 8, 8, page, col);
 
     uint8_t number = 0;
 
@@ -67,7 +67,7 @@ int main() {
             }
         }
 
-        lcd.displayBitMap(ball, 8, 8, page, col);
+        lcd.displayBitMapInArea(ball, 8, 8, page, col);
 
         lcd.clearArea(16, 8, 7, 0);
 

@@ -19,7 +19,7 @@
 #define DISPLAYON 0xAF
 
 namespace EVT::core::DEV {
-/*
+/**
 * This class represents the structure to command a GLCD with 
 * a ST7565 controller.
 */
@@ -81,7 +81,7 @@ public:
      *
      * @param[in] bitMap Bitmap to be displayed
      */
-    void displayMap(const uint8_t* bitMap);
+    void setEntireScreenBitMap(const uint8_t* bitMap);
 
     /**
      * Displays the given bit map at a certain height and width on the page.
@@ -92,7 +92,7 @@ public:
      * @param page[in] the page to draw the bitmap on. Range: 0-7.
      * @param column[in] the column to draw the bitmap on. Range:0-127.
      */
-    void displayBitMap(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column);
+    void displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column);
 
     /**
      * Writes text to the screen. Has options to wrap the text around the edge of the screen if needed.

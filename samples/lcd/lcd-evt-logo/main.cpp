@@ -107,7 +107,7 @@ int main() {
     lcd.initLCD();
     lcd.clearLCD();
 
-    lcd.displayMap(evtBitMap);
+    lcd.setEntireScreenBitMap(evtBitMap);
 
     return 0;
 }

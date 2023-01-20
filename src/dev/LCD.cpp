@@ -108,7 +108,7 @@ void LCD::clearArea(uint8_t width, uint8_t height, uint8_t page, uint8_t column)
     this->commandWrite(0xAF);// Finish Writing
 }
 
-void LCD::displayMap(const uint8_t* bitMap) {
+void LCD::setEntireScreenBitMap(const uint8_t* bitMap) {
     uint8_t page = 0xB0;
     this->commandWrite(0xAE);              //Display OFF
     this->commandWrite(0x40);              //Display start address + 0x40
@@ -125,7 +125,7 @@ void LCD::displayMap(const uint8_t* bitMap) {
     this->commandWrite(0xAF);
 }
 
-void LCD::displayBitMap(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column) {
+void LCD::displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column) {
     // Calculate the correct column address from an 8-bit number.
     // The issue is that the display takes 4 bit numbers, instead of 8.
     // So you need to split it into two 4 bit numbers.
@@ -157,7 +157,7 @@ void LCD::displayBitMap(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeig
 void LCD::writeText(const char* text, uint8_t page, uint8_t column, bool wrapText) {
     for (uint8_t x = 0; x < strlen(text); x++) {
         // Get the ASCII value of the character.
-        uint8_t fontIndex = int(uint8_t(text[x]));
+        uint8_t fontIndex = text[x];
 
         // Create the character that we need to write to the screen.
         unsigned char characterMap[4] = {
@@ -172,7 +172,7 @@ void LCD::writeText(const char* text, uint8_t page, uint8_t column, bool wrapTex
         }
 
         // Display the character bit map at the calculated page and column.
-        displayBitMap(characterMap, 4, 8, page, column);
+        displayBitMapInArea(characterMap, 4, 8, page, column);
         column += 4;// Advance the column for the next character.
 
         // If we need to wrap text, move the page forward and the column to 0.
