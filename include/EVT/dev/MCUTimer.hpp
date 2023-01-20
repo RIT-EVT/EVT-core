@@ -5,6 +5,8 @@
 #include <HALf3/stm32f3xx.h>
 #endif
 
+namespace EVT::core::DEV {
+
 /**
  * TODO: Add documentation
  */
@@ -72,5 +74,7 @@ TIM_TypeDef* getTIM(MCUTimer mcuTimer) {
 
     return timPeriph;
 }
+
+}// namespace EVT::core::DEV
 
 #endif//_EVT_MCUTIMER_HPP_
