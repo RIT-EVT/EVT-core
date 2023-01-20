@@ -84,12 +84,8 @@ void LCD::clearArea(uint8_t width, uint8_t height, uint8_t page, uint8_t column)
     // Calculate the correct column address from an 8-bit number.
     // The issue is that the display takes 4 bit numbers, instead of 8.
     // So you need to split it into two 4 bit numbers.
-    uint8_t columnUpperAddress = column;
-    columnUpperAddress >>= 4;
-
-    uint8_t columnLowerAddress = column;
-    columnLowerAddress <<= 4;
-    columnLowerAddress >>= 4;
+    uint8_t columnUpperAddress = (column & 0xf0) >> 4;
+    uint8_t columnLowerAddress = (column & 0x0f);
 
     uint8_t amountOfPages = height / 8;
     if (height < 8) {
@@ -133,12 +129,8 @@ void LCD::displayBitMap(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeig
     // Calculate the correct column address from an 8-bit number.
     // The issue is that the display takes 4 bit numbers, instead of 8.
     // So you need to split it into two 4 bit numbers.
-    uint8_t columnUpperAddress = column;
-    columnUpperAddress >>= 4;
-
-    uint8_t columnLowerAddress = column;
-    columnLowerAddress <<= 4;
-    columnLowerAddress >>= 4;
+    uint8_t columnUpperAddress = (column & 0xf0) >> 4;
+    uint8_t columnLowerAddress = (column & 0x0f);
 
     uint8_t amountOfPages = bitMapHeight / 8;
     if (bitMapHeight < 8) {
