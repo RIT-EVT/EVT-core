@@ -1,7 +1,7 @@
-#include <stdint.h>
-#include <string.h>
-
 #include <EVT/io/UART.hpp>
+
+#include <cstdint>
+#include <cstring>
 
 namespace EVT::core::IO {
 
