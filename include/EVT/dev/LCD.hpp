@@ -145,7 +145,7 @@ private:
     /** Register select pin for the LCD */
     EVT::core::IO::GPIO& regSelect;
 
-    /** Reset pin for the lcd */
+    /** Reset pin for the LCD */
     EVT::core::IO::GPIO& reset;
 
     /** Chip select pin for the LCD */
