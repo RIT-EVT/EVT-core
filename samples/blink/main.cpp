@@ -1,5 +1,5 @@
 /**
- * This example is the basic LED blink sample. This samples shows how the
+ * This example is tz This samples shows how the
  * device level drivers (the LED in this case) can be established by providing
  * the driver with the cooresponding IO level driver (GPIO in this case).
  *

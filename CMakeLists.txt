@@ -4,7 +4,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 set(EVT_CORE_DIR     ${CMAKE_CURRENT_SOURCE_DIR})
-
+set(TARGET_DEV "STM32F302x8")
 include(CMakeDependentOption)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_compiler.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_install.cmake)
