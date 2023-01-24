@@ -20,8 +20,9 @@ int main() {
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>(true);
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
-    uint8_t payload[] = {0xE1, 0xE2, 0xE3, 0xE4, 0xE5};
-    IO::CANMessage transmit_message(0xA100101, 5, &payload[0], false);
+    uint8_t payload = 0xE4;
+
+    IO::CANMessage transmit_message(0xA100101, 1, &payload, false);
     IO::CANMessage received_message;
 
     IO::CAN::CANStatus result;
