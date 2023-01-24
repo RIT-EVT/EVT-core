@@ -1,3 +1,6 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/evt-core_build.cmake)
-
-make_exe(lcd main.cpp)
+add_subdirectory(basic)
+add_subdirectory(lcd-alphabet)
+add_subdirectory(lcd-ball)
+add_subdirectory(lcd-counter)
+add_subdirectory(lcd-evt-logo)
+add_subdirectory(lcd-segment)
