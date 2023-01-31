@@ -17,6 +17,7 @@
 #define ELECTRONICVOLCOMMAND 0x81
 #define ELECTRONICVOLVALUE 0x11
 #define DISPLAYON 0xAF
+#define DISPLAYOFF 0xAE
 
 namespace EVT::core::DEV {
 /**

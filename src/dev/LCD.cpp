@@ -21,8 +21,6 @@ void LCD::initLCD() {
     this->commandWrite(ELECTRONICVOLCOMMAND);// Electronic Volume Command (set contrast) Double Byte: 1 of 2
     this->commandWrite(ELECTRONICVOLVALUE);  // Electronic Volume value (contrast value) Double Byte: 2 of 2
     this->commandWrite(DISPLAYON);           // Display ON
-    this->commandWrite(0xAE);
-    this->commandWrite(0xAE);
 }
 
 void LCD::dataWrite(uint8_t data) {
@@ -40,8 +38,6 @@ void LCD::commandWrite(uint8_t data) {
 }
 
 void LCD::driveColumn(uint8_t page, uint8_t colUp, uint8_t colLow, uint8_t data) {
-    this->commandWrite(0xAE);// Display OFF
-
     this->commandWrite(0x40);         // Line to start writing on (0 -> 64) moves set bits with it DO NOT CHANGE
     this->commandWrite(0xB0 + page);  // Writes the page address (4 bits, 8 rows selected by values 0-7 )
     this->commandWrite(0x10 + colUp); // Writes the first 4 bits of the column select (out of 8 bits)
@@ -66,7 +62,6 @@ void LCD::driveColumn(uint8_t page, uint8_t colUp, uint8_t colLow, uint8_t data)
 void LCD::clearLCD() {
     uint8_t page = 0xB0;// The starting page
 
-    this->commandWrite(0xAE);                      // Display OFF
     this->commandWrite(0x40);                      // Display start address + 0x40
     for (uint8_t i = 0; i < 8; i++) {              // 64 pixel display / 8 pixels per page = 8 pages
         this->commandWrite(page);                  // Send page address
@@ -92,7 +87,6 @@ void LCD::clearArea(uint8_t width, uint8_t height, uint8_t page, uint8_t column)
         amountOfPages = 1;
     }
 
-    this->commandWrite(0xAE);                         // Display OFF
     this->commandWrite(0x40);                         // Display start address + 0x40
     for (uint8_t i = 0; i < amountOfPages; i++) {     // 64 pixel display / 8 pixels per page = 8 pages
         this->commandWrite(0xB0 + page);              // Send page address
@@ -110,7 +104,6 @@ void LCD::clearArea(uint8_t width, uint8_t height, uint8_t page, uint8_t column)
 
 void LCD::setEntireScreenBitMap(const uint8_t* bitMap) {
     uint8_t page = 0xB0;
-    this->commandWrite(0xAE);              //Display OFF
     this->commandWrite(0x40);              //Display start address + 0x40
     for (uint8_t i = 0; i < 8; i++) {      //64 pixel display / 8 pixels per page = 8 pages
         this->commandWrite(page);          //send page address
@@ -137,7 +130,6 @@ void LCD::displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitM
         amountOfPages = 1;
     }
 
-    this->commandWrite(0xAE);                         //Display OFF
     this->commandWrite(0x40);                         //Display start address + 0x40
     for (uint8_t i = 0; i < amountOfPages; i++) {     // 64 pixel display / 8 pixels per page = 8 pages
         this->commandWrite(0xB0 + page);              // Send page address
