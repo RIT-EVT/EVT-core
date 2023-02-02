@@ -5,7 +5,7 @@
 #include <EVT/dev/LCD.hpp>
 #include <EVT/dev/LED.hpp>
 #include <EVT/io/UART.hpp>
-#include <EVT/io/manager.hpp>
+#include <EVT/manager.hpp>
 
 namespace DEV = EVT::core::DEV;
 namespace IO = EVT::core::IO;
@@ -19,7 +19,7 @@ IO::GPIO* devices[deviceCount];
 
 int main() {
     // Initialize system
-    IO::init();
+    EVT::core::platform::init();
 
     // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
