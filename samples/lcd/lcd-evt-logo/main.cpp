@@ -1,3 +1,7 @@
+/**
+* Sample code for displaying EVT logo onto an LCD display.
+*/
+
 #include <EVT/dev/LCD.hpp>
 #include <EVT/dev/LED.hpp>
 #include <EVT/io/UART.hpp>
@@ -12,13 +16,13 @@ namespace DEV = EVT::core::DEV;
 namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
 
-constexpr uint32_t SPI_SPEED = SPI_SPEED_500KHZ;// 62.5KHz
+constexpr uint32_t SPI_SPEED = SPI_SPEED_500KHZ;
 
 constexpr uint8_t deviceCount = 1;
 
 IO::GPIO* devices[deviceCount];
 
-unsigned char bitMap[8192] = {
+unsigned char evtBitMap[1024] = {
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
@@ -106,9 +110,9 @@ int main() {
     EVT::core::DEV::LCD lcd(regSelect, reset, spi);
     uart.printf("Initializing LCD...\n\r");
     lcd.initLCD();
-    lcd.displayMap(bitMap);
+    lcd.clearLCD();
 
-    while (1) {}
+    lcd.setEntireScreenBitMap(evtBitMap);
 
     return 0;
 }

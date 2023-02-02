@@ -4,11 +4,15 @@
 #include <cstdint>
 #include <cstdlib>
 
+#ifndef EVT_UART_TIMEOUT
+    #define EVT_UART_TIMEOUT 100
+#endif
+
 namespace EVT::core::IO {
 
 // Forward declarations:
 // The different pins are hardware specific. Forward declarations to allow
-// at compilation time the devicision of which pins should be used.
+// at compilation time the decision of which pins should be used.
 enum class Pin;
 
 /**
@@ -19,12 +23,12 @@ enum class Pin;
  * UART modules. Hardware specific features are not included.
  *
  * The UART modules support both character and byte oriented transmit and
- * receive operations. While fundametally these operations are the same,
- * semantically this makes working with character cetered data and byte
+ * receive operations. While fundamentally these operations are the same,
+ * semantically this makes working with character centered data and byte
  * centered data cleaner.
  *
  * NOTE: You cannot directly make an instance of this class via a constructor.
- * To make an isntance, use the UART::getInstance method.
+ * To make an instance, use the UART::getInstance method.
  */
 class UART {
 public:
@@ -94,14 +98,14 @@ public:
     virtual void sendBreak() = 0;
 
     /**
-     * Determins if the UART is currently readable.
+     * Determines if the UART is currently readable.
      *
      * @return True if the UART is readable.
      */
     virtual bool isReadable() = 0;
 
     /**
-     * Determins if the UART is currently writable.
+     * Determines if the UART is currently writable.
      *
      * @return True if the UART is writable
      */
@@ -185,8 +189,6 @@ protected:
     Pin rxPin;
     /// The baudrate that is currently being operated at
     uint32_t baudrate;
-
-    constexpr static uint32_t DEFAULT_TIMEOUT = 100;
 };
 
 }// namespace EVT::core::IO
