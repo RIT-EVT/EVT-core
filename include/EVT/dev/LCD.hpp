@@ -110,7 +110,7 @@ public:
      *
      * @param[in] newSectionTitles an array of section titles to display.
      */
-    void setDefaultSections(char* newSectionTitles[9]);
+    void setDefaultSections(char* const newSectionTitles[9]);
 
     /**
      * Displays the section headers. Only needs to be called once unless cleared.

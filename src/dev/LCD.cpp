@@ -175,7 +175,7 @@ void LCD::writeText(const char* text, uint8_t page, uint8_t column, bool wrapTex
     }
 }
 
-void LCD::setDefaultSections(char* newSectionTitles[9]) {
+void LCD::setDefaultSections(char* const newSectionTitles[9]) {
     for (uint8_t x = 0; x < numberOfSections; x++) {
         this->sectionTitles[x] = newSectionTitles[x];
     }
