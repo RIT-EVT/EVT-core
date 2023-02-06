@@ -17,6 +17,7 @@
 #define ELECTRONICVOLCOMMAND 0x81
 #define ELECTRONICVOLVALUE 0x11
 #define DISPLAYON 0xAF
+#define DISPLAYOFF 0xAE
 
 namespace EVT::core::DEV {
 /**
@@ -109,7 +110,7 @@ public:
      *
      * @param[in] newSectionTitles an array of section titles to display.
      */
-    void setDefaultSections(char* newSectionTitles[9]);
+    void setDefaultSections(char* const newSectionTitles[9]);
 
     /**
      * Displays the section headers. Only needs to be called once unless cleared.

@@ -52,7 +52,7 @@ int main() {
         "Temp 2",
         "Temp 3",
         "Status 1",
-        "Pre Stat",
+        "PVC Stat",
         "Torque",
     };
     lcd.setDefaultSections(titles);
