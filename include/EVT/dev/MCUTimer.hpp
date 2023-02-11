@@ -8,7 +8,7 @@
 namespace EVT::core::DEV {
 
 /**
- * TODO: Add documentation
+ * Enum for all the hardware timers available on the current MCU
  */
 enum class MCUTimer {
 #if defined(STM32F302x8)
@@ -31,10 +31,10 @@ enum class MCUTimer {
 };
 
 /**
- * TODO: Add documentation
+ * Gets the corresponding HAL TIM_TypeDef* for each MCUTimer
  *
- * @param mcuTimer
- * @return
+ * @param mcuTimer MCUTimer of which to get the HAL equivalent
+ * @return HAL equivalent of mcuTimer
  */
 TIM_TypeDef* getTIM(MCUTimer mcuTimer) {
     TIM_TypeDef* timPeriph;

@@ -164,13 +164,13 @@ UART& getUART(uint32_t baudrate) {
 }
 
 /**
- * TODO: Add documentation
+ * Get an instance of a SPI driver.
  *
- * @tparam sckPin
- * @tparam mosiPin
- * @tparam misoPin
- * @param CSPins
- * @param pinLength
+ * @tparam sckPin Serial clock pin
+ * @tparam mosiPin Master out, slave in pin
+ * @tparam misoPin Master in, slave out pin
+ * @param CSPins Array of chip select pins
+ * @param pinLength Number of chip select pins in the array
  */
 template<Pin sckPin, Pin mosiPin, Pin misoPin>
 SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
@@ -181,12 +181,12 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 }
 
 /**
- * TODO: Add documentation
+ * Get an instance of a write-only SPI driver.
  *
- * @tparam sckPin
- * @tparam mosiPin
- * @param CSPins
- * @param pinLength
+ * @tparam sckPin Serial clock pin
+ * @tparam mosiPin Master out, slave in pin
+ * @param CSPins Array of chip select pins
+ * @param pinLength Number of chip select pins in the array
  */
 template<Pin sckPin, Pin mosiPin>
 SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
