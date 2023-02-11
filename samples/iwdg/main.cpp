@@ -2,8 +2,7 @@
  * Example of IWDG functionality. The timer is refreshed 3 times in a loop,
  * then hits an infinite loop in the code which triggers a system reset.
  */
-#include <EVT/dev/platform/f3xx/f302x8/IWDGf302x8.hpp>
-#include <EVT/io/manager.hpp>
+#include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
@@ -12,11 +11,11 @@ namespace time = EVT::core::time;
 
 int main() {
     // Initialize system
-    IO::init();
+    EVT::core::platform::init();
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     // Start watchdog
-    DEV::IWDGf302x8 iwdg = DEV::IWDGf302x8(5000);
+    DEV::IWDG& iwdg = DEV::getIWDG(5000);
 
     uart.printf("Starting IWDG test...\n\r\n\r");
 

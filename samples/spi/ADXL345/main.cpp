@@ -8,7 +8,7 @@
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/I2C.hpp>
 #include <EVT/io/UART.hpp>
-#include <EVT/io/manager.hpp>
+#include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
@@ -25,7 +25,7 @@ IO::GPIO* devices[deviceCount];
 
 int main() {
     // Initialize system
-    IO::init();
+    EVT::core::platform::init();
 
     //CS: D10
     devices[0] = &IO::getGPIO<IO::Pin::SPI_CS>(EVT::core::IO::GPIO::Direction::OUTPUT);
