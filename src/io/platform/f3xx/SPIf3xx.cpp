@@ -284,28 +284,24 @@ bool SPIf3xx::endTransmission(uint8_t device) {
     return false;
 }
 
-void SPIf3xx::write(uint8_t byte) {
-    HAL_SPI_Transmit(&halSPI, &byte, 1, EVT_SPI_TIMEOUT);
+SPI::SPIStatus SPIf3xx::write(uint8_t byte) {
+    HAL_StatusTypeDef halStatus = HAL_SPI_Transmit(&halSPI, &byte, 1, EVT_SPI_TIMEOUT);
+
+    return halToSPIStatus(halStatus);
 }
 
-uint8_t SPIf3xx::read() {
-    uint8_t data;
-    HAL_SPI_Receive(&halSPI, &data, 1, EVT_SPI_TIMEOUT);
-    return data;
+SPI::SPIStatus SPIf3xx::read(uint8_t* out) {
+    HAL_StatusTypeDef halStatus = HAL_SPI_Receive(&halSPI, out, 1, EVT_SPI_TIMEOUT);
+
+    return halToSPIStatus(halStatus);
 }
 
-void SPIf3xx::write(uint8_t* bytes, uint8_t length) {
-    HAL_SPI_Transmit(&halSPI, bytes, length, EVT_SPI_TIMEOUT);
+SPI::SPIStatus SPIf3xx::write(uint8_t* bytes, uint8_t length) {
+    HAL_StatusTypeDef halStatus = HAL_SPI_Transmit(&halSPI, bytes, length, EVT_SPI_TIMEOUT);
+
+    return halToSPIStatus(halStatus);
 }
 
-/**
- * Reads an array of bytes from a SPI device.
- *
- * @param device the device to write to in CSPins
- * @param bytes an array of length n to receive the bytes from an SPI device
- * @param length the number of bytes to receive
- * @return SPIStatus of the HAL function call
- */
 SPI::SPIStatus SPIf3xx::read(uint8_t* bytes, uint8_t length) {
     HAL_StatusTypeDef halStatus = HAL_SPI_Receive(&halSPI, bytes, length, EVT_SPI_TIMEOUT);
 

@@ -109,11 +109,12 @@ public:
     virtual SPI::SPIStatus write(uint8_t* bytes, uint8_t length);
 
     /**
-     * Reads an array of bytes from a SPI device. Call startTransmission() first to initiate device communication.
+     * Reads an array of bytes from a SPI device.
      *
+     * @param device the device to write to in CSPins
      * @param bytes an array of length n to receive the bytes from an SPI device
      * @param length the number of bytes to receive
-     * @return the status after calling the function
+     * @return SPIStatus of the HAL function call
      */
     virtual SPI::SPIStatus read(uint8_t* bytes, uint8_t length);
 
