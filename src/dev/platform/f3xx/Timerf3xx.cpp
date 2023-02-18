@@ -1,6 +1,6 @@
-#include <EVT/dev/platform/f3xx/f302x8/Timerf302x8.hpp>
+#include <EVT/dev/platform/f3xx/Timerf3xx.hpp>
+
 #include <EVT/platform/f3xx/stm32f3xx.hpp>
-#include <HALf3/stm32f3xx_hal_conf.h>
 
 TIM_HandleTypeDef halTimers[4];
 void (*timerInterruptHandlers[4])(void* htim) = {nullptr};
@@ -110,12 +110,12 @@ uint8_t getTimerInterruptIndex(TIM_TypeDef* peripheral) {
 
 namespace EVT::core::DEV {
 
-Timerf302x8::Timerf302x8(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
+Timerf3xx::Timerf3xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
     initTimer(timerPeripheral, clockPeriod);
     this->halTimer = &halTimers[getTimerInterruptIndex(timerPeripheral)];
 }
 
-void Timerf302x8::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
+void Timerf3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
     this->clockPeriod = clockPeriod;
     auto& htim = halTimers[getTimerInterruptIndex(timerPeripheral)];
 
@@ -140,18 +140,18 @@ void Timerf302x8::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) 
     HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
 }
 
-void Timerf302x8::startTimer(void (*irqHandler)(void* htim)) {
+void Timerf3xx::startTimer(void (*irqHandler)(void* htim)) {
     TIM_TypeDef* timerPeripheral = this->halTimer->Instance;
     stopTimer();
     timerInterruptHandlers[getTimerInterruptIndex(timerPeripheral)] = irqHandler;
     startTimer();
 }
 
-void Timerf302x8::stopTimer() {
+void Timerf3xx::stopTimer() {
     HAL_TIM_Base_Stop_IT(this->halTimer);
 }
 
-void Timerf302x8::startTimer() {
+void Timerf3xx::startTimer() {
     stopTimer();// Stop timer in case it was already running
 
     auto htim = this->halTimer;
@@ -160,11 +160,11 @@ void Timerf302x8::startTimer() {
     HAL_TIM_Base_Start_IT(htim);
 }
 
-void Timerf302x8::reloadTimer() {
+void Timerf3xx::reloadTimer() {
     this->halTimer->Instance->CNT &= ~(0xFFFFFFFF);// Clear the Counter register to reset the timer
 }
 
-void Timerf302x8::setPeriod(uint32_t clockPeriod) {
+void Timerf3xx::setPeriod(uint32_t clockPeriod) {
     stopTimer();
     initTimer(this->halTimer->Instance, clockPeriod);
 }

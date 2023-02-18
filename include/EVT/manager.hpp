@@ -1,7 +1,7 @@
 #ifndef _EVT_MANAGER_H_
 #define _EVT_MANAGER_H_
 
-#include <stdint.h>
+#include <cstdint>
 
 #include <EVT/io/ADC.hpp>
 #include <EVT/io/CAN.hpp>
@@ -9,7 +9,10 @@
 #include <EVT/io/PWM.hpp>
 
 #ifdef STM32F3xx
-    #include <EVT/platform/f3xx/stm32f3xx.hpp>
+    #include <EVT/dev/MCUTimer.hpp>
+    #include <EVT/dev/platform/f3xx/IWDGf3xx.hpp>
+    #include <EVT/dev/platform/f3xx/RTCf3xx.hpp>
+    #include <EVT/dev/platform/f3xx/Timerf3xx.hpp>
 
     #include <EVT/io/platform/f3xx/ADCf3xx.hpp>
     #include <EVT/io/platform/f3xx/CANf3xx.hpp>
@@ -18,9 +21,11 @@
     #include <EVT/io/platform/f3xx/PWMf3xx.hpp>
     #include <EVT/io/platform/f3xx/SPIf3xx.hpp>
     #include <EVT/io/platform/f3xx/UARTf3xx.hpp>
+
+    #include <EVT/platform/f3xx/stm32f3xx.hpp>
 #endif
 
-namespace EVT::core::IO {
+namespace EVT::core::platform {
 
 /**
  * Initialize the low level components of the system. This is highly
@@ -29,9 +34,49 @@ namespace EVT::core::IO {
  */
 void init() {
 #ifdef STM32F3xx
-    EVT::core::platform::stm32f3xx_init();
+    stm32f3xx_init();
 #endif
 }
+
+}// namespace EVT::core::platform
+
+namespace EVT::core::DEV {
+
+/**
+ * Get an instance of an IWDG
+ *
+ * @param ms Time in milliseconds before the IWDG triggers a reset
+ * must be a value between 8 and 32768 ms.
+ */
+IWDG& getIWDG(uint32_t ms) {
+#ifdef STM32F3xx
+    // 8 < ms < 32768
+    static IWDGf3xx iwdg(ms);
+    return iwdg;
+#endif
+}
+
+/**
+ * Get an instance of an RTC
+ */
+RTC& getRTC() {
+#ifdef STM32F3xx
+    static RTCf3xx rtc;
+    return rtc;
+#endif
+}
+
+template<MCUTimer mcuTimer>
+Timer& getTimer(uint32_t clockPeriod) {
+#ifdef STM32F3xx
+    static Timerf3xx timer(getTIM(mcuTimer), clockPeriod);
+    return timer;
+#endif
+}
+
+}// namespace EVT::core::DEV
+
+namespace EVT::core::IO {
 
 /**
  * Get an instance of an ADC channel
@@ -103,7 +148,7 @@ PWM& getPWM() {
 #endif
 }
 
-/*
+/**
  * Get an instance of a UART.
  *
  * @param[in] txPin The transmit pin for the UART.
@@ -118,6 +163,15 @@ UART& getUART(uint32_t baudrate) {
 #endif
 }
 
+/**
+ * Get an instance of a SPI driver.
+ *
+ * @tparam sckPin Serial clock pin
+ * @tparam mosiPin Master out, slave in pin
+ * @tparam misoPin Master in, slave out pin
+ * @param CSPins Array of chip select pins
+ * @param pinLength Number of chip select pins in the array
+ */
 template<Pin sckPin, Pin mosiPin, Pin misoPin>
 SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 #ifdef STM32F3xx
@@ -126,6 +180,14 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 #endif
 }
 
+/**
+ * Get an instance of a write-only SPI driver.
+ *
+ * @tparam sckPin Serial clock pin
+ * @tparam mosiPin Master out, slave in pin
+ * @param CSPins Array of chip select pins
+ * @param pinLength Number of chip select pins in the array
+ */
 template<Pin sckPin, Pin mosiPin>
 SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 #ifdef STM32F3xx

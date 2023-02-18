@@ -1,24 +1,27 @@
-#include <EVT/dev/platform/f3xx/f302x8/RTC302x8.hpp>
+#include <EVT/dev/platform/f3xx/RTCf3xx.hpp>
 
 #include <HALf3/stm32f3xx_hal_rtc.h>
 
+namespace time = EVT::core::time;
+
 namespace EVT::core::DEV {
 
-RTCf302x8::RTCf302x8() {
-    halRTC.Instance = RTC1;
-
-    // Numbers generated from STMCubeMX
-    halRTC.Init.HourFormat = RTC_HOURFORMAT_24;
-    halRTC.Init.AsynchPrediv = 127;
-    halRTC.Init.SynchPrediv = 255;
-    halRTC.Init.OutPut = RTC_OUTPUT_DISABLE;
-    halRTC.Init.OutPutType = RTC_OUTPUT_TYPE_PUSHPULL;
-    halRTC.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
-
+RTCf3xx::RTCf3xx() : halRTC{
+    RTC1,
+    {
+        // Numbers generated from STMCubeMX
+        RTC_HOURFORMAT_24,
+        127,
+        255,
+        RTC_OUTPUT_DISABLE,
+        RTC_OUTPUT_TYPE_PUSHPULL,
+        RTC_OUTPUT_POLARITY_HIGH,
+    },
+} {
     RCC_OscInitTypeDef RCC_OscInitStruct;
     RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
 
-    // Initialize the peripherials
+    // Initialize the peripherals
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
 
@@ -37,7 +40,7 @@ RTCf302x8::RTCf302x8() {
     HAL_RTC_Init(&halRTC);
 }
 
-void RTCf302x8::getTime(EVT::core::time::TimeStamp& time) {
+void RTCf3xx::getTime(EVT::core::time::TimeStamp& time) {
     RTC_DateTypeDef rtcDate;
     RTC_TimeTypeDef rtcTime;
 
@@ -54,8 +57,8 @@ void RTCf302x8::getTime(EVT::core::time::TimeStamp& time) {
     time.day = rtcDate.Date;
 }
 
-uint32_t RTCf302x8::getTime() {
-    EVT::core::time::TimeStamp ts;
+uint32_t RTCf3xx::getTime() {
+    time::TimeStamp ts{};
     getTime(ts);
 
     uint32_t y = ts.year;
@@ -84,7 +87,7 @@ uint32_t RTCf302x8::getTime() {
     return time;
 }
 
-void RTCf302x8::setTime(EVT::core::time::TimeStamp& time) {
+void RTCf3xx::setTime(EVT::core::time::TimeStamp& time) {
     RTC_DateTypeDef rtcDate;
     RTC_TimeTypeDef rtcTime;
 

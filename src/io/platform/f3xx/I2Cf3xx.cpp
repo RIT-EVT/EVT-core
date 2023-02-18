@@ -1,6 +1,11 @@
+#include <EVT/io/platform/f3xx/I2Cf3xx.hpp>
+
 #include <EVT/io/pin.hpp>
 #include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
-#include <EVT/io/platform/f3xx/I2Cf3xx.hpp>
+
+#include <EVT/utils/log.hpp>
+
+namespace log = EVT::core::log;
 
 namespace EVT::core::IO {
 
@@ -13,8 +18,8 @@ namespace EVT::core::IO {
  * TODO: Make modifications for this to be runnable at compile time
  * allowing for validation of the selected pins.
  *
- * @param sclPin The selected I2C clock pin.
- * @return
+ * @param sclPin The selected I2C clock pin
+ * @return The port ID associated with the selected pins
  */
 static uint8_t getPortID(Pin sclPin) {
 #ifdef STM32F302x8
@@ -30,9 +35,9 @@ static uint8_t getPortID(Pin sclPin) {
     case Pin::PA_8:
         return 3;
     default:
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid SCL Pin");
         return 0;
     }
-    return 0;// Should not get here, unless bad pin given
 #endif
 
 #ifdef STM32F334x8
@@ -54,7 +59,7 @@ static void getInstance(uint8_t portID, I2C_TypeDef** instance, uint8_t* altId) 
     case 1:
         *instance = I2C1;
 
-        if (!(__HAL_RCC_I2C1_IS_CLK_ENABLED()))
+        if (!__HAL_RCC_I2C1_IS_CLK_ENABLED())
             __HAL_RCC_I2C1_CLK_ENABLE();
 
         *altId = GPIO_AF4_I2C1;
@@ -63,7 +68,7 @@ static void getInstance(uint8_t portID, I2C_TypeDef** instance, uint8_t* altId) 
     case 2:
         *instance = I2C2;
 
-        if (!(__HAL_RCC_I2C2_IS_CLK_ENABLED()))
+        if (!__HAL_RCC_I2C2_IS_CLK_ENABLED())
             __HAL_RCC_I2C2_CLK_ENABLE();
 
         *altId = GPIO_AF4_I2C2;
@@ -72,7 +77,7 @@ static void getInstance(uint8_t portID, I2C_TypeDef** instance, uint8_t* altId) 
     case 3:
         *instance = I2C3;
 
-        if (!(__HAL_RCC_I2C3_IS_CLK_ENABLED()))
+        if (!__HAL_RCC_I2C3_IS_CLK_ENABLED())
             __HAL_RCC_I2C3_CLK_ENABLE();
 
         *altId = GPIO_AF2_I2C3;
@@ -122,14 +127,14 @@ I2Cf3xx::I2Cf3xx(Pin sclPin, Pin sdaPin) : I2C(sclPin, sdaPin) {
 I2C::I2CStatus I2Cf3xx::write(uint8_t addr, uint8_t byte) {
     HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&halI2C, addr << 1,
                                                        &byte, 1,
-                                                       DEFAULT_I2C_TIMEOUT);
+                                                       EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
 I2C::I2CStatus I2Cf3xx::read(uint8_t addr, uint8_t* output) {
     HAL_StatusTypeDef status = HAL_I2C_Master_Receive(&halI2C, addr << 1,
                                                       output, 1,
-                                                      DEFAULT_I2C_TIMEOUT);
+                                                      EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
@@ -140,7 +145,7 @@ I2C::I2CStatus I2Cf3xx::read(uint8_t addr, uint8_t* output) {
 I2C::I2CStatus I2Cf3xx::write(uint8_t addr, uint8_t* bytes, uint8_t length) {
     HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&halI2C, addr << 1,
                                                        bytes, length,
-                                                       DEFAULT_I2C_TIMEOUT);
+                                                       EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
@@ -151,7 +156,7 @@ I2C::I2CStatus I2Cf3xx::write(uint8_t addr, uint8_t* bytes, uint8_t length) {
 I2C::I2CStatus I2Cf3xx::read(uint8_t addr, uint8_t* bytes, uint8_t length) {
     HAL_StatusTypeDef status = HAL_I2C_Master_Receive(&halI2C, addr << 1,
                                                       bytes, length,
-                                                      DEFAULT_I2C_TIMEOUT);
+                                                      EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
@@ -161,7 +166,7 @@ I2C::I2CStatus I2Cf3xx::writeMemReg(uint8_t addr, uint32_t memAddress,
     uint16_t memAddress16 = memAddress;
     HAL_StatusTypeDef status = HAL_I2C_Mem_Write(&halI2C, addr << 1,
                                                  memAddress16, memAddSize,
-                                                 &byte, 1, DEFAULT_I2C_TIMEOUT);
+                                                 &byte, 1, EVT_I2C_TIMEOUT);
     HAL_Delay(maxWriteTime);
     return halToI2CStatus(status);
 }
@@ -172,7 +177,7 @@ I2C::I2CStatus I2Cf3xx::readMemReg(uint8_t addr, uint32_t memAddress,
     uint16_t memAddress16 = memAddress;
     HAL_StatusTypeDef status = HAL_I2C_Mem_Read(&halI2C, addr << 1,
                                                 memAddress16, memAddSize, byte,
-                                                1, DEFAULT_I2C_TIMEOUT);
+                                                1, EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
@@ -184,7 +189,7 @@ I2C::I2CStatus I2Cf3xx::writeMemReg(uint8_t addr, uint32_t memAddress,
     HAL_StatusTypeDef status = HAL_I2C_Mem_Write(&halI2C, addr << 1,
                                                  memAddress16, memAddSize,
                                                  bytes, size,
-                                                 DEFAULT_I2C_TIMEOUT);
+                                                 EVT_I2C_TIMEOUT);
     HAL_Delay(maxWriteTime);
     return halToI2CStatus(status);
 }
@@ -196,7 +201,7 @@ I2C::I2CStatus I2Cf3xx::readMemReg(uint8_t addr, uint32_t memAddress,
     HAL_StatusTypeDef status = HAL_I2C_Mem_Read(&halI2C, addr << 1,
                                                 memAddress16, memAddSize,
                                                 bytes, size,
-                                                DEFAULT_I2C_TIMEOUT);
+                                                EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 

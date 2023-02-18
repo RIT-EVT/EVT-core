@@ -1,7 +1,7 @@
 #include <EVT/dev/LED.hpp>
 #include <EVT/dev/button.hpp>
 #include <EVT/io/UART.hpp>
-#include <EVT/io/manager.hpp>
+#include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
 
 namespace DEV = EVT::core::DEV;
@@ -10,7 +10,7 @@ namespace time = EVT::core::time;
 
 int main() {
     // Initialize system
-    IO::init();
+    EVT::core::platform::init();
 
     // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);

@@ -1,9 +1,3 @@
-/**
- * Contains generic implmentations for some of the I2C funcitonality.
- * Some hardware has the ability to implement the functionality in this
- * file so specific implementations of the I2C driver may override these
- * methods for a hardware speedup.
- */
 #include <EVT/io/I2C.hpp>
 
 namespace EVT::core::IO {

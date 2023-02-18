@@ -9,10 +9,11 @@
     return CONCAT(status, __LINE__)
 
 namespace EVT::core::IO {
-SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : CSPinsLength(pinLength),
-                                                                                    sckPin(sckPin),
+
+SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : sckPin(sckPin),
                                                                                     mosiPin(mosiPin),
-                                                                                    misoPin(misoPin) {
+                                                                                    misoPin(misoPin),
+                                                                                    CSPinsLength(pinLength) {
     if (pinLength >= MAX_PINS) {
         CSPinsLength = MAX_PINS;
     }
@@ -21,8 +22,11 @@ SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin
     }
 }
 
-SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : CSPinsLength(pinLength), sckPin(sckPin),
-                                                                       mosiPin(mosiPin) {
+SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : sckPin(sckPin),
+                                                                       mosiPin(mosiPin),
+                                                                       // There is no MISO pin
+                                                                       misoPin(static_cast<Pin>(0)),
+                                                                       CSPinsLength(pinLength) {
     if (pinLength >= MAX_PINS) {
         CSPinsLength = MAX_PINS;
     }
