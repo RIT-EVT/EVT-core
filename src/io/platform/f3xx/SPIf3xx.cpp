@@ -284,22 +284,43 @@ bool SPIf3xx::endTransmission(uint8_t device) {
     return false;
 }
 
-void SPIf3xx::write(uint8_t byte) {
-    HAL_SPI_Transmit(&halSPI, &byte, 1, EVT_SPI_TIMEOUT);
+SPI::SPIStatus SPIf3xx::write(uint8_t byte) {
+    HAL_StatusTypeDef halStatus = HAL_SPI_Transmit(&halSPI, &byte, 1, EVT_SPI_TIMEOUT);
+
+    return halToSPIStatus(halStatus);
 }
 
-uint8_t SPIf3xx::read() {
-    uint8_t data;
-    HAL_SPI_Receive(&halSPI, &data, 1, EVT_SPI_TIMEOUT);
-    return data;
+SPI::SPIStatus SPIf3xx::read(uint8_t* out) {
+    HAL_StatusTypeDef halStatus = HAL_SPI_Receive(&halSPI, out, 1, EVT_SPI_TIMEOUT);
+
+    return halToSPIStatus(halStatus);
 }
 
-void SPIf3xx::write(uint8_t* bytes, uint8_t length) {
-    HAL_SPI_Transmit(&halSPI, bytes, length, EVT_SPI_TIMEOUT);
+SPI::SPIStatus SPIf3xx::write(uint8_t* bytes, uint8_t length) {
+    HAL_StatusTypeDef halStatus = HAL_SPI_Transmit(&halSPI, bytes, length, EVT_SPI_TIMEOUT);
+
+    return halToSPIStatus(halStatus);
 }
 
-void SPIf3xx::read(uint8_t* bytes, uint8_t length) {
-    HAL_SPI_Receive(&halSPI, bytes, length, EVT_SPI_TIMEOUT);
+SPI::SPIStatus SPIf3xx::read(uint8_t* bytes, uint8_t length) {
+    HAL_StatusTypeDef halStatus = HAL_SPI_Receive(&halSPI, bytes, length, EVT_SPI_TIMEOUT);
+
+    return halToSPIStatus(halStatus);
+}
+
+/**
+ * Converts HAL Status into EVT Core's own SPIStatus enum
+ *
+ * @param halStatus
+ * @return SPIStatus converted from halStatus
+ */
+SPI::SPIStatus SPIf3xx::halToSPIStatus(HAL_StatusTypeDef halStatus) {
+    switch (halStatus) {
+    case HAL_OK: return SPIStatus::OK;
+    case HAL_ERROR: return SPIStatus::ERROR;
+    case HAL_BUSY: return SPIStatus::BUSY;
+    case HAL_TIMEOUT: return SPIStatus::TIMEOUT;
+    }
 }
 
 }// namespace EVT::core::IO

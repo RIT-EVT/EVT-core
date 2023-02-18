@@ -39,11 +39,11 @@ public:
     bool startTransmission(uint8_t device) override;
     bool endTransmission(uint8_t device) override;
 
-    void write(uint8_t byte) override;
-    uint8_t read() override;
+    SPI::SPIStatus write(uint8_t byte) override;
+    SPI::SPIStatus read(uint8_t* out) override;
 
-    void write(uint8_t* bytes, uint8_t length) override;
-    void read(uint8_t* bytes, uint8_t length) override;
+    SPI::SPIStatus write(uint8_t* bytes, uint8_t length) override;
+    SPI::SPIStatus read(uint8_t* bytes, uint8_t length) override;
 
 private:
     /**
@@ -79,6 +79,14 @@ private:
 
     /** Interface into the HAL */
     SPI_HandleTypeDef halSPI = {};
+
+    /**
+     * Converts a HAL status to a SPIStatus
+     *
+     * @param halStatus HAL status to convert
+     * @return SPIStatus equivalent
+     */
+    SPIStatus halToSPIStatus(HAL_StatusTypeDef halStatus);
 };
 
 }// namespace EVT::core::IO

@@ -43,7 +43,7 @@ int main() {
     uart.printf("Starting SPI test\n\r");
     uint8_t byte = 0;
     while (byte != 0xE5) {
-        byte = spi.readReg(0, 0x00 | 0x80);
+        IO::SPI::SPIStatus status = spi.readReg(0, 0x00 | 0x80, &byte);
         uart.printf("device ID: 0x%X, %d\n\r", byte, byte == 0xE5);//should be 0xE5
         time::wait(500);
     }

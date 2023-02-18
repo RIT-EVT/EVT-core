@@ -1,5 +1,13 @@
 #include <EVT/io/SPI.hpp>
 
+#define CONCAT(a, b) CONCAT_INNER(a, b)
+#define CONCAT_INNER(a, b) a##b
+
+#define SPI_CHECK(functionCall)                        \
+    SPIStatus CONCAT(status, __LINE__) = functionCall; \
+    if (CONCAT(status, __LINE__) != SPIStatus::OK)     \
+    return CONCAT(status, __LINE__)
+
 namespace EVT::core::IO {
 
 SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : sckPin(sckPin),
@@ -27,48 +35,76 @@ SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : sckPin(sc
     }
 }
 
-void SPI::write(uint8_t* bytes, uint8_t length) {
-    for (int i = 0; i < length; i++)
-        write(bytes[i]);
-}
+SPI::SPIStatus SPI::write(uint8_t* bytes, uint8_t length) {
 
-void SPI::read(uint8_t* bytes, uint8_t length) {
-    for (int i = 0; i < length; i++)
-        bytes[i] = read();
-}
-
-void SPI::writeReg(uint8_t device, uint8_t reg, uint8_t byte) {
-    if (startTransmission(device)) {
-        write(reg);
-        write(byte);
-        endTransmission(device);
+    for (int i = 0; i < length; i++) {
+        SPI_CHECK(write(bytes[i]));
     }
+
+    return SPIStatus::OK;
 }
 
-uint8_t SPI::readReg(uint8_t device, uint8_t reg) {
-    uint8_t data = 0;
-    if (startTransmission(device)) {
-        write(reg);
-        data = read();
-        endTransmission(device);
+SPI::SPIStatus SPI::read(uint8_t* bytes, uint8_t length) {
+    for (int i = 0; i < length; i++) {
+        SPI_CHECK(read(&bytes[i]));
     }
-    return data;
+
+    return SPIStatus::OK;
 }
 
-void SPI::writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length) {
+SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t byte) {
+    bool transmitSuccess = false;
+
     if (startTransmission(device)) {
-        write(reg);
-        write(bytes, length);
-        endTransmission(device);
+        SPI_CHECK(write(reg));
+
+        SPI_CHECK(write(byte));
+
+        transmitSuccess = endTransmission(device);
     }
+
+    return transmitSuccess ? SPIStatus::OK : SPIStatus::ERROR;
 }
 
-void SPI::readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length) {
+SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* out) {
+    bool transmitSuccess = false;
+
     if (startTransmission(device)) {
-        write(reg);
-        read(bytes, length);
-        endTransmission(device);
+        SPI_CHECK(write(reg));
+
+        SPI_CHECK(read(out));
+
+        transmitSuccess = endTransmission(device);
     }
+
+    return transmitSuccess ? SPIStatus::OK : SPIStatus::ERROR;
+}
+
+SPI::SPIStatus SPI::writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length) {
+    bool transmitSuccess = false;
+
+    if (startTransmission(device)) {
+        SPI_CHECK(write(reg));
+        SPI_CHECK(write(bytes, length));
+
+        transmitSuccess = endTransmission(device);
+    }
+
+    return transmitSuccess ? SPIStatus::OK : SPIStatus::ERROR;
+}
+
+SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length) {
+    bool transmitSuccess = false;
+
+    if (startTransmission(device)) {
+        SPI_CHECK(write(reg));
+
+        SPI_CHECK(read(bytes, length));
+
+        transmitSuccess = endTransmission(device);
+    }
+
+    return transmitSuccess ? SPIStatus::OK : SPIStatus::ERROR;
 }
 
 }// namespace EVT::core::IO
