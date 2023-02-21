@@ -47,25 +47,26 @@ int main() {
         uart.printf("Reading second bytes 0x%02x%02x\n\r", buf[0], buf[1]);
 
         uint64_t realTemp;
-        uint64_t msb = buf[0]; uint64_t lsb = buf[1];
-        msb <<=8;
-        realTemp = (msb | lsb)* 78125;
+        uint64_t msb = buf[0];
+        uint64_t lsb = buf[1];
+        msb <<= 8;
+        realTemp = (msb | lsb) * 78125;
 
         uart.printf("Temperature read: %d\n\r", realTemp);
 
-//
+        //
         // Read the value of 'k'
-//        uint8_t kValue;
-//        status = i2c.readReg(I2C_SLAVE_ADDR, K_REGISTER, &kValue);
-//        if (status != IO::I2C::I2CStatus::OK) {
-//            uart.printf("Failed read 'k' register with I2C::I2CStatus: %d\n\r",
-//                        status);
-//            break;
-//        }
-//
-//        uart.printf("Bytes Read: %c %c\n\r", oValue, kValue);
+        //        uint8_t kValue;
+        //        status = i2c.readReg(I2C_SLAVE_ADDR, K_REGISTER, &kValue);
+        //        if (status != IO::I2C::I2CStatus::OK) {
+        //            uart.printf("Failed read 'k' register with I2C::I2CStatus: %d\n\r",
+        //                        status);
+        //            break;
+        //        }
+        //
+        //        uart.printf("Bytes Read: %c %c\n\r", oValue, kValue);
 
-//          uart.printf("Bytes Read: %x\n\r", oValue);   //Prosper's Debugger line
+        //          uart.printf("Bytes Read: %x\n\r", oValue);   //Prosper's Debugger line
         // Wait half a second before repeating the test
         time::wait(1000);
     }
