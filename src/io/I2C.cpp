@@ -42,17 +42,17 @@ I2C::I2CStatus I2C::writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
 /**
  * Reading from a register with a non-8 byte address and a non-8 byte
  * response usually involves writing out the register address in groups
- * of 8 bytes starting with the MSB. Reading the response is also done
+ * of 8 bytes starting with the MSB. Reading the response is also done,
  * starting with the LSB.
  */
 I2C::I2CStatus I2C::readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
                             uint8_t* bytes, uint8_t length) {
     // Write out register address
-    for (int i = 0; i < regLength; i++)
-        I2C_RETURN_IF_ERR(write(addr, reg[i]));
+    I2C_RETURN_IF_ERR(write(addr, reg, length));
+
     // Read in response
-    for (int i = 0; i < length; i++)
-        I2C_RETURN_IF_ERR(read(addr, &bytes[i]));
+    I2C_RETURN_IF_ERR(read(addr, bytes, length));
+
     return I2C::I2CStatus::OK;
 }
 
