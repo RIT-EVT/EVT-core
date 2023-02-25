@@ -133,7 +133,7 @@ private:
             // 180h+TPDO Node-ID
             .Key = CO_KEY(0x1400, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
             .Type = 0,
-            .Data = (uintptr_t) CO_COBID_TPDO_DEFAULT(0) + 1,
+            .Data = (uintptr_t) CO_COBID_TPDO_DEFAULT(0) + 0x01,
         },
         {
             // asynchronous trigger

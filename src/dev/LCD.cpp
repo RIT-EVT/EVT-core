@@ -3,11 +3,30 @@
 #include <cstring>
 
 namespace EVT::core::DEV {
-LCD::LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi)
-    : regSelect(regSelect), reset(reset), spi(spi) {
+LCD::LCD(IO::GPIO& regSelect, IO::GPIO& reset, IO::SPI& spi) : regSelect(regSelect), reset(reset), spi(spi) {
     this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->reset.writePin(EVT::core::IO::GPIO::State::LOW);
 }
+
+LCD::LCD(IO::GPIO &regSelect, IO::GPIO &reset, IO::SPI &spi, uint8_t numberOfSections, uint8_t sectionsPerRow,
+         uint8_t sectionHeight) : regSelect(regSelect), reset(reset), spi(spi) {
+    this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
+    this->reset.writePin(EVT::core::IO::GPIO::State::LOW);
+
+    if (sectionsPerRow > MAX_SECTION_PER_ROW)
+        sectionsPerRow = MAX_SECTION_PER_ROW;
+
+    if (sectionHeight > MAX_SECTION_HEIGHT)
+        sectionHeight = MAX_SECTION_HEIGHT;
+
+    if (numberOfSections > MAX_SECTIONS)
+        numberOfSections = MAX_SECTIONS;
+
+    this->numberOfSections = numberOfSections;
+    this->sectionsPerRow = sectionsPerRow;
+    this->sectionHeight = sectionHeight;
+}
+
 
 void LCD::initLCD() {
     this->reset.writePin(EVT::core::IO::GPIO::State::HIGH);
@@ -47,16 +66,16 @@ void LCD::driveColumn(uint8_t page, uint8_t colUp, uint8_t colLow, uint8_t data)
 
     this->commandWrite(0xAF);// Finish Writing
     /*
-     * writes 8 vertical bits based on value between 0-255 based on bits set ex: 01001100(0x4C) is
-     * |WHITE|
-     * |BLACK|
-     * |WHITE|
-     * |WHITE|
-     * |BLACK|
-     * |BLACK|
-     * |WHITE|
-     * |WHITE|
-     */
+         * writes 8 vertical bits based on value between 0-255 based on bits set ex: 01001100(0x4C) is
+         * |WHITE|
+         * |BLACK|
+         * |WHITE|
+         * |WHITE|
+         * |BLACK|
+         * |BLACK|
+         * |WHITE|
+         * |WHITE|
+         */
 }
 
 void LCD::clearLCD() {
@@ -206,7 +225,7 @@ void LCD::displaySectionHeaders() {
         if (rowCounter >= sectionsPerRow) {
             rowCounter = 0;
             column = 0;
-            page += 3;
+            page += sectionHeight;
         }
 
         // Check if we ran out of screen space.
@@ -221,7 +240,7 @@ void LCD::setTextForSection(uint8_t section, const char* text) {
     uint8_t adjustedSection = section + 1;        // Adjust the section so the following math operates correctly.
     uint8_t sectionRow = section / sectionsPerRow;// Calculate the correct row for the section
 
-    uint8_t sectionPage = (sectionRow * 3) + 1;
+    uint8_t sectionPage = (sectionRow * sectionHeight) + 1;
     uint8_t sectionColumn = (adjustedSection - (sectionRow * sectionsPerRow) - 1) * sectionWidth;// Calculate what the column # for the section is.
 
     // Clear the sections area so text is not written over old text.
@@ -236,5 +255,4 @@ void LCD::setTextForSection(uint8_t section, const char* text) {
     // Write the text to the screen under the section header.
     writeText(text, sectionPage, sectionColumn, false);
 }
-
 }// namespace EVT::core::DEV

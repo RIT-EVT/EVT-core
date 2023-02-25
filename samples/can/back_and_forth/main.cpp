@@ -15,7 +15,7 @@ namespace time = EVT::core::time;
 void canIRQHandler(IO::CANMessage& message, void* priv) {
     IO::UART* uart = (IO::UART*) priv;
     uart->printf("Message received\r\n");
-    uart->printf("Message id: %d \r\n", message.getId());
+    uart->printf("Message id: 0x%X \r\n", message.getId());
     uart->printf("Message length: %d\r\n", message.getDataLength());
     uart->printf("Message contents: ");
 
