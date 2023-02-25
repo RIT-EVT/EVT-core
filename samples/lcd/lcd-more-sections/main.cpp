@@ -56,8 +56,7 @@ int main() {
         "Torque",
         "Extra Data",
         "Extra Data",
-        "Extra Data"
-    };
+        "Extra Data"};
     lcd.setDefaultSections(titles);
 
     // Set the default

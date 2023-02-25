@@ -8,7 +8,7 @@ LCD::LCD(IO::GPIO& regSelect, IO::GPIO& reset, IO::SPI& spi) : regSelect(regSele
     this->reset.writePin(EVT::core::IO::GPIO::State::LOW);
 }
 
-LCD::LCD(IO::GPIO &regSelect, IO::GPIO &reset, IO::SPI &spi, uint8_t numberOfSections, uint8_t sectionsPerRow,
+LCD::LCD(IO::GPIO& regSelect, IO::GPIO& reset, IO::SPI& spi, uint8_t numberOfSections, uint8_t sectionsPerRow,
          uint8_t sectionHeight) : regSelect(regSelect), reset(reset), spi(spi) {
     this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->reset.writePin(EVT::core::IO::GPIO::State::LOW);
@@ -26,7 +26,6 @@ LCD::LCD(IO::GPIO &regSelect, IO::GPIO &reset, IO::SPI &spi, uint8_t numberOfSec
     this->sectionsPerRow = sectionsPerRow;
     this->sectionHeight = sectionHeight;
 }
-
 
 void LCD::initLCD() {
     this->reset.writePin(EVT::core::IO::GPIO::State::HIGH);
