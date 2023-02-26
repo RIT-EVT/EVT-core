@@ -41,7 +41,7 @@ public:
     LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi);
 
     /**
-      * Constructor the LCD class
+      * Constructor for the LCD class
       *
       * @param[in] regSelect Register select pin
       * @param[in] reset Reset pin
