@@ -6,25 +6,29 @@ namespace EVT::core::DEV {
 LCD::LCD(IO::GPIO& regSelect, IO::GPIO& reset, IO::SPI& spi) : regSelect(regSelect), reset(reset), spi(spi) {
     this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->reset.writePin(EVT::core::IO::GPIO::State::LOW);
+    this->sectionHeight = MAX_SECTION_HEIGHT / numberOfSections;
 }
 
-LCD::LCD(IO::GPIO& regSelect, IO::GPIO& reset, IO::SPI& spi, uint8_t numberOfSections, uint8_t sectionsPerRow,
-         uint8_t sectionHeight) : regSelect(regSelect), reset(reset), spi(spi) {
+LCD::LCD(IO::GPIO& regSelect, IO::GPIO& reset, IO::SPI& spi, uint8_t numberOfSections, uint8_t sectionsPerRow)
+    : regSelect(regSelect), reset(reset), spi(spi) {
     this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->reset.writePin(EVT::core::IO::GPIO::State::LOW);
 
-    if (sectionsPerRow > MAX_SECTION_PER_ROW)
+    if (sectionsPerRow > MAX_SECTION_PER_ROW) {
         sectionsPerRow = MAX_SECTION_PER_ROW;
+    }
 
-    if (sectionHeight > MAX_SECTION_HEIGHT)
+    if (sectionHeight > MAX_SECTION_HEIGHT) {
         sectionHeight = MAX_SECTION_HEIGHT;
+    }
 
-    if (numberOfSections > MAX_SECTIONS)
+    if (numberOfSections > MAX_SECTIONS) {
         numberOfSections = MAX_SECTIONS;
+    }
 
     this->numberOfSections = numberOfSections;
     this->sectionsPerRow = sectionsPerRow;
-    this->sectionHeight = sectionHeight;
+    this->sectionHeight = MAX_SECTION_HEIGHT / numberOfSections;
 }
 
 void LCD::initLCD() {
@@ -253,8 +257,5 @@ void LCD::setTextForSection(uint8_t section, const char* text) {
 
     // Write the text to the screen under the section header.
     writeText(text, sectionPage, sectionColumn, false);
-}
-uint8_t LCD::sectionHeight() {
-    return 8 / numberOfSections;
 }
 }// namespace EVT::core::DEV
