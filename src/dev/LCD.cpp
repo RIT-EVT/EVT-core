@@ -65,16 +65,16 @@ void LCD::driveColumn(uint8_t page, uint8_t colUp, uint8_t colLow, uint8_t data)
 
     this->commandWrite(0xAF);// Finish Writing
     /*
-         * writes 8 vertical bits based on value between 0-255 based on bits set ex: 01001100(0x4C) is
-         * |WHITE|
-         * |BLACK|
-         * |WHITE|
-         * |WHITE|
-         * |BLACK|
-         * |BLACK|
-         * |WHITE|
-         * |WHITE|
-         */
+    * writes 8 vertical bits based on value between 0-255 based on bits set ex: 01001100(0x4C) is
+    * |WHITE|
+    * |BLACK|
+    * |WHITE|
+    * |WHITE|
+    * |BLACK|
+    * |BLACK|
+    * |WHITE|
+    * |WHITE|
+    */
 }
 
 void LCD::clearLCD() {
@@ -253,5 +253,8 @@ void LCD::setTextForSection(uint8_t section, const char* text) {
 
     // Write the text to the screen under the section header.
     writeText(text, sectionPage, sectionColumn, false);
+}
+uint8_t LCD::sectionHeight() {
+    return 8 / numberOfSections;
 }
 }// namespace EVT::core::DEV

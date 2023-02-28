@@ -54,15 +54,16 @@ int main() {
         "Status 1",
         "PVC Stat",
         "Torque",
-        "Extra Data",
-        "Extra Data",
-        "Extra Data"};
+        "Status 2",
+        "Status 3",
+        "Status 4"
+    };
     lcd.setDefaultSections(titles);
 
     // Set the default
     lcd.displaySectionHeaders();
     lcd.setTextForSection(0, "3.2 v");
-    lcd.setTextForSection(2, "25 MPH");
+    lcd.setTextForSection(1, "25 MPH");
     lcd.setTextForSection(2, "3000");
     lcd.setTextForSection(3, "40 C");
     lcd.setTextForSection(4, "44 C");
@@ -70,9 +71,9 @@ int main() {
     lcd.setTextForSection(6, "ON");
     lcd.setTextForSection(7, "Ready");
     lcd.setTextForSection(8, "100 NM");
-    lcd.setTextForSection(9, "Data");
-    lcd.setTextForSection(10, "Data");
-    lcd.setTextForSection(11, "Data");
+    lcd.setTextForSection(9, "Battery Ready");
+    lcd.setTextForSection(10, "Lights Ready");
+    lcd.setTextForSection(11, "HUDL Ready");
 
     uint8_t number = 0;
 
