@@ -56,8 +56,7 @@ int main() {
         "Torque",
         "Status 2",
         "Status 3",
-        "Status 4"
-    };
+        "Status 4"};
     lcd.setDefaultSections(titles);
 
     // Set the default
