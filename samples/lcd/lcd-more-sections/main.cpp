@@ -56,8 +56,7 @@ int main() {
         "Torque",
         "Batt Stat",
         "HUDL Stat",
-        "PVC Stat"
-    };
+        "PVC Stat"};
     lcd.setDefaultSections(titles);
 
     // Set the default
