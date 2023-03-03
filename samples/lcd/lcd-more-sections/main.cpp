@@ -38,7 +38,7 @@ int main() {
 
     // Sets up LCD
     uart.printf("Creating LCD Object...\n\r");
-    EVT::core::DEV::LCD lcd(regSelect, reset, spi, 12, 3);
+    EVT::core::DEV::LCD lcd(regSelect, reset, spi, 12, 3, 2);
     uart.printf("Initializing LCD...\n\r");
     lcd.initLCD();
     lcd.clearLCD();
@@ -54,9 +54,9 @@ int main() {
         "Status 1",
         "PVC Stat",
         "Torque",
-        "Status 2",
-        "Status 3",
-        "Status 4"
+        "Batt Stat",
+        "HUDL Stat",
+        "PVC Stat"
     };
     lcd.setDefaultSections(titles);
 
@@ -71,9 +71,9 @@ int main() {
     lcd.setTextForSection(6, "ON");
     lcd.setTextForSection(7, "Ready");
     lcd.setTextForSection(8, "100 NM");
-    lcd.setTextForSection(9, "Battery Ready");
-    lcd.setTextForSection(10, "Lights Ready");
-    lcd.setTextForSection(11, "HUDL Ready");
+    lcd.setTextForSection(9, "Ready");
+    lcd.setTextForSection(10, "Ready");
+    lcd.setTextForSection(11, "Ready");
 
     uint8_t number = 0;
 

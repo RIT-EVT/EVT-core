@@ -6,10 +6,9 @@ namespace EVT::core::DEV {
 LCD::LCD(IO::GPIO& regSelect, IO::GPIO& reset, IO::SPI& spi) : regSelect(regSelect), reset(reset), spi(spi) {
     this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->reset.writePin(EVT::core::IO::GPIO::State::LOW);
-    this->sectionHeight = MAX_SECTION_HEIGHT / numberOfSections;
 }
 
-LCD::LCD(IO::GPIO& regSelect, IO::GPIO& reset, IO::SPI& spi, uint8_t numberOfSections, uint8_t sectionsPerRow)
+LCD::LCD(IO::GPIO& regSelect, IO::GPIO& reset, IO::SPI& spi, uint8_t numberOfSections, uint8_t sectionsPerRow, uint8_t sectionHeight)
     : regSelect(regSelect), reset(reset), spi(spi) {
     this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->reset.writePin(EVT::core::IO::GPIO::State::LOW);
@@ -18,17 +17,17 @@ LCD::LCD(IO::GPIO& regSelect, IO::GPIO& reset, IO::SPI& spi, uint8_t numberOfSec
         sectionsPerRow = MAX_SECTION_PER_ROW;
     }
 
-    if (sectionHeight > MAX_SECTION_HEIGHT) {
-        sectionHeight = MAX_SECTION_HEIGHT;
-    }
-
     if (numberOfSections > MAX_SECTIONS) {
         numberOfSections = MAX_SECTIONS;
     }
 
+    if (sectionHeight > MAX_SECTION_HEIGHT) {
+        sectionHeight = MAX_SECTION_HEIGHT;
+    }
+
     this->numberOfSections = numberOfSections;
     this->sectionsPerRow = sectionsPerRow;
-    this->sectionHeight = MAX_SECTION_HEIGHT / numberOfSections;
+    this->sectionHeight = sectionHeight;
 }
 
 void LCD::initLCD() {
@@ -197,7 +196,7 @@ void LCD::writeText(const char* text, uint8_t page, uint8_t column, bool wrapTex
     }
 }
 
-void LCD::setDefaultSections(char* const newSectionTitles[9]) {
+void LCD::setDefaultSections(char* const newSectionTitles[MAX_SECTIONS]) {
     for (uint8_t x = 0; x < numberOfSections; x++) {
         this->sectionTitles[x] = newSectionTitles[x];
     }

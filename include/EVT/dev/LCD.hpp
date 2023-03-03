@@ -51,7 +51,7 @@ public:
       * @param[in] sectionHeight how many pages each section should occupy
       */
     LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi,
-        uint8_t numberOfSections, uint8_t sectionsPerRow);
+        uint8_t numberOfSections, uint8_t sectionsPerRow, uint8_t sectionHeight);
 
     /**
      * Writes data to the LCD
@@ -155,13 +155,13 @@ private:
     static const uint8_t screenSizeY = 64;
 
     /** THe total number of sections */
-    uint8_t numberOfSections = 12;
+    uint8_t numberOfSections = 9;
 
     /** The total number of sections to display per row on the screen. Basically number of columns */
     uint8_t sectionsPerRow = 3;
 
     /** The number of pages each section occupies */
-    uint8_t sectionHeight;
+    uint8_t sectionHeight = 3;
 
     /** Register select pin for the LCD */
     EVT::core::IO::GPIO& regSelect;
