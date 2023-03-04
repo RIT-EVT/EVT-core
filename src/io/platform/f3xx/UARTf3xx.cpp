@@ -15,7 +15,7 @@ namespace log = EVT::core::log;
 
 namespace EVT::core::IO {
 
-UARTf3xx::UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped = false)
+UARTf3xx::UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped)
     : UART(txPin, rxPin, baudrate),
       halUART{} {
 

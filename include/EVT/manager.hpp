@@ -151,14 +151,15 @@ PWM& getPWM() {
 /**
  * Get an instance of a UART.
  *
- * @param[in] txPin The transmit pin for the UART.
- * @param[in] rxPin The receive pin for the UART.
- * @param[in] baudrate The baudrate to operate at..
+ * @param[in] txPin The transmit pin for the UART
+ * @param[in] rxPin The receive pin for the UART
+ * @param[in] baudrate The baudrate to operate at
+* @param[in] isSwapped Whether TX and RX should be swapped; defaults to false
  */
 template<Pin txPin, Pin rxPin>
-UART& getUART(uint32_t baudrate) {
+UART& getUART(uint32_t baudrate, bool isSwapped = false) {
 #ifdef STM32F3xx
-    static UARTf3xx uart(txPin, rxPin, baudrate);
+    static UARTf3xx uart(txPin, rxPin, baudrate, isSwapped);
     return uart;
 #endif
 }
