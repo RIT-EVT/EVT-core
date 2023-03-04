@@ -15,7 +15,7 @@ namespace log = EVT::core::log;
 
 namespace EVT::core::IO {
 
-UARTf3xx::UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate)
+UARTf3xx::UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped = false)
     : UART(txPin, rxPin, baudrate),
       halUART{} {
 
@@ -94,10 +94,10 @@ UARTf3xx::UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate)
     halUART.Init.Mode = UART_MODE_TX_RX;
     halUART.Init.OverSampling = UART_OVERSAMPLING_16;
 
-#ifdef EVT_SWAP_UART
-    halUART.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_SWAP_INIT;
-    halUART.AdvancedInit.Swap = UART_ADVFEATURE_SWAP_ENABLE;
-#endif
+    if (isSwapped) {
+        halUART.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_SWAP_INIT;
+        halUART.AdvancedInit.Swap = UART_ADVFEATURE_SWAP_ENABLE;
+    }
 
     HAL_UART_Init(&halUART);
 }
