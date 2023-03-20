@@ -17,9 +17,10 @@ public:
      *
      * @param[in] txPin The UART TX pin.
      * @param[in] rxPin THe UART RX pin.
-     * @param[in] baudrate The baudrate to operate the UART with/
+     * @param[in] baudrate The baudrate to operate the UART with
+     * @param[in] isSwapped Whether TX and RX should be swapped
      */
-    UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate);
+    UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped);
     void setBaudrate(uint32_t baudrate) override;
     void setFormat(WordLength wordLength = WordLength::EIGHT,
                    Parity parity = Parity::NONE,
