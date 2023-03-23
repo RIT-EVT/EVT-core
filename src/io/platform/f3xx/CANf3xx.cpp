@@ -158,7 +158,7 @@ CAN::CANStatus CANf3xx::transmit(CANMessage& message) {
     while (HAL_CAN_GetTxMailboxesFreeLevel(&halCAN) == 0) {
         if (timeout < 255) {
             time::wait(1);
-            timeout ++;
+            timeout++;
         } else {
             break;
         }
