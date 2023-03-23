@@ -153,9 +153,15 @@ CAN::CANStatus CANf3xx::transmit(CANMessage& message) {
     // Copy over bytes
     std::memcpy(payload, message.getPayload(), message.getDataLength());
 
-    // Wait unil mailbox 0 is available TODO: Add interrupt implementation
+    // Wait until mailbox 0 is available TODO: Add interrupt implementation
+    uint8_t timeout = 0;
     while (HAL_CAN_GetTxMailboxesFreeLevel(&halCAN) == 0) {
-        time::wait(1);
+        if (timeout < 255) {
+            time::wait(1);
+            timeout ++;
+        } else {
+            break;
+        }
     }
 
     HAL_StatusTypeDef result = HAL_CAN_AddTxMessage(&halCAN, &txHeader, payload, &mailbox);
