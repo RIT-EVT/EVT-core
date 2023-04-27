@@ -191,11 +191,6 @@ static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
         *channel = TIM_CHANNEL_4;
         *alternateFunction = GPIO_AF2_TIM1;
         break;
-    case Pin:: PC_6:
-        *instance = TIM3;
-        *channel = TIM_CHANNEL_1;
-        *alternateFunction = GPIO_AF11_TIM1;
-        break;
     // complementary channel
     case Pin::PC_13:
         *instance = TIM1;
