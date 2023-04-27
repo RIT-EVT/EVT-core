@@ -203,7 +203,8 @@ static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
         *channel = TIM_CHANNEL_3;
         *alternateFunction = GPIO_AF6_TIM1;
         break;
-#elifdef STM32F334x8
+#endif
+#ifdef STM32F334x8
     case Pin::PA_0:
         *instance = TIM2;
         *channel = TIM_CHANNEL_1;
