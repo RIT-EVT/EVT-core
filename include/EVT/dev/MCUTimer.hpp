@@ -14,6 +14,7 @@ enum class MCUTimer {
 #if defined(STM32F302x8)
     Timer1,
     Timer2,
+    Timer3,
     Timer6,
     Timer15,
     Timer16,

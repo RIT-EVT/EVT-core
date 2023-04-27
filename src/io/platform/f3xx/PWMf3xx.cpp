@@ -15,8 +15,15 @@ namespace EVT::core::IO {
  */
 static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
                         uint32_t* alternateFunction) {
-    switch (pin) {
+    switch (pin){
+#ifdef STM32F302x8
+    case Pin::PA_0:
+        *instance = TIM2;
+        *channel = TIM_CHANNEL_1;
+        *alternateFunction = GPIO_AF1_TIM2;
+        break;
     // complementary channel
+    ////////////////////////////////////////////
     case Pin::PA_1:
         *instance = TIM15;
         *channel = TIM_CHANNEL_1;
@@ -30,7 +37,18 @@ static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
     case Pin::PA_3:
         *instance = TIM15;
         *channel = TIM_CHANNEL_2;
-        *alternateFunction = GPIO_AF9_TIM15;
+        *alternateFunction = GPIO_AF3_TIM15;
+        break;
+        /////////////////////////////////////////////////////////////
+//    case Pin:: PA_4:
+//        *instance = TIM3;
+//        *channel = TIM_CHANNEL_2;
+//        *alternateFunction = GPIO_AF2_TIM3;
+//        break;
+    case Pin::PA_5:
+        *instance = TIM2;
+        *channel = TIM_CHANNEL_1;
+        *alternateFunction = GPIO_AF10_TIM2;
         break;
     case Pin::PA_8:
         *instance = TIM1;
@@ -73,6 +91,11 @@ static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
         *channel = TIM_CHANNEL_1;
         *alternateFunction = GPIO_AF1_TIM16;
         break;
+    case Pin::PA_15:
+        *instance = TIM2;
+        *channel = TIM_CHANNEL_1;
+        *alternateFunction = GPIO_AF10_TIM2;
+        break;
     // complementary channel
     case Pin::PB_0:
         *instance = TIM1;
@@ -85,6 +108,10 @@ static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
         *channel = TIM_CHANNEL_3;
         *alternateFunction = GPIO_AF6_TIM1;
         break;
+    case Pin::PB_3:
+        *instance = TIM2;
+        *channel = TIM_CHANNEL_2;
+        *alternateFunction = GPIO_AF1_TIM2;
     case Pin::PB_4:
         *instance = TIM16;
         *channel = TIM_CHANNEL_1;
@@ -117,6 +144,17 @@ static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
         *channel = TIM_CHANNEL_1;
         *alternateFunction = GPIO_AF1_TIM17;
         break;
+    case Pin::PB_10:
+        *instance = TIM2;
+        *channel = TIM_CHANNEL_3;
+        *alternateFunction = GPIO_AF1_TIM2;
+        break;
+    case Pin::PB_11:
+        *instance = TIM2;
+        *channel = TIM_CHANNEL_4;
+        *alternateFunction = GPIO_AF1_TIM2;
+        break;
+
     // complementation channel
     case Pin::PB_13:
         *instance = TIM1;
@@ -153,6 +191,11 @@ static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
         *channel = TIM_CHANNEL_4;
         *alternateFunction = GPIO_AF2_TIM1;
         break;
+    case Pin:: PC_6:
+        *instance = TIM3;
+        *channel = TIM_CHANNEL_1;
+        *alternateFunction = GPIO_AF11_TIM1;
+        break;
     // complementary channel
     case Pin::PC_13:
         *instance = TIM1;
@@ -165,6 +208,214 @@ static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
         *channel = TIM_CHANNEL_3;
         *alternateFunction = GPIO_AF6_TIM1;
         break;
+#elifdef STM32F334x8
+    case Pin::PA_0:
+        *instance = TIM2;
+        *channel = TIM_CHANNEL_1;
+        *alternateFunction = GPIO_AF1_TIM2;
+        break;
+    // complementary channel
+    case Pin::PA_1:
+    *instance = TIM15;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF2_TIM15;
+    break;
+    //PWM not shown for PA_2 - PA_5
+//    case Pin::PA_2:
+//    *instance = TIM15;
+//    *channel = TIM_CHANNEL_1;
+//    *alternateFunction = GPIO_AF1_TIM15;
+//    break;
+//    case Pin::PA_3:
+//    *instance = TIM15;
+//    *channel = TIM_CHANNEL_2;
+//    *alternateFunction = GPIO_AF2_TIM15;
+//    break;
+//    case Pin:: PA_4:
+//    *instance = TIM3;
+//    *channel = TIM_CHANNEL_2;
+//    *alternateFunction = GPIO_AF2_TIM3;
+//    break;
+//    case Pin::PA_5:
+//    *instance = TIM2;
+//    *channel = TIM_CHANNEL_1;
+//    *alternateFunction = GPIO_AF10_TIM2;
+//    break;
+    case Pin::PA_8:
+    *instance = TIM1;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF6_TIM1;
+    break;
+    case Pin::PA_6:
+    *instance = TIM16;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF1_TIM16;
+    break;
+    case Pin::PA_7:
+    *instance = TIM17;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF1_TIM17;
+    break;
+    case Pin::PA_9:
+    *instance = TIM1;
+    *channel = TIM_CHANNEL_2;
+    *alternateFunction = GPIO_AF6_TIM1;
+    break;
+    case Pin::PA_10:
+    *instance = TIM1;
+    *channel = TIM_CHANNEL_3;
+    *alternateFunction = GPIO_AF6_TIM1;
+    break;
+    case Pin::PA_11:
+    *instance = TIM1;
+    *channel = TIM_CHANNEL_4;
+    *alternateFunction = GPIO_AF11_TIM1;
+    break;
+    case Pin::PA_12:
+    *instance = TIM16;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF1_TIM16;
+    break;
+    // complementary channel
+    case Pin::PA_13:
+    *instance = TIM16;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF1_TIM16;
+    break;
+    case Pin::PA_15:
+    *instance = TIM2;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF1_TIM2;
+    break;
+    // complementary channel
+    case Pin::PB_0:
+    *instance = TIM1;
+    *channel = TIM_CHANNEL_2;
+    *alternateFunction = GPIO_AF6_TIM1;
+    break;
+    // complementary channel
+    case Pin::PB_1:
+    *instance = TIM1;
+    *channel = TIM_CHANNEL_3;
+    *alternateFunction = GPIO_AF6_TIM1;
+    break;
+    case Pin::PB_3:
+    *instance = TIM2;
+    *channel = TIM_CHANNEL_2;
+    *alternateFunction = GPIO_AF1_TIM2;
+    break;
+    case Pin::PB_4:
+    *instance = TIM16;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF1_TIM16;
+    break;
+    case Pin::PB_5:
+    *instance = TIM17;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF10_TIM17;
+    break;
+    // complementary channel
+    case Pin::PB_6:
+    *instance = TIM16;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF1_TIM16;
+    break;
+    // complementary channel
+    case Pin::PB_7:
+    *instance = TIM17;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF1_TIM17;
+    break;
+    case Pin::PB_8:
+    *instance = TIM16;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF1_TIM16;
+    break;
+    case Pin::PB_9:
+    *instance = TIM17;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF1_TIM17;
+    break;
+    case Pin::PB_10:
+    *instance = TIM2;
+    *channel = TIM_CHANNEL_3;
+    *alternateFunction = GPIO_AF1_TIM2;
+    break;
+    case Pin::PB_11:
+    *instance = TIM2;
+    *channel = TIM_CHANNEL_4;
+    *alternateFunction = GPIO_AF1_TIM2;
+    break;
+    // complementary channel
+    case Pin::PB_13:
+    *instance = TIM1;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF6_TIM1;
+    break;
+    case Pin::PB_14:
+    *instance = TIM15;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF1_TIM15;
+    break;
+    case Pin::PB_15:
+    *instance = TIM15;
+    *channel = TIM_CHANNEL_2;
+    *alternateFunction = GPIO_AF1_TIM15;
+    break;
+    case Pin::PC_0:
+    *instance = TIM1;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF2_TIM1;
+    break;
+    case Pin::PC_1:
+    *instance = TIM1;
+    *channel = TIM_CHANNEL_2;
+    *alternateFunction = GPIO_AF2_TIM1;
+    break;
+    case Pin::PC_2:
+    *instance = TIM1;
+    *channel = TIM_CHANNEL_3;
+    *alternateFunction = GPIO_AF2_TIM1;
+    break;
+    case Pin::PC_3:
+    *instance = TIM1;
+    *channel = TIM_CHANNEL_4;
+    *alternateFunction = GPIO_AF2_TIM1;
+    break;
+    //PWM not shown for PC_6 - PC_9
+//    case Pin::PC_6:
+//    *instance = TIM3;
+//    *channel = TIM_CHANNEL_1;
+//    *alternateFunction = GPIO_AF2_TIM3;
+//    break;
+//    case Pin::PC_7 :
+//    *instance = TIM3;
+//    *channel = TIM_CHANNEL_1;
+//    *alternateFunction = GPIO_AF10_TIM3;
+//    break;
+//    case Pin::PC_8:
+//    *instance = TIM3;
+//    *channel = TIM_CHANNEL_3;
+//    *alternateFunction = GPIO_AF2_TIM3;
+//    break;
+//    case Pin::PC_9:
+//    *instance = TIM3;
+//    *channel = TIM_CHANNEL_4;
+//    *alternateFunction = GPIO_AF10_TIM3;
+//    break;
+    // complementary channel
+    case Pin::PC_13:
+    *instance = TIM1;
+    *channel = TIM_CHANNEL_1;
+    *alternateFunction = GPIO_AF4_TIM1;
+    break;
+    // complementary channel
+    case Pin::PF_0:
+    *instance = TIM1;
+    *channel = TIM_CHANNEL_3;
+    *alternateFunction = GPIO_AF6_TIM1;
+    break;
+#endif
     default:
         *instance = NULL;
         *channel = -1;
@@ -179,6 +430,8 @@ PWMf3xx::PWMf3xx(Pin pin) : PWM(pin) {
 
     if (instance == TIM1) {
         __HAL_RCC_TIM1_CLK_ENABLE();
+    }else if (instance == TIM2) {
+        __HAL_RCC_TIM2_CLK_ENABLE();
     } else if (instance == TIM15) {
         __HAL_RCC_TIM15_CLK_ENABLE();
     } else if (instance == TIM16) {
@@ -186,6 +439,10 @@ PWMf3xx::PWMf3xx(Pin pin) : PWM(pin) {
     } else if (instance == TIM17) {
         __HAL_RCC_TIM17_CLK_ENABLE();
     }
+    //TODO:Investigate Timer 3 on 334
+//    } else if (instance == TIM3) {
+//        __HAL_RCC_TIM3_CLK_ENABLE();
+//    }
 
     TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
 
