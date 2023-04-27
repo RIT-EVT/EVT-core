@@ -51,7 +51,7 @@ public:
      *
      * @return The status associated with the success of joing the network
      */
-    virtual CANStatus connect() = 0;
+    virtual CANStatus connect(bool autoBusOff) = 0;
 
     /**
      * Disconnect from the CAN network.
