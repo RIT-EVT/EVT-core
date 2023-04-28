@@ -16,7 +16,7 @@ namespace EVT::core::IO {
 static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
                         uint32_t* alternateFunction) {
     switch (pin){
-#ifdef STM32F302x8
+#if defined(STM32F302x8)
     case Pin::PA_0:
         *instance = TIM2;
         *channel = TIM_CHANNEL_1;
@@ -203,8 +203,7 @@ static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
         *channel = TIM_CHANNEL_3;
         *alternateFunction = GPIO_AF6_TIM1;
         break;
-#endif
-#ifdef STM32F334x8
+#elif defined(STM32F334x8)
     case Pin::PA_0:
         *instance = TIM2;
         *channel = TIM_CHANNEL_1;
