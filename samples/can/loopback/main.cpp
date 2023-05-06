@@ -26,7 +26,7 @@ int main() {
     IO::CAN::CANStatus result;
 
     // Attempt to join the CAN network
-    result = can.connect();
+    result = can.connect(false);
 
     //  can.addCANFilter(0, 0, 13);  //This would create a filter that allows all messages through
     can.addCANFilter(0b00000011010, 0b0000111111100000, 2);

@@ -45,7 +45,7 @@ int main() {
     IO::CAN::CANStatus result;
 
     // Attempt to join the CAN network
-    result = can.connect();
+    result = can.connect(false);
 
     if (result != IO::CAN::CANStatus::OK) {
         uart.printf("Failed to connect to the CAN network\r\n");

@@ -113,7 +113,7 @@ int main() {
     CO_TMR_MEM appTmrMem[4];
 
     // Attempt to join the CAN network
-    IO::CAN::CANStatus result = can.connect();
+    IO::CAN::CANStatus result = can.connect(false);
 
     //test that the board is connected to the can network
     if (result != IO::CAN::CANStatus::OK) {
