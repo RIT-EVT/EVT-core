@@ -8,9 +8,9 @@ namespace EVT::core::DEV {
 IWDGf3xx::IWDGf3xx(uint32_t ms) : halIWDG{
     IWDG1,
     {
-        ms / 8 - 1,
-        ms / 8 - 1,
         IWDG_PRESCALER_256,
+        ms / 8 - 1,
+        ms / 8 - 1,
     },
 } {
     HAL_IWDG_Init(&halIWDG);
