@@ -73,7 +73,7 @@ int main() {
 
         char buffer[128] = {};
         snprintf(buffer, (8), "%d", (number));
-        lcd.writeText(buffer, 7, 0, true);
+        lcd.writeSmallText(buffer, 7, 0, true);
 
         number++;
         time::wait(500);
