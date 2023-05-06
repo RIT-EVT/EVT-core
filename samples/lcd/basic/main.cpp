@@ -44,7 +44,7 @@ int main() {
     lcd.clearLCD();
 
     const char* text = R"( !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)";
-    lcd.writeText(text, 0, 0, true);
+    lcd.writeSmallText(text, 0, 0, true);
 
     uint8_t ball[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
     uint8_t col = 0;

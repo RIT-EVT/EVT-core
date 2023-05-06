@@ -6,6 +6,24 @@ namespace EVT::core::DEV {
 LCD::LCD(IO::GPIO& regSelect, IO::GPIO& reset, IO::SPI& spi) : regSelect(regSelect), reset(reset), spi(spi) {
     this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
     this->reset.writePin(EVT::core::IO::GPIO::State::LOW);
+
+    this->numberOfSections = 9;
+    this->sectionsPerRow = 3;
+}
+
+LCD::LCD(IO::GPIO& regSelect, IO::GPIO& reset, IO::SPI& spi, uint8_t numberOfSections, uint8_t sectionsPerRow) : regSelect(regSelect), reset(reset), spi(spi) {
+    this->regSelect.writePin(EVT::core::IO::GPIO::State::LOW);
+    this->reset.writePin(EVT::core::IO::GPIO::State::LOW);
+    if (sectionsPerRow > MAX_SECTION_PER_ROW) {
+        sectionsPerRow = MAX_SECTION_PER_ROW;
+    }
+
+    if (numberOfSections > MAX_SECTIONS) {
+        numberOfSections = MAX_SECTIONS;
+    }
+
+    this->numberOfSections = numberOfSections;
+    this->sectionsPerRow = sectionsPerRow;
 }
 
 void LCD::initLCD() {
@@ -145,7 +163,7 @@ void LCD::displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitM
     this->commandWrite(0xAF);// Finish writing
 }
 
-void LCD::writeText(const char* text, uint8_t page, uint8_t column, bool wrapText) {
+void LCD::writeSmallText(const char* text, uint8_t page, uint8_t column, bool wrapText) {
      for (uint8_t x = 0; x < (uint8_t) strlen(text); x++) {
          // Get the ASCII value of the character.
          uint8_t fontIndex = text[x];
@@ -235,7 +253,7 @@ void LCD::displaySectionHeaders() {
         column += padding;
 
         // Write the text for the section header to the screen.
-        writeText(title, page, column, false);
+        writeSmallText(title, page, column, false);
 
         // Increment counters for the next section.
         column += length;
@@ -274,6 +292,6 @@ void LCD::setTextForSection(uint8_t section, const char* text) {
     sectionColumn += padding;
 
     // Write the text to the screen under the section header.
-    writeText(text, sectionPage, sectionColumn, false);
+    writeSmallText(text, sectionPage, sectionColumn, false);
 }
 }// namespace EVT::core::DEV

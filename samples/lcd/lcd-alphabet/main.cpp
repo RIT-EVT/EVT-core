@@ -42,7 +42,7 @@ int main() {
     lcd.clearLCD();
 
     const char* text = R"( !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)";
-    lcd.writeText(text, 0, 0, true);
+    lcd.writeSmallText(text, 0, 0, true);
 
     return 0;
 }
