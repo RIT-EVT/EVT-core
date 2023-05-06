@@ -19,13 +19,9 @@
 #define DISPLAYON 0xAF
 #define DISPLAYOFF 0xAE
 
-#define MAX_SECTIONS 12
-#define MAX_SECTION_HEIGHT 8
-#define MAX_SECTION_PER_ROW 3
-
 namespace EVT::core::DEV {
 /**
-* This class represents the structure to command a GLCD with 
+* This class represents the structure to command a GLCD with
 * a ST7565 controller.
 */
 class LCD {
@@ -39,19 +35,6 @@ public:
      * @param[in] bitMap bitmap to display to the LCD
      */
     LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi);
-
-    /**
-      * Constructor for the LCD class
-      *
-      * @param[in] regSelect Register select pin
-      * @param[in] reset Reset pin
-      * @param[in] spi SPI class for communication
-      * @param[in] numberOfSections number of sections that the display will show
-      * @param[in] sectionsPerRow number of sections per row to display
-      * @param[in] sectionHeight how many pages each section should occupy
-      */
-    LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi,
-        uint8_t numberOfSections, uint8_t sectionsPerRow, uint8_t sectionHeight);
 
     /**
      * Writes data to the LCD
@@ -110,7 +93,7 @@ public:
      * @param page[in] the page to draw the bitmap on. Range: 0-7.
      * @param column[in] the column to draw the bitmap on. Range:0-127.
      */
-    void displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column);
+    void displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column, uint8_t numbPages);
 
     /**
      * Writes text to the screen. Has options to wrap the text around the edge of the screen if needed.
@@ -121,6 +104,16 @@ public:
      * @param wrapText[in] whether or not the text should be wrapped around the edge of the screen.
      */
     void writeText(const char* text, uint8_t page, uint8_t column, bool wrapText);
+
+    /**
+     * Writes large text to the screen. Has options to wrap the text around the edge of the screen if needed.
+     *
+     * @param text[in] the text to write to the screen.
+     * @param page[in] the page to write the text too. Range 0-7.
+     * @param column[in] the column to write the text too. Range 0-127.
+     * @param wrapText[in] whether or not the text should be wrapped around the edge of the screen.
+     */
+    void writeLargeText(const char* text, uint8_t page, uint8_t column, bool wrapText);
 
     /**
      * Set the default section titles to be displayed.
@@ -146,7 +139,6 @@ public:
      * Initializes the LCD for operation (must be called to use the LCD)
      */
     void initLCD();
-
 private:
     /** The total width of the screen */
     static const uint8_t screenSizeX = 128;
@@ -155,13 +147,10 @@ private:
     static const uint8_t screenSizeY = 64;
 
     /** THe total number of sections */
-    uint8_t numberOfSections = 9;
+    static const uint8_t numberOfSections = 9;
 
     /** The total number of sections to display per row on the screen. Basically number of columns */
-    uint8_t sectionsPerRow = 3;
-
-    /** The number of pages each section occupies */
-    uint8_t sectionHeight = 3;
+    static const uint8_t sectionsPerRow = 3;
 
     /** Register select pin for the LCD */
     EVT::core::IO::GPIO& regSelect;
@@ -176,10 +165,7 @@ private:
     EVT::core::IO::SPI& spi;
 
     /** The default section titles for the display */
-    char* sectionTitles[MAX_SECTIONS] = {
-        "Not Set",
-        "Not Set",
-        "Not Set",
+    char* sectionTitles[9] = {
         "Not Set",
         "Not Set",
         "Not Set",
