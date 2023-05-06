@@ -46,7 +46,7 @@ int main() {
     uint8_t number = 0;
 
     while (true) {
-        lcd.clearArea(64, 8, 7, 0);
+        lcd.clearArea(64, 1, 7, 0);
         char buffer[128] = {};
         snprintf(buffer, (8), "%d", (number));
 

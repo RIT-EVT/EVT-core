@@ -50,12 +50,12 @@ int main() {
     uint8_t col = 0;
     uint8_t page = 4;
 
-    lcd.displayBitMapInArea(ball, 8, 8, page, col);
+    lcd.displayBitMapInArea(ball, 8, 1, page, col);
 
     uint8_t number = 0;
 
     while (true) {
-        lcd.clearArea(8, 8, page, col);
+        lcd.clearArea(8, 1, page, col);
 
         col++;
         if (col >= 128) {
@@ -67,9 +67,9 @@ int main() {
             }
         }
 
-        lcd.displayBitMapInArea(ball, 8, 8, page, col);
+        lcd.displayBitMapInArea(ball, 8, 1, page, col);
 
-        lcd.clearArea(16, 8, 7, 0);
+        lcd.clearArea(16, 1, 7, 0);
 
         char buffer[128] = {};
         snprintf(buffer, (8), "%d", (number));

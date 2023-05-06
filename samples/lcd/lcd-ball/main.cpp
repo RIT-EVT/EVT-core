@@ -46,10 +46,10 @@ int main() {
     uint8_t col = 0;
     uint8_t page = 0;
 
-    lcd.displayBitMapInArea(ball, 8, 8, page, col);
+    lcd.displayBitMapInArea(ball, 8, 1, page, col);
 
     while (true) {
-        lcd.clearArea(8, 8, page, col);
+        lcd.clearArea(8, 1, page, col);
 
         col++;
         if (col >= 128) {
@@ -61,7 +61,7 @@ int main() {
             }
         }
 
-        lcd.displayBitMapInArea(ball, 8, 8, page, col);
+        lcd.displayBitMapInArea(ball, 8, 1, page, col);
 
         time::wait(300);
     }

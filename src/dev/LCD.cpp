@@ -92,20 +92,15 @@ void LCD::clearLCD() {
     this->commandWrite(0xAF);
 }
 
-void LCD::clearArea(uint8_t width, uint8_t height, uint8_t page, uint8_t column) {
+void LCD::clearArea(uint8_t width, uint8_t numbPages, uint8_t page, uint8_t column) {
     // Calculate the correct column address from an 8-bit number.
     // The issue is that the display takes 4 bit numbers, instead of 8.
     // So you need to split it into two 4 bit numbers.
     uint8_t columnUpperAddress = (column & 0xf0) >> 4;
     uint8_t columnLowerAddress = (column & 0x0f);
 
-    uint8_t amountOfPages = height / 8;
-    if (height < 8) {
-        amountOfPages = 1;
-    }
-
     this->commandWrite(0x40);                         // Display start address + 0x40
-    for (uint8_t i = 0; i < amountOfPages; i++) {     // 64 pixel display / 8 pixels per page = 8 pages
+    for (uint8_t i = 0; i < numbPages; i++) {     // 64 pixel display / 8 pixels per page = 8 pages
         this->commandWrite(0xB0 + page);              // Send page address
         this->commandWrite(0x10 + columnUpperAddress);// Column address upper 4 bits + 0x10
         this->commandWrite(0x00 + columnLowerAddress);// Column address lower 4 bits + 0x00
@@ -135,20 +130,15 @@ void LCD::setEntireScreenBitMap(const uint8_t* bitMap) {
     this->commandWrite(0xAF);
 }
 
-void LCD::displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column, uint8_t numbPages) {
+void LCD::displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t numbPages, uint8_t page, uint8_t column) {
     // Calculate the correct column address from an 8-bit number.
     // The issue is that the display takes 4 bit numbers, instead of 8.
     // So you need to split it into two 4 bit numbers.
     uint8_t columnUpperAddress = (column & 0xf0) >> 4;
     uint8_t columnLowerAddress = (column & 0x0f);
 
-    uint8_t amountOfPages = bitMapHeight / 8;
-    if (bitMapHeight < 8) {
-        amountOfPages = 1;
-    }
-
     this->commandWrite(0x40);                         //Display start address + 0x40
-    for (uint8_t i = 0; i < amountOfPages; i++) {     // 64 pixel display / 8 pixels per page = 8 pages
+    for (uint8_t i = 0; i < numbPages; i++) {     // 64 pixel display / 8 pixels per page = 8 pages
         this->commandWrite(0xB0 + page);              // Send page address
         this->commandWrite(0x10 + columnUpperAddress);// Column address upper 4 bits + 0x10
         this->commandWrite(0x00 + columnLowerAddress);// Column address lower 4 bits + 0x00
@@ -181,7 +171,7 @@ void LCD::writeSmallText(const char* text, uint8_t page, uint8_t column, bool wr
          }
 
          // Display the character bit map at the calculated page and column.
-         displayBitMapInArea(characterMap, 4, 8, page, column, 1);
+         displayBitMapInArea(characterMap, 4, 1, page, column);
          column += 4;// Advance the column for the next character.
 
          // If we need to wrap text, move the page forward and the column to 0.
@@ -222,7 +212,7 @@ void LCD::writeLargeText(const char* text, uint8_t page, uint8_t column, bool wr
          }
 
          // Display the character bit map at the calculated page and column.
-         displayBitMapInArea(characterMap, 8, 16, page, column, 2);
+         displayBitMapInArea(characterMap, 8, 2, page, column);
          column += 8;// Advance the column for the next character.
 
          // If we need to wrap text, move the page forward and the column to 0.
@@ -283,7 +273,7 @@ void LCD::setTextForSection(uint8_t section, const char* text) {
     uint8_t sectionColumn = (adjustedSection - (sectionRow * sectionsPerRow) - 1) * sectionWidth;// Calculate what the column # for the section is.
 
     // Clear the sections area so text is not written over old text.
-    clearArea(sectionWidth, 8, sectionPage, sectionColumn);
+    clearArea(sectionWidth, 1, sectionPage, sectionColumn);
 
     // Calculate the padding to center the text in the section
     uint8_t length = strlen(text) * 4;

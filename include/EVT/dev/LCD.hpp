@@ -86,11 +86,11 @@ public:
      * Clears only a certain area on the display screen.
      *
      * @param[in] width the width in pixels of the area to clear. Range: 0-127
-     * @param[in] height the height in pixels of the area to clear. Range: 0-63
+     * @param[in] numbPages the height in pixels of the area to clear. Range: 0-63
      * @param[in] page the page to start the clearing on. Range: 0-7.
      * @param[in] column the column to start clearing on. Range: 0-127
      */
-    void clearArea(uint8_t width, uint8_t height, uint8_t page, uint8_t column);
+    void clearArea(uint8_t width, uint8_t numbPages, uint8_t page, uint8_t column);
 
     /**
      * Displays the map for diagnostic purposes
@@ -104,11 +104,11 @@ public:
      *
      * @param bitMap[in] the bitmap to display.
      * @param bitMapWidth[in] the width of the bitmap in pixels.
-     * @param bitMapHeight[in] the height of the bitmap in pixels.
+     * @param numbPages[in] the number of pages that the bitmap requires to draw.
      * @param page[in] the page to draw the bitmap on. Range: 0-7.
      * @param column[in] the column to draw the bitmap on. Range:0-127.
      */
-    void displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column, uint8_t numbPages);
+    void displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column);
 
     /**
      * Writes text to the screen. Has options to wrap the text around the edge of the screen if needed.
