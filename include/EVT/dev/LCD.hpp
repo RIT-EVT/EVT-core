@@ -154,6 +154,7 @@ public:
      * Initializes the LCD for operation (must be called to use the LCD)
      */
     void initLCD();
+
 private:
     /** The total width of the screen */
     static const uint8_t screenSizeX = 128;
