@@ -48,7 +48,7 @@ public:
      *
      * @return CANStatus::OK on success, CANStatus::ERROR otherwise
      */
-    CANStatus connect(bool autoBusOff);
+    CANStatus connect(bool autoBusOff = false) override;
 
     /**
      * Disconnect from the CAN network.

@@ -101,7 +101,7 @@ int main() {
     CO_TMR_MEM appTmrMem[4];
 
     // Attempt to join the CAN network
-    IO::CAN::CANStatus result = can.connect(false);
+    IO::CAN::CANStatus result = can.connect();
 
     if (result != IO::CAN::CANStatus::OK) {
         uart.printf("Failed to connect to CAN network\r\n");
