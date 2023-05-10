@@ -73,7 +73,7 @@ CANf3xx::CANf3xx(Pin txPin, Pin rxPin, bool loopbackEnabled)
                             GPIO_PULLUP, GPIO_SPEED_FREQ_HIGH, GPIO_AF9_CAN);
 }
 
-CAN::CANStatus CANf3xx::connect() {
+CAN::CANStatus CANf3xx::connect(bool autoBusOff) {
     // Initialize HAL CAN
     // Bit timing values calculated from the website
     // http://www.bittiming.can-wiki.info/
@@ -85,7 +85,11 @@ CAN::CANStatus CANf3xx::connect() {
     halCAN.Init.TimeSeg1 = CAN_BS1_13TQ;
     halCAN.Init.TimeSeg2 = CAN_BS2_2TQ;
     halCAN.Init.TimeTriggeredMode = DISABLE;
-    halCAN.Init.AutoBusOff = DISABLE;
+    if (autoBusOff) {
+        halCAN.Init.AutoBusOff = ENABLE;
+    } else {
+        halCAN.Init.AutoBusOff = DISABLE;
+    }
     halCAN.Init.AutoWakeUp = DISABLE;
     halCAN.Init.AutoRetransmission = DISABLE;
     halCAN.Init.ReceiveFifoLocked = DISABLE;

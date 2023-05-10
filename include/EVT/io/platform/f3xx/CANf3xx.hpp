@@ -43,10 +43,12 @@ public:
      * For the STM32f3xx this involves attempting to startup the CAN
      * interface. This could cause an error in the case of invalid
      * parameters.
+     * 
+     * @param[in] autoBusOff Indicates the state halCAN.Init.AutoBusOff should be in
      *
      * @return CANStatus::OK on success, CANStatus::ERROR otherwise
      */
-    CANStatus connect();
+    CANStatus connect(bool autoBusOff = false) override;
 
     /**
      * Disconnect from the CAN network.
