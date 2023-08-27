@@ -100,7 +100,7 @@ void LCD::clearArea(uint8_t width, uint8_t numPages, uint8_t page, uint8_t colum
     uint8_t columnLowerAddress = (column & 0x0f);
 
     this->commandWrite(0x40);                         // Display start address + 0x40
-    for (uint8_t i = 0; i < numPages; i++) {         // 64 pixel display / 8 pixels per page = 8 pages
+    for (uint8_t i = 0; i < numPages; i++) {          // 64 pixel display / 8 pixels per page = 8 pages
         this->commandWrite(0xB0 + page);              // Send page address
         this->commandWrite(0x10 + columnUpperAddress);// Column address upper 4 bits + 0x10
         this->commandWrite(0x00 + columnLowerAddress);// Column address lower 4 bits + 0x00
@@ -138,7 +138,7 @@ void LCD::displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t numP
     uint8_t columnLowerAddress = (column & 0x0f);
 
     this->commandWrite(0x40);                         //Display start address + 0x40
-    for (uint8_t i = 0; i < numPages; i++) {         // 64 pixel display / 8 pixels per page = 8 pages
+    for (uint8_t i = 0; i < numPages; i++) {          // 64 pixel display / 8 pixels per page = 8 pages
         this->commandWrite(0xB0 + page);              // Send page address
         this->commandWrite(0x10 + columnUpperAddress);// Column address upper 4 bits + 0x10
         this->commandWrite(0x00 + columnLowerAddress);// Column address lower 4 bits + 0x00
@@ -227,50 +227,48 @@ void LCD::writeText(const char* text, uint8_t page, uint8_t column, LCD::FontSiz
         uint8_t characterPages = fontSize == LARGE ? 2 : 1;
 
         switch (fontSize) {
-            case LARGE: {
-                // Create the character that we need to write to the screen.
-                unsigned char characterMap[16] = {
-                    BitmapFont::font6x13[characterIndex][0],
-                    BitmapFont::font6x13[characterIndex][1],
-                    BitmapFont::font6x13[characterIndex][2],
-                    BitmapFont::font6x13[characterIndex][3],
-                    BitmapFont::font6x13[characterIndex][4],
-                    BitmapFont::font6x13[characterIndex][5],
-                    BitmapFont::font6x13[characterIndex][6],
-                    BitmapFont::font6x13[characterIndex][7],
-                    BitmapFont::font6x13[characterIndex][8],
-                    BitmapFont::font6x13[characterIndex][9],
-                    BitmapFont::font6x13[characterIndex][10],
-                    BitmapFont::font6x13[characterIndex][11],
-                    BitmapFont::font6x13[characterIndex][12],
-                    0b00000000,
-                    0b00000000,
-                    0b00000000,
-                };
+        case LARGE: {
+            // Create the character that we need to write to the screen.
+            unsigned char characterMap[16] = {
+                BitmapFont::font6x13[characterIndex][0],
+                BitmapFont::font6x13[characterIndex][1],
+                BitmapFont::font6x13[characterIndex][2],
+                BitmapFont::font6x13[characterIndex][3],
+                BitmapFont::font6x13[characterIndex][4],
+                BitmapFont::font6x13[characterIndex][5],
+                BitmapFont::font6x13[characterIndex][6],
+                BitmapFont::font6x13[characterIndex][7],
+                BitmapFont::font6x13[characterIndex][8],
+                BitmapFont::font6x13[characterIndex][9],
+                BitmapFont::font6x13[characterIndex][10],
+                BitmapFont::font6x13[characterIndex][11],
+                BitmapFont::font6x13[characterIndex][12],
+                0b00000000,
+                0b00000000,
+                0b00000000,
+            };
 
-                // Display the character bit map at the calculated page and column.
-                displayBitMapInArea(characterMap, characterWidth, characterPages, page, column);
-            }
-                break;
-            case SMALL: {
-                unsigned char characterMap[4] = {
-                    BitmapFont::font4x6[characterIndex][0],
-                    BitmapFont::font4x6[characterIndex][1],
-                    BitmapFont::font4x6[characterIndex][2],
-                    BitmapFont::font4x6[characterIndex][3],
-                };
+            // Display the character bit map at the calculated page and column.
+            displayBitMapInArea(characterMap, characterWidth, characterPages, page, column);
+        } break;
+        case SMALL: {
+            unsigned char characterMap[4] = {
+                BitmapFont::font4x6[characterIndex][0],
+                BitmapFont::font4x6[characterIndex][1],
+                BitmapFont::font4x6[characterIndex][2],
+                BitmapFont::font4x6[characterIndex][3],
+            };
 
-                // Display the character bit map at the calculated page and column.
-                displayBitMapInArea(characterMap, characterWidth, characterPages, page, column);
-            }
-                break;
+            // Display the character bit map at the calculated page and column.
+            displayBitMapInArea(characterMap, characterWidth, characterPages, page, column);
+        } break;
         }
 
         column += characterWidth;// Advance the column for the next character.
 
         // If we need to wrap text, move the page forward and the column to 0.
         if (wrapText && column >= screenSizeX) {
-            page ++;
+            page++;
             column = 0;
         }
     }
