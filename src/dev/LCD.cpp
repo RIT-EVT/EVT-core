@@ -92,7 +92,7 @@ void LCD::clearLCD() {
     this->commandWrite(0xAF);
 }
 
-void LCD::clearArea(uint8_t width, uint8_t numbPages, uint8_t page, uint8_t column) {
+void LCD::clearArea(uint8_t width, uint8_t numPages, uint8_t page, uint8_t column) {
     // Calculate the correct column address from an 8-bit number.
     // The issue is that the display takes 4 bit numbers, instead of 8.
     // So you need to split it into two 4 bit numbers.
@@ -100,7 +100,7 @@ void LCD::clearArea(uint8_t width, uint8_t numbPages, uint8_t page, uint8_t colu
     uint8_t columnLowerAddress = (column & 0x0f);
 
     this->commandWrite(0x40);                         // Display start address + 0x40
-    for (uint8_t i = 0; i < numbPages; i++) {         // 64 pixel display / 8 pixels per page = 8 pages
+    for (uint8_t i = 0; i < numPages; i++) {         // 64 pixel display / 8 pixels per page = 8 pages
         this->commandWrite(0xB0 + page);              // Send page address
         this->commandWrite(0x10 + columnUpperAddress);// Column address upper 4 bits + 0x10
         this->commandWrite(0x00 + columnLowerAddress);// Column address lower 4 bits + 0x00
@@ -130,7 +130,7 @@ void LCD::setEntireScreenBitMap(const uint8_t* bitMap) {
     this->commandWrite(0xAF);
 }
 
-void LCD::displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t numbPages, uint8_t page, uint8_t column) {
+void LCD::displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t numPages, uint8_t page, uint8_t column) {
     // Calculate the correct column address from an 8-bit number.
     // The issue is that the display takes 4 bit numbers, instead of 8.
     // So you need to split it into two 4 bit numbers.
@@ -138,7 +138,7 @@ void LCD::displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t numb
     uint8_t columnLowerAddress = (column & 0x0f);
 
     this->commandWrite(0x40);                         //Display start address + 0x40
-    for (uint8_t i = 0; i < numbPages; i++) {         // 64 pixel display / 8 pixels per page = 8 pages
+    for (uint8_t i = 0; i < numPages; i++) {         // 64 pixel display / 8 pixels per page = 8 pages
         this->commandWrite(0xB0 + page);              // Send page address
         this->commandWrite(0x10 + columnUpperAddress);// Column address upper 4 bits + 0x10
         this->commandWrite(0x00 + columnLowerAddress);// Column address lower 4 bits + 0x00
@@ -151,76 +151,6 @@ void LCD::displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t numb
         page++;// After 128 columns, go to next page
     }
     this->commandWrite(0xAF);// Finish writing
-}
-
-void LCD::writeSmallText(const char* text, uint8_t page, uint8_t column, bool wrapText) {
-    for (uint8_t x = 0; x < (uint8_t) strlen(text); x++) {
-        // Get the ASCII value of the character.
-        uint8_t fontIndex = text[x];
-
-        // Create the character that we need to write to the screen.
-        unsigned char characterMap[4] = {
-            BitmapFont::font4x6[fontIndex][0],
-            BitmapFont::font4x6[fontIndex][1],
-            BitmapFont::font4x6[fontIndex][2],
-            BitmapFont::font4x6[fontIndex][3],
-        };
-
-        if (column >= screenSizeX) {
-            return;
-        }
-
-        // Display the character bit map at the calculated page and column.
-        displayBitMapInArea(characterMap, 4, 1, page, column);
-        column += 4;// Advance the column for the next character.
-
-        // If we need to wrap text, move the page forward and the column to 0.
-        if (wrapText && column >= screenSizeX) {
-            page++;
-            column = 0;
-        }
-    }
-}
-
-void LCD::writeLargeText(const char* text, uint8_t page, uint8_t column, bool wrapText) {
-    for (uint8_t x = 0; x < (uint8_t) strlen(text); x++) {
-        // Get the ASCII value of the character.
-        uint8_t fontIndex = text[x];
-
-        // Create the character that we need to write to the screen.
-        unsigned char characterMap[16] = {
-            BitmapFont::font6x13[fontIndex][0],
-            BitmapFont::font6x13[fontIndex][1],
-            BitmapFont::font6x13[fontIndex][2],
-            BitmapFont::font6x13[fontIndex][3],
-            BitmapFont::font6x13[fontIndex][4],
-            BitmapFont::font6x13[fontIndex][5],
-            BitmapFont::font6x13[fontIndex][6],
-            BitmapFont::font6x13[fontIndex][7],
-            BitmapFont::font6x13[fontIndex][8],
-            BitmapFont::font6x13[fontIndex][9],
-            BitmapFont::font6x13[fontIndex][10],
-            BitmapFont::font6x13[fontIndex][11],
-            BitmapFont::font6x13[fontIndex][12],
-            0b00000000,
-            0b00000000,
-            0b00000000,
-        };
-
-        if (column >= screenSizeX) {
-            return;
-        }
-
-        // Display the character bit map at the calculated page and column.
-        displayBitMapInArea(characterMap, 8, 2, page, column);
-        column += 8;// Advance the column for the next character.
-
-        // If we need to wrap text, move the page forward and the column to 0.
-        if (wrapText && column >= screenSizeX) {
-            page += 1;
-            column = 0;
-        }
-    }
 }
 
 void LCD::setDefaultSections(char* const newSectionTitles[9]) {
@@ -243,7 +173,7 @@ void LCD::displaySectionHeaders() {
         column += padding;
 
         // Write the text for the section header to the screen.
-        writeSmallText(title, page, column, false);
+        writeText(title, page, column, SMALL, false);
 
         // Increment counters for the next section.
         column += length;
@@ -282,6 +212,67 @@ void LCD::setTextForSection(uint8_t section, const char* text) {
     sectionColumn += padding;
 
     // Write the text to the screen under the section header.
-    writeSmallText(text, sectionPage, sectionColumn, false);
+    writeText(text, sectionPage, sectionColumn, SMALL, false);
+}
+
+void LCD::writeText(const char* text, uint8_t page, uint8_t column, LCD::FontSize fontSize, bool wrapText) {
+    for (uint8_t x = 0; x < (uint8_t) strlen(text); x++) {
+        if (column >= screenSizeX) {
+            return;
+        }
+
+        // Get the ASCII value of the character.
+        uint8_t characterIndex = text[x];
+        uint8_t characterWidth = fontSize == LARGE ? 8 : 4;
+        uint8_t characterPages = fontSize == LARGE ? 2 : 1;
+
+        switch (fontSize) {
+            case LARGE: {
+                // Create the character that we need to write to the screen.
+                unsigned char characterMap[16] = {
+                    BitmapFont::font6x13[characterIndex][0],
+                    BitmapFont::font6x13[characterIndex][1],
+                    BitmapFont::font6x13[characterIndex][2],
+                    BitmapFont::font6x13[characterIndex][3],
+                    BitmapFont::font6x13[characterIndex][4],
+                    BitmapFont::font6x13[characterIndex][5],
+                    BitmapFont::font6x13[characterIndex][6],
+                    BitmapFont::font6x13[characterIndex][7],
+                    BitmapFont::font6x13[characterIndex][8],
+                    BitmapFont::font6x13[characterIndex][9],
+                    BitmapFont::font6x13[characterIndex][10],
+                    BitmapFont::font6x13[characterIndex][11],
+                    BitmapFont::font6x13[characterIndex][12],
+                    0b00000000,
+                    0b00000000,
+                    0b00000000,
+                };
+
+                // Display the character bit map at the calculated page and column.
+                displayBitMapInArea(characterMap, characterWidth, characterPages, page, column);
+            }
+                break;
+            case SMALL: {
+                unsigned char characterMap[4] = {
+                    BitmapFont::font4x6[characterIndex][0],
+                    BitmapFont::font4x6[characterIndex][1],
+                    BitmapFont::font4x6[characterIndex][2],
+                    BitmapFont::font4x6[characterIndex][3],
+                };
+
+                // Display the character bit map at the calculated page and column.
+                displayBitMapInArea(characterMap, characterWidth, characterPages, page, column);
+            }
+                break;
+        }
+
+        column += characterWidth;// Advance the column for the next character.
+
+        // If we need to wrap text, move the page forward and the column to 0.
+        if (wrapText && column >= screenSizeX) {
+            page ++;
+            column = 0;
+        }
+    }
 }
 }// namespace EVT::core::DEV

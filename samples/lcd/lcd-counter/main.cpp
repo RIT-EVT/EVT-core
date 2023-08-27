@@ -50,7 +50,7 @@ int main() {
         char buffer[128] = {};
         snprintf(buffer, (8), "%d", (number));
 
-        lcd.writeSmallText(buffer, 7, 0, true);
+        lcd.writeText(buffer, 7, 0, EVT::core::DEV::LCD::SMALL, true);
 
         number++;
         time::wait(500);

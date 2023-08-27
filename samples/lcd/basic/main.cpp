@@ -44,7 +44,7 @@ int main() {
     lcd.clearLCD();
 
     const char* text = R"( !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)";
-    lcd.writeSmallText(text, 0, 0, true);
+    lcd.writeText(text, 0, 0, EVT::core::DEV::LCD::SMALL, true);
 
     uint8_t ball[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
     uint8_t col = 0;
@@ -73,7 +73,7 @@ int main() {
 
         char buffer[128] = {};
         snprintf(buffer, (8), "%d", (number));
-        lcd.writeSmallText(buffer, 7, 0, true);
+        lcd.writeText(buffer, 7, 0, EVT::core::DEV::LCD::SMALL, true);
 
         number++;
         time::wait(500);
