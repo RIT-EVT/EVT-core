@@ -183,15 +183,15 @@ private:
 
     /** The default section titles for the display */
     char* sectionTitles[MAX_SECTIONS] = {
-        "Not Set",
-        "Not Set",
-        "Not Set",
-        "Not Set",
-        "Not Set",
-        "Not Set",
-        "Not Set",
-        "Not Set",
-        "Not Set",
+        (char*) "Not Set",
+        (char*) "Not Set",
+        (char*) "Not Set",
+        (char*) "Not Set",
+        (char*) "Not Set",
+        (char*) "Not Set",
+        (char*) "Not Set",
+        (char*) "Not Set",
+        (char*) "Not Set",
     };
 };
 
