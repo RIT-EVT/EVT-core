@@ -44,18 +44,18 @@ int main() {
     lcd.clearLCD();
 
     const char* text = R"( !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)";
-    lcd.writeText(text, 0, 0, true);
+    lcd.writeText(text, 0, 0, EVT::core::DEV::LCD::SMALL, true);
 
     uint8_t ball[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
     uint8_t col = 0;
     uint8_t page = 4;
 
-    lcd.displayBitMapInArea(ball, 8, 8, page, col);
+    lcd.displayBitMapInArea(ball, 8, 1, page, col);
 
     uint8_t number = 0;
 
     while (true) {
-        lcd.clearArea(8, 8, page, col);
+        lcd.clearArea(8, 1, page, col);
 
         col++;
         if (col >= 128) {
@@ -67,13 +67,13 @@ int main() {
             }
         }
 
-        lcd.displayBitMapInArea(ball, 8, 8, page, col);
+        lcd.displayBitMapInArea(ball, 8, 1, page, col);
 
-        lcd.clearArea(16, 8, 7, 0);
+        lcd.clearArea(16, 1, 7, 0);
 
         char buffer[128] = {};
         snprintf(buffer, (8), "%d", (number));
-        lcd.writeText(buffer, 7, 0, true);
+        lcd.writeText(buffer, 7, 0, EVT::core::DEV::LCD::SMALL, true);
 
         number++;
         time::wait(500);

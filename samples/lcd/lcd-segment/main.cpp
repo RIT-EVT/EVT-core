@@ -46,15 +46,15 @@ int main() {
 
     // The segment titles
     char* titles[9] = {
-        "B Voltage",
-        "Speed",
-        "RPM",
-        "Temp 1",
-        "Temp 2",
-        "Temp 3",
-        "Status 1",
-        "PVC Stat",
-        "Torque",
+        (char*) "B Voltage",
+        (char*) "Speed",
+        (char*) "RPM",
+        (char*) "Temp 1",
+        (char*) "Temp 2",
+        (char*) "Temp 3",
+        (char*) "Status 1",
+        (char*) "PVC Stat",
+        (char*) "Torque",
     };
     lcd.setDefaultSections(titles);
 

@@ -25,11 +25,19 @@
 
 namespace EVT::core::DEV {
 /**
-* This class represents the structure to command a GLCD with 
+* This class represents the structure to command a GLCD with
 * a ST7565 controller.
 */
 class LCD {
 public:
+    /**
+     * An enumeration that can be used to select what size of text needs to be drawn to the screen.
+     */
+    enum FontSize {
+        LARGE,
+        SMALL
+    };
+
     /**
      * Constructor the LCD class
      *
@@ -48,10 +56,8 @@ public:
       * @param[in] spi SPI class for communication
       * @param[in] numberOfSections number of sections that the display will show
       * @param[in] sectionsPerRow number of sections per row to display
-      * @param[in] sectionHeight how many pages each section should occupy
       */
-    LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi,
-        uint8_t numberOfSections, uint8_t sectionsPerRow, uint8_t sectionHeight);
+    LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi, uint8_t numberOfSections, uint8_t sectionsPerRow);
 
     /**
      * Writes data to the LCD
@@ -88,11 +94,11 @@ public:
      * Clears only a certain area on the display screen.
      *
      * @param[in] width the width in pixels of the area to clear. Range: 0-127
-     * @param[in] height the height in pixels of the area to clear. Range: 0-63
+     * @param[in] numPages the height in pixels of the area to clear. Range: 0-63
      * @param[in] page the page to start the clearing on. Range: 0-7.
      * @param[in] column the column to start clearing on. Range: 0-127
      */
-    void clearArea(uint8_t width, uint8_t height, uint8_t page, uint8_t column);
+    void clearArea(uint8_t width, uint8_t numPages, uint8_t page, uint8_t column);
 
     /**
      * Displays the map for diagnostic purposes
@@ -106,21 +112,24 @@ public:
      *
      * @param bitMap[in] the bitmap to display.
      * @param bitMapWidth[in] the width of the bitmap in pixels.
-     * @param bitMapHeight[in] the height of the bitmap in pixels.
+     * @param numPages[in] the number of pages that the bitmap requires to draw.
      * @param page[in] the page to draw the bitmap on. Range: 0-7.
      * @param column[in] the column to draw the bitmap on. Range:0-127.
      */
-    void displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t bitMapHeight, uint8_t page, uint8_t column);
+    void displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t numPages, uint8_t page, uint8_t column);
 
     /**
-     * Writes text to the screen. Has options to wrap the text around the edge of the screen if needed.
+     * Writes text to the screen at the given page and column.
+     * You can also change the fontSize between LARGE and SMALL along with option
+     * to enable text wrapping.
      *
      * @param text[in] the text to write to the screen.
      * @param page[in] the page to write the text too. Range 0-7.
      * @param column[in] the column to write the text too. Range 0-127.
+     * @param fontSize[in] the size of the font that should be drawn to the screen.
      * @param wrapText[in] whether or not the text should be wrapped around the edge of the screen.
      */
-    void writeText(const char* text, uint8_t page, uint8_t column, bool wrapText);
+    void writeText(const char* text, uint8_t page, uint8_t column, FontSize fontSize, bool wrapText);
 
     /**
      * Set the default section titles to be displayed.
@@ -154,14 +163,11 @@ private:
     /** The total height of the screen */
     static const uint8_t screenSizeY = 64;
 
-    /** THe total number of sections */
-    uint8_t numberOfSections = 9;
+    /** The total number of sections */
+    uint8_t numberOfSections;
 
     /** The total number of sections to display per row on the screen. Basically number of columns */
-    uint8_t sectionsPerRow = 3;
-
-    /** The number of pages each section occupies */
-    uint8_t sectionHeight = 3;
+    uint8_t sectionsPerRow;
 
     /** Register select pin for the LCD */
     EVT::core::IO::GPIO& regSelect;
@@ -177,18 +183,15 @@ private:
 
     /** The default section titles for the display */
     char* sectionTitles[MAX_SECTIONS] = {
-        "Not Set",
-        "Not Set",
-        "Not Set",
-        "Not Set",
-        "Not Set",
-        "Not Set",
-        "Not Set",
-        "Not Set",
-        "Not Set",
-        "Not Set",
-        "Not Set",
-        "Not Set",
+        (char*) "Not Set",
+        (char*) "Not Set",
+        (char*) "Not Set",
+        (char*) "Not Set",
+        (char*) "Not Set",
+        (char*) "Not Set",
+        (char*) "Not Set",
+        (char*) "Not Set",
+        (char*) "Not Set",
     };
 };
 
