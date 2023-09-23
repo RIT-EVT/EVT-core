@@ -87,18 +87,17 @@ cmake_dependent_option(EVT_BUILD_SAMPLES
 add_compile_definitions(USE_HAL_DRIVER)
 
 add_subdirectory(libs/HALf3/)
-add_subdirectory(libs/canopen/canopen/)
+add_subdirectory(libs/canopen/src/)
 
-install(TARGETS Canopen EXPORT Canopen-config)
-install(EXPORT Canopen-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Canopen)
+install(TARGETS canopen-stack EXPORT canopen-stack-config)
+install(EXPORT canopen-stack-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/canopen-stack)
 
 # Later this will be handled dynamically, either the HALf3 or the HALf4 will
 # be linked to
 target_link_libraries(${PROJECT_NAME}
-    PUBLIC HALf3
-    PUBLIC Canopen
+        PUBLIC HALf3
+        PUBLIC canopen-stack
 )
-
 ###############################################################################
 # Install and expose library
 ###############################################################################
