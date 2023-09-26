@@ -87,7 +87,7 @@ cmake_dependent_option(EVT_BUILD_SAMPLES
 add_compile_definitions(USE_HAL_DRIVER)
 
 add_subdirectory(libs/HALf3/)
-add_subdirectory(libs/canopen/src/)
+add_subdirectory(libs/canopen/)
 
 install(TARGETS canopen-stack EXPORT canopen-stack-config)
 install(EXPORT canopen-stack-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/canopen-stack)

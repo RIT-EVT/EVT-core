@@ -6,7 +6,7 @@
 #ifndef _EVT_CANopen_
 #define _EVT_CANopen_
 
-#include "core/co_core.h"
+#include "co_core.h"
 
 #include <EVT/dev/RTC.hpp>
 #include <EVT/dev/Timer.hpp>
