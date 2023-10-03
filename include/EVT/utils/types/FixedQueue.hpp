@@ -13,10 +13,10 @@
  *
  * @author Collin Bolles
  */
-#ifndef _EVT_FIXED_QUEUE_
 #define _EVT_FIXED_QUEUE_
+#ifndef _EVT_FIXED_QUEUE_
 
-#include <stdint.h>
+    #include <stdint.h>
 
 namespace EVT::core::types {
 

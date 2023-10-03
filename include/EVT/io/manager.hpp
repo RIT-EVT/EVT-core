@@ -3,10 +3,11 @@
 
 #include <stdint.h>
 
-#include <EVT/io/ADC.hpp>
-#include <EVT/io/CAN.hpp>
+//#include <EVT/io/ADC.hpp>
+//#include <EVT/io/CAN.hpp>
 #include <EVT/io/GPIO.hpp>
-#include <EVT/io/PWM.hpp>
+//#include <EVT/io/PWM.hpp>
+#include <EVT/io/UART.hpp>
 
 #ifdef STM32F3xx
     #include <EVT/platform/f3xx/stm32f3xx.hpp>
@@ -20,6 +21,19 @@
     #include <EVT/io/platform/f3xx/UARTf3xx.hpp>
 #endif
 
+#ifdef STM32f4xx
+    #include <EVT/platform/f4xx/stm32f4xx.hpp>
+
+    //    #include "I2C.hpp"
+    //    #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
+    //    #include <EVT/io/platform/f4xx/CANf4xx.hpp>
+    #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
+    //    #include <EVT/io/platform/f4xx/I2Cf4xx.hpp>
+    //    #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
+    //    #include <EVT/io/platform/f4xx/SPIf4xx.hpp>
+    #include <EVT/io/platform/f4xx/UARTf4xx.hpp>
+#endif
+
 namespace EVT::core::IO {
 
 /**
@@ -31,6 +45,9 @@ void init() {
 #ifdef STM32F3xx
     EVT::core::platform::stm32f3xx_init();
 #endif
+#ifdef STM32f4xx
+    EVT::core::platform::stm32f4xx_init();
+#endif
 }
 
 /**
@@ -38,13 +55,17 @@ void init() {
  *
  * @param[in] pin The pin to use with the ADC
  */
-template<Pin pin>
-ADC& getADC() {
-#ifdef STM32F3xx
-    static ADCf3xx adc(pin);
-    return adc;
-#endif
-}
+//template<Pin pin>
+//ADC& getADC() {
+//#ifdef STM32F4xx
+//    static ADCf4xx adc(pin);
+//    return adc;
+//#endif
+//#ifdef STM32F3xx
+//    static ADCf3xx adc(pin);
+//    return adc;
+//#endif
+//}
 
 /**
  * Get an instance of a CAN interface.
@@ -52,13 +73,17 @@ ADC& getADC() {
  * @param[in] txPin CAN pin for transmitting messages
  * @param[in] rxPin CAN pin for receiving messages
  */
-template<Pin txPin, Pin rxPin>
-CAN& getCAN(bool loopbackEnabled = false) {
-#ifdef STM32F3xx
-    static CANf3xx can(txPin, rxPin, loopbackEnabled);
-    return can;
-#endif
-}
+//template<Pin txPin, Pin rxPin>
+//CAN& getCAN(bool loopbackEnabled = false) {
+//#ifdef STM32F3xx
+//    static CANf3xx can(txPin, rxPin, loopbackEnabled);
+//    return can;
+//#endif
+//#ifdef STM32F4xx
+//    static CANf4xx can(txPin, rxPin, loopbackEnabled);
+//    return can;
+//#endif
+//}
 
 /**
  * Get an instance of a GPIO pin.
@@ -68,6 +93,10 @@ CAN& getCAN(bool loopbackEnabled = false) {
  */
 template<Pin pin>
 GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT) {
+#ifdef STM32f4xx
+    static GPIOf4xx gpioPin(pin, direction);
+    return gpioPin;
+#endif
 #ifdef STM32F3xx
     static GPIOf3xx gpioPin(pin, direction);
     return gpioPin;
@@ -80,26 +109,26 @@ GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT) {
  * @param[in] scl The I2C clock pin
  * @param[in] sda The I2C data pin
  */
-template<Pin scl, Pin sda>
-I2C& getI2C() {
-#ifdef STM32F3xx
-    static I2Cf3xx i2c(scl, sda);
-    return i2c;
-#endif
-}
+//template<Pin scl, Pin sda>
+//I2C& getI2C() {
+//#ifdef STM32F3xx
+//    static I2Cf3xx i2c(scl, sda);
+//    return i2c;
+//#endif
+//}
 
 /**
  * Get an instance of a PWM pin.
  *
  * @param[in] pin The pin to attach to the PWM.
  */
-template<Pin pin>
-PWM& getPWM() {
-#ifdef STM32F3xx
-    static PWMf3xx pwm(pin);
-    return pwm;
-#endif
-}
+//template<Pin pin>
+//PWM& getPWM() {
+//#ifdef STM32F3xx
+//    static PWMf3xx pwm(pin);
+//    return pwm;
+//#endif
+//}
 
 /*
  * Get an instance of a UART.
@@ -110,27 +139,31 @@ PWM& getPWM() {
  */
 template<Pin txPin, Pin rxPin>
 UART& getUART(uint32_t baudrate) {
+#ifdef STM32f4xx
+    static UARTf4xx uart(txPin, rxPin, baudrate);
+    return uart;
+#endif
 #ifdef STM32F3xx
     static UARTf3xx uart(txPin, rxPin, baudrate);
     return uart;
 #endif
 }
 
-template<Pin sckPin, Pin mosiPin, Pin misoPin>
-SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
-#ifdef STM32F3xx
-    static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
-    return spi;
-#endif
-}
+//template<Pin sckPin, Pin mosiPin, Pin misoPin>
+//SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
+//#ifdef STM32F3xx
+//    static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
+//    return spi;
+//#endif
+//}
 
-template<Pin sckPin, Pin mosiPin>
-SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
-#ifdef STM32F3xx
-    static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin);
-    return spi;
-#endif
-}
+//template<Pin sckPin, Pin mosiPin>
+//SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
+//#ifdef STM32F3xx
+//    static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin);
+//    return spi;
+//#endif
+//}
 
 }// namespace EVT::core::IO
 

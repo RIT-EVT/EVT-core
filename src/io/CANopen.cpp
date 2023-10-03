@@ -1,12 +1,14 @@
-#include <EVT/io/CANopen.hpp>
-#include <EVT/io/types/CANMessage.hpp>
-#include <EVT/utils/types/FixedQueue.hpp>
+#define _EVT_CANopen_
+#ifndef _EVT_CANopen_
+    #include <EVT/io/CANopen.hpp>
+    #include <EVT/io/types/CANMessage.hpp>
+    #include <EVT/utils/types/FixedQueue.hpp>
 
-#include <EVT/dev/RTC.hpp>
+//#include <EVT/dev/RTC.hpp>
 
-#include <stdint.h>
+    #include <stdint.h>
 
-#define MAX_SIZE 64
+    #define MAX_SIZE 64
 
 /*
  * Empty namespace to contain "global" variables. These will be used within
@@ -249,3 +251,4 @@ static uint32_t nvmWrite(uint32_t start, uint8_t* buffer, uint32_t size) {
     }
     return bytesWrote;
 }
+#endif

@@ -8,6 +8,7 @@
  */
 #include <EVT/dev/LED.hpp>
 #include <EVT/io/GPIO.hpp>
+#include <EVT/io/UART.hpp>
 #include <EVT/io/manager.hpp>
 #include <EVT/io/pin.hpp>
 #include <EVT/utils/time.hpp>
@@ -22,16 +23,16 @@ int main() {
 
     // Setup the GPIO pin.
     // Notice that the pin used is called "LED". Each platform has a dedicated
-    // LED pin, for the f3xx that is PB_13.
+    // LED pin, for the f3xx that is PB_13 and for f4xx that is PA_5.
     IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();
     DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
+    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
-    while (1) {
+    while (true) {
         led.toggle();
-
-        // Wait half a second
-        time::wait(500);
+//        led.setState(EVT::core::IO::GPIO::State::HIGH);
+        uart.printf("khvgvkgfcthfvkjlugkjyjg");
+        time::wait(10);
     }
-
     return 0;
 }

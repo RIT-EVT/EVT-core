@@ -3,18 +3,18 @@
  * functions will take in an EVT-core driver which will be used for
  * making the drivers.
  */
-#ifndef _EVT_CANopen_
 #define _EVT_CANopen_
+#ifndef _EVT_CANopen_
 
-#include <Canopen/co_if.h>
+//#include <Canopen/co_if.h>
 
-#include <EVT/dev/RTC.hpp>
-#include <EVT/dev/Timer.hpp>
-#include <EVT/io/CAN.hpp>
-#include <EVT/io/types/CANMessage.hpp>
-#include <EVT/utils/types/FixedQueue.hpp>
+    #include <EVT/dev/RTC.hpp>
+    #include <EVT/dev/Timer.hpp>
+    #include <EVT/io/CAN.hpp>
+    #include <EVT/io/types/CANMessage.hpp>
+    #include <EVT/utils/types/FixedQueue.hpp>
 
-#define CANOPEN_QUEUE_SIZE 300
+    #define CANOPEN_QUEUE_SIZE 300
 
 namespace EVT::core::IO {
 
