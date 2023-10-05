@@ -12,7 +12,7 @@ IWDGf3xx::IWDGf3xx(uint32_t ms) : halIWDG{
         ms / 8 - 1,
         ms / 8 - 1,
     },
-} { }
+} {}
 
 void IWDGf3xx::init() {
     HAL_IWDG_Init(&halIWDG);

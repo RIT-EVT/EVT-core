@@ -28,5 +28,6 @@ int main() {
     }
 
     // Infinite loop represents an error, board should reset after the watchdog times out
-    while (1);
+    while (1)
+        ;
 }
