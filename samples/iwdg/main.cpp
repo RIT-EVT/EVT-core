@@ -16,6 +16,7 @@ int main() {
 
     // Start watchdog
     DEV::IWDG& iwdg = DEV::getIWDG(5000);
+    iwdg.init();
 
     uart.printf("Starting IWDG test...\n\r\n\r");
 
@@ -27,6 +28,5 @@ int main() {
     }
 
     // Infinite loop represents an error, board should reset after the watchdog times out
-    while (1)
-        ;
+    while (1);
 }
