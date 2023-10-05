@@ -157,17 +157,18 @@ CAN::CANStatus CANf3xx::transmit(CANMessage& message) {
     // Copy over bytes
     std::memcpy(payload, message.getPayload(), message.getDataLength());
 
-    // Wait until there is a free mailbox available for use. Timeout is necessary when there is no CAN
-    // network available. If there is no CAN network the mailboxes will fill and this function will infinitely
-    // loop. The timeout prevents that by just cancelling and then overwriting the mailbox.
+    // Wait until there is a free mailbox available for use. Timeout is necessary when there is no
+    // CAN network available. If there is no CAN network the mailboxes will fill and this function
+    // will infinitely loop.
     uint8_t timeout = 0;
-    while (HAL_CAN_GetTxMailboxesFreeLevel(&halCAN) == 0) {
-        if (timeout < 255) {
-            time::wait(1);
-            timeout++;
-        } else {
-            break;
-        }
+    while (HAL_CAN_GetTxMailboxesFreeLevel(&halCAN) == 0 && timeout < EVT_CAN_TIMEOUT) {
+        time::wait(1);
+        timeout++;
+    }
+
+    // If the mailbox is still full, return a timeout error
+    if (HAL_CAN_GetTxMailboxesFreeLevel(&halCAN) == 0) {
+        return CANStatus::TIMEOUT;
     }
 
     HAL_StatusTypeDef result = HAL_CAN_AddTxMessage(&halCAN, &txHeader, payload, &mailbox);
