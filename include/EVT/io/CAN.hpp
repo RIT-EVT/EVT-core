@@ -5,6 +5,10 @@
 
 #include <EVT/io/types/CANMessage.hpp>
 
+#ifndef EVT_CAN_TIMEOUT
+    #define EVT_CAN_TIMEOUT 255
+#endif
+
 namespace EVT::core::IO {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
