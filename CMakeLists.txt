@@ -24,8 +24,6 @@ project(EVT
     LANGUAGES CXX C
 )
 
-add_library(${PROJECT_NAME} STATIC)
-
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE
     src/platform/f3xx/stm32f302x8.cpp
@@ -48,6 +46,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     src/io/types/CANMessage.cpp
 
     src/dev/button.cpp
+    src/dev/encoder.cpp
     src/dev/LED.cpp
     src/dev/LCD.cpp
     src/dev/RTCTimer.cpp
