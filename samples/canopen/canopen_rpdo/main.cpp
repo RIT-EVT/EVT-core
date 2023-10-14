@@ -14,9 +14,9 @@
 
 #include <EVT/io/CANopen.hpp>
 
-#include <Canopen/co_core.h>
-#include <Canopen/co_if.h>
-#include <Canopen/co_tmr.h>
+#include <co_core.h>
+#include <co_if.h>
+#include <co_tmr.h>
 
 #include "TestCanNode.hpp"
 
@@ -67,9 +67,9 @@ extern "C" void CONodeFatalError(void) {}
 
 extern "C" void COIfCanReceive(CO_IF_FRM* frm) {}
 
-extern "C" int16_t COLssStore(uint32_t baudrate, uint8_t nodeId) { return 0; }
+extern "C" CO_ERR COLssStore(uint32_t baudrate, uint8_t nodeId) { return CO_ERR ::CO_ERR_NONE; };
 
-extern "C" int16_t COLssLoad(uint32_t* baudrate, uint8_t* nodeId) { return 0; }
+extern "C" CO_ERR COLssLoad(uint32_t* baudrate, uint8_t* nodeId) { return CO_ERR ::CO_ERR_NONE; }
 
 extern "C" void CONmtModeChange(CO_NMT* nmt, CO_MODE mode) {}
 

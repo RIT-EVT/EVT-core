@@ -8,7 +8,7 @@
  */
 #include <stdint.h>
 
-#include <Canopen/co_core.h>
+#include <co_core.h>
 
 class TestCanNode {
 public:
@@ -78,7 +78,9 @@ private:
      */
     CO_OBJ_T objectDictionary[OBJECT_DICTIONARY_SIZE + 1] = {
         // Sync ID, defaults to 0x80
-        {CO_KEY(0x1005, 0, CO_UNSIGNED32 | CO_OBJ_D__R_), 0, (uintptr_t) 0x80},
+        {
+            CO_KEY(0x1005, 0, CO_OBJ_DN__R_), 0, (uintptr_t) 0x80
+        },
 
         // Information about the hardware, hard coded sample values for now
         // 1: Vendor ID
@@ -86,22 +88,22 @@ private:
         // 3: Revision Number
         // 4: Serial Number
         {
-            .Key = CO_KEY(0x1018, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1018, 1, CO_OBJ_DN__R_),
             .Type = 0,
             .Data = (uintptr_t) 0x10,
         },
         {
-            .Key = CO_KEY(0x1018, 2, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1018, 2, CO_OBJ_DN__R_),
             .Type = 0,
             .Data = (uintptr_t) 0x11,
         },
         {
-            .Key = CO_KEY(0x1018, 3, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1018, 3, CO_OBJ_DN__R_),
             .Type = 0,
             .Data = (uintptr_t) 0x12,
         },
         {
-            .Key = CO_KEY(0x1018, 4, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1018, 4, CO_OBJ_DN__R_),
             .Type = 0,
             .Data = (uintptr_t) 0x13,
         },
@@ -110,12 +112,12 @@ private:
         // 1: Client -> Server ID, default is 0x600 + NODE_ID
         // 2: Server -> Client ID, default is 0x580 + NODE_ID
         {
-            .Key = CO_KEY(0x1200, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1200, 1, CO_OBJ_DN__R_),
             .Type = 0,
             .Data = (uintptr_t) 0x600 + NODE_ID,
         },
         {
-            .Key = CO_KEY(0x1200, 2, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1200, 2, CO_OBJ_DN__R_),
             .Type = 0,
             .Data = (uintptr_t) 0x580 + NODE_ID,
         },
@@ -125,19 +127,19 @@ private:
         // 1: The COB-ID to receive PDOs from.
         // 2: transmission trigger
         {
-            .Key = CO_KEY(0x1400, 0, CO_UNSIGNED8 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1400, 0, CO_OBJ_DN__R_),
             .Type = 0,
             .Data = (uintptr_t) 3,
         },
         {
             // 180h+TPDO Node-ID
-            .Key = CO_KEY(0x1400, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1400, 1, CO_OBJ_DN__R_),
             .Type = 0,
             .Data = (uintptr_t) CO_COBID_TPDO_DEFAULT(0) + 0x01,
         },
         {
             // asynchronous trigger
-            .Key = CO_KEY(0x1400, 2, CO_UNSIGNED8 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1400, 2, CO_OBJ_DN__R_),
             .Type = 0,
             .Data = (uintptr_t) 0xFE,
         },
@@ -148,19 +150,19 @@ private:
         // n: Link to the nth PDO message
         {
             // maps two objects
-            .Key = CO_KEY(0x1600, 0, CO_UNSIGNED8 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1600, 0, CO_OBJ_DN__R_),
             .Type = 0,
             .Data = (uintptr_t) 2,
         },
         {
             // link the first byte to (0x2100, 0, 8) - sampleDataA
-            .Key = CO_KEY(0x1600, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1600, 1, CO_OBJ_DN__R_),
             .Type = 0,
             .Data = CO_LINK(0x2100, 0, 8),
         },
         {
             // link the second byte to (0x2100, 1, 16) - sampleDataB
-            .Key = CO_KEY(0x1600, 2, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1600, 2, CO_OBJ_DN__R_),
             .Type = 0,
             .Data = CO_LINK(0x2100, 1, 16),
         },
@@ -169,17 +171,18 @@ private:
         // accessed via SDO and depending on configuration PDO
         {
             // sampleDataA
-            .Key = CO_KEY(0x2100, 0, CO_UNSIGNED8 | CO_OBJ___PRW),
+            .Key = CO_KEY(0x2100, 0, CO_OBJ____PRW),
             .Type = 0,
             .Data = (uintptr_t) &sampleDataA,
         },
         {
             // sampleDataB
-            .Key = CO_KEY(0x2100, 1, CO_UNSIGNED16 | CO_OBJ___PRW),
+            .Key = CO_KEY(0x2100, 1, CO_OBJ____PRW),
             .Type = 0,
             .Data = (uintptr_t) &sampleDataB,
         },
 
         // End of dictionary marker
-        CO_OBJ_DIR_ENDMARK};
+        CO_OBJ_DICT_ENDMARK
+    };
 };
