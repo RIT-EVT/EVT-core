@@ -14,7 +14,7 @@ endif()
 # Handle Selection of the target device
 option(TARGET_DEV "Target device" "STM32F446xx")
 if(NOT TARGET_DEV)
-    set(TARGET_DEV "STM32F302x8")
+    set(TARGET_DEV "STM32F334x8")
 endif()
 
 
@@ -30,6 +30,7 @@ elseif(TARGET_DEV STREQUAL "STM32F446xx")
 else()
     message(FATAL_ERROR "The target device is not supported")
 endif()
+message(STATUS "${TARGET_DEV} targeted")
 
 
 # Flags to skip compiler check

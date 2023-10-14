@@ -1,8 +1,13 @@
 #ifndef _EVT_SPI_
 #define _EVT_SPI_
 
+#include <cstdint>
+
 #include <EVT/io/GPIO.hpp>
-#include <stdint.h>
+
+#ifndef EVT_SPI_TIMEOUT
+    #define EVT_SPI_TIMEOUT 100
+#endif
 
 #define SPI_MSB_FIRST 1
 #define SPI_LSB_FIRST 0
@@ -22,6 +27,7 @@
 #define SPI_SPEED_31KHZ 31250
 
 namespace EVT::core::IO {
+
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
@@ -29,6 +35,16 @@ enum class Pin;
 
 class SPI {
 public:
+    /**
+     * Represents the current state of using the SPI interface.
+     */
+    enum class SPIStatus {
+        OK = 0,
+        ERROR = 1,
+        BUSY = 2,
+        TIMEOUT = 3,
+    };
+
     /**
      * Constructs an SPI instance in full duplex mode to send and receive data.
      *
@@ -71,31 +87,36 @@ public:
      * Writes a single byte out to the SPI device. Call startTransmission() first to initiate device communication.
      *
      * @param byte the byte to write
+     * @return the status after calling the function
      */
-    virtual void write(uint8_t byte) = 0;
+    virtual SPI::SPIStatus write(uint8_t byte) = 0;
 
     /**
      * Reads a single byte from a SPI device. Call startTransmission() first to initiate device communication.
      *
-     * @return the byte read
+     * @param out the byte read
+     * @return the status after calling the function
      */
-    virtual uint8_t read() = 0;
+    virtual SPI::SPIStatus read(uint8_t* out) = 0;
 
     /**
      * Writes an array of bytes to the SPI device. Call startTransmission() first to initiate device communication.
      *
      * @param bytes an array of bytes of length n to write to SPI device
      * @param length the length of the array
+     * @return the status after calling the function
      */
-    void write(uint8_t* bytes, uint8_t length);
+    virtual SPI::SPIStatus write(uint8_t* bytes, uint8_t length);
 
     /**
-     * Reads an array of bytes from a SPI device. Call startTransmission() first to initiate device communication.
+     * Reads an array of bytes from a SPI device.
      *
+     * @param device the device to write to in CSPins
      * @param bytes an array of length n to receive the bytes from an SPI device
-     * @param length the number of bytes to recive
+     * @param length the number of bytes to receive
+     * @return SPIStatus of the HAL function call
      */
-    void read(uint8_t* bytes, uint8_t length);
+    virtual SPI::SPIStatus read(uint8_t* bytes, uint8_t length);
 
     /**
      * Writes a byte of data to a register of a device.
@@ -103,17 +124,19 @@ public:
      * @param device the device index in the CSPins
      * @param reg the register address to write to
      * @param byte the byte of data to write
+     * @return the status after calling the function
      */
-    void writeReg(uint8_t device, uint8_t reg, uint8_t byte);
+    SPI::SPIStatus writeReg(uint8_t device, uint8_t reg, uint8_t byte);
 
     /**
      * Reads a byte of data from a register from a device.
      *
      * @param device the device index in the CSPins
      * @param reg the register address to read from
-     * @return the byte of data from the device
+     * @param out the byte of data from the device
+     * @return the status after calling the function
      */
-    uint8_t readReg(uint8_t device, uint8_t reg);
+    SPI::SPIStatus readReg(uint8_t device, uint8_t reg, uint8_t* out);
 
     /**
      * Writes a series of bytes to a device's registers starting at a specific one.
@@ -123,8 +146,9 @@ public:
      * @param reg the register address to start the write at
      * @param bytes an array of bytes of length n to write to SPI device
      * @param length the length of the array
+     * @return the status after calling the function
      */
-    void writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length);
+    SPI::SPIStatus writeReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length);
 
     /**
      * Reads a series of bytes from a device's registers starting at a specific one.
@@ -133,8 +157,9 @@ public:
      * @param reg the register address to start the read from
      * @param bytes an array of bytes of length n to store the byte from an SPI device
      * @param length the length of the array
+     * @return the status after calling the function
      */
-    void readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length);
+    SPI::SPIStatus readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t length);
 
     /**
      * Configures the SPI transmit mode.
@@ -156,7 +181,7 @@ private:
 protected:
     static constexpr uint8_t MAX_PINS = 5;
     uint8_t CSPinsLength;
-    GPIO* CSPins[MAX_PINS];
+    GPIO* CSPins[MAX_PINS] = {};
 };
 
 }// namespace EVT::core::IO

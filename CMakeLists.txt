@@ -5,6 +5,10 @@ cmake_minimum_required(VERSION 3.15)
 
 set(EVT_CORE_DIR     ${CMAKE_CURRENT_SOURCE_DIR})
 
+if(EVT_CORE_LOG_ENABLE)
+    add_compile_definitions(EVT_CORE_LOG_ENABLE)
+endif()
+
 include(CMakeDependentOption)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_compiler.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_install.cmake)
@@ -45,7 +49,11 @@ target_sources(${PROJECT_NAME} PRIVATE
 
     src/dev/button.cpp
     src/dev/LED.cpp
+    src/dev/LCD.cpp
     src/dev/RTCTimer.cpp
+    src/dev/platform/f3xx/RTCf3xx.cpp
+    src/dev/platform/f3xx/IWDGf3xx.cpp
+    src/dev/platform/f3xx/Timerf3xx.cpp
     src/dev/storage/M24C32.cpp
     src/dev/Thermistor.cpp
 

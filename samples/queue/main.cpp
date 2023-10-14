@@ -6,8 +6,8 @@
  * @author Collin Bolles
  */
 #include <EVT/io/UART.hpp>
-#include <EVT/io/manager.hpp>
 #include <EVT/io/pin.hpp>
+#include <EVT/manager.hpp>
 #include <EVT/utils/types/FixedQueue.hpp>
 
 namespace IO = EVT::core::IO;
@@ -44,7 +44,7 @@ public:
 
 int main() {
     // Initialize system
-    IO::init();
+    EVT::core::platform::init();
 
     // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);

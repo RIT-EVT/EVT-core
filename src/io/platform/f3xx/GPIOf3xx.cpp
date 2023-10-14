@@ -59,15 +59,17 @@ extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 
 namespace EVT::core::IO {
 
-GPIOf3xx::GPIOf3xx(Pin pin, GPIO::Direction direction)
-    : GPIO(pin, direction) {
+GPIOf3xx::GPIOf3xx(Pin pin, GPIO::Direction direction, Pull pull)
+    : GPIO(pin, direction, pull) {
 
     GPIO_InitTypeDef gpioInit;
     Pin myPins[] = {pin};
     uint8_t numOfPins = 1;
 
     gpioStateInit(&gpioInit, myPins, numOfPins,
-                  static_cast<uint32_t>(direction), GPIO_PULLDOWN, GPIO_SPEED_FREQ_HIGH);
+                  static_cast<uint32_t>(direction),
+                  static_cast<uint32_t>(pull),
+                  GPIO_SPEED_FREQ_HIGH);
 
     switch ((static_cast<uint8_t>(pin) & 0xF0) >> 4) {
     case 0x0:

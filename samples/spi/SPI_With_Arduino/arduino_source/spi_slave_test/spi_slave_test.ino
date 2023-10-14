@@ -1,7 +1,8 @@
-#define SCK_PIN   52
-#define MISO_PIN  50
-#define MOSI_PIN  51
-#define SS_PIN    53
+// Arduino UNO Pins
+#define SCK_PIN   13
+#define MISO_PIN  11
+#define MOSI_PIN  12
+#define SS_PIN    10
 
 #define REG_READ_BYTE       0x10
 #define REG_WRITE_8BYTES    0x40
@@ -114,7 +115,7 @@ void parseReg(uint8_t reg) {
     case REG_WRITE_8BYTES:
       //Serial.println("Write 8 bytes");
       count = handleWriteMultiple();
-      Serial.print("Recived ");
+      Serial.print("Received ");
       Serial.print(count);
       Serial.println(" bytes");
       printDataArray(dataArray, count);
@@ -133,7 +134,7 @@ void parseReg(uint8_t reg) {
     case REG_WRITE_BYTE:
       //Serial.println("Write register");
       byte b = readByte();
-      Serial.print("Recived: ");
+      Serial.print("Received: ");
       Serial.println(b, HEX);
       break;
 

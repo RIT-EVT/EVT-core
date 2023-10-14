@@ -10,6 +10,11 @@ namespace EVT::core::DEV {
 class IWDG {
 public:
     /**
+     * Initializes and activates the watchdog timer.
+     */
+    virtual void init() = 0;
+
+    /**
      * Refreshes the watchdog timer.
      */
     virtual void refresh() = 0;

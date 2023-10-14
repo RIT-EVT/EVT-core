@@ -6,7 +6,7 @@
  * @author Collin Bolles
  */
 #include <EVT/io/CAN.hpp>
-#include <EVT/io/manager.hpp>
+#include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
@@ -15,7 +15,7 @@ namespace time = EVT::core::time;
 void canIRQHandler(IO::CANMessage& message, void* priv) {
     IO::UART* uart = (IO::UART*) priv;
     uart->printf("Message received\r\n");
-    uart->printf("Message id: %d \r\n", message.getId());
+    uart->printf("Message id: 0x%X \r\n", message.getId());
     uart->printf("Message length: %d\r\n", message.getDataLength());
     uart->printf("Message contents: ");
 
@@ -28,7 +28,7 @@ void canIRQHandler(IO::CANMessage& message, void* priv) {
 
 int main() {
     // Initialize system
-    IO::init();
+    EVT::core::platform::init();
 
     // Get CAN instance with loopback enabled
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();

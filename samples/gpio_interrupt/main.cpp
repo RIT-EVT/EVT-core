@@ -4,8 +4,8 @@
  * enters.
  */
 #include <EVT/io/UART.hpp>
-#include <EVT/io/manager.hpp>
 #include <EVT/io/pin.hpp>
+#include <EVT/manager.hpp>
 
 namespace IO = EVT::core::IO;
 
@@ -24,7 +24,7 @@ void risingEdgeHandler(IO::GPIO* pin) {
 
 int main() {
     // Initialize system
-    IO::init();
+    EVT::core::platform::init();
 
     // Setup UART
     uart = &IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(BAUD_RATE);

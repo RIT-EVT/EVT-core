@@ -73,7 +73,7 @@ CANf3xx::CANf3xx(Pin txPin, Pin rxPin, bool loopbackEnabled)
                             GPIO_PULLUP, GPIO_SPEED_FREQ_HIGH, GPIO_AF9_CAN);
 }
 
-CAN::CANStatus CANf3xx::connect() {
+CAN::CANStatus CANf3xx::connect(bool autoBusOff) {
     // Initialize HAL CAN
     // Bit timing values calculated from the website
     // http://www.bittiming.can-wiki.info/
@@ -85,7 +85,11 @@ CAN::CANStatus CANf3xx::connect() {
     halCAN.Init.TimeSeg1 = CAN_BS1_13TQ;
     halCAN.Init.TimeSeg2 = CAN_BS2_2TQ;
     halCAN.Init.TimeTriggeredMode = DISABLE;
-    halCAN.Init.AutoBusOff = DISABLE;
+    if (autoBusOff) {
+        halCAN.Init.AutoBusOff = ENABLE;
+    } else {
+        halCAN.Init.AutoBusOff = DISABLE;
+    }
     halCAN.Init.AutoWakeUp = DISABLE;
     halCAN.Init.AutoRetransmission = DISABLE;
     halCAN.Init.ReceiveFifoLocked = DISABLE;
@@ -103,11 +107,11 @@ CAN::CANStatus CANf3xx::connect() {
     HAL_NVIC_SetPriority(CAN_RX0_IRQn, EVT::core::platform::CAN_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(CAN_RX0_IRQn);
 
-    // By default - filter that accepts no incoming messages
+    // By default - filter that accepts all incoming messages
     CAN_FilterTypeDef defaultFilter;
     defaultFilter.FilterIdHigh = 0;
     defaultFilter.FilterIdLow = 0;
-    defaultFilter.FilterMaskIdHigh = 0xFFFF;
+    defaultFilter.FilterMaskIdHigh = 0x0000;
     defaultFilter.FilterMaskIdLow = 0xFFFF;
     defaultFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
     defaultFilter.FilterBank = 0;
@@ -153,9 +157,18 @@ CAN::CANStatus CANf3xx::transmit(CANMessage& message) {
     // Copy over bytes
     std::memcpy(payload, message.getPayload(), message.getDataLength());
 
-    // Wait unil mailbox 0 is available TODO: Add interrupt implementation
-    while (HAL_CAN_GetTxMailboxesFreeLevel(&halCAN) == 0) {
+    // Wait until there is a free mailbox available for use. Timeout is necessary when there is no
+    // CAN network available. If there is no CAN network the mailboxes will fill and this function
+    // will infinitely loop.
+    uint8_t timeout = 0;
+    while (HAL_CAN_GetTxMailboxesFreeLevel(&halCAN) == 0 && timeout < EVT_CAN_TIMEOUT) {
         time::wait(1);
+        timeout++;
+    }
+
+    // If the mailbox is still full, return a timeout error
+    if (HAL_CAN_GetTxMailboxesFreeLevel(&halCAN) == 0) {
+        return CANStatus::TIMEOUT;
     }
 
     HAL_StatusTypeDef result = HAL_CAN_AddTxMessage(&halCAN, &txHeader, payload, &mailbox);

@@ -3,9 +3,14 @@
 
 #include <CAN.h>
 
-bool readyToSend = true;
-int counter = 0;
+//#define CS_PIN    9  //CAN shield v2
+#define CS_PIN    10 //CAN shield v1.4
+#define IRQ_PIN   2
+
+uint8_t counter1 = 0;
+uint16_t counter2 = 0;
 long timeSinceLastReceive = 0;
+long lastSend = 0;
 
 void onReceive(int packetSize) {
   if(CAN.packetId() != 0x180)
@@ -48,8 +53,6 @@ void onReceive(int packetSize) {
   }
 
   Serial.println();
-
-  readyToSend = true;
 }
 
 void setup() {
@@ -58,6 +61,7 @@ void setup() {
 
   Serial.println("CAN Sender");
 
+  CAN.setPins(CS_PIN, IRQ_PIN);
   // start the CAN bus at 500 kbps
   if (!CAN.begin(500E3)) {
     Serial.println("Starting CAN failed!");
@@ -69,36 +73,28 @@ void setup() {
 }
 
 void loop() {
+  //Serial.print("Sending CAN message ");
 
+  if(lastSend + 1000 < millis()){
+    lastSend = millis();
 
-  // Serial.print("Sending CAN message ");
+    Serial.print("Sending CAN message: ");
+    Serial.print(counter1, HEX);
+    Serial.print(" ");
+    Serial.println(counter2, HEX);
 
-  CAN.beginPacket(0x601);
-  
-  // Command byte
-  CAN.write(0x2F);
+    //manually create TPDO message
+    CAN.beginPacket(0x181);
+    CAN.write(counter1);
+    CAN.write((uint8_t)(counter2 & 0x00FF));
+    CAN.write((uint8_t)(counter2 >> 8));
+    CAN.endPacket();
+  }
 
-  // Index access
-  CAN.write(0x00);
-  CAN.write(0x21);
+  counter1++;
+  if(counter1 % 10 == 0){
+    counter2 = (counter2+1)*3;
+  }
 
-  // Subindex
-  CAN.write(0x00);
-
-  // Data
-  CAN.write(counter);
-  CAN.write(0x00);
-  CAN.write(0x00);
-  CAN.write(0x05);
-  
-  CAN.endPacket();
-
-  readyToSend = false;
-
-  counter++;
-  if(counter > 100)
-    counter = 0;
-
-  delay(500);
-  // Serial.println("done");
+  delay(10);
 }

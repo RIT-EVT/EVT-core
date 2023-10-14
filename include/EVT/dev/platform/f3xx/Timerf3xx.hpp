@@ -1,16 +1,18 @@
-#ifndef EVT_TIMER302X8_H
-#define EVT_TIMER302X8_H
+#ifndef _EVT_TIMER3xx_H
+#define _EVT_TIMER3xx_H
+
+#include <cstdint>
+
+#include <HALf3/stm32f3xx.h>
 
 #include <EVT/dev/Timer.hpp>
-#include <HALf3/stm32f3xx_hal_tim.h>
-#include <cstdint>
 
 namespace EVT::core::DEV {
 
 /**
- * Implementation of the Timer class for the f302x8 uC
+ * Implementation of the Timer class for STM32f3xx MCUs
  */
-class Timerf302x8 : public Timer {
+class Timerf3xx : public Timer {
 public:
     /**
      * Will initialize the timer device on the STM with the given period and the given IRQ Handler
@@ -22,7 +24,7 @@ public:
      * @param[in] timerPeripheral The timer to use
      * @param[in] clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
      */
-    explicit Timerf302x8(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod);
+    explicit Timerf3xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod);
 
     void startTimer(void (*irqHandler)(void* htim)) override;
 
@@ -32,10 +34,10 @@ public:
 
     void reloadTimer() override;
 
-    virtual void setPeriod(uint32_t clockPeriod);
+    void setPeriod(uint32_t clockPeriod) override;
 
 private:
-    // Pointer to the halTimer struct stored in the global of Timerf302x8.cpp
+    // Pointer to the halTimer struct stored in the global array in Timerf3xx.cpp
     TIM_HandleTypeDef* halTimer;
 
     // Timer clock period
@@ -52,4 +54,4 @@ private:
 
 }// namespace EVT::core::DEV
 
-#endif//EVT_TIMER302X8_H
+#endif//_EVT_TIMER3xx_H

@@ -9,7 +9,7 @@
 
 #include <EVT/io/I2C.hpp>
 #include <EVT/io/UART.hpp>
-#include <EVT/io/manager.hpp>
+#include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
@@ -24,7 +24,7 @@ constexpr uint8_t K_REGISTER = 0x01;
 
 int main() {
     // Initialize system
-    IO::init();
+    EVT::core::platform::init();
 
     IO::I2C& i2c = IO::getI2C<IO::Pin::PB_8, IO::Pin::PB_9>();
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);

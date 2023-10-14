@@ -38,6 +38,12 @@ PWM
 .. doxygenclass:: EVT::core::IO::PWMf3xx
    :members:
 
+SPI
+===
+
+.. doxygenclass:: EVT::core::IO::SPIf3xx
+   :members:
+
 UART
 ====
 

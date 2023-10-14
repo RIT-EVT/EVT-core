@@ -14,7 +14,10 @@
     #include <EVT/io/types/CANMessage.hpp>
     #include <EVT/utils/types/FixedQueue.hpp>
 
-    #define CANOPEN_QUEUE_SIZE 300
+//Allows for resizable CANOpen queue if needed
+#ifndef CANOPEN_QUEUE_SIZE
+    #define CANOPEN_QUEUE_SIZE 150
+#endif
 
 namespace EVT::core::IO {
 

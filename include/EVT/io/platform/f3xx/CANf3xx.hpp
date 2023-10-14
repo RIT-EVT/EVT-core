@@ -9,7 +9,10 @@
 #include <EVT/io/CAN.hpp>
 #include <EVT/utils/types/FixedQueue.hpp>
 
-#define CAN_MESSAGE_QUEUE_SIZE 100
+//Allows for resizable CAN queue if needed
+#ifndef CAN_MESSAGE_QUEUE_SIZE
+    #define CAN_MESSAGE_QUEUE_SIZE 100
+#endif
 
 namespace EVT::core::IO {
 
@@ -40,10 +43,12 @@ public:
      * For the STM32f3xx this involves attempting to startup the CAN
      * interface. This could cause an error in the case of invalid
      * parameters.
+     * 
+     * @param[in] autoBusOff Indicates the state halCAN.Init.AutoBusOff should be in
      *
      * @return CANStatus::OK on success, CANStatus::ERROR otherwise
      */
-    CANStatus connect();
+    CANStatus connect(bool autoBusOff = false) override;
 
     /**
      * Disconnect from the CAN network.

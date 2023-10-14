@@ -30,6 +30,13 @@ public:
      */
     uint32_t getTempCelcius();
 
+    /**
+     *     Returns the raw ADC values
+     *
+     *     @return The raw values from the ADC
+     */
+    uint32_t getRawADC();
+
 private:
     /// The ADC interface to read from
     EVT::core::IO::ADC& adc;

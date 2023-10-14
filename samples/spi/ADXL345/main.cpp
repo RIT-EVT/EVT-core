@@ -8,7 +8,7 @@
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/I2C.hpp>
 #include <EVT/io/UART.hpp>
-#include <EVT/io/manager.hpp>
+#include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
@@ -25,7 +25,7 @@ IO::GPIO* devices[deviceCount];
 
 int main() {
     // Initialize system
-    IO::init();
+    EVT::core::platform::init();
 
     //CS: D10
     devices[0] = &IO::getGPIO<IO::Pin::SPI_CS>(EVT::core::IO::GPIO::Direction::OUTPUT);
@@ -43,7 +43,7 @@ int main() {
     uart.printf("Starting SPI test\n\r");
     uint8_t byte = 0;
     while (byte != 0xE5) {
-        byte = spi.readReg(0, 0x00 | 0x80);
+        IO::SPI::SPIStatus status = spi.readReg(0, 0x00 | 0x80, &byte);
         uart.printf("device ID: 0x%X, %d\n\r", byte, byte == 0xE5);//should be 0xE5
         time::wait(500);
     }

@@ -5,6 +5,10 @@
 
 #include <EVT/io/types/CANMessage.hpp>
 
+#ifndef EVT_CAN_TIMEOUT
+    #define EVT_CAN_TIMEOUT 255
+#endif
+
 namespace EVT::core::IO {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
@@ -47,11 +51,12 @@ public:
 
     /**
      * Join the CAN network. Will attempt to connect to the CAN network
-     * and return the cooresponding status.
+     * and return the corresponding status.
      *
-     * @return The status associated with the success of joing the network
+     * @param[in] autoBusOff Indicates whether AutoBusOff should be enabled
+     * @return The status associated with the success of joining the network
      */
-    virtual CANStatus connect() = 0;
+    virtual CANStatus connect(bool autoBusOff = false) = 0;
 
     /**
      * Disconnect from the CAN network.
