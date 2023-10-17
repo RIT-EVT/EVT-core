@@ -40,13 +40,22 @@ public:
 
 
 private:
+    ///GPIO pin a
     IO::GPIO& a;
+    ///GPIO pin b
     IO::GPIO& b;
+
+    ///position can be between = [-range, range]
     int64_t range;
+    ///the current absolute position of the encoder
     int64_t position;
+    ///the current direction of travel of the encoder
     Direction currentDirection;
+    ; ///counter for how many updates have occured since the encoder was moved
     uint8_t noChangeCounter;
+    ///the current relative position of the encoder, in the range: [0,3]
     int8_t currentRelPos;
+    ///how many updates with no change in the encoder value can occur before the direction resets
     const static int8_t noChangeCap = 2;
 
     /**
@@ -79,10 +88,10 @@ private:
      * parses the raw change value and determines what the change should actually be based on the direction
      * the encoder was already traveling in. Also handles changing directions away from Static, and indirectly to Static
      * if encoder has been idle long enough
-     * @param change the raw change value, should be newPos - currentRelPos
-     * @return the actual change value
+     * @param newRelPos the new position value that was just read
+     * @return the amount the position should change
      */
-    int8_t parseChange(int8_t change);
+    int8_t calculateChange(int8_t newRelPos);
 
     /**
      * sets position to newPosition, capping it if the new value exceeds the range.

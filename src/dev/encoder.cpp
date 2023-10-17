@@ -7,12 +7,7 @@ Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, int64_t range, int64_t initialPositio
     if (range < 0) {
         range *= -1;
     }
-    //making sure position is in the range
-    if (position > range) {
-        position = range;
-    } else if (position < -1*range) {
-        position = -1*range;
-    }
+    setPosition(position);
     //setting other instance variables
     currentDirection = Static;
     noChangeCounter = 0;
@@ -28,13 +23,13 @@ int8_t Encoder::update() {
     //Reads current pin values
     int8_t newPos = readPinValues();
     //find the change in values;
-    int8_t change = newPos - currentRelPos;
-    change = parseChange(change);
+    int8_t change = calculateChange(newPos);
     setPosition(position + change);
     return change;
 }
 
-int8_t Encoder::parseChange(int8_t change) {
+int8_t Encoder::calculateChange(int8_t newRelPos) {
+    int8_t change = newRelPos - currentRelPos;
     if (currentDirection == Static) {
         switch(change) {
         case -1:
