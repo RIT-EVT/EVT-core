@@ -24,12 +24,16 @@ int8_t Encoder::update() {
     int8_t newPos = readPinValues();
     //find the change in values;
     int8_t change = calculateChange(newPos);
+    //sets the position to its new value
     setPosition(position + change);
     return change;
 }
 
 int8_t Encoder::calculateChange(int8_t newRelPos) {
+    //Gets the change between the positions and then sets currentRelPos to the newRelPos
     int8_t change = newRelPos - currentRelPos;
+    currentRelPos = newRelPos;
+
     if (currentDirection == Static) {
         switch(change) {
         case -1:
