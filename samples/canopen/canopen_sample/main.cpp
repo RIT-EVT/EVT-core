@@ -65,7 +65,7 @@ int main() {
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
     timer.stopTimer();
 
-    TestCanNode testCanNode;
+    RPDOCanNode testCanNode;
 
     // Reserved memory for CANopen stack usage
     uint8_t sdoBuffer[1][CO_SDO_BUF_BYTE];

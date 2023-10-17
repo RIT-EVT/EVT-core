@@ -10,9 +10,9 @@
 
 #include <co_core.h>
 
-class TestCanNode {
+class RPDOCanNode {
 public:
-    TestCanNode();
+    RPDOCanNode();
 
     /**
      * Expose a way to programmatically update the sampleData.

@@ -18,7 +18,7 @@
 #include <co_if.h>
 #include <co_tmr.h>
 
-#include "TestCanNode.hpp"
+#include "RPDOCanNode.hpp"
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
@@ -77,7 +77,7 @@ int main() {
     timer.stopTimer();
 
     //create the RPDO node
-    TestCanNode testCanNode;
+    RPDOCanNode testCanNode;
 
     // Reserved memory for CANopen stack usage
     uint8_t sdoBuffer[1][CO_SDO_BUF_BYTE];
