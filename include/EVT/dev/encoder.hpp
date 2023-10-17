@@ -6,13 +6,14 @@
 namespace EVT::core::DEV {
 class Encoder {
 public:
-    Encoder(IO::GPIO& a, IO::GPIO& b);
+    Encoder(IO::GPIO& a, IO::GPIO& b, int64_t range, int64_t initialPosition);
 
-    void update();
+    int64_t update();
 
     enum Direction {
-        Left = 0u,
-        Right = 1u
+        Left = -1,
+        Static = 0,
+        Right = 1
     };
 
 
@@ -20,9 +21,12 @@ public:
 private:
     IO::GPIO& a;
     IO::GPIO& b;
-    uint8_t relPos;
-    Direction direction;
+    int64_t range;
+    int64_t position;
+    Direction currentDirection;
+    int noChangeCounter;
 
+    static int8_t convertPinValuesToPosition(bool a, bool b);
 }; // namespace EVT::core::DEV
 } // namespace EVT::core::DEV
 
