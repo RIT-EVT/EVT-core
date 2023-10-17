@@ -32,7 +32,7 @@ int main() {
         led.toggle();
 //        led.setState(EVT::core::IO::GPIO::State::HIGH);
         uart.printf("khvgvkgfcthfvkjlugkjyjg");
-        time::wait(10);
+        time::wait(100);
     }
     return 0;
 }

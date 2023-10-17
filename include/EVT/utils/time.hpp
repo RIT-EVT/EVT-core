@@ -13,7 +13,7 @@
     #include <HALf4/stm32f4xx_hal.h>
 #endif
 #ifdef STM32F3xx
-    #include <HALf3/stm32F3xx_hal.h>
+    #include <HALf3/stm32f3xx_hal.h>
 #endif
 
 namespace EVT::core::time {

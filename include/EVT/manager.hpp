@@ -65,31 +65,31 @@ namespace EVT::core::DEV {
  * @param ms Time in milliseconds before the IWDG triggers a reset
  * must be a value between 8 and 32768 ms.
  */
-IWDG& getIWDG(uint32_t ms) {
-#ifdef STM32F3xx
-    // 8 < ms < 32768
-    static IWDGf3xx iwdg(ms);
-    return iwdg;
-#endif
-}
+//IWDG& getIWDG(uint32_t ms) {
+//#ifdef STM32F3xx
+//    // 8 < ms < 32768
+//    static IWDGf3xx iwdg(ms);
+//    return iwdg;
+//#endif
+//}
 
 /**
  * Get an instance of an RTC
  */
-RTC& getRTC() {
-#ifdef STM32F3xx
-    static RTCf3xx rtc;
-    return rtc;
-#endif
-}
+//RTC& getRTC() {
+//#ifdef STM32F3xx
+//    static RTCf3xx rtc;
+//    return rtc;
+//#endif
+//}
 
-template<MCUTimer mcuTimer>
-Timer& getTimer(uint32_t clockPeriod) {
-#ifdef STM32F3xx
-    static Timerf3xx timer(getTIM(mcuTimer), clockPeriod);
-    return timer;
-#endif
-}
+//template<MCUTimer mcuTimer>
+//Timer& getTimer(uint32_t clockPeriod) {
+//#ifdef STM32F3xx
+//    static Timerf3xx timer(getTIM(mcuTimer), clockPeriod);
+//    return timer;
+//#endif
+//}
 
 }// namespace EVT::core::DEV
 

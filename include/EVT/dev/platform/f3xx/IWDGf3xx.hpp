@@ -1,5 +1,5 @@
-#ifndef _EVT_IWDGf3xx_
 #define _EVT_IWDGf3xx_
+#ifndef _EVT_IWDGf3xx_
 
 #include <HALf3/stm32f3xx.h>
 

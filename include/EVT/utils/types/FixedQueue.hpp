@@ -13,8 +13,8 @@
  *
  * @author Collin Bolles
  */
-#define _EVT_FIXED_QUEUE_
 #ifndef _EVT_FIXED_QUEUE_
+#define _EVT_FIXED_QUEUE_
 
     #include <stdint.h>
 

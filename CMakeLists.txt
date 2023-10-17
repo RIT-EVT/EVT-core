@@ -24,42 +24,99 @@ project(EVT
     LANGUAGES CXX C
 )
 
-add_library(${PROJECT_NAME} STATIC src/utils/platform/f4xx/time.cpp)
+add_library(${PROJECT_NAME} STATIC )
 
 # Add sources
-target_sources(${PROJECT_NAME} PRIVATE
-    src/platform/f4xx/stm32f446xx.cpp
+    if(TARGET_DEV STREQUAL "STM32F302x8")
+        target_sources(${PROJECT_NAME} PRIVATE
+        src/io/ADC.cpp
+        src/io/CAN.cpp
+        src/io/CANopen.cpp
+        src/io/GPIO.cpp
+        src/io/I2C.cpp
+        src/io/PWM.cpp
+        src/io/UART.cpp
+        src/io/SPI.cpp
+        src/io/types/CANMessage.cpp
+        src/dev/button.cpp
+        src/dev/LED.cpp
+        src/dev/LCD.cpp
+        src/dev/RTCTimer.cpp
+        src/dev/storage/M24C32.cpp
+        src/dev/Thermistor.cpp
 
-    src/io/ADC.cpp
-    src/io/CAN.cpp
-    src/io/CANopen.cpp
-    src/io/GPIO.cpp
-    src/io/I2C.cpp
-    src/io/PWM.cpp
-    src/io/UART.cpp
-    src/io/SPI.cpp
-    src/io/platform/f4xx/ADCf4xx.cpp
-    src/io/platform/f4xx/CANf4xx.cpp
-    src/io/platform/f4xx/GPIOf4xx.cpp
-    src/io/platform/f4xx/I2Cf4xx.cpp
-    src/io/platform/f4xx/PWMf4xx.cpp
-    src/io/platform/f4xx/UARTf4xx.cpp
-    src/io/platform/f4xx/SPIf4xx.cpp
-    src/io/types/CANMessage.cpp
+        src/utils/log.cpp
+        src/utils/platform/f3xx/time.cpp
+        src/platform/f3xx/stm32f302x8.cpp
+        src/io/platform/f3xx/ADCf3xx.cpp
+        src/io/platform/f3xx/CANf3xx.cpp
+        src/io/platform/f3xx/GPIOf3xx.cpp
+        src/io/platform/f3xx/I2Cf3xx.cpp
+        src/io/platform/f3xx/PWMf3xx.cpp
+        src/io/platform/f3xx/UARTf3xx.cpp
+        src/io/platform/f3xx/SPIf3xx.cpp)
+    elseif(TARGET_DEV STREQUAL "STM32F334x8")
+        target_sources(${PROJECT_NAME} PRIVATE
+        src/io/ADC.cpp
+        src/io/CAN.cpp
+        src/io/CANopen.cpp
+        src/io/GPIO.cpp
+        src/io/I2C.cpp
+        src/io/PWM.cpp
+        src/io/UART.cpp
+        src/io/SPI.cpp
+        src/io/types/CANMessage.cpp
+        src/dev/button.cpp
+        src/dev/LED.cpp
+        src/dev/LCD.cpp
+        src/dev/RTCTimer.cpp
+        src/dev/storage/M24C32.cpp
+        src/dev/Thermistor.cpp
 
-    src/dev/button.cpp
-    src/dev/LED.cpp
-    src/dev/LCD.cpp
-    src/dev/RTCTimer.cpp
-    src/dev/platform/f3xx/RTCf3xx.cpp
-    src/dev/platform/f3xx/IWDGf3xx.cpp
-    src/dev/platform/f3xx/Timerf3xx.cpp
-    src/dev/storage/M24C32.cpp
-    src/dev/Thermistor.cpp
+        src/utils/log.cpp
+        src/utils/platform/f3xx/time.cpp
+        src/platform/f3xx/stm32f302x8.cpp
+        src/io/platform/f3xx/ADCf3xx.cpp
+        src/io/platform/f3xx/CANf3xx.cpp
+        src/io/platform/f3xx/GPIOf3xx.cpp
+        src/io/platform/f3xx/I2Cf3xx.cpp
+        src/io/platform/f3xx/PWMf3xx.cpp
+        src/io/platform/f3xx/UARTf3xx.cpp
+        src/io/platform/f3xx/SPIf3xx.cpp
+                )
+    elseif(TARGET_DEV STREQUAL "STM32F446xx")
+        target_sources(${PROJECT_NAME} PRIVATE
+        src/io/ADC.cpp
+        src/io/CAN.cpp
+        src/io/CANopen.cpp
+        src/io/GPIO.cpp
+        src/io/I2C.cpp
+        src/io/PWM.cpp
+        src/io/UART.cpp
+        src/io/SPI.cpp
+        src/io/types/CANMessage.cpp
+        src/dev/button.cpp
+        src/dev/LED.cpp
+        src/dev/LCD.cpp
+        src/dev/RTCTimer.cpp
+        src/dev/storage/M24C32.cpp
+        src/dev/Thermistor.cpp
 
-#    src/utils/log.cpp
-    src/utils/platform/f4xx/time.cpp
-)
+#        src/utils/log.cpp
+        src/utils/platform/f4xx/time.cpp
+        src/platform/f4xx/stm32f446xx.cpp
+        src/io/platform/f4xx/ADCf4xx.cpp
+        src/io/platform/f4xx/CANf4xx.cpp
+        src/io/platform/f4xx/GPIOf4xx.cpp
+        src/io/platform/f4xx/I2Cf4xx.cpp
+        src/io/platform/f4xx/PWMf4xx.cpp
+        src/io/platform/f4xx/UARTf4xx.cpp
+        src/io/platform/f4xx/SPIf4xx.cpp)
+    else()
+        message(FATAL_ERROR "the HAL didnt compile in top level CMake")
+    endif()
+    message(STATUS "${TARGET_DEV} targeted")
+
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 ###############################################################################
@@ -69,10 +126,8 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 # of another project
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     set(EVT_IS_MAIN_PROJECT TRUE)
-    message(jhgvjhtcfjhf)
 else()
     set(EVT_IS_MAIN_PROJECT FALSE)
-    message(ISTHISWHEREITGOES)
 endif()
 
 # Determine if the sample code should be built. Defaults to false if this
@@ -88,14 +143,30 @@ cmake_dependent_option(EVT_BUILD_SAMPLES
 
 add_compile_definitions(USE_HAL_DRIVER)
 
+if(TARGET_DEV STREQUAL "STM32F302x8")
+    add_subdirectory(libs/HALf3/)
+    target_link_libraries(${PROJECT_NAME}
+            PUBLIC HALf3
+            )
+elseif(TARGET_DEV STREQUAL "STM32F334x8")
+    add_subdirectory(libs/HALf3/)
+    # Later this will be handled dynamically, either the HALf3 or the HALf4 will
+    # be linked to
+    target_link_libraries(${PROJECT_NAME}
+            PUBLIC HALf3
+            )
+elseif(TARGET_DEV STREQUAL "STM32F446xx")
+    add_subdirectory(libs/HALf4/)
+    # Later this will be handled dynamically, either the HALf3 or the HALf4 will
+    # be linked to
+    target_link_libraries(${PROJECT_NAME}
+            PUBLIC HALf4
+            )
+else()
+    message(FATAL_ERROR "the HAL didnt compile in top level CMake")
+endif()
+message(STATUS "${TARGET_DEV} targeted")
 
-add_subdirectory(libs/HALf4/)
-
-# Later this will be handled dynamically, either the HALf3 or the HALf4 will
-# be linked to
-target_link_libraries(${PROJECT_NAME}
-    PUBLIC HALf4
-)
 
 ###############################################################################
 # Install and expose library
@@ -106,7 +177,6 @@ install_and_expose(${PROJECT_NAME})
 # Handle adding samples
 ###############################################################################
 if(EVT_BUILD_SAMPLES)
-    message(evtbuildingsamples)
     # Add the sample code sub directory
     add_subdirectory(samples)
 endif()
