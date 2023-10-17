@@ -77,7 +77,8 @@ private:
 
     /**
      * parses the raw change value and determines what the change should actually be based on the direction
-     * the encoder was already traveling in
+     * the encoder was already traveling in. Also handles changing directions away from Static, and indirectly to Static
+     * if encoder has been idle long enough
      * @param change the raw change value, should be newPos - currentRelPos
      * @return the actual change value
      */

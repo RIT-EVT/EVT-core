@@ -14,7 +14,7 @@ Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, int64_t range, int64_t initialPositio
         position = -1*range;
     }
     //setting other instance variables
-    currentDirection = Direction::Static;
+    currentDirection = Static;
     noChangeCounter = 0;
     currentRelPos = readPinValues();
 }
@@ -22,7 +22,6 @@ Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, int64_t range, int64_t initialPositio
 int64_t Encoder::getPosition() {
     return position;
 }
-
 
 
 int8_t Encoder::update() {
