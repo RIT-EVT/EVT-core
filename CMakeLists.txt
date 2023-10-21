@@ -24,6 +24,8 @@ project(EVT
     LANGUAGES CXX C
 )
 
+add_library(${PROJECT_NAME} STATIC)
+
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE
     src/platform/f3xx/stm32f302x8.cpp

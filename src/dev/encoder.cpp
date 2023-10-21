@@ -18,7 +18,6 @@ int64_t Encoder::getPosition() {
     return position;
 }
 
-
 int8_t Encoder::update() {
     //Reads current pin values
     int8_t newPos = readPinValues();

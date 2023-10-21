@@ -11,7 +11,7 @@ constexpr IO::Pin A_PIN = IO::Pin::PA_8;
 constexpr IO::Pin B_PIN = IO::Pin::PA_9;
 
 /**
-* encoder Button: PB_4
+ * encoder Button: PB_4
  * encoder A: PA_8
  * encoder B: PA_9
  *
@@ -33,6 +33,7 @@ int main() {
         //ENCODER MUST BE UPDATED EACH LOOP
         //That is how the rotation is read
         int8_t change = encoder.update();
+        //Now that the encoder is updated we can read the position of it, which for this example will be between [-124, 124]
         int64_t position = encoder.getPosition();
         uint8_t noChangeCounter = encoder.getNoChangeCounter();
         uart.printf("Encoder Update:\n\r");
