@@ -44,6 +44,8 @@ public:
      */
     uint8_t getNoChangeCounter();
 
+    int8_t getRelativePosition();
+
 
 private:
     ///GPIO pin a
@@ -62,7 +64,7 @@ private:
     ///the current relative position of the encoder, in the range: [0,3]
     int8_t currentRelPos;
     ///how many updates with no change in the encoder value can occur before the direction resets
-    const static int8_t noChangeCap = 5;
+    const static int8_t noChangeCap = 2;
 
     /**
      * helper method to convert binary pin values to the relative rotation of the encoder, in the range [0,3]

@@ -33,6 +33,8 @@ int8_t Encoder::calculateChange(int8_t newRelPos) {
     int8_t change = newRelPos - currentRelPos;
     currentRelPos = newRelPos;
 
+    //Basically, if the switch is static, only accepts inputs that are
+    // exactly 1 to the left or right
     if (currentDirection == Static) {
         switch(change) {
         case -1:
@@ -54,12 +56,22 @@ int8_t Encoder::calculateChange(int8_t newRelPos) {
         }
         return change;
     }
+    //Checking if the change is 0, which could either mean the encoder actually moved 0
+    //or the direction is STATIC and the change is 2 or -2, in which case we can't determine which direction
+    //the encoder was turning in. (that case is handled by the default case in the STATIC switch statement)
     if (change == 0) {
         incrementNoChangeCounter();
         return change;
     } else {
         noChangeCounter = 0;
     }
+    //If the change is 3 or -3, that's basically it switching from 3 to 0
+    // or 0 to 3, which is really a change of 1 or -1.
+    if (change == 3 || change == -3) {
+        change /= 3;
+    }
+    //The only different for non-STATIC directions is that they assume a change of 2
+    // is in the direction the encoder is already moving in, so the logic is greatly simplified
     if (currentDirection == Left) {
         if (change < 0) {
             return change;
@@ -87,11 +99,11 @@ void Encoder::setDirection(Direction newDirection) {
 
 bool Encoder::incrementNoChangeCounter() {
         noChangeCounter++;
-        if (noChangeCounter >= noChangeCap) {
+        bool atCap = noChangeCounter >= noChangeCap;
+        if (atCap) {
             setDirection(Static);
-            return true;
         }
-        return false;
+        return atCap;
 }
 
 int8_t Encoder::readPinValues() {
@@ -109,18 +121,24 @@ int8_t Encoder::convertPinValuesToPosition(bool a, bool b) {
 }
 
 bool Encoder::setPosition(int64_t newPosition) {
+    bool capped = false;
     if (newPosition > range) {
             newPosition = range;
-            return true;
-    } else if (newPosition < range) {
+            capped = true;
+    } else if (newPosition < -1*range) {
             newPosition = -1 * range;
-            return true;
+            capped = true;
     }
-    return false;
+    position = newPosition;
+    return capped;
 }
 
 uint8_t Encoder::getNoChangeCounter() {
     return noChangeCounter;
+}
+
+int8_t Encoder::getRelativePosition() {
+    return currentRelPos;
 }
 
 } // namespace EVT::core::DEV
