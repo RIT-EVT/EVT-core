@@ -2,7 +2,7 @@
 
 namespace EVT::core::DEV {
 
-Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, int64_t range, int64_t initialPosition): a(a), b(b), range(range), position(initialPosition){
+Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, int64_t range, int64_t initialPosition) : a(a), b(b), range(range), position(initialPosition) {
     //making sure range is positive
     if (range < 0) {
         range *= -1;
@@ -36,7 +36,7 @@ int8_t Encoder::calculateChange(int8_t newRelPos) {
     //Basically, if the switch is static, only accepts inputs that are
     // exactly 1 to the left or right
     if (currentDirection == Static) {
-        switch(change) {
+        switch (change) {
         case -1:
             setDirection(Left);
             break;
@@ -91,43 +91,51 @@ int8_t Encoder::calculateChange(int8_t newRelPos) {
 }
 
 void Encoder::setDirection(Direction newDirection) {
-        if (newDirection == Static) {
-            noChangeCounter = 0;
-        }
-        currentDirection = newDirection;
+    if (newDirection == Static) {
+        noChangeCounter = 0;
+    }
+    currentDirection = newDirection;
 }
 
 bool Encoder::incrementNoChangeCounter() {
-        noChangeCounter++;
-        bool atCap = noChangeCounter >= noChangeCap;
-        if (atCap) {
-            setDirection(Static);
-        }
-        return atCap;
+    noChangeCounter++;
+    bool atCap = noChangeCounter >= noChangeCap;
+    if (atCap) {
+        setDirection(Static);
+    }
+    return atCap;
 }
 
 int8_t Encoder::readPinValues() {
-    bool aPos = (bool)a.readPin();
-    bool bPos = (bool)b.readPin();
-    int8_t newPos = convertPinValuesToPosition(aPos,bPos);
+    bool aPos = (bool) a.readPin();
+    bool bPos = (bool) b.readPin();
+    int8_t newPos = convertPinValuesToPosition(aPos, bPos);
     return newPos;
 }
 
 int8_t Encoder::convertPinValuesToPosition(bool a, bool b) {
-    if (a == 0 && b == 0) {return 0;}
-    if (a == 1 && b == 0) {return 1;}
-    if (a == 1 && b == 1) {return 2;}
-    if (a == 0 && b == 1) {return 3;}
+    if (a == 0 && b == 0) {
+        return 0;
+    }
+    if (a == 1 && b == 0) {
+        return 1;
+    }
+    if (a == 1 && b == 1) {
+        return 2;
+    }
+    if (a == 0 && b == 1) {
+        return 3;
+    }
 }
 
 bool Encoder::setPosition(int64_t newPosition) {
     bool capped = false;
     if (newPosition > range) {
-            newPosition = range;
-            capped = true;
-    } else if (newPosition < -1*range) {
-            newPosition = -1 * range;
-            capped = true;
+        newPosition = range;
+        capped = true;
+    } else if (newPosition < -1 * range) {
+        newPosition = -1 * range;
+        capped = true;
     }
     position = newPosition;
     return capped;
@@ -141,4 +149,4 @@ int8_t Encoder::getRelativePosition() {
     return currentRelPos;
 }
 
-} // namespace EVT::core::DEV
+}// namespace EVT::core::DEV

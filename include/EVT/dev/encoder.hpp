@@ -6,7 +6,6 @@
 namespace EVT::core::DEV {
 class Encoder {
 public:
-
     /**
      * Constructs an Encoder instance. Call update() within the main loop to update encoder values.
      * @param a a pin of the encoder
@@ -46,7 +45,6 @@ public:
 
     int8_t getRelativePosition();
 
-
 private:
     ///GPIO pin a
     IO::GPIO& a;
@@ -59,7 +57,7 @@ private:
     int64_t position;
     ///the current direction of travel of the encoder
     Direction currentDirection;
-    ; ///counter for how many updates have occured since the encoder was moved
+    ;///counter for how many updates have occured since the encoder was moved
     uint8_t noChangeCounter;
     ///the current relative position of the encoder, in the range: [0,3]
     int8_t currentRelPos;
@@ -108,7 +106,7 @@ private:
      */
     bool setPosition(int64_t newPosition);
 
-}; // namespace EVT::core::DEV
-} // namespace EVT::core::DEV
+};// namespace EVT::core::DEV
+}// namespace EVT::core::DEV
 
 #endif

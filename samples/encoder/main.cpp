@@ -6,7 +6,6 @@
 #include <EVT/utils/time.hpp>
 #include <cstdio>
 
-
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
 namespace time = EVT::core::time;
@@ -46,7 +45,7 @@ int main() {
 
     DEV::Encoder encoder(pinA, pinB, 124, 0);
 
-    while(1) {
+    while (1) {
         //ENCODER MUST BE UPDATED EACH LOOP
         //That is how the rotation is read
         int8_t change = encoder.update();
