@@ -120,4 +120,8 @@ bool Encoder::setPosition(int64_t newPosition) {
     return false;
 }
 
+uint8_t Encoder::getNoChangeCounter() {
+    return noChangeCounter;
+}
+
 } // namespace EVT::core::DEV

@@ -6,6 +6,7 @@
 namespace EVT::core::DEV {
 class Encoder {
 public:
+
     /**
      * Constructs an Encoder instance. Call update() within the main loop to update encoder values.
      * @param a a pin of the encoder
@@ -14,6 +15,16 @@ public:
      * @param initialPosition initial position the encoder is in
      */
     Encoder(IO::GPIO& a, IO::GPIO& b, int64_t range, int64_t initialPosition);
+
+    /**
+     * An Enum that represents the direction the encoder is being spun in.
+     * The direction should reset to Static after a couple of reads with no changes.
+     */
+    enum Direction {
+        Left = -1,
+        Static = 0,
+        Right = 1
+    };
 
     /**
      * Reads and updates the encoder rotation and the absolute position.
@@ -28,15 +39,10 @@ public:
     int64_t getPosition();
 
     /**
-     * An Enum that represents the direction the encoder is being spun in.
-     * The direction should reset to Static after a couple of reads with no changes.
+     * returns the noChangeCounter value;
+     * @return the noChangeCounter value
      */
-    enum Direction {
-        Left = -1,
-        Static = 0,
-        Right = 1
-    };
-
+    uint8_t getNoChangeCounter();
 
 
 private:
@@ -56,7 +62,7 @@ private:
     ///the current relative position of the encoder, in the range: [0,3]
     int8_t currentRelPos;
     ///how many updates with no change in the encoder value can occur before the direction resets
-    const static int8_t noChangeCap = 2;
+    const static int8_t noChangeCap = 5;
 
     /**
      * helper method to convert binary pin values to the relative rotation of the encoder, in the range [0,3]
