@@ -7,6 +7,9 @@
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
 
+constexpr IO::Pin A_PIN = IO::Pin::PA_8;
+constexpr IO::Pin B_PIN = IO::Pin::PA_9;
+
 /**
 * encoder Button: PB_4
  * encoder A: PA_8
@@ -21,8 +24,8 @@ int main() {
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
     uart.printf("Starting Encoder Test\n\r");
 
-    IO::GPIO& pinA = IO::getGPIO<IO::Pin::PA_8>(IO::GPIO::Direction::INPUT);
-    IO::GPIO& pinB = IO::getGPIO<IO::Pin::PA_9>(IO::GPIO::Direction::INPUT);
+    IO::GPIO& pinA = IO::getGPIO<A_PIN>(IO::GPIO::Direction::INPUT);
+    IO::GPIO& pinB = IO::getGPIO<B_PIN>(IO::GPIO::Direction::INPUT);
 
     DEV::Encoder encoder(pinA, pinB, 124, 0);
 
