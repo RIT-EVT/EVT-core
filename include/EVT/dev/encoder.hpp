@@ -18,12 +18,12 @@ public:
 
     /**
      * An Enum that represents the direction the encoder is being spun in.
-     * The direction should reset to Static after a couple of reads with no changes.
+     * The direction should reset to STATIC after a couple of reads with no changes.
      */
     enum Direction {
-        Left = -1,
-        Static = 0,
-        Right = 1
+        LEFT = -1,
+        STATIC = 0,
+        RIGHT = 1
     };
 
     /**
@@ -81,20 +81,20 @@ private:
     int8_t readPinValues();
 
     /**
-     * sets direction, setting noChangeCounter to 0 if the direction is set to Static
+     * sets direction, setting noChangeCounter to 0 if the direction is set to STATIC
      * @param newDirection value direction will be set to
      */
     void setDirection(Direction newDirection);
 
     /**
-     * increments the noChangeCounter, setting the direction to Static if noChangeCounter is > noChangeCap
-     * @return whether or not the direction was set to Static
+     * increments the noChangeCounter, setting the direction to STATIC if noChangeCounter is > noChangeCap
+     * @return whether or not the direction was set to STATIC
      */
     bool incrementNoChangeCounter();
 
     /**
      * parses the raw change value and determines what the change should actually be based on the direction
-     * the encoder was already traveling in. Also handles changing directions away from Static, and indirectly to Static
+     * the encoder was already traveling in. Also handles changing directions away from STATIC, and indirectly to STATIC
      * if encoder has been idle long enough
      * @param newRelPos the new position value that was just read
      * @return the amount the position should change
