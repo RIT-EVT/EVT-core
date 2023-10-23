@@ -4,7 +4,6 @@
 #include <EVT/io/pin.hpp>
 #include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
-#include <cstdio>
 
 
 namespace IO = EVT::core::IO;
@@ -13,16 +12,6 @@ namespace time = EVT::core::time;
 
 constexpr IO::Pin A_PIN = IO::Pin::PA_8;
 constexpr IO::Pin B_PIN = IO::Pin::PA_9;
-
-//LCD stuff
-constexpr IO::Pin LCD_REGISTER_SELECT_PIN = IO::Pin::PB_0;
-constexpr IO::Pin LCD_RESET_PINT = IO::Pin::PA_1;
-constexpr IO::Pin LCD_SPI_DEVICE_0_PIN = IO::Pin::PA_0;
-
-constexpr IO::Pin LCD_SPI_SCK = IO::Pin::PA_5;
-constexpr IO::Pin LCD_SPI_MOSI = IO::Pin::PA_7;
-
-constexpr uint32_t SPI_SPEED = SPI_SPEED_500KHZ;
 
 /**
  * encoder Button: PB_4
