@@ -9,7 +9,7 @@ Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, int64_t range, int64_t initialPositio
     }
     setPosition(position);
     //setting other instance variables
-    currentDirection = STATIC;
+    currentDirection = IDLE;
     noChangeCounter = 0;
     currentRelPos = readPinValues();
 }
@@ -35,7 +35,7 @@ int8_t Encoder::calculateChange(int8_t newRelPos) {
 
     // Basically, if the switch is static, only accepts inputs that are
     // exactly 1 to the left or right
-    if (currentDirection == STATIC) {
+    if (currentDirection == IDLE) {
         switch(change) {
         case -1:
             setDirection(LEFT);
@@ -57,8 +57,8 @@ int8_t Encoder::calculateChange(int8_t newRelPos) {
         return change;
     }
     //Checking if the change is 0, which could either mean the encoder actually moved 0
-    //or the direction is STATIC and the change is 2 or -2, in which case we can't determine which direction
-    //the encoder was turning in. (that case is handled by the default case in the STATIC switch statement)
+    //or the direction is IDLE and the change is 2 or -2, in which case we can't determine which direction
+    //the encoder was turning in. (that case is handled by the default case in the IDLE switch statement)
     if (change == 0) {
         incrementNoChangeCounter();
         return change;
@@ -70,7 +70,7 @@ int8_t Encoder::calculateChange(int8_t newRelPos) {
     if (change == 3 || change == -3) {
         change /= 3;
     }
-    //The only different for non-STATIC directions is that they assume a change of 2
+    //The only different for non-IDLE directions is that they assume a change of 2
     // is in the direction the encoder is already moving in, so the logic is greatly simplified
     if (currentDirection == LEFT) {
         if (change < 0) {
@@ -91,7 +91,7 @@ int8_t Encoder::calculateChange(int8_t newRelPos) {
 }
 
 void Encoder::setDirection(Direction newDirection) {
-        if (newDirection == STATIC) {
+        if (newDirection == IDLE) {
             noChangeCounter = 0;
         }
         currentDirection = newDirection;
@@ -101,7 +101,7 @@ bool Encoder::incrementNoChangeCounter() {
         noChangeCounter++;
         bool atCap = noChangeCounter >= noChangeCap;
         if (atCap) {
-            setDirection(STATIC);
+            setDirection(IDLE);
         }
         return atCap;
 }
