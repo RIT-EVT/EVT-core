@@ -18,7 +18,7 @@ public:
      *
      * @param[in] a a pin of the encoder
      * @param[in] b b pin of the encoder
-     * @param range range of the encoder positions (should be positive)
+     * @param range range of the encoder positions
      * @param initialPosition initial position the encoder is in
      */
     Encoder(IO::GPIO& a, IO::GPIO& b, int64_t range, int64_t initialPosition);
