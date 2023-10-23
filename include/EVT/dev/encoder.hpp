@@ -59,7 +59,7 @@ private:
     int64_t position;
     ///the current direction of travel of the encoder
     Direction currentDirection;
-    ; ///counter for how many updates have occured since the encoder was moved
+    ///counter for how many updates have occured since the encoder was moved
     uint8_t noChangeCounter;
     ///the current relative position of the encoder, in the range: [0,3]
     int8_t currentRelPos;
