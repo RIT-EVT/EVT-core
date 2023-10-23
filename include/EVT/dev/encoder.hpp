@@ -54,8 +54,6 @@ public:
      */
     uint8_t getNoChangeCounter();
 
-    int8_t getRelativePosition();
-
 
 private:
     ///GPIO pin a

@@ -137,8 +137,4 @@ uint8_t Encoder::getNoChangeCounter() {
     return noChangeCounter;
 }
 
-int8_t Encoder::getRelativePosition() {
-    return currentRelPos;
-}
-
 } // namespace EVT::core::DEV
