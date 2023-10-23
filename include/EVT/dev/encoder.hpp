@@ -8,7 +8,8 @@ class Encoder {
 public:
 
     /**
-     * Constructs an Encoder instance. Call update() within the main loop to update encoder values.
+     * Constructs an Encoder instance.
+     *
      * @param[in] a a pin of the encoder
      * @param[in] b b pin of the encoder
      * @param range range of the encoder positions (should be positive)
@@ -28,18 +29,21 @@ public:
 
     /**
      * Reads and updates the encoder rotation and the absolute position.
+     *
      * @return what position was changed by, should be in this range: [-3,3]
      */
     int8_t update();
 
     /**
      * returns the current absolute position
+     *
      * @return the current position of the encoder, between -range and range, inclusive
      */
     int64_t getPosition();
 
     /**
      * returns the noChangeCounter value;
+     *
      * @return the noChangeCounter value
      */
     uint8_t getNoChangeCounter();
@@ -68,6 +72,7 @@ private:
 
     /**
      * helper method to convert binary pin values to the relative rotation of the encoder, in the range [0,3]
+     *
      * @param a value of the a pin
      * @param b value of the b pin
      * @return relative position of the encoder
@@ -76,18 +81,21 @@ private:
 
     /**
      * reads pin values and converts them to the relative position
+     *
      * @return relative position of the encoder
      */
     int8_t readPinValues();
 
     /**
      * sets direction, setting noChangeCounter to 0 if the direction is set to STATIC
+     *
      * @param newDirection value direction will be set to
      */
     void setDirection(Direction newDirection);
 
     /**
      * increments the noChangeCounter, setting the direction to STATIC if noChangeCounter is > noChangeCap
+     *
      * @return whether or not the direction was set to STATIC
      */
     bool incrementNoChangeCounter();
@@ -96,6 +104,7 @@ private:
      * parses the raw change value and determines what the change should actually be based on the direction
      * the encoder was already traveling in. Also handles changing directions away from STATIC, and indirectly to STATIC
      * if encoder has been idle long enough
+     *
      * @param newRelPos the new position value that was just read
      * @return the amount the position should change
      */
@@ -103,6 +112,7 @@ private:
 
     /**
      * sets position to newPosition, capping it if the new value exceeds the range.
+     *
      * @param newPosition the new value for position
      * @return if position was capped
      */
