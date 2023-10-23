@@ -56,22 +56,22 @@ public:
 
 
 private:
-    ///GPIO pin a
+    /** GPIO pin a */
     IO::GPIO& a;
-    ///GPIO pin b
+    /** GPIO pin b */
     IO::GPIO& b;
 
-    ///position can be between = [-range, range]
+    /** position can be between = [-range, range] */
     int64_t range;
-    ///the current absolute position of the encoder
+    /** the current absolute position of the encoder */
     int64_t position;
-    ///the current direction of travel of the encoder
+    /** the current direction of travel of the encoder */
     Direction currentDirection;
-    ///counter for how many updates have occured since the encoder was moved
+    /** counter for how many updates have occured since the encoder was moved */
     uint8_t noChangeCounter;
-    ///the current relative position of the encoder, in the range: [0,3]
+    /** the current relative position of the encoder, in the range: [0,3] */
     int8_t currentRelPos;
-    ///how many updates with no change in the encoder value can occur before the direction resets
+    /** how many updates with no change in the encoder value can occur before the direction resets */
     const static int8_t noChangeCap = 2;
 
     /**
