@@ -9,8 +9,8 @@ public:
 
     /**
      * Constructs an Encoder instance. Call update() within the main loop to update encoder values.
-     * @param a a pin of the encoder
-     * @param b b pin of the encoder
+     * @param[in] a a pin of the encoder
+     * @param[in] b b pin of the encoder
      * @param range range of the encoder positions (should be positive)
      * @param initialPosition initial position the encoder is in
      */

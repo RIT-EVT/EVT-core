@@ -33,7 +33,7 @@ int8_t Encoder::calculateChange(int8_t newRelPos) {
     int8_t change = newRelPos - currentRelPos;
     currentRelPos = newRelPos;
 
-    //Basically, if the switch is static, only accepts inputs that are
+    // Basically, if the switch is static, only accepts inputs that are
     // exactly 1 to the left or right
     if (currentDirection == STATIC) {
         switch(change) {
