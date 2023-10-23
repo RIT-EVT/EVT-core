@@ -4,6 +4,12 @@
 #include <EVT/io/GPIO.hpp>
 
 namespace EVT::core::DEV {
+
+/**
+ * This class represents a CTS Series 288 Rotary encoder with a 2-bit Binary resolution
+ * update() must be called within the main loop to update encoder values, the longer
+ * the time in between calls, the slower it will respond.
+ */
 class Encoder {
 public:
 
