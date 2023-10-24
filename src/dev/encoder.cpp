@@ -18,21 +18,21 @@ uint64_t Encoder::getPosition() {
 }
 
 int8_t Encoder::update() {
-    //Reads current pin values
+    //Read current pin values
     int8_t newPos = readPinValues();
     //find the change in values;
     int8_t change = calculateChange(newPos);
-    //sets the position to its new value
+    //set the position to its new value
     changePosition(change);
     return change;
 }
 
 int8_t Encoder::calculateChange(int8_t newRelPos) {
-    //Gets the change between the positions and then sets currentRelPos to the newRelPos
+    //Get the change between the positions and then sets currentRelPos to the newRelPos
     int8_t change = newRelPos - currentRelPos;
     currentRelPos = newRelPos;
 
-    // Basically, if the switch is static, only accepts inputs that are
+    // Basically, if the switch is static, only accept inputs that are
     // exactly 1 to the left or right
     if (currentDirection == IDLE) {
         switch(change) {
@@ -57,14 +57,14 @@ int8_t Encoder::calculateChange(int8_t newRelPos) {
     }
     //Checking if the change is 0, which could either mean the encoder actually moved 0
     //or the direction is IDLE and the change is 2 or -2, in which case we can't determine which direction
-    //the encoder was turning in. (that case is handled by the default case in the IDLE switch statement)
+    //the encoder was turning in.
     if (change == 0) {
         incrementNoChangeCounter();
         return change;
     } else {
         noChangeCounter = 0;
     }
-    //If the change is 3 or -3, that's basically it switching from 3 to 0
+    // If the change is 3 or -3, that's basically it switching from 3 to 0
     // or 0 to 3, which is really a change of 1 or -1.
     if (change == 3 || change == -3) {
         change /= 3;
