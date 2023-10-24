@@ -1,4 +1,8 @@
-#include <EVT/dev/LCD.hpp>
+/**
+ * This is an example designed to work with the charge controller,
+ * but please ask someone before flashing the charge controller!
+*/
+
 #include <EVT/dev/encoder.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
@@ -13,13 +17,6 @@ namespace time = EVT::core::time;
 constexpr IO::Pin A_PIN = IO::Pin::PA_8;
 constexpr IO::Pin B_PIN = IO::Pin::PA_9;
 
-/**
- * encoder Button: PB_4
- * encoder A: PA_8
- * encoder B: PA_9
- *
- * This is an example designed to work with the charge controller, but please ask someone before flashing the charge controller!
-*/
 constexpr uint8_t deviceCount = 1;
 IO::GPIO* devices[deviceCount];
 
