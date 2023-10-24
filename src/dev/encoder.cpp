@@ -2,19 +2,18 @@
 
 namespace EVT::core::DEV {
 
-Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, int64_t range, int64_t initialPosition): a(a), b(b), range(range), position(initialPosition){
-    //making sure range is positive
-    if (range < 0) {
-        range *= -1;
+Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, uint64_t range, uint64_t initialPosition, bool rollOver)
+    : a(a), b(b), range(range), position(initialPosition), rollOver(rollOver){
+    if (position > range) {
+        position = range;
     }
-    setPosition(position);
     //setting other instance variables
     currentDirection = IDLE;
     noChangeCounter = 0;
     currentRelPos = readPinValues();
 }
 
-int64_t Encoder::getPosition() {
+uint64_t Encoder::getPosition() {
     return position;
 }
 
@@ -24,7 +23,7 @@ int8_t Encoder::update() {
     //find the change in values;
     int8_t change = calculateChange(newPos);
     //sets the position to its new value
-    setPosition(position + change);
+    changePosition(change);
     return change;
 }
 
@@ -75,13 +74,19 @@ int8_t Encoder::calculateChange(int8_t newRelPos) {
     if (currentDirection == LEFT) {
         if (change < 0) {
             return change;
+        } else if (change == 1) {
+            setDirection(RIGHT);
+            return change; //Turned one to the right, probably
         } else {
             change *= -1;
             return change;
         }
     }
     if (currentDirection == RIGHT) {
-        if (change < 0) {
+        if (change == -1) {
+            setDirection(LEFT);
+            return change; //Turned one to the left
+        } else if (change < 0) {
             change *= -1;
             return change;
         } else {
@@ -120,17 +125,29 @@ int8_t Encoder::convertPinValuesToPosition(bool a, bool b) {
     if (a == 0 && b == 1) {return 3;}
 }
 
-bool Encoder::setPosition(int64_t newPosition) {
-    bool capped = false;
+bool Encoder::changePosition(int8_t change) {
+    //I HAVE NO IDEA IF THIS METHOD WORKS
+    bool hitCap = false;
+    int64_t newPosition = (int64_t)position;
+    newPosition += change;
     if (newPosition > range) {
-            newPosition = range;
-            capped = true;
-    } else if (newPosition < -1*range) {
-            newPosition = -1 * range;
-            capped = true;
+            //Position reached cap
+            if (rollOver) {
+                newPosition = newPosition - range;
+            } else {
+                newPosition = range;
+            }
+            hitCap = true;
+    } else if (newPosition < 0) {
+            if (rollOver) {
+                newPosition = range;
+            } else {
+                newPosition = 0;
+            }
+            hitCap = true;
     }
-    position = newPosition;
-    return capped;
+    position = (uint64_t) newPosition;
+    return hitCap;
 }
 
 uint8_t Encoder::getNoChangeCounter() {

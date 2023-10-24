@@ -33,16 +33,15 @@ int main() {
     IO::GPIO& pinA = IO::getGPIO<A_PIN>(IO::GPIO::Direction::INPUT);
     IO::GPIO& pinB = IO::getGPIO<B_PIN>(IO::GPIO::Direction::INPUT);
 
-    DEV::Encoder encoder(pinA, pinB, 124, 0);
+    DEV::Encoder encoder(pinA, pinB, 124, 0, true);
 
     while(1) {
         //ENCODER MUST BE UPDATED EACH LOOP
         //That is how the rotation is read
         int8_t change = encoder.update();
         //Now that the encoder is updated we can read the position of it, which for this example will be between [-124, 124]
-        int64_t position = encoder.getPosition();
+        uint64_t position = encoder.getPosition();
         uint8_t noChangeCounter = encoder.getNoChangeCounter();
-        uint8_t currentRelPos = encoder.getRelativePosition();
 
         //PRINT VALUES (only enable one at a time)
         //uart.printf("\r Encoder Change: %d       ", change);

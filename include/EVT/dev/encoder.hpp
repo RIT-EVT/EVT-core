@@ -21,7 +21,7 @@ public:
      * @param range range of the encoder positions
      * @param initialPosition initial position the encoder is in
      */
-    Encoder(IO::GPIO& a, IO::GPIO& b, int64_t range, int64_t initialPosition);
+    Encoder(IO::GPIO& a, IO::GPIO& b, uint64_t range, uint64_t initialPosition, bool rollOver);
 
     /**
      * An Enum that represents the direction the encoder is being spun in.
@@ -45,7 +45,7 @@ public:
      *
      * @return the current position of the encoder, between -range and range, inclusive
      */
-    int64_t getPosition();
+    uint64_t getPosition();
 
     /**
      * returns the noChangeCounter value;
@@ -61,10 +61,12 @@ private:
     /** GPIO pin b */
     IO::GPIO& b;
 
-    /** position can be between = [-range, range] */
-    int64_t range;
+    /** position can be between = [0, range] */
+    uint64_t range;
     /** the current absolute position of the encoder */
-    int64_t position;
+    uint64_t position;
+    /** if the position rolls over when it reaches range or 0 */
+    bool rollOver;
     /** the current direction of travel of the encoder */
     Direction currentDirection;
     /** counter for how many updates have occured since the encoder was moved */
@@ -72,7 +74,7 @@ private:
     /** the current relative position of the encoder, in the range: [0,3] */
     int8_t currentRelPos;
     /** how many updates with no change in the encoder value can occur before the direction resets */
-    const static int8_t noChangeCap = 2;
+    const static uint8_t noChangeCap = 2;
 
     /**
      * helper method to convert binary pin values to the relative rotation of the encoder, in the range [0,3]
@@ -115,12 +117,12 @@ private:
     int8_t calculateChange(int8_t newRelPos);
 
     /**
-     * sets position to newPosition, capping it if the new value exceeds the range.
+     * changes position by change, capping or rolling over depending on rollOver variable
      *
      * @param newPosition the new value for position
-     * @return if position was capped
+     * @return if position was capped/rolled over
      */
-    bool setPosition(int64_t newPosition);
+    bool changePosition(int8_t change);
 
 }; // namespace EVT::core::DEV
 } // namespace EVT::core::DEV
