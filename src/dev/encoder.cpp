@@ -68,6 +68,7 @@ int8_t Encoder::calculateChange(int8_t newRelPos) {
     // or 0 to 3, which is really a change of 1 or -1.
     if (change == 3 || change == -3) {
         change /= 3;
+        change *= -1;
     }
     //The only different for non-IDLE directions is that they assume a change of 2
     // is in the direction the encoder is already moving in, so the logic is greatly simplified
