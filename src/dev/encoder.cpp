@@ -76,8 +76,9 @@ int8_t Encoder::calculateChange(int8_t newRelPos) {
         if (change < 0) {
             return change;
         } else if (change == 1) {
+            //TODO test the feel of this
             setDirection(RIGHT);
-            return change; //Turned one to the right, probably
+            return change; //Most likely turned one to the right rather than 3 to the left
         } else {
             change *= -1;
             return change;
@@ -85,8 +86,9 @@ int8_t Encoder::calculateChange(int8_t newRelPos) {
     }
     if (currentDirection == RIGHT) {
         if (change == -1) {
+            //TODO test the feel of this
             setDirection(LEFT);
-            return change; //Turned one to the left
+            return change; //Most likely turned one to the left rather than 3 to the right
         } else if (change < 0) {
             change *= -1;
             return change;
@@ -127,27 +129,28 @@ int8_t Encoder::convertPinValuesToPosition(bool a, bool b) {
 }
 
 bool Encoder::changePosition(int8_t change) {
-    //I HAVE NO IDEA IF THIS METHOD WORKS
+    //TODO test this method
     bool hitCap = false;
     int64_t newPosition = (int64_t)position;
     newPosition += change;
-    if (newPosition > range) {
+    if (newPosition < 0) {
+            if (rollOver) {
+                position = (int64_t)(range)+newPosition+1;
+            } else {
+                position = 0;
+            }
+            hitCap = true;
+    } else if (newPosition > (int64_t)range) {
             //Position reached cap
             if (rollOver) {
-                newPosition = newPosition - range;
+                position = (uint64_t)newPosition -1 - range;
             } else {
-                newPosition = range;
+                position = range;
             }
             hitCap = true;
-    } else if (newPosition < 0) {
-            if (rollOver) {
-                newPosition = range;
-            } else {
-                newPosition = 0;
-            }
-            hitCap = true;
+    } else {
+            position = (uint64_t)newPosition;
     }
-    position = (uint64_t) newPosition;
     return hitCap;
 }
 

@@ -30,7 +30,7 @@ int main() {
     IO::GPIO& pinA = IO::getGPIO<A_PIN>(IO::GPIO::Direction::INPUT);
     IO::GPIO& pinB = IO::getGPIO<B_PIN>(IO::GPIO::Direction::INPUT);
 
-    DEV::Encoder encoder(pinA, pinB, 124, 0, true);
+    DEV::Encoder encoder(pinA, pinB, 120, 60, true);
 
     while(1) {
         //ENCODER MUST BE UPDATED EACH LOOP
@@ -42,7 +42,6 @@ int main() {
 
         //PRINT VALUES (only enable one at a time)
         //uart.printf("\r Encoder Change: %d       ", change);
-        //uart.printf("\rRelative Pos: %d          ", currentRelPos);
         uart.printf("\rPosition: %d         ", position);
         //uart.printf("\rNoChangeCounter: %d          ", noChangeCounter);
 
