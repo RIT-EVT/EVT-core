@@ -11,6 +11,7 @@
 #include <EVT/utils/log.hpp>
 
 namespace IO = EVT::core::IO;
+namespace log = EVT::core::log;
 namespace DEV = EVT::core::DEV;
 
 int main() {

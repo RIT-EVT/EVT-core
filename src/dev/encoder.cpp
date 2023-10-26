@@ -75,21 +75,13 @@ int8_t Encoder::calculateChange(int8_t newRelPos) {
     if (currentDirection == LEFT) {
         if (change < 0) {
             return change;
-        } else if (change == 1) {
-            //TODO test the feel of this
-            setDirection(RIGHT);
-            return change; //Most likely turned one to the right rather than 3 to the left
         } else {
             change *= -1;
             return change;
         }
     }
     if (currentDirection == RIGHT) {
-        if (change == -1) {
-            //TODO test the feel of this
-            setDirection(LEFT);
-            return change; //Most likely turned one to the left rather than 3 to the right
-        } else if (change < 0) {
+        if (change < 0) {
             change *= -1;
             return change;
         } else {
