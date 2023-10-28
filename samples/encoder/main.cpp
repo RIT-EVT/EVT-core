@@ -20,6 +20,16 @@ constexpr IO::Pin B_PIN = IO::Pin::PA_9;
 constexpr uint8_t deviceCount = 1;
 IO::GPIO* devices[deviceCount];
 
+//Necessary static wrappers for the encoder to handle the pin interrupts
+DEV::Encoder* encoderWrapper;
+void ainterruptHandlerWrapper(IO::GPIO* pin) {
+    encoderWrapper->aInterruptHandler(pin);
+}
+
+void binterruptHandlerWrapper(IO::GPIO* pin) {
+    encoderWrapper->bInterruptHandler(pin);
+}
+
 int main() {
     //Init platform
     EVT::core::platform::init();
@@ -30,22 +40,27 @@ int main() {
     IO::GPIO& pinA = IO::getGPIO<A_PIN>(IO::GPIO::Direction::INPUT);
     IO::GPIO& pinB = IO::getGPIO<B_PIN>(IO::GPIO::Direction::INPUT);
 
-    DEV::Encoder encoder(pinA, pinB, 120, 60, true);
+    DEV::Encoder encoder(pinA, pinB, 18, 0, true);
+
+    //setting the wrapper to the encoder
+    encoderWrapper = &encoder;
+
+    //Creating the interrupts
+    pinA.registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING, ainterruptHandlerWrapper);
+    pinB.registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING, binterruptHandlerWrapper);
 
     while(1) {
         //ENCODER MUST BE UPDATED EACH LOOP
-        //That is how the rotation is read
-        int8_t change = encoder.update();
-        //Now that the encoder is updated we can read the position of it, which for this example will be between [-124, 124]
+        //That is how the position is updated
+        encoder.update();
+        //Now that the encoder is updated we can read the position of it, which for this example will in the range [0, 18]
         uint64_t position = encoder.getPosition();
-        uint8_t noChangeCounter = encoder.getNoChangeCounter();
 
         //PRINT VALUES (only enable one at a time)
         //uart.printf("\r Encoder Change: %d       ", change);
         uart.printf("\rPosition: %d         ", position);
-        //uart.printf("\rNoChangeCounter: %d          ", noChangeCounter);
 
         //The wait simulates a loop that is doing other processing, because that will affect how often the output is read
-        time::wait(300);
+        time::wait(1000);
     }
 }
