@@ -9,7 +9,6 @@
 #include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
 
-
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
 namespace time = EVT::core::time;
@@ -49,7 +48,7 @@ int main() {
     pinA.registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING, ainterruptHandlerWrapper);
     pinB.registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING, binterruptHandlerWrapper);
 
-    while(1) {
+    while (1) {
         //ENCODER MUST BE UPDATED EACH LOOP
         //That is how the position is updated
         encoder.update();
