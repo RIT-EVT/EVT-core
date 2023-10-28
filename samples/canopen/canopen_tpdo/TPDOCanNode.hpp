@@ -85,31 +85,31 @@ private:
         /**
          * Mandatory Identification Keys
          */
-        {// Device Type
+        { // Device Type
          .Key = CO_KEY(0x1000, 0x00, CO_OBJ_____R_),
          .Type = CO_TUNSIGNED32,
          .Data = (CO_DATA) 0x00
         },
-        {// Error Register
+        { // Error Register
          .Key = CO_KEY(0x1001, 0x00, CO_OBJ_____R_),
          .Type = CO_TUNSIGNED8,
          .Data = (CO_DATA) 0x00
         },
-        {// Sync ID, defaults to 0x80
+        { // Sync ID, defaults to 0x80
          .Key = CO_KEY(0x1005, 0x00, CO_OBJ_DN__R_),
          .Type = CO_TUNSIGNED32,
          .Data = (CO_DATA) 0x80
         },
-        {// COB-ID EMCY
+        { // COB-ID EMCY
          .Key = CO_KEY(0x1014, 0x00, CO_OBJ__N__R_),
          .Type = CO_TEMCY_ID,
          .Data = (CO_DATA) 0x80
         },
-//        {// Heartbeat Producer
-//         .Key = CO_KEY(0x1017, 0x00, CO_OBJ_____RW),
-//         .Type = CO_THB_PROD,
-//         .Data = (CO_DATA) 2000
-//        },
+        { // Heartbeat Producer
+         .Key = CO_KEY(0x1017, 0x00, CO_OBJ_____RW),
+         .Type = CO_THB_PROD,
+         .Data = (CO_DATA) 2000
+        },
 
         /*
          * Identity Object
@@ -119,27 +119,27 @@ private:
          * 3. Revision Number
          * 4. Serial Number
          */
-        {// Identity Object
+        { // Identity Object
          .Key = CO_KEY(0x1018, 0x00, CO_OBJ_D___R_),
          .Type = CO_TUNSIGNED8,
          .Data = (CO_DATA) 0x04
         },
-        {// Vendor ID
+        { // Vendor ID
          .Key = CO_KEY(0x1018, 0x01, CO_OBJ_____R_),
          .Type = CO_TUNSIGNED8,
          .Data = (CO_DATA) 0x00
         },
-        {// Product Code
+        { // Product Code
          .Key = CO_KEY(0x1018, 0x02, CO_OBJ_____R_),
          .Type = CO_TUNSIGNED8,
          .Data = (CO_DATA) 0x00
         },
-        {// Revision Number
+        { // Revision Number
          .Key = CO_KEY(0x1018, 0x03, CO_OBJ_____R_),
          .Type = CO_TUNSIGNED8,
          .Data = (CO_DATA) 0x00
         },
-        {// Serial number
+        { // Serial number
          .Key = CO_KEY(0x1018, 0x04, CO_OBJ_____R_),
          .Type = CO_TUNSIGNED8,
          .Data = (CO_DATA) 0x00
