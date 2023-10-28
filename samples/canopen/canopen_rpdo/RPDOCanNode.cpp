@@ -26,5 +26,5 @@ CO_OBJ_T* RPDOCanNode::getObjectDictionary() {
 }
 
 uint8_t RPDOCanNode::getNumElements() {
-    return OBJECT_DICTIONARY_SIZE;
+    return OBJECT_DICTIONARY_SIZE + 1;
 }

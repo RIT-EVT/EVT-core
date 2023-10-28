@@ -135,7 +135,7 @@ static int16_t canRead(CO_IF_FRM* frm) {
 
     // No message
     if (!canQueue->pop(&message))
-        return ((int16_t) -1u);
+        return ((int16_t) 0); // This should be 0 according to CANopen's COIfCanRead
 
     frm->Identifier = message.getId();
     frm->DLC = message.getDataLength();
