@@ -179,7 +179,7 @@ private:
             // 180h+TPDO Node-ID
             .Key = CO_KEY(0x1400, 0x01, CO_OBJ_D___R_),
             .Type = CO_TPDO_ID,
-            .Data = (CO_DATA) CO_COBID_TPDO_DEFAULT(0) + 0x01,
+            .Data = (CO_DATA) CO_COBID_TPDO_DEFAULT(0) + TPDO_NODE_ID,
         },
         {
             // Transmission type
