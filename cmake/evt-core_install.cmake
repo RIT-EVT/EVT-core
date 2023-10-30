@@ -29,5 +29,4 @@ macro(install_and_expose proj_name)
     install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${proj_name}
     )
-    message(CMAKEINSTALLFILE)
 endmacro()

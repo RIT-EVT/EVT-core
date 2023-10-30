@@ -1,5 +1,5 @@
-#define _EVT_TIMER3xx_H
 #ifndef _EVT_TIMER3xx_H
+#define _EVT_TIMER3xx_H
 
 #include <cstdint>
 

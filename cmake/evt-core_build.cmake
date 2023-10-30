@@ -5,7 +5,6 @@ files for the given name. This will make a dedicated project.
 macro(make_exe proj_name sources)
     project(${proj_name} C CXX ASM)
     add_definitions(-DUSE_HAL_LIBRARY)
-    message(we are building)
     add_executable(${proj_name} ${sources})
 
     # Make the main executable have an ".elf" suffix
@@ -18,7 +17,6 @@ macro(make_exe proj_name sources)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
                                 -Wl,-Map=${proj_name}.map")
     set(HEX_FILE "${proj_name}.hex")
-    message(CMAKEBUILDFILE)
     set(BIN_FILE "${proj_name}.bin")
     add_custom_command(TARGET ${proj_name} POST_BUILD
     COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${proj_name}> ${HEX_FILE}
@@ -27,5 +25,4 @@ macro(make_exe proj_name sources)
 
     # Link the EVT-core library
     target_link_libraries(${proj_name} PUBLIC EVT)
-    message(link)
 endmacro()

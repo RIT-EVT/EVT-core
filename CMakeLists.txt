@@ -47,6 +47,7 @@ add_library(${PROJECT_NAME} STATIC )
 
         src/utils/log.cpp
         src/utils/platform/f3xx/time.cpp
+        src/dev/platform/f3xx/Timerf3xx.cpp
         src/platform/f3xx/stm32f302x8.cpp
         src/io/platform/f3xx/ADCf3xx.cpp
         src/io/platform/f3xx/CANf3xx.cpp
@@ -54,7 +55,8 @@ add_library(${PROJECT_NAME} STATIC )
         src/io/platform/f3xx/I2Cf3xx.cpp
         src/io/platform/f3xx/PWMf3xx.cpp
         src/io/platform/f3xx/UARTf3xx.cpp
-        src/io/platform/f3xx/SPIf3xx.cpp)
+        src/io/platform/f3xx/SPIf3xx.cpp
+        src/dev/platform/f3xx/IWDGf3xx.cpp)
     elseif(TARGET_DEV STREQUAL "STM32F334x8")
         target_sources(${PROJECT_NAME} PRIVATE
         src/io/ADC.cpp
@@ -74,6 +76,7 @@ add_library(${PROJECT_NAME} STATIC )
         src/dev/Thermistor.cpp
 
         src/utils/log.cpp
+        src/dev/platform/f3xx/Timerf3xx.cpp
         src/utils/platform/f3xx/time.cpp
         src/platform/f3xx/stm32f302x8.cpp
         src/io/platform/f3xx/ADCf3xx.cpp
@@ -83,7 +86,7 @@ add_library(${PROJECT_NAME} STATIC )
         src/io/platform/f3xx/PWMf3xx.cpp
         src/io/platform/f3xx/UARTf3xx.cpp
         src/io/platform/f3xx/SPIf3xx.cpp
-                )
+        src/dev/platform/f3xx/IWDGf3xx.cpp)
     elseif(TARGET_DEV STREQUAL "STM32F446xx")
         target_sources(${PROJECT_NAME} PRIVATE
         src/io/ADC.cpp
