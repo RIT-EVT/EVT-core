@@ -1,8 +1,8 @@
-#define EVT_TIMER_H
 #ifndef EVT_TIMER_H
-    #include <EVT/dev/RTC.hpp>
-    #include <EVT/dev/Timer.hpp>
-    #include <EVT/utils/time.hpp>
+#define EVT_TIMER_H
+#include <EVT/dev/RTC.hpp>
+#include <EVT/dev/Timer.hpp>
+#include <EVT/utils/time.hpp>
 
 namespace time = EVT::core::time;
 

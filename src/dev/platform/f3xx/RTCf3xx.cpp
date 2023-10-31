@@ -1,7 +1,4 @@
-#ifndef REMOVE
-#define REMOVE
 #include <EVT/dev/platform/f3xx/RTCf3xx.hpp>
-
 #include <HALf3/stm32f3xx_hal_rtc.h>
 
 namespace time = EVT::core::time;
@@ -111,4 +108,3 @@ void RTCf3xx::setTime(EVT::core::time::TimeStamp& time) {
 }
 
 }// namespace EVT::core::DEV
-#endif

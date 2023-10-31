@@ -198,7 +198,7 @@ UART& getUART(uint32_t baudrate, bool isSwapped = false) {
 #endif
 }
 
- /**
+/**
   * Get an instance of a SPI driver.
   *
   * @tparam sckPin Serial clock pin
@@ -207,15 +207,15 @@ UART& getUART(uint32_t baudrate, bool isSwapped = false) {
   * @param CSPins Array of chip select pins
   * @param pinLength Number of chip select pins in the array
   */
- template<Pin sckPin, Pin mosiPin, Pin misoPin>
- SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
- #ifdef STM32F3xx
-     static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
-     return spi;
- #endif
- }
+template<Pin sckPin, Pin mosiPin, Pin misoPin>
+SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
+#ifdef STM32F3xx
+    static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
+    return spi;
+#endif
+}
 
- /**
+/**
   * Get an instance of a write-only SPI driver.
   *
   * @tparam sckPin Serial clock pin
@@ -223,13 +223,13 @@ UART& getUART(uint32_t baudrate, bool isSwapped = false) {
   * @param CSPins Array of chip select pins
   * @param pinLength Number of chip select pins in the array
   */
- template<Pin sckPin, Pin mosiPin>
- SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
- #ifdef STM32F3xx
-     static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin);
-     return spi;
- #endif
- }
+template<Pin sckPin, Pin mosiPin>
+SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
+#ifdef STM32F3xx
+    static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin);
+    return spi;
+#endif
+}
 
 }// namespace EVT::core::IO
 

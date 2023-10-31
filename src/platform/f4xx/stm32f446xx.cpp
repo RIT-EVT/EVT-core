@@ -33,10 +33,10 @@ void stm32f4xx_init() {
     RCC_OscInitStruct.PLL.PLLQ = 2;
     RCC_OscInitStruct.PLL.PLLR = 2;
     HAL_RCC_OscConfig(&RCC_OscInitStruct);
-//    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-//    {
-//        Error_Handler();
-//    }
+    //    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+    //    {
+    //        Error_Handler();
+    //    }
 
     /** Initializes the CPU, AHB and APB buses clocks
     */
@@ -46,8 +46,7 @@ void stm32f4xx_init() {
     RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
     RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
     RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
-    {
+    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK) {
         Error_Handler();
     }
 
@@ -67,8 +66,7 @@ void Error_Handler(void) {
     /* USER CODE BEGIN Error_Handler_Debug */
     /* User can add his own implementation to report the HAL error return state */
     __disable_irq();
-    while (1)
-    {
+    while (1) {
         std::cout << "the code died" << endl;
     }
     /* USER CODE END Error_Handler_Debug */

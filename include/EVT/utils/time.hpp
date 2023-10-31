@@ -3,7 +3,6 @@
  * operations are platform independent.
  *
  */
-
 #ifndef _EVT_TIME_
 #define _EVT_TIME_
 

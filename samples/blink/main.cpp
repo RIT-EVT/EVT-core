@@ -30,7 +30,7 @@ int main() {
 
     while (true) {
         led.toggle();
-//        led.setState(EVT::core::IO::GPIO::State::HIGH);
+        //        led.setState(EVT::core::IO::GPIO::State::HIGH);
         uart.printf("khvgvkgfcthfvkjlugkjyjg");
         time::wait(100);
     }
