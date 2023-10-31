@@ -18,7 +18,6 @@ namespace EVT::core::DEV {
  */
 class Encoder {
 public:
-
     /**
      * Constructs an Encoder instance.
      *
@@ -102,7 +101,7 @@ private:
      */
     bool changePosition(int64_t change);
 
-}; // namespace EVT::core::DEV
-} // namespace EVT::core::DEV
+};// namespace EVT::core::DEV
+}// namespace EVT::core::DEV
 
 #endif
