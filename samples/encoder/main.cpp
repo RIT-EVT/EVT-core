@@ -8,10 +8,13 @@
 #include <EVT/io/pin.hpp>
 #include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
+#include <EVT/utils/log.hpp>
+
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
 namespace time = EVT::core::time;
+namespace log = EVT::core::log;
 
 constexpr IO::Pin A_PIN = IO::Pin::PA_8;
 constexpr IO::Pin B_PIN = IO::Pin::PA_9;
@@ -36,6 +39,10 @@ int main() {
 
     uart.printf("\n\rSTARTING ENCODER TEST\n\r");
 
+    //init logger
+    log::LOGGER.setUART(&uart);
+    log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
+
     IO::GPIO& pinA = IO::getGPIO<A_PIN>(IO::GPIO::Direction::INPUT);
     IO::GPIO& pinB = IO::getGPIO<B_PIN>(IO::GPIO::Direction::INPUT);
 
@@ -57,9 +64,9 @@ int main() {
 
         //PRINT VALUES (only enable one at a time)
         //uart.printf("\r Encoder Change: %d       ", change);
-        uart.printf("\rPosition: %d         ", position);
+        //uart.printf("\rPosition: %d         ", position);
 
         //The wait simulates a loop that is doing other processing, because that will affect how often the output is read
-        time::wait(1000);
+        time::wait(0);
     }
 }
