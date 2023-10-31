@@ -7,7 +7,6 @@
 
 namespace time = EVT::core::time;
 
-
 namespace EVT::core::DEV {
 
 /**
