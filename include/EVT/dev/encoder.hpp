@@ -72,10 +72,12 @@ private:
     ///INTERRUPT RELATED VARIABLES
     /** the change since the last update was called, updated in the interrupt handler */
     int64_t interruptChange;
-    /** the most recent time in milliseconds since the last interrupt */
-    uint32_t recentInterruptTime;
+    /** the most recent time in milliseconds since the last interrupt on pin A */
+    uint32_t recentAInterruptTime;
+    /** the most recent time in milliseconds since the last interrupt on pin B*/
+    uint32_t recentBInterruptTime;
     /** how soon after an interrupt another can happen, in milliseconds */
-    const static uint32_t INTERRUPTCOOLDOWN = 50;
+    const static uint32_t INTERRUPTCOOLDOWN = 100;
 
     /**
      * helper method that converts binary pin values to the relative rotation of the encoder, in the range [0,3]

@@ -12,15 +12,16 @@ Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, uint64_t range, uint64_t initialPosit
     //setting instance variables
     currentRelPos = readPinValues();
     interruptChange = 0;
-    recentInterruptTime = 0;
+    recentAInterruptTime = 0;
+    recentBInterruptTime = 0;
 }
 
 
 void Encoder::aInterruptHandler(IO::GPIO* pin) {
-    if(time::millis() - recentInterruptTime < INTERRUPTCOOLDOWN) {
+    if((time::millis() - recentAInterruptTime) < INTERRUPTCOOLDOWN) {
         return;
     }
-    recentInterruptTime = time::millis();
+    recentAInterruptTime = time::millis();
     int8_t change;
     switch(currentRelPos) {
         case 0:
@@ -40,15 +41,16 @@ void Encoder::aInterruptHandler(IO::GPIO* pin) {
             currentRelPos = 2;
             break;
     }
-    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "aInterrupt Called, position: %d",currentRelPos);
     interruptChange += change;
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "aInterrupt Called, position: %d",currentRelPos);
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Change: %d",change);
 }
 
 void Encoder::bInterruptHandler(IO::GPIO* pin) {
-    if(time::millis() - recentInterruptTime < INTERRUPTCOOLDOWN) {
+    if((time::millis() - recentBInterruptTime) < INTERRUPTCOOLDOWN) {
             return;
     }
-    recentInterruptTime = time::millis();
+    recentBInterruptTime = time::millis();
     int8_t change;
     switch(currentRelPos) {
     case 0:
@@ -68,8 +70,9 @@ void Encoder::bInterruptHandler(IO::GPIO* pin) {
             currentRelPos = 0;
             break;
     }
-    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "bInterrupt Called, position: %d",currentRelPos);
     interruptChange += change;
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "bInterrupt Called, position: %d",currentRelPos);
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Change: %d",change);
 }
 
 uint64_t Encoder::getPosition() const {

@@ -67,6 +67,6 @@ int main() {
         //uart.printf("\rPosition: %d         ", position);
 
         //The wait simulates a loop that is doing other processing, because that will affect how often the output is read
-        time::wait(0);
+        time::wait(400);
     }
 }
