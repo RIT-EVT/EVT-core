@@ -417,7 +417,7 @@ int main() {
             uart.printf("Current value: %X, %X\r\n", lastVal1, lastVal2);
         }
 
-        //        processError(&canNode);
+//                processError(&canNode);
 
         // Process incoming CAN messages
         CONodeProcess(&canNode);

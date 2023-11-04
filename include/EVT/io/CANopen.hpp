@@ -13,6 +13,7 @@
 #include <EVT/io/CAN.hpp>
 #include <EVT/io/types/CANMessage.hpp>
 #include <EVT/utils/types/FixedQueue.hpp>
+//#include <EVT/io/CANOpenMacros.hpp>
 
 //Allows for resizable CANOpen queue if needed
 #ifndef CANOPEN_QUEUE_SIZE
@@ -54,7 +55,6 @@ void getCANopenTimerDriver(DEV::Timer* timer, CO_IF_TIMER_DRV* timerDriver);
      * @param[out] nvmDriver The NVM driver to populate
      */
 void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver);
-
 }// namespace EVT::core::IO
 
 #endif
