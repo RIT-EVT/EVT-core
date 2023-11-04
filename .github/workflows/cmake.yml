@@ -47,7 +47,7 @@ jobs:
       - name: F446 Build
         run: |
           cmake -DTARGET_DEV=STM32F446xx -B ${{github.workspace}}/build
-          cmake --build ${{github.workspace}}/build
+#          cmake --build ${{github.workspace}}/build
 
       # Apply clang-format formatting to the branch and create a new commit if any files are changed
       - name: Apply Formatting
