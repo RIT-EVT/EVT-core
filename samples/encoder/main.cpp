@@ -64,9 +64,9 @@ int main() {
 
         //PRINT VALUES (only enable one at a time)
         //uart.printf("\r Encoder Change: %d       ", change);
-        //uart.printf("\rPosition: %d         ", position);
+        uart.printf("\rPosition: %d         ", position);
 
         //The wait simulates a loop that is doing other processing, because that will affect how often the output is read
-        time::wait(400);
+        time::wait(100);
     }
 }

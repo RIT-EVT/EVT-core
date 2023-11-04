@@ -99,7 +99,7 @@ private:
      * changes position by change, capping or rolling over depending on rollOver
      *
      * @param newPosition the new value for position
-     * @return if position tried to go over range or below 0
+     * @return if position tried to go outside the range
      */
     bool changePosition(int64_t change);
 

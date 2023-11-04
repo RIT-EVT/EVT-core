@@ -18,10 +18,10 @@ Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, uint64_t range, uint64_t initialPosit
 
 
 void Encoder::aInterruptHandler(IO::GPIO* pin) {
-    if((time::millis() - recentAInterruptTime) < INTERRUPTCOOLDOWN) {
+    if ((time::millis() - recentAInterruptTime) < INTERRUPTCOOLDOWN) {
+        log::LOGGER.log(log::Logger::LogLevel::DEBUG, "aInterrupt Skipped, reason: on cooldown");
         return;
     }
-    recentAInterruptTime = time::millis();
     int8_t change;
     switch(currentRelPos) {
         case 0:
@@ -42,15 +42,19 @@ void Encoder::aInterruptHandler(IO::GPIO* pin) {
             break;
     }
     interruptChange += change;
-    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "aInterrupt Called, position: %d",currentRelPos);
-    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Change: %d",change);
+    recentAInterruptTime = time::millis();
+    //time::wait(200);
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "aInterrupt Called, "
+                                                  "\n\r\tCalculated Position: %d"
+                                                  "\n\r\tActual Position: %d"
+                                                  "\n\r\tChange: %d",currentRelPos, readPinValues(), change);
 }
 
 void Encoder::bInterruptHandler(IO::GPIO* pin) {
-    if((time::millis() - recentBInterruptTime) < INTERRUPTCOOLDOWN) {
+    if ((time::millis() - recentBInterruptTime) < INTERRUPTCOOLDOWN) {
+            log::LOGGER.log(log::Logger::LogLevel::DEBUG, "bInterrupt Skipped, reason: on cooldown");
             return;
     }
-    recentBInterruptTime = time::millis();
     int8_t change;
     switch(currentRelPos) {
     case 0:
@@ -71,8 +75,11 @@ void Encoder::bInterruptHandler(IO::GPIO* pin) {
             break;
     }
     interruptChange += change;
-    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "bInterrupt Called, position: %d",currentRelPos);
-    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Change: %d",change);
+    recentBInterruptTime = time::millis();
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "bInterrupt Called, "
+                                                  "\n\r\tCalculated Position: %d"
+                                                  "\n\r\tActual Position: %d"
+                                                  "\n\r\tChange: %d",currentRelPos, readPinValues(), change);
 }
 
 uint64_t Encoder::getPosition() const {
@@ -83,6 +90,8 @@ void Encoder::update() {
     int64_t change = interruptChange;
     interruptChange = 0;
     changePosition(change);
+    //in case of triggers desyncing the position
+    currentRelPos = readPinValues();
 }
 
 int8_t Encoder::readPinValues() {
