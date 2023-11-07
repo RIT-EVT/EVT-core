@@ -89,15 +89,15 @@ private:
          * Sets up the first RPDO to be an async trigger
          * TPDO 0 of the TPDO_NODE_ID
          */
-        RPDO_SETTINGS_OBJECT_140X(0, 0, TPDO_NODE_ID, PDO_TRIGGER_ASYNC),
+        RECEIVE_PDO_SETTINGS_OBJECT_140X(0, 0, TPDO_NODE_ID, RECEIVE_PDO_TRIGGER_ASYNC),
 
         // RPDO0 mapping, determines the PDO messages to send when RPDO0 is triggered
         // 0: The number of PDO message associated with the RPDO
         // 1: Link to the first PDO message sampleDataA with a size of 8 and a sub index of 1
         // 2: Link to teh second PDO message sampleDataB with a size of 16 and a sub index of 2.
-        RPDO_N_MAPPING_START_KEY_160X(0, 2),
-        RPDO_N_MAPPING_ENTRY_N_160X(0, 1, PDO_MAPPING_UNSIGNED8),
-        RPDO_N_MAPPING_ENTRY_N_160X(0, 2, PDO_MAPPING_UNSIGNED16),
+        RECEIVE_PDO_N_MAPPING_START_KEY_160X(0, 2),
+        RECEIVE_PDO_N_MAPPING_ENTRY_N_160X(0, 1, PDO_MAPPING_UNSIGNED8),
+        RECEIVE_PDO_N_MAPPING_ENTRY_N_160X(0, 2, PDO_MAPPING_UNSIGNED16),
 
         // User defined data, this will be where we put elements that can be
         // accessed via SDO and depending on configuration PDO

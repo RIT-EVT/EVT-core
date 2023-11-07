@@ -9,6 +9,7 @@
 #include <stdint.h>
 
 #include <co_core.h>
+#include <EVT/io/CANOpenMacros.hpp>
 
 class TPDOCanNode {
 public:
@@ -73,7 +74,7 @@ private:
      * Have to know the size of the object dictionary for initialization
      * process.
      */
-    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 23;
+    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 24;
 
     /**
      * The object dictionary itself. Will be populated by this object during
@@ -82,171 +83,22 @@ private:
      * The plus one is for the special "end of dictionary" marker.
      */
     CO_OBJ_T objectDictionary[OBJECT_DICTIONARY_SIZE + 1] = {
-        /**
-         * Mandatory Identification Keys
-         */
-        { // Device Type
-         .Key = CO_KEY(0x1000, 0x00, CO_OBJ_____R_),
-         .Type = CO_TUNSIGNED32,
-         .Data = (CO_DATA) 0x00
-        },
-        { // Error Register
-         .Key = CO_KEY(0x1001, 0x00, CO_OBJ_____R_),
-         .Type = CO_TUNSIGNED8,
-         .Data = (CO_DATA) 0x00
-        },
-        { // Sync ID, defaults to 0x80
-         .Key = CO_KEY(0x1005, 0x00, CO_OBJ_DN__R_),
-         .Type = CO_TUNSIGNED32,
-         .Data = (CO_DATA) 0x80
-        },
-        { // COB-ID EMCY
-         .Key = CO_KEY(0x1014, 0x00, CO_OBJ__N__R_),
-         .Type = CO_TEMCY_ID,
-         .Data = (CO_DATA) 0x80
-        },
-        { // Heartbeat Producer
-         .Key = CO_KEY(0x1017, 0x00, CO_OBJ_____RW),
-         .Type = CO_THB_PROD,
-         .Data = (CO_DATA) 2000
-        },
+        MANDATORY_IDENTIFICATION_ENTRIES_1000_1014,
+        HEARTBEAT_PRODUCER_1017(2000),
+        IDENTITY_OBJECT_1018,
+        SDO_CONFIGURATION_1200,
 
-        /*
-         * Identity Object
-         * 0. Object Start Key
-         * 1. Vendor ID
-         * 2. Product Code
-         * 3. Revision Number
-         * 4. Serial Number
-         */
-        { // Identity Object
-         .Key = CO_KEY(0x1018, 0x00, CO_OBJ_D___R_),
-         .Type = CO_TUNSIGNED8,
-         .Data = (CO_DATA) 0x04
-        },
-        { // Vendor ID
-         .Key = CO_KEY(0x1018, 0x01, CO_OBJ_____R_),
-         .Type = CO_TUNSIGNED8,
-         .Data = (CO_DATA) 0x00
-        },
-        { // Product Code
-         .Key = CO_KEY(0x1018, 0x02, CO_OBJ_____R_),
-         .Type = CO_TUNSIGNED8,
-         .Data = (CO_DATA) 0x00
-        },
-        { // Revision Number
-         .Key = CO_KEY(0x1018, 0x03, CO_OBJ_____R_),
-         .Type = CO_TUNSIGNED8,
-         .Data = (CO_DATA) 0x00
-        },
-        { // Serial number
-         .Key = CO_KEY(0x1018, 0x04, CO_OBJ_____R_),
-         .Type = CO_TUNSIGNED8,
-         .Data = (CO_DATA) 0x00
-        },
+        TRANSMIT_PDO_SETTINGS_OBJECT_180X(0x00, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 2000),
 
-        // SDO CAN message IDS.
-        // 1: Client -> Server ID, default is 0x600 + NODE_ID
-        // 2: Server -> Client ID, default is 0x580 + NODE_ID
-        {
-            // Communication Object SDO Server
-            .Key = CO_KEY(0x1200, 0x00, CO_OBJ_D___R_),
-            .Type = CO_TUNSIGNED32,
-            .Data = (CO_DATA) 0x02,
-        },
-        {
-            // SDO Server Request COBID
-            .Key = CO_KEY(0x1200, 0x01, CO_OBJ__N__R_),
-            .Type = CO_TUNSIGNED32,
-            .Data = (CO_DATA) CO_COBID_SDO_RESPONSE(),
-        },
-        {
-            // SDO Server Response COBID
-            .Key = CO_KEY(0x1200, 0x02, CO_OBJ__N__R_),
-            .Type = CO_TUNSIGNED32,
-            .Data = (CO_DATA) CO_COBID_SDO_RESPONSE(),
-        },
-
-        // TPDO0 settings
-        // 0: The TPDO number, default 0
-        // 1: The COB-ID used by TPDO0, provided as a function of the TPDO number
-        // 2: How the TPO is triggered, default to manual triggering
-        // 3: Inhibit time, defaults to 0
-        // 5: Timer trigger time in 1ms units, 0 will disable the timer based triggering
-        {
-            // Communication Object TPDO #0
-            .Key = CO_KEY(0x1800, 0x00, CO_OBJ_D___R_),
-            .Type = CO_TUNSIGNED8,
-            .Data = (CO_DATA) 0x05,
-        },
-        {
-            // COB-ID used by TPDO
-            // 180h+Node-ID
-            .Key = CO_KEY(0x1800, 0x01, CO_OBJ_DN__R_),
-            .Type = CO_TPDO_ID,
-            .Data = (CO_DATA) CO_COBID_TPDO_DEFAULT(0),
-        },
-        {
-            // Transmission type
-            .Key = CO_KEY(0x1800, 0x02, CO_OBJ_D___R_),
-            .Type = CO_TPDO_TYPE,
-            .Data = (CO_DATA) 0xFE,// timer triggered
-        },
-        {
-            // Inhibit time with LSB 100us (0=disable)
-            .Key = CO_KEY(0x1800, 0x03, CO_OBJ_D___R_),
-            .Type = CO_TUNSIGNED16,
-            .Data = (CO_DATA) 0x00,
-        },
-        {
-            // Event timer LSB 1ms (0=disable)
-            .Key = CO_KEY(0x1800, 0x05, CO_OBJ_D___R_),
-            .Type = CO_TPDO_EVENT,
-            .Data = (CO_DATA) 2000,// send every 2 seconds
-        },
-
-        // TPDO0 mapping, determines the PDO messages to send when TPDO1 is triggered
-        // 0: The number of PDO message associated with the TPDO
-        // 1: Link to the first PDO message
-        // n: Link to the nth PDO message
-        {
-            // TPDO #0 Mapping Object
-            .Key = CO_KEY(0x1A00, 0x00, CO_OBJ_D___R_),
-            .Type = CO_TUNSIGNED8,
-            .Data = (CO_DATA) 0x02,
-        },
-        {
-            // link the first byte to (0x2100, 0, 8) - sampleDataA
-            .Key = CO_KEY(0x1A00, 0x01, CO_OBJ_D___R_),
-            .Type = CO_TUNSIGNED32,
-            .Data = (CO_DATA) CO_LINK(0x2100, 0x01, 8),
-        },
-        {
-            // link the second byte to (0x2100, 1, 16) - sampleDataB
-            .Key = CO_KEY(0x1A00, 0x02, CO_OBJ_D___R_),
-            .Type = CO_TUNSIGNED32,
-            .Data = (CO_DATA) CO_LINK(0x2100, 0x02, 16),
-        },
+        TRANSMIT_PDO_N_MAPPING_START_KEY_1A0X(0x00, 0x02),
+        TRANSMIT_PDO_N_MAPPING_ENTRY_N_1A0X(0x00, 0x01, PDO_MAPPING_UNSIGNED8),
+        TRANSMIT_PDO_N_MAPPING_ENTRY_N_1A0X(0x00, 0x02, PDO_MAPPING_UNSIGNED16),
 
         // User defined data, this will be where we put elements that can be
         // accessed via SDO and depending on configuration PDO
-        {
-            .Key = CO_KEY(0x2100, 0, CO_OBJ_D___R_),
-            .Type = CO_TUNSIGNED8,
-            .Data = (CO_DATA) 2,
-        },
-        {
-            // sampleDataA
-            .Key = CO_KEY(0x2100, 1, CO_OBJ____PRW),
-            .Type = CO_TUNSIGNED8,
-            .Data = (uintptr_t) &sampleDataA,
-        },
-        {
-            // sampleDataB
-            .Key = CO_KEY(0x2100, 2, CO_OBJ____PRW),
-            .Type = CO_TUNSIGNED16,
-            .Data = (uintptr_t) &sampleDataB,
-        },
+        DATA_LINK_START_KEY_210X(0, 0x02),
+        DATA_LINK_210X(0, 1, CO_TUNSIGNED8, &sampleDataA),
+        DATA_LINK_210X(0, 1, CO_TUNSIGNED16, &sampleDataB),
 
         // End of dictionary marker
         CO_OBJ_DICT_ENDMARK
