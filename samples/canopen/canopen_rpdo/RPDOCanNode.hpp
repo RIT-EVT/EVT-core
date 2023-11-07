@@ -80,39 +80,24 @@ private:
      * The plus one is for the special "end of dictionary" marker.
      */
     CO_OBJ_T objectDictionary[OBJECT_DICTIONARY_SIZE + 1] = {
-        /**
-         * Mandatory Identification Keys
-         */
-        MANDATORY_IDENTIFICATION_ENTRIES_1000_1014(0x00),
-
-        /**
-         * Heartbeat
-         */
+        MANDATORY_IDENTIFICATION_ENTRIES_1000_1014,
         HEARTBEAT_PRODUCER_1017(2000),
-
-        /**
-         * Identity Object
-         */
         IDENTITY_OBJECT_1018,
-
-        /**
-         * SDO Configuration
-         */
         SDO_CONFIGURATION_1200,
 
         /**
-         * Asyncronous trigger for RPDO 0 which will receive
+         * Sets up the first RPDO to be an async trigger
          * TPDO 0 of the TPDO_NODE_ID
          */
-        RPDO_SETTINGS_OBJECT_140X(0, 0, TPDO_NODE_ID, 0xFE),
+        RPDO_SETTINGS_OBJECT_140X(0, 0, TPDO_NODE_ID, PDO_TRIGGER_ASYNC),
 
         // RPDO0 mapping, determines the PDO messages to send when RPDO0 is triggered
         // 0: The number of PDO message associated with the RPDO
-        // 1: Link to the first PDO message
-        // n: Link to the nth PDO message
+        // 1: Link to the first PDO message sampleDataA with a size of 8 and a sub index of 1
+        // 2: Link to teh second PDO message sampleDataB with a size of 16 and a sub index of 2.
         RPDO_N_MAPPING_START_KEY_160X(0, 2),
-        RPDO_N_MAPPING_ENTRY_N(0, 1, 8),
-        RPDO_N_MAPPING_ENTRY_N(0, 2, 16),
+        RPDO_N_MAPPING_ENTRY_N_160X(0, 1, PDO_MAPPING_UNSIGNED8),
+        RPDO_N_MAPPING_ENTRY_N_160X(0, 2, PDO_MAPPING_UNSIGNED16),
 
         // User defined data, this will be where we put elements that can be
         // accessed via SDO and depending on configuration PDO
