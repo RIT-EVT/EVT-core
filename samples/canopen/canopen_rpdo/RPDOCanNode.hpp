@@ -8,8 +8,8 @@
  */
 #include <stdint.h>
 
-#include <co_core.h>
 #include <EVT/io/CANOpenMacros.hpp>
+#include <co_core.h>
 
 class RPDOCanNode {
 public:
@@ -106,6 +106,5 @@ private:
         DATA_LINK_210X(0, 2, CO_TUNSIGNED16, &sampleDataB),
 
         // End of dictionary marker
-        CO_OBJ_DICT_ENDMARK
-    };
+        CO_OBJ_DICT_ENDMARK};
 };

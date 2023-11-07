@@ -209,26 +209,26 @@
  *
 */
 #define TRANSMIT_PDO_SETTINGS_OBJECT_180X(TPDO_NUMBER, TRANSMISSION_TYPE, INHIBIT_TIME, INTERVAL) \
-    { /* TPDO #N Settings Object */                                                               \
+    {                                                                                             \
+        /* TPDO #N Settings Object */                                                             \
         .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x00, CO_OBJ_D___R_),                                 \
         .Type = CO_TUNSIGNED8,                                                                    \
         .Data = (CO_DATA) 0x05,                                                                   \
     },                                                                                            \
-    { /* COB-ID used by TPDO  180h+TPDO Node-ID*/                                                 \
-        .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x01, CO_OBJ_D___R_),                                 \
-        .Type = CO_TPDO_ID,                                                                       \
-        .Data = (CO_DATA) CO_COBID_TPDO_DEFAULT(TPDO_NUMBER),                                     \
-    },                                                                                            \
-    { /* Transmission type */                                                                     \
-        .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x02, CO_OBJ_D___R_),                                 \
-        .Type = CO_TPDO_TYPE,                                                                     \
-        .Data = (CO_DATA) TRANSMISSION_TYPE                                                       \
-    },                                                                                            \
-    { /* Inhibit time with LSB 100us (0=disable) */                                               \
-        .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x03, CO_OBJ_D___R_),                                 \
-        .Type = CO_TUNSIGNED16,                                                                   \
-        .Data = (CO_DATA) INHIBIT_TIME                                                            \
-    },                                                                                            \
+        {                                                                                         \
+            /* COB-ID used by TPDO  180h+TPDO Node-ID*/                                           \
+            .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x01, CO_OBJ_D___R_),                             \
+            .Type = CO_TPDO_ID,                                                                   \
+            .Data = (CO_DATA) CO_COBID_TPDO_DEFAULT(TPDO_NUMBER),                                 \
+        },                                                                                        \
+        {/* Transmission type */                                                                  \
+         .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x02, CO_OBJ_D___R_),                                \
+         .Type = CO_TPDO_TYPE,                                                                    \
+         .Data = (CO_DATA) TRANSMISSION_TYPE},                                                    \
+        {/* Inhibit time with LSB 100us (0=disable) */                                            \
+         .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x03, CO_OBJ_D___R_),                                \
+         .Type = CO_TUNSIGNED16,                                                                  \
+         .Data = (CO_DATA) INHIBIT_TIME},                                                         \
     { /* Event timer LSB 1ms (0=disable) */                                                       \
         .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x05, CO_OBJ_D___R_),                                 \
         .Type = CO_TPDO_EVENT,                                                                    \

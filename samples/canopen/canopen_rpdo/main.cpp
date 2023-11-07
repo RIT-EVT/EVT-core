@@ -318,10 +318,10 @@ void processError(CO_NODE* canNode) {
     uart.printf("\n\r");
 }
 
-#define CANOPEN_PROCESS(canNode)    \
-        CONodeProcess(&canNode);    \
-        COTmrService(&canNode.Tmr); \
-        COTmrProcess(&canNode.Tmr);
+#define CANOPEN_PROCESS(canNode) \
+    CONodeProcess(&canNode);     \
+    COTmrService(&canNode.Tmr);  \
+    COTmrProcess(&canNode.Tmr);
 
 int main() {
     // Initialize system
