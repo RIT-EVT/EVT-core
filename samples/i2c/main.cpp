@@ -11,6 +11,7 @@
 #include <EVT/io/UART.hpp>
 #include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
+#include <EVT/io/pin.hpp>
 
 namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
@@ -26,7 +27,8 @@ int main() {
     // Initialize system
     EVT::core::platform::init();
 
-    IO::I2C& i2c = IO::getI2C<IO::Pin::PB_8, IO::Pin::PB_9>();
+    IO::I2C& i2c = IO::getI2C<IO::Pin::I2C_SCL, IO::Pin::I2C_SDA>();
+
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     uart.printf("Starting I2C test\n\r");

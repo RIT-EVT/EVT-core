@@ -8,6 +8,7 @@
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/PWM.hpp>
 #include <EVT/io/UART.hpp>
+#include <EVT/io/I2C.hpp>
 
 #ifdef STM32F3xx
     #include <EVT/dev/MCUTimer.hpp>
@@ -28,14 +29,13 @@
 
 #ifdef STM32f4xx
     #include <EVT/platform/f4xx/stm32f4xx.hpp>
-
-    //    #include "I2C.hpp"
-    //    #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
-    //    #include <EVT/io/platform/f4xx/CANf4xx.hpp>
+        #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
+        #include <EVT/io/platform/f4xx/CANf4xx.hpp>
+        #include <EVT/io/platform/f4xx/I2Cf4xx.hpp>
     #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
-    //    #include <EVT/io/platform/f4xx/I2Cf4xx.hpp>
-    //    #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
-    //    #include <EVT/io/platform/f4xx/SPIf4xx.hpp>
+        #include <EVT/io/platform/f4xx/I2Cf4xx.hpp>
+        #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
+        #include <EVT/io/platform/f4xx/SPIf4xx.hpp>
     #include <EVT/io/platform/f4xx/UARTf4xx.hpp>
 #endif
 
@@ -65,33 +65,32 @@ namespace EVT::core::DEV {
  * @param ms Time in milliseconds before the IWDG triggers a reset
  * must be a value between 8 and 32768 ms.
  */
-IWDG& getIWDG(uint32_t ms) {
-#ifdef STM32F3xx
-    // 8 < ms < 32768
-    static IWDGf3xx iwdg(ms);
-    return iwdg;
-#endif
+//IWDG& getIWDG(uint32_t ms) {
+//#ifdef STM32F3xx
+//    // 8 < ms < 32768
+//    static IWDGf3xx iwdg(ms);
+//    return iwdg;
+//#endif
 }
 
 /**
  * Get an instance of an RTC
  */
-RTC& getRTC() {
-#ifdef STM32F3xx
-    static RTCf3xx rtc;
-    return rtc;
-#endif
-}
+//RTC& getRTC() {
+//#ifdef STM32F3xx
+//    static RTCf3xx rtc;
+//    return rtc;
+//#endif
+//}
 
-template<MCUTimer mcuTimer>
-Timer& getTimer(uint32_t clockPeriod) {
-#ifdef STM32F3xx
-    static Timerf3xx timer(getTIM(mcuTimer), clockPeriod);
-    return timer;
-#endif
-}
-
-}// namespace EVT::core::DEV
+//template<MCUTimer mcuTimer>
+//Timer& getTimer(uint32_t clockPeriod) {
+//#ifdef STM32F3xx
+//    static Timerf3xx timer(getTIM(mcuTimer), clockPeriod);
+//    return timer;
+//#endif
+//}
+//}// namespace EVT::core::DEV
 
 namespace EVT::core::IO {
 
@@ -100,17 +99,17 @@ namespace EVT::core::IO {
  *
  * @param[in] pin The pin to use with the ADC
  */
-template<Pin pin>
-ADC& getADC() {
-#ifdef STM32F4xx
-    static ADCf4xx adc(pin);
-    return adc;
-#endif
-#ifdef STM32F3xx
-    static ADCf3xx adc(pin);
-    return adc;
-#endif
-}
+//template<Pin pin>
+//ADC& getADC() {
+//#ifdef STM32F4xx
+//    static ADCf4xx adc(pin);
+//    return adc;
+//#endif
+//#ifdef STM32F3xx
+//    static ADCf3xx adc(pin);
+//    return adc;
+//#endif
+//}
 
 /**
  * Get an instance of a CAN interface.
@@ -159,6 +158,10 @@ GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT,
  */
 template<Pin scl, Pin sda>
 I2C& getI2C() {
+#ifdef STM32f4xx
+    static I2Cf4xx i2c(scl, sda);
+    return i2c;
+#endif
 #ifdef STM32F3xx
     static I2Cf3xx i2c(scl, sda);
     return i2c;
@@ -207,13 +210,13 @@ UART& getUART(uint32_t baudrate, bool isSwapped = false) {
   * @param CSPins Array of chip select pins
   * @param pinLength Number of chip select pins in the array
   */
-template<Pin sckPin, Pin mosiPin, Pin misoPin>
-SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
-#ifdef STM32F3xx
-    static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
-    return spi;
-#endif
-}
+//template<Pin sckPin, Pin mosiPin, Pin misoPin>
+//SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
+//#ifdef STM32F3xx
+//    static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
+//    return spi;
+//#endif
+//}
 
 /**
   * Get an instance of a write-only SPI driver.
@@ -223,13 +226,13 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
   * @param CSPins Array of chip select pins
   * @param pinLength Number of chip select pins in the array
   */
-template<Pin sckPin, Pin mosiPin>
-SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
-#ifdef STM32F3xx
-    static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin);
-    return spi;
-#endif
-}
+//template<Pin sckPin, Pin mosiPin>
+//SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
+//#ifdef STM32F3xx
+//    static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin);
+//    return spi;
+//#endif
+//}
 
 }// namespace EVT::core::IO
 

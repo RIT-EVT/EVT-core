@@ -92,8 +92,8 @@ add_library(${PROJECT_NAME} STATIC )
     elseif(TARGET_DEV STREQUAL "STM32F446xx")
         target_sources(${PROJECT_NAME} PRIVATE
         src/io/ADC.cpp
-        src/io/CAN.cpp
-        src/io/CANopen.cpp
+#        src/io/CAN.cpp
+#        src/io/CANopen.cpp
         src/io/GPIO.cpp
         src/io/I2C.cpp
         src/io/PWM.cpp
@@ -103,7 +103,7 @@ add_library(${PROJECT_NAME} STATIC )
         src/dev/button.cpp
         src/dev/LED.cpp
         src/dev/LCD.cpp
-        src/dev/RTCTimer.cpp
+#        src/dev/RTCTimer.cpp
         src/dev/storage/M24C32.cpp
         src/dev/Thermistor.cpp
 
