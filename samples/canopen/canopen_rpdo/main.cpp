@@ -106,7 +106,7 @@ int main() {
     IO::initializeCANopenDriver(&canOpenQueue, &canStackDriver, &nvmDriver, &timerDriver, &canDriver);
 
     // Initialize the CANOpen node we are using.
-    IO::initializeCANopenNode(&canNode, RPDOCanNode::NODE_ID,&testCanNode, &canStackDriver, sdoBuffer, appTmrMem);
+    IO::initializeCANopenNode(&canNode, RPDOCanNode::NODE_ID, &testCanNode, &canStackDriver, sdoBuffer, appTmrMem);
 
     time::wait(500);
 
