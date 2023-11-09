@@ -11,7 +11,7 @@
 #include "EVT/io/CANDevice.hpp"
 #include <EVT/io/CANOpenMacros.hpp>
 
-class TPDOCanNode: public CANDevice {
+class TPDOCanNode : public CANDevice {
 public:
     TPDOCanNode();
 
