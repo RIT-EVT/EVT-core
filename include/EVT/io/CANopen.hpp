@@ -56,10 +56,44 @@ void getCANopenTimerDriver(DEV::Timer* timer, CO_IF_TIMER_DRV* timerDriver);
  */
 void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver);
 
-void initializeCANopenDriver(types::FixedQueue<150, IO::CANMessage>* canOpenQueue, CO_IF_DRV* canStackDriver, CO_IF_NVM_DRV* nvmDriver, CO_IF_TIMER_DRV* timerDriver, CO_IF_CAN_DRV* canDriver, CO_NODE* canNode);
+/*!
+ * @brief Initialize the drivers needed by CANOpen.
+ *
+ * Takes in a references to all of of the drivers that are needed
+ * by CANopen as well as the
+ *
+ * @param canOpenQueue the canOpen queue to give to the drivers.
+ * @param canStackDriver the stack driver.
+ * @param nvmDriver the nvm driver.
+ * @param timerDriver the timer driver.
+ * @param canDriver the general CAN driver.
+ */
+void initializeCANopenDriver(types::FixedQueue<150, IO::CANMessage>* canOpenQueue, CO_IF_DRV* canStackDriver, CO_IF_NVM_DRV* nvmDriver, CO_IF_TIMER_DRV* timerDriver, CO_IF_CAN_DRV* canDriver);
 
-void initializeCANopenData(CANDevice* canDevice, uint8_t NODE_ID, uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE], CO_TMR_MEM appTmrMem[16], CO_NODE* canNode, CO_IF_DRV* canStackDriver);
+/*!
+ * @brief Initializes data needed for the operation of CANopen.
+ *
+ * This function initializes a CO_NODE by taking in the CANDevice,
+ * drivers, and buffers and using those to create a CO_NODE_SPEC and
+ * initializing it.
+ *
+ * @param canNode the CO_NODE that is initialized.
+ * @param NODE_ID the ID of the Node that represents this device.
+ * @param canDevice the canDevice that the object dictionary is retrieved from.
+ * @param canStackDriver references to the drivers that will be used in initialization
+ * @param sdoBuffer the sdoBuffer
+ * @param appTmrMem the appTmrMem
+ */
+void initializeCANopenNode(CO_NODE* canNode, uint8_t NODE_ID, CANDevice* canDevice, CO_IF_DRV* canStackDriver, uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE], CO_TMR_MEM appTmrMem[16]);
 
+/*!
+ * @brief Process events that happened on the given canNode
+ *
+ * Takes in a reference to a CO_NODE and processes events
+ * on that node.
+ *
+ * @param canNode the node to process events on.
+ */
 void processCANopenNode(CO_NODE* canNode);
 }// namespace EVT::core::IO
 

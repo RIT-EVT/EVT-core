@@ -91,7 +91,7 @@ void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver) {
     nvmDriver->Write = nvmWrite;
 }
 
-void initializeCANopenDriver(types::FixedQueue<150, IO::CANMessage>* canOpenQueue, CO_IF_DRV* canStackDriver, CO_IF_NVM_DRV* nvmDriver, CO_IF_TIMER_DRV* timerDriver, CO_IF_CAN_DRV* canDriver, CO_NODE* canNode) {
+void initializeCANopenDriver(types::FixedQueue<150, IO::CANMessage>* canOpenQueue, CO_IF_DRV* canStackDriver, CO_IF_NVM_DRV* nvmDriver, CO_IF_TIMER_DRV* timerDriver, CO_IF_CAN_DRV* canDriver) {
     IO::getCANopenCANDriver(can, canOpenQueue, canDriver);
     IO::getCANopenTimerDriver(timer, timerDriver);
     IO::getCANopenNVMDriver(nvmDriver);
@@ -101,7 +101,7 @@ void initializeCANopenDriver(types::FixedQueue<150, IO::CANMessage>* canOpenQueu
     canStackDriver->Nvm = nvmDriver;
 }
 
-void initializeCANopenData(CANDevice* canDevice, uint8_t NODE_ID, uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE], CO_TMR_MEM appTmrMem[16], CO_NODE* canNode, CO_IF_DRV* canStackDriver) {
+void initializeCANopenNode(CO_NODE* canNode, uint8_t NODE_ID, CANDevice* canDevice, CO_IF_DRV* canStackDriver, uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE], CO_TMR_MEM appTmrMem[16]) {
     //setup CANopen Node
     CO_NODE_SPEC canSpec = {
         .NodeId = NODE_ID,
