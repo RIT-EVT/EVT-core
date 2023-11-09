@@ -4,7 +4,6 @@
  */
 #include <stdint.h>
 
-#include <EVT/io/ADC.hpp>
 #include <EVT/io/CAN.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/types/CANMessage.hpp>
@@ -13,10 +12,6 @@
 #include <EVT/utils/types/FixedQueue.hpp>
 
 #include <EVT/io/CANopen.hpp>
-
-#include <co_core.h>
-#include <co_if.h>
-#include <co_tmr.h>
 
 #include "RPDOCanNode.hpp"
 

@@ -6,6 +6,7 @@
 #define EVT_CANDEVICE_HPP
 
 #include "co_obj.h"
+
 class CANDevice {
 public:
     /**
