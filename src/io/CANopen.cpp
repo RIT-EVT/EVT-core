@@ -130,7 +130,6 @@ void processCANopenNode(CO_NODE* canNode) {
     COTmrProcess(&canNode->Tmr);
 }
 
-
 }// namespace EVT::core::IO
 
 ///////////////////////////////////////////////////////////////////////////////
