@@ -83,13 +83,14 @@ int main() {
     uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE];
     CO_TMR_MEM appTmrMem[16];
 
-    // Reserve driver variables
+    // Reserve CAN drivers
     CO_IF_DRV canStackDriver;
 
     CO_IF_CAN_DRV canDriver;
     CO_IF_TIMER_DRV timerDriver;
     CO_IF_NVM_DRV nvmDriver;
 
+    // Reserve canNode
     CO_NODE canNode;
 
     // Attempt to join the CAN network
@@ -101,14 +102,20 @@ int main() {
         return 1;
     }
 
+    // Initialize all the CANOpen drivers.
     IO::initializeCANopenDriver(&canOpenQueue, &canStackDriver, &nvmDriver, &timerDriver, &canDriver);
 
-    IO::initializeCANopenNode(&canNode, RPDOCanNode::NODE_ID, &testCanNode, &canStackDriver, sdoBuffer, appTmrMem);
+    // Initialize the CANOpen node we are using.
+    IO::initializeCANopenNode(&canNode, RPDOCanNode::NODE_ID,&testCanNode, &canStackDriver, sdoBuffer, appTmrMem);
 
     time::wait(500);
 
     //print any CANopen errors
     uart.printf("Error: %d\r\n", CONodeGetErr(&canNode));
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Main loop
+    ///////////////////////////////////////////////////////////////////////////
 
     uint8_t lastVal1 = 0;
     uint16_t lastVal2 = 0;
