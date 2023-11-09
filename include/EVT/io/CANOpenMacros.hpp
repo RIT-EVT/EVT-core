@@ -1,7 +1,7 @@
 #ifndef EVT_CANOPENMACROS_HPP
 #define EVT_CANOPENMACROS_HPP
 
-#include <co_core.h>
+//#include <co_types.h>
 
 #define RECEIVE_PDO_TRIGGER_SYNC 0x00
 #define RECEIVE_PDO_TRIGGER_ASYNC 0xFE
@@ -14,6 +14,9 @@
 #define PDO_MAPPING_UNSIGNED64 64
 
 #define TRANSMIT_PDO_INHIBIT_TIME_DISABLE 0x00
+
+// TODO: I don't like importing co_core into a macros file. We should discuss importing all the types we need individually.
+#include "co_core.h"
 
 /*!
  * @brief MANDATORY IDENTIFICATION OBJECTS

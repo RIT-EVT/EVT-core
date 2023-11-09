@@ -8,10 +8,10 @@
  */
 #include <stdint.h>
 
+#include "EVT/io/CANDevice.hpp"
 #include <EVT/io/CANOpenMacros.hpp>
-#include <co_core.h>
 
-class TPDOCanNode {
+class TPDOCanNode: public CANDevice {
 public:
     TPDOCanNode();
 
@@ -46,14 +46,14 @@ public:
      *
      * @return Pointer to the start of the object dictionary
      */
-    CO_OBJ_T* getObjectDictionary();
+    CO_OBJ_T* getObjectDictionary() override;
 
     /**
      * Get the number of elements in the object dictionary.
      *
      * @return The number of elements in the object dictionary
      */
-    uint8_t getNumElements();
+    uint8_t getNumElements() override;
 
     /**
      * The node ID used to identify the device on the CAN network.

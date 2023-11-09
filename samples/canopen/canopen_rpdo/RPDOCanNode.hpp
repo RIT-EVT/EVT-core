@@ -8,9 +8,8 @@
  */
 #include <stdint.h>
 
-#include <EVT/io/CANDevice.hpp>
 #include <EVT/io/CANOpenMacros.hpp>
-#include <co_core.h>
+#include <EVT/io/CANDevice.hpp>
 
 class RPDOCanNode : public CANDevice {
 public:
