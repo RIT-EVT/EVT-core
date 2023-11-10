@@ -3,10 +3,7 @@
 * only to run on the STMF3xx.
 */
 
-#include <EVT/utils/time.hpp>
-
-#include <HALf4/stm32f4xx_hal.h>
-#include <HALf4/stm32f4xx_it.h>
+#include <EVT/utils/platform/f4xx/timef4xx.hpp>
 
 namespace EVT::core::time {
 /**

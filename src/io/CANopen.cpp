@@ -2,6 +2,10 @@
 #include <EVT/io/types/CANMessage.hpp>
 #include <EVT/utils/types/FixedQueue.hpp>
 
+#include <EVT/dev/RTC.hpp>
+
+#include <stdint.h>
+
 #define MAX_SIZE 64
 
 /*

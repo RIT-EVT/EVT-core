@@ -12,7 +12,7 @@
 
 namespace EVT::core::IO {
 
-UARTf4xx::UARTf4xx(Pin txPin, Pin rxPin, uint32_t baudrate)
+UARTf4xx::UARTf4xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped)
     : UART(txPin, rxPin, baudrate) {
 
     GPIO_InitTypeDef gpioInit;
@@ -115,19 +115,19 @@ bool UARTf4xx::isWritable() {
 
 void UARTf4xx::putc(char c) {
     uint8_t* data = reinterpret_cast<uint8_t*>(&c);
-    HAL_UART_Transmit(&halUART, data, 1, DEFAULT_TIMEOUT);
+    HAL_UART_Transmit(&halUART, data, 1, EVT_UART_TIMEOUT);
 }
 
 void UARTf4xx::puts(const char* s) {
     char buf[100];
     strncpy(buf, s, 100);
     uint8_t* data = reinterpret_cast<uint8_t*>(buf);
-    HAL_UART_Transmit(&halUART, data, strlen(buf), DEFAULT_TIMEOUT);
+    HAL_UART_Transmit(&halUART, data, strlen(buf), EVT_UART_TIMEOUT);
 }
 
 char UARTf4xx::getc() {
     uint8_t c;
-    while (HAL_UART_Receive(&halUART, &c, 1, DEFAULT_TIMEOUT) == HAL_TIMEOUT) {
+    while (HAL_UART_Receive(&halUART, &c, 1, EVT_UART_TIMEOUT) == HAL_TIMEOUT) {
     }
     return static_cast<char>(c);
 }
@@ -140,7 +140,7 @@ void UARTf4xx::printf(const char* format, ...) {
     uint8_t* data = reinterpret_cast<uint8_t*>(&string);
     if (0 < vsprintf(string, format, args)) {
         HAL_UART_Transmit(&halUART, data,
-                          strlen(string), DEFAULT_TIMEOUT);
+                          strlen(string), EVT_UART_TIMEOUT);
     }
 
     va_end(args);
@@ -155,11 +155,11 @@ uint8_t UARTf4xx::read() {
 }
 
 void UARTf4xx::writeBytes(uint8_t* bytes, size_t size) {
-    HAL_UART_Transmit(&halUART, bytes, size, DEFAULT_TIMEOUT);
+    HAL_UART_Transmit(&halUART, bytes, size, EVT_UART_TIMEOUT);
 }
 
 void UARTf4xx::readBytes(uint8_t* bytes, size_t size) {
-    HAL_UART_Receive(&halUART, bytes, size, DEFAULT_TIMEOUT);
+    HAL_UART_Receive(&halUART, bytes, size, EVT_UART_TIMEOUT);
 }
 
 }// namespace EVT::core::IO

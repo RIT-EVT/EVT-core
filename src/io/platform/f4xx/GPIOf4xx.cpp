@@ -5,7 +5,7 @@
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/pin.hpp>
 
-#include "EVT/io/platform/f4xx/GPIOf4xx.hpp"
+#include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
 #include <EVT/platform/f4xx/stm32f4xx.hpp>
 #include <HALf4/stm32f4xx_hal_gpio.h>
 #include <HALf4/stm32f4xx_hal_rcc.h>
@@ -60,16 +60,17 @@ extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 
 namespace EVT::core::IO {
 
-GPIOf4xx::GPIOf4xx(Pin pin, GPIO::Direction direction)
-    : GPIO(pin, direction) {
+GPIOf4xx::GPIOf4xx(Pin pin, GPIO::Direction direction, Pull pull)
+    : GPIO(pin, direction, pull) {
 
     GPIO_InitTypeDef gpioInit;
     Pin myPins[] = {pin};
     uint8_t numOfPins = 1;
 
     gpioStateInit(&gpioInit, myPins, numOfPins,
-                  static_cast<uint32_t>(direction), GPIO_PULLDOWN, GPIO_SPEED_FREQ_HIGH);
+                  static_cast<uint32_t>(direction), static_cast<uint32_t>(pull),GPIO_PULLDOWN, GPIO_SPEED_FREQ_HIGH);
 
+    //TODO: double check that this actually applies to F4xx the same way it does to F3xx
     switch ((static_cast<uint8_t>(pin) & 0xF0) >> 4) {
     case 0x0:
         this->port = GPIOA;
@@ -121,6 +122,7 @@ void GPIOf4xx::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin)) {
     INTERRUPT_GPIOS[pin_index] = this;
     IRQn_Type irqNum;
 
+    //TODO: double check that this actually applies to F4xx the same way it does to F3xx
     switch (this->halPin) {
     case GPIO_PIN_0:
         irqNum = EXTI0_IRQn;

@@ -1,10 +1,8 @@
-#ifndef _EVT_UARTf3xx_
-#define _EVT_UARTf3xx_
+#ifndef _EVT_UARTf4xx_
+#define _EVT_UARTf4xx_
 
-#include <stdint.h>
-
+#include <cstdint>
 #include <EVT/io/UART.hpp>
-
 #include <HALf4/stm32f4xx.h>
 
 namespace EVT::core::IO {
@@ -19,7 +17,7 @@ public:
      * @param[in] rxPin THe UART RX pin.
      * @param[in] baudrate The baudrate to operate the UART with/
      */
-    UARTf4xx(Pin txPin, Pin rxPin, uint32_t baudrate);
+    UARTf4xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped);
 
     void setBaudrate(uint32_t baudrate);
 

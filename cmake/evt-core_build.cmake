@@ -6,7 +6,6 @@ macro(make_exe proj_name sources)
     project(${proj_name} C CXX ASM)
     add_definitions(-DUSE_HAL_LIBRARY)
     add_executable(${proj_name} ${sources})
-
     # Make the main executable have an ".elf" suffix
     set_target_properties(${proj_name} PROPERTIES
         OUTPUT_NAME "${proj_name}"

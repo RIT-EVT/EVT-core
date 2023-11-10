@@ -1074,7 +1074,7 @@ typedef struct
 #define TIM12               ((TIM_TypeDef *) TIM12_BASE)
 #define TIM13               ((TIM_TypeDef *) TIM13_BASE)
 #define TIM14               ((TIM_TypeDef *) TIM14_BASE)
-#define RTC                 ((RTC_TypeDef *) RTC_BASE)
+#define RTC1                 ((RTC_TypeDef *) RTC_BASE)
 #define WWDG                ((WWDG_TypeDef *) WWDG_BASE)
 #define IWDG                ((IWDG_TypeDef *) IWDG_BASE)
 #define SPI2                ((SPI_TypeDef *) SPI2_BASE)

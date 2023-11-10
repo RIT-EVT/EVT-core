@@ -3,7 +3,6 @@
  * functions will take in an EVT-core driver which will be used for
  * making the drivers.
  */
-
 #ifndef _EVT_CANopen_
 #define _EVT_CANopen_
 
