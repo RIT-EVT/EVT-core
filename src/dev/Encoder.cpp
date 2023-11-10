@@ -12,13 +12,13 @@ Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, uint64_t range, uint64_t initialPosit
     //setting instance variables
     currentRelPos = readPinValues();
     interruptChange = 0;
-    recentAInterruptTime = 0;
-    recentBInterruptTime = 0;
+    lastAInterruptTime = 0;
+    lastBInterruptTime = 0;
 }
 
 
 void Encoder::aInterruptHandler(IO::GPIO* pin) {
-    if ((time::millis() - recentAInterruptTime) < INTERRUPTCOOLDOWN) {
+    if ((time::millis() - lastAInterruptTime) < INTERRUPTCOOLDOWN) {
         log::LOGGER.log(log::Logger::LogLevel::DEBUG, "aInterrupt Skipped, reason: on cooldown");
         return;
     }
@@ -42,7 +42,7 @@ void Encoder::aInterruptHandler(IO::GPIO* pin) {
             break;
     }
     interruptChange += change;
-    recentAInterruptTime = time::millis();
+    lastAInterruptTime = time::millis();
     //time::wait(200);
     log::LOGGER.log(log::Logger::LogLevel::DEBUG, "aInterrupt Called, "
                                                   "\n\r\tCalculated Position: %d"
@@ -51,7 +51,7 @@ void Encoder::aInterruptHandler(IO::GPIO* pin) {
 }
 
 void Encoder::bInterruptHandler(IO::GPIO* pin) {
-    if ((time::millis() - recentBInterruptTime) < INTERRUPTCOOLDOWN) {
+    if ((time::millis() - lastBInterruptTime) < INTERRUPTCOOLDOWN) {
             log::LOGGER.log(log::Logger::LogLevel::DEBUG, "bInterrupt Skipped, reason: on cooldown");
             return;
     }
@@ -75,7 +75,7 @@ void Encoder::bInterruptHandler(IO::GPIO* pin) {
             break;
     }
     interruptChange += change;
-    recentBInterruptTime = time::millis();
+    lastBInterruptTime = time::millis();
     log::LOGGER.log(log::Logger::LogLevel::DEBUG, "bInterrupt Called, "
                                                   "\n\r\tCalculated Position: %d"
                                                   "\n\r\tActual Position: %d"

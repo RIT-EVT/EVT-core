@@ -72,9 +72,9 @@ private:
     /** the change since the last update was called, updated in the interrupt handler */
     int64_t interruptChange;
     /** the most recent time in milliseconds since the last interrupt on pin A */
-    uint32_t recentAInterruptTime;
+    uint32_t lastAInterruptTime;
     /** the most recent time in milliseconds since the last interrupt on pin B*/
-    uint32_t recentBInterruptTime;
+    uint32_t lastBInterruptTime;
     /** how soon after an interrupt another can happen, in milliseconds */
     const static uint32_t INTERRUPTCOOLDOWN = 100;
 
