@@ -19,9 +19,6 @@ namespace log = EVT::core::log;
 constexpr IO::Pin A_PIN = IO::Pin::PA_8;
 constexpr IO::Pin B_PIN = IO::Pin::PA_9;
 
-constexpr uint8_t deviceCount = 1;
-IO::GPIO* devices[deviceCount];
-
 //Necessary static wrappers for the encoder to handle the pin interrupts
 DEV::Encoder* encoderWrapper;
 void ainterruptHandlerWrapper(IO::GPIO* pin) {
