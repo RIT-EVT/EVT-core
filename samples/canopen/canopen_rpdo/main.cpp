@@ -103,7 +103,7 @@ int main() {
     }
 
     // Initialize all the CANOpen drivers.
-    IO::initializeCANopenDriver(&canOpenQueue, &canStackDriver, &nvmDriver, &timerDriver, &canDriver);
+    IO::initializeCANopenDriver(&canOpenQueue, &can, &timer, &canStackDriver, &nvmDriver, &timerDriver, &canDriver);
 
     // Initialize the CANOpen node we are using.
     IO::initializeCANopenNode(&canNode, RPDOCanNode::NODE_ID, &testCanNode, &canStackDriver, sdoBuffer, appTmrMem);

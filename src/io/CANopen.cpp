@@ -14,9 +14,9 @@
  * the driver implementations.
  */
 namespace {
-EVT::core::IO::CAN* can;
+EVT::core::IO::CAN* globalCAN;
 // Temporary values for testing CANopen without actual timer
-EVT::core::DEV::Timer* timer;
+EVT::core::DEV::Timer* globalTimer;
 
 /** Counts the number of interrupts that have taken place */
 uint32_t timerCounter = 0;
@@ -64,7 +64,7 @@ namespace EVT::core::IO {
 void getCANopenCANDriver(IO::CAN* canInf,
                          EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* messageQueue,
                          CO_IF_CAN_DRV* canDriver) {
-    can = canInf;
+    globalCAN = canInf;
     canQueue = messageQueue;
     canDriver->Init = canInit;
     canDriver->Enable = canEnable;
@@ -75,7 +75,7 @@ void getCANopenCANDriver(IO::CAN* canInf,
 }
 
 void getCANopenTimerDriver(DEV::Timer* timerIntf, CO_IF_TIMER_DRV* timerDriver) {
-    timer = timerIntf;
+    globalTimer = timerIntf;
 
     timerDriver->Init = timerInit;
     timerDriver->Reload = timerReload;
@@ -91,7 +91,15 @@ void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver) {
     nvmDriver->Write = nvmWrite;
 }
 
-void initializeCANopenDriver(types::FixedQueue<150, IO::CANMessage>* canOpenQueue, CO_IF_DRV* canStackDriver, CO_IF_NVM_DRV* nvmDriver, CO_IF_TIMER_DRV* timerDriver, CO_IF_CAN_DRV* canDriver) {
+void initializeCANopenDriver(
+    types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* canOpenQueue,
+    IO::CAN* can,
+    EVT::core::DEV::Timer* timer,
+    CO_IF_DRV* canStackDriver,
+    CO_IF_NVM_DRV* nvmDriver,
+    CO_IF_TIMER_DRV* timerDriver,
+    CO_IF_CAN_DRV* canDriver
+    ) {
     IO::getCANopenCANDriver(can, canOpenQueue, canDriver);
     IO::getCANopenTimerDriver(timer, timerDriver);
     IO::getCANopenNVMDriver(nvmDriver);
@@ -159,7 +167,7 @@ static void canEnable(uint32_t baudrate) {
  */
 static int16_t canSend(CO_IF_FRM* frm) {
     EVT::core::IO::CANMessage message(frm->Identifier, frm->DLC, frm->Data, false);
-    can->transmit(message);
+    globalCAN->transmit(message);
 
     return sizeof(CO_IF_FRM);
 }
@@ -216,13 +224,13 @@ void timerHandler(void* halTim) {
  */
 static void timerInit(uint32_t freq) {
     timerCounter = 0;
-    timer->setPeriod(10);
+    globalTimer->setPeriod(10);
 }
 
 static void timerReload(uint32_t reload) {
-    timer->stopTimer();
-    timer->setPeriod(10);
-    timer->startTimer(timerHandler);
+    globalTimer->stopTimer();
+    globalTimer->setPeriod(10);
+    globalTimer->startTimer(timerHandler);
     timerCounter = 0;
     timerRunning = true;
     counterTarget = reload;
@@ -232,7 +240,7 @@ static void timerReload(uint32_t reload) {
  * Start the "timer" running
  */
 static void timerStart(void) {
-    timer->startTimer(timerHandler);
+    globalTimer->startTimer(timerHandler);
     timerRunning = true;
     timerCounter = 0;
 }
@@ -256,7 +264,7 @@ static uint32_t timerDelay(void) {
  * Stop the timer, currently does nothing.
  */
 static void timerStop(void) {
-    timer->stopTimer();
+    globalTimer->stopTimer();
     timerRunning = false;
     timerCounter = 0;
 }

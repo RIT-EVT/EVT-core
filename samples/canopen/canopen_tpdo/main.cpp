@@ -71,6 +71,9 @@ int main() {
     //create the TPDO node
     TPDOCanNode testCanNode;
 
+    DEV::Timer& timer = DEV::getTimer<DEV::MCUTimer::Timer2>(100);
+    timer.stopTimer();
+
     ///////////////////////////////////////////////////////////////////////////
     // Setup CAN configuration, this handles making drivers, applying settings.
     // And generally creating the CANopen stack node which is the interface
@@ -107,8 +110,10 @@ int main() {
         return 1;
     }
 
-    IO::initializeCANopenDriver(&canOpenQueue, &canStackDriver, &nvmDriver, &timerDriver, &canDriver);
+    // Initialize all the CANOpen drivers.
+    IO::initializeCANopenDriver(&canOpenQueue, &can, &timer, &canStackDriver, &nvmDriver, &timerDriver, &canDriver);
 
+    // Initialize the CANOpen node we are using.
     IO::initializeCANopenNode(&canNode, TPDOCanNode::NODE_ID, &testCanNode, &canStackDriver, sdoBuffer, appTmrMem);
 
     time::wait(500);
@@ -130,8 +135,6 @@ int main() {
             lastVal2 = testCanNode.getSampleDataB();
             uart.printf("Current value: %X, %X\r\n", lastVal1, lastVal2);
         }
-
-        //                processError(&canNode);
 
         IO::processCANopenNode(&canNode);
         // Wait for new data to come in
