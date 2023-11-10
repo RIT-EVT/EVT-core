@@ -68,7 +68,7 @@ private:
     /** counter for how many updates have occurred since the encoder was moved */
     int8_t currentRelPos;
 
-    ///INTERRUPT RELATED VARIABLES
+    //INTERRUPT RELATED VARIABLES
     /** the change since the last update was called, updated in the interrupt handler */
     int64_t interruptChange;
     /** the most recent time in milliseconds since the last interrupt on pin A */
