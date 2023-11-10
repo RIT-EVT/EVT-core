@@ -97,15 +97,11 @@ void Encoder::update() {
 int8_t Encoder::readPinValues() {
     bool aPos = (bool)a.readPin();
     bool bPos = (bool)b.readPin();
-    int8_t newPos = convertPinValuesToPosition(aPos,bPos);
-    return newPos;
-}
-
-int8_t Encoder::convertPinValuesToPosition(bool a, bool b) {
-    if (a == 0 && b == 0) {return 0;}
-    else if (a == 1 && b == 0) {return 1;}
-    else if (a == 1 && b == 1) {return 2;}
-    else if (a == 0 && b == 1) {return 3;}
+    //calculating and returning the position
+    if (aPos == 0 && bPos == 0) {return 0;}
+    else if (aPos == 1 && bPos == 0) {return 1;}
+    else if (aPos == 1 && bPos == 1) {return 2;}
+    else if (aPos == 0 && bPos == 1) {return 3;}
 }
 
 bool Encoder::changePosition(int64_t change) {

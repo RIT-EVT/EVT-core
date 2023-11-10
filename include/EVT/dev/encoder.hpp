@@ -79,15 +79,6 @@ private:
     const static uint32_t INTERRUPTCOOLDOWN = 100;
 
     /**
-     * helper method that converts binary pin values to the relative rotation of the encoder, in the range [0,3]
-     *
-     * @param[in] a value of the a pin
-     * @param[in] b value of the b pin
-     * @return relative position of the encoder
-     */
-    static int8_t convertPinValuesToPosition(bool a, bool b);
-
-    /**
      * reads pin values and converts them to the relative position
      *
      * @return relative position of the encoder
