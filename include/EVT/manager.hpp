@@ -20,6 +20,7 @@
     #define PWM_SUPPORTED
     #define UART_SUPPORTED
     #define SPI_SUPPORTED
+    #define CAN_SUPPORTED
 
     #include <EVT/dev/MCUTimer.hpp>
     #include <EVT/dev/platform/f3xx/IWDGf3xx.hpp>
