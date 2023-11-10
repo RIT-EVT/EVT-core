@@ -59,7 +59,7 @@ private:
     /** GPIO pin b */
     IO::GPIO& b;
 
-    /** position can be between = [0, range] */
+    /** position can be in [0, range] */
     uint64_t range;
     /** the current absolute position of the encoder */
     uint64_t position;
