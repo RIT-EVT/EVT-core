@@ -43,7 +43,6 @@ void Encoder::aInterruptHandler(IO::GPIO* pin) {
     }
     interruptChange += change;
     lastAInterruptTime = time::millis();
-    //time::wait(200);
     log::LOGGER.log(log::Logger::LogLevel::DEBUG, "aInterrupt Called, "
                                                   "\n\r\tCalculated Position: %d"
                                                   "\n\r\tActual Position: %d"
