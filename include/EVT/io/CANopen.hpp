@@ -23,8 +23,8 @@
 namespace EVT::core::IO {
 
 /**
- * Get an instance of the CAN driver that globalCAN be used with the CANopen
- * stack. This will populate a struct with function pointers that globalCAN
+ * Get an instance of the CAN driver that can be used with the CANopen
+ * stack. This will populate a struct with function pointers that can
  * handle CAN operations.
  *
  * @param[in] can The CAN interface that will be used for the stack driver
@@ -36,7 +36,7 @@ void getCANopenCANDriver(CAN* can,
                          CO_IF_CAN_DRV* canDriver);
 
 /**
- * Get an instance of the timer driver that globalCAN be used with the
+ * Get an instance of the timer driver that can be used with the
  * CANopen stack. This will populate a struct with function pointers
  * that will handler timer operations.
  *
@@ -46,9 +46,9 @@ void getCANopenCANDriver(CAN* can,
 void getCANopenTimerDriver(DEV::Timer* timer, CO_IF_TIMER_DRV* timerDriver);
 
 /**
- * Get an instance of the NVM (non-volitile memory) that globalCAN be used
+ * Get an instance of the NVM (non-volitile memory) that can be used
  * with the CANopen stack. This will populate a struct with
- * function pointers that globalCAN handle CAN operations.
+ * function pointers that can handle CAN operations.
 // *
  * CURRENTLY ONLY FOR TESTING USE ONLY, NOT ACTUALLY NVM.
  *
