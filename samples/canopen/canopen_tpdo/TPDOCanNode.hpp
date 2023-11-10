@@ -8,15 +8,15 @@
 */
 #include <stdint.h>
 
-#include <co_core.h>
-#include <EVT/io/CANOpenMacros.hpp>
 #include <EVT/io/CANDevice.hpp>
+#include <EVT/io/CANOpenMacros.hpp>
+#include <co_core.h>
 
-class TPDOCanNode: public CANDevice {
+class TPDOCanNode : public CANDevice {
 public:
-   TPDOCanNode();
+    TPDOCanNode();
 
-   /**
+    /**
     * Expose a way to programmatically update the sampleData.
     *
     * An example use case could be temperature data that is collected
@@ -26,82 +26,81 @@ public:
     *
     * @param newValue[in] The value to set sample data to
     */
-   void setSampleDataA(uint8_t newValue);
-   void setSampleDataB(uint16_t newValue);
+    void setSampleDataA(uint8_t newValue);
+    void setSampleDataB(uint16_t newValue);
 
-   /**
+    /**
     * Get the contained sample data
     *
     * @return The value of the sample data
     */
-   uint8_t getSampleDataA();
-   uint16_t getSampleDataB();
+    uint8_t getSampleDataA();
+    uint16_t getSampleDataB();
 
-   /**
+    /**
     * increments counters up
     */
-   void update();
+    void update();
 
-   /**
+    /**
     * Get a pointer to the start of the object dictionary
     *
     * @return Pointer to the start of the object dictionary
     */
-   CO_OBJ_T* getObjectDictionary() override;
+    CO_OBJ_T* getObjectDictionary() override;
 
-   /**
+    /**
     * Get the number of elements in the object dictionary.
     *
     * @return The number of elements in the object dictionary
     */
-   uint8_t getNumElements() override;
+    uint8_t getNumElements() override;
 
-   /**
+    /**
     * The node ID used to identify the device on the CAN network.
     */
-   static constexpr uint8_t NODE_ID = 0x01;
+    static constexpr uint8_t NODE_ID = 0x01;
 
 private:
-   /**
+    /**
     * This sample data will be exposed over CAN through the object
     * dictionary. The address of the variable will be included in the
      * object dictionary and can be updated via SDO via a CANopen client.
     * This device will then broadcast the value via a triggered PDO.
     */
-   uint8_t sampleDataA;
-   uint16_t sampleDataB;
+    uint8_t sampleDataA;
+    uint16_t sampleDataB;
 
-   /**
+    /**
     * Have to know the size of the object dictionary for initialization
     * process.
     */
-   static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 24;
+    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 24;
 
-   /**
+    /**
     * The object dictionary itself. Will be populated by this object during
     * construction.
     *
     * The plus one is for the special "end of dictionary" marker.
     */
-   CO_OBJ_T objectDictionary[OBJECT_DICTIONARY_SIZE + 1] = {
-       MANDATORY_IDENTIFICATION_ENTRIES_1000_1014,
-       HEARTBEAT_PRODUCER_1017(2000),
-       IDENTITY_OBJECT_1018,
-       SDO_CONFIGURATION_1200,
+    CO_OBJ_T objectDictionary[OBJECT_DICTIONARY_SIZE + 1] = {
+        MANDATORY_IDENTIFICATION_ENTRIES_1000_1014,
+        HEARTBEAT_PRODUCER_1017(2000),
+        IDENTITY_OBJECT_1018,
+        SDO_CONFIGURATION_1200,
 
-       TRANSMIT_PDO_SETTINGS_OBJECT_180X(0x00, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 2000),
+        TRANSMIT_PDO_SETTINGS_OBJECT_180X(0x00, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 2000),
 
-       TRANSMIT_PDO_N_MAPPING_START_KEY_1A0X(0x00, 0x02),
-       TRANSMIT_PDO_N_MAPPING_ENTRY_N_1A0X(0x00, 0x01, PDO_MAPPING_UNSIGNED8),
-       TRANSMIT_PDO_N_MAPPING_ENTRY_N_1A0X(0x00, 0x02, PDO_MAPPING_UNSIGNED16),
+        TRANSMIT_PDO_N_MAPPING_START_KEY_1A0X(0x00, 0x02),
+        TRANSMIT_PDO_N_MAPPING_ENTRY_N_1A0X(0x00, 0x01, PDO_MAPPING_UNSIGNED8),
+        TRANSMIT_PDO_N_MAPPING_ENTRY_N_1A0X(0x00, 0x02, PDO_MAPPING_UNSIGNED16),
 
-       // User defined data, this will be where we put elements that can be
-       // accessed via SDO and depending on configuration PDO
-       DATA_LINK_START_KEY_210X(0, 0x02),
-       DATA_LINK_210X(0x00, 0x01, CO_TUNSIGNED8, &sampleDataA),
-       DATA_LINK_210X(0x00, 0x02, CO_TUNSIGNED16, &sampleDataB),
+        // User defined data, this will be where we put elements that can be
+        // accessed via SDO and depending on configuration PDO
+        DATA_LINK_START_KEY_210X(0, 0x02),
+        DATA_LINK_210X(0x00, 0x01, CO_TUNSIGNED8, &sampleDataA),
+        DATA_LINK_210X(0x00, 0x02, CO_TUNSIGNED16, &sampleDataB),
 
-       // End of dictionary marker
-       CO_OBJ_DICT_ENDMARK
-   };
+        // End of dictionary marker
+        CO_OBJ_DICT_ENDMARK};
 };

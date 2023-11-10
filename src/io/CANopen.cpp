@@ -98,8 +98,7 @@ void initializeCANopenDriver(
     CO_IF_DRV* canStackDriver,
     CO_IF_NVM_DRV* nvmDriver,
     CO_IF_TIMER_DRV* timerDriver,
-    CO_IF_CAN_DRV* canDriver
-    ) {
+    CO_IF_CAN_DRV* canDriver) {
     IO::getCANopenCANDriver(can, canOpenQueue, canDriver);
     IO::getCANopenTimerDriver(timer, timerDriver);
     IO::getCANopenNVMDriver(nvmDriver);
