@@ -73,7 +73,7 @@ private:
      * Have to know the size of the object dictionary for initialization
      * process.
      */
-    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 23;
+    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 24;
 
     /**
      * The object dictionary itself. Will be populated by this object during
@@ -249,5 +249,6 @@ private:
         },
 
         // End of dictionary marker
-        CO_OBJ_DICT_ENDMARK};
+        CO_OBJ_DICT_ENDMARK
+    };
 };
