@@ -57,6 +57,13 @@ public:
     uint8_t getNumElements() override;
 
     /**
+    * Get the device's node ID
+    *
+    * @return The node ID of the can device.
+     */
+    uint8_t getNodeID() override;
+
+    /**
     * The node ID used to identify the device on the CAN network.
     */
     static constexpr uint8_t NODE_ID = 0x01;

@@ -80,13 +80,12 @@ void initializeCANopenDriver(types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessag
  * initializing it.
  *
  * @param canNode the CO_NODE that is initialized.
- * @param NODE_ID the ID of the Node that represents this device.
  * @param canDevice the canDevice that the object dictionary is retrieved from.
  * @param canStackDriver references to the drivers that will be used in initialization
  * @param sdoBuffer the sdoBuffer
  * @param appTmrMem the appTmrMem
  */
-void initializeCANopenNode(CO_NODE* canNode, uint8_t NODE_ID, CANDevice* canDevice, CO_IF_DRV* canStackDriver, uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE], CO_TMR_MEM appTmrMem[16]);
+void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* canStackDriver, uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE], CO_TMR_MEM appTmrMem[16]);
 
 /*!
  * @brief Process events that happened on the given canNode

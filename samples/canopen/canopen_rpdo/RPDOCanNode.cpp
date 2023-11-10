@@ -28,3 +28,6 @@ void RPDOCanNode::setSampleDataB(uint16_t newValue) {
 uint16_t RPDOCanNode::getSampleDataB() {
     return sampleDataB;
 }
+uint8_t RPDOCanNode::getNodeID() {
+    return NODE_ID;
+}

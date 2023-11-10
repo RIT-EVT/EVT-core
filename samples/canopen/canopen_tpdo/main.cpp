@@ -114,8 +114,11 @@ int main() {
     IO::initializeCANopenDriver(&canOpenQueue, &can, &timer, &canStackDriver, &nvmDriver, &timerDriver, &canDriver);
 
     // Initialize the CANOpen node we are using.
-    IO::initializeCANopenNode(&canNode, TPDOCanNode::NODE_ID, &testCanNode, &canStackDriver, sdoBuffer, appTmrMem);
+    IO::initializeCANopenNode(&canNode, &testCanNode, &canStackDriver, sdoBuffer, appTmrMem);
 
+    // Set the node to operational mode
+    CONmtSetMode(&canNode.Nmt, CO_OPERATIONAL);
+    
     time::wait(500);
 
     //print any CANopen errors

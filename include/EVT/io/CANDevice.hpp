@@ -22,6 +22,13 @@ public:
      * @return The number of elements in the object dictionary
      */
     virtual uint8_t getNumElements() = 0;
+
+    /**
+    * Get the device's node ID
+    *
+    * @return The node ID of the can device.
+     */
+     virtual uint8_t getNodeID() = 0;
 };
 
 #endif//EVT_CANDEVICE_HPP

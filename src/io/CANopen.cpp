@@ -108,10 +108,10 @@ void initializeCANopenDriver(
     canStackDriver->Nvm = nvmDriver;
 }
 
-void initializeCANopenNode(CO_NODE* canNode, uint8_t NODE_ID, CANDevice* canDevice, CO_IF_DRV* canStackDriver, uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE], CO_TMR_MEM appTmrMem[16]) {
+void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* canStackDriver, uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE], CO_TMR_MEM appTmrMem[16]) {
     //setup CANopen Node
     CO_NODE_SPEC canSpec = {
-        .NodeId = NODE_ID,
+        .NodeId = canDevice->getNodeID(),
         .Baudrate = IO::CAN::DEFAULT_BAUD,
         .Dict = canDevice->getObjectDictionary(),
         .DictLen = canDevice->getNumElements(),
@@ -125,7 +125,6 @@ void initializeCANopenNode(CO_NODE* canNode, uint8_t NODE_ID, CANDevice* canDevi
 
     CONodeInit(canNode, &canSpec);
     CONodeStart(canNode);
-    CONmtSetMode(&canNode->Nmt, CO_OPERATIONAL);
 }
 
 void processCANopenNode(CO_NODE* canNode) {
