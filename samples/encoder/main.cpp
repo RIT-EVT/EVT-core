@@ -3,7 +3,7 @@
  * but please ask someone before flashing the charge controller!
 */
 
-#include <EVT/dev/encoder.hpp>
+#include <EVT/dev/Encoder.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
 #include <EVT/manager.hpp>

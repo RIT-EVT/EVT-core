@@ -1,4 +1,4 @@
-#include <EVT/dev/encoder.hpp>
+#include <EVT/dev/Encoder.hpp>
 
 namespace EVT::core::DEV {
 
