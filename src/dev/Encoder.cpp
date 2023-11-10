@@ -81,16 +81,13 @@ void Encoder::bInterruptHandler(IO::GPIO* pin) {
                                                   "\n\r\tChange: %d",currentRelPos, readPinValues(), change);
 }
 
-uint64_t Encoder::getPosition() const {
-    return position;
-}
-
-void Encoder::update() {
+uint64_t Encoder::getPosition() {
     int64_t change = interruptChange;
     interruptChange = 0;
     changePosition(change);
-    //in case of triggers desyncing the position
+    //in case of triggers desyncing the relative position
     currentRelPos = readPinValues();
+    return position;
 }
 
 int8_t Encoder::readPinValues() {

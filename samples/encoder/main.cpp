@@ -54,9 +54,7 @@ int main() {
 
     while (1) {
         //ENCODER MUST BE UPDATED EACH LOOP
-        //That is how the position is updated
-        encoder.update();
-        //Now that the encoder is updated we can read the position of it, which for this example will in the range [0, 18]
+        //Read the position of the encoder, which for this example will be in the range [0, 18]
         uint64_t position = encoder.getPosition();
 
         //PRINT VALUES (only enable one at a time)
