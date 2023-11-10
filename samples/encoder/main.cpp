@@ -1,6 +1,7 @@
 /**
- * This is an example designed to work with the charge controller,
- * but please ask someone before flashing the charge controller!
+ * This example demonstrates how to utilize the encoder object,
+ * Two pins are used to read the encoder values via interrupts
+ * Static wrappers are necessary for the encoder to handle the pin interrupts
 */
 
 #include <EVT/dev/Encoder.hpp>
