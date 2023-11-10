@@ -1,7 +1,7 @@
 #include <EVT/dev/BitmapFonts.hpp>
 #include <EVT/dev/LCD.hpp>
-#include <cstring>
 #include <EVT/utils/time.hpp>
+#include <cstring>
 
 namespace EVT::core::DEV {
 LCD::LCD(IO::GPIO& regSelect, IO::GPIO& reset, IO::SPI& spi) : regSelect(regSelect), reset(reset), spi(spi) {

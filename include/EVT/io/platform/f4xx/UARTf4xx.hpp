@@ -1,9 +1,9 @@
 #ifndef _EVT_UARTf4xx_
 #define _EVT_UARTf4xx_
 
-#include <cstdint>
 #include <EVT/io/UART.hpp>
 #include <HALf4/stm32f4xx.h>
+#include <cstdint>
 
 namespace EVT::core::IO {
 

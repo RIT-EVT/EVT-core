@@ -189,7 +189,6 @@ protected:
     Pin rxPin;
     /// The baudrate that is currently being operated at
     uint32_t baudrate;
-
 };
 
 }// namespace EVT::core::IO
