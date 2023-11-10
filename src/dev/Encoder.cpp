@@ -4,7 +4,7 @@ namespace EVT::core::DEV {
 
 
 
-Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, uint64_t range, uint64_t initialPosition, bool rollOver)
+Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, uint32_t range, uint32_t initialPosition, bool rollOver)
     : a(a), b(b), range(range), position(initialPosition), rollOver(rollOver){
     if (position > range) {
         position = range;
@@ -104,7 +104,7 @@ bool Encoder::changePosition(int64_t change) {
     newPosition += change;
     if (newPosition < 0) {
             if (rollOver) {
-                position = (int64_t)(range)+newPosition+1;
+                position = (uint32_t)((range)+(uint32_t)newPosition+1);
             } else {
                 position = 0;
             }
@@ -112,7 +112,7 @@ bool Encoder::changePosition(int64_t change) {
     } else if (newPosition > (int64_t)range) {
             //Position reached cap
             if (rollOver) {
-                position = (uint64_t)newPosition -1 - range;
+                position = (uint32_t)newPosition -1 - range;
             } else {
                 position = range;
             }

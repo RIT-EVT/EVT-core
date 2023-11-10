@@ -25,7 +25,7 @@ public:
      * @param[in] range range of the encoder positions
      * @param[in] initialPosition initial position the encoder is in
      */
-    Encoder(IO::GPIO& a, IO::GPIO& b, uint64_t range, uint64_t initialPosition, bool rollOver);
+    Encoder(IO::GPIO& a, IO::GPIO& b, uint32_t range, uint32_t initialPosition, bool rollOver);
 
     /**
      * Reads and updates the encoder position.
@@ -60,9 +60,9 @@ private:
     IO::GPIO& b;
 
     /** position can be in [0, range] */
-    uint64_t range;
+    uint32_t range;
     /** the current absolute position of the encoder */
-    uint64_t position;
+    uint32_t position;
     /** if the position rolls over when it reaches range or 0 */
     bool rollOver;
     /** counter for how many updates have occurred since the encoder was moved */
