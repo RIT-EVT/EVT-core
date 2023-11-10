@@ -70,11 +70,11 @@ private:
 
     //INTERRUPT RELATED VARIABLES
     /** the change since the last update was called, updated in the interrupt handler */
-    int64_t interruptChange;
+    int64_t interruptChange = 0;
     /** the most recent time in milliseconds since the last interrupt on pin A */
-    uint32_t lastAInterruptTime;
+    uint32_t lastAInterruptTime = 0;
     /** the most recent time in milliseconds since the last interrupt on pin B*/
-    uint32_t lastBInterruptTime;
+    uint32_t lastBInterruptTime = 0;
     /** how soon after an interrupt another can happen, in milliseconds */
     const static uint32_t INTERRUPTCOOLDOWN = 100;
 

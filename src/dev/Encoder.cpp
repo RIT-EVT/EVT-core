@@ -11,9 +11,6 @@ Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, uint64_t range, uint64_t initialPosit
     }
     //setting instance variables
     currentRelPos = readPinValues();
-    interruptChange = 0;
-    lastAInterruptTime = 0;
-    lastBInterruptTime = 0;
 }
 
 
