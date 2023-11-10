@@ -118,7 +118,7 @@ int main() {
 
     // Set the node to operational mode
     CONmtSetMode(&canNode.Nmt, CO_OPERATIONAL);
-    
+
     time::wait(500);
 
     //print any CANopen errors

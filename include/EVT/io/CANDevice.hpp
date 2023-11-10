@@ -28,7 +28,7 @@ public:
     *
     * @return The node ID of the can device.
      */
-     virtual uint8_t getNodeID() = 0;
+    virtual uint8_t getNodeID() = 0;
 };
 
 #endif//EVT_CANDEVICE_HPP

@@ -9,10 +9,10 @@
 #include <stdint.h>
 
 #include <EVT/io/CANDevice.hpp>
-#include <co_core.h>
 #include <EVT/io/CANOpenMacros.hpp>
+#include <co_core.h>
 
-class TestCanNode: public CANDevice {
+class TestCanNode : public CANDevice {
 public:
     TestCanNode();
 
@@ -55,6 +55,7 @@ public:
     * @return The node ID of the can device.
      */
     uint8_t getNodeID() override;
+
 private:
     /**
      * The node ID used to identify the device on the CAN network.
@@ -94,6 +95,5 @@ private:
         DATA_LINK_210X(0, 1, CO_TUNSIGNED8, &sampleData),
 
         // End of dictionary marker
-        CO_OBJ_DICT_ENDMARK
-    };
+        CO_OBJ_DICT_ENDMARK};
 };
