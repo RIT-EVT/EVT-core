@@ -234,7 +234,7 @@
     },                                                                                            \
         {                                                                                         \
             /* COB-ID used by TPDO  180h+TPDO Node-ID*/                                           \
-            .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x01, CO_OBJ_D___R_),                             \
+            .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x01, CO_OBJ_DN__R_),                             \
             .Type = CO_TPDO_ID,                                                                   \
             .Data = (CO_DATA) CO_COBID_TPDO_DEFAULT(TPDO_NUMBER),                                 \
         },                                                                                        \
