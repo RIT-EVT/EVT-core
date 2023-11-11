@@ -9,7 +9,6 @@
 
 #include <cstdint>
 
-
 namespace EVT::core::time {
 /**
  * Function to have the program hold for a set amount of time before
