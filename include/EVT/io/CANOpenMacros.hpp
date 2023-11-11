@@ -38,7 +38,7 @@
         {                                               \
             /* Error Register */                        \
             .Key = CO_KEY(0x1001, 0x00, CO_OBJ_____R_), \
-            .Type = CO_TUNSIGNED8,                     \
+            .Type = CO_TUNSIGNED8,                      \
             .Data = (CO_DATA) 0x00,                     \
         },                                              \
         {                                               \

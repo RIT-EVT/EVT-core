@@ -129,7 +129,7 @@ int main() {
             lastVal2 = testCanNode.getSampleDataB();
             uart.printf("Current value: %X, %X\r\n", lastVal1, lastVal2);
         }
-        
+
         IO::processCANopenNode(&canNode);
         // Wait for new data to come in
         time::wait(10);
