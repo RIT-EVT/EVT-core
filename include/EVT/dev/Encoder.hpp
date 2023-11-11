@@ -88,7 +88,7 @@ private:
     /**
      * changes position by change, capping or rolling over depending on rollOver
      *
-     * @param[in] newPosition the new value for position
+     * @param[in] change the the position should be changed by
      * @return if position tried to go outside the range
      */
     bool changePosition(int64_t change);
