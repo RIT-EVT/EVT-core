@@ -14,7 +14,7 @@ Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, uint32_t range, uint32_t initialPosit
 }
 
 void Encoder::aInterruptHandlerWrapper(IO::GPIO* pin, void* instance) {
-    auto* e = (Encoder*)instance;
+    auto* e = (Encoder*) instance;
     e->aInterruptHandler();
 }
 
