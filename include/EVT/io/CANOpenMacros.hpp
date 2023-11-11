@@ -28,23 +28,29 @@
  * https://canopen-stack.org/v4.4/start/quickstart/#mandatory-object-entries
  *
  */
-#define MANDATORY_IDENTIFICATION_ENTRIES_1000_1014   \
-    {/* Device Type */                               \
-     .Key = CO_KEY(0x1000, 0x00, CO_OBJ_____R_),     \
-     .Type = CO_TUNSIGNED32,                         \
-     .Data = (CO_DATA) 0x00},                        \
-        {/* Error Register */                        \
-         .Key = CO_KEY(0x1001, 0x00, CO_OBJ_____R_), \
-         .Type = CO_TUNSIGNED32,                     \
-         .Data = (CO_DATA) 0x00},                    \
-        {/* COB-ID SYNC-message */                   \
-         .Key = CO_KEY(0x1005, 0x00, CO_OBJ_DN__R_), \
-         .Type = CO_TUNSIGNED32,                     \
-         .Data = (CO_DATA) 0x80},                    \
-    { /* COB-ID EMCY */                              \
-        .Key = CO_KEY(0x1014, 0x00, CO_OBJ__N__R_),  \
-        .Type = CO_TEMCY_ID,                         \
-        .Data = (CO_DATA) 0x80                       \
+#define MANDATORY_IDENTIFICATION_ENTRIES_1000_1014      \
+    {                                                   \
+        /* Device Type */                               \
+        .Key = CO_KEY(0x1000, 0x00, CO_OBJ_____R_),     \
+        .Type = CO_TUNSIGNED32,                         \
+        .Data = (CO_DATA) 0x00,                         \
+    },                                                  \
+        {                                               \
+            /* Error Register */                        \
+            .Key = CO_KEY(0x1001, 0x00, CO_OBJ_____R_), \
+            .Type = CO_TUNSIGNED32,                     \
+            .Data = (CO_DATA) 0x00,                     \
+        },                                              \
+        {                                               \
+            /* COB-ID SYNC-message */                   \
+            .Key = CO_KEY(0x1005, 0x00, CO_OBJ_DN__R_), \
+            .Type = CO_TUNSIGNED32,                     \
+            .Data = (CO_DATA) 0x80,                     \
+        },                                              \
+    { /* COB-ID EMCY */                                 \
+        .Key = CO_KEY(0x1014, 0x00, CO_OBJ__N__R_),     \
+        .Type = CO_TEMCY_ID,                            \
+        .Data = (CO_DATA) 0x80,                         \
     }
 
 // TODO: Implement a heartbeat consumer
@@ -62,7 +68,7 @@
     {                                               \
         .Key = CO_KEY(0x1017, 0x00, CO_OBJ_D___R_), \
         .Type = CO_THB_PROD,                        \
-        .Data = (CO_DATA) INTERVAL                  \
+        .Data = (CO_DATA) INTERVAL,                 \
     }
 
 /*!
@@ -74,27 +80,35 @@
  *
  * TODO: Currently this macro does not allow for per device product codes, revisions, or serial numbers
  */
-#define IDENTITY_OBJECT_1018                         \
-    {/* Object Start Key */                          \
-     .Key = CO_KEY(0x1018, 0x00, CO_OBJ_D___R_),     \
-     .Type = CO_TUNSIGNED8,                          \
-     .Data = (CO_DATA) 0x04},                        \
-        {/* Vendor ID */                             \
-         .Key = CO_KEY(0x1018, 0x01, CO_OBJ_____R_), \
-         .Type = CO_TUNSIGNED8,                      \
-         .Data = (CO_DATA) 0x00},                    \
-        {/* Product Code */                          \
-         .Key = CO_KEY(0x1018, 0x02, CO_OBJ_____R_), \
-         .Type = CO_TUNSIGNED8,                      \
-         .Data = (CO_DATA) 0x00},                    \
-        {/* Revision Number */                       \
-         .Key = CO_KEY(0x1018, 0x03, CO_OBJ_____R_), \
-         .Type = CO_TUNSIGNED8,                      \
-         .Data = (CO_DATA) 0x00},                    \
-    { /* Serial Number */                            \
-        .Key = CO_KEY(0x1018, 0x04, CO_OBJ_____R_),  \
-        .Type = CO_TUNSIGNED8,                       \
-        .Data = (CO_DATA) 0x00                       \
+#define IDENTITY_OBJECT_1018                            \
+    {                                                   \
+        /* Object Start Key */                          \
+        .Key = CO_KEY(0x1018, 0x00, CO_OBJ_D___R_),     \
+        .Type = CO_TUNSIGNED8,                          \
+        .Data = (CO_DATA) 0x04,                         \
+    },                                                  \
+        {                                               \
+            /* Vendor ID */                             \
+            .Key = CO_KEY(0x1018, 0x01, CO_OBJ_____R_), \
+            .Type = CO_TUNSIGNED8,                      \
+            .Data = (CO_DATA) 0x00,                     \
+        },                                              \
+        {                                               \
+            /* Product Code */                          \
+            .Key = CO_KEY(0x1018, 0x02, CO_OBJ_____R_), \
+            .Type = CO_TUNSIGNED8,                      \
+            .Data = (CO_DATA) 0x00,                     \
+        },                                              \
+        {                                               \
+            /* Revision Number */                       \
+            .Key = CO_KEY(0x1018, 0x03, CO_OBJ_____R_), \
+            .Type = CO_TUNSIGNED8,                      \
+            .Data = (CO_DATA) 0x00,                     \
+        },                                              \
+    { /* Serial Number */                               \
+        .Key = CO_KEY(0x1018, 0x04, CO_OBJ_____R_),     \
+        .Type = CO_TUNSIGNED8,                          \
+        .Data = (CO_DATA) 0x00,                         \
     }
 
 /*!
@@ -121,7 +135,7 @@
     { /* SDO Server Response COBID */                   \
         .Key = CO_KEY(0x1200, 0x02, CO_OBJ__N__R_),     \
         .Type = CO_TUNSIGNED32,                         \
-        .Data = (CO_DATA) CO_COBID_SDO_RESPONSE()       \
+        .Data = (CO_DATA) CO_COBID_SDO_RESPONSE(),      \
     }
 
 /*!
@@ -154,7 +168,7 @@
     { /* Transmission type */                                                                       \
         .Key = CO_KEY(0x1400 + RPDO_NUMBER, 0x02, CO_OBJ_D___R_),                                   \
         .Type = CO_TPDO_TYPE,                                                                       \
-        .Data = (CO_DATA) TRANSMISSION_TYPE                                                         \
+        .Data = (CO_DATA) TRANSMISSION_TYPE,                                                        \
     }
 
 /*!
@@ -176,7 +190,7 @@
     {                                                                            \
         .Key = CO_KEY(0x1600 + RPDO_NUMBER, 0x00, CO_OBJ_D___R_),                \
         .Type = CO_TUNSIGNED8,                                                   \
-        .Data = (CO_DATA) NUMBER_OF_SUB_INDICES                                  \
+        .Data = (CO_DATA) NUMBER_OF_SUB_INDICES,                                 \
     }
 
 /*!
@@ -192,11 +206,11 @@
  * @param SUB_INDEX (integer) the sub index in the greater RPDO MAPPING Object.
  * @param DATA_SIZE (integer) the size in bits of the data that this entry corresponds to. You should use the PDO_MAPPING_UNSIGNEDX definitions for these sizes.
  */
-#define RECEIVE_PDO_N_MAPPING_ENTRY_N_160X(RPDO_NUMBER, SUB_INDEX, DATA_SIZE)        \
-    {                                                                                \
-        .Key = CO_KEY(0x1600 + RPDO_NUMBER, SUB_INDEX, CO_OBJ_D___R_),               \
-        .Type = CO_TUNSIGNED32,                                                      \
-        .Data = (CO_DATA) CO_LINK(0x2100 + RPDO_NUMBER, 0x00 + SUB_INDEX, DATA_SIZE) \
+#define RECEIVE_PDO_N_MAPPING_ENTRY_N_160X(RPDO_NUMBER, SUB_INDEX, DATA_SIZE)         \
+    {                                                                                 \
+        .Key = CO_KEY(0x1600 + RPDO_NUMBER, SUB_INDEX, CO_OBJ_D___R_),                \
+        .Type = CO_TUNSIGNED32,                                                       \
+        .Data = (CO_DATA) CO_LINK(0x2100 + RPDO_NUMBER, 0x00 + SUB_INDEX, DATA_SIZE), \
     }
 
 /*!
@@ -224,18 +238,22 @@
             .Type = CO_TPDO_ID,                                                                   \
             .Data = (CO_DATA) CO_COBID_TPDO_DEFAULT(TPDO_NUMBER),                                 \
         },                                                                                        \
-        {/* Transmission type */                                                                  \
-         .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x02, CO_OBJ_D___R_),                                \
-         .Type = CO_TPDO_TYPE,                                                                    \
-         .Data = (CO_DATA) TRANSMISSION_TYPE},                                                    \
-        {/* Inhibit time with LSB 100us (0=disable) */                                            \
-         .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x03, CO_OBJ_D___R_),                                \
-         .Type = CO_TUNSIGNED16,                                                                  \
-         .Data = (CO_DATA) INHIBIT_TIME},                                                         \
+        {                                                                                         \
+            /* Transmission type */                                                               \
+            .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x02, CO_OBJ_D___R_),                             \
+            .Type = CO_TPDO_TYPE,                                                                 \
+            .Data = (CO_DATA) TRANSMISSION_TYPE,                                                  \
+        },                                                                                        \
+        {                                                                                         \
+            /* Inhibit time with LSB 100us (0=disable) */                                         \
+            .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x03, CO_OBJ_D___R_),                             \
+            .Type = CO_TUNSIGNED16,                                                               \
+            .Data = (CO_DATA) INHIBIT_TIME,                                                       \
+        },                                                                                        \
     { /* Event timer LSB 1ms (0=disable) */                                                       \
         .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x05, CO_OBJ_D___R_),                                 \
         .Type = CO_TPDO_EVENT,                                                                    \
-        .Data = (CO_DATA) INTERVAL                                                                \
+        .Data = (CO_DATA) INTERVAL,                                                               \
     }
 
 /*!
@@ -256,7 +274,7 @@
     {                                                                             \
         .Key = CO_KEY(0x1A00 + TPDO_NUMBER, 0x00, CO_OBJ_D___R_),                 \
         .Type = CO_TUNSIGNED8,                                                    \
-        .Data = (CO_DATA) NUMBER_OF_SUB_INDICES                                   \
+        .Data = (CO_DATA) NUMBER_OF_SUB_INDICES,                                  \
     }
 
 /*!
@@ -272,11 +290,11 @@
  * @param SUB_INDEX (integer) the sub index in the greater TPDO MAPPING Object.
  * @param DATA_SIZE (integer) the size in bits of the data that this entry corresponds to. You should use the PDO_MAPPING_UNSIGNEDX definitions for these sizes.
  */
-#define TRANSMIT_PDO_N_MAPPING_ENTRY_N_1A0X(TPDO_NUMBER, SUB_INDEX, DATA_SIZE)       \
-    {                                                                                \
-        .Key = CO_KEY(0x1A00 + TPDO_NUMBER, SUB_INDEX, CO_OBJ_D___R_),               \
-        .Type = CO_TUNSIGNED32,                                                      \
-        .Data = (CO_DATA) CO_LINK(0x2100 + TPDO_NUMBER, 0x00 + SUB_INDEX, DATA_SIZE) \
+#define TRANSMIT_PDO_N_MAPPING_ENTRY_N_1A0X(TPDO_NUMBER, SUB_INDEX, DATA_SIZE)        \
+    {                                                                                 \
+        .Key = CO_KEY(0x1A00 + TPDO_NUMBER, SUB_INDEX, CO_OBJ_D___R_),                \
+        .Type = CO_TUNSIGNED32,                                                       \
+        .Data = (CO_DATA) CO_LINK(0x2100 + TPDO_NUMBER, 0x00 + SUB_INDEX, DATA_SIZE), \
     }
 
 /*!
@@ -294,7 +312,7 @@
     {                                                               \
         .Key = CO_KEY(0x2100 + PDO_NUMBER, 0, CO_OBJ_D___R_),       \
         .Type = CO_TUNSIGNED8,                                      \
-        .Data = (CO_DATA) NUMBER_OF_SUB_INDICES                     \
+        .Data = (CO_DATA) NUMBER_OF_SUB_INDICES,                    \
     }
 
 /*!
@@ -315,7 +333,7 @@
     {                                                                  \
         .Key = CO_KEY(0x2100 + PDO_NUMBER, SUB_INDEX, CO_OBJ_D___R_),  \
         .Type = DATA_TYPE,                                             \
-        .Data = (CO_DATA) DATA_POINTER                                 \
+        .Data = (CO_DATA) DATA_POINTER,                                \
     }
 
 #endif//EVT_CANOPENMACROS_HPP
