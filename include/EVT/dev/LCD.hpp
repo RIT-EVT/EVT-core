@@ -5,7 +5,7 @@
 #include <EVT/io/SPI.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
-//#include <EVT/utils/time.hpp>
+#include <EVT/utils/time.hpp>
 #include <stdint.h>
 
 #define ADCSELECT 0xA0

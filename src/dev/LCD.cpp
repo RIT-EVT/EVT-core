@@ -1,6 +1,5 @@
 #include <EVT/dev/BitmapFonts.hpp>
 #include <EVT/dev/LCD.hpp>
-#include <EVT/utils/time.hpp>
 #include <cstring>
 
 namespace EVT::core::DEV {

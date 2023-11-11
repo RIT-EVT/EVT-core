@@ -3,7 +3,9 @@
  * only to run on the STMF3xx.
  */
 
-#include <EVT/utils/platform/f3xx/timef3xx.hpp>
+#include <HALf3/stm32f3xx_hal.h>
+#include <HALf3/stm32f3xx_it.h>
+#include <cstdint>
 
 namespace EVT::core::time {
 /**
