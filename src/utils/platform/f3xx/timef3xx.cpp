@@ -5,6 +5,8 @@
 
 #include <HALf3/stm32f3xx_hal.h>
 #include <HALf3/stm32f3xx_it.h>
+
+#include <EVT/utils/time.hpp>
 #include <cstdint>
 
 namespace EVT::core::time {
