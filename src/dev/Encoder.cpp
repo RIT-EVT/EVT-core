@@ -9,9 +9,21 @@ Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, uint32_t range, uint32_t initialPosit
     }
     //setting instance variables
     currentRelPos = readPinValues();
+    a.registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING, aInterruptHandlerWrapper, this);
+    b.registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING, bInterruptHandlerWrapper, this);
 }
 
-void Encoder::aInterruptHandler(IO::GPIO* pin) {
+void Encoder::aInterruptHandlerWrapper(IO::GPIO* pin, void* instance) {
+    auto* e = (Encoder*)instance;
+    e->aInterruptHandler();
+}
+
+void Encoder::bInterruptHandlerWrapper(IO::GPIO* pin, void* instance) {
+    auto* e = (Encoder*) instance;
+    e->bInterruptHandler();
+}
+
+void Encoder::aInterruptHandler() {
     if ((time::millis() - lastAInterruptTime) < INTERRUPTCOOLDOWN) {
         log::LOGGER.log(log::Logger::LogLevel::DEBUG, "aInterrupt Skipped, reason: on cooldown");
         return;
@@ -44,7 +56,7 @@ void Encoder::aInterruptHandler(IO::GPIO* pin) {
                     currentRelPos, readPinValues(), change);
 }
 
-void Encoder::bInterruptHandler(IO::GPIO* pin) {
+void Encoder::bInterruptHandler() {
     if ((time::millis() - lastBInterruptTime) < INTERRUPTCOOLDOWN) {
         log::LOGGER.log(log::Logger::LogLevel::DEBUG, "bInterrupt Skipped, reason: on cooldown");
         return;

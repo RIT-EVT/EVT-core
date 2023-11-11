@@ -19,16 +19,6 @@ namespace log = EVT::core::log;
 constexpr IO::Pin A_PIN = IO::Pin::PA_8;
 constexpr IO::Pin B_PIN = IO::Pin::PA_9;
 
-//Necessary static wrappers for the encoder to handle the pin interrupts
-DEV::Encoder* encoderWrapper;
-void ainterruptHandlerWrapper(IO::GPIO* pin) {
-    encoderWrapper->aInterruptHandler(pin);
-}
-
-void binterruptHandlerWrapper(IO::GPIO* pin) {
-    encoderWrapper->bInterruptHandler(pin);
-}
-
 int main() {
     //Init platform
     EVT::core::platform::init();
@@ -44,13 +34,6 @@ int main() {
     IO::GPIO& pinB = IO::getGPIO<B_PIN>(IO::GPIO::Direction::INPUT);
 
     DEV::Encoder encoder(pinA, pinB, 18, 0, true);
-
-    //setting the wrapper to the encoder
-    encoderWrapper = &encoder;
-
-    //Creating the interrupts
-    pinA.registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING, ainterruptHandlerWrapper);
-    pinB.registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING, binterruptHandlerWrapper);
 
     while (1) {
         //ENCODER MUST BE UPDATED EACH LOOP
