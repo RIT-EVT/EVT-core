@@ -1,9 +1,6 @@
 #ifndef EVT_TIMER_HPP
 #define EVT_TIMER_HPP
 
-#include <HALf3/stm32f3xx.h>
-#include <HALf3/stm32f3xx_hal_def.h>
-
 namespace EVT::core::DEV {
 
 /**
