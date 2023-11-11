@@ -42,12 +42,12 @@ target_sources(${PROJECT_NAME} PRIVATE
         src/dev/LCD.cpp
         src/dev/RTCTimer.cpp
         src/dev/storage/M24C32.cpp
-        src/dev/Thermistor.cpp)
+        src/dev/Thermistor.cpp
+        src/utils/log.cpp)
 
 get_directory_property(COMPDEFS COMPILE_DEFINITIONS)
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
     target_sources(${PROJECT_NAME} PRIVATE
-    src/utils/log.cpp
     src/utils/platform/f3xx/timef3xx.cpp
     src/dev/platform/f3xx/Timerf3xx.cpp
     src/platform/f3xx/stm32f302x8.cpp
@@ -62,7 +62,6 @@ if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
     src/dev/platform/f3xx/RTCf3xx.cpp)
 elseif(COMPDEFS MATCHES "(.*)STM32F4xx(.*)")
     target_sources(${PROJECT_NAME} PRIVATE
-#   src/utils/log.cpp
     src/utils/platform/f4xx/timef4xx.cpp
     src/platform/f4xx/stm32f446xx.cpp
     src/io/platform/f4xx/ADCf4xx.cpp

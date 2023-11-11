@@ -10,9 +10,9 @@ macro(make_exe proj_name sources)
 
     # Make the main executable have an ".elf" suffix
     set_target_properties(${proj_name} PROPERTIES
-            OUTPUT_NAME "${proj_name}"
-            SUFFIX ".elf"
-            )
+        OUTPUT_NAME "${proj_name}"
+        SUFFIX ".elf"
+    )
 
     # Generate a map file
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
@@ -20,9 +20,9 @@ macro(make_exe proj_name sources)
     set(HEX_FILE "${proj_name}.hex")
     set(BIN_FILE "${proj_name}.bin")
     add_custom_command(TARGET ${proj_name} POST_BUILD
-            COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${proj_name}> ${HEX_FILE}
-            COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${proj_name}> ${BIN_FILE}
-            COMMENT "Building ${HEX_FILE} \nBuilding ${BIN_FILE}")
+    COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${proj_name}> ${HEX_FILE}
+    COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${proj_name}> ${BIN_FILE}
+    COMMENT "Building ${HEX_FILE} \nBuilding ${BIN_FILE}")
 
     # Link the EVT-core library
     target_link_libraries(${proj_name} PUBLIC EVT)
