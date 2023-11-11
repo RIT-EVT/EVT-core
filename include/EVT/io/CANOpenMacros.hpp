@@ -38,7 +38,7 @@
         {                                               \
             /* Error Register */                        \
             .Key = CO_KEY(0x1001, 0x00, CO_OBJ_____R_), \
-            .Type = CO_TUNSIGNED32,                     \
+            .Type = CO_TUNSIGNED8,                     \
             .Data = (CO_DATA) 0x00,                     \
         },                                              \
         {                                               \
@@ -331,7 +331,7 @@
  */
 #define DATA_LINK_210X(PDO_NUMBER, SUB_INDEX, DATA_TYPE, DATA_POINTER) \
     {                                                                  \
-        .Key = CO_KEY(0x2100 + PDO_NUMBER, SUB_INDEX, CO_OBJ_D___R_),  \
+        .Key = CO_KEY(0x2100 + PDO_NUMBER, SUB_INDEX, CO_OBJ____PRW),  \
         .Type = DATA_TYPE,                                             \
         .Data = (CO_DATA) DATA_POINTER,                                \
     }
