@@ -24,8 +24,9 @@ project(EVT
     LANGUAGES CXX C
 )
 
-add_library(${PROJECT_NAME} STATIC include/EVT/utils/platform/f3xx/timef3xx.hpp include/EVT/utils/platform/f4xx/timef4xx.hpp)
+add_library(${PROJECT_NAME} STATIC)
 
+# Add sources
 target_sources(${PROJECT_NAME} PRIVATE
         src/io/ADC.cpp
         src/io/CAN.cpp
@@ -42,12 +43,12 @@ target_sources(${PROJECT_NAME} PRIVATE
         src/dev/RTCTimer.cpp
         src/dev/storage/M24C32.cpp
         src/dev/Thermistor.cpp)
-# Add sources
+
 get_directory_property(COMPDEFS COMPILE_DEFINITIONS)
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
     target_sources(${PROJECT_NAME} PRIVATE
     src/utils/log.cpp
-            src/utils/platform/f3xx/timef3xx.cpp
+    src/utils/platform/f3xx/timef3xx.cpp
     src/dev/platform/f3xx/Timerf3xx.cpp
     src/platform/f3xx/stm32f302x8.cpp
     src/io/platform/f3xx/ADCf3xx.cpp
@@ -61,8 +62,8 @@ if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
     src/dev/platform/f3xx/RTCf3xx.cpp)
 elseif(COMPDEFS MATCHES "(.*)STM32F4xx(.*)")
     target_sources(${PROJECT_NAME} PRIVATE
-#        src/utils/log.cpp
-            src/utils/platform/f4xx/timef4xx.cpp
+#   src/utils/log.cpp
+    src/utils/platform/f4xx/timef4xx.cpp
     src/platform/f4xx/stm32f446xx.cpp
     src/io/platform/f4xx/ADCf4xx.cpp
     src/io/platform/f4xx/CANf4xx.cpp
