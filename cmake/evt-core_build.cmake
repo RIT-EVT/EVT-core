@@ -5,6 +5,7 @@ files for the given name. This will make a dedicated project.
 macro(make_exe proj_name sources)
     project(${proj_name} C CXX ASM)
     add_definitions(-DUSE_HAL_LIBRARY)
+
     add_executable(${proj_name} ${sources})
 
     # Make the main executable have an ".elf" suffix

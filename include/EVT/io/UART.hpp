@@ -189,8 +189,6 @@ protected:
     Pin rxPin;
     /// The baudrate that is currently being operated at
     uint32_t baudrate;
-
-    constexpr static uint32_t DEFAULT_TIMEOUT = 100;
 };
 
 }// namespace EVT::core::IO

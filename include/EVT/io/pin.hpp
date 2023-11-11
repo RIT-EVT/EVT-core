@@ -7,7 +7,6 @@
 #define _EVT_PIN_
 
 namespace EVT::core::IO {
-// STM32F302R8 pin names
 
 /**
  * Pin mapping information. These values are generated via a combination of the GPIO bank that
@@ -107,6 +106,9 @@ enum class Pin {
 #ifdef STM32F334x8
     LED = PA_5,
 #endif
+#ifdef STM32F4xx
+    LED = PA_5,
+#endif
 
 #ifdef STM32F302x8
     SPI_SCK = PB_13, //D13
@@ -124,11 +126,6 @@ enum class Pin {
     I2C_SDA = PB_8,
     I2C_SCL = PB_9,
 #endif
-
-#ifdef STM32f4xx
-    LED = PA_5,
-#endif
-
     UART_TX = PA_2,
     UART_RX = PA_3,
     I2C_SDA = PB_6,

@@ -1,4 +1,4 @@
-#include "EVT/dev/RTCTimer.hpp"
+#include <EVT/dev/RTCTimer.hpp>
 
 namespace EVT::core::DEV {
 
@@ -41,4 +41,5 @@ uint32_t RTCTimer::getTime() {
 bool RTCTimer::hasGoneOff() {
     return getTime() >= clockPeriod;
 }
+
 }// namespace EVT::core::DEV

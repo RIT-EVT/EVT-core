@@ -16,7 +16,7 @@
 #ifndef _EVT_FIXED_QUEUE_
 #define _EVT_FIXED_QUEUE_
 
-#include <cstddef>
+#include <stdint.h>
 
 namespace EVT::core::types {
 

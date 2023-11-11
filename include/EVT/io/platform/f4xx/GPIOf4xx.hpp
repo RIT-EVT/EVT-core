@@ -25,7 +25,7 @@ public:
      * @param[in] pin The pin for the GPIO instance to use.
      * @param[in] direction The flow of data (either input or output).
      */
-    GPIOf4xx(Pin pin, Direction direction);
+    GPIOf4xx(Pin pin, Direction direction, Pull pull = Pull::PULL_DOWN);
 
     void setDirection(Direction direction) override;
 
@@ -43,7 +43,7 @@ public:
      * @param mode gpio configuration mode
      * @param pull pull-up or pull-down activation
      * @param speed maximum gpio output frequency
-     * Possible values for Mode, Pull, and Speed can be found in "stm32f3xx_hal_gpio.h"
+     * Possible values for Mode, Pull, and Speed can be found in "stm32f4xx_hal_gpio.h"
      * @param alternate gpio alternate function selection
      */
     static void gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins,
