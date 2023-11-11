@@ -6,9 +6,9 @@
 #ifndef _EVT_TIME_
 #define _EVT_TIME_
 
-#include <cstdint>
 #include <HALf4/stm32f4xx_hal.h>
 #include <HALf4/stm32f4xx_it.h>
+#include <cstdint>
 
 namespace EVT::core::time {
 /**
@@ -30,30 +30,30 @@ uint32_t millis();
 * Struct representing a timestamp.
 */
 struct TimeStamp {
-   /**
+    /**
     * The current year
     */
-   uint16_t year;
-   /**
+    uint16_t year;
+    /**
     * The current month (1-12)
     */
-   uint8_t month;
-   /**
+    uint8_t month;
+    /**
     * The current day (1-31)
     */
-   uint8_t day;
-   /**
+    uint8_t day;
+    /**
     * The hour in a 24 hour timeframe
     */
-   uint8_t hour;
-   /**
+    uint8_t hour;
+    /**
     * The minute (0-59)
     */
-   uint8_t minute;
-   /**
+    uint8_t minute;
+    /**
     * The second (0-59)
     */
-   uint8_t second;
+    uint8_t second;
 };
 }// namespace EVT::core::time
 #endif

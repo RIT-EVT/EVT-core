@@ -3,12 +3,12 @@
 
 #include <cstdint>
 
-#include <EVT/io/pin.hpp>
 #include <EVT/io/ADC.hpp>
 #include <EVT/io/CAN.hpp>
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/PWM.hpp>
 #include <EVT/io/UART.hpp>
+#include <EVT/io/pin.hpp>
 
 #ifdef STM32F3xx
     #define IWDG_SUPPORTED
@@ -79,11 +79,11 @@ namespace EVT::core::DEV {
 */
 #ifdef IWDG_SUPPORTED
 IWDG& getIWDG(uint32_t ms) {
-#ifdef STM32F3xx
+    #ifdef STM32F3xx
     // 8 < ms < 32768
     static IWDGf3xx iwdg(ms);
     return iwdg;
-#endif
+    #endif
 }
 #endif
 
@@ -92,20 +92,20 @@ IWDG& getIWDG(uint32_t ms) {
 */
 #ifdef RTC_SUPPORTED
 RTC& getRTC() {
-#ifdef STM32F3xx
+    #ifdef STM32F3xx
     static RTCf3xx rtc;
     return rtc;
-#endif
+    #endif
 }
 #endif
 
 #ifdef MCU_SUPPORTED
 template<MCUTimer mcuTimer>
 Timer& getTimer(uint32_t clockPeriod) {
-#ifdef STM32F3xx
+    #ifdef STM32F3xx
     static Timerf3xx timer(getTIM(mcuTimer), clockPeriod);
     return timer;
-#endif
+    #endif
 }
 #endif
 
@@ -121,14 +121,14 @@ namespace EVT::core::IO {
 #ifdef ADC_SUPPORTED
 template<Pin pin>
 ADC& getADC() {
-#ifdef STM32F4xx
+    #ifdef STM32F4xx
     static ADCf4xx adc(pin);
     return adc;
-#endif
-#ifdef STM32F3xx
+    #endif
+    #ifdef STM32F3xx
     static ADCf3xx adc(pin);
     return adc;
-#endif
+    #endif
 }
 #endif
 
@@ -141,14 +141,14 @@ ADC& getADC() {
 #ifdef CAN_SUPPORTED
 template<Pin txPin, Pin rxPin>
 CAN& getCAN(bool loopbackEnabled = false) {
-#ifdef STM32F3xx
+    #ifdef STM32F3xx
     static CANf3xx can(txPin, rxPin, loopbackEnabled);
     return can;
-#endif
-#ifdef STM32F4xx
+    #endif
+    #ifdef STM32F4xx
     static CANf4xx can(txPin, rxPin, loopbackEnabled);
     return can;
-#endif
+    #endif
 }
 #endif
 
@@ -163,14 +163,14 @@ CAN& getCAN(bool loopbackEnabled = false) {
 template<Pin pin>
 GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT,
               GPIO::Pull pull = GPIO::Pull::PULL_DOWN) {
-#ifdef STM32F3xx
+    #ifdef STM32F3xx
     static GPIOf3xx gpioPin(pin, direction, pull);
     return gpioPin;
-#endif
-#ifdef STM32F4xx
+    #endif
+    #ifdef STM32F4xx
     static GPIOf4xx gpioPin(pin, direction);
     return gpioPin;
-#endif
+    #endif
 }
 #endif
 
@@ -183,10 +183,10 @@ GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT,
 #ifdef I2C_SUPPORTED
 template<Pin scl, Pin sda>
 I2C& getI2C() {
-#ifdef STM32F3xx
+    #ifdef STM32F3xx
     static I2Cf3xx i2c(scl, sda);
     return i2c;
-#endif
+    #endif
 }
 #endif
 
@@ -198,10 +198,10 @@ I2C& getI2C() {
 #ifdef PWM_SUPPORTED
 template<Pin pin>
 PWM& getPWM() {
-#ifdef STM32F3xx
+    #ifdef STM32F3xx
     static PWMf3xx pwm(pin);
     return pwm;
-#endif
+    #endif
 }
 #endif
 
@@ -216,14 +216,14 @@ PWM& getPWM() {
 #ifdef UART_SUPPORTED
 template<Pin txPin, Pin rxPin>
 UART& getUART(uint32_t baudrate, bool isSwapped = false) {
-#ifdef STM32F3xx
+    #ifdef STM32F3xx
     static UARTf3xx uart(txPin, rxPin, baudrate, isSwapped);
     return uart;
-#endif
-#ifdef STM32F4xx
+    #endif
+    #ifdef STM32F4xx
     static UARTf4xx uart(txPin, rxPin, baudrate, isSwapped);
     return uart;
-#endif
+    #endif
 }
 #endif
 
@@ -239,10 +239,10 @@ UART& getUART(uint32_t baudrate, bool isSwapped = false) {
 #ifdef SPI_SUPPORTED
 template<Pin sckPin, Pin mosiPin, Pin misoPin>
 SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
-#ifdef STM32F3xx
+    #ifdef STM32F3xx
     static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
     return spi;
-#endif
+    #endif
 }
 
 /**
@@ -255,10 +255,10 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 */
 template<Pin sckPin, Pin mosiPin>
 SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
-#ifdef STM32F3xx
+    #ifdef STM32F3xx
     static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin);
     return spi;
-#endif
+    #endif
 }
 #endif
 

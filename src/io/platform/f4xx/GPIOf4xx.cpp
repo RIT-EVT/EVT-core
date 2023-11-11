@@ -68,7 +68,7 @@ GPIOf4xx::GPIOf4xx(Pin pin, GPIO::Direction direction, Pull pull)
     uint8_t numOfPins = 1;
 
     gpioStateInit(&gpioInit, myPins, numOfPins,
-                  static_cast<uint32_t>(direction), static_cast<uint32_t>(pull),GPIO_PULLDOWN, GPIO_SPEED_FREQ_HIGH);
+                  static_cast<uint32_t>(direction), static_cast<uint32_t>(pull), GPIO_PULLDOWN, GPIO_SPEED_FREQ_HIGH);
 
     //TODO: double check that this actually applies to F4xx the same way it does to F3xx
     switch ((static_cast<uint8_t>(pin) & 0xF0) >> 4) {
