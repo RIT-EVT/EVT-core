@@ -1,6 +1,8 @@
 #ifndef _EVT_STM32F3xx_
 #define _EVT_STM32F3xx_
 
+#include <cstdint>
+
 namespace EVT::core::platform {
 
 // stm32f302x8_init() sets clock speed to 8 MHz
