@@ -9,8 +9,6 @@
 
 #include <cstdint>
 
-#include <HALf3/stm32f3xx_hal.h>
-
 namespace EVT::core::time {
 /**
  * Function to have the program hold for a set amount of time before
