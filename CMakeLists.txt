@@ -38,6 +38,7 @@ target_sources(${PROJECT_NAME} PRIVATE
         src/io/SPI.cpp
         src/io/types/CANMessage.cpp
         src/dev/button.cpp
+        src/dev/Encoder.cpp
         src/dev/LED.cpp
         src/dev/LCD.cpp
         src/dev/RTCTimer.cpp
