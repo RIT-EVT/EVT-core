@@ -1,21 +1,21 @@
 #include "TestCanNode.hpp"
 
-RPDOCanNode::RPDOCanNode() {
+TestCanNode::RPDOCanNode() {
     sampleData = 0;
 }
 
-void RPDOCanNode::setSampleData(uint8_t newValue) {
+void TestCanNode::setSampleData(uint8_t newValue) {
     this->sampleData = newValue;
 }
 
-uint8_t RPDOCanNode::getSampleData() {
+uint8_t TestCanNode::getSampleData() {
     return sampleData;
 }
 
-CO_OBJ_T* RPDOCanNode::getObjectDictionary() {
+CO_OBJ_T* TestCanNode::getObjectDictionary() {
     return &objectDictionary[0];
 }
 
-uint8_t RPDOCanNode::getNumElements() {
+uint8_t TestCanNode::getNumElements() {
     return OBJECT_DICTIONARY_SIZE;
 }

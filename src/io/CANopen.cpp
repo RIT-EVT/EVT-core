@@ -128,13 +128,13 @@ static int16_t canSend(CO_IF_FRM* frm) {
  * into the CANopen stack format.
  *
  * @param frm[out] The message to populate with CAN data
- * @return sizeof(CO_IF_FMR) on success, ((int16_t)-1u) on failure
+ * @return sizeof(CO_IF_FMR) on success, ((int16_t) 0) on failure
  */
 static int16_t canRead(CO_IF_FRM* frm) {
     EVT::core::IO::CANMessage message;
 
     // No message
-    if (!canQueue->pop(&message))
+    if (!`canQueue->pop(&message)`)
         return ((int16_t) 0);// This should be 0 according to CANopen's COIfCanRead
 
     frm->Identifier = message.getId();

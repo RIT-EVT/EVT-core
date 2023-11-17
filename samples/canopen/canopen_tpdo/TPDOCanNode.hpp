@@ -57,7 +57,7 @@ public:
     /**
      * The node ID used to identify the device on the CAN network.
      */
-    static constexpr uint8_t NODE_ID = 0x01;
+    static constexpr uint8_t NODE_ID = 1;
 
 private:
     /**

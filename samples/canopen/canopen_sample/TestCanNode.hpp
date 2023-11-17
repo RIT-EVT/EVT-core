@@ -10,9 +10,9 @@
 
 #include <co_core.h>
 
-class RPDOCanNode {
+class TestCanNode {
 public:
-    RPDOCanNode();
+    TestCanNode();
 
     /**
      * Expose a way to programmatically update the sampleData.
@@ -51,7 +51,7 @@ private:
     /**
      * The node ID used to identify the device on the CAN network.
      */
-    static constexpr uint8_t NODE_ID = 0x01;
+    static constexpr uint8_t NODE_ID = 1;
 
     /**
      * This sample data will be exposed over CAN through the object
