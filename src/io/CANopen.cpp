@@ -134,7 +134,7 @@ static int16_t canRead(CO_IF_FRM* frm) {
     EVT::core::IO::CANMessage message;
 
     // No message
-    if (!`canQueue->pop(&message)`)
+    if (!canQueue->pop(&message))
         return ((int16_t) 0);// This should be 0 according to CANopen's COIfCanRead
 
     frm->Identifier = message.getId();
