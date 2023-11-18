@@ -98,6 +98,15 @@ uint64_t Encoder::getPosition() {
     return position;
 }
 
+void Encoder::setRangeAndPosition(uint32_t newRange, uint32_t newPosition) {
+    range = newRange;
+    if (newPosition <= range) {
+        position = newPosition;
+    } else {
+        position = 0;
+    }
+}
+
 int8_t Encoder::readPinValues() {
     bool aPos = (bool) a.readPin();
     bool bPos = (bool) b.readPin();
