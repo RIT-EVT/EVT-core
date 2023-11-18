@@ -1,6 +1,6 @@
 #include "TestCanNode.hpp"
 
-TestCanNode::RPDOCanNode() {
+TestCanNode::TestCanNode() {
     sampleData = 0;
 }
 
