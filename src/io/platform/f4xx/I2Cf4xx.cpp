@@ -44,9 +44,9 @@ static uint8_t getPortID(Pin sclPin) {
     return 1;
 #endif
 
-#ifdef STM32f446xx
+#ifdef STM32F4xx
     switch (sclPin) {
-    case Pin::PB_6:
+    case Pin::PB_8:
         return 1;
     case Pin::PB_10:
         return 2;
@@ -106,7 +106,7 @@ static void getInstance(uint8_t portID, I2C_TypeDef** instance, uint8_t* altId) 
         __HAL_RCC_I2C1_CLK_ENABLE();
 #endif
 
-#ifdef STM32f446xx
+#ifdef STM32F4xx
     switch(portID){
     case 1:
         *instance = I2C1;
@@ -141,9 +141,11 @@ I2Cf4xx::I2Cf4xx(Pin sclPin, Pin sdaPin) : I2C(sclPin, sdaPin) {
     Pin i2cPins[] = {sclPin, sdaPin};
     uint8_t numOfPins = 2;
 
+    //TODO: CHECK GPIO STATES IN HAL CODE
     GPIOf4xx::gpioStateInit(&gpioInit, i2cPins, numOfPins, GPIO_MODE_AF_OD,
                             GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
 
+    //TODO: CHECK CLOCK SPEED TO MAKE SURE ITS RIGHT
     // 8MHz = 0x00310309; 16MHz = 0x10320309; 48MHz = 0x50330309
     halI2C.Init.ClockSpeed = 0x00310309;
     // Timing Register Layout(Bits): [PRESC(4)][RESERVED(4)]

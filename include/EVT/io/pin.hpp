@@ -126,10 +126,15 @@ enum class Pin {
     I2C_SDA = PB_8,
     I2C_SCL = PB_9,
 #endif
+
+#ifdef STM32F4xx
+    I2C_SDA = PB_9,
+    I2C_SCL = PB_8,
+#endif
+
     UART_TX = PA_2,
     UART_RX = PA_3,
-    I2C_SDA = PB_6,
-    I2C_SCL = PB_7,
+
 };
 };// namespace EVT::core::IO
 #endif

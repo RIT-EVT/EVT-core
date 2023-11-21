@@ -27,11 +27,17 @@ int main() {
     // Initialize system
     EVT::core::platform::init();
 
-    IO::I2C& i2c = IO::getI2C<IO::Pin::I2C_SCL, IO::Pin::I2C_SDA>();
-
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
+    uart.printf("no I2C test\n\r");
+
+//    HAL_Init();
+
+    IO::I2C& i2c = IO::getI2C<IO::Pin::I2C_SCL, IO::Pin::I2C_SDA>();
+
+
     uart.printf("Starting I2C test\n\r");
+
 
     while (1) {
         uart.printf("Requesting first byte\n\r");
@@ -42,7 +48,7 @@ int main() {
         if (status != IO::I2C::I2CStatus::OK) {
             uart.printf("Failed read 'o' register with I2C::I2CStatus: %d\n\r",
                         status);
-            break;
+//            break;
         }
 
         uart.printf("Reading second bytes\n\r");
@@ -53,12 +59,13 @@ int main() {
         if (status != IO::I2C::I2CStatus::OK) {
             uart.printf("Failed read 'k' register with I2C::I2CStatus: %d\n\r",
                         status);
-            break;
+//            break;
         }
 
         uart.printf("Bytes Read: %c %c\n\r", oValue, kValue);
 
         // Wait half a second before repeating the test
         time::wait(500);
+        break;
     }
 }

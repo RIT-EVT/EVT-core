@@ -16,7 +16,7 @@ namespace EVT::core::IO {
 class I2Cf4xx : public I2C {
 public:
     /**
-     * Make an instance of an I2C interface for the F3. Will determine
+     * Make an instance of an I2C interface for the F4. Will determine
      * which I2C bus of the STM to use based on the provided pins.
      *
      * @param[in] sclPin The I2C clock pin
