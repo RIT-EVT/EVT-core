@@ -77,27 +77,32 @@ private:
         /**
          * Mandatory Identification Keys
          */
-        {// Device Type
-         .Key = CO_KEY(0x1000, 0x00, CO_OBJ_____R_),
-         .Type = CO_TUNSIGNED32,
-         .Data = (CO_DATA) 0x00,
+        {
+            // Device Type
+            .Key = CO_KEY(0x1000, 0x00, CO_OBJ_____R_),
+            .Type = CO_TUNSIGNED32,
+            .Data = (CO_DATA) 0x00,
         },
-        {// Error Register
-         .Key = CO_KEY(0x1001, 0x00, CO_OBJ_____R_),
-         .Type = CO_TUNSIGNED8,
-         .Data = (CO_DATA) 0x00,
+        {
+            // Error Register
+            .Key = CO_KEY(0x1001, 0x00, CO_OBJ_____R_),
+            .Type = CO_TUNSIGNED8,
+            .Data = (CO_DATA) 0x00,
         },
-        {// Sync ID, defaults to 0x80
-         .Key = CO_KEY(0x1005, 0x00, CO_OBJ_DN__R_),
-         .Type = CO_TUNSIGNED32,
-         .Data = (CO_DATA) 0x80,
+        {
+            // Sync ID, defaults to 0x80
+            .Key = CO_KEY(0x1005, 0x00, CO_OBJ_DN__R_),
+            .Type = CO_TUNSIGNED32,
+            .Data = (CO_DATA) 0x80,
         },
-        {// COB-ID EMCY
-         .Key = CO_KEY(0x1014, 0x00, CO_OBJ__N__R_),
-         .Type = CO_TEMCY_ID,
-         .Data = (CO_DATA) 0x80,
+        {
+            // COB-ID EMCY
+            .Key = CO_KEY(0x1014, 0x00, CO_OBJ__N__R_),
+            .Type = CO_TEMCY_ID,
+            .Data = (CO_DATA) 0x80,
         },
-        {// Heartbeat Producer
+        {
+            // Heartbeat Producer
             .Key = CO_KEY(0x1017, 0x00, CO_OBJ_D___R_),
             .Type = CO_THB_PROD,
             .Data = (CO_DATA) 2000,
@@ -206,6 +211,5 @@ private:
         },
 
         // End of dictionary marker
-        CO_OBJ_DICT_ENDMARK
-    };
+        CO_OBJ_DICT_ENDMARK};
 };

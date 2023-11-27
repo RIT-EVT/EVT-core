@@ -98,10 +98,11 @@ private:
          .Key = CO_KEY(0x1014, 0x00, CO_OBJ__N__R_),
          .Type = CO_TEMCY_ID,
          .Data = (CO_DATA) 0x80},
-        {// Heartbeat Producer
-         .Key = CO_KEY(0x1017, 0x00, CO_OBJ_D___R_),
-         .Type = CO_THB_PROD,
-         .Data = (CO_DATA) 2000,
+        {
+            // Heartbeat Producer
+            .Key = CO_KEY(0x1017, 0x00, CO_OBJ_D___R_),
+            .Type = CO_THB_PROD,
+            .Data = (CO_DATA) 2000,
         },
 
         /*
