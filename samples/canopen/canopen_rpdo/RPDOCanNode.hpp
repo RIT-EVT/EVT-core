@@ -101,7 +101,8 @@ private:
         {// Heartbeat Producer
          .Key = CO_KEY(0x1017, 0x00, CO_OBJ_D___R_),
          .Type = CO_THB_PROD,
-         .Data = (CO_DATA) 2000},
+         .Data = (CO_DATA) 2000,
+        },
 
         /*
          * Identity Object
