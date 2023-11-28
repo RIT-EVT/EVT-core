@@ -1,10 +1,10 @@
 /**
  * This sample shows off CANopen support from EVT-core. This will
  * setup a CANopen node and attempt to make back and forth communication.
+ *
+ * This sample is intended to be run alongside canopen_tpdo.
  */
-#include <stdint.h>
 
-#include <EVT/io/ADC.hpp>
 #include <EVT/io/CAN.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/types/CANMessage.hpp>
@@ -14,11 +14,11 @@
 
 #include <EVT/io/CANopen.hpp>
 
-#include <Canopen/co_core.h>
-#include <Canopen/co_if.h>
-#include <Canopen/co_tmr.h>
+#include <co_core.h>
+#include <co_if.h>
+#include <co_tmr.h>
 
-#include "TestCanNode.hpp"
+#include "RPDOCanNode.hpp"
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
@@ -44,8 +44,7 @@ IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
 // create a can interrupt handler
 void canInterrupt(IO::CANMessage& message, void* priv) {
-    EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* queue =
-        (EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*) priv;
+    auto* queue = (EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*) priv;
 
     //print out raw received data
     uart.printf("Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
@@ -59,35 +58,6 @@ void canInterrupt(IO::CANMessage& message, void* priv) {
     if (queue != nullptr)
         queue->append(message);
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// CANopen specific Callbacks. Need to be defined in some location
-///////////////////////////////////////////////////////////////////////////////
-extern "C" void CONodeFatalError(void) {}
-
-extern "C" void COIfCanReceive(CO_IF_FRM* frm) {}
-
-extern "C" int16_t COLssStore(uint32_t baudrate, uint8_t nodeId) { return 0; }
-
-extern "C" int16_t COLssLoad(uint32_t* baudrate, uint8_t* nodeId) { return 0; }
-
-extern "C" void CONmtModeChange(CO_NMT* nmt, CO_MODE mode) {}
-
-extern "C" void CONmtHbConsEvent(CO_NMT* nmt, uint8_t nodeId) {}
-
-extern "C" void CONmtHbConsChange(CO_NMT* nmt, uint8_t nodeId, CO_MODE mode) {}
-
-extern "C" int16_t COParaDefault(CO_PARA* pg) { return 0; }
-
-extern "C" void COPdoTransmit(CO_IF_FRM* frm) {}
-
-extern "C" int16_t COPdoReceive(CO_IF_FRM* frm) { return 0; }
-
-extern "C" void COPdoSyncUpdate(CO_RPDO* pdo) {}
-
-extern "C" void COTmrLock(void) {}
-
-extern "C" void COTmrUnlock(void) {}
 
 int main() {
     // Initialize system
@@ -106,11 +76,12 @@ int main() {
     timer.stopTimer();
 
     //create the RPDO node
-    TestCanNode testCanNode;
+    RPDOCanNode testCanNode;
 
-    // Reserved memory for CANopen stack usage
-    uint8_t sdoBuffer[1][CO_SDO_BUF_BYTE];
-    CO_TMR_MEM appTmrMem[4];
+    // Reserve memory for the SDO buffers. We take the number of SDOs supported and
+    // multiply it by the size of a single SDO Buffer to get the right buffer size.
+    uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE];
+    CO_TMR_MEM appTmrMem[16];
 
     // Attempt to join the CAN network
     IO::CAN::CANStatus result = can.connect();
@@ -143,7 +114,7 @@ int main() {
 
     //setup CANopen Node
     CO_NODE_SPEC canSpec = {
-        .NodeId = 0x02,
+        .NodeId = RPDOCanNode::NODE_ID,
         .Baudrate = IO::CAN::DEFAULT_BAUD,
         .Dict = testCanNode.getObjectDictionary(),
         .DictLen = testCanNode.getNumElements(),
@@ -165,6 +136,7 @@ int main() {
 
     //print any CANopen errors
     uart.printf("Error: %d\r\n", CONodeGetErr(&canNode));
+
     uint8_t lastVal1 = 0;
     uint16_t lastVal2 = 0;
     while (1) {
@@ -174,6 +146,7 @@ int main() {
             lastVal2 = testCanNode.getSampleDataB();
             uart.printf("Current value: %X, %X\r\n", lastVal1, lastVal2);
         }
+
         // Process incoming CAN messages
         CONodeProcess(&canNode);
         // Update the state of timer based events

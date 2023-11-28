@@ -1,3 +1,7 @@
+#include <stdint.h>
+
+#include <co_core.h>
+
 /**
  * Representation of the CAN node. Handles constructing the object
  * dictionary and other baseline settings. The idea is that each "board"
@@ -6,10 +10,6 @@
  * For example, a temperature management system may to expose water pump
  * flow rate in the object dictionary.
  */
-#include <stdint.h>
-
-#include <Canopen/co_core.h>
-
 class TestCanNode {
 public:
     TestCanNode();
@@ -51,7 +51,7 @@ private:
     /**
      * The node ID used to identify the device on the CAN network.
      */
-    static constexpr uint8_t NODE_ID = 0x01;
+    static constexpr uint8_t NODE_ID = 1;
 
     /**
      * This sample data will be exposed over CAN through the object
@@ -65,7 +65,7 @@ private:
      * Have to know the size of the object dictionary for initialization
      * process.
      */
-    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 16;
+    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 19;
 
     /**
      * The object dictionary itself. Will be populated by this object during
@@ -74,8 +74,39 @@ private:
      * The plus one is for the special "end of dictionary" marker.
      */
     CO_OBJ_T objectDictionary[OBJECT_DICTIONARY_SIZE + 1] = {
-        // Sync ID, defaults to 0x80
-        {CO_KEY(0x1005, 0, CO_UNSIGNED32 | CO_OBJ_D__R_), 0, (uintptr_t) 0x80},
+        /**
+         * Mandatory Identification Keys
+         */
+        {
+            // Device Type
+            .Key = CO_KEY(0x1000, 0x00, CO_OBJ_____R_),
+            .Type = CO_TUNSIGNED32,
+            .Data = (CO_DATA) 0x00,
+        },
+        {
+            // Error Register
+            .Key = CO_KEY(0x1001, 0x00, CO_OBJ_____R_),
+            .Type = CO_TUNSIGNED8,
+            .Data = (CO_DATA) 0x00,
+        },
+        {
+            // Sync ID, defaults to 0x80
+            .Key = CO_KEY(0x1005, 0x00, CO_OBJ_DN__R_),
+            .Type = CO_TUNSIGNED32,
+            .Data = (CO_DATA) 0x80,
+        },
+        {
+            // COB-ID EMCY
+            .Key = CO_KEY(0x1014, 0x00, CO_OBJ__N__R_),
+            .Type = CO_TEMCY_ID,
+            .Data = (CO_DATA) 0x80,
+        },
+        {
+            // Heartbeat Producer
+            .Key = CO_KEY(0x1017, 0x00, CO_OBJ_D___R_),
+            .Type = CO_THB_PROD,
+            .Data = (CO_DATA) 2000,
+        },
 
         // Information about the hardware, hard coded sample values for now
         // 1: Vendor ID
@@ -83,22 +114,22 @@ private:
         // 3: Revision Number
         // 4: Serial Number
         {
-            .Key = CO_KEY(0x1018, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1018, 1, CO_OBJ_D___R_),
             .Type = 0,
             .Data = (uintptr_t) 0x10,
         },
         {
-            .Key = CO_KEY(0x1018, 2, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1018, 2, CO_OBJ_D___R_),
             .Type = 0,
             .Data = (uintptr_t) 0x11,
         },
         {
-            .Key = CO_KEY(0x1018, 3, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1018, 3, CO_OBJ_D___R_),
             .Type = 0,
             .Data = (uintptr_t) 0x12,
         },
         {
-            .Key = CO_KEY(0x1018, 4, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1018, 4, CO_OBJ_D___R_),
             .Type = 0,
             .Data = (uintptr_t) 0x13,
         },
@@ -107,14 +138,14 @@ private:
         // 1: Client -> Server ID, default is 0x600 + NODE_ID
         // 2: Server -> Client ID, default is 0x580 + NODE_ID
         {
-            .Key = CO_KEY(0x1200, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1200, 1, CO_OBJ_DN__R_),
             .Type = 0,
-            .Data = (uintptr_t) 0x600 + NODE_ID,
+            .Data = (uintptr_t) 0x600,
         },
         {
-            .Key = CO_KEY(0x1200, 2, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1200, 2, CO_OBJ_DN__R_),
             .Type = 0,
-            .Data = (uintptr_t) 0x580 + NODE_ID,
+            .Data = (uintptr_t) 0x580,
         },
 
         // TPDO0 settings
@@ -124,32 +155,32 @@ private:
         // 3: Inhibit time, defaults to 0
         // 5: Timer trigger time in 1ms units, 0 will disable the timer based triggering
         {
-            .Key = CO_KEY(0x1800, 0, CO_UNSIGNED8 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1800, 0, CO_OBJ_D___R_),
             .Type = 0,
             .Data = (uintptr_t) 5,
         },
         {
             // 180h+Node-ID
-            .Key = CO_KEY(0x1800, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1800, 1, CO_OBJ_DN__R_),
             .Type = 0,
-            .Data = (uintptr_t) CO_COBID_TPDO_DEFAULT(0) + NODE_ID,
+            .Data = (uintptr_t) CO_COBID_TPDO_DEFAULT(0),
         },
         {
             // timer triggered
-            .Key = CO_KEY(0x1800, 2, CO_UNSIGNED8 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1800, 2, CO_OBJ_D___R_),
             .Type = 0,
             .Data = (uintptr_t) 0xFE,
         },
         {
             // no inhibit time
-            .Key = CO_KEY(0x1800, 3, CO_UNSIGNED16 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1800, 3, CO_OBJ_D___R_),
             .Type = 0,
             .Data = (uintptr_t) 0,
         },
         {
             // send every 2 seconds
-            .Key = CO_KEY(0x1800, 5, CO_UNSIGNED16 | CO_OBJ_D__R_),
-            .Type = CO_TEVENT,
+            .Key = CO_KEY(0x1800, 5, CO_OBJ_D___R_),
+            .Type = CO_TUNSIGNED16,
             .Data = (uintptr_t) 2000,
         },
 
@@ -159,13 +190,13 @@ private:
         // n: Link to the nth PDO message
         {
             // maps one object
-            .Key = CO_KEY(0x1A00, 0, CO_UNSIGNED8 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1A00, 0, CO_OBJ_D___R_),
             .Type = 0,
             .Data = (uintptr_t) 1,
         },
         {
             // link the first byte to (0x2100, 0, 8) - sampleData
-            .Key = CO_KEY(0x1A00, 1, CO_UNSIGNED32 | CO_OBJ_D__R_),
+            .Key = CO_KEY(0x1A00, 1, CO_OBJ_D___R_),
             .Type = 0,
             .Data = CO_LINK(0x2100, 0, 8),
         },
@@ -174,11 +205,11 @@ private:
         // accessed via SDO and depending on configuration PDO
         {
             // sampleData
-            .Key = CO_KEY(0x2100, 0, CO_UNSIGNED8 | CO_OBJ___PRW),
+            .Key = CO_KEY(0x2100, 0, CO_OBJ____PRW),
             .Type = 0,
             .Data = (uintptr_t) &sampleData,
         },
 
         // End of dictionary marker
-        CO_OBJ_DIR_ENDMARK};
+        CO_OBJ_DICT_ENDMARK};
 };

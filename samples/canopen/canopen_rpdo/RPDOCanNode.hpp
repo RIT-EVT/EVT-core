@@ -1,3 +1,7 @@
+#include <stdint.h>
+
+#include <co_core.h>
+
 /**
  * Representation of the CAN node. Handles constructing the object
  * dictionary and other baseline settings. The idea is that each "board"
@@ -6,13 +10,9 @@
  * For example, a temperature management system may to expose water pump
  * flow rate in the object dictionary.
  */
-#include <stdint.h>
-
-#include <co_core.h>
-
-class TPDOCanNode {
+class RPDOCanNode {
 public:
-    TPDOCanNode();
+    RPDOCanNode();
 
     /**
      * Expose a way to programmatically update the sampleData.
@@ -36,11 +36,6 @@ public:
     uint16_t getSampleDataB();
 
     /**
-     * increments counters up
-     */
-    void update();
-
-    /**
      * Get a pointer to the start of the object dictionary
      *
      * @return Pointer to the start of the object dictionary
@@ -57,7 +52,9 @@ public:
     /**
      * The node ID used to identify the device on the CAN network.
      */
-    static constexpr uint8_t NODE_ID = 1;
+    static constexpr uint8_t NODE_ID = 2;
+
+    static constexpr uint8_t TPDO_NODE_ID = 1;
 
 private:
     /**
@@ -73,7 +70,7 @@ private:
      * Have to know the size of the object dictionary for initialization
      * process.
      */
-    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 24;
+    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 22;
 
     /**
      * The object dictionary itself. Will be populated by this object during
@@ -101,10 +98,12 @@ private:
          .Key = CO_KEY(0x1014, 0x00, CO_OBJ__N__R_),
          .Type = CO_TEMCY_ID,
          .Data = (CO_DATA) 0x80},
-        {// Heartbeat Producer
-         .Key = CO_KEY(0x1017, 0x00, CO_OBJ_____RW),
-         .Type = CO_THB_PROD,
-         .Data = (CO_DATA) 2000},
+        {
+            // Heartbeat Producer
+            .Key = CO_KEY(0x1017, 0x00, CO_OBJ_D___R_),
+            .Type = CO_THB_PROD,
+            .Data = (CO_DATA) 2000,
+        },
 
         /*
          * Identity Object
@@ -148,7 +147,7 @@ private:
             // SDO Server Request COBID
             .Key = CO_KEY(0x1200, 0x01, CO_OBJ__N__R_),
             .Type = CO_TUNSIGNED32,
-            .Data = (CO_DATA) CO_COBID_SDO_RESPONSE(),
+            .Data = (CO_DATA) CO_COBID_SDO_REQUEST(),
         },
         {
             // SDO Server Response COBID
@@ -157,63 +156,49 @@ private:
             .Data = (CO_DATA) CO_COBID_SDO_RESPONSE(),
         },
 
-        // TPDO0 settings
-        // 0: The TPDO number, default 0
-        // 1: The COB-ID used by TPDO0, provided as a function of the TPDO number
-        // 2: How the TPO is triggered, default to manual triggering
-        // 3: Inhibit time, defaults to 0
-        // 5: Timer trigger time in 1ms units, 0 will disable the timer based triggering
+        // RPDO settings
+        // 0: RPDO number in index and total number of sub indexes.
+        // 1: The COB-ID to receive PDOs from.
+        // 2: transmission trigger
         {
-            // Communication Object TPDO #0
-            .Key = CO_KEY(0x1800, 0x00, CO_OBJ_D___R_),
+            // RPDO #0 Mapping Object
+            .Key = CO_KEY(0x1400, 0x00, CO_OBJ_D___R_),
             .Type = CO_TUNSIGNED8,
-            .Data = (CO_DATA) 0x05,
+            .Data = (CO_DATA) 0x02,
         },
         {
             // COB-ID used by TPDO
-            // 180h+Node-ID
-            .Key = CO_KEY(0x1800, 0x01, CO_OBJ_DN__R_),
+            // 180h+TPDO Node-ID
+            .Key = CO_KEY(0x1400, 0x01, CO_OBJ_D___R_),
             .Type = CO_TPDO_ID,
-            .Data = (CO_DATA) CO_COBID_TPDO_DEFAULT(0),
+            .Data = (CO_DATA) CO_COBID_TPDO_DEFAULT(0) + TPDO_NODE_ID,
         },
         {
             // Transmission type
-            .Key = CO_KEY(0x1800, 0x02, CO_OBJ_D___R_),
+            .Key = CO_KEY(0x1400, 0x02, CO_OBJ_D___R_),
             .Type = CO_TPDO_TYPE,
-            .Data = (CO_DATA) 0xFE,// timer triggered
-        },
-        {
-            // Inhibit time with LSB 100us (0=disable)
-            .Key = CO_KEY(0x1800, 0x03, CO_OBJ_D___R_),
-            .Type = CO_TUNSIGNED16,
-            .Data = (CO_DATA) 0x00,
-        },
-        {
-            // Event timer LSB 1ms (0=disable)
-            .Key = CO_KEY(0x1800, 0x05, CO_OBJ_D___R_),
-            .Type = CO_TPDO_EVENT,
-            .Data = (CO_DATA) 2000,// send every 2 seconds
+            .Data = (CO_DATA) 0xFE,// asynchronous trigger
         },
 
-        // TPDO0 mapping, determines the PDO messages to send when TPDO1 is triggered
-        // 0: The number of PDO message associated with the TPDO
+        // RPDO0 mapping, determines the PDO messages to send when RPDO0 is triggered
+        // 0: The number of PDO message associated with the RPDO
         // 1: Link to the first PDO message
         // n: Link to the nth PDO message
         {
-            // TPDO #0 Mapping Object
-            .Key = CO_KEY(0x1A00, 0x00, CO_OBJ_D___R_),
+            // RPDO #0 Mapping Object
+            .Key = CO_KEY(0x1600, 0x00, CO_OBJ_D___R_),
             .Type = CO_TUNSIGNED8,
             .Data = (CO_DATA) 0x02,
         },
         {
             // link the first byte to (0x2100, 0, 8) - sampleDataA
-            .Key = CO_KEY(0x1A00, 0x01, CO_OBJ_D___R_),
+            .Key = CO_KEY(0x1600, 0x01, CO_OBJ_D___R_),
             .Type = CO_TUNSIGNED32,
             .Data = (CO_DATA) CO_LINK(0x2100, 0x01, 8),
         },
         {
             // link the second byte to (0x2100, 1, 16) - sampleDataB
-            .Key = CO_KEY(0x1A00, 0x02, CO_OBJ_D___R_),
+            .Key = CO_KEY(0x1600, 0x02, CO_OBJ_D___R_),
             .Type = CO_TUNSIGNED32,
             .Data = (CO_DATA) CO_LINK(0x2100, 0x02, 16),
         },
