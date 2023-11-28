@@ -34,7 +34,7 @@ public:
 
     State readPin() override;
 
-    void registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin)) override;
+    void registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin, void* priv), void* priv) override;
 
     /**
      * Condenses gpio settings initialization into a single function.
