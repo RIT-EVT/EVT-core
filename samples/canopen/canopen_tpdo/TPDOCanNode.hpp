@@ -62,7 +62,7 @@ public:
     * @return The node ID of the can device.
      */
     uint8_t getNodeID() override;
-    
+
     /**
     * Get the device's node ID
     *

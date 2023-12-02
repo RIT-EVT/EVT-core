@@ -7,8 +7,8 @@
  * flow rate in the object dictionary.
  */
 
-#include <stdint.h>
 #include <co_core.h>
+#include <stdint.h>
 
 #include <EVT/io/CANDevice.hpp>
 #include <EVT/io/CANOpenMacros.hpp>
