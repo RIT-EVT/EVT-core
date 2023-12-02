@@ -1,8 +1,9 @@
 /**
  * This sample shows off CANopen support from EVT-core. This will
  * setup a CANopen node and attempt to make back and forth communication.
+ *
+ * This sample is intended to be run alongside canopen_tpdo.
  */
-#include <stdint.h>
 
 #include <EVT/io/CAN.hpp>
 #include <EVT/io/UART.hpp>

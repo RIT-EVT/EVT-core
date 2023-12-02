@@ -6,7 +6,9 @@
  * For example, a temperature management system may to expose water pump
  * flow rate in the object dictionary.
  */
+
 #include <stdint.h>
+#include <co_core.h>
 
 #include <EVT/io/CANDevice.hpp>
 #include <EVT/io/CANOpenMacros.hpp>
@@ -60,9 +62,9 @@ public:
     /**
      * The node ID used to identify the device on the CAN network.
      */
-    static constexpr uint8_t NODE_ID = 0x02;
+    static constexpr uint8_t NODE_ID = 2;
 
-    static constexpr uint8_t TPDO_NODE_ID = 0x01;
+    static constexpr uint8_t TPDO_NODE_ID = 1;
 
 private:
     /**

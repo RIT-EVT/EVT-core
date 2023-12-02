@@ -101,8 +101,9 @@ public:
      * condition.
      * @param[in] edge The edge trigger event to trigger the interrupt
      * @param[in] irqHandler The function pointer to handle the GPIO interrupt
+     * @param[in] priv private data the function may use
      */
-    virtual void registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin)) = 0;
+    virtual void registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin, void* priv), void* priv) = 0;
 
 protected:
     /// The pin the GPIO instance is attached to

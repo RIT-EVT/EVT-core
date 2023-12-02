@@ -6,11 +6,12 @@
  * For example, a temperature management system may to expose water pump
  * flow rate in the object dictionary.
  */
+
 #include <stdint.h>
+#include <co_core.h>
 
 #include <EVT/io/CANDevice.hpp>
 #include <EVT/io/CANOpenMacros.hpp>
-#include <co_core.h>
 
 class TestCanNode : public CANDevice {
 public:
@@ -60,7 +61,7 @@ private:
     /**
      * The node ID used to identify the device on the CAN network.
      */
-    static constexpr uint8_t NODE_ID = 0x01;
+    static constexpr uint8_t NODE_ID = 1;
 
     /**
      * This sample data will be exposed over CAN through the object
@@ -95,5 +96,6 @@ private:
         DATA_LINK_210X(0, 1, CO_TUNSIGNED8, &sampleData),
 
         // End of dictionary marker
-        CO_OBJ_DICT_ENDMARK};
+        CO_OBJ_DICT_ENDMARK,
+        };
 };

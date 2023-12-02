@@ -14,7 +14,9 @@ constexpr IO::Pin INTERRUPT_PIN = IO::Pin::PC_3;
 
 IO::UART* uart;
 
-void risingEdgeHandler(IO::GPIO* pin) {
+void risingEdgeHandler(IO::GPIO* pin, void* priv) {
+    // we don't need the void* in this handler, but the registerIRQ()
+    // method requires a function with these exact arguments
     IO::GPIO::State pin_value = pin->readPin();
 
     uart->printf("Received %s edge interrupt for pin C3\n\r",
@@ -33,7 +35,7 @@ int main() {
     IO::GPIO& interruptGPIO = IO::getGPIO<INTERRUPT_PIN>(
         IO::GPIO::Direction::INPUT);
     interruptGPIO.registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING,
-                              risingEdgeHandler);
+                              risingEdgeHandler, nullptr);
 
     uart->printf("\n\rWaiting for interrupts...\n\r");
 
