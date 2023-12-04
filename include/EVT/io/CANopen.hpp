@@ -59,8 +59,9 @@ void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver);
 /*!
  * @brief Initialize the drivers needed by CANOpen.
  *
- * Takes in a references to all of of the drivers that are needed
- * by CANopen as well as the
+ * Takes in a references to objects that will be populated
+ * with all of the needed CAN drivers. Once these drivers
+ * are populated, they are passed to the overall canDriver.
  *
  * @param canOpenQueue[in,out] the canOpen queue to give to the drivers.
  * @param can[in,out] the can instance to initialize with.
