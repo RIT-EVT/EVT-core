@@ -91,17 +91,7 @@ void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver) {
     nvmDriver->Write = nvmWrite;
 }
 
-void initializeCANopenDriver(
-    types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* canOpenQueue,
-    IO::CAN* can,
-    EVT::core::DEV::Timer* timer,
-    CO_IF_DRV* canStackDriver,
-    CO_IF_NVM_DRV* nvmDriver,
-    CO_IF_TIMER_DRV* timerDriver,
-    CO_IF_CAN_DRV* canDriver) {
-    IO::getCANopenCANDriver(can, canOpenQueue, canDriver);
-    IO::getCANopenTimerDriver(timer, timerDriver);
-    IO::getCANopenNVMDriver(nvmDriver);
+void initializeCANopenDriver(types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* canOpenQueue, IO::CAN* can, EVT::core::DEV::Timer* timer, CO_IF_DRV* canStackDriver, CO_IF_NVM_DRV* nvmDriver, CO_IF_TIMER_DRV* timerDriver, CO_IF_CAN_DRV* canDriver) { IO::getCANopenCANDriver(can, canOpenQueue, canDriver); IO::getCANopenTimerDriver(timer, timerDriver); IO::getCANopenNVMDriver(nvmDriver);
 
     canStackDriver->Can = canDriver;
     canStackDriver->Timer = timerDriver;

@@ -1,12 +1,14 @@
-//
-// Created by Taylor Lineman on 11/8/23.
-//
-
 #ifndef EVT_CANDEVICE_HPP
 #define EVT_CANDEVICE_HPP
 
 #include "co_obj.h"
 
+/**
+ * An abstract class used to define a class as a participant in the CAN Network.
+ * Provides functions for getting the object dictionary, its size and the ID
+ * of the CANDevice. These are used to initialize our CAN settings by just
+ * passing a reference to the CANDevice subclass.
+ */
 class CANDevice {
 public:
     /**
