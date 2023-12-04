@@ -10,7 +10,7 @@
 class CANDevice {
 public:
     /**
-     * Get a pointer to the start of the object dictionary
+     * Get a pointer to the object dictionary
      *
      * @return Pointer to the start of the object dictionary
      */
