@@ -97,6 +97,7 @@ void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* ca
  * @param canNode[in,out] the node to process events on.
  */
 void processCANopenNode(CO_NODE* canNode);
+
 }// namespace EVT::core::IO
 
 #endif
