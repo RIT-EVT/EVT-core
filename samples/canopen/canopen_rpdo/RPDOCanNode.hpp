@@ -4,7 +4,6 @@
 #include <EVT/io/CANDevice.hpp>
 #include <EVT/io/CANOpenMacros.hpp>
 
-
 /**
  * Representation of the CAN node. Handles constructing the object
  * dictionary and other baseline settings. The idea is that each "board"
