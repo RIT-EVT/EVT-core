@@ -217,7 +217,7 @@
  * This macro creates an TPDO settings object. This macro itself is abstract,
  * allowing it to be used with any TPDO number supported by CANOpen.
  *
- * @param RPDO_NUMBER (integer) the TPDO number this settings object is for.
+ * @param TPDO_NUMBER (integer) the TPDO number this settings object is for.
  * @param TRANSMISSION_TYPE (hex) the type of transmission to make. You should use TRANSMIT_PDO_TRIGGER_TIMER.
  * @param INHIBIT_TIME (integer) The amount of time (in 100μs increments) that must pass before another TPDO message can be sent.
  * @param INTERVAL (integer) the time trigger (in ms) that the TPDO sends on.
