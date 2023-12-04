@@ -74,7 +74,7 @@ private:
     /**
     * This sample data will be exposed over CAN through the object
     * dictionary. The address of the variable will be included in the
-     * object dictionary and can be updated via SDO via a CANopen client.
+    * object dictionary and can be updated via SDO via a CANopen client.
     * This device will then broadcast the value via a triggered PDO.
     */
     uint8_t sampleDataA;
