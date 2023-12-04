@@ -72,7 +72,6 @@ int main() {
     TPDOCanNode testCanNode;
 
     DEV::Timer& timer = DEV::getTimer<DEV::MCUTimer::Timer2>(100);
-    timer.stopTimer();
 
     ///////////////////////////////////////////////////////////////////////////
     // Setup CAN configuration, this handles making drivers, applying settings.

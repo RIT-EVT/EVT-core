@@ -1,3 +1,9 @@
+#include <cstdint>
+
+#include <EVT/io/CANDevice.hpp>
+#include <EVT/io/CANOpenMacros.hpp>
+#include <co_core.h>
+
 /**
 * Representation of the CAN node. Handles constructing the object
 * dictionary and other baseline settings. The idea is that each "board"
@@ -6,12 +12,6 @@
 * For example, a temperature management system may to expose water pump
 * flow rate in the object dictionary.
 */
-#include <stdint.h>
-
-#include <EVT/io/CANDevice.hpp>
-#include <EVT/io/CANOpenMacros.hpp>
-#include <co_core.h>
-
 class TPDOCanNode : public CANDevice {
 public:
     TPDOCanNode();

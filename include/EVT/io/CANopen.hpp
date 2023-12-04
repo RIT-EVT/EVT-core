@@ -89,8 +89,6 @@ void initializeCANopenDriver(types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessag
 void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* canStackDriver, uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE], CO_TMR_MEM appTmrMem[16]);
 
 /*!
- * @brief Process events that happened on the given canNode
- *
  * Takes in a reference to a CO_NODE and processes events
  * on that node.
  *

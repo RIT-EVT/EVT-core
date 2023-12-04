@@ -55,7 +55,6 @@ int main() {
 
     // UART for testing
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-    timer.stopTimer();
 
     TestCanNode testCanNode;
 

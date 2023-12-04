@@ -14,9 +14,9 @@
  * the driver implementations.
  */
 namespace {
-EVT::core::IO::CAN* globalCAN;
+EVT::core::IO::CAN* __evt_core_can__;
 // Temporary values for testing CANopen without actual timer
-EVT::core::DEV::Timer* globalTimer;
+EVT::core::DEV::Timer* __evt_core_can_timer__;
 
 /** Counts the number of interrupts that have taken place */
 uint32_t timerCounter = 0;
@@ -64,7 +64,7 @@ namespace EVT::core::IO {
 void getCANopenCANDriver(IO::CAN* canInf,
                          EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* messageQueue,
                          CO_IF_CAN_DRV* canDriver) {
-    globalCAN = canInf;
+    __evt_core_can__ = canInf;
     canQueue = messageQueue;
     canDriver->Init = canInit;
     canDriver->Enable = canEnable;
@@ -75,7 +75,7 @@ void getCANopenCANDriver(IO::CAN* canInf,
 }
 
 void getCANopenTimerDriver(DEV::Timer* timerIntf, CO_IF_TIMER_DRV* timerDriver) {
-    globalTimer = timerIntf;
+    __evt_core_can_timer__ = timerIntf;
 
     timerDriver->Init = timerInit;
     timerDriver->Reload = timerReload;
@@ -158,7 +158,7 @@ static void canEnable(uint32_t baudrate) {
  */
 static int16_t canSend(CO_IF_FRM* frm) {
     EVT::core::IO::CANMessage message(frm->Identifier, frm->DLC, frm->Data, false);
-    globalCAN->transmit(message);
+    __evt_core_can__->transmit(message);
 
     return sizeof(CO_IF_FRM);
 }
@@ -215,13 +215,13 @@ void timerHandler(void* halTim) {
  */
 static void timerInit(uint32_t freq) {
     timerCounter = 0;
-    globalTimer->setPeriod(10);
+    __evt_core_can_timer__->setPeriod(10);
 }
 
 static void timerReload(uint32_t reload) {
-    globalTimer->stopTimer();
-    globalTimer->setPeriod(10);
-    globalTimer->startTimer(timerHandler);
+    __evt_core_can_timer__->stopTimer();
+    __evt_core_can_timer__->setPeriod(10);
+    __evt_core_can_timer__->startTimer(timerHandler);
     timerCounter = 0;
     timerRunning = true;
     counterTarget = reload;
@@ -231,7 +231,7 @@ static void timerReload(uint32_t reload) {
  * Start the "timer" running
  */
 static void timerStart(void) {
-    globalTimer->startTimer(timerHandler);
+    __evt_core_can_timer__->startTimer(timerHandler);
     timerRunning = true;
     timerCounter = 0;
 }
@@ -255,7 +255,7 @@ static uint32_t timerDelay(void) {
  * Stop the timer, currently does nothing.
  */
 static void timerStop(void) {
-    globalTimer->stopTimer();
+    __evt_core_can_timer__->stopTimer();
     timerRunning = false;
     timerCounter = 0;
 }
