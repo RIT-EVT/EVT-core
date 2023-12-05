@@ -103,15 +103,15 @@ private:
         // 0: The number of PDO message associated with the RPDO
         // 1: Link to the first PDO message sampleDataA with a size of 8 and a sub index of 1
         // 2: Link to teh second PDO message sampleDataB with a size of 16 and a sub index of 2.
-        RECEIVE_PDO_N_MAPPING_START_KEY_160X(0, 2),
-        RECEIVE_PDO_N_MAPPING_ENTRY_N_160X(0, 1, PDO_MAPPING_UNSIGNED8),
-        RECEIVE_PDO_N_MAPPING_ENTRY_N_160X(0, 2, PDO_MAPPING_UNSIGNED16),
+        RECEIVE_PDO_MAPPING_START_KEY_16XX(0, 2),
+        RECEIVE_PDO_MAPPING_ENTRY_16XX(0, 1, PDO_MAPPING_UNSIGNED8),
+        RECEIVE_PDO_MAPPING_ENTRY_16XX(0, 2, PDO_MAPPING_UNSIGNED16),
 
         // User defined data, this will be where we put elements that can be
         // accessed via SDO and depending on configuration PDO
-        DATA_LINK_START_KEY_210X(0, 2),
-        DATA_LINK_210X(0, 1, CO_TUNSIGNED8, &sampleDataA),
-        DATA_LINK_210X(0, 2, CO_TUNSIGNED16, &sampleDataB),
+        DATA_LINK_START_KEY_21XX(0, 2),
+        DATA_LINK_21XX(0, 1, CO_TUNSIGNED8, &sampleDataA),
+        DATA_LINK_21XX(0, 2, CO_TUNSIGNED16, &sampleDataB),
 
         // End of dictionary marker
         CO_OBJ_DICT_ENDMARK,
