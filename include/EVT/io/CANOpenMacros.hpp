@@ -33,18 +33,18 @@
         .Type = CO_TUNSIGNED32,                         \
         .Data = (CO_DATA) 0x00,                         \
     },                                                  \
-    {                                                   \
-        /* Error Register */                            \
-        .Key = CO_KEY(0x1001, 0x00, CO_OBJ_____R_),     \
-        .Type = CO_TUNSIGNED8,                          \
-        .Data = (CO_DATA) 0x00,                         \
-    },                                                  \
-    {                                                   \
-        /* COB-ID SYNC-message */                       \
-        .Key = CO_KEY(0x1005, 0x00, CO_OBJ_DN__R_),     \
-        .Type = CO_TUNSIGNED32,                         \
-        .Data = (CO_DATA) 0x80,                         \
-    },                                                  \
+        {                                               \
+            /* Error Register */                        \
+            .Key = CO_KEY(0x1001, 0x00, CO_OBJ_____R_), \
+            .Type = CO_TUNSIGNED8,                      \
+            .Data = (CO_DATA) 0x00,                     \
+        },                                              \
+        {                                               \
+            /* COB-ID SYNC-message */                   \
+            .Key = CO_KEY(0x1005, 0x00, CO_OBJ_DN__R_), \
+            .Type = CO_TUNSIGNED32,                     \
+            .Data = (CO_DATA) 0x80,                     \
+        },                                              \
     { /* COB-ID EMCY */                                 \
         .Key = CO_KEY(0x1014, 0x00, CO_OBJ__N__R_),     \
         .Type = CO_TEMCY_ID,                            \
@@ -85,24 +85,24 @@
         .Type = CO_TUNSIGNED8,                          \
         .Data = (CO_DATA) 0x04,                         \
     },                                                  \
-    {                                                   \
-        /* Vendor ID */                                 \
-        .Key = CO_KEY(0x1018, 0x01, CO_OBJ_____R_),     \
-        .Type = CO_TUNSIGNED8,                          \
-        .Data = (CO_DATA) 0x00,                         \
-    },                                                  \
-    {                                                   \
-        /* Product Code */                              \
-        .Key = CO_KEY(0x1018, 0x02, CO_OBJ_____R_),     \
-        .Type = CO_TUNSIGNED8,                          \
-        .Data = (CO_DATA) 0x00,                         \
-    },                                                  \
-    {                                                   \
-        /* Revision Number */                           \
-        .Key = CO_KEY(0x1018, 0x03, CO_OBJ_____R_),     \
-        .Type = CO_TUNSIGNED8,                          \
-        .Data = (CO_DATA) 0x00,                         \
-    },                                                  \
+        {                                               \
+            /* Vendor ID */                             \
+            .Key = CO_KEY(0x1018, 0x01, CO_OBJ_____R_), \
+            .Type = CO_TUNSIGNED8,                      \
+            .Data = (CO_DATA) 0x00,                     \
+        },                                              \
+        {                                               \
+            /* Product Code */                          \
+            .Key = CO_KEY(0x1018, 0x02, CO_OBJ_____R_), \
+            .Type = CO_TUNSIGNED8,                      \
+            .Data = (CO_DATA) 0x00,                     \
+        },                                              \
+        {                                               \
+            /* Revision Number */                       \
+            .Key = CO_KEY(0x1018, 0x03, CO_OBJ_____R_), \
+            .Type = CO_TUNSIGNED8,                      \
+            .Data = (CO_DATA) 0x00,                     \
+        },                                              \
     { /* Serial Number */                               \
         .Key = CO_KEY(0x1018, 0x04, CO_OBJ_____R_),     \
         .Type = CO_TUNSIGNED8,                          \
@@ -124,12 +124,12 @@
         .Type = CO_TUNSIGNED32,                         \
         .Data = (CO_DATA) 0x02,                         \
     },                                                  \
-    {                                                   \
-        /* SDO Server Request COBID */                  \
-        .Key = CO_KEY(0x1200, 0x01, CO_OBJ__N__R_),     \
-        .Type = CO_TUNSIGNED32,                         \
-        .Data = (CO_DATA) CO_COBID_SDO_REQUEST(),       \
-    },                                                  \
+        {                                               \
+            /* SDO Server Request COBID */              \
+            .Key = CO_KEY(0x1200, 0x01, CO_OBJ__N__R_), \
+            .Type = CO_TUNSIGNED32,                     \
+            .Data = (CO_DATA) CO_COBID_SDO_REQUEST(),   \
+        },                                              \
     { /* SDO Server Response COBID */                   \
         .Key = CO_KEY(0x1200, 0x02, CO_OBJ__N__R_),     \
         .Type = CO_TUNSIGNED32,                         \
@@ -157,12 +157,12 @@
         .Type = CO_TUNSIGNED8,                                                                      \
         .Data = (CO_DATA) 0x02,                                                                     \
     },                                                                                              \
-    {                                                                                               \
-        /* COB-ID used by TPDO  180h + TPDO Node-ID*/                                               \
-        .Key = CO_KEY(0x1400 + RPDO_NUMBER, 0x01, CO_OBJ_D___R_),                                   \
-        .Type = CO_TPDO_ID,                                                                         \
-        .Data = (CO_DATA) CO_COBID_TPDO_DEFAULT(TPDO_NUMBER) + TPDO_NODE_ID,                        \
-    },                                                                                              \
+        {                                                                                           \
+            /* COB-ID used by TPDO  180h + TPDO Node-ID*/                                           \
+            .Key = CO_KEY(0x1400 + RPDO_NUMBER, 0x01, CO_OBJ_D___R_),                               \
+            .Type = CO_TPDO_ID,                                                                     \
+            .Data = (CO_DATA) CO_COBID_TPDO_DEFAULT(TPDO_NUMBER) + TPDO_NODE_ID,                    \
+        },                                                                                          \
     { /* Transmission type */                                                                       \
         .Key = CO_KEY(0x1400 + RPDO_NUMBER, 0x02, CO_OBJ_D___R_),                                   \
         .Type = CO_TPDO_TYPE,                                                                       \
@@ -184,11 +184,11 @@
  * @param RPDO_NUMBER (integer) the RPDO number that this Mapping Key is associated with.
  * @param NUMBER_OF_SUB_INDICES (integer) the number of sub indices this mapping object will have.
  */
-#define RECEIVE_PDO_MAPPING_START_KEY_16XX(RPDO_NUMBER, NUMBER_OF_SUB_INDICES)   \
-    {                                                                            \
-        .Key = CO_KEY(0x1600 + RPDO_NUMBER, 0x00, CO_OBJ_D___R_),                \
-        .Type = CO_TUNSIGNED8,                                                   \
-        .Data = (CO_DATA) NUMBER_OF_SUB_INDICES,                                 \
+#define RECEIVE_PDO_MAPPING_START_KEY_16XX(RPDO_NUMBER, NUMBER_OF_SUB_INDICES) \
+    {                                                                          \
+        .Key = CO_KEY(0x1600 + RPDO_NUMBER, 0x00, CO_OBJ_D___R_),              \
+        .Type = CO_TUNSIGNED8,                                                 \
+        .Data = (CO_DATA) NUMBER_OF_SUB_INDICES,                               \
     }
 
 /*!
@@ -230,24 +230,24 @@
         .Type = CO_TUNSIGNED8,                                                                    \
         .Data = (CO_DATA) 0x05,                                                                   \
     },                                                                                            \
-    {                                                                                             \
-        /* COB-ID used by TPDO  180h+TPDO Node-ID*/                                               \
-        .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x01, CO_OBJ_DN__R_),                                 \
-        .Type = CO_TPDO_ID,                                                                       \
-        .Data = (CO_DATA) CO_COBID_TPDO_DEFAULT(TPDO_NUMBER),                                     \
-    },                                                                                            \
-    {                                                                                             \
-        /* Transmission type */                                                                   \
-        .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x02, CO_OBJ_D___R_),                                 \
-        .Type = CO_TPDO_TYPE,                                                                     \
-        .Data = (CO_DATA) TRANSMISSION_TYPE,                                                      \
-    },                                                                                            \
-    {                                                                                             \
-        /* Inhibit time with LSB 100us (0=disable) */                                             \
-        .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x03, CO_OBJ_D___R_),                                 \
-        .Type = CO_TUNSIGNED16,                                                                   \
-        .Data = (CO_DATA) INHIBIT_TIME,                                                           \
-    },                                                                                            \
+        {                                                                                         \
+            /* COB-ID used by TPDO  180h+TPDO Node-ID*/                                           \
+            .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x01, CO_OBJ_DN__R_),                             \
+            .Type = CO_TPDO_ID,                                                                   \
+            .Data = (CO_DATA) CO_COBID_TPDO_DEFAULT(TPDO_NUMBER),                                 \
+        },                                                                                        \
+        {                                                                                         \
+            /* Transmission type */                                                               \
+            .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x02, CO_OBJ_D___R_),                             \
+            .Type = CO_TPDO_TYPE,                                                                 \
+            .Data = (CO_DATA) TRANSMISSION_TYPE,                                                  \
+        },                                                                                        \
+        {                                                                                         \
+            /* Inhibit time with LSB 100us (0=disable) */                                         \
+            .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x03, CO_OBJ_D___R_),                             \
+            .Type = CO_TUNSIGNED16,                                                               \
+            .Data = (CO_DATA) INHIBIT_TIME,                                                       \
+        },                                                                                        \
     { /* Event timer LSB 1ms (0=disable) */                                                       \
         .Key = CO_KEY(0x1800 + TPDO_NUMBER, 0x05, CO_OBJ_D___R_),                                 \
         .Type = CO_TPDO_EVENT,                                                                    \
@@ -268,11 +268,11 @@
  * @param TPDO_NUMBER (integer) the TPDO number that this Mapping Key is associated with.
  * @param NUMBER_OF_SUB_INDICES (integer) the number of sub indices this mapping object will have.
  */
-#define TRANSMIT_PDO_MAPPING_START_KEY_1AXX(TPDO_NUMBER, NUMBER_OF_SUB_INDICES)   \
-    {                                                                             \
-        .Key = CO_KEY(0x1A00 + TPDO_NUMBER, 0x00, CO_OBJ_D___R_),                 \
-        .Type = CO_TUNSIGNED8,                                                    \
-        .Data = (CO_DATA) NUMBER_OF_SUB_INDICES,                                  \
+#define TRANSMIT_PDO_MAPPING_START_KEY_1AXX(TPDO_NUMBER, NUMBER_OF_SUB_INDICES) \
+    {                                                                           \
+        .Key = CO_KEY(0x1A00 + TPDO_NUMBER, 0x00, CO_OBJ_D___R_),               \
+        .Type = CO_TUNSIGNED8,                                                  \
+        .Data = (CO_DATA) NUMBER_OF_SUB_INDICES,                                \
     }
 
 /*!
