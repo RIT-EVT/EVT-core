@@ -16,9 +16,7 @@
 // TODO: I don't like importing co_core into a macros file. We should discuss importing all the types we need individually.
 #include "co_core.h"
 
-/*!
- * @brief MANDATORY IDENTIFICATION OBJECTS
- *
+/**
  * This macro helps to create a section of the CANOpen Object dictionary
  * that is known as the Mandatory Identification Keys. These keys sit
  * in the range of 0x1000-0x1014 and are all populated by default values.
@@ -53,9 +51,7 @@
 
 // TODO: Implement a heartbeat consumer
 
-/*!
- * @brief HEARTBEAT PRODUCER OBJECT
- *
+/**
  * This macro creates a heartbeat producer with a given interval
  * in milliseconds. This section of the object dictionary lives
  * at the 0x1017 key.
@@ -69,9 +65,7 @@
         .Data = (CO_DATA) INTERVAL,                 \
     }
 
-/*!
- * @brief DEVICE IDENTITY OBJECT
- *
+/**
  * This macro helps create the object dictionary entry for the 0x1018 key,
  * also known as the Identity Object. This is used to identify the device
  * on the CAN Network.
@@ -109,9 +103,7 @@
         .Data = (CO_DATA) 0x00,                         \
     }
 
-/*!
- * @brief SDO CONFIGURATION OBJECT
- *
+/**
  * This macro helps create the mandatory SDO configuration range of the
  * object dictionary. This lives at the key 0x1200 with 2 sub indices.
  * The SDO configuration is the same across all of our boards so this
@@ -136,9 +128,7 @@
         .Data = (CO_DATA) CO_COBID_SDO_RESPONSE(),      \
     }
 
-/*!
- * @brief RPDO SETTINGS OBJECT
- *
+/**
  * This macro creates an RPDO settings object. This macro itself is abstract,
  * allowing it to be used with any RPDO number supported by CANOpen. To make
  * interaction with the entire object dictionary easier you just specify a number
@@ -169,9 +159,7 @@
         .Data = (CO_DATA) TRANSMISSION_TYPE,                                                        \
     }
 
-/*!
- * @brief RPDO MAPPING START KEY
- *
+/**
  * This is a macro that helps create an RPDO Mapping start key. Because
  * RPDOs can have a dynamic length we are not able to make a single macro
  * that creates the entire dictionary. To remedy this we have this start key
@@ -191,9 +179,7 @@
         .Data = (CO_DATA) NUMBER_OF_SUB_INDICES,                               \
     }
 
-/*!
- * @brief RPDO MAPPING ENTRY
- *
+/**
  * This is a macro that allows us to define a mapping entry for an RPDO of number N and
  * an entry of sub index N. The RPDO_NUMBER should be consistent with the previous
  * RPDO_N_MAPPING_START_KEY_160X to ensure that this entry is mapped to the correct Mapping
@@ -211,9 +197,7 @@
         .Data = (CO_DATA) CO_LINK(0x2100 + RPDO_NUMBER, 0x00 + SUB_INDEX, DATA_SIZE), \
     }
 
-/*!
- * @brief TPDO SETTINGS OBJECT
- *
+/**
  * This macro creates an TPDO settings object. This macro itself is abstract,
  * allowing it to be used with any TPDO number supported by CANOpen.
  *
@@ -254,9 +238,7 @@
         .Data = (CO_DATA) INTERVAL,                                                               \
     }
 
-/*!
- * @brief TPDO MAPPING START KEY
- *
+/**
  * This macro helps create a TPDO Mapping start key. Because
  * TPDOs can have a dynamic length we are not able to make a single macro
  * that creates the entire dictionary. To remedy this we have this start key
@@ -275,9 +257,7 @@
         .Data = (CO_DATA) NUMBER_OF_SUB_INDICES,                                \
     }
 
-/*!
- * @brief TPDO MAPPING ENTRY
- *
+/**
  * This macro creates a mapping entry for a TPDO mapping object. The TPDO number should
  * relate to the TPDO that this mapping should be packaged with. The sub index is relative
  * to the previous Start Key and should increment by one for each entry. The Data Size should
@@ -295,9 +275,7 @@
         .Data = (CO_DATA) CO_LINK(0x2100 + TPDO_NUMBER, 0x00 + SUB_INDEX, DATA_SIZE), \
     }
 
-/*!
- * @brief DATA LINK START KEY
- *
+/**
  * This is a macro which defines the start of a data linking section of the object dictionary.
  * Because Data Linking can be done for multiple PDOs and should count up from index 2100 based
  * on the PDO number that it is associated with, this macro takes the PDO number associated with the
@@ -313,9 +291,7 @@
         .Data = (CO_DATA) NUMBER_OF_SUB_INDICES,                    \
     }
 
-/*!
- * @brief DATA LINK
- *
+/**
  * This macro creates a Data Link entry. This allows us to link pointers to data in our
  * application to mapping entries we created previously in a CANOpen Dictionary. This macro
  * takes a significant amount of parameters because it is highly abstract. This was done

@@ -56,9 +56,7 @@ void getCANopenTimerDriver(DEV::Timer* timer, CO_IF_TIMER_DRV* timerDriver);
  */
 void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver);
 
-/*!
- * @brief Initialize the drivers needed by CANOpen.
- *
+/**
  * Takes in a references to objects that will be populated
  * with all of the needed CAN drivers. Once these drivers
  * are populated, they are passed to the overall canDriver.
@@ -73,9 +71,7 @@ void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver);
  */
 void initializeCANopenDriver(types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* canOpenQueue, IO::CAN* can, EVT::core::DEV::Timer* timer, CO_IF_DRV* canStackDriver, CO_IF_NVM_DRV* nvmDriver, CO_IF_TIMER_DRV* timerDriver, CO_IF_CAN_DRV* canDriver);
 
-/*!
- * @brief Initializes data needed for the operation of CANopen.
- *
+/**
  * This function initializes a CO_NODE by taking in the CANDevice,
  * drivers, and buffers and using those to create a CO_NODE_SPEC and
  * initializing it.
@@ -88,7 +84,7 @@ void initializeCANopenDriver(types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessag
  */
 void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* canStackDriver, uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE], CO_TMR_MEM appTmrMem[16]);
 
-/*!
+/**
  * Takes in a reference to a CO_NODE and processes events
  * on that node.
  *
