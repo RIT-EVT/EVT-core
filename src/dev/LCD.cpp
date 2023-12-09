@@ -159,6 +159,14 @@ void LCD::setDefaultSections(char* const newSectionTitles[9]) {
     }
 }
 
+void LCD::setNewSections(uint8_t newNumberOfSections, uint8_t newSectionsPerRow, char* const newSectionTitles[9]) {
+    numberOfSections = newNumberOfSections;
+    sectionsPerRow = newSectionsPerRow;
+    for (uint8_t x = 0; x < numberOfSections; x++) {
+        this->sectionTitles[x] = newSectionTitles[x];
+    }
+}
+
 void LCD::displaySectionHeaders() {
     uint8_t page = 0;
     uint8_t column = 0;
