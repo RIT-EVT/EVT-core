@@ -40,6 +40,7 @@
     #define GPIO_SUPPORTED
     #define UART_SUPPORTED
     #define I2C_SUPPORTED
+    #define IWDG_SUPPORTED
 
     #include <EVT/platform/f4xx/stm32f4xx.hpp>
     //    #include "EVT/io/I2C.hpp"
@@ -50,6 +51,7 @@
     #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
     #include <EVT/io/platform/f4xx/SPIf4xx.hpp>
     #include <EVT/io/platform/f4xx/UARTf4xx.hpp>
+    #include <EVT/dev/platform/f4xx/IWDGf4xx.hpp>
 #endif
 
 namespace EVT::core::platform {
@@ -83,6 +85,14 @@ IWDG& getIWDG(uint32_t ms) {
     #ifdef STM32F3xx
     // 8 < ms < 32768
     static IWDGf3xx iwdg(ms);
+    return iwdg;
+    #endif
+    #ifdef STM32F4xx
+    // TODO: Calculate range
+
+    //TODO: figure out what is going on with the auto here
+    static auto iwdg = IWDGf4xx(ms);
+//    static IWDGf4xx iwdg(ms);
     return iwdg;
     #endif
 }

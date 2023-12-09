@@ -70,7 +70,8 @@ elseif(COMPDEFS MATCHES "(.*)STM32F4xx(.*)")
     src/io/platform/f4xx/I2Cf4xx.cpp
     src/io/platform/f4xx/PWMf4xx.cpp
     src/io/platform/f4xx/UARTf4xx.cpp
-    src/io/platform/f4xx/SPIf4xx.cpp)
+    src/io/platform/f4xx/SPIf4xx.cpp
+    src/dev/platform/f4xx/IWDGf4xx.cpp)
 else()
     message(FATAL_ERROR "the HAL didnt compile in top level CMake")
 endif()

@@ -138,7 +138,7 @@ I2Cf4xx::I2Cf4xx(Pin sclPin, Pin sdaPin) : I2C(sclPin, sdaPin) {
     uint8_t portId = getPortID(sclPin);
     getInstance(portId, &halI2C.Instance, &altId);
 
-    Pin i2cPins[] = {sclPin, sdaPin};
+    Pin i2cPins[2] = {sclPin, sdaPin};
     uint8_t numOfPins = 2;
 
     //TODO: CHECK GPIO STATES IN HAL CODE
@@ -147,7 +147,7 @@ I2Cf4xx::I2Cf4xx(Pin sclPin, Pin sdaPin) : I2C(sclPin, sdaPin) {
 
     //TODO: CHECK CLOCK SPEED TO MAKE SURE ITS RIGHT
     // 8MHz = 0x00310309; 16MHz = 0x10320309; 48MHz = 0x50330309
-    halI2C.Init.ClockSpeed = 0x00310309;
+    halI2C.Init.ClockSpeed = 100000;
     // Timing Register Layout(Bits): [PRESC(4)][RESERVED(4)]
     //                               [SCLDEL(4)][SDADEL(4)]
     //                               [SCLH(8)][SCLL(8)]
