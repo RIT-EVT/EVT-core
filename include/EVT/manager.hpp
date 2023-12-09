@@ -46,12 +46,12 @@
     //    #include "EVT/io/I2C.hpp"
     //    #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
     //    #include <EVT/io/platform/f4xx/CANf4xx.hpp>
+    #include <EVT/dev/platform/f4xx/IWDGf4xx.hpp>
     #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
     #include <EVT/io/platform/f4xx/I2Cf4xx.hpp>
     #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
     #include <EVT/io/platform/f4xx/SPIf4xx.hpp>
     #include <EVT/io/platform/f4xx/UARTf4xx.hpp>
-    #include <EVT/dev/platform/f4xx/IWDGf4xx.hpp>
 #endif
 
 namespace EVT::core::platform {
@@ -92,7 +92,7 @@ IWDG& getIWDG(uint32_t ms) {
 
     //TODO: figure out what is going on with the auto here
     static auto iwdg = IWDGf4xx(ms);
-//    static IWDGf4xx iwdg(ms);
+    //    static IWDGf4xx iwdg(ms);
     return iwdg;
     #endif
 }

@@ -9,9 +9,9 @@
 
 #include <EVT/io/I2C.hpp>
 #include <EVT/io/UART.hpp>
+#include <EVT/io/pin.hpp>
 #include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
-#include <EVT/io/pin.hpp>
 
 namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;

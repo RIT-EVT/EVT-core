@@ -51,7 +51,7 @@ static uint8_t getPortID(Pin sclPin) {
     case Pin::PB_10:
         return 2;
     default:
-//        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid SCL Pin");
+        //        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid SCL Pin");
         return 0;
     }
 #endif
@@ -107,7 +107,7 @@ static void getInstance(uint8_t portID, I2C_TypeDef** instance, uint8_t* altId) 
 #endif
 
 #ifdef STM32F4xx
-    switch(portID){
+    switch (portID) {
     case 1:
         *instance = I2C1;
 
@@ -156,8 +156,8 @@ I2Cf4xx::I2Cf4xx(Pin sclPin, Pin sdaPin) : I2C(sclPin, sdaPin) {
     halI2C.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
     halI2C.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
     halI2C.Init.OwnAddress2 = 0;
-//    part of F3 but not F4???
-//    halI2C.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+    //    part of F3 but not F4???
+    //    halI2C.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
     halI2C.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
     halI2C.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
 
