@@ -28,16 +28,19 @@ public:
     Encoder(IO::GPIO& a, IO::GPIO& b, uint32_t range, uint32_t initialPosition, bool rollOver);
 
     /**
-     * Reads and updates the encoder position.
-     */
-    void update();
-
-    /**
      * Returns the current absolute position
      *
      * @return the current position of the encoder, between 0 and range, inclusive
      */
     uint64_t getPosition();
+
+    /**
+     * Sets the range and position of the encoder
+     *
+     * @param newRange the new range for the encoder positions
+     * @param newPosition a new position for the encoder (defaults to 0)
+     */
+    void setRangeAndPosition(uint32_t newRange, uint32_t newPosition = 0);
 
     /**
      * Static Wrapper for aInterruptHandler()

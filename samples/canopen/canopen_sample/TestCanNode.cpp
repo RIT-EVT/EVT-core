@@ -19,3 +19,6 @@ CO_OBJ_T* TestCanNode::getObjectDictionary() {
 uint8_t TestCanNode::getNumElements() {
     return OBJECT_DICTIONARY_SIZE;
 }
+uint8_t TestCanNode::getNodeID() {
+    return NODE_ID;
+}
