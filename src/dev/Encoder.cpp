@@ -123,7 +123,7 @@ int8_t Encoder::readPinValues() {
 }
 
 bool Encoder::changePosition(int64_t change) {
-    change %= (int64_t) (range+1);
+    change %= (int64_t) (range + 1);
     bool hitCap = false;
     int64_t newPosition = (int64_t) position;
     newPosition += change;
