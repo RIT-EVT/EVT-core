@@ -3,7 +3,7 @@
 #include <EVT/io/pin.hpp>
 #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
 
-//#include <EVT/utils/log.hpp>
+#include <EVT/utils/log.hpp>
 
 //namespace log = EVT::core::log;
 
@@ -141,12 +141,15 @@ I2Cf4xx::I2Cf4xx(Pin sclPin, Pin sdaPin) : I2C(sclPin, sdaPin) {
     Pin i2cPins[2] = {sclPin, sdaPin};
     uint8_t numOfPins = 2;
 
-    //TODO: CHECK GPIO STATES IN HAL CODE
+    // TODO: CHECK GPIO STATES IN HAL CODE
     GPIOf4xx::gpioStateInit(&gpioInit, i2cPins, numOfPins, GPIO_MODE_AF_OD,
                             GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
 
-    //TODO: CHECK CLOCK SPEED TO MAKE SURE ITS RIGHT
-    // 8MHz = 0x00310309; 16MHz = 0x10320309; 48MHz = 0x50330309
+    /*
+// 8MHz = 0x00310309; 16MHz = 0x10320309; 48MHz = 0x50330309
+halI2C.Init.Timing = 0x00310309;
+     */
+
     halI2C.Init.ClockSpeed = 100000;
     // Timing Register Layout(Bits): [PRESC(4)][RESERVED(4)]
     //                               [SCLDEL(4)][SDADEL(4)]

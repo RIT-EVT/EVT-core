@@ -14,13 +14,6 @@ namespace EVT::core::time {
 * Calls HAL wait, assumes HAL_Init() has been called
 */
 void wait(uint32_t ms) {
-    // TODO: Remove need for this first time call
-    //    static bool isFirst = true;
-    //    if (isFirst) {
-    //        HAL_Init();
-    //        SysTick_Handler();
-    //    }
-
     HAL_Delay(ms);
 }
 

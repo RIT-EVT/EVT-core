@@ -17,7 +17,7 @@ namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
 
 /** The address of the arduino listening for I2C requests */
-constexpr uint8_t I2C_SLAVE_ADDR = 0x48;
+constexpr uint8_t I2C_SLAVE_ADDR = 0x04;
 //Address is 0x48 for temp sensors
 /** The "register" location of the "o" byte */
 constexpr uint8_t O_REGISTER = 0x00;

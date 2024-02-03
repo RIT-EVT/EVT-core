@@ -49,8 +49,8 @@
     #include <EVT/dev/platform/f4xx/IWDGf4xx.hpp>
     #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
     #include <EVT/io/platform/f4xx/I2Cf4xx.hpp>
-    #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
-    #include <EVT/io/platform/f4xx/SPIf4xx.hpp>
+//    #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
+//    #include <EVT/io/platform/f4xx/SPIf4xx.hpp>
     #include <EVT/io/platform/f4xx/UARTf4xx.hpp>
 #endif
 
@@ -88,11 +88,11 @@ IWDG& getIWDG(uint32_t ms) {
     return iwdg;
     #endif
     #ifdef STM32F4xx
-    // TODO: Calculate range
+    // 8 < ms < 32768
+    // Found in IWDG Main Features:
+    // https://www.st.com/resource/en/reference_manual/dm00135183-stm32f446xx-advanced-arm-based-32-bit-mcus-stmicroelectronics.pdf
 
-    //TODO: figure out what is going on with the auto here
-    static auto iwdg = IWDGf4xx(ms);
-    //    static IWDGf4xx iwdg(ms);
+    static IWDGf4xx iwdg(ms);
     return iwdg;
     #endif
 }

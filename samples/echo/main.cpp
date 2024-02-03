@@ -21,7 +21,7 @@ int main() {
 
     while (1) {
         // Read user input
-        uart.printf("Enter message: ");
+        uart.printf("Enter message:");
         uart.gets(buf, 100);
         uart.printf("\n\recho: %s\n\r", buf);
     }
