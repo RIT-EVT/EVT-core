@@ -199,7 +199,7 @@ I2C& getI2C() {
 template<Pin pin>
 PWM& getPWM() {
     #ifdef STM32F3xx
-    static PWMf4xx pwm(pin);
+    static PWMf3xx pwm(pin);
     return pwm;
     #endif
     #ifdef STM32F4xx
