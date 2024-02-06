@@ -125,7 +125,6 @@ PWMf4xx::PWMf4xx(Pin pin) : PWM(pin) {
         __HAL_RCC_TIM4_CLK_ENABLE();
     }
 
-
     TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
 
     halTIM.Instance = instance;
