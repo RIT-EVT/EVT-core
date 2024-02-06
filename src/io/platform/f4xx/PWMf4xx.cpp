@@ -16,10 +16,92 @@ namespace EVT::core::IO {
 static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
                         uint32_t* alternateFunction) {
     switch (pin) {
+        // TIMER 1
     case Pin::PA_8:
         *instance = TIM1;
         *channel = TIM_CHANNEL_1;
-        *alternateFunction = GPIO_AF0_MCO;
+        *alternateFunction = GPIO_AF1_TIM1; // Previously -> GPIO_AF0_MCO????
+        break;
+    case Pin::PA_9:
+        *instance = TIM1;
+        *channel = TIM_CHANNEL_2;
+        *alternateFunction = GPIO_AF1_TIM1;
+        break;
+    case Pin::PA_10:
+        *instance = TIM1;
+        *channel = TIM_CHANNEL_3;
+        *alternateFunction = GPIO_AF1_TIM1;
+        break;
+    case Pin::PA_11:
+        *instance = TIM1;
+        *channel = TIM_CHANNEL_4;
+        *alternateFunction = GPIO_AF1_TIM1;
+        break;
+
+        // TIMER 2
+    case Pin::PA_0:
+        *instance = TIM2;
+        *channel = TIM_CHANNEL_1;
+        *alternateFunction = GPIO_AF1_TIM2;
+        break;
+    case Pin::PA_1:
+        *instance = TIM2;
+        *channel = TIM_CHANNEL_2;
+        *alternateFunction = GPIO_AF1_TIM2;
+        break;
+    case Pin::PA_2:
+        *instance = TIM2;
+        *channel = TIM_CHANNEL_3;
+        *alternateFunction = GPIO_AF1_TIM2;
+        break;
+    case Pin::PA_3:
+        *instance = TIM2;
+        *channel = TIM_CHANNEL_4;
+        *alternateFunction = GPIO_AF1_TIM2;
+        break;
+
+        // TIMER 3
+    case Pin::PC_6:
+        *instance = TIM3;
+        *channel = TIM_CHANNEL_1;
+        *alternateFunction = GPIO_AF2_TIM3;
+        break;
+    case Pin::PC_7:
+        *instance = TIM3;
+        *channel = TIM_CHANNEL_2;
+        *alternateFunction = GPIO_AF2_TIM3;
+        break;
+    case Pin::PC_8:
+        *instance = TIM3;
+        *channel = TIM_CHANNEL_3;
+        *alternateFunction = GPIO_AF2_TIM3;
+        break;
+    case Pin::PC_9:
+        *instance = TIM3;
+        *channel = TIM_CHANNEL_4;
+        *alternateFunction = GPIO_AF2_TIM3;
+        break;
+
+        // TIMER 4
+    case Pin::PB_6:
+        *instance = TIM4;
+        *channel = TIM_CHANNEL_1;
+        *alternateFunction = GPIO_AF2_TIM4;
+        break;
+    case Pin::PB_7:
+        *instance = TIM4;
+        *channel = TIM_CHANNEL_2;
+        *alternateFunction = GPIO_AF2_TIM4;
+        break;
+    case Pin::PB_8:
+        *instance = TIM4;
+        *channel = TIM_CHANNEL_3;
+        *alternateFunction = GPIO_AF2_TIM4;
+        break;
+    case Pin::PB_9:
+        *instance = TIM4;
+        *channel = TIM_CHANNEL_4;
+        *alternateFunction = GPIO_AF2_TIM4;
         break;
     default:
         *instance = NULL;
@@ -37,11 +119,12 @@ PWMf4xx::PWMf4xx(Pin pin) : PWM(pin) {
         __HAL_RCC_TIM1_CLK_ENABLE();
     } else if (instance == TIM2) {
         __HAL_RCC_TIM2_CLK_ENABLE();
+    } else if (instance == TIM3) {
+        __HAL_RCC_TIM3_CLK_ENABLE();
+    } else if (instance == TIM4) {
+        __HAL_RCC_TIM4_CLK_ENABLE();
     }
-    //TODO:Investigate Timer 3 on 334
-    //    } else if (instance == TIM3) {
-    //        __HAL_RCC_TIM3_CLK_ENABLE();
-    //    }
+
 
     TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
 
@@ -88,6 +171,7 @@ void PWMf4xx::setDutyCycle(uint32_t dutyCycle) {
     sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
     sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
 
+    HAL_TIM_PWM_Stop(&halTIM, halTIMChannelID);
     HAL_TIM_PWM_ConfigChannel(&halTIM, &sConfigOC, halTIMChannelID);
     HAL_TIM_PWM_Start(&halTIM, halTIMChannelID);
 }
