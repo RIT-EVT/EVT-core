@@ -20,7 +20,7 @@ static void getInstance(Pin pin, TIM_TypeDef** instance, uint32_t* channel,
     case Pin::PA_8:
         *instance = TIM1;
         *channel = TIM_CHANNEL_1;
-        *alternateFunction = GPIO_AF1_TIM1; // Previously -> GPIO_AF0_MCO????
+        *alternateFunction = GPIO_AF1_TIM1;
         break;
     case Pin::PA_9:
         *instance = TIM1;
