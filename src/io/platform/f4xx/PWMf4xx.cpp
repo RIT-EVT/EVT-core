@@ -5,8 +5,7 @@ namespace EVT::core::IO {
 
 /**
  * Get the TIM instance and channel associated with a pin. This information
- * is pulled from the STM32F302x8 documentation. Easier representation of this
- * data can be found on MBed's STM32F302r8 documentation.
+ * is pulled from the STM32F446re documentation.
  *
  * @param pin The pin to check the instance of
  * @param instance The instance to assign to
