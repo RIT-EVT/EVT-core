@@ -30,7 +30,7 @@
     #include <EVT/io/platform/f3xx/CANf3xx.hpp>
     #include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
     #include <EVT/io/platform/f3xx/I2Cf3xx.hpp>
-    #include <EVT/io/platform/f3xx/PWMf4xx.hpp>
+    #include <EVT/io/platform/f3xx/PWMf3xx.hpp>
     #include <EVT/io/platform/f3xx/SPIf3xx.hpp>
     #include <EVT/io/platform/f3xx/UARTf3xx.hpp>
     #include <EVT/platform/f3xx/stm32f3xx.hpp>
@@ -42,7 +42,6 @@
     #define PWM_SUPPORTED
 
     #include <EVT/platform/f4xx/stm32f4xx.hpp>
-    //    #include "I2C.hpp"
     //    #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
     //    #include <EVT/io/platform/f4xx/CANf4xx.hpp>
     #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
