@@ -9,7 +9,6 @@
 
 #include <EVT/io/I2C.hpp>
 #include <EVT/io/UART.hpp>
-#include <EVT/io/pin.hpp>
 #include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
 
@@ -18,7 +17,6 @@ namespace time = EVT::core::time;
 
 /** The address of the arduino listening for I2C requests */
 constexpr uint8_t I2C_SLAVE_ADDR = 0x04;
-//Address is 0x48 for temp sensors
 /** The "register" location of the "o" byte */
 constexpr uint8_t O_REGISTER = 0x00;
 /** The "register" location of the "k" byte */

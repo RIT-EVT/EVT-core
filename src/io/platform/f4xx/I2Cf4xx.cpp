@@ -22,27 +22,6 @@ namespace EVT::core::IO {
  * @return The port ID associated with the selected pins
  */
 static uint8_t getPortID(Pin sclPin) {
-#ifdef STM32F302x8
-
-    switch (sclPin) {
-    case Pin::PB_8:
-    case Pin::PB_6:
-    case Pin::PA_15:
-        return 1;
-    case Pin::PA_9:
-    case Pin::PF_1:
-        return 2;
-    case Pin::PA_8:
-        return 3;
-    default:
-        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid SCL Pin");
-        return 0;
-    }
-#endif
-
-#ifdef STM32F334x8
-    return 1;
-#endif
 
 #ifdef STM32F4xx
     switch (sclPin) {
@@ -66,45 +45,6 @@ static uint8_t getPortID(Pin sclPin) {
  * @param portId The target port, for the STM32f334 this is always 1
  */
 static void getInstance(uint8_t portID, I2C_TypeDef** instance, uint8_t* altId) {
-#ifdef STM32F302x8
-    switch (portID) {
-    case 1:
-        *instance = I2C1;
-
-        if (!__HAL_RCC_I2C1_IS_CLK_ENABLED())
-            __HAL_RCC_I2C1_CLK_ENABLE();
-
-        *altId = GPIO_AF4_I2C1;
-
-        break;
-    case 2:
-        *instance = I2C2;
-
-        if (!__HAL_RCC_I2C2_IS_CLK_ENABLED())
-            __HAL_RCC_I2C2_CLK_ENABLE();
-
-        *altId = GPIO_AF4_I2C2;
-
-        break;
-    case 3:
-        *instance = I2C3;
-
-        if (!__HAL_RCC_I2C3_IS_CLK_ENABLED())
-            __HAL_RCC_I2C3_CLK_ENABLE();
-
-        *altId = GPIO_AF2_I2C3;
-        break;
-    default:
-        break;
-    }
-#endif
-
-#ifdef STM32F334x8
-    *instance = I2C1;
-    *altId = GPIO_AF4_I2C1;
-    if (!(__HAL_RCC_I2C1_IS_CLK_ENABLED()))
-        __HAL_RCC_I2C1_CLK_ENABLE();
-#endif
 
 #ifdef STM32F4xx
     switch (portID) {
