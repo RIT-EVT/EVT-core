@@ -3,13 +3,13 @@
 
 #include <cstdint>
 
+#include "EVT/io/I2C.hpp"
 #include <EVT/io/ADC.hpp>
 #include <EVT/io/CAN.hpp>
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/PWM.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
-#include "EVT/io/I2C.hpp"
 
 #ifdef STM32F3xx
     #define IWDG_SUPPORTED
@@ -44,8 +44,8 @@
     #define IWDG_SUPPORTED
 
     #include <EVT/platform/f4xx/stm32f4xx.hpp>
-//    #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
-//    #include <EVT/io/platform/f4xx/CANf4xx.hpp>
+    //    #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
+    //    #include <EVT/io/platform/f4xx/CANf4xx.hpp>
     #include <EVT/dev/platform/f4xx/IWDGf4xx.hpp>
     #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
     #include <EVT/io/platform/f4xx/I2Cf4xx.hpp>
