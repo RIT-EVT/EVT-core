@@ -39,10 +39,11 @@
 #ifdef STM32F4xx
     #define GPIO_SUPPORTED
     #define UART_SUPPORTED
+    #define ADC_SUPPORTED
 
     #include <EVT/platform/f4xx/stm32f4xx.hpp>
     //    #include "I2C.hpp"
-    //    #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
+    #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
     //    #include <EVT/io/platform/f4xx/CANf4xx.hpp>
     #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
     //    #include <EVT/io/platform/f4xx/I2Cf4xx.hpp>

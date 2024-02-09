@@ -1103,7 +1103,7 @@ typedef struct
 #define ADC3                ((ADC_TypeDef *) ADC3_BASE)
 #define ADC123_COMMON       ((ADC_Common_TypeDef *) ADC123_COMMON_BASE)
 /* Legacy define */
-#define ADC                  ADC123_COMMON
+#define ADC10                  ADC123_COMMON
 #define SDIO                ((SDIO_TypeDef *) SDIO_BASE)
 #define SPI1                ((SPI_TypeDef *) SPI1_BASE)
 #define SPI4                ((SPI_TypeDef *) SPI4_BASE)

@@ -789,8 +789,8 @@ HAL_StatusTypeDef HAL_ADC_Start(ADC_HandleTypeDef* hadc)
     if(HAL_IS_BIT_CLR(tmpADC_Common->CCR, ADC_CCR_MULTI))
     {
 #if defined(ADC2) && defined(ADC3)
-      if((hadc->Instance == ADC1) || ((hadc->Instance == ADC2) && ((ADC->CCR & ADC_CCR_MULTI_Msk) < ADC_CCR_MULTI_0)) \
-                                  || ((hadc->Instance == ADC3) && ((ADC->CCR & ADC_CCR_MULTI_Msk) < ADC_CCR_MULTI_4)))
+      if((hadc->Instance == ADC1) || ((hadc->Instance == ADC2) && ((ADC10->CCR & ADC_CCR_MULTI_Msk) < ADC_CCR_MULTI_0)) \
+                                  || ((hadc->Instance == ADC3) && ((ADC10->CCR & ADC_CCR_MULTI_Msk) < ADC_CCR_MULTI_4)))
       {
 #endif /* ADC2 || ADC3 */
         /* if no external trigger present enable software conversion of regular channels */
@@ -1113,8 +1113,8 @@ HAL_StatusTypeDef HAL_ADC_Start_IT(ADC_HandleTypeDef* hadc)
     if(HAL_IS_BIT_CLR(tmpADC_Common->CCR, ADC_CCR_MULTI))
     {
 #if defined(ADC2) && defined(ADC3)
-      if((hadc->Instance == ADC1) || ((hadc->Instance == ADC2) && ((ADC->CCR & ADC_CCR_MULTI_Msk) < ADC_CCR_MULTI_0)) \
-                                  || ((hadc->Instance == ADC3) && ((ADC->CCR & ADC_CCR_MULTI_Msk) < ADC_CCR_MULTI_4)))
+      if((hadc->Instance == ADC1) || ((hadc->Instance == ADC2) && ((ADC10->CCR & ADC_CCR_MULTI_Msk) < ADC_CCR_MULTI_0)) \
+                                  || ((hadc->Instance == ADC3) && ((ADC10->CCR & ADC_CCR_MULTI_Msk) < ADC_CCR_MULTI_4)))
       {
 #endif /* ADC2 || ADC3 */
         /* if no external trigger present enable software conversion of regular channels */
@@ -1466,8 +1466,8 @@ HAL_StatusTypeDef HAL_ADC_Start_DMA(ADC_HandleTypeDef* hadc, uint32_t* pData, ui
     if(HAL_IS_BIT_CLR(tmpADC_Common->CCR, ADC_CCR_MULTI))
     {
 #if defined(ADC2) && defined(ADC3)
-      if((hadc->Instance == ADC1) || ((hadc->Instance == ADC2) && ((ADC->CCR & ADC_CCR_MULTI_Msk) < ADC_CCR_MULTI_0)) \
-                                  || ((hadc->Instance == ADC3) && ((ADC->CCR & ADC_CCR_MULTI_Msk) < ADC_CCR_MULTI_4)))
+      if((hadc->Instance == ADC1) || ((hadc->Instance == ADC2) && ((ADC10->CCR & ADC_CCR_MULTI_Msk) < ADC_CCR_MULTI_0)) \
+                                  || ((hadc->Instance == ADC3) && ((ADC10->CCR & ADC_CCR_MULTI_Msk) < ADC_CCR_MULTI_4)))
       {
 #endif /* ADC2 || ADC3 */
         /* if no external trigger present enable software conversion of regular channels */
