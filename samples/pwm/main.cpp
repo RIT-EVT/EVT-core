@@ -13,13 +13,16 @@ int main() {
     // Initialize system
     EVT::core::platform::init();
 
-    IO::PWM& pwm = IO::getPWM<IO::Pin::PC_8>();
+    IO::PWM& pwm = IO::getPWM<IO::Pin::PA_8>();
     // 1000000 microseconds (1 second) period
     pwm.setPeriod(1000000);
     // 50 % duty cycle
     pwm.setDutyCycle(50);
 
     while (1) {
-        time::wait(10);
+        time::wait(5000);
+        pwm.setDutyCycle(70);
+        time::wait(5000);
+        pwm.setDutyCycle(30);
     }
 }
