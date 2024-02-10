@@ -35,7 +35,7 @@ I2C
 PWM
 ===
 
-.. doxygenclass:: EVT::core::IO::PWMf4xx
+.. doxygenclass:: EVT::core::IO::PWMf3xx
    :members:
 
 SPI
