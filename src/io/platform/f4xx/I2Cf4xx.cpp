@@ -30,7 +30,7 @@ static uint8_t getPortID(Pin sclPin) {
     case Pin::PB_10:
         return 2;
     default:
-        //        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid SCL Pin");
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid SCL Pin");
         return 0;
     }
 #endif
