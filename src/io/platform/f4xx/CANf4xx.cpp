@@ -14,62 +14,101 @@
 #include <EVT/platform/f4xx/stm32f4xx.hpp>
 #include <EVT/utils/time.hpp>
 #include <EVT/utils/types/FixedQueue.hpp>
+#include <EVT/utils/log.hpp>
 
-namespace {
+namespace log = EVT::core::log;
 
-// Pointer to the CANf302r8 interface
-//
-// NOTE: Part of the reason this works is because the STM32F3xx only supports
-// a single CAN interface at a time.
-EVT::core::IO::CANf4xx* canIntf;
+#define CAN_INTERFACE_1_INDEX 0
+#define CAN_INTERFACE_2_INDEX 1
 
-// Pointer to the CAN interface, made global for similar reasons to the
-// variable above.
-CAN_HandleTypeDef* hcan;
-
-}// namespace
-
-extern "C" void CAN_RX0_IRQHandler(void) {
-    HAL_CAN_IRQHandler(hcan);
-}
+static EVT::core::IO::CANf4xx* CAN_INTERFACES[2] = {nullptr};
 
 /**
  * Interrupt handler for incoming CAN messages. The messages are added to
  * a queue for receiving.
  *
  * NOTE: Ideally a pointer to the queue would be stored in the CAN handle
- * typedef. It may be worth considering changing the HAL code.
+ * typedef. It may be weally a pointer to the queue would be stored in the CAN handle
+ * typedef. It may be worth considering changing the HAL code.orth considering changing the HAL code.
+ *
+ * NOTE 2: This is really the only way to do this. If we extend the HAL code it is a massive project.
+ * Having a static is not ideal, but it is the best option.
  */
 extern "C" void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
     CAN_RxHeaderTypeDef rxHeader = {0};
     uint8_t payload[EVT::core::IO::CANMessage::CAN_MAX_PAYLOAD_SIZE];
 
+
     HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rxHeader, payload);
 
-    // Construct the CANmessage
+    // Construct the CANMessage
     bool isExtended = rxHeader.IDE == CAN_ID_EXT;
     uint32_t id = isExtended ? rxHeader.ExtId : rxHeader.StdId;
     EVT::core::IO::CANMessage message(id, rxHeader.DLC, payload, isExtended);
 
+    // Retrieve the correct instance of CAN so we access the correct interface in the static interfaces array.
+    uint8_t index = (hcan->Instance == CAN1) ? CAN_INTERFACE_1_INDEX : CAN_INTERFACE_2_INDEX;
+
     // Check to see if a user defined IRQ has been provided
-    if (canIntf->triggerIRQ(message))
+    if (CAN_INTERFACES[index]->triggerIRQ(message))
         return;
 
     // TODO: Part of an error system should log when the CAN buffer has filled
-    canIntf->addCANMessage(message);
+    CAN_INTERFACES[index]->addCANMessage(message);
 }
 
 namespace EVT::core::IO {
 
-CANf4xx::CANf4xx(Pin txPin, Pin rxPin, bool loopbackEnabled)
-    : CAN(txPin, rxPin, loopbackEnabled) {
+static uint8_t getPortID(Pin txPin) {
+    switch (txPin) {
+    case Pin::PB_8:
+        return 1;
+    case Pin::PB_6:
+        return 2;
+    default:
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid CAN Pin");
+        return 0;
+    }
+}
 
+static void getInstance(CAN_HandleTypeDef *halCAN, uint8_t portID) {
+    switch (portID) {
+    case 1:
+        halCAN->Instance = CAN1;
+        __HAL_RCC_CAN1_CLK_ENABLE();
+        HAL_CAN_Init(halCAN);
+
+        // Intialize interrupts
+        HAL_CAN_ActivateNotification(halCAN, CAN_IT_RX_FIFO0_MSG_PENDING);
+        HAL_NVIC_SetPriority(IRQn_Type::CAN1_RX0_IRQn, EVT::core::platform::CAN_INTERRUPT_PRIORITY, 0);
+        HAL_NVIC_EnableIRQ(IRQn_Type::CAN1_RX0_IRQn);
+        break;
+    case 2:
+        halCAN->Instance = CAN2;
+        __HAL_RCC_CAN2_CLK_ENABLE();
+        HAL_CAN_Init(halCAN);
+
+        // Intialize interrupts
+        HAL_CAN_ActivateNotification(halCAN, CAN_IT_RX_FIFO0_MSG_PENDING);
+        HAL_NVIC_SetPriority(IRQn_Type::CAN2_RX0_IRQn, EVT::core::platform::CAN_INTERRUPT_PRIORITY, 0);
+        HAL_NVIC_EnableIRQ(IRQn_Type::CAN2_RX0_IRQn);
+        break;
+    default:
+        break;
+    }
+}
+
+
+CANf4xx::CANf4xx(Pin txPin, Pin rxPin, bool loopbackEnabled): CAN(txPin, rxPin, loopbackEnabled) {
     // Setup GPIO
+    portID = getPortID(txPin);
+
     GPIO_InitTypeDef gpioInit = {0};
     Pin canPins[] = {txPin, rxPin};
     uint8_t numOfPins = 2;
-    GPIOf4xx::gpioStateInit(&gpioInit, canPins, numOfPins, GPIO_MODE_AF_OD,
-                            GPIO_PULLUP, GPIO_SPEED_FREQ_HIGH, GPIO_AF9_CAN1);
+    uint8_t gpioAlt = GPIO_AF9_CAN1; // This is okay I promise. GPIO_AF9_CAN1 and GPIO_AF9_CAN2 are BOTH 0x09.
+
+    GPIOf4xx::gpioStateInit(&gpioInit, canPins, numOfPins, GPIO_MODE_AF_OD,GPIO_PULLUP, GPIO_SPEED_FREQ_HIGH, gpioAlt);
 }
 
 CAN::CANStatus CANf4xx::connect(bool autoBusOff) {
@@ -77,7 +116,6 @@ CAN::CANStatus CANf4xx::connect(bool autoBusOff) {
     // Bit timing values calculated from the website
     // http://www.bittiming.can-wiki.info/
     uint32_t mode = loopbackEnabled ? CAN_MODE_LOOPBACK : CAN_MODE_NORMAL;
-    halCAN.Instance = CAN1;
     halCAN.Init.Prescaler = 1;
     halCAN.Init.Mode = mode;
     halCAN.Init.SyncJumpWidth = CAN_SJW_1TQ;
@@ -94,18 +132,19 @@ CAN::CANStatus CANf4xx::connect(bool autoBusOff) {
     halCAN.Init.ReceiveFifoLocked = DISABLE;
     halCAN.Init.TransmitFifoPriority = DISABLE;
 
-    // Setup global variables
-    hcan = &this->halCAN;
-    canIntf = this;
+    // Add into the static array of interfaces.
+    switch (portID) {
+    case 1:
+        CAN_INTERFACES[CAN_INTERFACE_1_INDEX] = this;
+        break;
+    case 2:
+        CAN_INTERFACES[CAN_INTERFACE_2_INDEX] = this;
+        break;
+    default:
+        break;
+    }
 
-    __HAL_RCC_CAN1_CLK_ENABLE();
-    HAL_CAN_Init(&halCAN);
-
-    // Intialize interrupts
-
-    HAL_CAN_ActivateNotification(&halCAN, CAN_IT_RX_FIFO0_MSG_PENDING);
-    HAL_NVIC_SetPriority(IRQn_Type::CAN1_RX0_IRQn, EVT::core::platform::CAN_INTERRUPT_PRIORITY, 0);
-    HAL_NVIC_EnableIRQ(IRQn_Type::CAN1_RX0_IRQn);
+    getInstance(&halCAN, portID);
 
     // By default - filter that accepts all incoming messages
     CAN_FilterTypeDef defaultFilter;

@@ -93,6 +93,7 @@ public:
     bool triggerIRQ(CANMessage& message);
 
 private:
+    uint8_t portID;
     /** Instance of the HAL can interface */
     CAN_HandleTypeDef halCAN;
     /** Queue which holds received CAN messages */
