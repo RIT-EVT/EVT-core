@@ -9,7 +9,7 @@
 #include <HALf4/stm32f4xx_hal_gpio.h>
 #include <HALf4/stm32f4xx_hal_rcc.h>
 
-void (*INTERRUPT_HANDLERS[16])(EVT::core::IO::GPIO* pin) = {nullptr};
+void (*INTERRUPT_HANDLERS[16])(EVT::core::IO::GPIO* pin, void* priv) = {nullptr};
 EVT::core::IO::GPIO* INTERRUPT_GPIOS[16] = {nullptr};
 void* INTERRUPT_ARGS[16] = {nullptr};
 
