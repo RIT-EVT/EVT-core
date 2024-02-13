@@ -12,9 +12,9 @@
  * For example, a temperature management system may to expose water pump
  * flow rate in the object dictionary.
  */
-class TestCanNode : public CANDevice {
+class RPDOCanNode : public CANDevice {
 public:
-    TestCanNode();
+    RPDOCanNode();
 
     /**
      * Expose a way to programmatically update the sampleData.
@@ -26,14 +26,16 @@ public:
      *
      * @param newValue[in] The value to set sample data to
      */
-    void setSampleData(uint8_t newValue);
+    void setSampleDataA(uint8_t newValue);
+    void setSampleDataB(uint16_t newValue);
 
     /**
      * Get the contained sample data
      *
      * @return The value of the sample data
      */
-    uint8_t getSampleData();
+    uint8_t getSampleDataA();
+    uint16_t getSampleDataB();
 
     /**
      * Get a pointer to the start of the object dictionary
@@ -56,25 +58,28 @@ public:
      */
     uint8_t getNodeID() override;
 
-private:
     /**
      * The node ID used to identify the device on the CAN network.
      */
-    static constexpr uint8_t NODE_ID = 1;
+    static constexpr uint8_t NODE_ID = 2;
 
+    static constexpr uint8_t TPDO_NODE_ID = 1;
+
+private:
     /**
      * This sample data will be exposed over CAN through the object
      * dictionary. The address of the variable will be included in the
      * object dictionary and can be updated via SDO via a CANopen client.
      * This device will then broadcast the value via a triggered PDO.
      */
-    uint8_t sampleData;
+    uint8_t sampleDataA;
+    uint16_t sampleDataB;
 
     /**
      * Have to know the size of the object dictionary for initialization
      * process.
      */
-    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 21;
+    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 40;
 
     /**
      * The object dictionary itself. Will be populated by this object during
@@ -84,15 +89,29 @@ private:
      */
     CO_OBJ_T objectDictionary[OBJECT_DICTIONARY_SIZE + 1] = {
         MANDATORY_IDENTIFICATION_ENTRIES_1000_1014,
+        HEARTBEAT_PRODUCER_1017(2000),
         IDENTITY_OBJECT_1018,
         SDO_CONFIGURATION_1200,
-        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 200),
 
-        TRANSMIT_PDO_MAPPING_START_KEY_1AXX(0, 1),
-        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0, 0x01, PDO_MAPPING_UNSIGNED8),
+        /**
+         * Sets up the first RPDO to be an async trigger
+         * TPDO 0 of the TPDO_NODE_ID
+         */
+        RECEIVE_PDO_SETTINGS_OBJECT_140X(0, 0, TPDO_NODE_ID, RECEIVE_PDO_TRIGGER_ASYNC),
 
-        DATA_LINK_START_KEY_21XX(0, 1),
-        DATA_LINK_21XX(0, 1, CO_TUNSIGNED8, &sampleData),
+        // RPDO0 mapping, determines the PDO messages to send when RPDO0 is triggered
+        // 0: The number of PDO message associated with the RPDO
+        // 1: Link to the first PDO message sampleDataA with a size of 8 and a sub index of 1
+        // 2: Link to teh second PDO message sampleDataB with a size of 16 and a sub index of 2.
+        RECEIVE_PDO_MAPPING_START_KEY_16XX(0, 2),
+        RECEIVE_PDO_MAPPING_ENTRY_16XX(0, 1, PDO_MAPPING_UNSIGNED8),
+        RECEIVE_PDO_MAPPING_ENTRY_16XX(0, 2, PDO_MAPPING_UNSIGNED16),
+
+        // User defined data, this will be where we put elements that can be
+        // accessed via SDO and depending on configuration PDO
+        DATA_LINK_START_KEY_21XX(0, 2),
+        DATA_LINK_21XX(0, 1, CO_TUNSIGNED8, &sampleDataA),
+        DATA_LINK_21XX(0, 2, CO_TUNSIGNED16, &sampleDataB),
 
         // End of dictionary marker
         CO_OBJ_DICT_ENDMARK,

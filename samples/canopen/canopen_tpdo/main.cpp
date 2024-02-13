@@ -2,9 +2,7 @@
  * This sample shows off CANopen support from EVT-core. This will
  * setup a CANopen node and attempt to make back and forth communication.
  */
-#include <stdint.h>
 
-#include <EVT/io/ADC.hpp>
 #include <EVT/io/CAN.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/types/CANMessage.hpp>
@@ -13,10 +11,6 @@
 #include <EVT/utils/types/FixedQueue.hpp>
 
 #include <EVT/io/CANopen.hpp>
-
-#include <Canopen/co_core.h>
-#include <Canopen/co_if.h>
-#include <Canopen/co_tmr.h>
 
 #include "TPDOCanNode.hpp"
 
@@ -44,8 +38,7 @@ IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
 // create a can interrupt handler
 void canInterrupt(IO::CANMessage& message, void* priv) {
-    EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* queue =
-        (EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*) priv;
+    auto* queue = (EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*) priv;
 
     //print out raw received data
     uart.printf("Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
@@ -60,25 +53,6 @@ void canInterrupt(IO::CANMessage& message, void* priv) {
         queue->append(message);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// CANopen specific Callbacks. Need to be defined in some location
-///////////////////////////////////////////////////////////////////////////////
-extern "C" void CONodeFatalError(void) {}
-
-extern "C" void COIfCanReceive(CO_IF_FRM* frm) {}
-
-extern "C" int16_t COLssStore(uint32_t baudrate, uint8_t nodeId) { return 0; }
-
-extern "C" int16_t COLssLoad(uint32_t* baudrate, uint8_t* nodeId) { return 0; }
-
-extern "C" void CONmtModeChange(CO_NMT* nmt, CO_MODE mode) {}
-
-extern "C" void CONmtHbConsEvent(CO_NMT* nmt, uint8_t nodeId) {}
-
-extern "C" void CONmtHbConsChange(CO_NMT* nmt, uint8_t nodeId, CO_MODE mode) {}
-
-extern "C" int16_t COParaDefault(CO_PARA* pg) { return 0; }
-
 //setup a TPDO event handler to print the raw TPDO message when sending
 extern "C" void COPdoTransmit(CO_IF_FRM* frm) {
     uart.printf("Sending PDO as 0x%X with length %d and data: ", frm->Identifier, frm->DLC);
@@ -90,17 +64,20 @@ extern "C" void COPdoTransmit(CO_IF_FRM* frm) {
     uart.printf("\r\n");
 }
 
-extern "C" int16_t COPdoReceive(CO_IF_FRM* frm) { return 0; }
-
-extern "C" void COPdoSyncUpdate(CO_RPDO* pdo) {}
-
-extern "C" void COTmrLock(void) {}
-
-extern "C" void COTmrUnlock(void) {}
-
 int main() {
     // Initialize system
     EVT::core::platform::init();
+
+    //create the TPDO node
+    TPDOCanNode testCanNode;
+
+    DEV::Timer& timer = DEV::getTimer<DEV::MCUTimer::Timer2>(100);
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Setup CAN configuration, this handles making drivers, applying settings.
+    // And generally creating the CANopen stack node which is the interface
+    // between the application (the code we write) and the physical CAN network
+    ///////////////////////////////////////////////////////////////////////////
 
     // Will store CANopen messages that will be populated by the EVT-core CAN
     // interrupt
@@ -110,16 +87,18 @@ int main() {
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();
     can.addIRQHandler(canInterrupt, reinterpret_cast<void*>(&canOpenQueue));
 
-    // Initialize the timer
-    DEV::Timer& timer = DEV::getTimer<DEV::MCUTimer::Timer2>(100);
-    timer.stopTimer();
-
-    //create the TPDO node
-    TPDOCanNode testCanNode;
-
     // Reserved memory for CANopen stack usage
-    uint8_t sdoBuffer[1][CO_SDO_BUF_BYTE];
-    CO_TMR_MEM appTmrMem[4];
+    uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE];
+    CO_TMR_MEM appTmrMem[16];
+
+    // Reserve driver variables
+    CO_IF_DRV canStackDriver;
+
+    CO_IF_CAN_DRV canDriver;
+    CO_IF_TIMER_DRV timerDriver;
+    CO_IF_NVM_DRV nvmDriver;
+
+    CO_NODE canNode;
 
     // Attempt to join the CAN network
     IO::CAN::CANStatus result = can.connect();
@@ -130,66 +109,36 @@ int main() {
         return 1;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Setup CAN configuration, this handles making drivers, applying settings.
-    // And generally creating the CANopen stack node which is the interface
-    // between the application (the code we write) and the physical CAN network
-    ///////////////////////////////////////////////////////////////////////////
-    // Make drivers
-    CO_IF_DRV canStackDriver;
+    // Initialize all the CANOpen drivers.
+    IO::initializeCANopenDriver(&canOpenQueue, &can, &timer, &canStackDriver, &nvmDriver, &timerDriver, &canDriver);
 
-    CO_IF_CAN_DRV canDriver;
-    CO_IF_TIMER_DRV timerDriver;
-    CO_IF_NVM_DRV nvmDriver;
+    // Initialize the CANOpen node we are using.
+    IO::initializeCANopenNode(&canNode, &testCanNode, &canStackDriver, sdoBuffer, appTmrMem);
 
-    IO::getCANopenCANDriver(&can, &canOpenQueue, &canDriver);
-    IO::getCANopenTimerDriver(&timer, &timerDriver);
-    IO::getCANopenNVMDriver(&nvmDriver);
-
-    canStackDriver.Can = &canDriver;
-    canStackDriver.Timer = &timerDriver;
-    canStackDriver.Nvm = &nvmDriver;
-
-    //setup CANopen Node
-    CO_NODE_SPEC canSpec = {
-        .NodeId = 0x01,
-        .Baudrate = IO::CAN::DEFAULT_BAUD,
-        .Dict = testCanNode.getObjectDictionary(),
-        .DictLen = testCanNode.getNumElements(),
-        .EmcyCode = NULL,
-        .TmrMem = appTmrMem,
-        .TmrNum = 16,
-        .TmrFreq = 100,
-        .Drv = &canStackDriver,
-        .SdoBuf = reinterpret_cast<uint8_t*>(&sdoBuffer[0]),
-    };
-
-    CO_NODE canNode;
-
-    CONodeInit(&canNode, &canSpec);
-    CONodeStart(&canNode);
+    // Set the node to operational mode
     CONmtSetMode(&canNode.Nmt, CO_OPERATIONAL);
 
     time::wait(500);
 
     //print any CANopen errors
     uart.printf("Error: %d\r\n", CONodeGetErr(&canNode));
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Main loop
+    ///////////////////////////////////////////////////////////////////////////
+
     uint8_t lastVal1 = 0;
     uint16_t lastVal2 = 0;
     while (1) {
         //increment node values
         testCanNode.update();
-        if (lastVal2 != testCanNode.getSampleDataB()) {
+        if (lastVal1 != testCanNode.getSampleDataA() || lastVal2 != testCanNode.getSampleDataB()) {
             lastVal1 = testCanNode.getSampleDataA();
             lastVal2 = testCanNode.getSampleDataB();
             uart.printf("Current value: %X, %X\r\n", lastVal1, lastVal2);
         }
-        // Process incoming CAN messages
-        CONodeProcess(&canNode);
-        // Update the state of timer based events
-        COTmrService(&canNode.Tmr);
-        // Handle executing timer events that have elapsed
-        COTmrProcess(&canNode.Tmr);
+
+        IO::processCANopenNode(&canNode);
         // Wait for new data to come in
         time::wait(50);
     }
