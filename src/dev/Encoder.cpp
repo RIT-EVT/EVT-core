@@ -89,7 +89,7 @@ void Encoder::bInterruptHandler() {
                     currentRelPos, readPinValues(), change);
 }
 
-uint64_t Encoder::getPosition() {
+uint32_t Encoder::getPosition() {
     int64_t change = interruptChange;
     interruptChange = 0;
     changePosition(change);
@@ -123,7 +123,7 @@ int8_t Encoder::readPinValues() {
 }
 
 bool Encoder::changePosition(int64_t change) {
-    change %= (int64_t) range;
+    change %= (int64_t) (range + 1);
     bool hitCap = false;
     int64_t newPosition = (int64_t) position;
     newPosition += change;
@@ -143,7 +143,7 @@ bool Encoder::changePosition(int64_t change) {
         }
         hitCap = true;
     } else {
-        position = (uint64_t) newPosition;
+        position = (uint32_t) newPosition;
     }
     return hitCap;
 }

@@ -32,7 +32,7 @@ public:
      *
      * @return the current position of the encoder, between 0 and range, inclusive
      */
-    uint64_t getPosition();
+    uint32_t getPosition();
 
     /**
      * Sets the range and position of the encoder

@@ -39,15 +39,14 @@
 #ifdef STM32F4xx
     #define GPIO_SUPPORTED
     #define UART_SUPPORTED
-    #define ADC_SUPPORTED
+    #define PWM_SUPPORTED
 
     #include <EVT/platform/f4xx/stm32f4xx.hpp>
-    //    #include "I2C.hpp"
-    #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
+    //    #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
     //    #include <EVT/io/platform/f4xx/CANf4xx.hpp>
     #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
     //    #include <EVT/io/platform/f4xx/I2Cf4xx.hpp>
-    //    #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
+    #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
     //    #include <EVT/io/platform/f4xx/SPIf4xx.hpp>
     #include <EVT/io/platform/f4xx/UARTf4xx.hpp>
 #endif
@@ -63,7 +62,7 @@ void init() {
 #ifdef STM32F3xx
     stm32f3xx_init();
 #endif
-#ifdef STM32f4xx
+#ifdef STM32F4xx
     EVT::core::platform::stm32f4xx_init();
 #endif
 }
@@ -201,6 +200,10 @@ template<Pin pin>
 PWM& getPWM() {
     #ifdef STM32F3xx
     static PWMf3xx pwm(pin);
+    return pwm;
+    #endif
+    #ifdef STM32F4xx
+    static PWMf4xx pwm(pin);
     return pwm;
     #endif
 }

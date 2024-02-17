@@ -484,6 +484,7 @@ void PWMf3xx::setDutyCycle(uint32_t dutyCycle) {
     sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
     sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
 
+    HAL_TIM_PWM_Stop(&halTIM, halTIMChannelID);
     HAL_TIM_PWM_ConfigChannel(&halTIM, &sConfigOC, halTIMChannelID);
     HAL_TIM_PWM_Start(&halTIM, halTIMChannelID);
 }

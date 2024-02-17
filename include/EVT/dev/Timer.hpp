@@ -1,6 +1,8 @@
 #ifndef EVT_TIMER_HPP
 #define EVT_TIMER_HPP
 
+#include <cstdint>
+
 namespace EVT::core::DEV {
 
 /**
