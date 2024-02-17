@@ -88,13 +88,13 @@ void ADCf4xx::initADC(uint8_t num_channels) {
 
     // TODO: Figure out ADC calibration
 
-    halADC.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV1;// Use AHB clock (8MHz) w/o division for ADC clock
+    halADC.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2; // Use AHB clock (8MHz) w/o division for ADC clock
     halADC.Init.Resolution = ADC_RESOLUTION_12B;
     halADC.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-    halADC.Init.ScanConvMode = ADC_SCAN_ENABLE;
+    halADC.Init.ScanConvMode = ENABLE;
     halADC.Init.EOCSelection = ADC_EOC_SEQ_CONV;
-    halADC.Init.LowPowerAutoWait = DISABLE;// Wait for the previous value to be written by DMA before beginning
-                                           // next transfer.  Not recommended for DMA.
+//    halADC.Init.LowPowerAutoWait = DISABLE;// Wait for the previous value to be written by DMA before beginning
+                                           // next transfer.  Not recommended for DMA. DOES NOT EXIST IN F4xx
     halADC.Init.ContinuousConvMode = ENABLE;
     halADC.Init.NbrOfConversion = num_channels;
     halADC.Init.DiscontinuousConvMode = DISABLE;
@@ -102,7 +102,7 @@ void ADCf4xx::initADC(uint8_t num_channels) {
     halADC.Init.ExternalTrigConv = ADC_SOFTWARE_START;
     halADC.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;// Parameter discared when set to ADC_SOFTWARE_START
     halADC.Init.DMAContinuousRequests = ENABLE;
-    halADC.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
+//    halADC.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN; // DOES NOT EXIST IN F4xx
 
     __HAL_RCC_ADC1_CLK_ENABLE();
     HAL_ADC_Init(&halADC);
@@ -114,7 +114,7 @@ void ADCf4xx::initDMA() {
     // TODO: Add some way of selecting the next available DMA channel
     // Ideally we would have a "DMA" class dedicated to DMA resource
     // allocation.
-    halDMA.Instance = DMA1_Channel1;
+    halDMA.Instance = DMA1_Stream1; // OG DMA1_Channel1, doesnt exist. stream is pretty close to channel :)
     halDMA.Init.Direction = DMA_PERIPH_TO_MEMORY;
     halDMA.Init.PeriphInc = DMA_PINC_DISABLE;
     halDMA.Init.MemInc = DMA_MINC_ENABLE;
@@ -125,8 +125,8 @@ void ADCf4xx::initDMA() {
 
     HAL_DMA_Init(&halDMA);
 
-    HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, EVT::core::platform::ADC_INTERRUPT_PRIORITY, 0);
-    HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+    HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, EVT::core::platform::ADC_INTERRUPT_PRIORITY, 0); // OG DMA1_Channel1_IRQn, doesnt exist. channel and stream are pretty close right :)
+    HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn); // OG DMA1_Channel1_IRQn, doesnt exist. channel and stream are pretty close right :)
 
     __HAL_LINKDMA(&halADC, DMA_Handle, halDMA);
 }
@@ -195,10 +195,10 @@ void ADCf4xx::addChannel(uint8_t rank) {
     channels[rank - 1] = pin;
 
     adcChannel.Rank = rank;
-    adcChannel.SamplingTime = ADC_SAMPLETIME_601CYCLES_5;
+    adcChannel.SamplingTime = ADC_SAMPLETIME_480CYCLES; // OG ADC_SAMPLETIME_601CYCLES_5. DOESNT EXIST
     adcChannel.Offset = 0;
-    adcChannel.SingleDiff = ADC_SINGLE_ENDED;
-    adcChannel.OffsetNumber = ADC_OFFSET_NONE;
+//    adcChannel.SingleDiff = ADC_SINGLE_ENDED;     //  Not recommended for DMA. DOES NOT EXIST IN F4xx
+//    adcChannel.OffsetNumber = ADC_OFFSET_NONE;    // Not recommended for DMA. DOES NOT EXIST IN F4xx
     adcChannel.Offset = 0x000;
 
     HAL_ADC_ConfigChannel(&halADC, &adcChannel);
