@@ -1,10 +1,79 @@
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file           : main.c
+  * @brief          : Main program body
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2024 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+/* Includes ------------------------------------------------------------------*/
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file           : main.h
+  * @brief          : Header for main.c file.
+  *                   This file contains the common defines of the application.
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2024 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+
+/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __MAIN_H
     #define __MAIN_H
 
     #ifdef __cplusplus
-    extern "C" {
+extern "C" {
     #endif
 
+    /* Includes ------------------------------------------------------------------*/
+    #include "HALf4/stm32f4xx_hal.h"
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+
+/* USER CODE END Includes */
+
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
+
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+/* USER CODE BEGIN EC */
+
+/* USER CODE END EC */
+
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/* USER CODE END EM */
+
+/* Exported functions prototypes ---------------------------------------------*/
+void Error_Handler(void);
+
+    /* USER CODE BEGIN EFP */
+
+    /* USER CODE END EFP */
 
     /* Private defines -----------------------------------------------------------*/
     #define B1_Pin GPIO_PIN_13
@@ -22,9 +91,9 @@
     #define SWO_Pin GPIO_PIN_3
     #define SWO_GPIO_Port GPIOB
 
-    /* USER CODE BEGIN Private defines */
+/* USER CODE BEGIN Private defines */
 
-    /* USER CODE END Private defines */
+/* USER CODE END Private defines */
 
     #ifdef __cplusplus
 }
@@ -32,7 +101,29 @@
 
 #endif /* __MAIN_H */
 
-#include "HALf4/stm32f4xx_hal.h"
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+#include "EVT/manager.hpp"
+#include "HALf4/stm32f4xx_it.h"
+#include <stdio.h>
+
+namespace IO = EVT::core::IO;
+/* USER CODE END Includes */
+
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
+
+/* USER CODE END PTD */
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+
+/* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
@@ -40,24 +131,21 @@ DMA_HandleTypeDef hdma_adc1;
 
 UART_HandleTypeDef huart2;
 
-#include <EVT/manager.hpp>
+/* USER CODE BEGIN PV */
+/* USER CODE END PV */
+
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_ADC1_Init(void);
-static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
-
-#include <EVT/io/PWM.hpp>
-#include <EVT/manager.hpp>
-
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-namespace IO = EVT::core::IO;
+
 /* USER CODE END 0 */
 
 /**
@@ -66,40 +154,28 @@ namespace IO = EVT::core::IO;
   */
 int main(void)
 {
-    /* USER CODE BEGIN 1 */
     /* USER CODE END 1 */
 
-    /* MCU Configuration--------------------------------------------------------*/
-    EVT::core::platform::init();
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-
-    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-//    HAL_Init();
-
-    /* USER CODE BEGIN Init */
-
-    /* USER CODE END Init */
-
-    /* Configure the system clock */
-//    SystemClock_Config();
-//    MX_USART2_UART_Init();
+    SystemClock_Config();
 
     /* USER CODE BEGIN SysInit */
+    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+
     /* USER CODE END SysInit */
 
     /* Initialize all configured peripherals */
-//    MX_GPIO_Init();
+    MX_GPIO_Init();
     MX_DMA_Init();
-
     MX_ADC1_Init();
+
     /* USER CODE BEGIN 2 */
+    uart.printf("starting \n\r");
 
     uint32_t adc1;
 
 
     /* USER CODE END 2 */
     HAL_ADC_Start(&hadc1);
-    uart.printf("STARTWORKS\n");
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1)
@@ -131,19 +207,23 @@ int main(void)
   * @brief System Clock Configuration
   * @retval None
   */
+
+
 void SystemClock_Config(void)
 {
+    HAL_Init();
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+    RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
     /** Configure the main internal regulator output voltage
-  */
+    */
     __HAL_RCC_PWR_CLK_ENABLE();
     __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
 
     /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
+    * in the RCC_OscInitTypeDef structure.
+    */
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
     RCC_OscInitStruct.HSIState = RCC_HSI_ON;
     RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
@@ -156,23 +236,23 @@ void SystemClock_Config(void)
     RCC_OscInitStruct.PLL.PLLR = 2;
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
     {
-//        Error_Handler();
+        Error_Handler();
     }
 
     /** Initializes the CPU, AHB and APB buses clocks
-  */
-    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-        |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+    */
+    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
+        | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;// SYSCLK at 8 MHz (HSI CLK)
     RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
     RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
     RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-
-    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
-    {
+    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK) {
+        Error_Handler();
     }
-}
 
+    SysTick_Handler();
+}
 /**
   * @brief ADC1 Initialization Function
   * @param None
@@ -207,6 +287,7 @@ static void MX_ADC1_Init(void)
     hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
     if (HAL_ADC_Init(&hadc1) != HAL_OK)
     {
+        Error_Handler();
     }
 
     /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
@@ -216,6 +297,7 @@ static void MX_ADC1_Init(void)
     sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
     if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
     {
+        Error_Handler();
     }
     /* USER CODE BEGIN ADC1_Init 2 */
 
@@ -248,6 +330,7 @@ static void MX_USART2_UART_Init(void)
     huart2.Init.OverSampling = UART_OVERSAMPLING_16;
     if (HAL_UART_Init(&huart2) != HAL_OK)
     {
+        Error_Handler();
     }
     /* USER CODE BEGIN USART2_Init 2 */
 
@@ -311,6 +394,21 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
+
+/**
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
+void Error_Handler(void)
+{
+    /* USER CODE BEGIN Error_Handler_Debug */
+    /* User can add his own implementation to report the HAL error return state */
+    __disable_irq();
+    while (1)
+    {
+    }
+    /* USER CODE END Error_Handler_Debug */
+}
 
 #ifdef  USE_FULL_ASSERT
 /**
