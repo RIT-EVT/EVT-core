@@ -37,10 +37,7 @@ static uint8_t getPortID(Pin sclPin) {
 }
 
 /**
- * Get the target I2C instance based on the version of the STM32f3
- *
- * The STM32F302r8 supports 3 I2C instances, the STM32F334x8 supports
- * 1 I2C instance
+ * Get the target I2C instance.
  *
  * @param portId The target port, for the STM32f334 this is always 1
  */
