@@ -8,9 +8,11 @@
 #include <EVT/io/CAN.hpp>
 #include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
+#include <EVT/utils/log.hpp>
 
 namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
+namespace log = EVT::core::log;
 
 void canIRQHandler(IO::CANMessage& message, void* priv) {
     IO::UART* uart = (IO::UART*) priv;
@@ -31,8 +33,10 @@ int main() {
     EVT::core::platform::init();
 
     // Get CAN instance with loopback enabled
-    IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    log::LOGGER.setUART(&uart);
+
+    IO::CAN& can = IO::getCAN<IO::Pin::PB_8, IO::Pin::PB_9>();
     can.addIRQHandler(canIRQHandler, &uart);
 
     // CAN message that will be sent
@@ -56,11 +60,11 @@ int main() {
         // Transmit every second
         result = can.transmit(transmit_message);
         if (result != IO::CAN::CANStatus::OK) {
-            uart.printf("Failed to transmit message\r\n");
+            uart.printf("Failed to transmit message %d\r\n", result);
             return 1;
         }
 
-        time::wait(1000);
+        time::wait(100);
     }
 
     return 0;

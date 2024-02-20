@@ -62,8 +62,10 @@ namespace EVT::core::IO {
 static uint8_t getPortID(Pin txPin) {
     switch (txPin) {
     case Pin::PB_8:
+        log::LOGGER.log(log::Logger::LogLevel::INFO, "CAN1 Selected");
         return 1;
     case Pin::PB_6:
+        log::LOGGER.log(log::Logger::LogLevel::INFO, "CAN2 Selected");
         return 2;
     default:
         log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid CAN Pin");
@@ -206,11 +208,15 @@ CAN::CANStatus CANf4xx::transmit(CANMessage& message) {
     }
 
     // If the mailbox is still full, return a timeout error
-    if (HAL_CAN_GetTxMailboxesFreeLevel(&halCAN) == 0) {
+    uint32_t mailboxFreeLevel = HAL_CAN_GetTxMailboxesFreeLevel(&halCAN);
+    log::LOGGER.log(log::Logger::LogLevel::INFO, "Mailbox Free Level: %d", mailboxFreeLevel);
+    if (mailboxFreeLevel == 0) {
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Mailbox Free Timing Out");
         return CANStatus::TIMEOUT;
     }
 
     HAL_StatusTypeDef result = HAL_CAN_AddTxMessage(&halCAN, &txHeader, payload, &mailbox);
+    log::LOGGER.log(log::Logger::LogLevel::INFO, "Result: %d", result);
 
     switch (result) {
     case HAL_OK:
