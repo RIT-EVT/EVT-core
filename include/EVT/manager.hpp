@@ -6,6 +6,7 @@
 #include <EVT/io/ADC.hpp>
 #include <EVT/io/CAN.hpp>
 #include <EVT/io/GPIO.hpp>
+#include <EVT/io/I2C.hpp>
 #include <EVT/io/PWM.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
@@ -44,7 +45,10 @@
     #include <EVT/platform/f4xx/stm32f4xx.hpp>
     //    #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
     //    #include <EVT/io/platform/f4xx/CANf4xx.hpp>
+    #include <EVT/dev/platform/f4xx/IWDGf4xx.hpp>
     #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
+    #include <EVT/io/platform/f4xx/I2Cf4xx.hpp>
+    //    #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
     //    #include <EVT/io/platform/f4xx/I2Cf4xx.hpp>
     #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
     //    #include <EVT/io/platform/f4xx/SPIf4xx.hpp>
@@ -82,6 +86,14 @@ IWDG& getIWDG(uint32_t ms) {
     #ifdef STM32F3xx
     // 8 < ms < 32768
     static IWDGf3xx iwdg(ms);
+    return iwdg;
+    #endif
+    #ifdef STM32F4xx
+    // 8 < ms < 32768
+    // Found in IWDG Main Features:
+    // https://www.st.com/resource/en/reference_manual/dm00135183-stm32f446xx-advanced-arm-based-32-bit-mcus-stmicroelectronics.pdf
+
+    static IWDGf4xx iwdg(ms);
     return iwdg;
     #endif
 }
@@ -185,6 +197,10 @@ template<Pin scl, Pin sda>
 I2C& getI2C() {
     #ifdef STM32F3xx
     static I2Cf3xx i2c(scl, sda);
+    return i2c;
+    #endif
+    #ifdef STM32F4xx
+    static I2Cf4xx i2c(scl, sda);
     return i2c;
     #endif
 }
