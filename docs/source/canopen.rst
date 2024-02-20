@@ -100,7 +100,7 @@ parts. First is the C++ class which represents the node as a whole including
 the object dictionary. Second is the main file which setups CANopen and
 processes incoming data.
 
-Lets first look at the Object Dictionary contained in ``TestCanNode.hpp``.
+Lets first look at the Object Dictionary contained in ``RPDOCanNode.hpp``.
 
 .. code-block:: C++
 
@@ -378,7 +378,7 @@ news is that all of it is essentially boiler plate code.
    #include <Canopen/co_if.h>
    #include <Canopen/co_tmr.h>
 
-   #include "TestCanNode.hpp"
+   #include "RPDOCanNode.hpp"
 
    namespace IO = EVT::core::IO;
    namespace DEV = EVT::core::DEV;
@@ -454,7 +454,7 @@ news is that all of it is essentially boiler plate code.
        IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
        timer.stopTimer();
 
-       TestCanNode testCanNode;
+       RPDOCanNode testCanNode;
 
        // Reserved memory for CANopen stack usage
        uint8_t sdoBuffer[1][CO_SDO_BUF_BYTE];

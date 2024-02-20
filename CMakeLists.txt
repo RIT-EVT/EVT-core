@@ -38,6 +38,7 @@ target_sources(${PROJECT_NAME} PRIVATE
         src/io/SPI.cpp
         src/io/types/CANMessage.cpp
         src/dev/button.cpp
+        src/dev/Encoder.cpp
         src/dev/LED.cpp
         src/dev/LCD.cpp
         src/dev/RTCTimer.cpp
@@ -101,11 +102,11 @@ cmake_dependent_option(EVT_BUILD_SAMPLES
 
 add_compile_definitions(USE_HAL_DRIVER)
 
-add_subdirectory(libs/canopen/canopen/)
-install(TARGETS Canopen EXPORT Canopen-config)
-install(EXPORT Canopen-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Canopen)
+add_subdirectory(libs/canopen/)
+install(TARGETS canopen-stack EXPORT canopen-stack-config)
+install(EXPORT canopen-stack-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/canopen-stack)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC Canopen)
+target_link_libraries(${PROJECT_NAME} PUBLIC canopen-stack)
 
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
     add_subdirectory(libs/HALf3/)

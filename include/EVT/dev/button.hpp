@@ -15,8 +15,9 @@ public:
      * Create an instance of the Button based on the given GPIO pin.
      *
      * @param gpio[in] GPIO pin
+     * @param pressedState[in] Which GPIO state indicates the button is pressed
      */
-    Button(IO::GPIO& gpio);
+    Button(IO::GPIO& gpio, IO::GPIO::State pressedState = IO::GPIO::State::HIGH);
 
     /**
      * Gets the button's GPIO Pin state
@@ -34,11 +35,14 @@ public:
     bool debounce(uint32_t debounceTime);
 
 private:
-    // The GPIO pin that the button is connected to
+    /** The GPIO pin that the button is connected to */
     IO::GPIO& gpio;
 
-    // The time since the button was last pressed
+    /** The time since the button was last pressed */
     uint32_t timeSinceLastPress;
+
+    /** The GPIO state that means the button is being pressed */
+    IO::GPIO::State pressedState;
 
 };// namespace EVT::core::DEV
 }// namespace EVT::core::DEV

@@ -6,7 +6,8 @@
 #ifndef _EVT_CANopen_
 #define _EVT_CANopen_
 
-#include <Canopen/co_if.h>
+#include "CANDevice.hpp"
+#include "co_core.h"
 
 #include <EVT/dev/RTC.hpp>
 #include <EVT/dev/Timer.hpp>
@@ -22,38 +23,74 @@
 namespace EVT::core::IO {
 
 /**
-    * Get an instance of the CAN driver that can be used with the CANopen
-    * stack. This will populate a struct with function pointers that can
-    * handle CAN operations.
-    *
-    * @param[in] can The CAN interface that will be used for the stack driver
-    * @param[in] messageQueue Queue that will be read from for receiveing CAN messages
-    * @param[out] canDriver The CANopen stack driver to populate
-    */
+ * Get an instance of the CAN driver that can be used with the CANopen
+ * stack. This will populate a struct with function pointers that can
+ * handle CAN operations.
+ *
+ * @param[in] can The CAN interface that will be used for the stack driver
+ * @param[in] messageQueue Queue that will be read from for receiveing CAN messages
+ * @param[out] canDriver The CANopen stack driver to populate
+ */
 void getCANopenCANDriver(CAN* can,
                          types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* messageQueue,
                          CO_IF_CAN_DRV* canDriver);
 
 /**
-     * Get an instance of the timer driver that can be used with the
-     * CANopen stack. This will populate a struct with function pointers
-     * that will handler timer operations.
-     *
-     * @param[in] timer The timer interface to use
-     * @param[out] timerDriver The timer driver to populate
-     */
+ * Get an instance of the timer driver that can be used with the
+ * CANopen stack. This will populate a struct with function pointers
+ * that will handler timer operations.
+ *
+ * @param[in] timer The timer interface to use
+ * @param[out] timerDriver The timer driver to populate
+ */
 void getCANopenTimerDriver(DEV::Timer* timer, CO_IF_TIMER_DRV* timerDriver);
 
 /**
-     * Get an instance of the NVM (non-volitile memory) that can be used
-     * with the CANopen stack. This will populate a struct with
-     * function pointers that can handle CAN operations.
-     *
-     * CURRENTLY ONLY FOR TESTING USE ONLY, NOT ACTUALLY NVM.
-     *
-     * @param[out] nvmDriver The NVM driver to populate
-     */
+ * Get an instance of the NVM (non-volitile memory) that can be used
+ * with the CANopen stack. This will populate a struct with
+ * function pointers that can handle CAN operations.
+ *
+ * CURRENTLY ONLY FOR TESTING USE ONLY, NOT ACTUALLY NVM.
+ *
+ * @param[out] nvmDriver The NVM driver to populate
+ */
 void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver);
+
+/**
+ * Takes in a references to objects that will be populated
+ * with all of the needed CAN drivers. Once these drivers
+ * are populated, they are passed to the overall canDriver.
+ *
+ * @param canOpenQueue[in,out] the canOpen queue to give to the drivers.
+ * @param can[in,out] the can instance to initialize with.
+ * @param timer[in] the EVT Core timer to give to CANOpen.
+ * @param canStackDriver[in,out] the stack driver.
+ * @param nvmDriver[in,out] the nvm driver.
+ * @param timerDriver[in,out] the timer driver.
+ * @param canDriver[in,out] the general CAN driver.
+ */
+void initializeCANopenDriver(types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* canOpenQueue, IO::CAN* can, EVT::core::DEV::Timer* timer, CO_IF_DRV* canStackDriver, CO_IF_NVM_DRV* nvmDriver, CO_IF_TIMER_DRV* timerDriver, CO_IF_CAN_DRV* canDriver);
+
+/**
+ * This function initializes a CO_NODE by taking in the CANDevice,
+ * drivers, and buffers and using those to create a CO_NODE_SPEC and
+ * initializing it.
+ *
+ * @param canNode[in,out] the CO_NODE that is initialized.
+ * @param canDevice[in] the canDevice that the object dictionary is retrieved from.
+ * @param canStackDriver[in] references to the drivers that will be used in initialization
+ * @param sdoBuffer[in] the sdoBuffer
+ * @param appTmrMem[in] the appTmrMem
+ */
+void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* canStackDriver, uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE], CO_TMR_MEM appTmrMem[16]);
+
+/**
+ * Takes in a reference to a CO_NODE and processes events
+ * on that node.
+ *
+ * @param canNode[in,out] the node to process events on.
+ */
+void processCANopenNode(CO_NODE* canNode);
 
 }// namespace EVT::core::IO
 

@@ -139,6 +139,14 @@ public:
     void setDefaultSections(char* const newSectionTitles[9]);
 
     /**
+     * Sets new values for the number of sections, sections per row, and section titles
+     * @param newNumberOfSections the new total number of sections
+     * @param newSectionsPerRow the new number of sections per row
+     * @param newSectionTitles the new array of section titles to display
+     */
+    void setNewSections(uint8_t newNumberOfSections, uint8_t newSectionsPerRow, char* const newSectionTitles[9]);
+
+    /**
      * Displays the section headers. Only needs to be called once unless cleared.
      */
     void displaySectionHeaders();
