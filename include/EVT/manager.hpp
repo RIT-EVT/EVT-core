@@ -3,10 +3,10 @@
 
 #include <cstdint>
 
-#include <EVT/io/I2C.hpp>
 #include <EVT/io/ADC.hpp>
 #include <EVT/io/CAN.hpp>
 #include <EVT/io/GPIO.hpp>
+#include <EVT/io/I2C.hpp>
 #include <EVT/io/PWM.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
