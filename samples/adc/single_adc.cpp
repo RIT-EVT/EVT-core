@@ -108,6 +108,8 @@ void Error_Handler(void);
 #include <stdio.h>
 
 namespace IO = EVT::core::IO;
+DMA_HandleTypeDef halDMA = {0};
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -135,10 +137,10 @@ UART_HandleTypeDef huart2;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
-static void MX_DMA_Init(void);
-static void MX_ADC1_Init(void);
+void SystemClock_Config();
+static void MX_GPIO_Init();
+static void MX_DMA_Init();
+static void MX_ADC1_Init();
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -152,7 +154,7 @@ static void MX_ADC1_Init(void);
   * @brief  The application entry point.
   * @retval int
   */
-int main(void)
+int main()
 {
     /* USER CODE END 1 */
 
@@ -180,14 +182,10 @@ int main(void)
     /* USER CODE BEGIN WHILE */
     while (1)
     {
-        //	    HAL_ADC_Start(&hadc1);
-        //	    HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY); TEST WITHOUT THIS
-        //	    raw = HAL_ADC_GetValue(&hadc1);
 
         adc1 = HAL_ADC_GetValue(&hadc1);
         uart.printf("ADC:%li\n\r", adc1);
-
-
+    // todo try copy and pasting that github guys code and see if it works
         //	    sprintf(msg, "%hu\r\n", raw);
         //	    HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
 
@@ -209,21 +207,20 @@ int main(void)
   */
 
 
-void SystemClock_Config(void)
+void SystemClock_Config()
 {
     HAL_Init();
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-    RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
     /** Configure the main internal regulator output voltage
-    */
+  */
     __HAL_RCC_PWR_CLK_ENABLE();
     __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
 
     /** Initializes the RCC Oscillators according to the specified parameters
-    * in the RCC_OscInitTypeDef structure.
-    */
+  * in the RCC_OscInitTypeDef structure.
+  */
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
     RCC_OscInitStruct.HSIState = RCC_HSI_ON;
     RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
@@ -234,16 +231,13 @@ void SystemClock_Config(void)
     RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
     RCC_OscInitStruct.PLL.PLLQ = 2;
     RCC_OscInitStruct.PLL.PLLR = 2;
-    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-    {
-        Error_Handler();
-    }
+    HAL_RCC_OscConfig(&RCC_OscInitStruct);
 
     /** Initializes the CPU, AHB and APB buses clocks
-    */
-    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
-        | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
-    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;// SYSCLK at 8 MHz (HSI CLK)
+  */
+    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+        |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
     RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
     RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
     RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
@@ -258,8 +252,7 @@ void SystemClock_Config(void)
   * @param None
   * @retval None
   */
-static void MX_ADC1_Init(void)
-{
+static void MX_ADC1_Init() {
 
     /* USER CODE BEGIN ADC1_Init 0 */
 
@@ -272,7 +265,7 @@ static void MX_ADC1_Init(void)
     /* USER CODE END ADC1_Init 1 */
 
     /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
-  */
+      */
     hadc1.Instance = ADC1;
     hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
     hadc1.Init.Resolution = ADC_RESOLUTION_12B;
@@ -285,72 +278,43 @@ static void MX_ADC1_Init(void)
     hadc1.Init.NbrOfConversion = 1;
     hadc1.Init.DMAContinuousRequests = ENABLE;
     hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
-    if (HAL_ADC_Init(&hadc1) != HAL_OK)
-    {
-        Error_Handler();
-    }
-
+    __HAL_RCC_ADC1_CLK_ENABLE();
+    HAL_ADC_Init(&hadc1);
     /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
-  */
+      */
     sConfig.Channel = ADC_CHANNEL_1;
     sConfig.Rank = 1;
     sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
-    if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-    {
-        Error_Handler();
-    }
+    HAL_ADC_ConfigChannel(&hadc1, &sConfig);
     /* USER CODE BEGIN ADC1_Init 2 */
 
     /* USER CODE END ADC1_Init 2 */
-
 }
 
-/**
-  * @brief USART2 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USART2_UART_Init(void)
-{
-
-    /* USER CODE BEGIN USART2_Init 0 */
-
-    /* USER CODE END USART2_Init 0 */
-
-    /* USER CODE BEGIN USART2_Init 1 */
-
-    /* USER CODE END USART2_Init 1 */
-    huart2.Instance = USART2;
-    huart2.Init.BaudRate = 9600;
-    huart2.Init.WordLength = UART_WORDLENGTH_8B;
-    huart2.Init.StopBits = UART_STOPBITS_1;
-    huart2.Init.Parity = UART_PARITY_NONE;
-    huart2.Init.Mode = UART_MODE_TX_RX;
-    huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-    huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-    if (HAL_UART_Init(&huart2) != HAL_OK)
-    {
-        Error_Handler();
-    }
-    /* USER CODE BEGIN USART2_Init 2 */
-
-    /* USER CODE END USART2_Init 2 */
-
-}
-
-/**
+    /**
   * Enable DMA controller clock
   */
-static void MX_DMA_Init(void)
+static void MX_DMA_Init()
 {
 
     /* DMA controller clock enable */
     __HAL_RCC_DMA2_CLK_ENABLE();
+    halDMA.Instance = DMA2_Stream0; // OG DMA1_Channel1, doesnt exist. stream is pretty close to channel :)
+    halDMA.Init.Direction = DMA_PERIPH_TO_MEMORY;
+    halDMA.Init.PeriphInc = DMA_PINC_DISABLE;
+    halDMA.Init.MemInc = DMA_MINC_ENABLE;
+    halDMA.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+    halDMA.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+    halDMA.Init.Mode = DMA_CIRCULAR;
+    halDMA.Init.Priority = DMA_PRIORITY_VERY_HIGH;
+
+    HAL_DMA_Init(&halDMA);
 
     /* DMA interrupt init */
     /* DMA2_Stream0_IRQn interrupt configuration */
     HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+    __HAL_LINKDMA(&hadc1, DMA_Handle, halDMA);
 
 }
 
@@ -359,7 +323,7 @@ static void MX_DMA_Init(void)
   * @param None
   * @retval None
   */
-static void MX_GPIO_Init(void)
+static void MX_GPIO_Init()
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
     /* USER CODE BEGIN MX_GPIO_Init_1 */
