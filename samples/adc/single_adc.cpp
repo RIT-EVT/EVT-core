@@ -48,52 +48,12 @@ extern "C" {
     /* Includes ------------------------------------------------------------------*/
     #include "HALf4/stm32f4xx_hal.h"
 
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
-
-/* Exported types ------------------------------------------------------------*/
-/* USER CODE BEGIN ET */
-
-/* USER CODE END ET */
-
-/* Exported constants --------------------------------------------------------*/
-/* USER CODE BEGIN EC */
-
-/* USER CODE END EC */
-
-/* Exported macro ------------------------------------------------------------*/
-/* USER CODE BEGIN EM */
-
-/* USER CODE END EM */
-
-/* Exported functions prototypes ---------------------------------------------*/
-void Error_Handler(void);
-
-    /* USER CODE BEGIN EFP */
-
-    /* USER CODE END EFP */
 
     /* Private defines -----------------------------------------------------------*/
     #define B1_Pin GPIO_PIN_13
     #define B1_GPIO_Port GPIOC
-    #define USART_TX_Pin GPIO_PIN_2
-    #define USART_TX_GPIO_Port GPIOA
-    #define USART_RX_Pin GPIO_PIN_3
-    #define USART_RX_GPIO_Port GPIOA
     #define LD2_Pin GPIO_PIN_5
     #define LD2_GPIO_Port GPIOA
-    #define TMS_Pin GPIO_PIN_13
-    #define TMS_GPIO_Port GPIOA
-    #define TCK_Pin GPIO_PIN_14
-    #define TCK_GPIO_Port GPIOA
-    #define SWO_Pin GPIO_PIN_3
-    #define SWO_GPIO_Port GPIOB
-
-/* USER CODE BEGIN Private defines */
-
-/* USER CODE END Private defines */
 
     #ifdef __cplusplus
 }
@@ -102,7 +62,6 @@ void Error_Handler(void);
 #endif /* __MAIN_H */
 
 /* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
 #include "EVT/manager.hpp"
 #include "HALf4/stm32f4xx_it.h"
 #include <stdio.h>
@@ -112,43 +71,14 @@ DMA_HandleTypeDef halDMA = {0};
 
 /* USER CODE END Includes */
 
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
-DMA_HandleTypeDef hdma_adc1;
-
-UART_HandleTypeDef huart2;
-
-/* USER CODE BEGIN PV */
-/* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config();
 static void MX_GPIO_Init();
 static void MX_DMA_Init();
 static void MX_ADC1_Init();
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
 
 /**
   * @brief  The application entry point.
@@ -156,14 +86,11 @@ static void MX_ADC1_Init();
   */
 int main()
 {
-    /* USER CODE END 1 */
-
+    // Initialize System
     SystemClock_Config();
 
-    /* USER CODE BEGIN SysInit */
+    // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-
-    /* USER CODE END SysInit */
 
     /* Initialize all configured peripherals */
     MX_GPIO_Init();
@@ -175,37 +102,22 @@ int main()
 
     uint32_t adc1;
 
-
     /* USER CODE END 2 */
     HAL_ADC_Start(&hadc1);
-    /* Infinite loop */
-    /* USER CODE BEGIN WHILE */
+
     while (1)
     {
-
         adc1 = HAL_ADC_GetValue(&hadc1);
         uart.printf("ADC:%li\n\r", adc1);
-    // todo try copy and pasting that github guys code and see if it works
-        //	    sprintf(msg, "%hu\r\n", raw);
-        //	    HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
-
-        //	    THIS WORKS ON PA_1 PIN
 
         HAL_Delay(500);
-
-
-        /* USER CODE END WHILE */
-
-        /* USER CODE BEGIN 3 */
     }
-    /* USER CODE END 3 */
 }
 
 /**
   * @brief System Clock Configuration
   * @retval None
   */
-
 
 void SystemClock_Config()
 {
@@ -241,9 +153,7 @@ void SystemClock_Config()
     RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
     RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
     RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK) {
-        Error_Handler();
-    }
+    HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1);
 
     SysTick_Handler();
 }
@@ -254,15 +164,7 @@ void SystemClock_Config()
   */
 static void MX_ADC1_Init() {
 
-    /* USER CODE BEGIN ADC1_Init 0 */
-
-    /* USER CODE END ADC1_Init 0 */
-
     ADC_ChannelConfTypeDef sConfig = {0};
-
-    /* USER CODE BEGIN ADC1_Init 1 */
-
-    /* USER CODE END ADC1_Init 1 */
 
     /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
       */
@@ -279,6 +181,7 @@ static void MX_ADC1_Init() {
     hadc1.Init.DMAContinuousRequests = ENABLE;
     hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
     __HAL_RCC_ADC1_CLK_ENABLE();
+
     HAL_ADC_Init(&hadc1);
     /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
       */
@@ -296,10 +199,8 @@ static void MX_ADC1_Init() {
   */
 static void MX_DMA_Init()
 {
-
-    /* DMA controller clock enable */
     __HAL_RCC_DMA2_CLK_ENABLE();
-    halDMA.Instance = DMA2_Stream0; // OG DMA1_Channel1, doesnt exist. stream is pretty close to channel :)
+    halDMA.Instance = DMA2_Stream0;
     halDMA.Init.Direction = DMA_PERIPH_TO_MEMORY;
     halDMA.Init.PeriphInc = DMA_PINC_DISABLE;
     halDMA.Init.MemInc = DMA_MINC_ENABLE;
@@ -307,14 +208,15 @@ static void MX_DMA_Init()
     halDMA.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
     halDMA.Init.Mode = DMA_CIRCULAR;
     halDMA.Init.Priority = DMA_PRIORITY_VERY_HIGH;
+    halDMA.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
 
     HAL_DMA_Init(&halDMA);
+    __HAL_LINKDMA(&hadc1, DMA_Handle, halDMA);
 
     /* DMA interrupt init */
     /* DMA2_Stream0_IRQn interrupt configuration */
     HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
-    __HAL_LINKDMA(&hadc1, DMA_Handle, halDMA);
 
 }
 
@@ -326,8 +228,6 @@ static void MX_DMA_Init()
 static void MX_GPIO_Init()
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
-    /* USER CODE BEGIN MX_GPIO_Init_1 */
-    /* USER CODE END MX_GPIO_Init_1 */
 
     /* GPIO Ports Clock Enable */
     __HAL_RCC_GPIOC_CLK_ENABLE();
@@ -351,27 +251,10 @@ static void MX_GPIO_Init()
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
 
-    /* USER CODE BEGIN MX_GPIO_Init_2 */
-    /* USER CODE END MX_GPIO_Init_2 */
-}
-
-/* USER CODE BEGIN 4 */
-
-/* USER CODE END 4 */
-
-/**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
-void Error_Handler(void)
-{
-    /* USER CODE BEGIN Error_Handler_Debug */
-    /* User can add his own implementation to report the HAL error return state */
-    __disable_irq();
-    while (1)
-    {
-    }
-    /* USER CODE END Error_Handler_Debug */
+    GPIO_InitStruct.Pin = GPIO_PIN_1;
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -389,4 +272,4 @@ void assert_failed(uint8_t *file, uint32_t line)
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
     /* USER CODE END 6 */
 }
-#endif /* USE_FULL_ASSERT */
+#endif
