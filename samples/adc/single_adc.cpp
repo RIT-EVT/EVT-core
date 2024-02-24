@@ -75,7 +75,6 @@ DMA_HandleTypeDef halDMA = {0};
 ADC_HandleTypeDef hadc1;
 
 /* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config();
 static void MX_GPIO_Init();
 static void MX_DMA_Init();
 static void MX_ADC1_Init();
@@ -87,7 +86,7 @@ static void MX_ADC1_Init();
 int main()
 {
     // Initialize System
-    SystemClock_Config();
+    EVT::core::platform::init();
 
     // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
@@ -114,49 +113,6 @@ int main()
     }
 }
 
-/**
-  * @brief System Clock Configuration
-  * @retval None
-  */
-
-void SystemClock_Config()
-{
-    HAL_Init();
-    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-    RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-
-    /** Configure the main internal regulator output voltage
-  */
-    __HAL_RCC_PWR_CLK_ENABLE();
-    __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
-
-    /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-    RCC_OscInitStruct.PLL.PLLM = 8;
-    RCC_OscInitStruct.PLL.PLLN = 50;
-    RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-    RCC_OscInitStruct.PLL.PLLQ = 2;
-    RCC_OscInitStruct.PLL.PLLR = 2;
-    HAL_RCC_OscConfig(&RCC_OscInitStruct);
-
-    /** Initializes the CPU, AHB and APB buses clocks
-  */
-    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-        |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-    RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-    HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1);
-
-    SysTick_Handler();
-}
 /**
   * @brief ADC1 Initialization Function
   * @param None
