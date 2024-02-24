@@ -10,13 +10,17 @@
 
 namespace {
 /// This is made as a global variable so that it is accessible in the
-// interrupt.
+/// interrupt.
 DMA_HandleTypeDef* dmaHandle;
 ADC_HandleTypeDef* adcHandle;
+#define B1_Pin GPIO_PIN_13
+#define B1_GPIO_Port GPIOC
+#define LD2_Pin GPIO_PIN_5
+#define LD2_GPIO_Port GPIOA
 
 }// namespace
 
-extern "C" void DMA1_Channel1_IRQHandler(void) {
+extern "C" void DMA2_Stream0_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle);
     HAL_ADC_IRQHandler(adcHandle);
 }
@@ -47,19 +51,29 @@ ADCf4xx::ADCf4xx(Pin pin) : ADC(pin) {
         HAL_ADC_Stop_DMA(&halADC);
         HAL_DMA_DeInit(&halDMA);
     } else {
-        __HAL_RCC_DMA1_CLK_ENABLE();
+        __HAL_RCC_DMA2_CLK_ENABLE();
         halADCisInit = true;
     }
-    initADC(rank);
 
     dmaHandle = &this->halDMA;
     adcHandle = &this->halADC;
 
-    addChannel(rank);
+//    MX_GPIO_Init(); // todo currently in here to test.
+        GPIO_InitTypeDef gpioInit; // todo THIS GPIO STUFF DOESNT WORK
+                        Pin myPins[] = {Pin::PA_1}; // todo doesn't work with pin, works if i hardcode Pin::PA_1. og -> pin
+                        uint8_t numOfPins = 1;
+
+                        GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG,
+                                                GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     initDMA();
-    HAL_ADC_Start_DMA(&halADC, reinterpret_cast<uint32_t*>(&buffer[0]),
-                      rank);
+    initADC(rank);
+
+    addChannel(rank);
+
+    HAL_ADC_Start(&halADC);
+//    HAL_ADC_Start_DMA(&halADC, reinterpret_cast<uint32_t*>(&buffer[0]),
+//                      rank);
 
     rank++;
 }
@@ -84,37 +98,30 @@ float ADCf4xx::readPercentage() {
 }
 
 void ADCf4xx::initADC(uint8_t num_channels) {
-    halADC.Instance = ADC1;// Only ADC the F3 supports
 
-    // TODO: Figure out ADC calibration
-
-    halADC.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2; // Use AHB clock (8MHz) w/o division for ADC clock
+    /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+      */
+    halADC.Instance = ADC1;
+    halADC.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
     halADC.Init.Resolution = ADC_RESOLUTION_12B;
-    halADC.Init.DataAlign = ADC_DATAALIGN_RIGHT;
     halADC.Init.ScanConvMode = ENABLE;
-    halADC.Init.EOCSelection = ADC_EOC_SEQ_CONV;
-//    halADC.Init.LowPowerAutoWait = DISABLE;// Wait for the previous value to be written by DMA before beginning
-                                           // next transfer.  Not recommended for DMA. DOES NOT EXIST IN F4xx
     halADC.Init.ContinuousConvMode = ENABLE;
-    halADC.Init.NbrOfConversion = num_channels;
     halADC.Init.DiscontinuousConvMode = DISABLE;
-    halADC.Init.NbrOfDiscConversion = 1;// Parameter discarded when Discontinuous Conv Mode is Disabled
+    halADC.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
     halADC.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-    halADC.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;// Parameter discared when set to ADC_SOFTWARE_START
+    halADC.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+    halADC.Init.NbrOfConversion = num_channels;
     halADC.Init.DMAContinuousRequests = ENABLE;
-//    halADC.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN; // DOES NOT EXIST IN F4xx
-
+    halADC.Init.EOCSelection = ADC_EOC_SEQ_CONV;
     __HAL_RCC_ADC1_CLK_ENABLE();
+
     HAL_ADC_Init(&halADC);
 }
 
 void ADCf4xx::initDMA() {
-    // HAL_ADC_Stop(&halADC);
+    // HAL_ADC_Stop(&halADC); // todo was commented out in f3xx
 
-    // TODO: Add some way of selecting the next available DMA channel
-    // Ideally we would have a "DMA" class dedicated to DMA resource
-    // allocation.
-    halDMA.Instance = DMA1_Stream1; // OG DMA1_Channel1, doesnt exist. stream is pretty close to channel :)
+    halDMA.Instance = DMA2_Stream0;
     halDMA.Init.Direction = DMA_PERIPH_TO_MEMORY;
     halDMA.Init.PeriphInc = DMA_PINC_DISABLE;
     halDMA.Init.MemInc = DMA_MINC_ENABLE;
@@ -122,22 +129,24 @@ void ADCf4xx::initDMA() {
     halDMA.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
     halDMA.Init.Mode = DMA_CIRCULAR;
     halDMA.Init.Priority = DMA_PRIORITY_VERY_HIGH;
+    halDMA.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
 
     HAL_DMA_Init(&halDMA);
-
-    HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, EVT::core::platform::ADC_INTERRUPT_PRIORITY, 0); // OG DMA1_Channel1_IRQn, doesnt exist. channel and stream are pretty close right :)
-    HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn); // OG DMA1_Channel1_IRQn, doesnt exist. channel and stream are pretty close right :)
-
     __HAL_LINKDMA(&halADC, DMA_Handle, halDMA);
+
+    /* DMA interrupt init */
+    /* DMA2_Stream0_IRQn interrupt configuration */
+    HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, EVT::core::platform::ADC_INTERRUPT_PRIORITY, 0);
+    HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
 }
 
 void ADCf4xx::addChannel(uint8_t rank) {
-    GPIO_InitTypeDef gpioInit;
-    Pin myPins[] = {pin};
-    uint8_t numOfPins = 1;
-
-    GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG,
-                            GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
+//    GPIO_InitTypeDef gpioInit; // todo THIS GPIO STUFF DOESNT WORK
+//    Pin myPins[] = {pin};
+//    uint8_t numOfPins = 1;
+//
+//    GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG,
+//                            GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;
 
@@ -195,13 +204,46 @@ void ADCf4xx::addChannel(uint8_t rank) {
     channels[rank - 1] = pin;
 
     adcChannel.Rank = rank;
-    adcChannel.SamplingTime = ADC_SAMPLETIME_480CYCLES; // OG ADC_SAMPLETIME_601CYCLES_5. DOESNT EXIST
+    adcChannel.SamplingTime = ADC_SAMPLETIME_3CYCLES; // OG ADC_SAMPLETIME_601CYCLES_5. DOESNT EXIST
     adcChannel.Offset = 0;
-//    adcChannel.SingleDiff = ADC_SINGLE_ENDED;     //  Not recommended for DMA. DOES NOT EXIST IN F4xx
-//    adcChannel.OffsetNumber = ADC_OFFSET_NONE;    // Not recommended for DMA. DOES NOT EXIST IN F4xx
     adcChannel.Offset = 0x000;
 
     HAL_ADC_ConfigChannel(&halADC, &adcChannel);
 }
 
-}// namespace EVT::core::IO
+  void ADCf4xx::MX_GPIO_Init()
+{
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+    /* GPIO Ports Clock Enable */
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    __HAL_RCC_GPIOH_CLK_ENABLE();
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+
+    /*Configure GPIO pin Output Level */
+    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+
+    /*Configure GPIO pin : B1_Pin */
+    GPIO_InitStruct.Pin = B1_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
+
+    /*Configure GPIO pin : LD2_Pin */
+    GPIO_InitStruct.Pin = LD2_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_1;
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+}
+  uint32_t ADCf4xx::testread() {
+    return HAL_ADC_GetValue(&halADC);
+  }
+
+  }// namespace EVT::core::IO
