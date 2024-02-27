@@ -54,14 +54,14 @@ ADCf4xx::ADCf4xx(Pin pin) : ADC(pin) {
     dmaHandle = &this->halDMA;
     adcHandle = &this->halADC;
 
-    initDMA();
     initADC(rank);
+    initDMA();
 
     addChannel(rank);
 
     HAL_ADC_Start(&halADC);
 //    HAL_ADC_Start_DMA(&halADC, reinterpret_cast<uint32_t*>(&buffer[0]),
-//                      1);
+//                      rank);
 
     rank++;
 }
@@ -140,59 +140,62 @@ void ADCf4xx::addChannel(uint8_t rank) {
 
     switch (pin) {
     case Pin::PA_0:
-        adcChannel.Channel = ADC_CHANNEL_1;
+        adcChannel.Channel = ADC_CHANNEL_0;
         break;
     case Pin::PA_1:
         adcChannel.Channel = ADC_CHANNEL_1;
         break;
     case Pin::PA_2:
-        adcChannel.Channel = ADC_CHANNEL_3;
+        adcChannel.Channel = ADC_CHANNEL_2;
         break;
     case Pin::PA_3:
-        adcChannel.Channel = ADC_CHANNEL_4;
+        adcChannel.Channel = ADC_CHANNEL_3;
         break;
     case Pin::PA_4:
+        adcChannel.Channel = ADC_CHANNEL_4;
+        break;
+    case Pin::PA_5:
         adcChannel.Channel = ADC_CHANNEL_5;
         break;
-    case Pin::PC_0:
+    case Pin::PA_6:
         adcChannel.Channel = ADC_CHANNEL_6;
         break;
-    case Pin::PC_1:
+    case Pin::PA_7:
         adcChannel.Channel = ADC_CHANNEL_7;
         break;
-    case Pin::PC_2:
+    case Pin::PB_0:
         adcChannel.Channel = ADC_CHANNEL_8;
         break;
-    case Pin::PC_3:
+    case Pin::PB_1:
         adcChannel.Channel = ADC_CHANNEL_9;
         break;
-    case Pin::PA_6:
+    case Pin::PC_0:
         adcChannel.Channel = ADC_CHANNEL_10;
         break;
-    case Pin::PB_0:
+    case Pin::PC_1:
         adcChannel.Channel = ADC_CHANNEL_11;
         break;
-    case Pin::PB_1:
+    case Pin::PC_2:
         adcChannel.Channel = ADC_CHANNEL_12;
         break;
-    case Pin::PB_13:
+    case Pin::PC_3:
         adcChannel.Channel = ADC_CHANNEL_13;
         break;
-    case Pin::PB_11:
+    case Pin::PC_4:
         adcChannel.Channel = ADC_CHANNEL_14;
         break;
-    case Pin::PA_7:
+    case Pin::PC_5:
         adcChannel.Channel = ADC_CHANNEL_15;
         break;
     default:
-        break;// Should never get here
+        break;  // Should never get here
     }
 
     // Subtract 1 because rank starts at 1
     channels[rank - 1] = pin;
 
     adcChannel.Rank = rank;
-    adcChannel.SamplingTime = ADC_SAMPLETIME_3CYCLES; // OG ADC_SAMPLETIME_601CYCLES_5. DOESNT EXIST
+    adcChannel.SamplingTime = ADC_SAMPLETIME_3CYCLES; // OG was ADC_SAMPLETIME_601CYCLES_5. Doesn't exist in F4xx
     adcChannel.Offset = 0;
     adcChannel.Offset = 0x000;
 
