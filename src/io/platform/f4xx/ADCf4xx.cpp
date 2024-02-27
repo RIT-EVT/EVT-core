@@ -13,10 +13,6 @@ namespace {
 /// interrupt.
 DMA_HandleTypeDef* dmaHandle;
 ADC_HandleTypeDef* adcHandle;
-#define B1_Pin GPIO_PIN_13
-#define B1_GPIO_Port GPIOC
-#define LD2_Pin GPIO_PIN_5
-#define LD2_GPIO_Port GPIOA
 
 }// namespace
 
@@ -58,14 +54,6 @@ ADCf4xx::ADCf4xx(Pin pin) : ADC(pin) {
     dmaHandle = &this->halDMA;
     adcHandle = &this->halADC;
 
-//    MX_GPIO_Init(); // todo currently in here to test.
-        GPIO_InitTypeDef gpioInit; // todo THIS GPIO STUFF DOESNT WORK
-                        Pin myPins[] = {Pin::PA_1}; // todo doesn't work with pin, works if i hardcode Pin::PA_1. og -> pin
-                        uint8_t numOfPins = 1;
-
-                        GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG,
-                                                GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
-
     initDMA();
     initADC(rank);
 
@@ -73,7 +61,7 @@ ADCf4xx::ADCf4xx(Pin pin) : ADC(pin) {
 
     HAL_ADC_Start(&halADC);
 //    HAL_ADC_Start_DMA(&halADC, reinterpret_cast<uint32_t*>(&buffer[0]),
-//                      rank);
+//                      1);
 
     rank++;
 }
@@ -119,7 +107,7 @@ void ADCf4xx::initADC(uint8_t num_channels) {
 }
 
 void ADCf4xx::initDMA() {
-    // HAL_ADC_Stop(&halADC); // todo was commented out in f3xx
+//     HAL_ADC_Stop(&halADC); // TODO was commented out in f3xx
 
     halDMA.Instance = DMA2_Stream0;
     halDMA.Init.Direction = DMA_PERIPH_TO_MEMORY;
@@ -141,12 +129,12 @@ void ADCf4xx::initDMA() {
 }
 
 void ADCf4xx::addChannel(uint8_t rank) {
-//    GPIO_InitTypeDef gpioInit; // todo THIS GPIO STUFF DOESNT WORK
-//    Pin myPins[] = {pin};
-//    uint8_t numOfPins = 1;
-//
-//    GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG,
-//                            GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
+    GPIO_InitTypeDef gpioInit;
+    Pin myPins[] = {pin};
+    uint8_t numOfPins = 1;
+
+    GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG,
+                            GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;
 
@@ -155,7 +143,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
         adcChannel.Channel = ADC_CHANNEL_1;
         break;
     case Pin::PA_1:
-        adcChannel.Channel = ADC_CHANNEL_2;
+        adcChannel.Channel = ADC_CHANNEL_1;
         break;
     case Pin::PA_2:
         adcChannel.Channel = ADC_CHANNEL_3;
@@ -211,37 +199,6 @@ void ADCf4xx::addChannel(uint8_t rank) {
     HAL_ADC_ConfigChannel(&halADC, &adcChannel);
 }
 
-  void ADCf4xx::MX_GPIO_Init()
-{
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-    /* GPIO Ports Clock Enable */
-    __HAL_RCC_GPIOC_CLK_ENABLE();
-    __HAL_RCC_GPIOH_CLK_ENABLE();
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    __HAL_RCC_GPIOB_CLK_ENABLE();
-
-    /*Configure GPIO pin Output Level */
-    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-
-    /*Configure GPIO pin : B1_Pin */
-    GPIO_InitStruct.Pin = B1_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
-
-    /*Configure GPIO pin : LD2_Pin */
-    GPIO_InitStruct.Pin = LD2_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = GPIO_PIN_1;
-    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-}
   uint32_t ADCf4xx::testread() {
     return HAL_ADC_GetValue(&halADC);
   }
