@@ -41,13 +41,12 @@ can then be exposed on the CANopen network.
 
 For example, take a Temperature Management System (TMS). In its Object Dictionary
 would be a series of identifiers required by CANopen (specifically a vendor ID,
-product code, revision number, and serial number). Potentially a few control
-loop setting such as "max pump speed", "minimum threshold temperature", etc.
-Additionally the Object Dictionary may have data which would allow other entities 
-on the CANopen network to gain information on the state of the Temperature 
-Management System such as "current pump speed", "current motor controller 
-temperature", etc. An example CANopen Object Dictionary is shown in the sample 
-below.
+product code, revision number, and serial number), potentially a few control
+loop setting such as "max pump speed", "minimum threshold temperature" or data
+for other entities on the CANopen network to gain information on the state of 
+the Temperature Management System such as "current pump speed", "current motor 
+controller temperature", etc. An example CANopen Object Dictionary is shown 
+in the sample below.
 
 Most of CANopen is built around the idea that the entities on a network work
 by reading from and manipulating other Object Dictionaries. For example,
