@@ -43,11 +43,11 @@ For example, take a Temperature Management System (TMS). In its Object Dictionar
 would be a series of identifiers required by CANopen (specifically a vendor ID,
 product code, revision number, and serial number). Potentially a few control
 loop setting such as "max pump speed", "minimum threshold temperature", etc.
-Additionally the Object Dictionary may have data which is in the Object
-Dictionary which would allow other entities on the CANopen network to gain
-information on the state of the Temperature Management System such as
-"current pump speed", "current motor controller temperature", etc. An example
-CANopen Object Dictionary is shown in the sample below.
+Additionally the Object Dictionary may have data which would allow other entities 
+on the CANopen network to gain information on the state of the Temperature 
+Management System such as "current pump speed", "current motor controller 
+temperature", etc. An example CANopen Object Dictionary is shown in the sample 
+below.
 
 Most of CANopen is built around the idea that the entities on a network work
 by reading from and manipulating other Object Dictionaries. For example,
@@ -87,7 +87,7 @@ become a node on a CANopen network. As such CANopen needs to be provided with
 a few pieces of information. First, it needs the Object Dictionary of the node,
 this way the library knows how to process SDO's and PDO's. Second, CANopen
 stack needs to be provided with "drivers" to interact with the physical world.
-More specifically, users provide a CAN driver, timer driver, and non-volitile
+More specifically, users provide a CAN driver, timer driver, and non-volatile
 memory driver. EVT-core provides means for passing this information to
 CANopen stack.
 
