@@ -540,7 +540,7 @@ After the drivers are created, a ``CO_NODE_SPEC`` instance is made that
 contains the settings for CANopen stack. This includes the drivers,
 CANopen Object Dictionary, and other settings.
 
-The CANopen stack instance is then intialized and started up, at this point
+The CANopen stack instance is then initialized and started up, at this point
 CANopen stack is able to handle and respond to incoming CAN messages.
 
 The final while loop prints the value of the data that is exposed by the
