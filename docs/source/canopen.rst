@@ -544,12 +544,12 @@ CANopen Object Dictionary, and other settings.
 The CANopen stack instance is then intialized and started up, at this point
 CANopen stack is able to handle and respond to incoming CAN messages.
 
-The final while loop printes the value of the data that is exposed by the
+The final while loop prints the value of the data that is exposed by the
 Object Dictionary and calls a few CANopen stack functions which update the
 internal state of the CANopen stack logic.
 
 As mentioned, the vast majority of this code is boiler plate and can be
 copied, pasted, and modified for specific applications. Most notably, the
 IO pins may need to be changed, the Object Dictionary, and additional logic
-is probably needed in the main loop for what ever application the code is
+is probably needed in the main loop for whatever application the code is
 being used for.
