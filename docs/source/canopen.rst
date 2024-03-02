@@ -40,13 +40,12 @@ from CANopen required identifiers, to device specific settings, to data which
 can then be exposed on the CANopen network.
 
 For example, take a Temperature Management System (TMS). In its Object Dictionary
-would be a series of identifiers required by CANopen (specifically a vendor ID,
-product code, revision number, and serial number), potentially a few control
-loop settings such as "max pump speed", "minimum threshold temperature" or data
-for other entities on the CANopen network to gain information on the state of 
-the Temperature Management System such as "current pump speed", "current motor 
-controller temperature", etc. An example CANopen Object Dictionary is shown 
-in the sample below.
+would first be the series of identifiers required by CANopen (specifically a 
+vendor ID, product code, revision number, and serial number). Then follows device
+settings which could be a few control loop settings such as "max pump speed" or 
+"minimum threshold temperature". The data to expose could be "current pump speed",
+"current motor controller temperature", etc. An example CANopen Object Dictionary
+is shown in :ref:`the sample<Looking at an Example>` below.
 
 Most of CANopen is built around the idea that the entities on a network work
 by reading from and manipulating other Object Dictionaries. For example,
