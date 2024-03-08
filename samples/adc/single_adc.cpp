@@ -202,9 +202,8 @@ int main()
 
 
     /* USER CODE END 2 */
-    uint8_t ret = HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_buf, 30);
+    HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_buf, 30);
 
-    uart.printf("%d\r\n", 2);
 
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
@@ -430,3 +429,4 @@ void assert_failed(uint8_t *file, uint32_t line)
     /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
