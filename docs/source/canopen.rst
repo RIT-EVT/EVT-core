@@ -40,14 +40,12 @@ from CANopen required identifiers, to device specific settings, to data which
 can then be exposed on the CANopen network.
 
 For example, take a Temperature Management System (TMS). In its Object Dictionary
-would be a series of identifiers required by CANopen (specifically a vendor ID,
-product code, revision number, and serial number). Potentially a few control
-loop setting such as "max pump speed", "minimum threshold temperature", etc.
-Additionally the Object Dictionary may have data which is in the Object
-Dictionary which would allow other entities on the CANopen network to gain
-information on the state of the Temperature Management System such as
-"current pump speed", "current motor controller temperature", etc. An example
-CANopen Object Dictionary is shown in the sample below.
+would first be the series of identifiers required by CANopen (specifically a 
+vendor ID, product code, revision number, and serial number). Then follows device
+settings which could be a few control loop settings such as "max pump speed" or 
+"minimum threshold temperature". The data to expose could be "current pump speed",
+"current motor controller temperature", etc. An example CANopen Object Dictionary
+is shown in :ref:`the sample<Looking at an Example>` below.
 
 Most of CANopen is built around the idea that the entities on a network work
 by reading from and manipulating other Object Dictionaries. For example,
@@ -87,7 +85,7 @@ become a node on a CANopen network. As such CANopen needs to be provided with
 a few pieces of information. First, it needs the Object Dictionary of the node,
 this way the library knows how to process SDO's and PDO's. Second, CANopen
 stack needs to be provided with "drivers" to interact with the physical world.
-More specifically, users provide a CAN driver, timer driver, and non-volitile
+More specifically, users provide a CAN driver, timer driver, and non-volatile
 memory driver. EVT-core provides means for passing this information to
 CANopen stack.
 
@@ -541,15 +539,15 @@ After the drivers are created, a ``CO_NODE_SPEC`` instance is made that
 contains the settings for CANopen stack. This includes the drivers,
 CANopen Object Dictionary, and other settings.
 
-The CANopen stack instance is then intialized and started up, at this point
+The CANopen stack instance is then initialized and started up, at this point
 CANopen stack is able to handle and respond to incoming CAN messages.
 
-The final while loop printes the value of the data that is exposed by the
+The final while loop prints the value of the data that is exposed by the
 Object Dictionary and calls a few CANopen stack functions which update the
 internal state of the CANopen stack logic.
 
 As mentioned, the vast majority of this code is boiler plate and can be
 copied, pasted, and modified for specific applications. Most notably, the
 IO pins may need to be changed, the Object Dictionary, and additional logic
-is probably needed in the main loop for what ever application the code is
+is probably needed in the main loop for whatever application the code is
 being used for.
