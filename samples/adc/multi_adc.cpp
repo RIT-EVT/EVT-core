@@ -9,8 +9,6 @@
 #include <EVT/utils/time.hpp>
 
 
-#define B1_Pin GPIO_PIN_13
-#define B1_GPIO_Port GPIOC
 #define LD2_Pin GPIO_PIN_5
 #define LD2_GPIO_Port GPIOA
 
@@ -28,20 +26,25 @@ int main() {
     time::wait(250);
 
     IO::ADC& adc0 = IO::getADC<IO::Pin::PA_0>();
-
+    uart.printf("Created ADC0 :)\r\n");
+    IO::ADC& adc1 = IO::getADC<IO::Pin::PC_5>();
+    uart.printf("Created ADC1 :)\r\n");
     time::wait(250);
 
     while (1) {
         uart.printf("--------------------\r\n");
         uart.printf("ADC0 : %d mV\r\n", static_cast<uint32_t>(adc0.read() * 1000));
         uart.printf("ADC0: %d%%\r\n", static_cast<uint32_t>(adc0.readPercentage() * 100));
-        uart.printf("ADC0 raw: %d\r\n\r\n", adc0.readRaw());
+        uart.printf("ADC0 raw: %d\r\n\r\n\n", adc0.readRaw());
+
+        uart.printf("ADC1 : %d mV\r\n", static_cast<uint32_t>(adc1.read() * 1000));
+        uart.printf("ADC1: %d%%\r\n", static_cast<uint32_t>(adc1.readPercentage() * 100));
+        uart.printf("ADC1 raw: %d\r\n\r\n", adc1.readRaw());
+
         uart.printf("--------------------\r\n\r\n");
-        time::wait(500);
+        time::wait(1500);
     }
 }
-
-
 
 namespace {
 /// This is made as a global variable so that it is accessible in the
@@ -53,7 +56,7 @@ ADC_HandleTypeDef* adcHandle;
 
 extern "C" void DMA2_Stream0_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle);
-    //    HAL_ADC_IRQHandler(adcHandle);
+        HAL_ADC_IRQHandler(adcHandle);
 }
 
 namespace EVT::core::IO {
@@ -93,15 +96,11 @@ ADCf4xx::ADCf4xx(Pin pin) : ADC(pin) {
 
     initADC(rank);
 
-
     HAL_ADC_Start_DMA(&halADC, reinterpret_cast<uint32_t*>(&buffer[0]),
                       rank);
 
     rank++;
 }
-
-
-
 
 
 float ADCf4xx::read() {
@@ -126,15 +125,11 @@ float ADCf4xx::readPercentage() {
 void ADCf4xx::initADC(uint8_t num_channels) {
 
     /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
-      */
-    ADC_ChannelConfTypeDef sConfig = {0};
-
-    /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
   */
     halADC.Instance = ADC1;
-    halADC.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
+    halADC.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV8;
     halADC.Init.Resolution = ADC_RESOLUTION_12B;
-    halADC.Init.ScanConvMode = DISABLE;
+    halADC.Init.ScanConvMode = ENABLE;
     halADC.Init.ContinuousConvMode = ENABLE;
     halADC.Init.DiscontinuousConvMode = DISABLE;
     halADC.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
@@ -144,16 +139,11 @@ void ADCf4xx::initADC(uint8_t num_channels) {
     halADC.Init.DMAContinuousRequests = ENABLE;
     halADC.Init.EOCSelection = ADC_EOC_SEQ_CONV;
 
+    __HAL_RCC_ADC1_CLK_ENABLE();
 
     HAL_ADC_Init(&halADC);
 
     GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-    /* USER CODE BEGIN ADC1_MspInit 0 */
-
-    /* USER CODE END ADC1_MspInit 0 */
-    /* Peripheral clock enable */
-    __HAL_RCC_ADC1_CLK_ENABLE();
 
     __HAL_RCC_GPIOA_CLK_ENABLE();
     /**ADC1 GPIO Configuration
@@ -164,10 +154,10 @@ void ADCf4xx::initADC(uint8_t num_channels) {
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+
     /* ADC1 DMA Init */
     /* ADC1 Init */
     halDMA.Instance = DMA2_Stream0;
-    halDMA.Init.Channel = DMA_CHANNEL_0;
     halDMA.Init.Direction = DMA_PERIPH_TO_MEMORY;
     halDMA.Init.PeriphInc = DMA_PINC_DISABLE;
     halDMA.Init.MemInc = DMA_MINC_ENABLE;
@@ -183,12 +173,10 @@ void ADCf4xx::initADC(uint8_t num_channels) {
 }
 
 void ADCf4xx::initDMA() {
-    HAL_ADC_Stop(&halADC); // TODO: line was commented out in f3xx
-
     /* DMA interrupt init */
     /* DMA2_Stream0_IRQn interrupt configuration */
-    HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, EVT::core::platform::ADC_INTERRUPT_PRIORITY, 0);
-    HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+//    HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, EVT::core::platform::ADC_INTERRUPT_PRIORITY, 0);
+//    HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
 }
 
 void ADCf4xx::addChannel(uint8_t rank) {
@@ -258,7 +246,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
     channels[rank - 1] = pin;
 
     adcChannel.Rank = rank;
-    adcChannel.SamplingTime = ADC_SAMPLETIME_3CYCLES; // OG was ADC_SAMPLETIME_601CYCLES_5. Doesn't exist in F4xx
+    adcChannel.SamplingTime = ADC_SAMPLETIME_480CYCLES; // OG was ADC_SAMPLETIME_601CYCLES_5. Doesn't exist in F4xx
     adcChannel.Offset = 0;
     adcChannel.Offset = 0x000;
 
