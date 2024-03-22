@@ -1,3 +1,18 @@
+/**
+ * DISCLAIMER: THIS MIGHT BREAK AT ANY POINT AND/OR NOT WORK FOR CERTAIN PURPOSES
+ *
+ * This DMA ADC is different than f3xx DMA ADC!
+ * This DMA ADC does NOT use the interrupts, as when interrupts were enabled it
+ * would constantly interrupt, not letting the print statements or anything
+ * else happen.
+ * Tried to fix this by changing the sampletime and clock prescaler values, but
+ * nothing worked.
+ * This was "fixed" by commenting out the NVIC_EnableIRQ, stopping the interrupt
+ * from ever being enabled.
+ *
+ * For commit from before code was removed, refer to THIS commit.
+ */
+
 #include <EVT/io/pin.hpp>
 #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
 #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
@@ -14,7 +29,7 @@ ADC_HandleTypeDef* adcHandle;
 
 extern "C" void DMA2_Stream0_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle);  // todo: just so everyone knows, this is here, but im 90% sure it isn't used... -travis :)
-    HAL_ADC_IRQHandler(adcHandle);  // todo: was here in f3xx, everything i've found doesn't have this for f4xx. -travis :)
+    HAL_ADC_IRQHandler(adcHandle);  // todo: was here in f3xx, everything i've found doesn't have this line for f4xx. -travis :)
 }
 
 
@@ -88,7 +103,7 @@ void ADCf4xx::initADC(uint8_t num_channels) {
     halADC.Instance = ADC1;
     halADC.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
     halADC.Init.Resolution = ADC_RESOLUTION_12B;
-    halADC.Init.ScanConvMode = ENABLE;
+    halADC.Init.ScanConvMode = ENABLE;  // todo: this mode is DISABLE in all f4xx dma adc examples i found online, but needs to be ENABLE for it to work rn
     halADC.Init.ContinuousConvMode = ENABLE;
     halADC.Init.DiscontinuousConvMode = DISABLE;
     halADC.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
@@ -191,7 +206,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
     channels[rank - 1] = pin;
 
     adcChannel.Rank = rank;
-    adcChannel.SamplingTime = ADC_SAMPLETIME_480CYCLES; // todo: F3xx was ADC_SAMPLETIME_601CYCLES_5. Doesn't exist in F4xx. I like sampletime 3
+    adcChannel.SamplingTime = ADC_SAMPLETIME_480CYCLES; // todo: F3xx was ADC_SAMPLETIME_601CYCLES_5. Doesn't exist in F4xx -travis :)
     adcChannel.Offset = 0;
     adcChannel.Offset = 0x000;
 
@@ -199,7 +214,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
 }
 
 /*
-    // todo: for the current code this isn't necessary ig? - travis :)
+    // todo: for the current code this isn't necessary ig? -travis :)
 void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef* halADC) {
     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
 }
