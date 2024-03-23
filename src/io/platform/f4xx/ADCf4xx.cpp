@@ -177,7 +177,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
         adcChannel.Channel = ADC_CHANNEL_15;
         break;
     default:
-        break;  // Should never get here
+        break;// Should never get here
     }
 
     // Subtract 1 because rank starts at 1
