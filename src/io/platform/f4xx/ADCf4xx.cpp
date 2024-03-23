@@ -191,4 +191,4 @@ void ADCf4xx::addChannel(uint8_t rank) {
     HAL_ADC_ConfigChannel(&halADC, &adcChannel);
 }
 
-}   // namespace EVT::core::IO
+}// namespace EVT::core::IO
