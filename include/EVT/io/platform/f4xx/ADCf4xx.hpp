@@ -30,9 +30,10 @@ private:
     static constexpr float VREF_POS = 3.3;
     // Max value for a 12 bit ADC reading (2^12 - 1)
     static constexpr uint32_t MAX_RAW = 4095;
-    /// This is static since the STM32F3xx only has a single ADC which
-    /// supports muliple channels. The ADC will be initialized once then
-    /// each channel will be added on.
+    /// This is static since the STM32F3xx only had a single ADC which
+    /// supports multiple channels, so I made this one only use a single ADC.
+    /// The F446re has 3 12 bit ADC's. Currently not able to use the other 2.
+    /// The ADC will be initialized once then each channel will be added on.
     static ADC_HandleTypeDef halADC;
     /// Static list of all channels supported by the ADC
     static Pin channels[MAX_CHANNELS];
@@ -47,14 +48,14 @@ private:
     void initADC(uint8_t num_channels);
 
     /**
-     * Initialize the HALD DMA for the ADC, should only have to be run once
+     * Initialize the HAL DMA for the ADC, should only have to be run once
      */
     void initDMA();
 
     /**
      * Adds an ADC channel to the HAL ADC device.
      *
-     * @param rank The "rank" which represents the order in which the channle
+     * @param rank The "rank" which represents the order in which the channel
      *      was added to the ADC starting at 1
      */
     void addChannel(uint8_t rank);
