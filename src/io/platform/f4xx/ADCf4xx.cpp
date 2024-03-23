@@ -10,7 +10,7 @@
  * This was "fixed" by commenting out the NVIC_EnableIRQ, stopping the interrupt
  * from ever being enabled.
  *
- * For commit from before code was removed, refer to THIS commit.
+ * For commit from before code was removed, refer to commit 81624521a8b2c4b66480193e88cf32782aaee84d.
  */
 
 #include <EVT/io/pin.hpp>
@@ -18,20 +18,6 @@
 #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
 #include <HALf4/stm32f4xx.h>
 #include <HALf4/stm32f4xx_hal_adc.h>
-
-namespace {
-/// This is made as a global variable so that it is accessible in the
-/// interrupt.
-DMA_HandleTypeDef* dmaHandle;
-ADC_HandleTypeDef* adcHandle;
-
-}// namespace
-
-extern "C" void DMA2_Stream0_IRQHandler(void) {
-    HAL_DMA_IRQHandler(dmaHandle);  // todo: just so everyone knows, this is here, but im 90% sure it isn't used... -travis :)
-    HAL_ADC_IRQHandler(adcHandle);  // todo: was here in f3xx, everything i've found doesn't have this line for f4xx. -travis :)
-}
-
 
 namespace EVT::core::IO {
 
@@ -44,6 +30,7 @@ DMA_HandleTypeDef ADCf4xx::halDMA = {0};
 ADCf4xx::ADCf4xx(Pin pin) : ADC(pin) {
     // Flag representing if the ADC has been configured yet
     static bool halADCisInit = false;
+
     // "Rank" represents the order in which the channels are added
     // Also represents the total number of added channels
     static uint8_t rank = 1;
@@ -62,9 +49,6 @@ ADCf4xx::ADCf4xx(Pin pin) : ADC(pin) {
         __HAL_RCC_DMA2_CLK_ENABLE();
         halADCisInit = true;
     }
-
-    dmaHandle = &this->halDMA;
-    adcHandle = &this->halADC;
 
     addChannel(rank);
 
@@ -98,12 +82,13 @@ float ADCf4xx::readPercentage() {
 }
 
 void ADCf4xx::initADC(uint8_t num_channels) {
-    /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+    /** Configure the global features of the ADC (Clock, Resolution, Data
+     * Alignment and number of conversion)
       */
     halADC.Instance = ADC1;
     halADC.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
     halADC.Init.Resolution = ADC_RESOLUTION_12B;
-    halADC.Init.ScanConvMode = ENABLE;  // todo: this mode is DISABLE in all f4xx dma adc examples i found online, but needs to be ENABLE for it to work rn
+    halADC.Init.ScanConvMode = ENABLE;
     halADC.Init.ContinuousConvMode = ENABLE;
     halADC.Init.DiscontinuousConvMode = DISABLE;
     halADC.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
@@ -118,8 +103,6 @@ void ADCf4xx::initADC(uint8_t num_channels) {
 }
 
 void ADCf4xx::initDMA() {
-    //     HAL_ADC_Stop(&halADC); // was commented out in f3xx...
-
     halDMA.Instance = DMA2_Stream0;
     halDMA.Init.Direction = DMA_PERIPH_TO_MEMORY;
     halDMA.Init.PeriphInc = DMA_PINC_DISABLE;
@@ -132,11 +115,6 @@ void ADCf4xx::initDMA() {
 
     HAL_DMA_Init(&halDMA);
     __HAL_LINKDMA(&halADC, DMA_Handle, halDMA);
-
-    /* DMA interrupt init */
-    /* DMA2_Stream0_IRQn interrupt configuration */
-//    HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, EVT::core::platform::ADC_INTERRUPT_PRIORITY, 0);
-//    HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn); // todo: look into this being unnecessary (isn't needed for working adc rn) -travis :)
 }
 
 void ADCf4xx::addChannel(uint8_t rank) {
@@ -206,24 +184,11 @@ void ADCf4xx::addChannel(uint8_t rank) {
     channels[rank - 1] = pin;
 
     adcChannel.Rank = rank;
-    adcChannel.SamplingTime = ADC_SAMPLETIME_480CYCLES; // todo: F3xx was ADC_SAMPLETIME_601CYCLES_5. Doesn't exist in F4xx -travis :)
+    adcChannel.SamplingTime = ADC_SAMPLETIME_480CYCLES;
     adcChannel.Offset = 0;
     adcChannel.Offset = 0x000;
 
     HAL_ADC_ConfigChannel(&halADC, &adcChannel);
 }
-
-/*
-    // todo: for the current code this isn't necessary ig? -travis :)
-void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef* halADC) {
-    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-}
-
-
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* halADC) {
-    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-}
-
-*/
 
 }// namespace EVT::core::IO
