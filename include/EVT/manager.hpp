@@ -41,7 +41,7 @@
     #define GPIO_SUPPORTED
     #define UART_SUPPORTED
     #define PWM_SUPPORTED
-
+    #define SPI_SUPPORTED
     #include <EVT/platform/f4xx/stm32f4xx.hpp>
     //    #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
     //    #include <EVT/io/platform/f4xx/CANf4xx.hpp>
@@ -51,7 +51,7 @@
     //    #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
     //    #include <EVT/io/platform/f4xx/I2Cf4xx.hpp>
     #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
-    //    #include <EVT/io/platform/f4xx/SPIf4xx.hpp>
+    #include <EVT/io/platform/f4xx/SPIf4xx.hpp>
     #include <EVT/io/platform/f4xx/UARTf4xx.hpp>
 #endif
 
@@ -263,6 +263,10 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
     static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
     return spi;
     #endif
+    #ifdef STM32F4xx
+    static SPIf4xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
+    return spi;
+#endif
 }
 
 /**
