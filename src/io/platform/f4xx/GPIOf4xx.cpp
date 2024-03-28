@@ -1,7 +1,5 @@
 #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
 
-#include <stdint.h>
-
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/pin.hpp>
 
