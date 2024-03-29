@@ -80,15 +80,6 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin
 
     if (mosiPort == misoPort && misoPort == sckPort) {
         switch (mosiPort) {
-#ifdef STM32F334x8
-        case 1:
-            halSPI.Instance = SPI1;
-            if (!__HAL_RCC_SPI1_IS_CLK_ENABLED()) {
-                __HAL_RCC_SPI1_CLK_ENABLE();
-            }
-            altId = GPIO_AF5_SPI1;
-            break;
-#endif
 #ifdef STM32F446xx
         case 2:
             halSPI.Instance = SPI2;
@@ -102,7 +93,7 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin
             if (!__HAL_RCC_SPI3_IS_CLK_ENABLED()) {
                 __HAL_RCC_SPI3_CLK_ENABLE();
             }
-            altId = GPIO_AF6_SPI3;
+            altId = GPIO_AF5_SPI3;
             break;
 #endif
         default:
@@ -145,16 +136,7 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : S
 
     if (mosiPort == sckPort) {
         switch (mosiPort) {
-#ifdef STM32F334x8
-        case 1:
-            halSPI.Instance = SPI1;
-            if (!__HAL_RCC_SPI1_IS_CLK_ENABLED()) {
-                __HAL_RCC_SPI1_CLK_ENABLE();
-            }
-            altId = GPIO_AF5_SPI1;
-            break;
-#endif
-#ifdef STM32F302x8
+#ifdef STM32F446xx
         case 2:
             halSPI.Instance = SPI2;
             if (!__HAL_RCC_SPI2_IS_CLK_ENABLED()) {
@@ -167,7 +149,7 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : S
             if (!__HAL_RCC_SPI3_IS_CLK_ENABLED()) {
                 __HAL_RCC_SPI3_CLK_ENABLE();
             }
-            altId = GPIO_AF6_SPI3;
+            altId = GPIO_AF5_SPI3;
             break;
 #endif
         default:
@@ -194,7 +176,7 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : S
     }
 }
 
-void SPIf4xx::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order) {
+void SPIf4xx::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t orderMSB) {
     // set the CPOL and CPHA depending on the SPI mode
     switch (mode) {
     case SPI_MODE0:
@@ -238,7 +220,7 @@ void SPIf4xx::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order) {
     }
 
     // configure the bit order of the data; MSB or LSB
-    if (order) {
+    if (orderMSB) {
         halSPI.Init.FirstBit = SPI_FIRSTBIT_MSB;
     } else {
         halSPI.Init.FirstBit = SPI_FIRSTBIT_LSB;
