@@ -3,10 +3,8 @@
  * device and the ADXL345 accelerometer
  *
  */
-#include <stdint.h>
 
 #include <EVT/io/GPIO.hpp>
-#include <EVT/io/I2C.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
@@ -14,12 +12,12 @@
 namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
 
-constexpr uint32_t SPI_SPEED = SPI_SPEED_62KHZ;// 62.5KHz
+constexpr uint32_t SPI_SPEED = SPI_SPEED_62KHZ; // 62.5KHz
 
 constexpr uint8_t deviceCount = 1;
 
-#define ADXL345_REG_POWER_CTL 0x2D//R/W   00000000  Power-saving features control  ----
-#define ADXL345_REG_DATAY0 0x34   //R     00000000  Y-Axis Data 0
+#define ADXL345_REG_POWER_CTL 0x2D  //R/W   00000000  Power-saving features control  ----
+#define ADXL345_REG_DATAY0 0x34     //R     00000000  Y-Axis Data 0
 
 IO::GPIO* devices[deviceCount];
 
@@ -53,8 +51,6 @@ int main() {
     int16_t data;
     uint8_t bytes[2];
     while (1) {
-        //data = spi.readReg(0, ADXL345_REG_DATAY0 | 0x80 | 0x40);
-
         spi.startTransmission(0);
         spi.write(ADXL345_REG_DATAY0 | 0x80 | 0x40);
         spi.read(bytes, 2);

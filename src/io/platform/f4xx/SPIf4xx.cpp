@@ -1,8 +1,6 @@
 #include <EVT/io/platform/f4xx/SPIf4xx.hpp>
-
 #include <EVT/io/pin.hpp>
 #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
-
 #include <EVT/utils/log.hpp>
 
 namespace log = EVT::core::log;
@@ -122,8 +120,6 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin
         halSPI.Init.TIMode = SPI_TIMODE_DISABLE;
         halSPI.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
         halSPI.Init.CRCPolynomial = 7;
-//        halSPI.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;  // todo: not a setting in f4xx
-//        halSPI.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;     // todo: not a setting in f4xx
         halSPI.Init.NSS = SPI_NSS_SOFT;
     }
 }
@@ -170,8 +166,6 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : S
         halSPI.Init.TIMode = SPI_TIMODE_DISABLE;
         halSPI.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
         halSPI.Init.CRCPolynomial = 7;
-//        halSPI.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;  // todo: not a setting in f4xx
-//        halSPI.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;     // todo: not a setting in f4xx
         halSPI.Init.NSS = SPI_NSS_SOFT;
     }
 }
