@@ -128,9 +128,9 @@ enum class Pin {
 #endif
 
 #ifdef STM32F4xx
-    SPI_SCK = PA_9,     // D8 todo give the Dxx pin label for these
-    SPI_MISO = PC_2,    //
-    SPI_MOSI = PC_3,    //
+    SPI_SCK = PA_9,     // D8
+    SPI_MISO = PC_2,
+    SPI_MOSI = PC_3,
     SPI_CS = PB_4,      // D5
     I2C_SDA = PB_9,
     I2C_SCL = PB_8,
