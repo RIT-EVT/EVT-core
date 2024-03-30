@@ -176,7 +176,7 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : S
     }
 }
 
-void SPIf4xx::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t orderMSB) {
+void SPIf4xx::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t firstBitMSB) {
     // set the CPOL and CPHA depending on the SPI mode
     switch (mode) {
     case SPI_MODE0:
@@ -220,7 +220,7 @@ void SPIf4xx::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t orderMSB) {
     }
 
     // configure the bit order of the data; MSB or LSB
-    if (orderMSB) {
+    if (firstBitMSB) {
         halSPI.Init.FirstBit = SPI_FIRSTBIT_MSB;
     } else {
         halSPI.Init.FirstBit = SPI_FIRSTBIT_LSB;

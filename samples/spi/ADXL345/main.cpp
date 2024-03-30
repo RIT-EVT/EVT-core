@@ -31,9 +31,6 @@ int main() {
     devices[0] = &IO::getGPIO<IO::Pin::SPI_CS>(EVT::core::IO::GPIO::Direction::OUTPUT);
     devices[0]->writePin(EVT::core::IO::GPIO::State::HIGH);
 
-    //CLK: D13
-    //MISO: D12
-    //MOSI: D11
     IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, EVT::core::IO::Pin::SPI_MOSI, EVT::core::IO::Pin::SPI_MISO>(devices, deviceCount);
 
     spi.configureSPI(SPI_SPEED, SPI_MODE3, SPI_MSB_FIRST);
@@ -44,7 +41,11 @@ int main() {
     uint8_t byte = 0;
     while (byte != 0xE5) {
         IO::SPI::SPIStatus status = spi.readReg(0, 0x00 | 0x80, &byte);
-        uart.printf("device ID: 0x%X, %d\n\r", byte, byte == 0xE5);//should be 0xE5
+        if(status != EVT::core::IO::SPI::SPIStatus::OK) {
+            uart.printf("SPI readReg Error!\n\r");
+        }
+
+        uart.printf("device ID: 0x%X, %d\n\r", byte, byte == 0xE5); //should be 0xE5
         time::wait(500);
     }
     spi.writeReg(0, ADXL345_REG_POWER_CTL, 0x08);
