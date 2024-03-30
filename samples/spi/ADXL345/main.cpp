@@ -25,7 +25,6 @@ int main() {
     // Initialize system
     EVT::core::platform::init();
 
-    //CS: D10
     devices[0] = &IO::getGPIO<IO::Pin::SPI_CS>(EVT::core::IO::GPIO::Direction::OUTPUT);
     devices[0]->writePin(EVT::core::IO::GPIO::State::HIGH);
 
@@ -58,7 +57,7 @@ int main() {
         spi.endTransmission(0);
         uart.printf("Y: %i\n\r", data);
 
-        // Wait five seconds before repeating the test
+        // Wait half a second before repeating the test
         time::wait(500);
     }
 }
