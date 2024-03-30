@@ -33,7 +33,6 @@ int main() {
         uart.printf("ADC1 : %d mV\r\n", static_cast<uint32_t>(adc1.read() * 1000));
         uart.printf("ADC1: %d%%\r\n", static_cast<uint32_t>(adc1.readPercentage() * 100));
         uart.printf("ADC1 raw: %d\r\n", adc1.readRaw());
-
         uart.printf("--------------------\r\n\r\n");
         time::wait(500);
     }

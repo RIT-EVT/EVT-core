@@ -42,8 +42,10 @@
     #define UART_SUPPORTED
     #define PWM_SUPPORTED
     #define SPI_SUPPORTED
+    #define ADC_SUPPORTED
+
+    #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
     #include <EVT/platform/f4xx/stm32f4xx.hpp>
-    //    #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
     //    #include <EVT/io/platform/f4xx/CANf4xx.hpp>
     #include <EVT/dev/platform/f4xx/IWDGf4xx.hpp>
     #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
