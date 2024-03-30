@@ -1,6 +1,6 @@
-#include <EVT/io/platform/f4xx/SPIf4xx.hpp>
 #include <EVT/io/pin.hpp>
 #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
+#include <EVT/io/platform/f4xx/SPIf4xx.hpp>
 #include <EVT/utils/log.hpp>
 
 namespace log = EVT::core::log;

@@ -1,9 +1,9 @@
 #ifndef _EVT_SPIf4xx_
 #define _EVT_SPIf4xx_
 
-#include <cstdint>
-#include <HALf4/stm32f4xx.h>
 #include <EVT/io/SPI.hpp>
+#include <HALf4/stm32f4xx.h>
+#include <cstdint>
 
 #define SPI_MAX_BAUD 4000000
 
