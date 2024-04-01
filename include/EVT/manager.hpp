@@ -50,8 +50,6 @@
     #include <EVT/dev/platform/f4xx/IWDGf4xx.hpp>
     #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
     #include <EVT/io/platform/f4xx/I2Cf4xx.hpp>
-    //    #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
-    //    #include <EVT/io/platform/f4xx/I2Cf4xx.hpp>
     #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
     #include <EVT/io/platform/f4xx/SPIf4xx.hpp>
     #include <EVT/io/platform/f4xx/UARTf4xx.hpp>
