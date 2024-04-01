@@ -12,12 +12,12 @@
 namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;
 
-constexpr uint32_t SPI_SPEED = SPI_SPEED_62KHZ; // 62.5KHz
+constexpr uint32_t SPI_SPEED = SPI_SPEED_62KHZ;// 62.5KHz
 
 constexpr uint8_t deviceCount = 1;
 
-#define ADXL345_REG_POWER_CTL 0x2D  //R/W   00000000  Power-saving features control  ----
-#define ADXL345_REG_DATAY0 0x34     //R     00000000  Y-Axis Data 0
+#define ADXL345_REG_POWER_CTL 0x2D//R/W   00000000  Power-saving features control  ----
+#define ADXL345_REG_DATAY0 0x34   //R     00000000  Y-Axis Data 0
 
 IO::GPIO* devices[deviceCount];
 
@@ -38,11 +38,11 @@ int main() {
     uint8_t byte = 0;
     while (byte != 0xE5) {
         IO::SPI::SPIStatus status = spi.readReg(0, 0x00 | 0x80, &byte);
-        if(status != EVT::core::IO::SPI::SPIStatus::OK) {
+        if (status != EVT::core::IO::SPI::SPIStatus::OK) {
             uart.printf("SPI readReg Error!\n\r");
         }
 
-        uart.printf("device ID: 0x%X, %d\n\r", byte, byte == 0xE5); //should be 0xE5
+        uart.printf("device ID: 0x%X, %d\n\r", byte, byte == 0xE5);//should be 0xE5
         time::wait(500);
     }
     spi.writeReg(0, ADXL345_REG_POWER_CTL, 0x08);

@@ -266,7 +266,7 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
     #ifdef STM32F4xx
     static SPIf4xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
     return spi;
-#endif
+    #endif
 }
 
 /**

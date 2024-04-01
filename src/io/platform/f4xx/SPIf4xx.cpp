@@ -1,6 +1,6 @@
-#include <EVT/io/platform/f4xx/SPIf4xx.hpp>
 #include <EVT/io/pin.hpp>
 #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
+#include <EVT/io/platform/f4xx/SPIf4xx.hpp>
 #include <EVT/utils/log.hpp>
 
 namespace log = EVT::core::log;
@@ -266,7 +266,7 @@ SPI::SPIStatus SPIf4xx::read(uint8_t* bytes, uint8_t length) {
 /**
  * Converts HAL Status into EVT Core's own SPIStatus enum
  *
- * @param halStatus
+ * @param[in] halStatus HAL-defined status enum value
  * @return SPIStatus converted from halStatus
  */
 SPI::SPIStatus SPIf4xx::halToSPIStatus(HAL_StatusTypeDef halStatus) {
