@@ -32,7 +32,7 @@ public:
      */
     SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin);
 
-    void configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order) override;
+    void configureSPI(uint32_t baudRate, SPIMode mode, bool order) override;
 
     bool startTransmission(uint8_t device) override;
     bool endTransmission(uint8_t device) override;

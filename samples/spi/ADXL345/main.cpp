@@ -25,12 +25,12 @@ int main() {
     // Initialize system
     EVT::core::platform::init();
 
-    devices[0] = &IO::getGPIO<IO::Pin::SPI_CS>(EVT::core::IO::GPIO::Direction::OUTPUT);
-    devices[0]->writePin(EVT::core::IO::GPIO::State::HIGH);
+    devices[0] = &IO::getGPIO<IO::Pin::SPI_CS>(IO::GPIO::Direction::OUTPUT);
+    devices[0]->writePin(IO::GPIO::State::HIGH);
 
-    IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, EVT::core::IO::Pin::SPI_MOSI, EVT::core::IO::Pin::SPI_MISO>(devices, deviceCount);
+    IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, IO::Pin::SPI_MOSI, IO::Pin::SPI_MISO>(devices, deviceCount);
 
-    spi.configureSPI(SPI_SPEED, SPI_MODE3, SPI_MSB_FIRST);
+    spi.configureSPI(SPI_SPEED, IO::SPI::SPIMode::SPI_MODE3, SPI_MSB_FIRST);
 
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
@@ -38,7 +38,7 @@ int main() {
     uint8_t byte = 0;
     while (byte != 0xE5) {
         IO::SPI::SPIStatus status = spi.readReg(0, 0x00 | 0x80, &byte);
-        if (status != EVT::core::IO::SPI::SPIStatus::OK) {
+        if (status != IO::SPI::SPIStatus::OK) {
             uart.printf("SPI readReg Error!\n\r");
         }
 

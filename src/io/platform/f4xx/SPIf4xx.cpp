@@ -21,14 +21,15 @@ void SPIf4xx::togglePin(GPIO* pin) {
 uint8_t SPIf4xx::getMOSIPortID(Pin mosiPin) {
 #ifdef STM32F446xx
     switch (mosiPin) {
+    case Pin::PA_7:
+    case Pin::PB_5:
+        return 1;
     case Pin::PC_1:
     case Pin::PC_3:
     case Pin::PB_15:
         return 2;
-    case Pin::PA_7:
     case Pin::PB_0:
     case Pin::PB_2:
-    case Pin::PB_5:
     case Pin::PC_12:
         return 3;
     default:
@@ -40,10 +41,12 @@ uint8_t SPIf4xx::getMOSIPortID(Pin mosiPin) {
 uint8_t SPIf4xx::getMISOPortID(Pin misoPin) {
 #ifdef STM32F446xx
     switch (misoPin) {
+    case Pin::PA_6:
+    case Pin::PB_4:
+        return 1;
     case Pin::PC_2:
     case Pin::PB_14:
         return 2;
-    case Pin::PB_4:
     case Pin::PC_11:
         return 3;
     default:
@@ -55,12 +58,14 @@ uint8_t SPIf4xx::getMISOPortID(Pin misoPin) {
 uint8_t SPIf4xx::getSCKPortID(Pin sckPin) {
 #ifdef STM32F446xx
     switch (sckPin) {
+    case Pin::PA_5:
+    case Pin::PB_3:
+        return 1;
     case Pin::PB_10:
     case Pin::PB_13:
     case Pin::PC_7:
     case Pin::PA_9:
         return 2;
-    case Pin::PB_3:
     case Pin::PC_10:
         return 3;
     default:
@@ -79,6 +84,13 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin
     if (mosiPort == misoPort && misoPort == sckPort) {
         switch (mosiPort) {
 #ifdef STM32F446xx
+        case 1:
+            halSPI.Instance = SPI1;
+            if (!__HAL_RCC_SPI1_IS_CLK_ENABLED()) {
+                __HAL_RCC_SPI1_CLK_ENABLE();
+            }
+            altId = GPIO_AF5_SPI1;
+            break;
         case 2:
             halSPI.Instance = SPI2;
             if (!__HAL_RCC_SPI2_IS_CLK_ENABLED()) {
@@ -133,6 +145,13 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : S
     if (mosiPort == sckPort) {
         switch (mosiPort) {
 #ifdef STM32F446xx
+        case 1:
+            halSPI.Instance = SPI1;
+            if (!__HAL_RCC_SPI1_IS_CLK_ENABLED()) {
+                __HAL_RCC_SPI1_CLK_ENABLE();
+            }
+            altId = GPIO_AF5_SPI1;
+            break;
         case 2:
             halSPI.Instance = SPI2;
             if (!__HAL_RCC_SPI2_IS_CLK_ENABLED()) {
@@ -170,22 +189,22 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : S
     }
 }
 
-void SPIf4xx::configureSPI(uint32_t baudRate, uint8_t mode, uint8_t firstBitMSB) {
+void SPIf4xx::configureSPI(uint32_t baudRate, SPIMode mode, bool firstBitMSB) {
     // set the CPOL and CPHA depending on the SPI mode
     switch (mode) {
-    case SPI_MODE0:
+    case IO::SPI::SPIMode::SPI_MODE0:
         halSPI.Init.CLKPolarity = SPI_POLARITY_LOW;
         halSPI.Init.CLKPhase = SPI_PHASE_1EDGE;
         break;
-    case SPI_MODE1:
+    case IO::SPI::SPIMode::SPI_MODE1:
         halSPI.Init.CLKPolarity = SPI_POLARITY_LOW;
         halSPI.Init.CLKPhase = SPI_PHASE_2EDGE;
         break;
-    case SPI_MODE2:
+    case IO::SPI::SPIMode::SPI_MODE2:
         halSPI.Init.CLKPolarity = SPI_POLARITY_HIGH;
         halSPI.Init.CLKPhase = SPI_PHASE_1EDGE;
         break;
-    case SPI_MODE3:
+    case IO::SPI::SPIMode::SPI_MODE3:
         halSPI.Init.CLKPolarity = SPI_POLARITY_HIGH;
         halSPI.Init.CLKPhase = SPI_PHASE_2EDGE;
         break;
