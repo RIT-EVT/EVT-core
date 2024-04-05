@@ -42,11 +42,13 @@
     #define UART_SUPPORTED
     #define PWM_SUPPORTED
     #define ADC_SUPPORTED
+    #define RTC_SUPPORTED
 
     #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
     #include <EVT/platform/f4xx/stm32f4xx.hpp>
     //    #include <EVT/io/platform/f4xx/CANf4xx.hpp>
     #include <EVT/dev/platform/f4xx/IWDGf4xx.hpp>
+    #include <EVT/dev/platform/f4xx/RTCf4xx.hpp>
     #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
     #include <EVT/io/platform/f4xx/I2Cf4xx.hpp>
     //    #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
@@ -107,6 +109,10 @@ IWDG& getIWDG(uint32_t ms) {
 RTC& getRTC() {
     #ifdef STM32F3xx
     static RTCf3xx rtc;
+    return rtc;
+    #endif
+    #ifdef STM32F4xx
+    static RTCf4xx rtc;
     return rtc;
     #endif
 }

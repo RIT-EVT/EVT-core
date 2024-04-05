@@ -19,7 +19,7 @@ int main() {
 
     // Start RTC and set the default time
     time::TimeStamp time;
-    time.year = 2021;
+    time.year = 24;
     time.month = 9;
     time.day = 10;
 
