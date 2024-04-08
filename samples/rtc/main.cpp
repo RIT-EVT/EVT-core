@@ -20,12 +20,12 @@ int main() {
     // Start RTC and set the default time
     time::TimeStamp time;
     time.year = 24;
-    time.month = 9;
-    time.day = 10;
+    time.month = 4;
+    time.day = 8;
 
-    time.hour = 13;
-    time.minute = 42;
-    time.second = 35;
+    time.hour = 19;
+    time.minute = 23;
+    time.second = 55;
 
     DEV::RTC& rtc = DEV::getRTC();
     rtc.setTime(time);
