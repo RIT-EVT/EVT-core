@@ -5,14 +5,16 @@
 namespace time = EVT::core::time;
 
 namespace EVT::core::DEV {
+constexpr int asynchPrediv = 127;
+constexpr int synchPrediv = 255;
 
 RTCf4xx::RTCf4xx() : halRTC{
     RTC1,
     {
         // Numbers generated from STMCubeMX
         RTC_HOURFORMAT_24,
-        127,
-        255,
+        asynchPrediv,
+        synchPrediv,
         RTC_OUTPUT_DISABLE,
         RTC_OUTPUT_TYPE_PUSHPULL,
         RTC_OUTPUT_POLARITY_HIGH,
