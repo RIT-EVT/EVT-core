@@ -3,10 +3,8 @@
  * device and the ADXL345 accelerometer
  *
  */
-#include <stdint.h>
 
 #include <EVT/io/GPIO.hpp>
-#include <EVT/io/I2C.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
@@ -33,16 +31,12 @@ int main() {
     // Initialize system
     EVT::core::platform::init();
 
-    //CS: D10
-    devices[0] = &IO::getGPIO<IO::Pin::SPI_CS>(EVT::core::IO::GPIO::Direction::OUTPUT);
-    devices[0]->writePin(EVT::core::IO::GPIO::State::HIGH);
+    devices[0] = &IO::getGPIO<IO::Pin::SPI_CS>(IO::GPIO::Direction::OUTPUT);
+    devices[0]->writePin(IO::GPIO::State::HIGH);
 
-    //CLK: D13
-    //MISO: D12
-    //MOSI: D11
-    IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, EVT::core::IO::Pin::SPI_MOSI, EVT::core::IO::Pin::SPI_MISO>(devices, deviceCount);
+    IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, IO::Pin::SPI_MOSI, IO::Pin::SPI_MISO>(devices, deviceCount);
 
-    spi.configureSPI(SPI_SPEED, SPI_MODE3, SPI_MSB_FIRST);
+    spi.configureSPI(SPI_SPEED, IO::SPI::SPIMode::SPI_MODE3, SPI_MSB_FIRST);
 
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
@@ -88,7 +82,7 @@ int main() {
         uart.printf("SPI Status: %i\n\r", status);
         uart.printf("reading register byte %X\n\r\n\r", byte);
 
-        // Wait five seconds before repeating the test
+        // Wait half a second before repeating the test
         time::wait(500);
     }
 }

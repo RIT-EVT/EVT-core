@@ -9,13 +9,8 @@
     #define EVT_SPI_TIMEOUT 100
 #endif
 
-#define SPI_MSB_FIRST 1
-#define SPI_LSB_FIRST 0
-
-#define SPI_MODE0 0x01
-#define SPI_MODE1 0x02
-#define SPI_MODE2 0x04
-#define SPI_MODE3 0x08
+#define SPI_MSB_FIRST true
+#define SPI_LSB_FIRST false
 
 #define SPI_SPEED_4MHZ 4000000
 #define SPI_SPEED_2MHZ 2000000
@@ -43,6 +38,16 @@ public:
         ERROR = 1,
         BUSY = 2,
         TIMEOUT = 3,
+    };
+
+    /**
+     * Enum of SPI mode's that can be used.
+     */
+    enum class SPIMode {
+        SPI_MODE0 = 0x01,
+        SPI_MODE1 = 0x02,
+        SPI_MODE2 = 0x04,
+        SPI_MODE3 = 0x08,
     };
 
     /**
@@ -166,9 +171,9 @@ public:
      *
      * @param baudRate the baudrate to transmit at (4MHz to 31.25KHz)
      * @param mode The SPIMode to use when sending (0-3)
-     * @param order MSB first or LSB first
+     * @param order MSB first (true) or LSB first (false)
      */
-    virtual void configureSPI(uint32_t baudRate, uint8_t mode, uint8_t order) = 0;
+    virtual void configureSPI(uint32_t baudRate, SPIMode mode, bool order) = 0;
 
 private:
     /** The SPI clock line */
