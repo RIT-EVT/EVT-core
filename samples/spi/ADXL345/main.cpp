@@ -3,10 +3,8 @@
  * device and the ADXL345 accelerometer
  *
  */
-#include <stdint.h>
 
 #include <EVT/io/GPIO.hpp>
-#include <EVT/io/I2C.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/manager.hpp>
 #include <EVT/utils/time.hpp>
@@ -27,16 +25,12 @@ int main() {
     // Initialize system
     EVT::core::platform::init();
 
-    //CS: D10
-    devices[0] = &IO::getGPIO<IO::Pin::SPI_CS>(EVT::core::IO::GPIO::Direction::OUTPUT);
-    devices[0]->writePin(EVT::core::IO::GPIO::State::HIGH);
+    devices[0] = &IO::getGPIO<IO::Pin::SPI_CS>(IO::GPIO::Direction::OUTPUT);
+    devices[0]->writePin(IO::GPIO::State::HIGH);
 
-    //CLK: D13
-    //MISO: D12
-    //MOSI: D11
-    IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, EVT::core::IO::Pin::SPI_MOSI, EVT::core::IO::Pin::SPI_MISO>(devices, deviceCount);
+    IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, IO::Pin::SPI_MOSI, IO::Pin::SPI_MISO>(devices, deviceCount);
 
-    spi.configureSPI(SPI_SPEED, SPI_MODE3, SPI_MSB_FIRST);
+    spi.configureSPI(SPI_SPEED, IO::SPI::SPIMode::SPI_MODE3, SPI_MSB_FIRST);
 
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
@@ -44,6 +38,10 @@ int main() {
     uint8_t byte = 0;
     while (byte != 0xE5) {
         IO::SPI::SPIStatus status = spi.readReg(0, 0x00 | 0x80, &byte);
+        if (status != IO::SPI::SPIStatus::OK) {
+            uart.printf("SPI readReg Error!\n\r");
+        }
+
         uart.printf("device ID: 0x%X, %d\n\r", byte, byte == 0xE5);//should be 0xE5
         time::wait(500);
     }
@@ -52,8 +50,6 @@ int main() {
     int16_t data;
     uint8_t bytes[2];
     while (1) {
-        //data = spi.readReg(0, ADXL345_REG_DATAY0 | 0x80 | 0x40);
-
         spi.startTransmission(0);
         spi.write(ADXL345_REG_DATAY0 | 0x80 | 0x40);
         spi.read(bytes, 2);
@@ -61,7 +57,7 @@ int main() {
         spi.endTransmission(0);
         uart.printf("Y: %i\n\r", data);
 
-        // Wait five seconds before repeating the test
+        // Wait half a second before repeating the test
         time::wait(500);
     }
 }

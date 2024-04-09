@@ -128,6 +128,10 @@ enum class Pin {
 #endif
 
 #ifdef STM32F4xx
+    SPI_SCK = PA_5, // D13
+    SPI_MISO = PA_6,// D12
+    SPI_MOSI = PA_7,// D11
+    SPI_CS = PB_6,  // D10
     I2C_SDA = PB_9,
     I2C_SCL = PB_8,
 #endif

@@ -35,7 +35,7 @@ int main() {
 
     // Setup SPI
     IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, IO::Pin::SPI_MOSI>(devices, deviceCount);
-    spi.configureSPI(SPI_SPEED, SPI_MODE0, SPI_MSB_FIRST);
+    spi.configureSPI(SPI_SPEED, IO::SPI::SPIMode::SPI_MODE0, SPI_MSB_FIRST);
 
     // Sets up LCD
     uart.printf("Creating LCD Object...\n\r");
