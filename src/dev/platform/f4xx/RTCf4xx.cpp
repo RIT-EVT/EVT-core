@@ -1,6 +1,6 @@
-#include <EVT/dev/platform/f3xx/RTCf3xx.hpp>
+#include <EVT/dev/platform/f4xx/RTCf4xx.hpp>
 
-#include <HALf3/stm32f3xx_hal_rtc.h>
+#include <HALf4/stm32f4xx_hal_rtc.h>
 
 namespace time = EVT::core::time;
 
@@ -8,7 +8,7 @@ namespace EVT::core::DEV {
 constexpr int asynchPrediv = 127;
 constexpr int synchPrediv = 255;
 
-RTCf3xx::RTCf3xx() : halRTC{
+RTCf4xx::RTCf4xx() : halRTC{
     RTC1,
     {
         // Numbers generated from STMCubeMX
@@ -42,7 +42,7 @@ RTCf3xx::RTCf3xx() : halRTC{
     HAL_RTC_Init(&halRTC);
 }
 
-void RTCf3xx::getTime(EVT::core::time::TimeStamp& time) {
+void RTCf4xx::getTime(EVT::core::time::TimeStamp& time) {
     RTC_DateTypeDef rtcDate;
     RTC_TimeTypeDef rtcTime;
 
@@ -59,7 +59,7 @@ void RTCf3xx::getTime(EVT::core::time::TimeStamp& time) {
     time.day = rtcDate.Date;
 }
 
-uint32_t RTCf3xx::getTime() {
+uint32_t RTCf4xx::getTime() {
     time::TimeStamp ts{};
     getTime(ts);
 
@@ -89,7 +89,7 @@ uint32_t RTCf3xx::getTime() {
     return time;
 }
 
-void RTCf3xx::setTime(EVT::core::time::TimeStamp& time) {
+void RTCf4xx::setTime(EVT::core::time::TimeStamp& time) {
     RTC_DateTypeDef rtcDate;
     RTC_TimeTypeDef rtcTime;
 
