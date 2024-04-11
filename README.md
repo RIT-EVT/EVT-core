@@ -148,7 +148,7 @@ Below is the supported features associated with each board
 | GPIO     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | I2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | PWM      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| RTC      | :heavy_check_mark: | :x:                | :x:                |
+| RTC      | :heavy_check_mark: | :heavy_check_mark: | :x:                |
 | SPI      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | Timer    | :heavy_check_mark: | :heavy_check_mark: | :x:                |
 | UART     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
