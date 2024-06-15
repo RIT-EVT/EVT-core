@@ -1,3 +1,1 @@
-add_subdirectory(canopen_rpdo)
-add_subdirectory(canopen_sample)
-add_subdirectory(canopen_tpdo)
+add_subdirectory(Basic-Test)

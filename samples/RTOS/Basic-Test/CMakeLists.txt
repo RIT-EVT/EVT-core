@@ -1,3 +1,4 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/evt-core_build.cmake)
+include(../../../cmake/evt-core_build.cmake)
 
-make_exe(rtc_timer main.cpp)
+set(SAMPLE_SOURCES main.cpp)
+make_exe(Basic-Test "${SAMPLE_SOURCES}")

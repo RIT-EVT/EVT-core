@@ -24,7 +24,8 @@ project(EVT
     LANGUAGES CXX C
 )
 
-add_library(${PROJECT_NAME} STATIC)
+add_library(${PROJECT_NAME} STATIC
+        samples/RTOS/Basic-Test/main.cpp)
 
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE
@@ -108,6 +109,16 @@ install(TARGETS canopen-stack EXPORT canopen-stack-config)
 install(EXPORT canopen-stack-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/canopen-stack)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC canopen-stack)
+
+set(THREADX_ARCH "cortex_m4")
+set(THREADX_TOOLCHAIN "gnu")
+
+add_subdirectory(libs/threadx/)
+install(TARGETS threadx EXPORT threadx-config)
+install(EXPORT threadx-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/threadx)
+message(${CMAKE_INSTALL_LIBDIR})
+
+target_link_libraries(${PROJECT_NAME} PUBLIC threadx)
 
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
     add_subdirectory(libs/HALf3/)
