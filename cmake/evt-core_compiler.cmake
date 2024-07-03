@@ -8,6 +8,7 @@ if(NOT DEFINED ENV{GCC_ARM_TOOLS_PATH})
     message(WARNING
             "Set your environment variables you frickin' hecker."
             "   --Shane Snover"
+            "(GCC_ARM_TOOLS_PATH is not set)"
             )
 endif()
 
@@ -32,6 +33,10 @@ else()
 endif()
 message(STATUS "${TARGET_DEV} targeted")
 
+option (FORCE_COLORED_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." FALSE)
+if (${FORCE_COLORED_OUTPUT})
+    add_compile_options (-fdiagnostics-color=always)
+endif ()
 
 # Flags to skip compiler check
 set(CMAKE_C_COMPILER_WORKS 1)
@@ -102,4 +107,4 @@ endif()
 
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -mfloat-abi=hard \
                             -specs=nano.specs -specs=nosys.specs \
-                            -lc -lm -lnosys -Wl,--gc-section")
+                            -lc -lm -lnosys -Wl,--gc-section -Wl,--print-memory-usage")
