@@ -26,4 +26,5 @@ macro(make_exe proj_name sources)
 
     # Link the EVT-core library
     target_link_libraries(${proj_name} PUBLIC EVT)
+    target_link_libraries(${proj_name} PUBLIC threadx)
 endmacro()

@@ -13,7 +13,7 @@ include(CMakeDependentOption)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_compiler.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_install.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_clang-format.cmake)
-
+#include(${CMAKE_SOURCE_DIR}/libs/threadx/cmake/cortex_m4.cmake)
 ###############################################################################
 # Project Setup
 ###############################################################################
@@ -24,8 +24,7 @@ project(EVT
     LANGUAGES CXX C
 )
 
-add_library(${PROJECT_NAME} STATIC
-        samples/RTOS/Basic-Test/main.cpp)
+add_library(${PROJECT_NAME} STATIC)
 
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE
@@ -113,12 +112,10 @@ target_link_libraries(${PROJECT_NAME} PUBLIC canopen-stack)
 set(THREADX_ARCH "cortex_m4")
 set(THREADX_TOOLCHAIN "gnu")
 
-add_subdirectory(libs/threadx/)
-install(TARGETS threadx EXPORT threadx-config)
-install(EXPORT threadx-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/threadx)
-message(${CMAKE_INSTALL_LIBDIR})
-
-target_link_libraries(${PROJECT_NAME} PUBLIC threadx)
+add_subdirectory(libs/threadx)
+#install(TARGETS threadx EXPORT threadx-config)
+#install(EXPORT threadx-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/threadx)
+#target_link_libraries(threadx PUBLIC ${PROJECT_NAME})
 
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
     add_subdirectory(libs/HALf3/)

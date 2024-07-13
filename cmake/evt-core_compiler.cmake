@@ -102,4 +102,4 @@ endif()
 
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -mfloat-abi=hard \
                             -specs=nano.specs -specs=nosys.specs \
-                            -lc -lm -lnosys -Wl,--gc-section")
+                            -lc -lm -lnosys -Wl,--gc-section -Wl,--print-memory-usage")
