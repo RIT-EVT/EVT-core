@@ -5,7 +5,6 @@
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
 #include <EVT/manager.hpp>
-#include <HALf4/system_stm32f4xx.h>
 #include <EVT/dev/LED.hpp>
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/pin.hpp>
