@@ -4,10 +4,6 @@
 #include <EVT/manager.hpp>
 #include <EVT/dev/LED.hpp>
 #include <EVT/io/GPIO.hpp>
-#include <EVT/io/pin.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
-#include <stdio.h>
 
 ///Namespaces
 namespace IO = EVT::core::IO;
@@ -43,15 +39,6 @@ typedef struct {
 typedef void (*EntryFunction)(ULONG thread_input);
 
 ThreadData dataArray[ThreadNum+1];
-
-/**
- * have a ptr to a threads data
- * get index for thread1
- * get its ptr
- * pass it into the array
- * inside thread take input param
- * pass it into ThreadData
-**/
 
 void ThreadCreator(TX_BYTE_POOL* byte_pool, TX_THREAD* thread, EntryFunction thread_entry, ULONG thread_input) {
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);

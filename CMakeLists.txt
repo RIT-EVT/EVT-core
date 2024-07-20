@@ -13,7 +13,7 @@ include(CMakeDependentOption)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_compiler.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_install.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_clang-format.cmake)
-#include(${CMAKE_SOURCE_DIR}/libs/threadx/cmake/cortex_m4.cmake)
+
 ###############################################################################
 # Project Setup
 ###############################################################################
@@ -21,7 +21,7 @@ file(STRINGS version.txt EVT_VERSION)
 
 project(EVT
     VERSION ${EVT_VERSION}
-    LANGUAGES CXX C
+    LANGUAGES CXX C ASM
 )
 
 add_library(${PROJECT_NAME} STATIC)
@@ -73,7 +73,9 @@ elseif(COMPDEFS MATCHES "(.*)STM32F4xx(.*)")
     src/io/platform/f4xx/UARTf4xx.cpp
     src/io/platform/f4xx/SPIf4xx.cpp
     src/dev/platform/f4xx/IWDGf4xx.cpp
-    src/dev/platform/f4xx/RTCf4xx.cpp)
+    src/dev/platform/f4xx/RTCf4xx.cpp
+    src/RTOS/f4xx/tx_initialize_low_level.s)
+
 else()
     message(FATAL_ERROR "the HAL didnt compile in top level CMake")
 endif()
@@ -111,6 +113,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC canopen-stack)
 
 set(THREADX_ARCH "cortex_m4")
 set(THREADX_TOOLCHAIN "gnu")
+set(MCPU_FLAGS "-mthumb -mcpu=cortex-m4")
+set(VFP_FLAGS "")
+set(SPEC_FLAGS "--specs=nosys.specs")
 
 add_subdirectory(libs/threadx)
 #install(TARGETS threadx EXPORT threadx-config)

@@ -7,9 +7,6 @@
 #include <EVT/manager.hpp>
 #include <EVT/dev/LED.hpp>
 #include <EVT/io/GPIO.hpp>
-#include <EVT/io/pin.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
 
 ///Namespaces
 namespace IO = EVT::core::IO;

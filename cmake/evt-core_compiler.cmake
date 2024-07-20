@@ -90,6 +90,9 @@ set(CMAKE_C_FLAGS           "${EVT_COMMON_FLAGS} \
 set(CMAKE_CXX_FLAGS         "${EVT_COMMON_FLAGS} \
                             -fno-rtti -Wvla")
 
+set(CMAKE_ASM_FLAGS         "-mthumb -mcpu=cortex-m4 \
+                            -x assembler-with-cpp")
+
 if(TARGET_DEV STREQUAL "STM32F302x8")
     set(CMAKE_EXE_LINKER_FLAGS "-T ${EVT_CORE_DIR}/libs/HALf3/STM32F302C8Tx_FLASH.ld")
 elseif(TARGET_DEV STREQUAL "STM32F334x8")
