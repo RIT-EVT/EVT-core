@@ -74,7 +74,7 @@ elseif(COMPDEFS MATCHES "(.*)STM32F4xx(.*)")
     src/io/platform/f4xx/SPIf4xx.cpp
     src/dev/platform/f4xx/IWDGf4xx.cpp
     src/dev/platform/f4xx/RTCf4xx.cpp
-            src/rtos/f4xx/tx_initialize_low_level.s)
+    src/RTOS/f4xx/tx_initialize_low_level.s)
 
 else()
     message(FATAL_ERROR "the HAL didnt compile in top level CMake")
@@ -113,9 +113,14 @@ target_link_libraries(${PROJECT_NAME} PUBLIC canopen-stack)
 
 set(THREADX_ARCH "cortex_m4")
 set(THREADX_TOOLCHAIN "gnu")
-set(-DUSE_RTOS=1)
+set(MCPU_FLAGS "-mthumb -mcpu=cortex-m4")
+set(VFP_FLAGS "")
+set(SPEC_FLAGS "--specs=nosys.specs")
 
 add_subdirectory(libs/threadx)
+#install(TARGETS threadx EXPORT threadx-config)
+#install(EXPORT threadx-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/threadx)
+#target_link_libraries(threadx PUBLIC ${PROJECT_NAME})
 
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
     add_subdirectory(libs/HALf3/)
