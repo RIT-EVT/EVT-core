@@ -1,6 +1,8 @@
-//
-// Created by diego on 6/15/2024.
-//
+/**
+ * This sample shows off Threadx support from Evt-core.
+ * This will make 4 threads and send data between them.
+ */
+
 #include "tx_api.h"
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
