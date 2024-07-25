@@ -33,8 +33,8 @@ else()
 endif()
 message(STATUS "${TARGET_DEV} targeted")
 
-option (FORCE_COLORED_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." FALSE)
-if (${FORCE_COLORED_OUTPUT})
+option (FORCE_COLORED_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." OFF)
+if (FORCE_COLORED_OUTPUT)
     add_compile_options (-fdiagnostics-color=always)
 endif ()
 
