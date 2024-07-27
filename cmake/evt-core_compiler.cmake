@@ -17,6 +17,7 @@ if(NOT TARGET_DEV)
     set(TARGET_DEV "STM32F334x8")
 endif()
 
+option(USE_RTOS "Determines whether or not to compile the RTOS." OFF)
 
 if(TARGET_DEV STREQUAL "STM32F302x8")
     add_compile_definitions(STM32F302x8)

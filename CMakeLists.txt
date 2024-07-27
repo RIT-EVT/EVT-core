@@ -73,8 +73,7 @@ elseif(COMPDEFS MATCHES "(.*)STM32F4xx(.*)")
     src/io/platform/f4xx/UARTf4xx.cpp
     src/io/platform/f4xx/SPIf4xx.cpp
     src/dev/platform/f4xx/IWDGf4xx.cpp
-    src/dev/platform/f4xx/RTCf4xx.cpp
-            src/rtos/f4xx/tx_initialize_low_level.s)
+    src/dev/platform/f4xx/RTCf4xx.cpp)
 
 else()
     message(FATAL_ERROR "the HAL didnt compile in top level CMake")
@@ -111,11 +110,12 @@ install(EXPORT canopen-stack-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ca
 
 target_link_libraries(${PROJECT_NAME} PUBLIC canopen-stack)
 
-set(THREADX_ARCH "cortex_m4")
-set(THREADX_TOOLCHAIN "gnu")
-set(-DUSE_RTOS=1)
-
-add_subdirectory(libs/threadx)
+if(USE_RTOS)
+    set(THREADX_ARCH "cortex_m4")
+    set(THREADX_TOOLCHAIN "gnu")
+    add_subdirectory(libs/threadx)
+    target_sources(${PROJECT_NAME} PRIVATE src/rtos/f4xx/tx_initialize_low_level.s)
+endif()
 
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
     add_subdirectory(libs/HALf3/)

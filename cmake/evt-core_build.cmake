@@ -25,5 +25,8 @@ macro(make_exe proj_name sources)
     COMMENT "Building ${HEX_FILE} \nBuilding ${BIN_FILE}")
 
     target_link_libraries(${proj_name} PUBLIC EVT)
-    target_link_libraries(${proj_name} PUBLIC threadx)
+
+    if(USE_RTOS)
+        target_link_libraries(${proj_name} PUBLIC threadx)
+    endif()
 endmacro()
