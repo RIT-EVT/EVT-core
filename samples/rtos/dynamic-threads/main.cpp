@@ -5,11 +5,11 @@
  */
 
 #include "tx_api.h"
+#include <EVT/dev/LED.hpp>
+#include <EVT/io/GPIO.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
 #include <EVT/manager.hpp>
-#include <EVT/dev/LED.hpp>
-#include <EVT/io/GPIO.hpp>
 
 ///Namespaces
 namespace IO = EVT::core::IO;
@@ -44,23 +44,22 @@ typedef struct {
 
 typedef void (*EntryFunction)(ULONG thread_input);
 
-ThreadData dataArray[ThreadNum+1];
+ThreadData dataArray[ThreadNum + 1];
 
 void ThreadCreator(TX_BYTE_POOL* byte_pool, TX_THREAD* thread, EntryFunction thread_entry, ULONG thread_input) {
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
     char* pointer = static_cast<char*>(TX_NULL);
 
-        tx_byte_allocate(byte_pool, (void**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
-        ULONG status = tx_thread_create(thread, "dynamic thread", thread_entry, thread_input, pointer,
-                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
+    tx_byte_allocate(byte_pool, (void**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
+    ULONG status = tx_thread_create(thread, "dynamic thread", thread_entry, thread_input, pointer,
+                                    DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
 
-        if (status != TX_SUCCESS){
-            uart.printf("\n\rThread not be created %lu\n\r", status);
-            uart.printf("\n\rThread ptr %lu\n\r", byte_pool);
-        }
-        else {
-            uart.printf("\n\rThread created\n\r");
-        }
+    if (status != TX_SUCCESS) {
+        uart.printf("\n\rThread not be created %lu\n\r", status);
+        uart.printf("\n\rThread ptr %lu\n\r", byte_pool);
+    } else {
+        uart.printf("\n\rThread created\n\r");
+    }
 }
 
 // Merged tx_application_define and App_ThreadX_Init functions
@@ -70,10 +69,9 @@ void tx_application_define(void* first_unused_memory) {
 
     if (tx_byte_pool_create(&tx_app_byte_pool, "Tx App memory pool", tx_byte_pool_buffer, TX_APP_MEM_POOL_SIZE) != TX_SUCCESS) {
         uart.printf("\n\rByte pool could not be created\n\r");
-    }
-    else {
-        memory_ptr = (void*)&tx_app_byte_pool;
-        TX_BYTE_POOL* byte_pool = (TX_BYTE_POOL*)memory_ptr;
+    } else {
+        memory_ptr = (void*) &tx_app_byte_pool;
+        TX_BYTE_POOL* byte_pool = (TX_BYTE_POOL*) memory_ptr;
 
         tx_queue_create(&queue_0, "queue 0", TX_1_ULONG, tx_byte_pool_buffer,
                         DEMO_QUEUE_SIZE * sizeof(ULONG));
@@ -82,8 +80,8 @@ void tx_application_define(void* first_unused_memory) {
 
         tx_event_flags_create(&event_flags_0, "event flags 0");
 
-        ThreadCreator(byte_pool,&generator,generator_entry,0 );
-        ThreadCreator(byte_pool,&event,event_entry,0 );
+        ThreadCreator(byte_pool, &generator, generator_entry, 0);
+        ThreadCreator(byte_pool, &event, event_entry, 0);
 
         // Create threads
         for (int i = 0; i < ThreadNum; ++i) {
@@ -105,8 +103,8 @@ int main() {
     return 0;
 }
 
-ULONG global_count = 0; //Times a random number has been sent and received
-ULONG global_sum = 0; //Sum of random numbers
+ULONG global_count = 0;//Times a random number has been sent and received
+ULONG global_sum = 0;  //Sum of random numbers
 ULONG generator_count = 0;
 ULONG generator_sum = 0;
 
@@ -119,8 +117,8 @@ void generator_entry(ULONG thread_input) {
     ULONG queue_status;
     ULONG semaphore_status;
     ULONG num;
-    ThreadData *data1 = &dataArray[0];
-    ThreadData *data2 = &dataArray[1];
+    ThreadData* data1 = &dataArray[0];
+    ThreadData* data2 = &dataArray[1];
 
     uart.printf("\n\rGenerator Created\n\r");
 
@@ -166,10 +164,9 @@ void generator_entry(ULONG thread_input) {
                         "\tcount: %lu\r\n"
                         "\taverage: %lu\r\n\r\n",
                         data2->sum, data2->count, data2->sum / data2->count);
-
         }
-            semaphore_status = tx_semaphore_put(&semaphore_0);
-            tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
+        semaphore_status = tx_semaphore_put(&semaphore_0);
+        tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
     }
 }
 
@@ -182,11 +179,11 @@ void worker_entry(ULONG thread_input) {
     ULONG semaphore_status;
     UINT flag_status;
 
-    ThreadData *data = &dataArray[thread_input];
+    ThreadData* data = &dataArray[thread_input];
 
-    uart.printf("Worker %d Created\n\r", thread_input+1);
+    uart.printf("Worker %d Created\n\r", thread_input + 1);
 
-    while(1){
+    while (1) {
         /* Retrieve a message from the queue. */
         queue_status = tx_queue_receive(&queue_0, &received_message,
                                         TX_WAIT_FOREVER);
@@ -209,7 +206,8 @@ void worker_entry(ULONG thread_input) {
                     "\treceived message: %lu\r\n"
                     "\tcount: %lu\r\n"
                     "\tsum: %lu\r\n"
-                    "\r\n", thread_input+1,received_message, data->count, data->sum);
+                    "\r\n",
+                    thread_input + 1, received_message, data->count, data->sum);
 
         semaphore_status = tx_semaphore_put(&semaphore_0);
         tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
@@ -228,11 +226,10 @@ void event_entry(ULONG thread_input) {
 
     uart.printf("Event Created\n\r\n\r");
 
-    while(1){
-        flag_status = tx_event_flags_get(&event_flags_0, 0x1, TX_OR_CLEAR, &actual_flag,TX_WAIT_FOREVER);
+    while (1) {
+        flag_status = tx_event_flags_get(&event_flags_0, 0x1, TX_OR_CLEAR, &actual_flag, TX_WAIT_FOREVER);
 
-        if(flag_status == TX_SUCCESS)
-        {
+        if (flag_status == TX_SUCCESS) {
             uart.printf("Event flag set\n\r\n\r");
             led.toggle();
             tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);

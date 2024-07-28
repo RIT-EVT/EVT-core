@@ -4,11 +4,11 @@
  */
 
 #include "tx_api.h"
+#include <EVT/dev/LED.hpp>
+#include <EVT/io/GPIO.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
 #include <EVT/manager.hpp>
-#include <EVT/dev/LED.hpp>
-#include <EVT/io/GPIO.hpp>
 
 ///Namespaces
 namespace IO = EVT::core::IO;
@@ -42,21 +42,20 @@ void thread_2_entry(ULONG thread_input);
 void thread_3_entry(ULONG thread_input);
 
 //Merged tx_application_define and App_ThreadX_Init functions
-VOID tx_application_define(VOID *first_unused_memory) {
+VOID tx_application_define(VOID* first_unused_memory) {
     VOID* memory_ptr;
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     if (tx_byte_pool_create(&tx_app_byte_pool, "Tx App memory pool", tx_byte_pool_buffer, TX_APP_MEM_POOL_SIZE) != TX_SUCCESS) {
         uart.printf("\n\rByte pool could not be created\n\r");
-    }
-    else {
+    } else {
 
         memory_ptr = (VOID*) &tx_app_byte_pool;
 
-        TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*) memory_ptr;
+        TX_BYTE_POOL* byte_pool = (TX_BYTE_POOL*) memory_ptr;
 
         /* USER CODE BEGIN App_ThreadX_Init */
-        char *pointer = static_cast<char *>(TX_NULL);
+        char* pointer = static_cast<char*>(TX_NULL);
 
         /* Allocate the stack for thread 0.  */
         tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
@@ -88,7 +87,7 @@ VOID tx_application_define(VOID *first_unused_memory) {
 
         /* Create the message queue shared by all threads. */
         tx_queue_create(&queue_0, "queue 0", TX_1_ULONG, pointer,
-                        DEMO_QUEUE_SIZE*sizeof(ULONG));
+                        DEMO_QUEUE_SIZE * sizeof(ULONG));
 
         /* Create the semaphore used by all threads. */
         tx_semaphore_create(&semaphore_0, "counting semaphore 0", 1);
@@ -97,8 +96,7 @@ VOID tx_application_define(VOID *first_unused_memory) {
     }
 }
 
-int main()
-{
+int main() {
     // Initialize system
     EVT::core::platform::init();
 
@@ -113,8 +111,8 @@ int main()
     return 0;
 }
 
-ULONG global_count = 0; //Times a random number has been sent and received
-ULONG global_sum = 0; //Sum of random numbers
+ULONG global_count = 0;//Times a random number has been sent and received
+ULONG global_sum = 0;  //Sum of random numbers
 ULONG thread0_count = 0;
 ULONG thread0_sum = 0;
 ULONG thread1_count = 0;
@@ -137,7 +135,7 @@ void thread_0_entry(ULONG thread_input) {
     /* Delay ensures that thread 1 and thread 2 are created before thread 0 adds to the queue. */
     tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
 
-    while(1){
+    while (1) {
         num = rand() % 25 + 1;
 
         /* Send message to queue 0. */
@@ -151,7 +149,7 @@ void thread_0_entry(ULONG thread_input) {
             thread0_sum += num;
         }
 
-        if(thread0_count % 10 == 0) {
+        if (thread0_count % 10 == 0) {
             uart.printf("Global count: %lu\r\n"
                         "Global sum: %lu\r\n"
                         "Global average: %lu\r\n",
@@ -190,7 +188,7 @@ void thread_1_entry(ULONG thread_input) {
 
     uart.printf("Thread 1 Created\n\r");
 
-    while(1){
+    while (1) {
         /* Retrieve a message from the queue. */
         queue_status = tx_queue_receive(&queue_0, &received_message,
                                         TX_WAIT_FOREVER);
@@ -210,9 +208,10 @@ void thread_1_entry(ULONG thread_input) {
         }
 
         uart.printf("Thread 1 received message: %lu\r\n"
-                 "Thread 1 count: %lu\r\n"
-                 "Thread 1 sum: %lu\r\n"
-                 "\r\n", received_message, thread1_count, thread1_sum);
+                    "Thread 1 count: %lu\r\n"
+                    "Thread 1 sum: %lu\r\n"
+                    "\r\n",
+                    received_message, thread1_count, thread1_sum);
 
         semaphore_status = tx_semaphore_put(&semaphore_0);
         tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
@@ -230,7 +229,7 @@ void thread_2_entry(ULONG thread_input) {
 
     uart.printf("Thread 2 Created\n\r");
 
-    while(1){
+    while (1) {
         /* Retrieve a message from the queue. */
         queue_status = tx_queue_receive(&queue_0, &received_message,
                                         TX_WAIT_FOREVER);
@@ -252,7 +251,8 @@ void thread_2_entry(ULONG thread_input) {
         uart.printf("Thread 2 received message: %lu\r\n"
                     "Thread 2 count: %lu\r\n"
                     "Thread 2 sum: %lu\r\n"
-                    "\r\n", received_message, thread2_count, thread2_sum);
+                    "\r\n",
+                    received_message, thread2_count, thread2_sum);
 
         semaphore_status = tx_semaphore_put(&semaphore_0);
         tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
@@ -271,11 +271,10 @@ void thread_3_entry(ULONG thread_input) {
 
     uart.printf("Thread 3 Created\n\r\n\r");
 
-    while(1){
-        flag_status = tx_event_flags_get(&event_flags_0, 0x1, TX_OR_CLEAR, &actual_flag,TX_WAIT_FOREVER);
+    while (1) {
+        flag_status = tx_event_flags_get(&event_flags_0, 0x1, TX_OR_CLEAR, &actual_flag, TX_WAIT_FOREVER);
 
-        if(flag_status == TX_SUCCESS)
-        {
+        if (flag_status == TX_SUCCESS) {
             uart.printf("Thread 3 flag set\n\r\n\r");
             led.toggle();
             tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
