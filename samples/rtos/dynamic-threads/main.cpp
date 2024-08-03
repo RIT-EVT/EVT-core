@@ -115,7 +115,6 @@ void generator_entry(ULONG thread_input) {
 
     srand(77);
     ULONG queue_status;
-    ULONG semaphore_status;
     ULONG num;
     ThreadData* data1 = &dataArray[0];
     ThreadData* data2 = &dataArray[1];
@@ -132,7 +131,7 @@ void generator_entry(ULONG thread_input) {
         queue_status = tx_queue_send(&queue_0, &num, TX_WAIT_FOREVER);
 
         /* Take semaphore when it is released. */
-        semaphore_status = tx_semaphore_get(&semaphore_0, TX_WAIT_FOREVER);
+        tx_semaphore_get(&semaphore_0, TX_WAIT_FOREVER);
 
         if (queue_status == TX_SUCCESS) {
             generator_count++;
@@ -165,7 +164,7 @@ void generator_entry(ULONG thread_input) {
                         "\taverage: %lu\r\n\r\n",
                         data2->sum, data2->count, data2->sum / data2->count);
         }
-        semaphore_status = tx_semaphore_put(&semaphore_0);
+        tx_semaphore_put(&semaphore_0);
         tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
     }
 }
@@ -176,7 +175,6 @@ void worker_entry(ULONG thread_input) {
 
     ULONG received_message;
     ULONG queue_status;
-    ULONG semaphore_status;
     UINT flag_status;
 
     ThreadData* data = &dataArray[thread_input];
@@ -189,7 +187,7 @@ void worker_entry(ULONG thread_input) {
                                         TX_WAIT_FOREVER);
 
         /* Get the semaphore with suspension. */
-        semaphore_status = tx_semaphore_get(&semaphore_0, TX_WAIT_FOREVER);
+        tx_semaphore_get(&semaphore_0, TX_WAIT_FOREVER);
 
         if (queue_status == TX_SUCCESS) {
             if (received_message >= 20) {
@@ -209,7 +207,7 @@ void worker_entry(ULONG thread_input) {
                     "\r\n",
                     thread_input + 1, received_message, data->count, data->sum);
 
-        semaphore_status = tx_semaphore_put(&semaphore_0);
+        tx_semaphore_put(&semaphore_0);
         tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
     }
 }
