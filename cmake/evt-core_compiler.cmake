@@ -8,6 +8,7 @@ if(NOT DEFINED ENV{GCC_ARM_TOOLS_PATH})
     message(WARNING
             "Set your environment variables you frickin' hecker."
             "   --Shane Snover"
+            "(GCC_ARM_TOOLS_PATH is not set)"
             )
 endif()
 
@@ -33,6 +34,10 @@ else()
 endif()
 message(STATUS "${TARGET_DEV} targeted")
 
+option(FORCE_COLORED_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." OFF)
+if(FORCE_COLORED_OUTPUT)
+    add_compile_options(-fdiagnostics-color=always)
+endif()
 
 # Flags to skip compiler check
 set(CMAKE_C_COMPILER_WORKS 1)
@@ -43,7 +48,7 @@ file(TO_CMAKE_PATH "$ENV{GCC_ARM_TOOLS_PATH}" GCC_ARM_TOOLS_PATH)
 set(CMAKE_SYSTEM_NAME       Generic)
 set(CMAKE_SYSTEM_PROCESSOR  arm)
 
-if (WIN32)
+if(WIN32)
     set(CMAKE_AR                "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-ar.exe")
     set(CMAKE_ASM_COMPILER      "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-gcc.exe")
     set(CMAKE_C_COMPILER        "${GCC_ARM_TOOLS_PATH}/arm-none-eabi-gcc.exe")
