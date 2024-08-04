@@ -24,6 +24,9 @@ macro(make_exe proj_name sources)
     COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${proj_name}> ${BIN_FILE}
     COMMENT "Building ${HEX_FILE} \nBuilding ${BIN_FILE}")
 
-    # Link the EVT-core library
     target_link_libraries(${proj_name} PUBLIC EVT)
+
+    if(USE_RTOS)
+        target_link_libraries(${proj_name} PUBLIC threadx)
+    endif()
 endmacro()

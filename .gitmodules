@@ -1,3 +1,6 @@
 [submodule "libs/canopen"]
 	path = libs/canopen
 	url = ../canopen-stack.git
+[submodule "libs/threadx"]
+	path = libs/threadx
+	url = ../threadx.git

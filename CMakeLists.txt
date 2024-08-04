@@ -21,7 +21,7 @@ file(STRINGS version.txt EVT_VERSION)
 
 project(EVT
     VERSION ${EVT_VERSION}
-    LANGUAGES CXX C
+    LANGUAGES CXX C ASM
 )
 
 add_library(${PROJECT_NAME} STATIC)
@@ -108,6 +108,13 @@ install(TARGETS canopen-stack EXPORT canopen-stack-config)
 install(EXPORT canopen-stack-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/canopen-stack)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC canopen-stack)
+
+if(USE_RTOS)
+    set(THREADX_ARCH "cortex_m4")
+    set(THREADX_TOOLCHAIN "gnu")
+    add_subdirectory(libs/threadx)
+    target_sources(${PROJECT_NAME} PRIVATE src/rtos/f4xx/tx_initialize_low_level.s)
+endif()
 
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
     add_subdirectory(libs/HALf3/)
