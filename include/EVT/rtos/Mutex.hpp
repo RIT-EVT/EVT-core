@@ -8,9 +8,8 @@ namespace core::rtos {
 template <typename T>
 class Mutex : Initializable {
 public:
-    bool init();
+    bool init(BytePool &pool);
 private:
-
 };
 
 } // namespace core::rtos

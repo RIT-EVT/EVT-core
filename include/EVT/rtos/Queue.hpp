@@ -8,7 +8,7 @@ namespace core::rtos {
 template <typename T>
 class Queue : Initializable {
 public:
-    bool init();
+    bool init(BytePool &pool);
 private:
 
 };
