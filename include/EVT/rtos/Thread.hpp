@@ -23,7 +23,7 @@ public:
      * Creates the threadx thread and starts it.
      * @return whether or not the thread was started successfully.
      */
-    bool init(BytePool &pool);
+    bool init(BytePool &pool) override;
 private:
     /**
      * The function this thread will be running.

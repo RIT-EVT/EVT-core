@@ -2,7 +2,7 @@
 #ifndef _EVT_RTOS_Initializeable_
 #define _EVT_RTOS_Initializeable_
 
-#include <EVT/rtos/BytePool.hpp>
+#include <EVT/rtos/BytePoolBase.hpp>
 
 namespace core::rtos {
 
@@ -14,7 +14,7 @@ public:
      * @param pool The byte pool that this initializable object will be stored in.
      * @return If the initialization succeeded.
      */
-    bool init(BytePool &pool);
+    virtual bool init(BytePool &pool) = 0;
 };
 
 } //namespace core::rtos

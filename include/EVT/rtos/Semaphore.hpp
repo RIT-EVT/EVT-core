@@ -8,7 +8,7 @@ namespace core::rtos {
 template <typename T>
 class Semaphore : Initializable {
 public:
-    bool init(BytePool &pool);
+    bool init(BytePool &pool) override;
 private:
 
 };
