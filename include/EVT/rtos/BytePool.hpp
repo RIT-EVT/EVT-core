@@ -2,12 +2,13 @@
 #ifndef _EVT_RTOS_BYTEPOOL_
 #define _EVT_RTOS_BYTEPOOL_
 
+#include <../../../libs/threadx/common/inc/tx_api.h>
+#include <../../../libs/threadx/ports/cortex_m4/gnu/inc/tx_port.h>
 #include <cstdint>
-#include <tx_api.h>
 
 namespace core::rtos {
 
-template <size_t SIZE>
+template <std::size_t SIZE>
 class BytePool {
 public:
     /**
@@ -22,7 +23,7 @@ public:
      * @param wait whether or not the calling thread should wait for enough memory to be available.
      * @return a pointer to the allocated memory.
      */
-    void* AllocateMemory(size_t amount, bool wait);
+    void* AllocateMemory(std::size_t amount, bool wait);
 
 private:
     UCHAR tx_byte_pool_buffer[SIZE];
