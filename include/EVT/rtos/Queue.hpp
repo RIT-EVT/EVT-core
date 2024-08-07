@@ -5,7 +5,6 @@
 
 namespace core::rtos {
 
-template <typename T>
 class Queue : Initializable {
 public:
     bool init(BytePool &pool) override;

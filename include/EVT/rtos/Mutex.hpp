@@ -5,7 +5,6 @@
 
 namespace core::rtos {
 
-template <typename T>
 class Mutex : Initializable {
 public:
     bool init(BytePool &pool) override;
