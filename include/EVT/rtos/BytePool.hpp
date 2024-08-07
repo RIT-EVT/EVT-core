@@ -18,11 +18,12 @@ public:
     /**
      * Allocates memory from the BytePool and returns a pointer to the start of it.
      *
-     * @param amount how much memory (in bytes) that is requested.
-     * @param wait If the calling thread should wait for the memory to be available.
+     * @param[in] amount how much memory (in bytes) that is requested.
+     * @param[in] waitOption How long (in ticks) the calling thread should wait for the memory to become available:
+     * 0 for no wait, and TX_WAIT_FOREVER for waiting forever.
      * @return a pointer to the allocated bytepool memory.
      */
-    virtual void* AllocateMemory(std::size_t amount, bool wait) = 0;
+    virtual void* AllocateMemory(std::size_t amount, uint32_t waitOption) = 0;
 };
 
 } //namespace core::rtos

@@ -3,14 +3,14 @@
 
 namespace core::rtos {
 
-Semaphore::Semaphore(ULONG initialCount, const char* name)
+Semaphore::Semaphore(uint32_t initialCount, const char* name)
     : txSemaphore(), initialCount(initialCount), name(name) {}
 
 UINT Semaphore::destroy() {
     return tx_semaphore_delete(&txSemaphore);
 }
 
-UINT Semaphore::get() {
+UINT Semaphore::get(uint32_t waitOption) {
     return tx_semaphore_get(&txSemaphore);
 }
 

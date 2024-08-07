@@ -1,3 +1,5 @@
+
+
 #ifndef EVT_RTOS_SEMAPHORE_
 #define EVT_RTOS_SEMAPHORE_
 
@@ -7,11 +9,16 @@ namespace core::rtos {
 
 class Semaphore : Initializable {
 public:
-    Semaphore(ULONG initialCount, const char* name);
+    /**
+     * Constructs a Semaphore object, but does not initialize it (must call init before using).
+     * @param initialCount What number the Semaphore will start at.
+     * @param name The name of the Semaphore.
+     */
+    Semaphore(uint32_t initialCount, const char* name);
 
     UINT destroy();
 
-    UINT get();
+    UINT get(uint32_t waitOption);
 
     UINT put();
 
@@ -24,8 +31,17 @@ public:
     bool init(BytePool &pool) override;
 
 private:
+    /**
+     * Threadx struct that actually holds all of the information for the Semaphore.
+     */
     TX_SEMAPHORE txSemaphore;
-    ULONG initialCount;
+    /**
+     * The count the Semaphore will be initialized with.
+     */
+    const ULONG initialCount;
+    /**
+     * The name of the Semaphore.
+     */
     const char* name;
 };
 

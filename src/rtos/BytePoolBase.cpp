@@ -11,9 +11,9 @@ BytePoolBase<SIZE>::BytePoolBase(const char* name) : tx_byte_pool_buffer(), name
 }
 
 template<size_t SIZE>
-void* BytePoolBase<SIZE>::AllocateMemory(size_t amount, bool wait) {
+void* BytePoolBase<SIZE>::AllocateMemory(size_t amount, uint32_t waitOption) {
     void* output;
-    tx_byte_allocate(&tx_app_byte_pool, &output, amount, (wait ? TX_WAIT_FOREVER : TX_NO_WAIT));
+    tx_byte_allocate(&tx_app_byte_pool, &output, amount, waitOption);
     return output;
 }
 

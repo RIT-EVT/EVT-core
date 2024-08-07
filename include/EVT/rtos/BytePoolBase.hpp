@@ -21,7 +21,7 @@ public:
      */
     BytePoolBase(const char* name);
 
-    void* AllocateMemory(std::size_t amount, bool wait) override;
+    void* AllocateMemory(std::size_t amount, uint32_t waitOption) override;
 
 private:
     /**
