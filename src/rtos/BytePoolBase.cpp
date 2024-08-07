@@ -4,8 +4,8 @@
 namespace core::rtos {
 
 template<size_t SIZE>
-BytePoolBase<SIZE>::BytePoolBase() : tx_byte_pool_buffer() {
-    if(tx_byte_pool_create(&tx_app_byte_pool, "NAME", tx_byte_pool_buffer, SIZE) != TX_SUCCESS) {
+BytePoolBase<SIZE>::BytePoolBase(const char* name) : tx_byte_pool_buffer(), name(name) {
+    if(tx_byte_pool_create(&tx_app_byte_pool, name, tx_byte_pool_buffer, SIZE) != TX_SUCCESS) {
         //TODO: THROW AN ERROR SOMEHOW
     }
 }

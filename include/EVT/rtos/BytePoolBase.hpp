@@ -19,7 +19,7 @@ public:
      * Constructs a BytePoolBase, including creating a buffer to hold the
      * information for the pool and the buffer for the pool itself.
      */
-    BytePoolBase();
+    BytePoolBase(const char* name);
 
     void* AllocateMemory(std::size_t amount, bool wait) override;
 
@@ -32,6 +32,7 @@ private:
      * The struct that the threadx application uses to hold information about the bytepool.
      */
     TX_BYTE_POOL tx_app_byte_pool;
+    const char* name;
 };
 
 } //namespace core::rtos
