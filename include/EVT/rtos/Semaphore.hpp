@@ -8,9 +8,23 @@ namespace core::rtos {
 class Semaphore : Initializable {
 public:
     Semaphore(ULONG initialCount, const char* name);
+
+    UINT destroy();
+
+    UINT get();
+
+    UINT put();
+
+    UINT putNotify();
+
+    UINT prioritize();
+
+    UINT ceilingPut();
+
     bool init(BytePool &pool) override;
+
 private:
-    TX_SEMAPHORE_STRUCT txSemaphoreStruct;
+    TX_SEMAPHORE txSemaphore;
     ULONG initialCount;
     const char* name;
 };
