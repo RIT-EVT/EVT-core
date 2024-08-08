@@ -3,8 +3,8 @@
 
 namespace core::rtos {
 
-Semaphore::Semaphore(uint32_t initialCount, const char* name)
-    : txSemaphore(), initialCount(initialCount), name(name) {}
+Semaphore::Semaphore(const char* name, uint32_t initialCount)
+    : txSemaphore(), name(name), initialCount(initialCount) {}
 
 UINT Semaphore::destroy() {
     return tx_semaphore_delete(&txSemaphore);
@@ -31,6 +31,7 @@ UINT Semaphore::ceilingPut() {
 }
 
 bool Semaphore::init(core::rtos::BytePool& pool) {
+    //TODO: instead of having the semaphore struct be within this class, should we place it in the BytePool?
     return tx_semaphore_create(&txSemaphore, name, initialCount) == TX_SUCCESS;
 }
 

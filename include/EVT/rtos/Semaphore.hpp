@@ -11,10 +11,11 @@ class Semaphore : Initializable {
 public:
     /**
      * Constructs a Semaphore object, but does not initialize it (must call init before using).
-     * @param initialCount What number the Semaphore will start at.
+     *
      * @param name The name of the Semaphore.
+     * @param initialCount What number the Semaphore will start at.
      */
-    Semaphore(uint32_t initialCount, const char* name);
+    Semaphore(const char* name, uint32_t initialCount);
 
     UINT destroy();
 
@@ -36,13 +37,13 @@ private:
      */
     TX_SEMAPHORE txSemaphore;
     /**
-     * The count the Semaphore will be initialized with.
-     */
-    const ULONG initialCount;
-    /**
      * The name of the Semaphore.
      */
     const char* name;
+    /**
+     * The count the Semaphore will be initialized with.
+     */
+    const ULONG initialCount;
 };
 
 } // namespace core::rtos
