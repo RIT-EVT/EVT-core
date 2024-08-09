@@ -12,8 +12,8 @@ public:
     /**
      * Constructs a Semaphore object, but does not initialize it (must call init before using).
      *
-     * @param name The name of the Semaphore.
-     * @param initialCount What number the Semaphore will start at.
+     * @param[in] name The name of the Semaphore.
+     * @param[in] initialCount What number the Semaphore will start at.
      */
     Semaphore(const char* name, uint32_t initialCount);
 
