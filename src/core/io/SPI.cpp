@@ -8,7 +8,7 @@
     if (CONCAT(status, __LINE__) != SPIStatus::OK)     \
     return CONCAT(status, __LINE__)
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 SPI::SPI(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : sckPin(sckPin),
                                                                                     mosiPin(mosiPin),
@@ -107,4 +107,4 @@ SPI::SPIStatus SPI::readReg(uint8_t device, uint8_t reg, uint8_t* bytes, uint8_t
     return transmitSuccess ? SPIStatus::OK : SPIStatus::ERROR;
 }
 
-}// namespace EVT::core::IO
+}// namespace core::IO

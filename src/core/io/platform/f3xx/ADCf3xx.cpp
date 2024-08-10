@@ -21,7 +21,7 @@ extern "C" void DMA1_Channel1_IRQHandler(void) {
     HAL_ADC_IRQHandler(adcHandle);
 }
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 // Init static member variables
 ADC_HandleTypeDef ADCf3xx::halADC = {0};
@@ -125,7 +125,7 @@ void ADCf3xx::initDMA() {
 
     HAL_DMA_Init(&halDMA);
 
-    HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, EVT::core::platform::ADC_INTERRUPT_PRIORITY, 0);
+    HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, core::platform::ADC_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 
     __HAL_LINKDMA(&halADC, DMA_Handle, halDMA);
@@ -204,4 +204,4 @@ void ADCf3xx::addChannel(uint8_t rank) {
     HAL_ADC_ConfigChannel(&halADC, &adcChannel);
 }
 
-}// namespace EVT::core::IO
+}// namespace core::IO

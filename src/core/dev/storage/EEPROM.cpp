@@ -5,4 +5,4 @@
  * methods for a hardware speedup.
  */
 
-namespace EVT::core::DEV {}
+namespace core::DEV {}

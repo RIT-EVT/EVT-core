@@ -14,7 +14,7 @@
     #define CAN_MESSAGE_QUEUE_SIZE 100
 #endif
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 /**
  * STMF3xx implementation of the CAN protocol. The STM32f3xx has an on
@@ -96,9 +96,9 @@ private:
     /** Instance of the HAL can interface */
     CAN_HandleTypeDef halCAN;
     /** Queue which holds received CAN messages */
-    EVT::core::types::FixedQueue<CAN_MESSAGE_QUEUE_SIZE, CANMessage> messageQueue;
+    core::types::FixedQueue<CAN_MESSAGE_QUEUE_SIZE, CANMessage> messageQueue;
 };
 
-}// namespace EVT::core::IO
+}// namespace core::IO
 
 #endif

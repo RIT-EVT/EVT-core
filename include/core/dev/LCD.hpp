@@ -23,7 +23,7 @@
 #define MAX_SECTION_HEIGHT 8
 #define MAX_SECTION_PER_ROW 3
 
-namespace EVT::core::DEV {
+namespace core::DEV {
 /**
 * This class represents the structure to command a GLCD with
 * a ST7565 controller.
@@ -46,7 +46,7 @@ public:
      * @param[in] spi SPI class for communication
      * @param[in] bitMap bitmap to display to the LCD
      */
-    LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi);
+    LCD(core::IO::GPIO& regSelect, core::IO::GPIO& reset, core::IO::SPI& spi);
 
     /**
       * Constructor for the LCD class
@@ -57,7 +57,7 @@ public:
       * @param[in] numberOfSections number of sections that the display will show
       * @param[in] sectionsPerRow number of sections per row to display
       */
-    LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi, uint8_t numberOfSections, uint8_t sectionsPerRow);
+    LCD(core::IO::GPIO& regSelect, core::IO::GPIO& reset, core::IO::SPI& spi, uint8_t numberOfSections, uint8_t sectionsPerRow);
 
     /**
      * Writes data to the LCD
@@ -178,16 +178,16 @@ private:
     uint8_t sectionsPerRow;
 
     /** Register select pin for the LCD */
-    EVT::core::IO::GPIO& regSelect;
+    core::IO::GPIO& regSelect;
 
     /** Reset pin for the LCD */
-    EVT::core::IO::GPIO& reset;
+    core::IO::GPIO& reset;
 
     /** Chip select pin for the LCD */
-    //EVT::core::IO::GPIO& chipSelect; // TODO: Need to figure out purpose of this
+    //core::IO::GPIO& chipSelect; // TODO: Need to figure out purpose of this
 
     /** SPI port for the LCD controller */
-    EVT::core::IO::SPI& spi;
+    core::IO::SPI& spi;
 
     /** The default section titles for the display */
     char* sectionTitles[MAX_SECTIONS] = {
@@ -203,6 +203,6 @@ private:
     };
 };
 
-}// namespace EVT::core::DEV
+}// namespace core::DEV
 
 #endif

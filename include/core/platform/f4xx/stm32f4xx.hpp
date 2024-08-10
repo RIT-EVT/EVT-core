@@ -1,7 +1,7 @@
 #ifndef _EVT_STM32F4xx_
 #define _EVT_STM32F4xx_
 
-namespace EVT::core::platform {
+namespace core::platform {
 
 // stm32f4xx_init() sets clock speed to 8MHz
 constexpr uint32_t CLK_SPEED = 8000000;
@@ -20,5 +20,5 @@ constexpr uint32_t GPIO_INTERRUPT_PRIORITY = 10;
 void stm32f4xx_init();
 void Error_Handler(void);
 
-}// namespace EVT::core::platform
+}// namespace core::platform
 #endif

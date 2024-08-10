@@ -14,9 +14,9 @@
 
 #include "TPDOCanNode.hpp"
 
-namespace IO = EVT::core::IO;
-namespace DEV = EVT::core::DEV;
-namespace time = EVT::core::time;
+namespace IO = core::IO;
+namespace DEV = core::DEV;
+namespace time = core::time;
 
 ///////////////////////////////////////////////////////////////////////////////
 // EVT-core CAN callback and CAN setup. This will include logic to set
@@ -38,7 +38,7 @@ IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
 // create a can interrupt handler
 void canInterrupt(IO::CANMessage& message, void* priv) {
-    auto* queue = (EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*) priv;
+    auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*) priv;
 
     //print out raw received data
     uart.printf("Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
@@ -66,7 +66,7 @@ extern "C" void COPdoTransmit(CO_IF_FRM* frm) {
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     //create the TPDO node
     TPDOCanNode testCanNode;
@@ -81,7 +81,7 @@ int main() {
 
     // Will store CANopen messages that will be populated by the EVT-core CAN
     // interrupt
-    EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage> canOpenQueue;
+    core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage> canOpenQueue;
 
     // Initialize CAN, add an IRQ which will add messages to the queue above
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();

@@ -34,7 +34,7 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim) {
         return;// Should never reach, but if an invalid peripheral is passed in then simply return
     }
 
-    HAL_NVIC_SetPriority(irqNum, EVT::core::platform::TIMER_INTERRUPT_PRIORITY, 0);
+    HAL_NVIC_SetPriority(irqNum, core::platform::TIMER_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(irqNum);
 }
 
@@ -108,7 +108,7 @@ uint8_t getTimerInterruptIndex(TIM_TypeDef* peripheral) {
     return interruptIdx;
 }
 
-namespace EVT::core::DEV {
+namespace core::DEV {
 
 Timerf3xx::Timerf3xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
     initTimer(timerPeripheral, clockPeriod);
@@ -120,7 +120,7 @@ void Timerf3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
     auto& htim = halTimers[getTimerInterruptIndex(timerPeripheral)];
 
     htim.Instance = timerPeripheral;
-    uint32_t prescaler = EVT::core::platform::CLK_SPEED / 1000;
+    uint32_t prescaler = core::platform::CLK_SPEED / 1000;
     htim.Init.Prescaler = prescaler;// Sets f_CK_PSC to 1000 Hz
     // Allows period increments of 1 ms with max of 2^(32) ms.
     htim.Init.CounterMode = TIM_COUNTERMODE_UP;
@@ -168,4 +168,4 @@ void Timerf3xx::setPeriod(uint32_t clockPeriod) {
     stopTimer();
     initTimer(this->halTimer->Instance, clockPeriod);
 }
-}// namespace EVT::core::DEV
+}// namespace core::DEV

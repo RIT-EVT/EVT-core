@@ -1,6 +1,6 @@
 #include <core/dev/Encoder.hpp>
 
-namespace EVT::core::DEV {
+namespace core::DEV {
 
 Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, uint32_t range, uint32_t initialPosition, bool rollOver)
     : a(a), b(b), range(range), position(initialPosition), rollOver(rollOver) {
@@ -148,4 +148,4 @@ bool Encoder::changePosition(int64_t change) {
     return hitCap;
 }
 
-}// namespace EVT::core::DEV
+}// namespace core::DEV

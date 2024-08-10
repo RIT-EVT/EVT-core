@@ -7,7 +7,7 @@
 #include <core/io/PWM.hpp>
 #include <core/io/pin.hpp>
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 class PWMf3xx : public PWM {
 public:
@@ -35,6 +35,6 @@ private:
     TIM_OC_InitTypeDef halChannel;
 };
 
-}// namespace EVT::core::IO
+}// namespace core::IO
 
 #endif

@@ -1,6 +1,6 @@
 #include <core/io/GPIO.hpp>
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 // Setup instance variables
 GPIO::GPIO(Pin pin) {
@@ -13,4 +13,4 @@ GPIO::GPIO(Pin pin, Direction direction, Pull pull) {
     this->pull = pull;
 }
 
-}// namespace EVT::core::IO
+}// namespace core::IO

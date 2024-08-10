@@ -58,7 +58,7 @@
     #include <core/io/platform/f4xx/UARTf4xx.hpp>
 #endif
 
-namespace EVT::core::platform {
+namespace core::platform {
 
 /**
 * Initialize the low level components of the system. This is highly
@@ -70,13 +70,13 @@ void init() {
     stm32f3xx_init();
 #endif
 #ifdef STM32F4xx
-    EVT::core::platform::stm32f4xx_init();
+    core::platform::stm32f4xx_init();
 #endif
 }
 
-}// namespace EVT::core::platform
+}// namespace core::platform
 
-namespace EVT::core::DEV {
+namespace core::DEV {
 
 /**
 * Get an instance of an IWDG
@@ -128,9 +128,9 @@ Timer& getTimer(uint32_t clockPeriod) {
 }
 #endif
 
-}// namespace EVT::core::DEV
+}// namespace core::DEV
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 /**
 * Get an instance of an ADC channel
@@ -293,6 +293,6 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 }
 #endif
 
-}// namespace EVT::core::IO
+}// namespace core::IO
 
 #endif

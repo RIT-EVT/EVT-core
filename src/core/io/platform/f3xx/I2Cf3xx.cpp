@@ -5,9 +5,9 @@
 
 #include <core/utils/log.hpp>
 
-namespace log = EVT::core::log;
+namespace log = core::log;
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 /**
  * Get the I2C ID associated that is associated with the given pin
@@ -221,4 +221,4 @@ I2C::I2CStatus I2Cf3xx::halToI2CStatus(HAL_StatusTypeDef halStatus) {
     }
 }
 
-}// namespace EVT::core::IO
+}// namespace core::IO

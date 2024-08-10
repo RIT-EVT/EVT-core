@@ -10,8 +10,8 @@
 #include <core/manager.hpp>
 #include <core/utils/types/FixedQueue.hpp>
 
-namespace IO = EVT::core::IO;
-namespace types = EVT::core::types;
+namespace IO = core::IO;
+namespace types = core::types;
 
 /**
  * Test class for showing off having a custom class in the FixedQueue.
@@ -44,7 +44,7 @@ public:
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);

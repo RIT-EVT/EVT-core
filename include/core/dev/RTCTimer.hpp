@@ -5,9 +5,9 @@
 #include <core/dev/Timer.hpp>
 #include <core/utils/time.hpp>
 
-namespace time = EVT::core::time;
+namespace time = core::time;
 
-namespace EVT::core::DEV {
+namespace core::DEV {
 
 class RTCTimer : public Timer {
 public:
@@ -76,6 +76,6 @@ private:
     bool bTimerStopped;
 };
 
-}// namespace EVT::core::DEV
+}// namespace core::DEV
 
 #endif//EVT_TIMER_H

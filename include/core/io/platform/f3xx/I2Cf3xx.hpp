@@ -11,7 +11,7 @@
     #define EVT_I2C_TIMEOUT 100
 #endif
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 class I2Cf3xx : public I2C {
 public:
@@ -64,6 +64,6 @@ private:
     static I2C::I2CStatus halToI2CStatus(HAL_StatusTypeDef halStatus);
 };
 
-}// namespace EVT::core::IO
+}// namespace core::IO
 
 #endif

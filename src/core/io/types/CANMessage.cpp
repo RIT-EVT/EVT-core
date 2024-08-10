@@ -3,7 +3,7 @@
 
 #include <core/io/types/CANMessage.hpp>
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 CANMessage::CANMessage(uint32_t id, uint8_t dataLength, uint8_t* payload, bool isExtended) {
     this->id = id;
@@ -60,4 +60,4 @@ bool CANMessage::isCANExtended() {
     return this->isExtended;
 }
 
-}// namespace EVT::core::IO
+}// namespace core::IO

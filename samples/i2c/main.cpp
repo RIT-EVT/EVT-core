@@ -12,8 +12,8 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = EVT::core::IO;
-namespace time = EVT::core::time;
+namespace IO = core::IO;
+namespace time = core::time;
 
 /** The address of the arduino listening for I2C requests */
 constexpr uint8_t I2C_SLAVE_ADDR = 0x04;
@@ -24,7 +24,7 @@ constexpr uint8_t K_REGISTER = 0x01;
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     IO::I2C& i2c = IO::getI2C<IO::Pin::PB_8, IO::Pin::PB_9>();
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);

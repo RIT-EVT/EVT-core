@@ -12,9 +12,9 @@
 #include <core/manager.hpp>
 
 ///Namespaces
-namespace IO = EVT::core::IO;
-namespace DEV = EVT::core::DEV;
-namespace time = EVT::core::time;
+namespace IO = core::IO;
+namespace DEV = core::DEV;
+namespace time = core::time;
 
 ///Defines
 #define DEMO_STACK_SIZE 1024
@@ -91,7 +91,7 @@ void tx_application_define(void* first_unused_memory) {
 }
 
 int main() {
-    EVT::core::platform::init();
+    core::platform::init();
 
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 

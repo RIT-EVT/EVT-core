@@ -6,7 +6,7 @@
 #include <iostream>
 
 using namespace std;
-namespace EVT::core::platform {
+namespace core::platform {
 
 void stm32f4xx_init() {
     HAL_Init();
@@ -69,4 +69,4 @@ void Error_Handler(void) {
     /* USER CODE END Error_Handler_Debug */
 }
 
-}// namespace EVT::core::platform
+}// namespace core::platform

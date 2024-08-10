@@ -10,13 +10,13 @@
 #include <core/manager.hpp>
 #include <core/utils/log.hpp>
 
-namespace IO = EVT::core::IO;
-namespace log = EVT::core::log;
-namespace DEV = EVT::core::DEV;
+namespace IO = core::IO;
+namespace log = core::log;
+namespace DEV = core::DEV;
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 

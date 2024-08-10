@@ -8,7 +8,7 @@
     #define EVT_UART_TIMEOUT 100
 #endif
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 // Forward declarations:
 // The different pins are hardware specific. Forward declarations to allow
@@ -191,6 +191,6 @@ protected:
     uint32_t baudrate;
 };
 
-}// namespace EVT::core::IO
+}// namespace core::IO
 
 #endif

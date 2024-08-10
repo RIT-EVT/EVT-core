@@ -1,7 +1,7 @@
 #include <core/io/platform/f3xx/GPIOf3xx.hpp>
 #include <core/io/platform/f3xx/PWMf3xx.hpp>
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 /**
  * Get the TIM instance and channel associated with a pin. This information
@@ -525,4 +525,4 @@ uint32_t PWMf3xx::getPeriod() {
     return period;
 }
 
-}// namespace EVT::core::IO
+}// namespace core::IO

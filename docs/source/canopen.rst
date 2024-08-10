@@ -378,9 +378,9 @@ news is that all of it is essentially boiler plate code.
 
    #include "RPDOCanNode.hpp"
 
-   namespace IO = EVT::core::IO;
-   namespace DEV = EVT::core::DEV;
-   namespace time = EVT::core::time;
+   namespace IO = core::IO;
+   namespace DEV = core::DEV;
+   namespace time = core::time;
 
    ///////////////////////////////////////////////////////////////////////////////
    // EVT-core CAN callback and CAN setup. This will include logic to set
@@ -398,8 +398,8 @@ news is that all of it is essentially boiler plate code.
     * @param message[in] The passed in CAN message that was read.
     */
    void canInterrupt(IO::CANMessage& message, void* priv) {
-       EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* queue =
-           (EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*) priv;
+       core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* queue =
+           (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*) priv;
        if (queue != nullptr)
            queue->append(message);
    }
@@ -439,7 +439,7 @@ news is that all of it is essentially boiler plate code.
 
        // Will store CANopen messages that will be populated by the EVT-core CAN
        // interrupt
-       EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage> canOpenQueue;
+       core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage> canOpenQueue;
 
        // Intialize CAN, add an IRQ which will add messages to the queue above
        IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();

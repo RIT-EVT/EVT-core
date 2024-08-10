@@ -5,7 +5,7 @@
 
 #include <core/io/ADC.hpp>
 
-namespace EVT::core::DEV {
+namespace core::DEV {
 
 /**
  * Handles representing any device that can produce temperature reading based
@@ -21,7 +21,7 @@ public:
      * @param[in] adc The ADC to use to convert ADC values into temperature
      * @param[in] conversion The conversion function
      */
-    Thermistor(EVT::core::IO::ADC& adc, uint32_t (*conversion)(uint32_t));
+    Thermistor(core::IO::ADC& adc, uint32_t (*conversion)(uint32_t));
 
     /**
      * Return the temperature in milli celcius of the thermistor
@@ -39,11 +39,11 @@ public:
 
 private:
     /// The ADC interface to read from
-    EVT::core::IO::ADC& adc;
+    core::IO::ADC& adc;
     /// Funtion that converts raw ADC values into milli Celcius
     uint32_t (*conversion)(uint32_t);
 };
 
-}// namespace EVT::core::DEV
+}// namespace core::DEV
 
 #endif

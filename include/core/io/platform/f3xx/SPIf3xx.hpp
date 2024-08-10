@@ -9,7 +9,7 @@
 
 #define SPI_MAX_BAUD 4000000
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 class SPIf3xx : public SPI {
 public:
@@ -89,6 +89,6 @@ private:
     SPIStatus halToSPIStatus(HAL_StatusTypeDef halStatus);
 };
 
-}// namespace EVT::core::IO
+}// namespace core::IO
 
 #endif

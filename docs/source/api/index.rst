@@ -17,31 +17,31 @@ is not strictly a rule. An LED is a simplistic example of a device.
 IWDG
 ---
 
-.. doxygenclass:: EVT::core::DEV::IWDG
+.. doxygenclass:: core::DEV::IWDG
    :members:
 
 LED
 ---
 
-.. doxygenclass:: EVT::core::DEV::LED
+.. doxygenclass:: core::DEV::LED
    :members:
 
 RTC
 ---
 
-.. doxygenclass:: EVT::core::DEV::RTC
+.. doxygenclass:: core::DEV::RTC
    :members:
 
 Timer
 -----
 
-.. doxygenclass:: EVT::core::DEV::Timer
+.. doxygenclass:: core::DEV::Timer
    :members:
 
 EEPROM
 ------
 
-.. doxygenclass:: EVT::core::DEV::EEPROM
+.. doxygenclass:: core::DEV::EEPROM
    :members:
 
 IO
@@ -59,43 +59,43 @@ supported by the platform's implementation of the IO interface.
 ADC
 ---
 
-.. doxygenclass:: EVT::core::IO::ADC
+.. doxygenclass:: core::IO::ADC
    :members:
 
 CAN
 ---
 
-.. doxygenclass:: EVT::core::IO::CAN
+.. doxygenclass:: core::IO::CAN
    :members:
 
 GPIO
 ----
 
-.. doxygenclass:: EVT::core::IO::GPIO
+.. doxygenclass:: core::IO::GPIO
    :members:
 
 I2C
 ---
 
-.. doxygenclass:: EVT::core::IO::I2C
+.. doxygenclass:: core::IO::I2C
    :members:
 
 PWM
 ---
 
-.. doxygenclass:: EVT::core::IO::PWM
+.. doxygenclass:: core::IO::PWM
    :members:
 
 SPI
 ---
 
-.. doxygenclass:: EVT::core::IO::SPI
+.. doxygenclass:: core::IO::SPI
    :members:
 
 UART
 ----
 
-.. doxygenclass:: EVT::core::IO::UART
+.. doxygenclass:: core::IO::UART
    :members:
 
 Types
@@ -104,7 +104,7 @@ Types
 CANMessage
 ----------
 
-.. doxygenclass:: EVT::core::IO::CANMessage
+.. doxygenclass:: core::IO::CANMessage
    :members:
 
 Platform Implementations

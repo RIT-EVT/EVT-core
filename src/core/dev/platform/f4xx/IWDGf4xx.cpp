@@ -1,6 +1,6 @@
 #include <core/dev/platform/f4xx/IWDGf4xx.hpp>
 
-namespace EVT::core::DEV {
+namespace core::DEV {
 
 // According to a time formula in the documentation with the set prescaler,
 // the ratio of counter ticks to milliseconds should be about 1:8. In testing,
@@ -24,4 +24,4 @@ void IWDGf4xx::refresh() {
     }
 }
 
-}// namespace EVT::core::DEV
+}// namespace core::DEV

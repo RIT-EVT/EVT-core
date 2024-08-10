@@ -9,8 +9,8 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = EVT::core::IO;
-namespace time = EVT::core::time;
+namespace IO = core::IO;
+namespace time = core::time;
 
 constexpr uint32_t SPI_SPEED = SPI_SPEED_4MHZ;// 4MHz
 
@@ -29,7 +29,7 @@ IO::GPIO* devices[deviceCount];
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     devices[0] = &IO::getGPIO<IO::Pin::SPI_CS>(IO::GPIO::Direction::OUTPUT);
     devices[0]->writePin(IO::GPIO::State::HIGH);

@@ -6,8 +6,8 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = EVT::core::IO;
-namespace DEV = EVT::core::DEV;
+namespace IO = core::IO;
+namespace DEV = core::DEV;
 
 IO::GPIO* ledGPIO;
 IO::GPIO* interruptGPIO2Hz;
@@ -35,7 +35,7 @@ void timer16IRQHandler(void* htim) {
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     // Setup GPIO
     ledGPIO = &IO::getGPIO<IO::Pin::LED>();
@@ -53,10 +53,10 @@ int main() {
     timer16.startTimer(timer16IRQHandler);
 
     while (1) {
-        EVT::core::time::wait(500);
+        core::time::wait(500);
         timer15.stopTimer();
         timer16.reloadTimer();
-        EVT::core::time::wait(500);
+        core::time::wait(500);
         timer15.startTimer();
     }
 }

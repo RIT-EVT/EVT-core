@@ -5,7 +5,7 @@
 #include <core/io/UART.hpp>
 #include <cstdint>
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 class UARTf4xx : public UART {
 public:
@@ -51,5 +51,5 @@ private:
     /// HAL representation of the UART
     UART_HandleTypeDef halUART;
 };
-}// namespace EVT::core::IO
+}// namespace core::IO
 #endif

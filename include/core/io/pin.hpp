@@ -6,7 +6,7 @@
 #ifndef _EVT_PIN_
 #define _EVT_PIN_
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 /**
  * Pin mapping information. These values are generated via a combination of the GPIO bank that
@@ -140,5 +140,5 @@ enum class Pin {
     UART_RX = PA_3,
 
 };
-};// namespace EVT::core::IO
+};// namespace core::IO
 #endif

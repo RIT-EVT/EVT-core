@@ -6,12 +6,12 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = EVT::core::IO;
-namespace DEV = EVT::core::DEV;
-namespace time = EVT::core::time;
+namespace IO = core::IO;
+namespace DEV = core::DEV;
+namespace time = core::time;
 
 int main() {
-    EVT::core::platform::init();
+    core::platform::init();
 
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 

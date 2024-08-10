@@ -9,8 +9,8 @@
 #include <HALf3/stm32f3xx_hal_rcc.h>
 #include <core/platform/f3xx/stm32f3xx.hpp>
 
-void (*INTERRUPT_HANDLERS[16])(EVT::core::IO::GPIO* pin, void* priv) = {nullptr};
-EVT::core::IO::GPIO* INTERRUPT_GPIOS[16] = {nullptr};
+void (*INTERRUPT_HANDLERS[16])(core::IO::GPIO* pin, void* priv) = {nullptr};
+core::IO::GPIO* INTERRUPT_GPIOS[16] = {nullptr};
 void* INTERRUPT_ARGS[16] = {nullptr};
 
 extern "C" void EXTI0_IRQHandler(void) {
@@ -58,7 +58,7 @@ extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     }
 }
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 GPIOf3xx::GPIOf3xx(Pin pin, GPIO::Direction direction, Pull pull)
     : GPIO(pin, direction, pull) {
@@ -160,7 +160,7 @@ void GPIOf3xx::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin, void*
         return;// Shouldn't get here
     }
 
-    HAL_NVIC_SetPriority(irqNum, EVT::core::platform::GPIO_INTERRUPT_PRIORITY, 0);
+    HAL_NVIC_SetPriority(irqNum, core::platform::GPIO_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(irqNum);
 }
 
@@ -213,4 +213,4 @@ void GPIOf3xx::gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins,
         }
     }
 }
-}// namespace EVT::core::IO
+}// namespace core::IO

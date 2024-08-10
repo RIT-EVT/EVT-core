@@ -1,6 +1,6 @@
 #include <core/dev/storage/M24C32.hpp>
 
-namespace EVT::core::DEV {
+namespace core::DEV {
 
 M24C32::M24C32(uint8_t i2cSlaveAddress, IO::I2C& i2c) : i2cSlaveAddress(i2cSlaveAddress), i2c(i2c) {}
 
@@ -101,4 +101,4 @@ void M24C32::writeWords(uint8_t address, uint32_t* dataArr, uint8_t numWords) {
     auto* tempDataArr = reinterpret_cast<uint8_t*>(dataArr);
     writeBytes(address, tempDataArr, numWords * 4);
 }
-}// namespace EVT::core::DEV
+}// namespace core::DEV

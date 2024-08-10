@@ -4,7 +4,7 @@
 
 #include <core/platform/f3xx/stm32f3xx.hpp>
 
-namespace EVT::core::platform {
+namespace core::platform {
 
 void stm32f3xx_init() {
     HAL_Init();
@@ -46,4 +46,4 @@ void stm32f3xx_init() {
     SysTick_Handler();
 }
 
-}// namespace EVT::core::platform
+}// namespace core::platform

@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <cstring>
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 UART::UART(Pin txPin, Pin rxPin, uint32_t baudrate) {
     this->txPin = txPin;
@@ -37,4 +37,4 @@ char* UART::gets(char* buf, size_t size) {
     return buf;
 }
 
-}// namespace EVT::core::IO
+}// namespace core::IO

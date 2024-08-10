@@ -1,7 +1,7 @@
 #include <core/dev/button.hpp>
 #include <core/utils/time.hpp>
 
-namespace EVT::core::DEV {
+namespace core::DEV {
 Button::Button(IO::GPIO& gpio, IO::GPIO::State pressedState) : gpio(gpio), pressedState(pressedState) {
     this->timeSinceLastPress = 0;
 }
@@ -21,4 +21,4 @@ bool Button::debounce(uint32_t debounceTime) {
     return false;
 }
 
-}// namespace EVT::core::DEV
+}// namespace core::DEV

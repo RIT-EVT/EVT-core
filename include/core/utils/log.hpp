@@ -5,9 +5,9 @@
 #include <core/io/UART.hpp>
 #include <cstdint>
 
-namespace dev = EVT::core::DEV;
+namespace dev = core::DEV;
 
-namespace EVT::core::log {
+namespace core::log {
 /** To enable the logger, compile with "cmake -D EVT_CORE_LOG_ENABLE" */
 class Logger {
 public:
@@ -65,6 +65,6 @@ private:
 // creating a new one each time this header is included
 /** Global Logger instance */
 extern Logger LOGGER;
-}// namespace EVT::core::log
+}// namespace core::log
 
 #endif// INCLUDE_EVT_UTILS_LOG_HPP_

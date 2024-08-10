@@ -5,9 +5,9 @@
 #include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 
-namespace time = EVT::core::time;
+namespace time = core::time;
 
-namespace EVT::core::DEV {
+namespace core::DEV {
 
 /**
  * This class represents a CTS Series 288 Rotary encoder with a 2-bit Binary resolution.
@@ -108,7 +108,7 @@ private:
      */
     void bInterruptHandler();
 
-};// namespace EVT::core::DEV
-}// namespace EVT::core::DEV
+};// namespace core::DEV
+}// namespace core::DEV
 
 #endif

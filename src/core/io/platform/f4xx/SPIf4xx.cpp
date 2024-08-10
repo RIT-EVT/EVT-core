@@ -3,9 +3,9 @@
 #include <core/io/platform/f4xx/SPIf4xx.hpp>
 #include <core/utils/log.hpp>
 
-namespace log = EVT::core::log;
+namespace log = core::log;
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 void SPIf4xx::togglePin(GPIO* pin) {
     switch (pin->readPin()) {
@@ -297,4 +297,4 @@ SPI::SPIStatus SPIf4xx::halToSPIStatus(HAL_StatusTypeDef halStatus) {
     }
 }
 
-}// namespace EVT::core::IO
+}// namespace core::IO

@@ -7,11 +7,11 @@
 #include <core/io/pin.hpp>
 #include <core/manager.hpp>
 
-namespace IO = EVT::core::IO;
+namespace IO = core::IO;
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);

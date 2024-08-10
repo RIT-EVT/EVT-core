@@ -4,13 +4,13 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace DEV = EVT::core::DEV;
-namespace IO = EVT::core::IO;
-namespace time = EVT::core::time;
+namespace DEV = core::DEV;
+namespace IO = core::IO;
+namespace time = core::time;
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);

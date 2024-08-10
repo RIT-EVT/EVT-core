@@ -11,9 +11,9 @@
 #include <core/io/platform/f3xx/GPIOf3xx.hpp>
 #include <core/utils/log.hpp>
 
-namespace log = EVT::core::log;
+namespace log = core::log;
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 UARTf3xx::UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped)
     : UART(txPin, rxPin, baudrate),
@@ -175,4 +175,4 @@ void UARTf3xx::readBytes(uint8_t* bytes, size_t size) {
     HAL_UART_Receive(&halUART, bytes, size, EVT_UART_TIMEOUT);
 }
 
-}// namespace EVT::core::IO
+}// namespace core::IO

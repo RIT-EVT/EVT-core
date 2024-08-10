@@ -2,9 +2,9 @@
 
 #include <HALf3/stm32f3xx_hal_rtc.h>
 
-namespace time = EVT::core::time;
+namespace time = core::time;
 
-namespace EVT::core::DEV {
+namespace core::DEV {
 constexpr int asynchPrediv = 127;
 constexpr int synchPrediv = 255;
 
@@ -42,7 +42,7 @@ RTCf3xx::RTCf3xx() : halRTC{
     HAL_RTC_Init(&halRTC);
 }
 
-void RTCf3xx::getTime(EVT::core::time::TimeStamp& time) {
+void RTCf3xx::getTime(core::time::TimeStamp& time) {
     RTC_DateTypeDef rtcDate;
     RTC_TimeTypeDef rtcTime;
 
@@ -89,7 +89,7 @@ uint32_t RTCf3xx::getTime() {
     return time;
 }
 
-void RTCf3xx::setTime(EVT::core::time::TimeStamp& time) {
+void RTCf3xx::setTime(core::time::TimeStamp& time) {
     RTC_DateTypeDef rtcDate;
     RTC_TimeTypeDef rtcTime;
 
@@ -110,4 +110,4 @@ void RTCf3xx::setTime(EVT::core::time::TimeStamp& time) {
     HAL_RTC_SetTime(&halRTC, &rtcTime, RTC_FORMAT_BIN);
 }
 
-}// namespace EVT::core::DEV
+}// namespace core::DEV

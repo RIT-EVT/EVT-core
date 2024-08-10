@@ -4,7 +4,7 @@
 #include <core/dev/storage/EEPROM.hpp>
 #include <core/io/I2C.hpp>
 
-namespace EVT::core::DEV {
+namespace core::DEV {
 
 class M24C32 : public EEPROM {
 public:
@@ -56,6 +56,6 @@ private:
     /** I2C instance to be used for I2C communication */
     IO::I2C& i2c;
 };
-}// namespace EVT::core::DEV
+}// namespace core::DEV
 
 #endif//EVT_M24C32

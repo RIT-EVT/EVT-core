@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-namespace EVT::core::platform {
+namespace core::platform {
 
 // stm32f302x8_init() sets clock speed to 8 MHz
 constexpr uint32_t CLK_SPEED = 8000000;
@@ -21,5 +21,5 @@ constexpr uint32_t GPIO_INTERRUPT_PRIORITY = 10;
  */
 void stm32f3xx_init();
 
-}// namespace EVT::core::platform
+}// namespace core::platform
 #endif

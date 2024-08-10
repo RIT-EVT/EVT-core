@@ -1,6 +1,6 @@
 #include <core/io/I2C.hpp>
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 I2C::I2C(Pin sclPin, Pin sdaPin) : sclPin(sclPin), sdaPin(sdaPin) {}
 
@@ -56,4 +56,4 @@ I2C::I2CStatus I2C::readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
     return I2C::I2CStatus::OK;
 }
 
-}// namespace EVT::core::IO
+}// namespace core::IO

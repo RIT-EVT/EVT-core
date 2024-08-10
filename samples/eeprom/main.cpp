@@ -9,8 +9,8 @@
 #include <core/dev/storage/M24C32.hpp>
 #include <core/manager.hpp>
 
-namespace IO = EVT::core::IO;
-namespace DEV = EVT::core::DEV;
+namespace IO = core::IO;
+namespace DEV = core::DEV;
 
 /**
  * The address of the EEPROM listening for reads/writes
@@ -48,7 +48,7 @@ uint32_t WORD_ARR_DATA[WORD_ARR_LENGTH] = {0x01234567, 0x89abcdef};
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     IO::I2C& i2c = IO::getI2C<IO::Pin::PB_8, IO::Pin::PB_9>();
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);

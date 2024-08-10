@@ -2,9 +2,9 @@
 #include <cstdarg>
 #include <cstdio>
 
-namespace IO = EVT::core::IO;
+namespace IO = core::IO;
 
-namespace EVT::core::log {
+namespace core::log {
 /**
  * Set the UART to be used for logging
  *
@@ -92,4 +92,4 @@ void Logger::log(LogLevel level, const char* format, ...) {
 }
 
 Logger LOGGER;
-}// namespace EVT::core::log
+}// namespace core::log

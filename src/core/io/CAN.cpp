@@ -2,7 +2,7 @@
 
 #include <core/io/CAN.hpp>
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 CAN::CAN(Pin txPin, Pin rxPin, bool loopbackEnabled) : txPin(txPin),
                                                        rxPin(rxPin),
@@ -16,4 +16,4 @@ void CAN::addIRQHandler(void (*handler)(CANMessage&, void*), void* priv) {
     this->priv = priv;
 }
 
-}// namespace EVT::core::IO
+}// namespace core::IO

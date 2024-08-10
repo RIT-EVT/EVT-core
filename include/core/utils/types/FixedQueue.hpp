@@ -18,7 +18,7 @@
 
 #include <stdint.h>
 
-namespace EVT::core::types {
+namespace core::types {
 
 template<size_t maxSize, class Element>
 class FixedQueue {
@@ -147,6 +147,6 @@ private:
     bool withOverwrite;
 };
 
-}// namespace EVT::core::types
+}// namespace core::types
 
 #endif

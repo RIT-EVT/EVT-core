@@ -9,13 +9,13 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = EVT::core::IO;
-namespace DEV = EVT::core::DEV;
-namespace time = EVT::core::time;
+namespace IO = core::IO;
+namespace DEV = core::DEV;
+namespace time = core::time;
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     // Setup the GPIO pin.
     // Notice that the pin used is called "LED". Each platform has a dedicated

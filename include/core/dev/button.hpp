@@ -4,7 +4,7 @@
 #include <core/io/GPIO.hpp>
 #include <stdint.h>
 
-namespace EVT::core::DEV {
+namespace core::DEV {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
@@ -44,6 +44,6 @@ private:
     /** The GPIO state that means the button is being pressed */
     IO::GPIO::State pressedState;
 
-};// namespace EVT::core::DEV
-}// namespace EVT::core::DEV
+};// namespace core::DEV
+}// namespace core::DEV
 #endif

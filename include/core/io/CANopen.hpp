@@ -20,7 +20,7 @@
     #define CANOPEN_QUEUE_SIZE 150
 #endif
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 /**
  * Get an instance of the CAN driver that can be used with the CANopen
@@ -69,7 +69,7 @@ void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver);
  * @param timerDriver[in,out] the timer driver.
  * @param canDriver[in,out] the general CAN driver.
  */
-void initializeCANopenDriver(types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* canOpenQueue, IO::CAN* can, EVT::core::DEV::Timer* timer, CO_IF_DRV* canStackDriver, CO_IF_NVM_DRV* nvmDriver, CO_IF_TIMER_DRV* timerDriver, CO_IF_CAN_DRV* canDriver);
+void initializeCANopenDriver(types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* canOpenQueue, IO::CAN* can, core::DEV::Timer* timer, CO_IF_DRV* canStackDriver, CO_IF_NVM_DRV* nvmDriver, CO_IF_TIMER_DRV* timerDriver, CO_IF_CAN_DRV* canDriver);
 
 /**
  * This function initializes a CO_NODE by taking in the CANDevice,
@@ -92,6 +92,6 @@ void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* ca
  */
 void processCANopenNode(CO_NODE* canNode);
 
-}// namespace EVT::core::IO
+}// namespace core::IO
 
 #endif

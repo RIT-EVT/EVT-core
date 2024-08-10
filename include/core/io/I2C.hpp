@@ -12,7 +12,7 @@
     }                                       \
     void(0)
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
@@ -204,6 +204,6 @@ private:
     Pin sdaPin;
 };
 
-}// namespace EVT::core::IO
+}// namespace core::IO
 
 #endif

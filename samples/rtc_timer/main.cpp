@@ -3,11 +3,11 @@
 
 #include <core/dev/RTCTimer.hpp>
 
-namespace IO = EVT::core::IO;
-namespace DEV = EVT::core::DEV;
+namespace IO = core::IO;
+namespace DEV = core::DEV;
 
 int main() {
-    EVT::core::platform::init();
+    core::platform::init();
 
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 

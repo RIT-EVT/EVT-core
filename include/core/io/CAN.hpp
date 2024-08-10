@@ -9,7 +9,7 @@
     #define EVT_CAN_TIMEOUT 255
 #endif
 
-namespace EVT::core::IO {
+namespace core::IO {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
@@ -144,6 +144,6 @@ protected:
     /** If CAN should operate in loop back mode */
     bool loopbackEnabled;
 };
-}// namespace EVT::core::IO
+}// namespace core::IO
 
 #endif

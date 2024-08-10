@@ -7,9 +7,9 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = EVT::core::IO;
-namespace DEV = EVT::core::DEV;
-namespace time = EVT::core::time;
+namespace IO = core::IO;
+namespace DEV = core::DEV;
+namespace time = core::time;
 
 /**
  * Note, this conversion function is just to show off how a conversion
@@ -21,7 +21,7 @@ uint32_t convert(uint32_t voltage) {
 }
 
 int main() {
-    EVT::core::platform::init();
+    core::platform::init();
 
     // Setup IO
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);

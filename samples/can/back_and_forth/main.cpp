@@ -9,8 +9,8 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = EVT::core::IO;
-namespace time = EVT::core::time;
+namespace IO = core::IO;
+namespace time = core::time;
 
 void canIRQHandler(IO::CANMessage& message, void* priv) {
     IO::UART* uart = (IO::UART*) priv;
@@ -28,7 +28,7 @@ void canIRQHandler(IO::CANMessage& message, void* priv) {
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     // Get CAN instance with loopback enabled
     IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();

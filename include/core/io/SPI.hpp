@@ -21,7 +21,7 @@
 #define SPI_SPEED_62KHZ 62500
 #define SPI_SPEED_31KHZ 31250
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
@@ -189,6 +189,6 @@ protected:
     GPIO* CSPins[MAX_PINS] = {};
 };
 
-}// namespace EVT::core::IO
+}// namespace core::IO
 
 #endif

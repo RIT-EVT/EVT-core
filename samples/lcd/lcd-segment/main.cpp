@@ -10,9 +10,9 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace DEV = EVT::core::DEV;
-namespace IO = EVT::core::IO;
-namespace time = EVT::core::time;
+namespace DEV = core::DEV;
+namespace IO = core::IO;
+namespace time = core::time;
 
 constexpr uint32_t SPI_SPEED = SPI_SPEED_500KHZ;
 
@@ -22,15 +22,15 @@ IO::GPIO* devices[deviceCount];
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     // Uses HUDL 1.0 Pins
-    IO::GPIO& regSelect = IO::getGPIO<IO::Pin::PA_3>(EVT::core::IO::GPIO::Direction::OUTPUT);
-    IO::GPIO& reset = IO::getGPIO<IO::Pin::PB_3>(EVT::core::IO::GPIO::Direction::OUTPUT);
-    devices[0] = &IO::getGPIO<IO::Pin::PB_12>(EVT::core::IO::GPIO::Direction::OUTPUT);
+    IO::GPIO& regSelect = IO::getGPIO<IO::Pin::PA_3>(core::IO::GPIO::Direction::OUTPUT);
+    IO::GPIO& reset = IO::getGPIO<IO::Pin::PB_3>(core::IO::GPIO::Direction::OUTPUT);
+    devices[0] = &IO::getGPIO<IO::Pin::PB_12>(core::IO::GPIO::Direction::OUTPUT);
     devices[0]->writePin(IO::GPIO::State::HIGH);
 
     // Setup SPI
@@ -39,7 +39,7 @@ int main() {
 
     // Sets up LCD
     uart.printf("Creating LCD Object...\n\r");
-    EVT::core::DEV::LCD lcd(regSelect, reset, spi);
+    core::DEV::LCD lcd(regSelect, reset, spi);
     uart.printf("Initializing LCD...\n\r");
     lcd.initLCD();
     lcd.clearLCD();

@@ -22,7 +22,7 @@ namespace {
 //
 // NOTE: Part of the reason this works is because the STM32F3xx only supports
 // a single CAN interface at a time.
-EVT::core::IO::CANf3xx* canIntf;
+core::IO::CANf3xx* canIntf;
 
 // Pointer to the CAN interface, made global for similar reasons to the
 // variable above.
@@ -43,14 +43,14 @@ extern "C" void CAN_RX0_IRQHandler(void) {
  */
 extern "C" void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
     CAN_RxHeaderTypeDef rxHeader = {0};
-    uint8_t payload[EVT::core::IO::CANMessage::CAN_MAX_PAYLOAD_SIZE];
+    uint8_t payload[core::IO::CANMessage::CAN_MAX_PAYLOAD_SIZE];
 
     HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rxHeader, payload);
 
     // Construct the CANmessage
     bool isExtended = rxHeader.IDE == CAN_ID_EXT;
     uint32_t id = isExtended ? rxHeader.ExtId : rxHeader.StdId;
-    EVT::core::IO::CANMessage message(id, rxHeader.DLC, payload, isExtended);
+    core::IO::CANMessage message(id, rxHeader.DLC, payload, isExtended);
 
     // Check to see if a user defined IRQ has been provided
     if (canIntf->triggerIRQ(message))
@@ -60,7 +60,7 @@ extern "C" void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
     canIntf->addCANMessage(message);
 }
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 CANf3xx::CANf3xx(Pin txPin, Pin rxPin, bool loopbackEnabled)
     : CAN(txPin, rxPin, loopbackEnabled) {
@@ -104,7 +104,7 @@ CAN::CANStatus CANf3xx::connect(bool autoBusOff) {
 
     // Intialize interrupts
     HAL_CAN_ActivateNotification(&halCAN, CAN_IT_RX_FIFO0_MSG_PENDING);
-    HAL_NVIC_SetPriority(CAN_RX0_IRQn, EVT::core::platform::CAN_INTERRUPT_PRIORITY, 0);
+    HAL_NVIC_SetPriority(CAN_RX0_IRQn, core::platform::CAN_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(CAN_RX0_IRQn);
 
     // By default - filter that accepts all incoming messages
@@ -254,4 +254,4 @@ bool CANf3xx::triggerIRQ(CANMessage& message) {
     return true;
 }
 
-}// namespace EVT::core::IO
+}// namespace core::IO

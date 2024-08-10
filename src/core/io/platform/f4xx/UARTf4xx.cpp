@@ -10,7 +10,7 @@
 
 #include <HALf4/stm32f446xx.h>
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 UARTf4xx::UARTf4xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped)
     : UART(txPin, rxPin, baudrate) {
@@ -162,4 +162,4 @@ void UARTf4xx::readBytes(uint8_t* bytes, size_t size) {
     HAL_UART_Receive(&halUART, bytes, size, EVT_UART_TIMEOUT);
 }
 
-}// namespace EVT::core::IO
+}// namespace core::IO

@@ -11,17 +11,17 @@
 #include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = EVT::core::IO;
-namespace DEV = EVT::core::DEV;
-namespace time = EVT::core::time;
-namespace log = EVT::core::log;
+namespace IO = core::IO;
+namespace DEV = core::DEV;
+namespace time = core::time;
+namespace log = core::log;
 
 constexpr IO::Pin A_PIN = IO::Pin::PA_8;
 constexpr IO::Pin B_PIN = IO::Pin::PA_9;
 
 int main() {
     //Init platform
-    EVT::core::platform::init();
+    core::platform::init();
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600, true);
 
     uart.printf("\n\rSTARTING ENCODER TEST\n\r");

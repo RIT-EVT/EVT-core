@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-namespace EVT::core::DEV {
+namespace core::DEV {
 /**
  * EEPROMs are a type of small non-volatile storage devices. This class
  * represents features common across all EEPROMs.
@@ -113,6 +113,6 @@ public:
      */
     virtual void writeWords(uint8_t address, uint32_t* dataArr, uint8_t numWords) = 0;
 };
-}// namespace EVT::core::DEV
+}// namespace core::DEV
 
 #endif//EVT_EEPROM_HPP

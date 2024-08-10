@@ -3,7 +3,7 @@
 
 #include <core/io/GPIO.hpp>
 
-namespace EVT::core::DEV {
+namespace core::DEV {
 
 class LED {
 public:
@@ -21,7 +21,7 @@ public:
      * @param[in] gpio GPIO pin
      * @param[in] activeState Represents if the LED is active high or active low
      */
-    LED(EVT::core::IO::GPIO& gpio, ActiveState activeState);
+    LED(core::IO::GPIO& gpio, ActiveState activeState);
 
     /**
      * Toggle the current state of the LED
@@ -33,15 +33,15 @@ public:
      *
      * @param[in] state The state to set the LED to.
      */
-    void setState(EVT::core::IO::GPIO::State state);
+    void setState(core::IO::GPIO::State state);
 
 private:
     /// The gpio pin used by the LED
-    EVT::core::IO::GPIO& gpio;
+    core::IO::GPIO& gpio;
     /// If the LED is active high or active low
     ActiveState activeState;
 };
 
-}// namespace EVT::core::DEV
+}// namespace core::DEV
 
 #endif

@@ -6,12 +6,12 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = EVT::core::IO;
-namespace time = EVT::core::time;
+namespace IO = core::IO;
+namespace time = core::time;
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     IO::PWM& pwm = IO::getPWM<IO::Pin::PA_8>();
     // 1000000 microseconds (1 second) period

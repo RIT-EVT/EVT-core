@@ -7,7 +7,7 @@
 #include <core/io/pin.hpp>
 #include <core/manager.hpp>
 
-namespace IO = EVT::core::IO;
+namespace IO = core::IO;
 
 constexpr int BAUD_RATE = 9600;
 constexpr IO::Pin INTERRUPT_PIN = IO::Pin::PC_3;
@@ -26,7 +26,7 @@ void risingEdgeHandler(IO::GPIO* pin, void* priv) {
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     // Setup UART
     uart = &IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(BAUD_RATE);

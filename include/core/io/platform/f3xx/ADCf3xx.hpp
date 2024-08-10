@@ -6,7 +6,7 @@
 
 #include <core/io/ADC.hpp>
 
-namespace EVT::core::IO {
+namespace core::IO {
 
 class ADCf3xx : public ADC {
 public:
@@ -60,6 +60,6 @@ private:
     void addChannel(uint8_t rank);
 };
 
-}// namespace EVT::core::IO
+}// namespace core::IO
 
 #endif
