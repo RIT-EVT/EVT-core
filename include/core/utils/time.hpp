@@ -54,5 +54,6 @@ struct TimeStamp {
      */
     uint8_t second;
 };
-}// namespace core::time
+
+} // namespace core::time
 #endif

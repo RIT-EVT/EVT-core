@@ -9,8 +9,8 @@
 #include <core/utils/time.hpp>
 #include <cstdio>
 
-namespace DEV = core::DEV;
-namespace IO = core::IO;
+namespace DEV  = core::DEV;
+namespace IO   = core::IO;
 namespace time = core::time;
 
 constexpr uint32_t SPI_SPEED = SPI_SPEED_500KHZ;
@@ -28,7 +28,8 @@ int main() {
 
     // Uses HUDL 1.0 Pins
     IO::GPIO& regSelect = IO::getGPIO<IO::Pin::PA_3>(core::IO::GPIO::Direction::OUTPUT);
-    IO::GPIO& reset = IO::getGPIO<IO::Pin::PB_3>(core::IO::GPIO::Direction::OUTPUT);
+    IO::GPIO& reset     = IO::getGPIO<IO::Pin::PB_3>(core::IO::GPIO::Direction::OUTPUT);
+
     devices[0] = &IO::getGPIO<IO::Pin::PB_12>(core::IO::GPIO::Direction::OUTPUT);
     devices[0]->writePin(IO::GPIO::State::HIGH);
 
@@ -43,12 +44,13 @@ int main() {
     lcd.initLCD();
     lcd.clearLCD();
 
-    const char* text = R"( !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)";
+    const char* text =
+        R"( !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~)";
     lcd.writeText(text, 0, 0, core::DEV::LCD::SMALL, true);
 
     uint8_t ball[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-    uint8_t col = 0;
-    uint8_t page = 4;
+    uint8_t col     = 0;
+    uint8_t page    = 4;
 
     lcd.displayBitMapInArea(ball, 8, 1, page, col);
 

@@ -33,8 +33,7 @@ I2C::I2CStatus I2C::readReg(uint8_t addr, uint8_t reg, uint8_t* output) {
     return read(addr, output);
 }
 
-I2C::I2CStatus I2C::writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
-                             uint8_t* bytes, uint8_t length) {
+I2C::I2CStatus I2C::writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength, uint8_t* bytes, uint8_t length) {
     I2C_RETURN_IF_ERR(write(addr, reg, regLength));
     return write(addr, bytes, length);
 }
@@ -45,8 +44,7 @@ I2C::I2CStatus I2C::writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
  * of 8 bytes starting with the MSB. Reading the response is also done,
  * starting with the LSB.
  */
-I2C::I2CStatus I2C::readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
-                            uint8_t* bytes, uint8_t length) {
+I2C::I2CStatus I2C::readReg(uint8_t addr, uint8_t* reg, uint8_t regLength, uint8_t* bytes, uint8_t length) {
     // Write out register address
     I2C_RETURN_IF_ERR(write(addr, reg, regLength));
 
@@ -56,4 +54,4 @@ I2C::I2CStatus I2C::readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
     return I2C::I2CStatus::OK;
 }
 
-}// namespace core::IO
+} // namespace core::IO

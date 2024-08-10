@@ -9,7 +9,7 @@
 
 namespace IO = core::IO;
 
-constexpr int BAUD_RATE = 9600;
+constexpr int BAUD_RATE         = 9600;
 constexpr IO::Pin INTERRUPT_PIN = IO::Pin::PC_3;
 
 IO::UART* uart;
@@ -32,10 +32,8 @@ int main() {
     uart = &IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(BAUD_RATE);
 
     // Set the GPIO interrupt
-    IO::GPIO& interruptGPIO = IO::getGPIO<INTERRUPT_PIN>(
-        IO::GPIO::Direction::INPUT);
-    interruptGPIO.registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING,
-                              risingEdgeHandler, nullptr);
+    IO::GPIO& interruptGPIO = IO::getGPIO<INTERRUPT_PIN>(IO::GPIO::Direction::INPUT);
+    interruptGPIO.registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING, risingEdgeHandler, nullptr);
 
     uart->printf("\n\rWaiting for interrupts...\n\r");
 

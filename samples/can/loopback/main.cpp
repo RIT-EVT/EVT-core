@@ -8,7 +8,7 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = core::IO;
+namespace IO   = core::IO;
 namespace time = core::time;
 
 int main() {
@@ -16,7 +16,7 @@ int main() {
     core::platform::init();
 
     // Get CAN instance with loopback enabled
-    IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>(true);
+    IO::CAN& can   = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>(true);
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     uint8_t payload[] = {0xDE, 0xAD, 0xBE, 0xBE, 0xEF, 0x00, 0x01, 0x02};

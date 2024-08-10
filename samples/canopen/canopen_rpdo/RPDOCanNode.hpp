@@ -52,9 +52,9 @@ public:
     uint8_t getNumElements() override;
 
     /**
-    * Get the device's node ID
-    *
-    * @return The node ID of the can device.
+     * Get the device's node ID
+     *
+     * @return The node ID of the can device.
      */
     uint8_t getNodeID() override;
 

@@ -99,6 +99,6 @@ private:
     bool isExtended;
 };
 
-}// namespace core::IO
+} // namespace core::IO
 
 #endif

@@ -15,7 +15,7 @@ RTCTimer::RTCTimer(RTC& r, uint32_t clock) : rtc(r) {
 }
 
 void RTCTimer::startTimer() {
-    startTime = rtc.getTime();
+    startTime     = rtc.getTime();
     bTimerStopped = false;
 }
 
@@ -25,21 +25,15 @@ void RTCTimer::stopTimer() {
 }
 
 void RTCTimer::reloadTimer() {
-    time = 0;
-    startTime = rtc.getTime();
+    time          = 0;
+    startTime     = rtc.getTime();
     bTimerStopped = false;
 }
 
-void RTCTimer::setPeriod(uint32_t clock) {
-    clockPeriod = clock / 1000;
-}
+void RTCTimer::setPeriod(uint32_t clock) { clockPeriod = clock / 1000; }
 
-uint32_t RTCTimer::getTime() {
-    return bTimerStopped ? time : time + rtc.getTime() - startTime;
-}
+uint32_t RTCTimer::getTime() { return bTimerStopped ? time : time + rtc.getTime() - startTime; }
 
-bool RTCTimer::hasGoneOff() {
-    return getTime() >= clockPeriod;
-}
+bool RTCTimer::hasGoneOff() { return getTime() >= clockPeriod; }
 
-}// namespace core::DEV
+} // namespace core::DEV

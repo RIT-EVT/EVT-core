@@ -3,9 +3,9 @@
 namespace core::IO {
 
 PWM::PWM(Pin pin) {
-    this->pin = pin;
+    this->pin       = pin;
     this->dutyCycle = 0;
-    this->period = 0;
+    this->period    = 0;
 }
 
-}// namespace core::IO
+} // namespace core::IO

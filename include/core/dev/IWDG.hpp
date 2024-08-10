@@ -20,6 +20,6 @@ public:
     virtual void refresh() = 0;
 };
 
-}// namespace core::DEV
+} // namespace core::DEV
 
 #endif

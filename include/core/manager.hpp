@@ -61,10 +61,10 @@
 namespace core::platform {
 
 /**
-* Initialize the low level components of the system. This is highly
-* platform specific and usually involves clock setup and other peripheral
-* init logic.
-*/
+ * Initialize the low level components of the system. This is highly
+ * platform specific and usually involves clock setup and other peripheral
+ * init logic.
+ */
 void init() {
 #ifdef STM32F3xx
     stm32f3xx_init();
@@ -74,16 +74,16 @@ void init() {
 #endif
 }
 
-}// namespace core::platform
+} // namespace core::platform
 
 namespace core::DEV {
 
 /**
-* Get an instance of an IWDG
-*
-* @param ms Time in milliseconds before the IWDG triggers a reset
-* must be a value between 8 and 32768 ms.
-*/
+ * Get an instance of an IWDG
+ *
+ * @param ms Time in milliseconds before the IWDG triggers a reset
+ * must be a value between 8 and 32768 ms.
+ */
 #ifdef IWDG_SUPPORTED
 IWDG& getIWDG(uint32_t ms) {
     #ifdef STM32F3xx
@@ -103,8 +103,8 @@ IWDG& getIWDG(uint32_t ms) {
 #endif
 
 /**
-* Get an instance of an RTC
-*/
+ * Get an instance of an RTC
+ */
 #ifdef RTC_SUPPORTED
 RTC& getRTC() {
     #ifdef STM32F3xx
@@ -119,7 +119,7 @@ RTC& getRTC() {
 #endif
 
 #ifdef MCU_SUPPORTED
-template<MCUTimer mcuTimer>
+template <MCUTimer mcuTimer>
 Timer& getTimer(uint32_t clockPeriod) {
     #ifdef STM32F3xx
     static Timerf3xx timer(getTIM(mcuTimer), clockPeriod);
@@ -128,17 +128,17 @@ Timer& getTimer(uint32_t clockPeriod) {
 }
 #endif
 
-}// namespace core::DEV
+} // namespace core::DEV
 
 namespace core::IO {
 
 /**
-* Get an instance of an ADC channel
-*
-* @param[in] pin The pin to use with the ADC
-*/
+ * Get an instance of an ADC channel
+ *
+ * @param[in] pin The pin to use with the ADC
+ */
 #ifdef ADC_SUPPORTED
-template<Pin pin>
+template <Pin pin>
 ADC& getADC() {
     #ifdef STM32F4xx
     static ADCf4xx adc(pin);
@@ -152,13 +152,13 @@ ADC& getADC() {
 #endif
 
 /**
-* Get an instance of a CAN interface.
-*
-* @param[in] txPin CAN pin for transmitting messages
-* @param[in] rxPin CAN pin for receiving messages
-*/
+ * Get an instance of a CAN interface.
+ *
+ * @param[in] txPin CAN pin for transmitting messages
+ * @param[in] rxPin CAN pin for receiving messages
+ */
 #ifdef CAN_SUPPORTED
-template<Pin txPin, Pin rxPin>
+template <Pin txPin, Pin rxPin>
 CAN& getCAN(bool loopbackEnabled = false) {
     #ifdef STM32F3xx
     static CANf3xx can(txPin, rxPin, loopbackEnabled);
@@ -172,16 +172,15 @@ CAN& getCAN(bool loopbackEnabled = false) {
 #endif
 
 /**
-* Get an instance of a GPIO pin.
-*
-* @param[in] pin The pin to attach to the GPIO
-* @param[in] direction The direction, either input or output
-* @param[in] pull The direction of the internal pull resistor
-*/
+ * Get an instance of a GPIO pin.
+ *
+ * @param[in] pin The pin to attach to the GPIO
+ * @param[in] direction The direction, either input or output
+ * @param[in] pull The direction of the internal pull resistor
+ */
 #ifdef GPIO_SUPPORTED
-template<Pin pin>
-GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT,
-              GPIO::Pull pull = GPIO::Pull::PULL_DOWN) {
+template <Pin pin>
+GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT, GPIO::Pull pull = GPIO::Pull::PULL_DOWN) {
     #ifdef STM32F3xx
     static GPIOf3xx gpioPin(pin, direction, pull);
     return gpioPin;
@@ -194,13 +193,13 @@ GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT,
 #endif
 
 /**
-* Get an I2C master interface.
-*
-* @param[in] scl The I2C clock pin
-* @param[in] sda The I2C data pin
-*/
+ * Get an I2C master interface.
+ *
+ * @param[in] scl The I2C clock pin
+ * @param[in] sda The I2C data pin
+ */
 #ifdef I2C_SUPPORTED
-template<Pin scl, Pin sda>
+template <Pin scl, Pin sda>
 I2C& getI2C() {
     #ifdef STM32F3xx
     static I2Cf3xx i2c(scl, sda);
@@ -214,12 +213,12 @@ I2C& getI2C() {
 #endif
 
 /**
-* Get an instance of a PWM pin.
-*
-* @param[in] pin The pin to attach to the PWM.
-*/
+ * Get an instance of a PWM pin.
+ *
+ * @param[in] pin The pin to attach to the PWM.
+ */
 #ifdef PWM_SUPPORTED
-template<Pin pin>
+template <Pin pin>
 PWM& getPWM() {
     #ifdef STM32F3xx
     static PWMf3xx pwm(pin);
@@ -233,15 +232,15 @@ PWM& getPWM() {
 #endif
 
 /**
-* Get an instance of a UART.
-*
-* @param[in] txPin The transmit pin for the UART
-* @param[in] rxPin The receive pin for the UART
-* @param[in] baudrate The baudrate to operate at
-* @param[in] isSwapped Whether TX and RX should be swapped; defaults to false
+ * Get an instance of a UART.
+ *
+ * @param[in] txPin The transmit pin for the UART
+ * @param[in] rxPin The receive pin for the UART
+ * @param[in] baudrate The baudrate to operate at
+ * @param[in] isSwapped Whether TX and RX should be swapped; defaults to false
  */
 #ifdef UART_SUPPORTED
-template<Pin txPin, Pin rxPin>
+template <Pin txPin, Pin rxPin>
 UART& getUART(uint32_t baudrate, bool isSwapped = false) {
     #ifdef STM32F3xx
     static UARTf3xx uart(txPin, rxPin, baudrate, isSwapped);
@@ -255,16 +254,16 @@ UART& getUART(uint32_t baudrate, bool isSwapped = false) {
 #endif
 
 /**
-* Get an instance of a SPI driver.
-*
-* @tparam sckPin Serial clock pin
-* @tparam mosiPin Master out, slave in pin
-* @tparam misoPin Master in, slave out pin
-* @param CSPins Array of chip select pins
-* @param pinLength Number of chip select pins in the array
-*/
+ * Get an instance of a SPI driver.
+ *
+ * @tparam sckPin Serial clock pin
+ * @tparam mosiPin Master out, slave in pin
+ * @tparam misoPin Master in, slave out pin
+ * @param CSPins Array of chip select pins
+ * @param pinLength Number of chip select pins in the array
+ */
 #ifdef SPI_SUPPORTED
-template<Pin sckPin, Pin mosiPin, Pin misoPin>
+template <Pin sckPin, Pin mosiPin, Pin misoPin>
 SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
     #ifdef STM32F3xx
     static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
@@ -277,14 +276,14 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 }
 
 /**
-* Get an instance of a write-only SPI driver.
-*
-* @tparam sckPin Serial clock pin
-* @tparam mosiPin Master out, slave in pin
-* @param CSPins Array of chip select pins
-* @param pinLength Number of chip select pins in the array
-*/
-template<Pin sckPin, Pin mosiPin>
+ * Get an instance of a write-only SPI driver.
+ *
+ * @tparam sckPin Serial clock pin
+ * @tparam mosiPin Master out, slave in pin
+ * @param CSPins Array of chip select pins
+ * @param pinLength Number of chip select pins in the array
+ */
+template <Pin sckPin, Pin mosiPin>
 SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
     #ifdef STM32F3xx
     static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin);
@@ -293,6 +292,6 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 }
 #endif
 
-}// namespace core::IO
+} // namespace core::IO
 
 #endif

@@ -22,8 +22,7 @@ public:
      */
     UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped);
     void setBaudrate(uint32_t baudrate) override;
-    void setFormat(WordLength wordLength = WordLength::EIGHT,
-                   Parity parity = Parity::NONE,
+    void setFormat(WordLength wordLength = WordLength::EIGHT, Parity parity = Parity::NONE,
                    NumStopBits numStopBits = NumStopBits::ONE) override;
 
     void sendBreak() override;
@@ -48,6 +47,6 @@ private:
     UART_HandleTypeDef halUART;
 };
 
-}// namespace core::IO
+} // namespace core::IO
 
 #endif

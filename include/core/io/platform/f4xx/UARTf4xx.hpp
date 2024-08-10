@@ -21,8 +21,7 @@ public:
 
     void setBaudrate(uint32_t baudrate);
 
-    void setFormat(WordLength wordLength = WordLength::EIGHT,
-                   Parity parity = Parity::NONE,
+    void setFormat(WordLength wordLength = WordLength::EIGHT, Parity parity = Parity::NONE,
                    NumStopBits numStopBits = NumStopBits::ONE);
 
     void sendBreak();
@@ -51,5 +50,5 @@ private:
     /// HAL representation of the UART
     UART_HandleTypeDef halUART;
 };
-}// namespace core::IO
+} // namespace core::IO
 #endif

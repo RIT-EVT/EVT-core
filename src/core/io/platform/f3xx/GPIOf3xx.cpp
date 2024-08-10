@@ -10,24 +10,14 @@
 #include <core/platform/f3xx/stm32f3xx.hpp>
 
 void (*INTERRUPT_HANDLERS[16])(core::IO::GPIO* pin, void* priv) = {nullptr};
-core::IO::GPIO* INTERRUPT_GPIOS[16] = {nullptr};
-void* INTERRUPT_ARGS[16] = {nullptr};
+core::IO::GPIO* INTERRUPT_GPIOS[16]                             = {nullptr};
+void* INTERRUPT_ARGS[16]                                        = {nullptr};
 
-extern "C" void EXTI0_IRQHandler(void) {
-    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
-}
-extern "C" void EXTI1_IRQHandler(void) {
-    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
-}
-extern "C" void EXTI2_TSC_IRQHandler(void) {
-    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);
-}
-extern "C" void EXTI3_IRQHandler(void) {
-    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_3);
-}
-extern "C" void EXTI4_IRQHandler(void) {
-    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
-}
+extern "C" void EXTI0_IRQHandler(void) { HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0); }
+extern "C" void EXTI1_IRQHandler(void) { HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1); }
+extern "C" void EXTI2_TSC_IRQHandler(void) { HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2); }
+extern "C" void EXTI3_IRQHandler(void) { HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_3); }
+extern "C" void EXTI4_IRQHandler(void) { HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4); }
 extern "C" void EXTI9_5_IRQHandler(void) {
     HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
     HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_6);
@@ -47,7 +37,7 @@ extern "C" void EXTI15_10_IRQHandler(void) {
 
 extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     uint16_t tmpPin = GPIO_Pin;
-    uint8_t count = 0;
+    uint8_t count   = 0;
 
     while ((tmpPin & 0x0001) == 0) {
         tmpPin = tmpPin >> 1;
@@ -60,14 +50,15 @@ extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 
 namespace core::IO {
 
-GPIOf3xx::GPIOf3xx(Pin pin, GPIO::Direction direction, Pull pull)
-    : GPIO(pin, direction, pull) {
+GPIOf3xx::GPIOf3xx(Pin pin, GPIO::Direction direction, Pull pull) : GPIO(pin, direction, pull) {
 
     GPIO_InitTypeDef gpioInit;
-    Pin myPins[] = {pin};
+    Pin myPins[]      = {pin};
     uint8_t numOfPins = 1;
 
-    gpioStateInit(&gpioInit, myPins, numOfPins,
+    gpioStateInit(&gpioInit,
+                  myPins,
+                  numOfPins,
                   static_cast<uint32_t>(direction),
                   static_cast<uint32_t>(pull),
                   GPIO_SPEED_FREQ_HIGH);
@@ -89,11 +80,11 @@ GPIOf3xx::GPIOf3xx(Pin pin, GPIO::Direction direction, Pull pull)
         this->port = GPIOF;
         break;
     default:
-        break;// Should never get here
+        break; // Should never get here
     }
 
     this->halPin = 1 << (static_cast<uint16_t>(this->pin) & 0x0F);
-    this->writePin(GPIO::State::LOW);// Output set low by default
+    this->writePin(GPIO::State::LOW); // Output set low by default
 }
 
 void GPIOf3xx::setDirection(GPIO::Direction direction) {
@@ -101,27 +92,27 @@ void GPIOf3xx::setDirection(GPIO::Direction direction) {
 }
 
 void GPIOf3xx::writePin(GPIO::State state) {
-    HAL_GPIO_WritePin(this->port, this->halPin,
-                      static_cast<GPIO_PinState>(state));
+    HAL_GPIO_WritePin(this->port, this->halPin, static_cast<GPIO_PinState>(state));
 }
 
-GPIO::State GPIOf3xx::readPin() {
-    return static_cast<GPIO::State>(HAL_GPIO_ReadPin(this->port, this->halPin));
-}
+GPIO::State GPIOf3xx::readPin() { return static_cast<GPIO::State>(HAL_GPIO_ReadPin(this->port, this->halPin)); }
 
 void GPIOf3xx::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin, void* priv), void* priv) {
     GPIO_InitTypeDef gpioInit;
-    Pin myPins[] = {pin};
+    Pin myPins[]      = {pin};
     uint8_t numOfPins = 1;
 
-    gpioStateInit(&gpioInit, myPins, numOfPins,
+    gpioStateInit(&gpioInit,
+                  myPins,
+                  numOfPins,
                   GPIOf3xx::GPIO_TRIGGER_INTERRUPT_BASE | (static_cast<uint32_t>(edge) << GPIO_MODE_IT_SHIFT),
-                  GPIO_PULLDOWN, GPIO_SPEED_FREQ_HIGH);
+                  GPIO_PULLDOWN,
+                  GPIO_SPEED_FREQ_HIGH);
 
-    auto pin_index = static_cast<uint8_t>(this->pin) & 0x0F;
+    auto pin_index                = static_cast<uint8_t>(this->pin) & 0x0F;
     INTERRUPT_HANDLERS[pin_index] = irqHandler;
-    INTERRUPT_GPIOS[pin_index] = this;
-    INTERRUPT_ARGS[pin_index] = priv;
+    INTERRUPT_GPIOS[pin_index]    = this;
+    INTERRUPT_ARGS[pin_index]     = priv;
     IRQn_Type irqNum;
 
     switch (this->halPin) {
@@ -157,22 +148,20 @@ void GPIOf3xx::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin, void*
         break;
 
     default:
-        return;// Shouldn't get here
+        return; // Shouldn't get here
     }
 
     HAL_NVIC_SetPriority(irqNum, core::platform::GPIO_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(irqNum);
 }
 
-void GPIOf3xx::gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins,
-                             uint8_t numOfPins, uint32_t mode, uint32_t pull,
+void GPIOf3xx::gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pull,
                              uint32_t speed, uint8_t alternate) {
     if (numOfPins == 2) {
-        targetGpio->Pin =
-            static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[0]) & 0x0F)) | static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[1]) & 0x0F));
+        targetGpio->Pin = static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[0]) & 0x0F))
+            | static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[1]) & 0x0F));
     } else {
-        targetGpio->Pin =
-            static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[0]) & 0x0F));
+        targetGpio->Pin = static_cast<uint32_t>(1 << (static_cast<uint32_t>(pins[0]) & 0x0F));
     }
 
     targetGpio->Mode = mode;
@@ -209,8 +198,8 @@ void GPIOf3xx::gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins,
             HAL_GPIO_Init(GPIOF, targetGpio);
             break;
         default:
-            break;// Should never get here
+            break; // Should never get here
         }
     }
 }
-}// namespace core::IO
+} // namespace core::IO

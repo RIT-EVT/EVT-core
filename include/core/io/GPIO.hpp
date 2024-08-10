@@ -27,7 +27,7 @@ public:
      * Binary representation of the states the GPIO can be in
      */
     enum class State {
-        LOW = 0u,
+        LOW  = 0u,
         HIGH = 1u
     };
 
@@ -36,7 +36,7 @@ public:
      * output.
      */
     enum class Direction {
-        INPUT = 0u,
+        INPUT  = 0u,
         OUTPUT = 1u
     };
 
@@ -44,8 +44,8 @@ public:
      * Enum to handler the possible GPIO trigger states
      */
     enum class TriggerEdge {
-        RISING = 1u,
-        FALLING = 2u,
+        RISING         = 1u,
+        FALLING        = 2u,
         RISING_FALLING = 3u
     };
 
@@ -53,8 +53,8 @@ public:
      * Direction for the internal resistor
      */
     enum class Pull {
-        NO_PULL = 0u,
-        PULL_UP = 1u,
+        NO_PULL   = 0u,
+        PULL_UP   = 1u,
         PULL_DOWN = 2u,
     };
 
@@ -114,5 +114,5 @@ protected:
     Pull pull;
 };
 
-}// namespace core::IO
+} // namespace core::IO
 #endif

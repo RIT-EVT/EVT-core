@@ -9,22 +9,23 @@
 #include <core/dev/storage/M24C32.hpp>
 #include <core/manager.hpp>
 
-namespace IO = core::IO;
+namespace IO  = core::IO;
 namespace DEV = core::DEV;
 
 /**
  * The address of the EEPROM listening for reads/writes
  * Set up for M24C23 with all enable values set to 0
- * Docs can be found here: https://www.st.com/content/ccc/resource/technical/document/datasheet/80/4e/8c/54/f2/63/4c/4a/CD00001012.pdf/files/CD00001012.pdf/jcr:content/translations/en.CD00001012.pdf
+ * Docs can be found here:
+ * https://www.st.com/content/ccc/resource/technical/document/datasheet/80/4e/8c/54/f2/63/4c/4a/CD00001012.pdf/files/CD00001012.pdf/jcr:content/translations/en.CD00001012.pdf
  */
 constexpr uint8_t I2C_SLAVE_ADDR = 0x50;
 
-constexpr uint8_t BYTE_ADDRESS = 0x00;
-constexpr uint8_t HALF_WORD_ADDRESS = 0x01;
-constexpr uint8_t WORD_ADDRESS = 0x03;
-constexpr uint8_t BYTE_ARR_ADDRESS = 0x07;
+constexpr uint8_t BYTE_ADDRESS          = 0x00;
+constexpr uint8_t HALF_WORD_ADDRESS     = 0x01;
+constexpr uint8_t WORD_ADDRESS          = 0x03;
+constexpr uint8_t BYTE_ARR_ADDRESS      = 0x07;
 constexpr uint8_t HALF_WORD_ARR_ADDRESS = 0x09;
-constexpr uint8_t WORD_ARR_ADDRESS = 0x13;
+constexpr uint8_t WORD_ARR_ADDRESS      = 0x13;
 
 /**
  * NOTE: This address is picked to highlight a potential issue. The EEPROM
@@ -32,26 +33,26 @@ constexpr uint8_t WORD_ARR_ADDRESS = 0x13;
  * to write beyound the page size will cause a wrap around of writing. This
  * issue should now be address in the EVT-core driver.
  */
-constexpr uint8_t PAGE_BREAK_EXAMPLE_ADDRESS = 0x3C;
-constexpr uint8_t PAGE_BREAK_EXAMPLE_LENGTH = 7;
+constexpr uint8_t PAGE_BREAK_EXAMPLE_ADDRESS               = 0x3C;
+constexpr uint8_t PAGE_BREAK_EXAMPLE_LENGTH                = 7;
 uint8_t PAGE_BREAK_EXAMPLE_DATA[PAGE_BREAK_EXAMPLE_LENGTH] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
 
-constexpr uint8_t BYTE_DATA = 0xaa;
-constexpr uint16_t HALF_WORD_DATA = 0xabcd;
-constexpr uint32_t WORD_DATA = 0xfedcba98;
-constexpr uint8_t BYTE_ARR_LENGTH = 2;
-uint8_t BYTE_ARR_DATA[BYTE_ARR_LENGTH] = {0xab, 0xba};
-constexpr uint8_t HALF_WORD_ARR_LENGTH = 2;
+constexpr uint8_t BYTE_DATA                       = 0xaa;
+constexpr uint16_t HALF_WORD_DATA                 = 0xabcd;
+constexpr uint32_t WORD_DATA                      = 0xfedcba98;
+constexpr uint8_t BYTE_ARR_LENGTH                 = 2;
+uint8_t BYTE_ARR_DATA[BYTE_ARR_LENGTH]            = {0xab, 0xba};
+constexpr uint8_t HALF_WORD_ARR_LENGTH            = 2;
 uint16_t HALF_WORD_ARR_DATA[HALF_WORD_ARR_LENGTH] = {0xbbbb, 0xcccc};
-constexpr uint8_t WORD_ARR_LENGTH = 2;
-uint32_t WORD_ARR_DATA[WORD_ARR_LENGTH] = {0x01234567, 0x89abcdef};
+constexpr uint8_t WORD_ARR_LENGTH                 = 2;
+uint32_t WORD_ARR_DATA[WORD_ARR_LENGTH]           = {0x01234567, 0x89abcdef};
 
 int main() {
     // Initialize system
     core::platform::init();
 
-    IO::I2C& i2c = IO::getI2C<IO::Pin::PB_8, IO::Pin::PB_9>();
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    IO::I2C& i2c       = IO::getI2C<IO::Pin::PB_8, IO::Pin::PB_9>();
+    IO::UART& uart     = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
     DEV::M24C32 eeprom = DEV::M24C32(I2C_SLAVE_ADDR, i2c);
 
     uart.printf("Starting EEPROM test\n\r");

@@ -5,7 +5,7 @@
 
 #include <core/utils/log.hpp>
 
-//namespace log = core::log;
+// namespace log = core::log;
 
 namespace core::IO {
 
@@ -75,12 +75,11 @@ I2Cf4xx::I2Cf4xx(Pin sclPin, Pin sdaPin) : I2C(sclPin, sdaPin) {
     uint8_t portId = getPortID(sclPin);
     getInstance(portId, &halI2C.Instance, &altId);
 
-    Pin i2cPins[2] = {sclPin, sdaPin};
+    Pin i2cPins[2]    = {sclPin, sdaPin};
     uint8_t numOfPins = 2;
 
     // TODO: CHECK GPIO STATES IN HAL CODE
-    GPIOf4xx::gpioStateInit(&gpioInit, i2cPins, numOfPins, GPIO_MODE_AF_OD,
-                            GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+    GPIOf4xx::gpioStateInit(&gpioInit, i2cPins, numOfPins, GPIO_MODE_AF_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
 
     /*
 // 8MHz = 0x00310309; 16MHz = 0x10320309; 48MHz = 0x50330309
@@ -91,30 +90,26 @@ halI2C.Init.Timing = 0x00310309;
     // Timing Register Layout(Bits): [PRESC(4)][RESERVED(4)]
     //                               [SCLDEL(4)][SDADEL(4)]
     //                               [SCLH(8)][SCLL(8)]
-    halI2C.Init.DutyCycle = I2C_DUTYCYCLE_2;
-    halI2C.Init.OwnAddress1 = 0;
-    halI2C.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+    halI2C.Init.DutyCycle       = I2C_DUTYCYCLE_2;
+    halI2C.Init.OwnAddress1     = 0;
+    halI2C.Init.AddressingMode  = I2C_ADDRESSINGMODE_7BIT;
     halI2C.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-    halI2C.Init.OwnAddress2 = 0;
+    halI2C.Init.OwnAddress2     = 0;
     //    part of F3 but not F4???
     //    halI2C.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
     halI2C.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-    halI2C.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+    halI2C.Init.NoStretchMode   = I2C_NOSTRETCH_DISABLE;
 
     HAL_I2C_Init(&halI2C);
 }
 
 I2C::I2CStatus I2Cf4xx::write(uint8_t addr, uint8_t byte) {
-    HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&halI2C, addr << 1,
-                                                       &byte, 1,
-                                                       EVT_I2C_TIMEOUT);
+    HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&halI2C, addr << 1, &byte, 1, EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
 I2C::I2CStatus I2Cf4xx::read(uint8_t addr, uint8_t* output) {
-    HAL_StatusTypeDef status = HAL_I2C_Master_Receive(&halI2C, addr << 1,
-                                                      output, 1,
-                                                      EVT_I2C_TIMEOUT);
+    HAL_StatusTypeDef status = HAL_I2C_Master_Receive(&halI2C, addr << 1, output, 1, EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
@@ -123,9 +118,7 @@ I2C::I2CStatus I2Cf4xx::read(uint8_t addr, uint8_t* output) {
  * this via the HAL.
  */
 I2C::I2CStatus I2Cf4xx::write(uint8_t addr, uint8_t* bytes, uint8_t length) {
-    HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&halI2C, addr << 1,
-                                                       bytes, length,
-                                                       EVT_I2C_TIMEOUT);
+    HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&halI2C, addr << 1, bytes, length, EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
@@ -134,54 +127,39 @@ I2C::I2CStatus I2Cf4xx::write(uint8_t addr, uint8_t* bytes, uint8_t length) {
  * this via the HAL.
  */
 I2C::I2CStatus I2Cf4xx::read(uint8_t addr, uint8_t* bytes, uint8_t length) {
-    HAL_StatusTypeDef status = HAL_I2C_Master_Receive(&halI2C, addr << 1,
-                                                      bytes, length,
-                                                      EVT_I2C_TIMEOUT);
+    HAL_StatusTypeDef status = HAL_I2C_Master_Receive(&halI2C, addr << 1, bytes, length, EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
-I2C::I2CStatus I2Cf4xx::writeMemReg(uint8_t addr, uint32_t memAddress,
-                                    uint8_t byte, uint16_t memAddSize,
+I2C::I2CStatus I2Cf4xx::writeMemReg(uint8_t addr, uint32_t memAddress, uint8_t byte, uint16_t memAddSize,
                                     uint8_t maxWriteTime) {
     uint16_t memAddress16 = memAddress;
-    HAL_StatusTypeDef status = HAL_I2C_Mem_Write(&halI2C, addr << 1,
-                                                 memAddress16, memAddSize,
-                                                 &byte, 1, EVT_I2C_TIMEOUT);
+    HAL_StatusTypeDef status =
+        HAL_I2C_Mem_Write(&halI2C, addr << 1, memAddress16, memAddSize, &byte, 1, EVT_I2C_TIMEOUT);
     HAL_Delay(maxWriteTime);
     return halToI2CStatus(status);
 }
 
-I2C::I2CStatus I2Cf4xx::readMemReg(uint8_t addr, uint32_t memAddress,
-                                   uint8_t* byte,
-                                   uint16_t memAddSize) {
-    uint16_t memAddress16 = memAddress;
-    HAL_StatusTypeDef status = HAL_I2C_Mem_Read(&halI2C, addr << 1,
-                                                memAddress16, memAddSize, byte,
-                                                1, EVT_I2C_TIMEOUT);
+I2C::I2CStatus I2Cf4xx::readMemReg(uint8_t addr, uint32_t memAddress, uint8_t* byte, uint16_t memAddSize) {
+    uint16_t memAddress16    = memAddress;
+    HAL_StatusTypeDef status = HAL_I2C_Mem_Read(&halI2C, addr << 1, memAddress16, memAddSize, byte, 1, EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
-I2C::I2CStatus I2Cf4xx::writeMemReg(uint8_t addr, uint32_t memAddress,
-                                    uint8_t* bytes, uint8_t size,
-                                    uint16_t memAddSize,
-                                    uint8_t maxWriteTime) {
+I2C::I2CStatus I2Cf4xx::writeMemReg(uint8_t addr, uint32_t memAddress, uint8_t* bytes, uint8_t size,
+                                    uint16_t memAddSize, uint8_t maxWriteTime) {
     uint16_t memAddress16 = memAddress;
-    HAL_StatusTypeDef status = HAL_I2C_Mem_Write(&halI2C, addr << 1,
-                                                 memAddress16, memAddSize,
-                                                 bytes, size,
-                                                 EVT_I2C_TIMEOUT);
+    HAL_StatusTypeDef status =
+        HAL_I2C_Mem_Write(&halI2C, addr << 1, memAddress16, memAddSize, bytes, size, EVT_I2C_TIMEOUT);
     HAL_Delay(maxWriteTime);
     return halToI2CStatus(status);
 }
 
-I2C::I2CStatus I2Cf4xx::readMemReg(uint8_t addr, uint32_t memAddress,
-                                   uint8_t* bytes, uint8_t size,
+I2C::I2CStatus I2Cf4xx::readMemReg(uint8_t addr, uint32_t memAddress, uint8_t* bytes, uint8_t size,
                                    uint16_t memAddSize) {
     uint16_t memAddress16 = memAddress;
-    HAL_StatusTypeDef status = HAL_I2C_Mem_Read(&halI2C, addr << 1,
-                                                memAddress16, memAddSize,
-                                                bytes, size,
-                                                EVT_I2C_TIMEOUT);
+    HAL_StatusTypeDef status =
+        HAL_I2C_Mem_Read(&halI2C, addr << 1, memAddress16, memAddSize, bytes, size, EVT_I2C_TIMEOUT);
     return halToI2CStatus(status);
 }
 
@@ -201,4 +179,4 @@ I2C::I2CStatus I2Cf4xx::halToI2CStatus(HAL_StatusTypeDef halStatus) {
     }
 }
 
-}// namespace core::IO
+} // namespace core::IO

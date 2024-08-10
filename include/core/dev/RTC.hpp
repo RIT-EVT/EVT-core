@@ -33,6 +33,6 @@ public:
     virtual void setTime(core::time::TimeStamp& time) = 0;
 };
 
-}// namespace core::DEV
+} // namespace core::DEV
 
 #endif

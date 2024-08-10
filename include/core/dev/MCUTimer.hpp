@@ -75,6 +75,6 @@ TIM_TypeDef* getTIM(MCUTimer mcuTimer) {
     return timPeriph;
 }
 
-}// namespace core::DEV
+} // namespace core::DEV
 
-#endif//_EVT_MCUTIMER_HPP_
+#endif //_EVT_MCUTIMER_HPP_

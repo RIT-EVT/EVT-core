@@ -2,7 +2,7 @@
  * This example demonstrates how to utilize the encoder object,
  * Two pins are used to read the encoder values via interrupts
  * Static wrappers are necessary for the encoder to handle the pin interrupts
-*/
+ */
 
 #include <core/dev/Encoder.hpp>
 #include <core/io/UART.hpp>
@@ -11,22 +11,22 @@
 #include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = core::IO;
-namespace DEV = core::DEV;
+namespace IO   = core::IO;
+namespace DEV  = core::DEV;
 namespace time = core::time;
-namespace log = core::log;
+namespace log  = core::log;
 
 constexpr IO::Pin A_PIN = IO::Pin::PA_8;
 constexpr IO::Pin B_PIN = IO::Pin::PA_9;
 
 int main() {
-    //Init platform
+    // Init platform
     core::platform::init();
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600, true);
 
     uart.printf("\n\rSTARTING ENCODER TEST\n\r");
 
-    //init logger
+    // init logger
     log::LOGGER.setUART(&uart);
     log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
 
@@ -36,15 +36,16 @@ int main() {
     DEV::Encoder encoder(pinA, pinB, 18, 0, true);
 
     while (1) {
-        //ENCODER MUST BE UPDATED EACH LOOP
-        //Read the position of the encoder, which for this example will be in the range [0, 18]
+        // ENCODER MUST BE UPDATED EACH LOOP
+        // Read the position of the encoder, which for this example will be in the range [0, 18]
         uint64_t position = encoder.getPosition();
 
-        //PRINT VALUES (only enable one at a time)
-        //uart.printf("\r Encoder Change: %d       ", change);
+        // PRINT VALUES (only enable one at a time)
+        // uart.printf("\r Encoder Change: %d       ", change);
         uart.printf("\rPosition: %d         ", position);
 
-        //The wait simulates a loop that is doing other processing, because that will affect how often the output is read
+        // The wait simulates a loop that is doing other processing, because that will affect how often the output is
+        // read
         time::wait(1000);
     }
 }

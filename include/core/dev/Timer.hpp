@@ -41,6 +41,6 @@ public:
     virtual void setPeriod(uint32_t clockPeriod) = 0;
 };
 
-}// namespace core::DEV
+} // namespace core::DEV
 
-#endif//EVT_TIMER_HPP
+#endif // EVT_TIMER_HPP

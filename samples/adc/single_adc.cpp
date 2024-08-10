@@ -8,7 +8,7 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = core::IO;
+namespace IO   = core::IO;
 namespace time = core::time;
 
 int main() {

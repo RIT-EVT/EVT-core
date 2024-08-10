@@ -10,7 +10,7 @@
 #include <core/manager.hpp>
 #include <core/utils/types/FixedQueue.hpp>
 
-namespace IO = core::IO;
+namespace IO    = core::IO;
 namespace types = core::types;
 
 /**
@@ -37,9 +37,7 @@ public:
     }
 
     // For easier debugging
-    void print(IO::UART* uart) {
-        uart->printf("TestClass(a = %d, b = %d, c = %d)", a, b, c);
-    }
+    void print(IO::UART* uart) { uart->printf("TestClass(a = %d, b = %d, c = %d)", a, b, c); }
 };
 
 int main() {
@@ -80,8 +78,7 @@ int main() {
 
     // Try to pop from empty queue
     int value;
-    uart.printf("numberQueue.pop() success ? ->%d\r\n",
-                numberQueue.pop(&value));
+    uart.printf("numberQueue.pop() success ? ->%d\r\n", numberQueue.pop(&value));
 
     ///////////////////////////////////////////////////////////////////////////
     // Test a queue of numbers, with overwritting
@@ -94,10 +91,8 @@ int main() {
         uart.printf("numberQueueOverwrite.append(%d)\n\r", i);
         numberQueueOverwrite.append(i);
     }
-    uart.printf("numberQueueOverwrite.isFull() -> %d\r\n",
-                numberQueueOverwrite.isFull());
-    uart.printf("numberQueueOverwrite.canInsert() -> %d\r\n",
-                numberQueueOverwrite.canInsert());
+    uart.printf("numberQueueOverwrite.isFull() -> %d\r\n", numberQueueOverwrite.isFull());
+    uart.printf("numberQueueOverwrite.canInsert() -> %d\r\n", numberQueueOverwrite.canInsert());
 
     // Add ten more numbers
     for (int i = 10; i < 20; i++) {

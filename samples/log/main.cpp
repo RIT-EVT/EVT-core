@@ -10,7 +10,7 @@
 #include <core/manager.hpp>
 #include <core/utils/log.hpp>
 
-namespace IO = core::IO;
+namespace IO  = core::IO;
 namespace log = core::log;
 namespace DEV = core::DEV;
 
@@ -36,8 +36,6 @@ int main() {
     // Attempt to log a statement at each log level
     log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Log 0");
     log::LOGGER.log(log::Logger::LogLevel::INFO, "Log 1");
-    log::LOGGER.log(log::Logger::LogLevel::WARNING,
-                    "Log 2 - %x", sampleData);
-    log::LOGGER.log(log::Logger::LogLevel::ERROR,
-                    "Log 3 - %d", sampleData);
+    log::LOGGER.log(log::Logger::LogLevel::WARNING, "Log 2 - %x", sampleData);
+    log::LOGGER.log(log::Logger::LogLevel::ERROR, "Log 3 - %d", sampleData);
 }

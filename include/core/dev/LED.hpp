@@ -12,7 +12,7 @@ public:
      */
     enum class ActiveState {
         HIGH = 0u,
-        LOW = 1u
+        LOW  = 1u
     };
 
     /**
@@ -42,6 +42,6 @@ private:
     ActiveState activeState;
 };
 
-}// namespace core::DEV
+} // namespace core::DEV
 
 #endif

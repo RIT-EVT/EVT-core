@@ -9,19 +9,19 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = core::IO;
+namespace IO   = core::IO;
 namespace time = core::time;
 
-constexpr uint32_t SPI_SPEED = SPI_SPEED_4MHZ;// 4MHz
+constexpr uint32_t SPI_SPEED = SPI_SPEED_4MHZ; // 4MHz
 
 /** The address of the arduino listening for I2C requests */
-constexpr uint8_t SINGLE_BYTE = 0x10;
-constexpr uint8_t READ_MULTIPLE_BYTE = 0x11;
-uint8_t BYTE_MULTIPLE[] = {0x40, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F};
+constexpr uint8_t SINGLE_BYTE          = 0x10;
+constexpr uint8_t READ_MULTIPLE_BYTE   = 0x11;
+uint8_t BYTE_MULTIPLE[]                = {0x40, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F};
 constexpr uint8_t BYTE_MULTIPLE_LENGTH = 9;
-constexpr uint8_t WRITE_REG = 0x20;
-constexpr uint8_t WRITE_REG_BYTE = 0xF3;
-constexpr uint8_t READ_REG = 0x28;
+constexpr uint8_t WRITE_REG            = 0x20;
+constexpr uint8_t WRITE_REG_BYTE       = 0xF3;
+constexpr uint8_t READ_REG             = 0x28;
 
 constexpr uint8_t deviceCount = 1;
 

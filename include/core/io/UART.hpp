@@ -48,8 +48,8 @@ public:
      * Represents the possible lengths of words that can exist for UART.
      */
     enum class WordLength {
-        FIVE = 5,
-        SIX = 6,
+        FIVE  = 5,
+        SIX   = 6,
         SEVEN = 7,
         EIGHT = 8
     };
@@ -88,8 +88,7 @@ public:
      * @param[in] parity The parity settings to use.
      * @param[in] numStopBits The number of stop bits (1-2)
      */
-    virtual void setFormat(WordLength wordLength = WordLength::EIGHT,
-                           Parity parity = Parity::NONE,
+    virtual void setFormat(WordLength wordLength = WordLength::EIGHT, Parity parity = Parity::NONE,
                            NumStopBits numStopBits = NumStopBits::ONE) = 0;
 
     /**
@@ -191,6 +190,6 @@ protected:
     uint32_t baudrate;
 };
 
-}// namespace core::IO
+} // namespace core::IO
 
 #endif

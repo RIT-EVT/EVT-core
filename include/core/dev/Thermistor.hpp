@@ -44,6 +44,6 @@ private:
     uint32_t (*conversion)(uint32_t);
 };
 
-}// namespace core::DEV
+} // namespace core::DEV
 
 #endif

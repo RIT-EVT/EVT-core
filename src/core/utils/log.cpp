@@ -17,10 +17,10 @@ void Logger::setUART(IO::UART* loggingUART) {
 }
 
 /**
-* Set the minimum log level to be displayed by the logger
-*
-* @param level[in] Minimum log level to be displayed by the logger
-*/
+ * Set the minimum log level to be displayed by the logger
+ *
+ * @param level[in] Minimum log level to be displayed by the logger
+ */
 void Logger::setLogLevel(Logger::LogLevel level) {
 #ifdef EVT_CORE_LOG_ENABLE
     minLevel = level;
@@ -92,4 +92,4 @@ void Logger::log(LogLevel level, const char* format, ...) {
 }
 
 Logger LOGGER;
-}// namespace core::log
+} // namespace core::log

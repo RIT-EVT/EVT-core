@@ -31,6 +31,6 @@ private:
     RTC_HandleTypeDef halRTC;
 };
 
-}// namespace core::DEV
+} // namespace core::DEV
 
 #endif

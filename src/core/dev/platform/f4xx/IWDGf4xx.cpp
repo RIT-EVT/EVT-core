@@ -5,13 +5,14 @@ namespace core::DEV {
 // According to a time formula in the documentation with the set prescaler,
 // the ratio of counter ticks to milliseconds should be about 1:8. In testing,
 // we found this to have an error of about 1 second
-IWDGf4xx::IWDGf4xx(uint32_t ms) : halIWDG{
-                                      IWDG1,
-                                      {
-                                          IWDG_PRESCALER_256,
-                                          ms / 8 - 1,
-                                      },
-                                  } {}
+IWDGf4xx::IWDGf4xx(uint32_t ms)
+    : halIWDG{
+          IWDG1,
+          {
+              IWDG_PRESCALER_256,
+              ms / 8 - 1,
+          },
+      } {}
 
 void IWDGf4xx::init() {
     HAL_IWDG_Init(&halIWDG);
@@ -24,4 +25,4 @@ void IWDGf4xx::refresh() {
     }
 }
 
-}// namespace core::DEV
+} // namespace core::DEV

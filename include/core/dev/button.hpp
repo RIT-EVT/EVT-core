@@ -43,7 +43,7 @@ private:
 
     /** The GPIO state that means the button is being pressed */
     IO::GPIO::State pressedState;
+};
 
-};// namespace core::DEV
-}// namespace core::DEV
+} // namespace core::DEV
 #endif

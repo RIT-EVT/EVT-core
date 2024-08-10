@@ -76,6 +76,6 @@ private:
     bool bTimerStopped;
 };
 
-}// namespace core::DEV
+} // namespace core::DEV
 
-#endif//EVT_TIMER_H
+#endif // EVT_TIMER_H

@@ -56,6 +56,7 @@ private:
     /** I2C instance to be used for I2C communication */
     IO::I2C& i2c;
 };
-}// namespace core::DEV
 
-#endif//EVT_M24C32
+} // namespace core::DEV
+
+#endif // EVT_M24C32

@@ -48,6 +48,6 @@ protected:
     Pin pin;
 };
 
-}// namespace core::IO
+} // namespace core::IO
 
 #endif

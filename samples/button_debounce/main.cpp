@@ -4,8 +4,8 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace DEV = core::DEV;
-namespace IO = core::IO;
+namespace DEV  = core::DEV;
+namespace IO   = core::IO;
 namespace time = core::time;
 
 int main() {
@@ -13,9 +13,9 @@ int main() {
     core::platform::init();
 
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-    IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();
-    IO::GPIO& buttonGPIO = IO::getGPIO<IO::Pin::PC_3>();
+    IO::UART& uart         = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    IO::GPIO& ledGPIO      = IO::getGPIO<IO::Pin::LED>();
+    IO::GPIO& buttonGPIO   = IO::getGPIO<IO::Pin::PC_3>();
     uint32_t debounceStart = time::millis();
 
     DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);

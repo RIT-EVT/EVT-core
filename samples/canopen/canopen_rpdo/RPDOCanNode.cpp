@@ -5,29 +5,15 @@ RPDOCanNode::RPDOCanNode() {
     sampleDataB = 0;
 }
 
-CO_OBJ_T* RPDOCanNode::getObjectDictionary() {
-    return &objectDictionary[0];
-}
+CO_OBJ_T* RPDOCanNode::getObjectDictionary() { return &objectDictionary[0]; }
 
-uint8_t RPDOCanNode::getNumElements() {
-    return OBJECT_DICTIONARY_SIZE + 1;
-}
+uint8_t RPDOCanNode::getNumElements() { return OBJECT_DICTIONARY_SIZE + 1; }
 
-void RPDOCanNode::setSampleDataA(uint8_t newValue) {
-    this->sampleDataA = newValue;
-}
+void RPDOCanNode::setSampleDataA(uint8_t newValue) { this->sampleDataA = newValue; }
 
-uint8_t RPDOCanNode::getSampleDataA() {
-    return sampleDataA;
-}
+uint8_t RPDOCanNode::getSampleDataA() { return sampleDataA; }
 
-void RPDOCanNode::setSampleDataB(uint16_t newValue) {
-    this->sampleDataB = newValue;
-}
+void RPDOCanNode::setSampleDataB(uint16_t newValue) { this->sampleDataB = newValue; }
 
-uint16_t RPDOCanNode::getSampleDataB() {
-    return sampleDataB;
-}
-uint8_t RPDOCanNode::getNodeID() {
-    return NODE_ID;
-}
+uint16_t RPDOCanNode::getSampleDataB() { return sampleDataB; }
+uint8_t RPDOCanNode::getNodeID() { return NODE_ID; }

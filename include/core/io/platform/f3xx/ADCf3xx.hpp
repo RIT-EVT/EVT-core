@@ -60,6 +60,6 @@ private:
     void addChannel(uint8_t rank);
 };
 
-}// namespace core::IO
+} // namespace core::IO
 
 #endif

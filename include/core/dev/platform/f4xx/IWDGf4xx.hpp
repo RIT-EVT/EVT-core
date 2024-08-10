@@ -34,6 +34,6 @@ private:
     bool isActive = false;
 };
 
-}// namespace core::DEV
+} // namespace core::DEV
 
-#endif//EVT_IWDGF4XX_HPP
+#endif // EVT_IWDGF4XX_HPP

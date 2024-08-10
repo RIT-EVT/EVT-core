@@ -14,7 +14,7 @@ namespace {
 DMA_HandleTypeDef* dmaHandle;
 ADC_HandleTypeDef* adcHandle;
 
-}// namespace
+} // namespace
 
 extern "C" void DMA1_Channel1_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle);
@@ -58,8 +58,7 @@ ADCf3xx::ADCf3xx(Pin pin) : ADC(pin) {
     addChannel(rank);
 
     initDMA();
-    HAL_ADC_Start_DMA(&halADC, reinterpret_cast<uint32_t*>(&buffer[0]),
-                      rank);
+    HAL_ADC_Start_DMA(&halADC, reinterpret_cast<uint32_t*>(&buffer[0]), rank);
 
     rank++;
 }
@@ -84,25 +83,26 @@ float ADCf3xx::readPercentage() {
 }
 
 void ADCf3xx::initADC(uint8_t num_channels) {
-    halADC.Instance = ADC1;// Only ADC the F3 supports
+    halADC.Instance = ADC1; // Only ADC the F3 supports
 
     // TODO: Figure out ADC calibration
 
-    halADC.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV1;// Use AHB clock (8MHz) w/o division for ADC clock
-    halADC.Init.Resolution = ADC_RESOLUTION_12B;
-    halADC.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-    halADC.Init.ScanConvMode = ADC_SCAN_ENABLE;
-    halADC.Init.EOCSelection = ADC_EOC_SEQ_CONV;
-    halADC.Init.LowPowerAutoWait = DISABLE;// Wait for the previous value to be written by DMA before beginning
-                                           // next transfer.  Not recommended for DMA.
-    halADC.Init.ContinuousConvMode = ENABLE;
-    halADC.Init.NbrOfConversion = num_channels;
+    halADC.Init.ClockPrescaler   = ADC_CLOCK_SYNC_PCLK_DIV1; // Use AHB clock (8MHz) w/o division for ADC clock
+    halADC.Init.Resolution       = ADC_RESOLUTION_12B;
+    halADC.Init.DataAlign        = ADC_DATAALIGN_RIGHT;
+    halADC.Init.ScanConvMode     = ADC_SCAN_ENABLE;
+    halADC.Init.EOCSelection     = ADC_EOC_SEQ_CONV;
+    halADC.Init.LowPowerAutoWait = DISABLE; // Wait for the previous value to be written by DMA before beginning
+                                            // next transfer.  Not recommended for DMA.
+    halADC.Init.ContinuousConvMode    = ENABLE;
+    halADC.Init.NbrOfConversion       = num_channels;
     halADC.Init.DiscontinuousConvMode = DISABLE;
-    halADC.Init.NbrOfDiscConversion = 1;// Parameter discarded when Discontinuous Conv Mode is Disabled
-    halADC.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-    halADC.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;// Parameter discared when set to ADC_SOFTWARE_START
+    halADC.Init.NbrOfDiscConversion   = 1; // Parameter discarded when Discontinuous Conv Mode is Disabled
+    halADC.Init.ExternalTrigConv      = ADC_SOFTWARE_START;
+    halADC.Init.ExternalTrigConvEdge =
+        ADC_EXTERNALTRIGCONVEDGE_NONE; // Parameter discared when set to ADC_SOFTWARE_START
     halADC.Init.DMAContinuousRequests = ENABLE;
-    halADC.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
+    halADC.Init.Overrun               = ADC_OVR_DATA_OVERWRITTEN;
 
     __HAL_RCC_ADC1_CLK_ENABLE();
     HAL_ADC_Init(&halADC);
@@ -114,14 +114,14 @@ void ADCf3xx::initDMA() {
     // TODO: Add some way of selecting the next available DMA channel
     // Ideally we would have a "DMA" class dedicated to DMA resource
     // allocation.
-    halDMA.Instance = DMA1_Channel1;
-    halDMA.Init.Direction = DMA_PERIPH_TO_MEMORY;
-    halDMA.Init.PeriphInc = DMA_PINC_DISABLE;
-    halDMA.Init.MemInc = DMA_MINC_ENABLE;
+    halDMA.Instance                 = DMA1_Channel1;
+    halDMA.Init.Direction           = DMA_PERIPH_TO_MEMORY;
+    halDMA.Init.PeriphInc           = DMA_PINC_DISABLE;
+    halDMA.Init.MemInc              = DMA_MINC_ENABLE;
     halDMA.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
-    halDMA.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-    halDMA.Init.Mode = DMA_CIRCULAR;
-    halDMA.Init.Priority = DMA_PRIORITY_VERY_HIGH;
+    halDMA.Init.MemDataAlignment    = DMA_MDATAALIGN_HALFWORD;
+    halDMA.Init.Mode                = DMA_CIRCULAR;
+    halDMA.Init.Priority            = DMA_PRIORITY_VERY_HIGH;
 
     HAL_DMA_Init(&halDMA);
 
@@ -133,11 +133,10 @@ void ADCf3xx::initDMA() {
 
 void ADCf3xx::addChannel(uint8_t rank) {
     GPIO_InitTypeDef gpioInit;
-    Pin myPins[] = {pin};
+    Pin myPins[]      = {pin};
     uint8_t numOfPins = 1;
 
-    GPIOf3xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG,
-                            GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
+    GPIOf3xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;
 
@@ -188,20 +187,20 @@ void ADCf3xx::addChannel(uint8_t rank) {
         adcChannel.Channel = ADC_CHANNEL_15;
         break;
     default:
-        break;// Should never get here
+        break; // Should never get here
     }
 
     // Subtract 1 because rank starts at 1
     channels[rank - 1] = pin;
 
-    adcChannel.Rank = rank;
+    adcChannel.Rank         = rank;
     adcChannel.SamplingTime = ADC_SAMPLETIME_601CYCLES_5;
-    adcChannel.Offset = 0;
-    adcChannel.SingleDiff = ADC_SINGLE_ENDED;
+    adcChannel.Offset       = 0;
+    adcChannel.SingleDiff   = ADC_SINGLE_ENDED;
     adcChannel.OffsetNumber = ADC_OFFSET_NONE;
-    adcChannel.Offset = 0x000;
+    adcChannel.Offset       = 0x000;
 
     HAL_ADC_ConfigChannel(&halADC, &adcChannel);
 }
 
-}// namespace core::IO
+} // namespace core::IO

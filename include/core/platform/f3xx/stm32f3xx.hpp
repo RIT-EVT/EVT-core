@@ -9,10 +9,10 @@ namespace core::platform {
 constexpr uint32_t CLK_SPEED = 8000000;
 
 // Interrupt Priority Mappings.  0 is high and 15 is low
-constexpr uint32_t CAN_INTERRUPT_PRIORITY = 4;
-constexpr uint32_t ADC_INTERRUPT_PRIORITY = 5;
+constexpr uint32_t CAN_INTERRUPT_PRIORITY   = 4;
+constexpr uint32_t ADC_INTERRUPT_PRIORITY   = 5;
 constexpr uint32_t TIMER_INTERRUPT_PRIORITY = 9;
-constexpr uint32_t GPIO_INTERRUPT_PRIORITY = 10;
+constexpr uint32_t GPIO_INTERRUPT_PRIORITY  = 10;
 
 /**
  * Handles system level initialization of the STM32F302x8. This makes a
@@ -21,5 +21,5 @@ constexpr uint32_t GPIO_INTERRUPT_PRIORITY = 10;
  */
 void stm32f3xx_init();
 
-}// namespace core::platform
+} // namespace core::platform
 #endif

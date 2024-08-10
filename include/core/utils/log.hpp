@@ -12,13 +12,13 @@ namespace core::log {
 class Logger {
 public:
     /**
-    * The level at which messages should be logged
-    */
+     * The level at which messages should be logged
+     */
     enum class LogLevel {
-        DEBUG = 0u,
-        INFO = 1u,
+        DEBUG   = 0u,
+        INFO    = 1u,
         WARNING = 2u,
-        ERROR = 3u,
+        ERROR   = 3u,
     };
 
     /**
@@ -65,6 +65,7 @@ private:
 // creating a new one each time this header is included
 /** Global Logger instance */
 extern Logger LOGGER;
-}// namespace core::log
 
-#endif// INCLUDE_EVT_UTILS_LOG_HPP_
+} // namespace core::log
+
+#endif // INCLUDE_EVT_UTILS_LOG_HPP_

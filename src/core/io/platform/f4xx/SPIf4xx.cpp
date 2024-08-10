@@ -74,12 +74,13 @@ uint8_t SPIf4xx::getSCKPortID(Pin sckPin) {
 #endif
 }
 
-SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : SPI(CSPins, pinLength, sckPin, mosiPin, misoPin) {
-    uint8_t mosiPort = getMOSIPortID(mosiPin);
-    uint8_t misoPort = getMISOPortID(misoPin);
-    uint8_t sckPort = getSCKPortID(sckPin);
+SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin)
+    : SPI(CSPins, pinLength, sckPin, mosiPin, misoPin) {
+    uint8_t mosiPort          = getMOSIPortID(mosiPin);
+    uint8_t misoPort          = getMISOPortID(misoPin);
+    uint8_t sckPort           = getSCKPortID(sckPin);
     GPIO_InitTypeDef GPIOInit = {0};
-    uint8_t altId = 0x00U;
+    uint8_t altId             = 0x00U;
 
     if (mosiPort == misoPort && misoPort == sckPort) {
         switch (mosiPort) {
@@ -113,34 +114,44 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin
 
         // gpioStateInit only supports initializing up to 2 pins, so this must be done
         // init mosiPin and misoPin
-        Pin spiPins[] = {mosiPin, misoPin};
+        Pin spiPins[]     = {mosiPin, misoPin};
         uint8_t numOfPins = 2;
 
-        GPIOf4xx::gpioStateInit(&GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP,
-                                GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+        GPIOf4xx::gpioStateInit(&GPIOInit,
+                                spiPins,
+                                numOfPins,
+                                GPIO_MODE_AF_PP,
+                                GPIO_NOPULL,
+                                GPIO_SPEED_FREQ_HIGH,
+                                altId);
         // init sckPin
         spiPins[0] = sckPin;
-        numOfPins = 1;
-        GPIOf4xx::gpioStateInit(&GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP,
-                                GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+        numOfPins  = 1;
+        GPIOf4xx::gpioStateInit(&GPIOInit,
+                                spiPins,
+                                numOfPins,
+                                GPIO_MODE_AF_PP,
+                                GPIO_NOPULL,
+                                GPIO_SPEED_FREQ_HIGH,
+                                altId);
 
-        halSPI.Init.Mode = SPI_MODE_MASTER;
+        halSPI.Init.Mode      = SPI_MODE_MASTER;
         halSPI.Init.Direction = SPI_DIRECTION_2LINES;
-        halSPI.Init.DataSize = SPI_DATASIZE_8BIT;
+        halSPI.Init.DataSize  = SPI_DATASIZE_8BIT;
 
         // advanced settings
-        halSPI.Init.TIMode = SPI_TIMODE_DISABLE;
+        halSPI.Init.TIMode         = SPI_TIMODE_DISABLE;
         halSPI.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-        halSPI.Init.CRCPolynomial = 7;
-        halSPI.Init.NSS = SPI_NSS_SOFT;
+        halSPI.Init.CRCPolynomial  = 7;
+        halSPI.Init.NSS            = SPI_NSS_SOFT;
     }
 }
 
 SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : SPI(CSPins, pinLength, sckPin, mosiPin) {
-    uint8_t mosiPort = getMOSIPortID(mosiPin);
-    uint8_t sckPort = getSCKPortID(sckPin);
+    uint8_t mosiPort          = getMOSIPortID(mosiPin);
+    uint8_t sckPort           = getSCKPortID(sckPin);
     GPIO_InitTypeDef GPIOInit = {0};
-    uint8_t altId = 0x00U;
+    uint8_t altId             = 0x00U;
 
     if (mosiPort == sckPort) {
         switch (mosiPort) {
@@ -171,21 +182,26 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : S
             break;
         }
 
-        Pin spiPins[] = {mosiPin, sckPin};
+        Pin spiPins[]     = {mosiPin, sckPin};
         uint8_t numOfPins = 2;
 
-        GPIOf4xx::gpioStateInit(&GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP,
-                                GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+        GPIOf4xx::gpioStateInit(&GPIOInit,
+                                spiPins,
+                                numOfPins,
+                                GPIO_MODE_AF_PP,
+                                GPIO_NOPULL,
+                                GPIO_SPEED_FREQ_HIGH,
+                                altId);
 
-        halSPI.Init.Mode = SPI_MODE_MASTER;
+        halSPI.Init.Mode      = SPI_MODE_MASTER;
         halSPI.Init.Direction = SPI_DIRECTION_1LINE;
-        halSPI.Init.DataSize = SPI_DATASIZE_8BIT;
+        halSPI.Init.DataSize  = SPI_DATASIZE_8BIT;
 
         // advanced settings
-        halSPI.Init.TIMode = SPI_TIMODE_DISABLE;
+        halSPI.Init.TIMode         = SPI_TIMODE_DISABLE;
         halSPI.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-        halSPI.Init.CRCPolynomial = 7;
-        halSPI.Init.NSS = SPI_NSS_SOFT;
+        halSPI.Init.CRCPolynomial  = 7;
+        halSPI.Init.NSS            = SPI_NSS_SOFT;
     }
 }
 
@@ -194,19 +210,19 @@ void SPIf4xx::configureSPI(uint32_t baudRate, SPIMode mode, bool firstBitMSB) {
     switch (mode) {
     case IO::SPI::SPIMode::SPI_MODE0:
         halSPI.Init.CLKPolarity = SPI_POLARITY_LOW;
-        halSPI.Init.CLKPhase = SPI_PHASE_1EDGE;
+        halSPI.Init.CLKPhase    = SPI_PHASE_1EDGE;
         break;
     case IO::SPI::SPIMode::SPI_MODE1:
         halSPI.Init.CLKPolarity = SPI_POLARITY_LOW;
-        halSPI.Init.CLKPhase = SPI_PHASE_2EDGE;
+        halSPI.Init.CLKPhase    = SPI_PHASE_2EDGE;
         break;
     case IO::SPI::SPIMode::SPI_MODE2:
         halSPI.Init.CLKPolarity = SPI_POLARITY_HIGH;
-        halSPI.Init.CLKPhase = SPI_PHASE_1EDGE;
+        halSPI.Init.CLKPhase    = SPI_PHASE_1EDGE;
         break;
     case IO::SPI::SPIMode::SPI_MODE3:
         halSPI.Init.CLKPolarity = SPI_POLARITY_HIGH;
-        halSPI.Init.CLKPhase = SPI_PHASE_2EDGE;
+        halSPI.Init.CLKPhase    = SPI_PHASE_2EDGE;
         break;
     default:
         log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid SPI Mode");
@@ -290,11 +306,15 @@ SPI::SPIStatus SPIf4xx::read(uint8_t* bytes, uint8_t length) {
  */
 SPI::SPIStatus SPIf4xx::halToSPIStatus(HAL_StatusTypeDef halStatus) {
     switch (halStatus) {
-    case HAL_OK: return SPIStatus::OK;
-    case HAL_ERROR: return SPIStatus::ERROR;
-    case HAL_BUSY: return SPIStatus::BUSY;
-    case HAL_TIMEOUT: return SPIStatus::TIMEOUT;
+    case HAL_OK:
+        return SPIStatus::OK;
+    case HAL_ERROR:
+        return SPIStatus::ERROR;
+    case HAL_BUSY:
+        return SPIStatus::BUSY;
+    case HAL_TIMEOUT:
+        return SPIStatus::TIMEOUT;
     }
 }
 
-}// namespace core::IO
+} // namespace core::IO

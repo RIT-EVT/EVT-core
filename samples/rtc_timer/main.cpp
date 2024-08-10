@@ -3,7 +3,7 @@
 
 #include <core/dev/RTCTimer.hpp>
 
-namespace IO = core::IO;
+namespace IO  = core::IO;
 namespace DEV = core::DEV;
 
 int main() {
@@ -11,7 +11,7 @@ int main() {
 
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
-    //Specific implementation of DEV::RTC, clock type can vary
+    // Specific implementation of DEV::RTC, clock type can vary
     DEV::RTC& clock = DEV::getRTC();
 
     DEV::RTCTimer timer(clock, 5000);
@@ -23,10 +23,10 @@ int main() {
     time::wait(1000);
     uart.printf("Stopped...\r\n");
     timer.stopTimer();
-    uart.printf("Current time: %d\r\n", timer.getTime());// should be same
+    uart.printf("Current time: %d\r\n", timer.getTime()); // should be same
     uart.printf("Waiting...\r\n");
     time::wait(1000);
-    uart.printf("Current time: %d\r\n", timer.getTime());// should be same
+    uart.printf("Current time: %d\r\n", timer.getTime()); // should be same
     timer.startTimer();
 
     while (1) {

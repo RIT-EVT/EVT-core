@@ -12,7 +12,7 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = core::IO;
+namespace IO   = core::IO;
 namespace time = core::time;
 
 /** The address of the arduino listening for I2C requests */
@@ -26,7 +26,7 @@ int main() {
     // Initialize system
     core::platform::init();
 
-    IO::I2C& i2c = IO::getI2C<IO::Pin::PB_8, IO::Pin::PB_9>();
+    IO::I2C& i2c   = IO::getI2C<IO::Pin::PB_8, IO::Pin::PB_9>();
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
     uart.printf("Starting I2C test\n\r");
@@ -38,8 +38,7 @@ int main() {
         uint8_t oValue;
         IO::I2C::I2CStatus status = i2c.readReg(I2C_SLAVE_ADDR, O_REGISTER, &oValue);
         if (status != IO::I2C::I2CStatus::OK) {
-            uart.printf("Failed read 'o' register with I2C::I2CStatus: %d\n\r",
-                        status);
+            uart.printf("Failed read 'o' register with I2C::I2CStatus: %d\n\r", status);
             break;
         }
 
@@ -49,8 +48,7 @@ int main() {
         uint8_t kValue;
         status = i2c.readReg(I2C_SLAVE_ADDR, K_REGISTER, &kValue);
         if (status != IO::I2C::I2CStatus::OK) {
-            uart.printf("Failed read 'k' register with I2C::I2CStatus: %d\n\r",
-                        status);
+            uart.printf("Failed read 'k' register with I2C::I2CStatus: %d\n\r", status);
             break;
         }
 

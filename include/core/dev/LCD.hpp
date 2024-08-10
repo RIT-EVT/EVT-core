@@ -8,26 +8,26 @@
 #include <core/utils/time.hpp>
 #include <stdint.h>
 
-#define ADCSELECT 0xA0
-#define DISPLAYOFF 0xAE
-#define COMDIRSCAN 0xC8
-#define LCDBIASET 0xA2
-#define POWERCONTROLSET 0x2F
-#define RESRATIOSET 0x26
+#define ADCSELECT            0xA0
+#define DISPLAYOFF           0xAE
+#define COMDIRSCAN           0xC8
+#define LCDBIASET            0xA2
+#define POWERCONTROLSET      0x2F
+#define RESRATIOSET          0x26
 #define ELECTRONICVOLCOMMAND 0x81
-#define ELECTRONICVOLVALUE 0x11
-#define DISPLAYON 0xAF
-#define DISPLAYOFF 0xAE
+#define ELECTRONICVOLVALUE   0x11
+#define DISPLAYON            0xAF
+#define DISPLAYOFF           0xAE
 
-#define MAX_SECTIONS 12
-#define MAX_SECTION_HEIGHT 8
+#define MAX_SECTIONS        12
+#define MAX_SECTION_HEIGHT  8
 #define MAX_SECTION_PER_ROW 3
 
 namespace core::DEV {
 /**
-* This class represents the structure to command a GLCD with
-* a ST7565 controller.
-*/
+ * This class represents the structure to command a GLCD with
+ * a ST7565 controller.
+ */
 class LCD {
 public:
     /**
@@ -49,15 +49,16 @@ public:
     LCD(core::IO::GPIO& regSelect, core::IO::GPIO& reset, core::IO::SPI& spi);
 
     /**
-      * Constructor for the LCD class
-      *
-      * @param[in] regSelect Register select pin
-      * @param[in] reset Reset pin
-      * @param[in] spi SPI class for communication
-      * @param[in] numberOfSections number of sections that the display will show
-      * @param[in] sectionsPerRow number of sections per row to display
-      */
-    LCD(core::IO::GPIO& regSelect, core::IO::GPIO& reset, core::IO::SPI& spi, uint8_t numberOfSections, uint8_t sectionsPerRow);
+     * Constructor for the LCD class
+     *
+     * @param[in] regSelect Register select pin
+     * @param[in] reset Reset pin
+     * @param[in] spi SPI class for communication
+     * @param[in] numberOfSections number of sections that the display will show
+     * @param[in] sectionsPerRow number of sections per row to display
+     */
+    LCD(core::IO::GPIO& regSelect, core::IO::GPIO& reset, core::IO::SPI& spi, uint8_t numberOfSections,
+        uint8_t sectionsPerRow);
 
     /**
      * Writes data to the LCD
@@ -184,7 +185,7 @@ private:
     core::IO::GPIO& reset;
 
     /** Chip select pin for the LCD */
-    //core::IO::GPIO& chipSelect; // TODO: Need to figure out purpose of this
+    // core::IO::GPIO& chipSelect; // TODO: Need to figure out purpose of this
 
     /** SPI port for the LCD controller */
     core::IO::SPI& spi;
@@ -203,6 +204,6 @@ private:
     };
 };
 
-}// namespace core::DEV
+} // namespace core::DEV
 
 #endif

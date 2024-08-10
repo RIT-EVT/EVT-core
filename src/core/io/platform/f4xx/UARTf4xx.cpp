@@ -12,11 +12,10 @@
 
 namespace core::IO {
 
-UARTf4xx::UARTf4xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped)
-    : UART(txPin, rxPin, baudrate) {
+UARTf4xx::UARTf4xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped) : UART(txPin, rxPin, baudrate) {
 
     GPIO_InitTypeDef gpioInit;
-    Pin myPins[] = {txPin, rxPin};
+    Pin myPins[]      = {txPin, rxPin};
     uint8_t numOfPins = 2;
     uint8_t alt_id;
 
@@ -75,15 +74,14 @@ UARTf4xx::UARTf4xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped)
         break;
     }
 
-    GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP,
-                            GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, alt_id);
+    GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, alt_id);
 
-    halUART.Init.BaudRate = baudrate;
-    halUART.Init.WordLength = UART_WORDLENGTH_8B;
-    halUART.Init.StopBits = UART_STOPBITS_1;
-    halUART.Init.Parity = UART_PARITY_NONE;
-    halUART.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-    halUART.Init.Mode = UART_MODE_TX_RX;
+    halUART.Init.BaudRate     = baudrate;
+    halUART.Init.WordLength   = UART_WORDLENGTH_8B;
+    halUART.Init.StopBits     = UART_STOPBITS_1;
+    halUART.Init.Parity       = UART_PARITY_NONE;
+    halUART.Init.HwFlowCtl    = UART_HWCONTROL_NONE;
+    halUART.Init.Mode         = UART_MODE_TX_RX;
     halUART.Init.OverSampling = UART_OVERSAMPLING_16;
 
     HAL_UART_Init(&halUART);
@@ -91,27 +89,20 @@ UARTf4xx::UARTf4xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped)
 
 void UARTf4xx::setBaudrate(uint32_t baudrate) {
     this->halUART.Init.BaudRate = baudrate;
-    this->baudrate = baudrate;
+    this->baudrate              = baudrate;
 }
 
-void UARTf4xx::setFormat(WordLength wordLength, Parity parity,
-                         NumStopBits numStopBits) {
+void UARTf4xx::setFormat(WordLength wordLength, Parity parity, NumStopBits numStopBits) {
     halUART.Init.WordLength = static_cast<uint32_t>(wordLength);
-    halUART.Init.Parity = static_cast<uint32_t>(parity);
-    halUART.Init.Parity = static_cast<uint32_t>(numStopBits);
+    halUART.Init.Parity     = static_cast<uint32_t>(parity);
+    halUART.Init.Parity     = static_cast<uint32_t>(numStopBits);
 }
 
-void UARTf4xx::sendBreak() {
-    HAL_LIN_SendBreak(&halUART);
-}
+void UARTf4xx::sendBreak() { HAL_LIN_SendBreak(&halUART); }
 
-bool UARTf4xx::isReadable() {
-    return halUART.pRxBuffPtr != NULL;
-}
+bool UARTf4xx::isReadable() { return halUART.pRxBuffPtr != NULL; }
 
-bool UARTf4xx::isWritable() {
-    return halUART.pTxBuffPtr == NULL;
-}
+bool UARTf4xx::isWritable() { return halUART.pTxBuffPtr == NULL; }
 
 void UARTf4xx::putc(char c) {
     uint8_t* data = reinterpret_cast<uint8_t*>(&c);
@@ -127,8 +118,7 @@ void UARTf4xx::puts(const char* s) {
 
 char UARTf4xx::getc() {
     uint8_t c;
-    while (HAL_UART_Receive(&halUART, &c, 1, EVT_UART_TIMEOUT) == HAL_TIMEOUT) {
-    }
+    while (HAL_UART_Receive(&halUART, &c, 1, EVT_UART_TIMEOUT) == HAL_TIMEOUT) {}
     return static_cast<char>(c);
 }
 
@@ -139,27 +129,18 @@ void UARTf4xx::printf(const char* format, ...) {
     char string[200];
     uint8_t* data = reinterpret_cast<uint8_t*>(&string);
     if (0 < vsprintf(string, format, args)) {
-        HAL_UART_Transmit(&halUART, data,
-                          strlen(string), EVT_UART_TIMEOUT);
+        HAL_UART_Transmit(&halUART, data, strlen(string), EVT_UART_TIMEOUT);
     }
 
     va_end(args);
 }
 
-void UARTf4xx::write(uint8_t byte) {
-    putc(static_cast<uint8_t>(byte));
-}
+void UARTf4xx::write(uint8_t byte) { putc(static_cast<uint8_t>(byte)); }
 
-uint8_t UARTf4xx::read() {
-    return static_cast<uint8_t>(getc());
-}
+uint8_t UARTf4xx::read() { return static_cast<uint8_t>(getc()); }
 
-void UARTf4xx::writeBytes(uint8_t* bytes, size_t size) {
-    HAL_UART_Transmit(&halUART, bytes, size, EVT_UART_TIMEOUT);
-}
+void UARTf4xx::writeBytes(uint8_t* bytes, size_t size) { HAL_UART_Transmit(&halUART, bytes, size, EVT_UART_TIMEOUT); }
 
-void UARTf4xx::readBytes(uint8_t* bytes, size_t size) {
-    HAL_UART_Receive(&halUART, bytes, size, EVT_UART_TIMEOUT);
-}
+void UARTf4xx::readBytes(uint8_t* bytes, size_t size) { HAL_UART_Receive(&halUART, bytes, size, EVT_UART_TIMEOUT); }
 
-}// namespace core::IO
+} // namespace core::IO

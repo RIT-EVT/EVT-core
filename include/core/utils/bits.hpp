@@ -15,9 +15,7 @@
  * @param data The number to get the high byte from
  * @return The high order byte
  */
-constexpr static inline uint8_t getHighByte(uint16_t data) {
-    return static_cast<uint8_t>((data & 0xFF00) >> 8);
-}
+constexpr static inline uint8_t getHighByte(uint16_t data) { return static_cast<uint8_t>((data & 0xFF00) >> 8); }
 
 /**
  * Get the low byte from the number.
@@ -25,9 +23,7 @@ constexpr static inline uint8_t getHighByte(uint16_t data) {
  * @param data The number to get the low byte from
  * @return The low order byte
  */
-constexpr static inline uint8_t getLowByte(uint16_t data) {
-    return static_cast<uint8_t>(data & 0x00FF);
-}
+constexpr static inline uint8_t getLowByte(uint16_t data) { return static_cast<uint8_t>(data & 0x00FF); }
 
 // 32 bit operations
 /**
@@ -66,8 +62,6 @@ constexpr static inline uint8_t getMiddleLowByte(uint32_t data) {
  * @param data The number to get the lowest byte from.
  * @return The lowest order byte
  */
-constexpr static inline uint8_t getLowestByte(uint32_t data) {
-    return static_cast<uint8_t>((data & 0x000000FF));
-}
+constexpr static inline uint8_t getLowestByte(uint32_t data) { return static_cast<uint8_t>((data & 0x000000FF)); }
 
 #endif

@@ -6,8 +6,8 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = core::IO;
-namespace DEV = core::DEV;
+namespace IO   = core::IO;
+namespace DEV  = core::DEV;
 namespace time = core::time;
 
 int main() {
@@ -19,11 +19,11 @@ int main() {
 
     // Start RTC and set the default time
     time::TimeStamp time;
-    time.year = 24;
+    time.year  = 24;
     time.month = 4;
-    time.day = 8;
+    time.day   = 8;
 
-    time.hour = 19;
+    time.hour   = 19;
     time.minute = 23;
     time.second = 55;
 
@@ -37,9 +37,7 @@ int main() {
     while (1) {
         rtc.getTime(time);
 
-        uart.printf("%d/%d/%d %d:%d:%d\r\n",
-                    time.day, time.month, time.year,
-                    time.hour, time.minute, time.second);
+        uart.printf("%d/%d/%d %d:%d:%d\r\n", time.day, time.month, time.year, time.hour, time.minute, time.second);
 
         epochTime = rtc.getTime();
         uart.printf("Timestamp since Epoch: %d\r\n\r\n", epochTime);

@@ -35,6 +35,6 @@ private:
     TIM_OC_InitTypeDef halChannel;
 };
 
-}// namespace core::IO
+} // namespace core::IO
 
 #endif

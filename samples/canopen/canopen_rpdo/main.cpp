@@ -16,8 +16,8 @@
 
 #include "RPDOCanNode.hpp"
 
-namespace IO = core::IO;
-namespace DEV = core::DEV;
+namespace IO   = core::IO;
+namespace DEV  = core::DEV;
 namespace time = core::time;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -42,7 +42,7 @@ IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 void canInterrupt(IO::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*) priv;
 
-    //print out raw received data
+    // print out raw received data
     uart.printf("Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
     uint8_t* data = message.getPayload();
     for (int i = 0; i < message.getDataLength(); i++) {
@@ -62,7 +62,7 @@ int main() {
     // Initialize the timer
     DEV::Timer& timer = DEV::getTimer<DEV::MCUTimer::Timer2>(100);
 
-    //create the RPDO node
+    // create the RPDO node
     RPDOCanNode testCanNode;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -96,7 +96,7 @@ int main() {
     // Attempt to join the CAN network
     IO::CAN::CANStatus result = can.connect();
 
-    //test that the board is connected to the can network
+    // test that the board is connected to the can network
     if (result != IO::CAN::CANStatus::OK) {
         uart.printf("Failed to connect to CAN network\r\n");
         return 1;
@@ -113,17 +113,17 @@ int main() {
 
     time::wait(500);
 
-    //print any CANopen errors
+    // print any CANopen errors
     uart.printf("Error: %d\r\n", CONodeGetErr(&canNode));
 
     ///////////////////////////////////////////////////////////////////////////
     // Main loop
     ///////////////////////////////////////////////////////////////////////////
 
-    uint8_t lastVal1 = 0;
+    uint8_t lastVal1  = 0;
     uint16_t lastVal2 = 0;
     while (1) {
-        //Print new value when changed over CAN
+        // Print new value when changed over CAN
         if (lastVal1 != testCanNode.getSampleDataA() || lastVal2 != testCanNode.getSampleDataB()) {
             lastVal1 = testCanNode.getSampleDataA();
             lastVal2 = testCanNode.getSampleDataB();

@@ -7,8 +7,8 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = core::IO;
-namespace DEV = core::DEV;
+namespace IO   = core::IO;
+namespace DEV  = core::DEV;
 namespace time = core::time;
 
 /**
@@ -16,9 +16,7 @@ namespace time = core::time;
  * function will look like. In actuality, this will be determined through
  * testing/reading the thermistor datasheet.
  */
-uint32_t convert(uint32_t voltage) {
-    return voltage / 2;
-}
+uint32_t convert(uint32_t voltage) { return voltage / 2; }
 
 int main() {
     core::platform::init();
@@ -38,10 +36,8 @@ int main() {
     uart.printf("Starting thermistor test\r\n");
 
     while (1) {
-        uart.printf("Temperature: %dmC\r\n",
-                    static_cast<int>(thermistor.getTempCelcius()));
-        uart.printf("Voltage: %dV\r\n",
-                    static_cast<int>(thermistor.getRawADC()));
+        uart.printf("Temperature: %dmC\r\n", static_cast<int>(thermistor.getTempCelcius()));
+        uart.printf("Voltage: %dV\r\n", static_cast<int>(thermistor.getRawADC()));
         time::wait(100);
     }
 }

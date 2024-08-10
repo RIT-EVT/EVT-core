@@ -1,6 +1,6 @@
 /**
-* Sample code for displaying a segmented display on an LCD.
-*/
+ * Sample code for displaying a segmented display on an LCD.
+ */
 
 #include <cstdio>
 
@@ -10,8 +10,8 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace DEV = core::DEV;
-namespace IO = core::IO;
+namespace DEV  = core::DEV;
+namespace IO   = core::IO;
 namespace time = core::time;
 
 constexpr uint32_t SPI_SPEED = SPI_SPEED_500KHZ;
@@ -29,7 +29,8 @@ int main() {
 
     // Uses HUDL 1.0 Pins
     IO::GPIO& regSelect = IO::getGPIO<IO::Pin::PA_3>(core::IO::GPIO::Direction::OUTPUT);
-    IO::GPIO& reset = IO::getGPIO<IO::Pin::PB_3>(core::IO::GPIO::Direction::OUTPUT);
+    IO::GPIO& reset     = IO::getGPIO<IO::Pin::PB_3>(core::IO::GPIO::Direction::OUTPUT);
+
     devices[0] = &IO::getGPIO<IO::Pin::PB_12>(core::IO::GPIO::Direction::OUTPUT);
     devices[0]->writePin(IO::GPIO::State::HIGH);
 

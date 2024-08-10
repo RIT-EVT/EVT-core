@@ -34,6 +34,6 @@ private:
     bool isActive = false;
 };
 
-}// namespace core::DEV
+} // namespace core::DEV
 
 #endif

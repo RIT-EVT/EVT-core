@@ -9,7 +9,7 @@
 #include <core/io/CAN.hpp>
 #include <core/utils/types/FixedQueue.hpp>
 
-//Allows for resizable CAN queue if needed
+// Allows for resizable CAN queue if needed
 #ifndef CAN_MESSAGE_QUEUE_SIZE
     #define CAN_MESSAGE_QUEUE_SIZE 100
 #endif
@@ -43,7 +43,7 @@ public:
      * For the STM32f3xx this involves attempting to startup the CAN
      * interface. This could cause an error in the case of invalid
      * parameters.
-     * 
+     *
      * @param[in] autoBusOff Indicates the state halCAN.Init.AutoBusOff should be in
      *
      * @return CANStatus::OK on success, CANStatus::ERROR otherwise
@@ -99,6 +99,6 @@ private:
     core::types::FixedQueue<CAN_MESSAGE_QUEUE_SIZE, CANMessage> messageQueue;
 };
 
-}// namespace core::IO
+} // namespace core::IO
 
 #endif

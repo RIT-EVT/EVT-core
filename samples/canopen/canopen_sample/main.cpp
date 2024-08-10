@@ -20,8 +20,8 @@
 
 #include "TestCanNode.hpp"
 
-namespace IO = core::IO;
-namespace DEV = core::DEV;
+namespace IO   = core::IO;
+namespace DEV  = core::DEV;
 namespace time = core::time;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -88,7 +88,7 @@ int main() {
     // Attempt to join the CAN network
     IO::CAN::CANStatus result = can.connect();
 
-    //test that the board is connected to the can network
+    // test that the board is connected to the can network
     if (result != IO::CAN::CANStatus::OK) {
         uart.printf("Failed to connect to CAN network\r\n");
         return 1;
@@ -105,7 +105,7 @@ int main() {
 
     time::wait(500);
 
-    //print any CANopen errors
+    // print any CANopen errors
     uart.printf("Error: %d\r\n", CONodeGetErr(&canNode));
 
     ///////////////////////////////////////////////////////////////////////////

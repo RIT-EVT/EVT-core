@@ -57,6 +57,6 @@ protected:
     uint32_t period;
 };
 
-}// namespace core::IO
+} // namespace core::IO
 
 #endif

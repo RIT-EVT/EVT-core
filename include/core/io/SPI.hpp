@@ -12,14 +12,14 @@
 #define SPI_MSB_FIRST true
 #define SPI_LSB_FIRST false
 
-#define SPI_SPEED_4MHZ 4000000
-#define SPI_SPEED_2MHZ 2000000
-#define SPI_SPEED_1MHZ 1000000
+#define SPI_SPEED_4MHZ   4000000
+#define SPI_SPEED_2MHZ   2000000
+#define SPI_SPEED_1MHZ   1000000
 #define SPI_SPEED_500KHZ 500000
 #define SPI_SPEED_250KHZ 250000
 #define SPI_SPEED_125KHZ 125000
-#define SPI_SPEED_62KHZ 62500
-#define SPI_SPEED_31KHZ 31250
+#define SPI_SPEED_62KHZ  62500
+#define SPI_SPEED_31KHZ  31250
 
 namespace core::IO {
 
@@ -34,9 +34,9 @@ public:
      * Represents the current state of using the SPI interface.
      */
     enum class SPIStatus {
-        OK = 0,
-        ERROR = 1,
-        BUSY = 2,
+        OK      = 0,
+        ERROR   = 1,
+        BUSY    = 2,
         TIMEOUT = 3,
     };
 
@@ -189,6 +189,6 @@ protected:
     GPIO* CSPins[MAX_PINS] = {};
 };
 
-}// namespace core::IO
+} // namespace core::IO
 
 #endif

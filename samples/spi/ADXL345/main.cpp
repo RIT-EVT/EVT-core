@@ -9,15 +9,15 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO = core::IO;
+namespace IO   = core::IO;
 namespace time = core::time;
 
-constexpr uint32_t SPI_SPEED = SPI_SPEED_62KHZ;// 62.5KHz
+constexpr uint32_t SPI_SPEED = SPI_SPEED_62KHZ; // 62.5KHz
 
 constexpr uint8_t deviceCount = 1;
 
-#define ADXL345_REG_POWER_CTL 0x2D//R/W   00000000  Power-saving features control  ----
-#define ADXL345_REG_DATAY0 0x34   //R     00000000  Y-Axis Data 0
+#define ADXL345_REG_POWER_CTL 0x2D // R/W   00000000  Power-saving features control  ----
+#define ADXL345_REG_DATAY0    0x34 // R     00000000  Y-Axis Data 0
 
 IO::GPIO* devices[deviceCount];
 
@@ -42,7 +42,7 @@ int main() {
             uart.printf("SPI readReg Error!\n\r");
         }
 
-        uart.printf("device ID: 0x%X, %d\n\r", byte, byte == 0xE5);//should be 0xE5
+        uart.printf("device ID: 0x%X, %d\n\r", byte, byte == 0xE5); // should be 0xE5
         time::wait(500);
     }
     spi.writeReg(0, ADXL345_REG_POWER_CTL, 0x08);

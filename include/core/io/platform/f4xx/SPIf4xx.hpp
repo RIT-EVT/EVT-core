@@ -87,6 +87,6 @@ private:
     SPIStatus halToSPIStatus(HAL_StatusTypeDef halStatus);
 };
 
-}// namespace core::IO
+} // namespace core::IO
 
 #endif

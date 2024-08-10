@@ -46,13 +46,12 @@ public:
      * Possible values for Mode, Pull, and Speed can be found in "stm32f4xx_hal_gpio.h"
      * @param alternate gpio alternate function selection
      */
-    static void gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins,
-                              uint8_t numOfPins, uint32_t mode, uint32_t pull,
+    static void gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pull,
                               uint32_t speed, uint8_t alternate = 0x0DU);
 
 private:
     // See stm32f4xx_hal_gpio -> GPIO_mode for info on derivations
-    constexpr static int GPIO_MODE_IT_SHIFT = 20;
+    constexpr static int GPIO_MODE_IT_SHIFT               = 20;
     constexpr static uint32_t GPIO_TRIGGER_INTERRUPT_BASE = GPIO_MODE_IT_RISING & ~(1 << GPIO_MODE_IT_SHIFT);
 
     /// Pin representing the underlying HAL pin identifer
@@ -61,6 +60,6 @@ private:
     GPIO_TypeDef* port;
 };
 
-}// namespace core::IO
+} // namespace core::IO
 
 #endif

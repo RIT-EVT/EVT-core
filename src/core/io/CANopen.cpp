@@ -31,7 +31,7 @@ uint8_t testerStorage[MAX_SIZE];
 
 // Queue that stores the CAN messages to send to the CANopen parser
 core::types::FixedQueue<CANOPEN_QUEUE_SIZE, core::IO::CANMessage>* canQueue;
-}// namespace
+} // namespace
 
 ///////////////////////////////////////////////////////////////////////////////
 // Forward declarations of CANopen stack CAN functions
@@ -61,59 +61,61 @@ static uint32_t nvmRead(uint32_t start, uint8_t* buffer, uint32_t size);
 static uint32_t nvmWrite(uint32_t start, uint8_t* buffer, uint32_t size);
 
 namespace core::IO {
-void getCANopenCANDriver(IO::CAN* canInf,
-                         core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* messageQueue,
+void getCANopenCANDriver(IO::CAN* canInf, core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* messageQueue,
                          CO_IF_CAN_DRV* canDriver) {
-    __evt_core_can__ = canInf;
-    canQueue = messageQueue;
-    canDriver->Init = canInit;
+    __evt_core_can__  = canInf;
+    canQueue          = messageQueue;
+    canDriver->Init   = canInit;
     canDriver->Enable = canEnable;
-    canDriver->Read = canRead;
-    canDriver->Send = canSend;
-    canDriver->Reset = canReset;
-    canDriver->Close = canClose;
+    canDriver->Read   = canRead;
+    canDriver->Send   = canSend;
+    canDriver->Reset  = canReset;
+    canDriver->Close  = canClose;
 }
 
 void getCANopenTimerDriver(DEV::Timer* timerIntf, CO_IF_TIMER_DRV* timerDriver) {
     __evt_core_can_timer__ = timerIntf;
 
-    timerDriver->Init = timerInit;
+    timerDriver->Init   = timerInit;
     timerDriver->Reload = timerReload;
-    timerDriver->Delay = timerDelay;
-    timerDriver->Stop = timerStop;
-    timerDriver->Start = timerStart;
+    timerDriver->Delay  = timerDelay;
+    timerDriver->Stop   = timerStop;
+    timerDriver->Start  = timerStart;
     timerDriver->Update = timerUpdate;
 }
 
 void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver) {
-    nvmDriver->Init = nvmInit;
-    nvmDriver->Read = nvmRead;
+    nvmDriver->Init  = nvmInit;
+    nvmDriver->Read  = nvmRead;
     nvmDriver->Write = nvmWrite;
 }
 
-void initializeCANopenDriver(types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* canOpenQueue, IO::CAN* can, core::DEV::Timer* timer, CO_IF_DRV* canStackDriver, CO_IF_NVM_DRV* nvmDriver, CO_IF_TIMER_DRV* timerDriver, CO_IF_CAN_DRV* canDriver) {
+void initializeCANopenDriver(types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* canOpenQueue, IO::CAN* can,
+                             core::DEV::Timer* timer, CO_IF_DRV* canStackDriver, CO_IF_NVM_DRV* nvmDriver,
+                             CO_IF_TIMER_DRV* timerDriver, CO_IF_CAN_DRV* canDriver) {
     IO::getCANopenCANDriver(can, canOpenQueue, canDriver);
     IO::getCANopenTimerDriver(timer, timerDriver);
     IO::getCANopenNVMDriver(nvmDriver);
 
-    canStackDriver->Can = canDriver;
+    canStackDriver->Can   = canDriver;
     canStackDriver->Timer = timerDriver;
-    canStackDriver->Nvm = nvmDriver;
+    canStackDriver->Nvm   = nvmDriver;
 }
 
-void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* canStackDriver, uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE], CO_TMR_MEM appTmrMem[16]) {
-    //setup CANopen Node
+void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* canStackDriver,
+                           uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE], CO_TMR_MEM appTmrMem[16]) {
+    // setup CANopen Node
     CO_NODE_SPEC canSpec = {
-        .NodeId = canDevice->getNodeID(),
+        .NodeId   = canDevice->getNodeID(),
         .Baudrate = IO::CAN::DEFAULT_BAUD,
-        .Dict = canDevice->getObjectDictionary(),
-        .DictLen = canDevice->getNumElements(),
+        .Dict     = canDevice->getObjectDictionary(),
+        .DictLen  = canDevice->getNumElements(),
         .EmcyCode = NULL,
-        .TmrMem = appTmrMem,
-        .TmrNum = 16,
-        .TmrFreq = 100,
-        .Drv = canStackDriver,
-        .SdoBuf = reinterpret_cast<uint8_t*>(&sdoBuffer[0]),
+        .TmrMem   = appTmrMem,
+        .TmrNum   = 16,
+        .TmrFreq  = 100,
+        .Drv      = canStackDriver,
+        .SdoBuf   = reinterpret_cast<uint8_t*>(&sdoBuffer[0]),
     };
 
     CONodeInit(canNode, &canSpec);
@@ -129,7 +131,7 @@ void processCANopenNode(CO_NODE* canNode) {
     COTmrProcess(&canNode->Tmr);
 }
 
-}// namespace core::IO
+} // namespace core::IO
 
 ///////////////////////////////////////////////////////////////////////////////
 // Implementation of CANopen stack CAN drivers
@@ -138,8 +140,7 @@ void processCANopenNode(CO_NODE* canNode) {
  * Initialize the CAN driver. This doesn't do anything since the CAN interface
  * should be passed into `getCANopenDriver` pre-initialized.
  */
-static void canInit(void) {
-}
+static void canInit(void) {}
 
 /**
  * Enable the CAN driver at the specific baudrate. Again this doesn't
@@ -175,10 +176,10 @@ static int16_t canRead(CO_IF_FRM* frm) {
 
     // No message
     if (!canQueue->pop(&message))
-        return ((int16_t) 0);// This should be 0 according to CANopen's COIfCanRead
+        return ((int16_t) 0); // This should be 0 according to CANopen's COIfCanRead
 
     frm->Identifier = message.getId();
-    frm->DLC = message.getDataLength();
+    frm->DLC        = message.getDataLength();
     // Copy contents into payload buffer
     for (int i = 0; i < message.getDataLength(); i++) {
         frm->Data[i] = message.getPayload()[i];
@@ -190,14 +191,12 @@ static int16_t canRead(CO_IF_FRM* frm) {
 /**
  * Reset the CAN interface. This does nothing at the moment.
  */
-static void canReset(void) {
-}
+static void canReset(void) {}
 
 /**
  * Close the CAN connection. This does nothing at the moment.
  */
-static void canClose(void) {
-}
+static void canClose(void) {}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Implementations of CANopen stack timer functions
@@ -206,9 +205,7 @@ static void canClose(void) {
 /**
  * Interrupt handler for the timer, updates that the timer has gone off
  */
-void timerHandler(void* halTim) {
-    timerCounter++;
-}
+void timerHandler(void* halTim) { timerCounter++; }
 
 /**
  * Initiailize the timer driver.
@@ -222,8 +219,8 @@ static void timerReload(uint32_t reload) {
     __evt_core_can_timer__->stopTimer();
     __evt_core_can_timer__->setPeriod(10);
     __evt_core_can_timer__->startTimer(timerHandler);
-    timerCounter = 0;
-    timerRunning = true;
+    timerCounter  = 0;
+    timerRunning  = true;
     counterTarget = reload;
 }
 
@@ -247,9 +244,7 @@ static uint8_t timerUpdate(void) {
 /**
  * Get the difference between the current value and the target value
  */
-static uint32_t timerDelay(void) {
-    return timerCounter > counterTarget ? 0 : counterTarget - timerCounter;
-}
+static uint32_t timerDelay(void) { return timerCounter > counterTarget ? 0 : counterTarget - timerCounter; }
 
 /**
  * Stop the timer, currently does nothing.
@@ -266,8 +261,7 @@ static void timerStop(void) {
 /**
  * Initialize the NVM driver, does nothing
  */
-static void nvmInit(void) {
-}
+static void nvmInit(void) {}
 
 /**
  * Read from the temporary buffer
