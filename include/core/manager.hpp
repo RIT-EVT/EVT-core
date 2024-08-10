@@ -44,6 +44,7 @@
     #define SPI_SUPPORTED
     #define ADC_SUPPORTED
     #define RTC_SUPPORTED
+    #define I2C_SUPPORTED
 
     #include <core/io/platform/f4xx/ADCf4xx.hpp>
     #include <core/platform/f4xx/stm32f4xx.hpp>
