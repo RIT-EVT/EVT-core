@@ -2,11 +2,11 @@
  * Sample code for showing all capabilities of an LCD.
  */
 
-#include <EVT/dev/LCD.hpp>
-#include <EVT/dev/LED.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/dev/LCD.hpp>
+#include <core/dev/LED.hpp>
+#include <core/io/UART.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 #include <cstdio>
 
 namespace DEV = EVT::core::DEV;

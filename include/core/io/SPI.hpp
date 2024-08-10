@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include <EVT/io/GPIO.hpp>
+#include <core/io/GPIO.hpp>
 
 #ifndef EVT_SPI_TIMEOUT
     #define EVT_SPI_TIMEOUT 100

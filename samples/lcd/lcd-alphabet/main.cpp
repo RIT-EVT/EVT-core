@@ -2,10 +2,10 @@
 * Sample code for displaying the Alphabet on an LCD.
 */
 
-#include <EVT/dev/LCD.hpp>
-#include <EVT/dev/LED.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/manager.hpp>
+#include <core/dev/LCD.hpp>
+#include <core/dev/LED.hpp>
+#include <core/io/UART.hpp>
+#include <core/manager.hpp>
 
 namespace DEV = EVT::core::DEV;
 namespace IO = EVT::core::IO;

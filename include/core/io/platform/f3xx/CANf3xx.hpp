@@ -6,8 +6,8 @@
 #include <HALf3/stm32f3xx.h>
 #include <HALf3/stm32f3xx_hal_can.h>
 
-#include <EVT/io/CAN.hpp>
-#include <EVT/utils/types/FixedQueue.hpp>
+#include <core/io/CAN.hpp>
+#include <core/utils/types/FixedQueue.hpp>
 
 //Allows for resizable CAN queue if needed
 #ifndef CAN_MESSAGE_QUEUE_SIZE

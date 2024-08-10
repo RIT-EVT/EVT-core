@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#include <EVT/io/CAN.hpp>
+#include <core/io/CAN.hpp>
 
 namespace EVT::core::IO {
 

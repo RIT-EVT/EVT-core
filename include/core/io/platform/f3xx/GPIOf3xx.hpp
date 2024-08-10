@@ -3,8 +3,8 @@
 
 #include <cstdint>
 
-#include <EVT/io/GPIO.hpp>
 #include <HALf3/stm32f3xx.h>
+#include <core/io/GPIO.hpp>
 
 namespace EVT::core::IO {
 

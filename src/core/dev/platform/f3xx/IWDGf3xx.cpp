@@ -1,4 +1,4 @@
-#include <EVT/dev/platform/f3xx/IWDGf3xx.hpp>
+#include <core/dev/platform/f3xx/IWDGf3xx.hpp>
 
 namespace EVT::core::DEV {
 
@@ -6,13 +6,13 @@ namespace EVT::core::DEV {
 // the ratio of counter ticks to milliseconds should be about 1:8. In testing,
 // we found this to have an error of about 1 second
 IWDGf3xx::IWDGf3xx(uint32_t ms) : halIWDG{
-    IWDG1,
-    {
-        IWDG_PRESCALER_256,
-        ms / 8 - 1,
-        ms / 8 - 1,
-    },
-} {}
+                                      IWDG1,
+                                      {
+                                          IWDG_PRESCALER_256,
+                                          ms / 8 - 1,
+                                          ms / 8 - 1,
+                                      },
+                                  } {}
 
 void IWDGf3xx::init() {
     HAL_IWDG_Init(&halIWDG);

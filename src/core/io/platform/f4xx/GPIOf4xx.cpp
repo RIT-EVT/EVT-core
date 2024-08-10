@@ -1,11 +1,11 @@
-#include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
+#include <core/io/platform/f4xx/GPIOf4xx.hpp>
 
-#include <EVT/io/GPIO.hpp>
-#include <EVT/io/pin.hpp>
+#include <core/io/GPIO.hpp>
+#include <core/io/pin.hpp>
 
-#include <EVT/platform/f4xx/stm32f4xx.hpp>
 #include <HALf4/stm32f4xx_hal_gpio.h>
 #include <HALf4/stm32f4xx_hal_rcc.h>
+#include <core/platform/f4xx/stm32f4xx.hpp>
 
 void (*INTERRUPT_HANDLERS[16])(EVT::core::IO::GPIO* pin, void* priv) = {nullptr};
 EVT::core::IO::GPIO* INTERRUPT_GPIOS[16] = {nullptr};

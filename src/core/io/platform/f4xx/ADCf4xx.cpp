@@ -13,11 +13,11 @@
  * For commit from before code was removed, refer to commit 81624521a8b2c4b66480193e88cf32782aaee84d.
  */
 
-#include <EVT/io/pin.hpp>
-#include <EVT/io/platform/f4xx/ADCf4xx.hpp>
-#include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
 #include <HALf4/stm32f4xx.h>
 #include <HALf4/stm32f4xx_hal_adc.h>
+#include <core/io/pin.hpp>
+#include <core/io/platform/f4xx/ADCf4xx.hpp>
+#include <core/io/platform/f4xx/GPIOf4xx.hpp>
 
 namespace EVT::core::IO {
 

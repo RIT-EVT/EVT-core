@@ -1,8 +1,8 @@
-#include <EVT/dev/LED.hpp>
-#include <EVT/dev/button.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/dev/LED.hpp>
+#include <core/dev/button.hpp>
+#include <core/io/UART.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
 namespace DEV = EVT::core::DEV;
 namespace IO = EVT::core::IO;

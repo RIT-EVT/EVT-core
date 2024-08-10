@@ -4,9 +4,9 @@
  *
  * @author Collin Bolles
  */
-#include <EVT/io/CAN.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/io/CAN.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;

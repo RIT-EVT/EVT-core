@@ -1,9 +1,9 @@
 #ifndef _EVT_ENCODER_
 #define _EVT_ENCODER_
 
-#include <EVT/io/GPIO.hpp>
-#include <EVT/utils/log.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/io/GPIO.hpp>
+#include <core/utils/log.hpp>
+#include <core/utils/time.hpp>
 
 namespace time = EVT::core::time;
 

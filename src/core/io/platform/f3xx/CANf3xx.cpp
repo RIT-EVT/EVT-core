@@ -10,11 +10,11 @@
 
 #include <HALf3/stm32f3xx.h>
 
-#include <EVT/io/platform/f3xx/CANf3xx.hpp>
-#include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
-#include <EVT/platform/f3xx/stm32f3xx.hpp>
-#include <EVT/utils/time.hpp>
-#include <EVT/utils/types/FixedQueue.hpp>
+#include <core/io/platform/f3xx/CANf3xx.hpp>
+#include <core/io/platform/f3xx/GPIOf3xx.hpp>
+#include <core/platform/f3xx/stm32f3xx.hpp>
+#include <core/utils/time.hpp>
+#include <core/utils/types/FixedQueue.hpp>
 
 namespace {
 

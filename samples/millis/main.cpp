@@ -2,12 +2,12 @@
  * This example calls the millis function and prints out the result. Each
  * result should be ~500ms off from each other
  */
-#include <EVT/dev/LED.hpp>
-#include <EVT/io/GPIO.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/io/pin.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/dev/LED.hpp>
+#include <core/io/GPIO.hpp>
+#include <core/io/UART.hpp>
+#include <core/io/pin.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;

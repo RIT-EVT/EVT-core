@@ -1,11 +1,11 @@
 /**
  * This example prints out temperature reading from a thermistor
  */
-#include <EVT/dev/Thermistor.hpp>
-#include <EVT/io/ADC.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/dev/Thermistor.hpp>
+#include <core/io/ADC.hpp>
+#include <core/io/UART.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;

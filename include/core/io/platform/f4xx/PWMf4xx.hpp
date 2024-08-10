@@ -3,9 +3,9 @@
 
 #include <stdint.h>
 
-#include <EVT/io/PWM.hpp>
-#include <EVT/io/pin.hpp>
 #include <HALf4/stm32f4xx.h>
+#include <core/io/PWM.hpp>
+#include <core/io/pin.hpp>
 
 namespace EVT::core::IO {
 

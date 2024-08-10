@@ -1,7 +1,7 @@
 #ifndef _EVT_LED_
 #define _EVT_LED_
 
-#include <EVT/io/GPIO.hpp>
+#include <core/io/GPIO.hpp>
 
 namespace EVT::core::DEV {
 

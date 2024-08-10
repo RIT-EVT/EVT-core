@@ -6,7 +6,7 @@
 #include <HALf4/stm32f4xx_hal.h>
 #include <HALf4/stm32f4xx_it.h>
 
-#include <EVT/utils/time.hpp>
+#include <core/utils/time.hpp>
 #include <cstdint>
 
 namespace EVT::core::time {

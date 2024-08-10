@@ -2,8 +2,8 @@
  * Example of IWDG functionality. The timer is refreshed 3 times in a loop,
  * then hits an infinite loop in the code which triggers a system reset.
  */
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;

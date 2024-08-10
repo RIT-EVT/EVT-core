@@ -1,11 +1,11 @@
 #ifndef _EVT_LCD_
 #define _EVT_LCD_
 
-#include <EVT/io/GPIO.hpp>
-#include <EVT/io/SPI.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/io/pin.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/io/GPIO.hpp>
+#include <core/io/SPI.hpp>
+#include <core/io/UART.hpp>
+#include <core/io/pin.hpp>
+#include <core/utils/time.hpp>
 #include <stdint.h>
 
 #define ADCSELECT 0xA0

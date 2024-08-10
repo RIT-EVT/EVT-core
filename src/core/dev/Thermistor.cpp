@@ -1,4 +1,4 @@
-#include <EVT/dev/Thermistor.hpp>
+#include <core/dev/Thermistor.hpp>
 
 namespace EVT::core::DEV {
 

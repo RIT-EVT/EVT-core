@@ -3,10 +3,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <EVT/io/pin.hpp>
-#include <EVT/io/platform/f4xx/UARTf4xx.hpp>
+#include <core/io/pin.hpp>
+#include <core/io/platform/f4xx/UARTf4xx.hpp>
 
-#include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
+#include <core/io/platform/f4xx/GPIOf4xx.hpp>
 
 #include <HALf4/stm32f446xx.h>
 

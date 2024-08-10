@@ -3,10 +3,10 @@
  * functionality and the values are continuously read in and printed over
  * UART.
  */
-#include <EVT/io/ADC.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/io/ADC.hpp>
+#include <core/io/UART.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;

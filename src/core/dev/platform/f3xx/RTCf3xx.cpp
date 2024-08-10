@@ -1,4 +1,4 @@
-#include <EVT/dev/platform/f3xx/RTCf3xx.hpp>
+#include <core/dev/platform/f3xx/RTCf3xx.hpp>
 
 #include <HALf3/stm32f3xx_hal_rtc.h>
 
@@ -9,17 +9,17 @@ constexpr int asynchPrediv = 127;
 constexpr int synchPrediv = 255;
 
 RTCf3xx::RTCf3xx() : halRTC{
-    RTC1,
-    {
-        // Numbers generated from STMCubeMX
-        RTC_HOURFORMAT_24,
-        asynchPrediv,
-        synchPrediv,
-        RTC_OUTPUT_DISABLE,
-        RTC_OUTPUT_TYPE_PUSHPULL,
-        RTC_OUTPUT_POLARITY_HIGH,
-    },
-} {
+                         RTC1,
+                         {
+                             // Numbers generated from STMCubeMX
+                             RTC_HOURFORMAT_24,
+                             asynchPrediv,
+                             synchPrediv,
+                             RTC_OUTPUT_DISABLE,
+                             RTC_OUTPUT_TYPE_PUSHPULL,
+                             RTC_OUTPUT_POLARITY_HIGH,
+                         },
+                     } {
     RCC_OscInitTypeDef RCC_OscInitStruct;
     RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
 

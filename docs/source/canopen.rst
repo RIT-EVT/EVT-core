@@ -361,16 +361,16 @@ news is that all of it is essentially boiler plate code.
     */
    #include <stdint.h>
 
-   #include <EVT/dev/platform/f3xx/f302x8/Timerf302x8.hpp>
-   #include <EVT/io/ADC.hpp>
-   #include <EVT/io/CAN.hpp>
-   #include <EVT/io/UART.hpp>
-   #include <EVT/io/manager.hpp>
-   #include <EVT/io/types/CANMessage.hpp>
-   #include <EVT/utils/time.hpp>
-   #include <EVT/utils/types/FixedQueue.hpp>
+   #include <core/dev/platform/f3xx/f302x8/Timerf302x8.hpp>
+   #include <core/io/ADC.hpp>
+   #include <core/io/CAN.hpp>
+   #include <core/io/UART.hpp>
+   #include <core/io/manager.hpp>
+   #include <core/io/types/CANMessage.hpp>
+   #include <core/utils/time.hpp>
+   #include <core/utils/types/FixedQueue.hpp>
 
-   #include <EVT/io/CANopen.hpp>
+   #include <core/io/CANopen.hpp>
 
    #include <Canopen/co_core.h>
    #include <Canopen/co_if.h>

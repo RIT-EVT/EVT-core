@@ -3,7 +3,7 @@
 
 #include <HALf4/stm32f4xx.h>
 
-#include <EVT/dev/RTC.hpp>
+#include <core/dev/RTC.hpp>
 
 namespace EVT::core::DEV {
 

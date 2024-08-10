@@ -9,11 +9,11 @@
 #include "CANDevice.hpp"
 #include "co_core.h"
 
-#include <EVT/dev/RTC.hpp>
-#include <EVT/dev/Timer.hpp>
-#include <EVT/io/CAN.hpp>
-#include <EVT/io/types/CANMessage.hpp>
-#include <EVT/utils/types/FixedQueue.hpp>
+#include <core/dev/RTC.hpp>
+#include <core/dev/Timer.hpp>
+#include <core/io/CAN.hpp>
+#include <core/io/types/CANMessage.hpp>
+#include <core/utils/types/FixedQueue.hpp>
 
 //Allows for resizable CANOpen queue if needed
 #ifndef CANOPEN_QUEUE_SIZE

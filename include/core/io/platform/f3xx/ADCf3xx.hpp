@@ -4,7 +4,7 @@
 #include <HALf3/stm32f3xx.h>
 #include <HALf3/stm32f3xx_hal.h>
 
-#include <EVT/io/ADC.hpp>
+#include <core/io/ADC.hpp>
 
 namespace EVT::core::IO {
 

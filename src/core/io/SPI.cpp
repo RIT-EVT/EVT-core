@@ -1,4 +1,4 @@
-#include <EVT/io/SPI.hpp>
+#include <core/io/SPI.hpp>
 
 #define CONCAT(a, b) CONCAT_INNER(a, b)
 #define CONCAT_INNER(a, b) a##b

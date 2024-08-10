@@ -3,13 +3,13 @@
 
 #include <cstdint>
 
-#include <EVT/io/ADC.hpp>
-#include <EVT/io/CAN.hpp>
-#include <EVT/io/GPIO.hpp>
-#include <EVT/io/I2C.hpp>
-#include <EVT/io/PWM.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/io/pin.hpp>
+#include <core/io/ADC.hpp>
+#include <core/io/CAN.hpp>
+#include <core/io/GPIO.hpp>
+#include <core/io/I2C.hpp>
+#include <core/io/PWM.hpp>
+#include <core/io/UART.hpp>
+#include <core/io/pin.hpp>
 
 #ifdef STM32F3xx
     #define IWDG_SUPPORTED
@@ -23,18 +23,18 @@
     #define SPI_SUPPORTED
     #define CAN_SUPPORTED
 
-    #include <EVT/dev/MCUTimer.hpp>
-    #include <EVT/dev/platform/f3xx/IWDGf3xx.hpp>
-    #include <EVT/dev/platform/f3xx/RTCf3xx.hpp>
-    #include <EVT/dev/platform/f3xx/Timerf3xx.hpp>
-    #include <EVT/io/platform/f3xx/ADCf3xx.hpp>
-    #include <EVT/io/platform/f3xx/CANf3xx.hpp>
-    #include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
-    #include <EVT/io/platform/f3xx/I2Cf3xx.hpp>
-    #include <EVT/io/platform/f3xx/PWMf3xx.hpp>
-    #include <EVT/io/platform/f3xx/SPIf3xx.hpp>
-    #include <EVT/io/platform/f3xx/UARTf3xx.hpp>
-    #include <EVT/platform/f3xx/stm32f3xx.hpp>
+    #include <core/dev/MCUTimer.hpp>
+    #include <core/dev/platform/f3xx/IWDGf3xx.hpp>
+    #include <core/dev/platform/f3xx/RTCf3xx.hpp>
+    #include <core/dev/platform/f3xx/Timerf3xx.hpp>
+    #include <core/io/platform/f3xx/ADCf3xx.hpp>
+    #include <core/io/platform/f3xx/CANf3xx.hpp>
+    #include <core/io/platform/f3xx/GPIOf3xx.hpp>
+    #include <core/io/platform/f3xx/I2Cf3xx.hpp>
+    #include <core/io/platform/f3xx/PWMf3xx.hpp>
+    #include <core/io/platform/f3xx/SPIf3xx.hpp>
+    #include <core/io/platform/f3xx/UARTf3xx.hpp>
+    #include <core/platform/f3xx/stm32f3xx.hpp>
 #endif
 
 #ifdef STM32F4xx
@@ -45,16 +45,16 @@
     #define ADC_SUPPORTED
     #define RTC_SUPPORTED
 
-    #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
-    #include <EVT/platform/f4xx/stm32f4xx.hpp>
-    //    #include <EVT/io/platform/f4xx/CANf4xx.hpp>
-    #include <EVT/dev/platform/f4xx/IWDGf4xx.hpp>
-    #include <EVT/dev/platform/f4xx/RTCf4xx.hpp>
-    #include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
-    #include <EVT/io/platform/f4xx/I2Cf4xx.hpp>
-    #include <EVT/io/platform/f4xx/PWMf4xx.hpp>
-    #include <EVT/io/platform/f4xx/SPIf4xx.hpp>
-    #include <EVT/io/platform/f4xx/UARTf4xx.hpp>
+    #include <core/io/platform/f4xx/ADCf4xx.hpp>
+    #include <core/platform/f4xx/stm32f4xx.hpp>
+    //    #include <core/io/platform/f4xx/CANf4xx.hpp>
+    #include <core/dev/platform/f4xx/IWDGf4xx.hpp>
+    #include <core/dev/platform/f4xx/RTCf4xx.hpp>
+    #include <core/io/platform/f4xx/GPIOf4xx.hpp>
+    #include <core/io/platform/f4xx/I2Cf4xx.hpp>
+    #include <core/io/platform/f4xx/PWMf4xx.hpp>
+    #include <core/io/platform/f4xx/SPIf4xx.hpp>
+    #include <core/io/platform/f4xx/UARTf4xx.hpp>
 #endif
 
 namespace EVT::core::platform {

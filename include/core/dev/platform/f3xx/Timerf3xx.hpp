@@ -5,7 +5,7 @@
 
 #include <HALf3/stm32f3xx.h>
 
-#include <EVT/dev/Timer.hpp>
+#include <core/dev/Timer.hpp>
 
 namespace EVT::core::DEV {
 

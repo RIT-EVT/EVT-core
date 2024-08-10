@@ -2,7 +2,7 @@
 #include <HALf4/stm32f4xx_hal.h>
 #include <HALf4/stm32f4xx_it.h>
 
-#include <EVT/platform/f4xx/stm32f4xx.hpp>
+#include <core/platform/f4xx/stm32f4xx.hpp>
 #include <iostream>
 
 using namespace std;

@@ -3,11 +3,11 @@
  * setup as an input and the state of that GPIO is reflected in the state of
  * the other GPIO connected to an LED.
  */
-#include <EVT/dev/LED.hpp>
-#include <EVT/io/GPIO.hpp>
-#include <EVT/io/pin.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/dev/LED.hpp>
+#include <core/io/GPIO.hpp>
+#include <core/io/pin.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;

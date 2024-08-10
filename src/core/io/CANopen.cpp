@@ -1,10 +1,10 @@
-#include <EVT/io/CANopen.hpp>
-#include <EVT/io/types/CANMessage.hpp>
-#include <EVT/utils/types/FixedQueue.hpp>
+#include <core/io/CANopen.hpp>
+#include <core/io/types/CANMessage.hpp>
+#include <core/utils/types/FixedQueue.hpp>
 
-#include <EVT/dev/RTC.hpp>
+#include <core/dev/RTC.hpp>
 
-#include "EVT/io/CANDevice.hpp"
+#include <core/io/CANDevice.hpp>
 #include <stdint.h>
 
 #define MAX_SIZE 64

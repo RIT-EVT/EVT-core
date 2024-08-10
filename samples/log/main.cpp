@@ -7,8 +7,8 @@
 
 #include <cstdint>
 
-#include <EVT/manager.hpp>
-#include <EVT/utils/log.hpp>
+#include <core/manager.hpp>
+#include <core/utils/log.hpp>
 
 namespace IO = EVT::core::IO;
 namespace log = EVT::core::log;

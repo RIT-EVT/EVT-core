@@ -1,8 +1,8 @@
 #ifndef EVT_M24C32
 #define EVT_M24C32
 
-#include <EVT/dev/storage/EEPROM.hpp>
-#include <EVT/io/I2C.hpp>
+#include <core/dev/storage/EEPROM.hpp>
+#include <core/io/I2C.hpp>
 
 namespace EVT::core::DEV {
 

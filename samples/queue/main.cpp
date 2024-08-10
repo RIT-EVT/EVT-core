@@ -5,10 +5,10 @@
  *
  * @author Collin Bolles
  */
-#include <EVT/io/UART.hpp>
-#include <EVT/io/pin.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/types/FixedQueue.hpp>
+#include <core/io/UART.hpp>
+#include <core/io/pin.hpp>
+#include <core/manager.hpp>
+#include <core/utils/types/FixedQueue.hpp>
 
 namespace IO = EVT::core::IO;
 namespace types = EVT::core::types;

@@ -1,8 +1,8 @@
 #include <co_core.h>
 #include <cstdint>
 
-#include <EVT/io/CANDevice.hpp>
-#include <EVT/io/CANOpenMacros.hpp>
+#include <core/io/CANDevice.hpp>
+#include <core/io/CANOpenMacros.hpp>
 
 /**
  * Representation of the CAN node. Handles constructing the object

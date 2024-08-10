@@ -4,12 +4,12 @@
  * Static wrappers are necessary for the encoder to handle the pin interrupts
 */
 
-#include <EVT/dev/Encoder.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/io/pin.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/log.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/dev/Encoder.hpp>
+#include <core/io/UART.hpp>
+#include <core/io/pin.hpp>
+#include <core/manager.hpp>
+#include <core/utils/log.hpp>
+#include <core/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;

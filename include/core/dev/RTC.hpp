@@ -1,7 +1,7 @@
 #ifndef _EVT_RTC_
 #define _EVT_RTC_
 
-#include <EVT/utils/time.hpp>
+#include <core/utils/time.hpp>
 
 namespace EVT::core::DEV {
 

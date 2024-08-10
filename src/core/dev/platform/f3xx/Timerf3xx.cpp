@@ -1,6 +1,6 @@
-#include <EVT/dev/platform/f3xx/Timerf3xx.hpp>
+#include <core/dev/platform/f3xx/Timerf3xx.hpp>
 
-#include <EVT/platform/f3xx/stm32f3xx.hpp>
+#include <core/platform/f3xx/stm32f3xx.hpp>
 
 TIM_HandleTypeDef halTimers[4];
 void (*timerInterruptHandlers[4])(void* htim) = {nullptr};

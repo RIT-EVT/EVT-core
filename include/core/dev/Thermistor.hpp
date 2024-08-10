@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include <EVT/io/ADC.hpp>
+#include <core/io/ADC.hpp>
 
 namespace EVT::core::DEV {
 

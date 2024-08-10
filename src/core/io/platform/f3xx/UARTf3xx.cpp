@@ -1,4 +1,4 @@
-#include <EVT/io/platform/f3xx/UARTf3xx.hpp>
+#include <core/io/platform/f3xx/UARTf3xx.hpp>
 
 #include <cstdarg>
 #include <cstdint>
@@ -7,9 +7,9 @@
 
 #include <HALf3/stm32f3xx.h>
 
-#include <EVT/io/pin.hpp>
-#include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
-#include <EVT/utils/log.hpp>
+#include <core/io/pin.hpp>
+#include <core/io/platform/f3xx/GPIOf3xx.hpp>
+#include <core/utils/log.hpp>
 
 namespace log = EVT::core::log;
 

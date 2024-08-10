@@ -2,9 +2,9 @@
  * This example prints out the time as read in from the RTC
  * every second.
  */
-#include <EVT/io/UART.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/io/UART.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;

@@ -3,14 +3,14 @@
  * setup a CANopen node and attempt to make back and forth communication.
  */
 
-#include <EVT/io/CAN.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/io/types/CANMessage.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
-#include <EVT/utils/types/FixedQueue.hpp>
+#include <core/io/CAN.hpp>
+#include <core/io/UART.hpp>
+#include <core/io/types/CANMessage.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
+#include <core/utils/types/FixedQueue.hpp>
 
-#include <EVT/io/CANopen.hpp>
+#include <core/io/CANopen.hpp>
 
 #include "TPDOCanNode.hpp"
 

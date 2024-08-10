@@ -5,11 +5,11 @@
  */
 
 #include "tx_api.h"
-#include <EVT/dev/LED.hpp>
-#include <EVT/io/GPIO.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/io/pin.hpp>
-#include <EVT/manager.hpp>
+#include <core/dev/LED.hpp>
+#include <core/io/GPIO.hpp>
+#include <core/io/UART.hpp>
+#include <core/io/pin.hpp>
+#include <core/manager.hpp>
 
 ///Namespaces
 namespace IO = EVT::core::IO;

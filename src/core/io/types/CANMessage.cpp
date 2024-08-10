@@ -1,7 +1,7 @@
 #include <cstring>
 #include <stdint.h>
 
-#include <EVT/io/types/CANMessage.hpp>
+#include <core/io/types/CANMessage.hpp>
 
 namespace EVT::core::IO {
 

@@ -4,10 +4,10 @@
  *
  */
 
-#include <EVT/io/GPIO.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/io/GPIO.hpp>
+#include <core/io/UART.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
 namespace IO = EVT::core::IO;
 namespace time = EVT::core::time;

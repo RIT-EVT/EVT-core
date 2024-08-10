@@ -1,5 +1,5 @@
-#include <EVT/dev/BitmapFonts.hpp>
-#include <EVT/dev/LCD.hpp>
+#include <core/dev/BitmapFonts.hpp>
+#include <core/dev/LCD.hpp>
 #include <cstring>
 
 namespace EVT::core::DEV {

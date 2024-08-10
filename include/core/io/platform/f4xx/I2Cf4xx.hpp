@@ -5,7 +5,7 @@
 
 #include <HALf4/stm32f4xx.h>
 
-#include <EVT/io/I2C.hpp>
+#include <core/io/I2C.hpp>
 
 #ifndef EVT_I2C_TIMEOUT
     #define EVT_I2C_TIMEOUT 100

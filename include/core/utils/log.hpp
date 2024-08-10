@@ -1,8 +1,8 @@
 #ifndef INCLUDE_EVT_UTILS_LOG_HPP_
 #define INCLUDE_EVT_UTILS_LOG_HPP_
 
-#include <EVT/dev/RTC.hpp>
-#include <EVT/io/UART.hpp>
+#include <core/dev/RTC.hpp>
+#include <core/io/UART.hpp>
 #include <cstdint>
 
 namespace dev = EVT::core::DEV;

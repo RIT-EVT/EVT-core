@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include <EVT/io/types/CANMessage.hpp>
+#include <core/io/types/CANMessage.hpp>
 
 #ifndef EVT_CAN_TIMEOUT
     #define EVT_CAN_TIMEOUT 255

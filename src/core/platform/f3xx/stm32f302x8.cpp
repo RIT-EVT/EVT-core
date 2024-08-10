@@ -2,7 +2,7 @@
 #include <HALf3/stm32f3xx_hal.h>
 #include <HALf3/stm32f3xx_it.h>
 
-#include <EVT/platform/f3xx/stm32f3xx.hpp>
+#include <core/platform/f3xx/stm32f3xx.hpp>
 
 namespace EVT::core::platform {
 
