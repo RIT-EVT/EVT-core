@@ -7,12 +7,12 @@ namespace core::DEV {
 // we found this to have an error of about 1 second
 IWDGf4xx::IWDGf4xx(uint32_t ms)
     : halIWDG{
-          IWDG1,
-          {
-              IWDG_PRESCALER_256,
-              ms / 8 - 1,
-          },
-      } {}
+        IWDG1,
+        {
+            IWDG_PRESCALER_256,
+            ms / 8 - 1,
+        },
+    } {}
 
 void IWDGf4xx::init() {
     HAL_IWDG_Init(&halIWDG);

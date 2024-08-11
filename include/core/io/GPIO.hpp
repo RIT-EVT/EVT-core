@@ -26,7 +26,8 @@ public:
     /**
      * Binary representation of the states the GPIO can be in
      */
-    enum class State {
+    enum class State
+    {
         LOW  = 0u,
         HIGH = 1u
     };
@@ -35,7 +36,8 @@ public:
      * Binary representation of the flow of information, either input or
      * output.
      */
-    enum class Direction {
+    enum class Direction
+    {
         INPUT  = 0u,
         OUTPUT = 1u
     };
@@ -43,7 +45,8 @@ public:
     /**
      * Enum to handler the possible GPIO trigger states
      */
-    enum class TriggerEdge {
+    enum class TriggerEdge
+    {
         RISING         = 1u,
         FALLING        = 2u,
         RISING_FALLING = 3u
@@ -52,7 +55,8 @@ public:
     /**
      * Direction for the internal resistor
      */
-    enum class Pull {
+    enum class Pull
+    {
         NO_PULL   = 0u,
         PULL_UP   = 1u,
         PULL_DOWN = 2u,
