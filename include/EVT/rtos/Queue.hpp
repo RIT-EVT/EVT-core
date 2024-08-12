@@ -21,15 +21,13 @@ public:
      * @param messageSize Size (in 4-byte words) of each message in the queue.
      * @param queueSize Total size (in bytes) of the queue storage area.
      */
-    Queue(const char* name, UINT messageSize,  ULONG queueSize);
+    Queue(const char* name, uint32_t messageSize,  uint32_t queueSize);
 
-    UINT destroy();
+    TXError flush();
 
-    UINT flush();
+    TXError prioritize();
 
-    UINT prioritize();
-
-    UINT recieve(void* destination, ULONG waitOption);
+    TXError recieve(void* destination, uint32_t waitOption);
 
     /**
      * Register a function to be called whenever a message is successfully sent to the queue.
@@ -37,22 +35,22 @@ public:
      * @param notifyFunction The function to be called when a message is sent to the queue.
      * @return A Threadx status code representing the success of the method.
      */
-    UINT registerSendNotifyFunction(notifyFunction_t notifyFunction);
+    TXError registerSendNotifyFunction(notifyFunction_t notifyFunction);
 
-    UINT send(void* source, ULONG waitOption);
+    TXError send(void* source, uint32_t waitOption);
 
-    UINT frontSend(void* source, ULONG waitOption);
+    TXError frontSend(void* source, uint32_t waitOption);
 
-    bool init(BytePool &pool) override;
+    TXError init(BytePoolBase& pool) override;
 private:
 
     TX_QUEUE txQueue;
 
     const char* name;
 
-    UINT messageSize;
+    uint32_t messageSize;
 
-    ULONG queueSize;
+    uint32_t queueSize;
 };
 
 } // namespace core::rtos

@@ -17,19 +17,17 @@ public:
      */
     Semaphore(const char* name, uint32_t initialCount);
 
-    UINT destroy();
+    TXError get(uint32_t waitOption);
 
-    UINT get(uint32_t waitOption);
+    TXError put();
 
-    UINT put();
+    TXError putNotify();
 
-    UINT putNotify();
+    TXError prioritize();
 
-    UINT prioritize();
+    TXError ceilingPut();
 
-    UINT ceilingPut();
-
-    bool init(BytePool &pool) override;
+    TXError init(BytePoolBase& pool) override;
 
 private:
     /**

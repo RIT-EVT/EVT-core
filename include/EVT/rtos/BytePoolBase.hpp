@@ -1,48 +1,37 @@
 /**
- * A template class that holds the actual information for managing a threadx bytepool.
+ * A pure virtual class that allows us to pass the BytePoolBase template class into external methods
+ * without the compiler complaining. After initialization, the BytePoolBase class should always be referenced
+ * as a BytePool, and never as a BytePoolBase. There should be no methods that accept a BytePoolBase as an argument.
  */
 
-#ifndef _EVT_RTOS_BYTEPOOLBASE_
-#define _EVT_RTOS_BYTEPOOLBASE_
+#ifndef _EVT_RTOS_BYTEPOOL_
+#define _EVT_RTOS_BYTEPOOL_
 
 #include <EVT/rtos/BytePool.hpp>
-#include <../../../libs/threadx/common/inc/tx_api.h>
-#include <../../../libs/threadx/ports/cortex_m4/gnu/inc/tx_port.h>
+#include <EVT/rtos/Threadx.hpp>
 #include <cstdint>
 
 namespace core::rtos {
 
-template <std::size_t SIZE>
-class BytePoolBase : BytePool {
+class BytePoolBase {
 public:
+
     /**
-     * Constructs a BytePoolBase, including creating a buffer to hold the
-     * information for the pool and the buffer for the pool itself.
+     * Allocates memory from the BytePool and returns a pointer to the start of it.
      *
-     * @param[in] name A pointer to the name of the BytePool.
+     * @param[in] amount how much memory (in bytes) that is requested.
+     * @param[in] waitOption How long (in ticks) the calling thread should wait for the memory to become available:
+     * 0 for no wait, and TX_WAIT_FOREVER for waiting forever.
+     * @return a pointer to the allocated bytepool memory.
      */
-    BytePoolBase(const char* name);
-
-    void* AllocateMemory(std::size_t amount, uint32_t waitOption) override;
-
-private:
-    /**
-     * Buffer for the bytepool.
-     */
-    UCHAR tx_byte_pool_buffer[SIZE];
+    virtual void* AllocateMemory(std::size_t amount, uint32_t waitOption) = 0;
 
     /**
-     * The struct that the threadx application uses to hold information about the bytepool.
+     * Initializes the bytepool within
      */
-    TX_BYTE_POOL tx_app_byte_pool;
-
-    /**
-     * A pointer to the name of the Bytepool.
-     */
-    const char* name;
+    virtual TXError init() = 0;
 };
 
 } //namespace core::rtos
 
-
-#endif //_EVT_RTOS_BYTEPOOLBASE_
+#endif _EVT_RTOS_BYTEPOOL_

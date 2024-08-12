@@ -1,31 +1,50 @@
 /**
- * A pure virtual class that allows us to pass the BytePoolBase template class into external methods
- * without the compiler complaining. After initialization, the BytePoolBase class should always be referenced
- * as a BytePool, and never as a BytePoolBase. There should be no methods that accept a BytePoolBase as an argument.
+ * A template class that holds the actual information for managing a threadx bytepool.
  */
 
-#ifndef _EVT_RTOS_BYTEPOOL_
-#define _EVT_RTOS_BYTEPOOL_
+#ifndef _EVT_RTOS_BYTEPOOLBASE_
+#define _EVT_RTOS_BYTEPOOLBASE_
 
+#include <../../../libs/threadx/common/inc/tx_api.h>
+#include <../../../libs/threadx/ports/cortex_m4/gnu/inc/tx_port.h>
 #include <EVT/rtos/BytePoolBase.hpp>
 #include <cstdint>
 
 namespace core::rtos {
 
-class BytePool {
+template <std::size_t SIZE>
+class BytePool : BytePoolBase {
 public:
+    /**
+     * Constructs a BytePoolBase, including creating a buffer to hold the
+     * information for the pool and the buffer for the pool itself.
+     *
+     * @param[in] name A pointer to the name of the BytePool.
+     */
+    BytePool(const char* name);
+
+    TXError init() override;
+
+    void* AllocateMemory(std::size_t amount, uint32_t waitOption) override;
+
+private:
+    /**
+     * Buffer for the bytepool, SIZE bytes large.
+     */
+    uint8_t tx_byte_pool_buffer[SIZE];
 
     /**
-     * Allocates memory from the BytePool and returns a pointer to the start of it.
-     *
-     * @param[in] amount how much memory (in bytes) that is requested.
-     * @param[in] waitOption How long (in ticks) the calling thread should wait for the memory to become available:
-     * 0 for no wait, and TX_WAIT_FOREVER for waiting forever.
-     * @return a pointer to the allocated bytepool memory.
+     * The struct that the threadx application uses to hold information about the bytepool.
      */
-    virtual void* AllocateMemory(std::size_t amount, uint32_t waitOption) = 0;
+    TX_BYTE_POOL tx_app_byte_pool;
+
+    /**
+     * A pointer to the name of the Bytepool.
+     */
+    const char* name;
 };
 
 } //namespace core::rtos
 
-#endif _EVT_RTOS_BYTEPOOL_
+
+#endif //_EVT_RTOS_BYTEPOOLBASE_

@@ -16,15 +16,13 @@ public:
      */
     Mutex(const char *name, bool priorityInheritance);
 
-    UINT destroy();
+    TXError get(uint32_t waitOption);
 
-    UINT get(uint32_t waitOption);
+    TXError put();
 
-    UINT put();
+    TXError prioritize();
 
-    UINT prioritize();
-
-    bool init(BytePool &pool) override;
+    TXError init(BytePoolBase &pool) override;
 
 private:
     /**
