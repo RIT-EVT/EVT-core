@@ -23,6 +23,11 @@ public:
      */
     Queue(const char* name, uint32_t messageSize,  uint32_t queueSize);
 
+    /**
+     * Queue Deconstructor.
+     */
+    ~Queue();
+
     TXError flush();
 
     TXError prioritize();

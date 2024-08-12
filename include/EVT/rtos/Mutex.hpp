@@ -16,6 +16,11 @@ public:
      */
     Mutex(const char *name, bool priorityInheritance);
 
+    /**
+     * Mutex Destructor.
+     */
+    ~Mutex();
+
     TXError get(uint32_t waitOption);
 
     TXError put();
@@ -43,4 +48,4 @@ private:
 
 } // namespace core::rtos
 
-#endif//EVT_RTOS_MUTEX_
+#endif //EVT_RTOS_MUTEX_

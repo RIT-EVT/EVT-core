@@ -17,6 +17,11 @@ public:
      */
     Semaphore(const char* name, uint32_t initialCount);
 
+    /**
+     * Semaphore Destructor.
+     */
+    ~Semaphore();
+
     TXError get(uint32_t waitOption);
 
     TXError put();

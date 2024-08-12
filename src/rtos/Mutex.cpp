@@ -6,6 +6,10 @@ namespace core::rtos {
 Mutex::Mutex(const char* name, bool priorityInheritance)
     : txMutex(), name(name), priorityInheritance(priorityInheritance) {}
 
+Mutex::~Mutex() {
+    tx_mutex_delete(&txMutex);
+}
+
 TXError Mutex::get(uint32_t waitOption) {
     return tx_semaphore_get(&txMutex);
 }

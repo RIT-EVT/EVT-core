@@ -7,7 +7,6 @@
 #ifndef _EVT_RTOS_BYTEPOOL_
 #define _EVT_RTOS_BYTEPOOL_
 
-#include <EVT/rtos/BytePool.hpp>
 #include <EVT/rtos/Threadx.hpp>
 #include <cstdint>
 
@@ -34,4 +33,4 @@ public:
 
 } //namespace core::rtos
 
-#endif _EVT_RTOS_BYTEPOOL_
+#endif //_EVT_RTOS_BYTEPOOL_

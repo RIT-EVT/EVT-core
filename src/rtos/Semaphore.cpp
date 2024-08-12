@@ -6,6 +6,10 @@ namespace core::rtos {
 Semaphore::Semaphore(const char* name, uint32_t initialCount)
     : txSemaphore(), name(name), initialCount(initialCount) {}
 
+Semaphore::~Semaphore() {
+    tx_semaphore_delete(&txSemaphore);
+}
+
 TXError Semaphore::get(uint32_t waitOption) {
     return tx_semaphore_get(&txSemaphore);
 }
