@@ -17,7 +17,9 @@ public:
      * @param data Data the thread's function requires.
      * @param stackSize How much stack space this thread is allocated.
      */
-    Thread(void (*entryFunction)(T), T data, std::size_t stackSize);
+    Thread(void (*entryFunction)(T*), T &data, std::size_t stackSize);
+
+
 
     /**
      * Creates the threadx thread and starts it.

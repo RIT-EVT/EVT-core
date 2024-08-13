@@ -7,7 +7,7 @@
 #ifndef _EVT_RTOS_BYTEPOOL_
 #define _EVT_RTOS_BYTEPOOL_
 
-#include <EVT/rtos/Threadx.hpp>
+#include <EVT/rtos/Enums.hpp>
 #include <cstdint>
 
 namespace core::rtos {

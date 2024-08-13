@@ -5,8 +5,6 @@
 #ifndef _EVT_RTOS_BYTEPOOLBASE_
 #define _EVT_RTOS_BYTEPOOLBASE_
 
-#include <../../../libs/threadx/common/inc/tx_api.h>
-//#include <../../../libs/threadx/ports/cortex_m4/gnu/inc/tx_port.h>
 #include <EVT/rtos/BytePoolBase.hpp>
 #include <cstdint>
 

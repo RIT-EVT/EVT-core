@@ -2,8 +2,8 @@
 #ifndef _EVT_RTOS_Initializeable_
 #define _EVT_RTOS_Initializeable_
 
-#include <EVT/rtos/BytePool.hpp>
-#include <EVT/rtos/Threadx.hpp>
+#include <EVT/rtos/BytePoolBase.hpp>
+#include <EVT/rtos/Enums.hpp>
 
 namespace core::rtos {
 
