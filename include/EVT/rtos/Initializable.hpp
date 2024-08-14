@@ -2,6 +2,8 @@
 #ifndef _EVT_RTOS_Initializeable_
 #define _EVT_RTOS_Initializeable_
 
+
+#include <../../../libs/threadx/common/inc/tx_api.h>
 #include <EVT/rtos/BytePoolBase.hpp>
 #include <EVT/rtos/Enums.hpp>
 

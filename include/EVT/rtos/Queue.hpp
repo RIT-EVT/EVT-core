@@ -12,7 +12,7 @@ public:
      * A type that represents the function that can be registered to a queue
      * to notify when it is sent a message.
      */
-    typedef void(*notifyFunction_t)(TX_QUEUE*);
+    typedef void(*queueNotifyFunction_t)(TX_QUEUE*);
 
     /**
      * Constructs a Queue object, but does not initiaize it (must call init before using).
@@ -40,7 +40,7 @@ public:
      * @param notifyFunction The function to be called when a message is sent to the queue.
      * @return A Threadx status code representing the success of the method.
      */
-    TXError registerSendNotifyFunction(notifyFunction_t notifyFunction);
+    TXError registerSendNotifyFunction(queueNotifyFunction_t notifyFunction);
 
     TXError send(void* source, uint32_t waitOption);
 

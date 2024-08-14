@@ -46,7 +46,7 @@ private:
     /**
      * The count the Semaphore will be initialized with.
      */
-    const ULONG initialCount;
+    const uint32_t initialCount;
 };
 
 } // namespace core::rtos
