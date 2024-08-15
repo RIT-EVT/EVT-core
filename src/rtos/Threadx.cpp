@@ -1,11 +1,21 @@
 
 #include <EVT/rtos/Threadx.hpp>
+#include <EVT/utils/log.hpp>
 
 namespace core::rtos {
 
-void init(Initializable* initList, std::size_t length, BytePoolBase&poolptr) {
+TXError init(Initializable* initList, std::size_t length, BytePoolBase &pool) {
+
+    TXError errorCode = pool.init();
+    if (errorCode != Success)
+        return errorCode;
+
     for (int i = 0; i < length; i++) {
-        initList[i].init(poolptr);
+        errorCode = initList[i].init(pool);
+        if (errorCode != Success) {
+            //Todo: figure out how to log which one in the list had an error. (use logger?)
+            return errorCode;
+        }
     }
 }
 

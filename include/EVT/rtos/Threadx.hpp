@@ -16,7 +16,7 @@ namespace core::rtos {
  * @param length the length of initList.
  * @param poolptr a reference to the bytepool to store the information of the initializable objects in.
  */
-void init(Initializable* initList, std::size_t length, BytePoolBase &poolptr);
+TXError init(Initializable* initList, std::size_t length, BytePoolBase &pool);
 
 } // namespace core::rtos
 
