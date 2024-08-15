@@ -13,7 +13,7 @@ TXError init(Initializable* initList, std::size_t length, BytePoolBase &pool) {
     for (int i = 0; i < length; i++) {
         errorCode = initList[i].init(pool);
         if (errorCode != Success) {
-            //Todo: figure out how to log which one in the list had an error. (use logger?)
+            //Todo: figure out how to log which one in the list had an error.
             return errorCode;
         }
     }
