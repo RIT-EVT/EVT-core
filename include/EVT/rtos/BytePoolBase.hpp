@@ -23,7 +23,7 @@ public:
      * 0 for no wait, and TX_WAIT_FOREVER for waiting forever.
      * @return a pointer to the allocated bytepool memory.
      */
-    virtual void* AllocateMemory(std::size_t amount, uint32_t waitOption) = 0;
+    virtual void* allocateMemory(std::size_t amount, uint32_t waitOption) = 0;
 
     /**
      * Initializes the bytepool within
