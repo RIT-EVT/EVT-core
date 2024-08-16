@@ -44,5 +44,10 @@ enum TXError {
     FeatureNotEnabled = 0xFFu
 };
 
+enum TXWait {
+    NoWait = 0u,
+    WaitForever = TX_WAIT_FOREVER
+};
+
 } //namespace core::rtos
 #endif //EVT_RTOS_ENUMS_
