@@ -28,8 +28,9 @@ TXError Queue::recieve(void* destination, uint32_t waitOption) {
     return tx_queue_receive(&txQueue, destination, waitOption);
 }
 
-TXError Queue::registerSendNotifyFunction(core::rtos::Queue::notifyFunction_t notifyFunction) {
-    return tx_queue_send_notify(&txQueue, notifyFunction);
+TXError Queue::registerNotifyFunction(void(*notifyFunction)(Queue*)) {
+    storedNotifyFunction = notifyFunction;
+    return tx_queue_send_notify(&txQueue, txNotifyFunction);
 }
 
 TXError Queue::send(void* source, uint32_t waitOption) {

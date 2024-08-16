@@ -13,8 +13,8 @@ EventFlags::~EventFlags() {
    return  tx_event_flags_delete(&txEventFlagsGroup);
 }
 
-TXError EventFlags::set(uint32_t mask, bool setOption) {
-    return tx_event_flags_set(mask, setOption ? TX_AND : TX_OR);
+TXError EventFlags::set(uint32_t mask, bool clearNonMaskedFlags) {
+    return tx_event_flags_set(mask, clearNonMaskedFlags ? TX_AND : TX_OR);
 }
 
 TXError EventFlags::get(uint32_t mask, bool waitForAllFlags, bool clear, uint32_t* output, uint32_t waitOption) {

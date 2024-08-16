@@ -9,12 +9,6 @@ class Queue : Initializable {
 public:
 
     /**
-     * A type that represents the function that can be registered to a queue
-     * to notify when it is sent a message.
-     */
-    typedef void(*queueNotifyFunction_t)(TX_QUEUE*);
-
-    /**
      * Constructs a Queue object, but does not initiaize it (must call init before using).
      *
      * @param[in] name The name of the queue.
@@ -42,7 +36,7 @@ public:
      * @param notifyFunction The function to be called when a message is sent to the queue.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError registerSendNotifyFunction(queueNotifyFunction_t notifyFunction);
+    TXError registerNotifyFunction(void(*notifyFunction)(Queue*));
 
     TXError send(void* source, uint32_t waitOption);
 
@@ -56,6 +50,12 @@ private:
     uint32_t messageSize;
 
     uint32_t queueSize;
+
+    void(*storedNotifyFunction)(Queue*);
+
+    void txNotifyFunction(TX_QUEUE* queue) {
+        storedNotifyFunction(this);
+    }
 };
 
 } // namespace core::rtos

@@ -12,12 +12,6 @@ class Thread : Initializable {
 public:
 
     /**
-     * A type that represents the function that can be registered to a thread
-     * to notify when it starts or ends.
-     */
-    typedef void(*threadNotifyFunction_t)(TX_THREAD*, uint32_t);
-
-    /**
      * Constructor for a Thread object. Thread will not start until init() method is called.
      *
      * @param[in] name pointer to a null-terminated character string representing the name of the thread
@@ -51,7 +45,7 @@ public:
      * @param[in] notifyFunction The function that will be called.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError registerEntryExitNotification(threadNotifyFunction_t notifyFunction);
+    TXError registerEntryExitNotification(void(*notifyFunction)(Thread<T>, uint32_t));
 
     //TODO: do we really need a thread info get function?
 
@@ -157,6 +151,20 @@ private:
      * Whether this thread will start when initialized or not.
      */
     bool autoStart;
+
+    /**
+     * Stores a notify function after the registerNotifyFunction method is called.
+     * This is necessary so that programmers are given a thread object when their notify function is called
+     * instead of TX's thread struct.
+     */
+    void(*storedNotifyFunction)(Thread<T>, uint32_t);
+
+    /**
+     * Method that will actually be registered with the tx kernel, just calls the stored notify function.
+     */
+    void txNotifyFunction(TX_THREAD *thread, uint32_t threadID) {
+        storedNotifyFunction(this, threadID);
+    }
 };
 
 } // namespace core::rtos

@@ -27,13 +27,10 @@ public:
      * Sets the eventFlags of the mask according to the setOption.
      *
      * @param[in] mask A bitmask describing what flags are to be interacted with.
-     * @param[in] setOption How the flags are to be set: TRUE = And, FALSE = Or.
-     *
-     * (This means that if setOption is true, the eventFlags will be simply set to the mask.
-     * If setOption is false, the current eventFlags and the mask will be binary or-ed together.
+     * @param[in] clearNonMaskedFlags If true, all the flags not included in the mask will be set to 0.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError set(uint32_t mask, bool setOption);
+    TXError set(uint32_t mask, bool clearNonMaskedFlags);
 
     /**
      * Gets the eventFlags of the mask according to the getOption
@@ -76,7 +73,7 @@ private:
     /**
      * The actual notify function that we will register with the threadx kernel
      */
-    void txNotifyFunction(TX_EVENT_FLAGS_GROUP* txEventFlagsGroup) {
+    void txNotifyFunction(TX_EVENT_FLAGS_GROUP* eventFlagsGroup) {
         storedNotifyFunction(this);
     }
 };

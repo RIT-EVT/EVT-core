@@ -28,8 +28,9 @@ TXError Thread<T>::init(core::rtos::BytePoolBase& pool) {
 }
 
 template<typename T>
-TXError Thread<T>::registerEntryExitNotification(threadNotifyFunction_t notifyFunction) {
-    tx_thread_entry_exit_notify(&txThread, notifyFunction);
+TXError Thread<T>::registerEntryExitNotification(void(*notifyFunction)(Thread<T>, uint32_t)) {
+    storedNotifyFunction = notifyFunction;
+    tx_thread_entry_exit_notify(&txThread, txNotifyFunction);
 }
 
 template<typename T>
