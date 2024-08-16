@@ -2,6 +2,8 @@
 #include <EVT/rtos/Threadx.hpp>
 #include <EVT/utils/log.hpp>
 
+namespace log = EVT::core::log;
+
 namespace core::rtos {
 
 TXError init(Initializable* initList, std::size_t length, BytePoolBase &pool) {
@@ -13,7 +15,7 @@ TXError init(Initializable* initList, std::size_t length, BytePoolBase &pool) {
     for (int i = 0; i < length; i++) {
         errorCode = initList[i].init(pool);
         if (errorCode != Success) {
-            //Todo: figure out how to log which one in the list had an error.
+            log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Errored on item %u in initializer list.", i);
             return errorCode;
         }
     }
