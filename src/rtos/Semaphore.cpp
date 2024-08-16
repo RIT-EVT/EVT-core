@@ -6,6 +6,10 @@ namespace core::rtos {
 Semaphore::Semaphore(const char* name, uint32_t initialCount)
     : txSemaphore(), name(name), initialCount(initialCount) {}
 
+TXError Semaphore::init(BytePoolBase& pool) {
+    return tx_semaphore_create(&txSemaphore, name, initialCount);
+}
+
 Semaphore::~Semaphore() {
     tx_semaphore_delete(&txSemaphore);
 }
@@ -28,10 +32,6 @@ TXError Semaphore::prioritize() {
 
 TXError Semaphore::ceilingPut() {
     return tx_semaphore_ceiling_put(&txSemaphore);
-}
-
-TXError Semaphore::init(BytePoolBase& pool) {
-    return tx_semaphore_create(&txSemaphore, name, initialCount);
 }
 
 } //namespace core::rtos

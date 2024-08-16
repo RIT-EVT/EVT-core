@@ -17,11 +17,13 @@ public:
     /**
      * Constructs a Queue object, but does not initiaize it (must call init before using).
      *
-     * @param name The name of the queue.
-     * @param messageSize Size (in 4-byte words) of each message in the queue.
-     * @param queueSize Total size (in bytes) of the queue storage area.
+     * @param[in] name The name of the queue.
+     * @param[in] messageSize Size (in 4-byte words) of each message in the queue.
+     * @param[in] queueSize Total size (in bytes) of the queue storage area.
      */
     Queue(const char* name, uint32_t messageSize,  uint32_t queueSize);
+
+    TXError init(BytePoolBase& pool) override;
 
     /**
      * Queue Deconstructor.
@@ -38,15 +40,13 @@ public:
      * Register a function to be called whenever a message is successfully sent to the queue.
      *
      * @param notifyFunction The function to be called when a message is sent to the queue.
-     * @return A Threadx status code representing the success of the method.
+     * @return The first error found by the function (or Success if there was no error).
      */
     TXError registerSendNotifyFunction(queueNotifyFunction_t notifyFunction);
 
     TXError send(void* source, uint32_t waitOption);
 
     TXError frontSend(void* source, uint32_t waitOption);
-
-    TXError init(BytePoolBase& pool) override;
 private:
 
     TX_QUEUE txQueue;

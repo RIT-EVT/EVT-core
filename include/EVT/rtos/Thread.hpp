@@ -33,6 +33,13 @@ public:
            uint32_t preemptThreshold, uint32_t timeSlice, bool autoStart);
 
     /**
+     * Creates the threadx thread and possibly starts it, depending on the autostart constructor parameter.
+     *
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError init(BytePoolBase &pool) override;
+
+    /**
      * Thread Deconstructor
      */
     ~Thread();
@@ -93,12 +100,14 @@ public:
 
     /**
      * Suspends the thread.
+     *
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError suspend();
 
     /**
      * Terminates the thread. Once this thread is terminated, it cannot be restarted.
+     *
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError terminate();
@@ -109,12 +118,6 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError abortWait();
-
-    /**
-     * Creates the threadx thread and starts it.
-     * @return whether or not the thread was started successfully.
-     */
-    TXError init(BytePoolBase &pool) override;
 
 
 private:

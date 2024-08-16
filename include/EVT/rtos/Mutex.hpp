@@ -16,6 +16,8 @@ public:
      */
     Mutex(const char *name, bool priorityInheritance);
 
+    TXError init(BytePoolBase &pool) override;
+
     /**
      * Mutex Destructor.
      */
@@ -26,8 +28,6 @@ public:
     TXError put();
 
     TXError prioritize();
-
-    TXError init(BytePoolBase &pool) override;
 
 private:
     /**

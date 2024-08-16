@@ -22,7 +22,7 @@ Thread<T>::~Thread() {
 template<typename T>
 TXError Thread<T>::init(core::rtos::BytePoolBase& pool) {
     void *stackStart;
-    stackStart = pool.AllocateMemory(stackSize, 0);
+    stackStart = pool.allocateMemory(stackSize, NoWait);
     tx_thread_create(&txThread, name, entryFunction, data, stackStart,
                      stackSize, priority, preemptThreshold, timeSlice, autoStart ? TX_AUTO_START : TX_DONT_START);
 }

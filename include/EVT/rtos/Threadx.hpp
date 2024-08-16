@@ -15,6 +15,7 @@ namespace core::rtos {
  * before the threadx kernel begins.
  * @param length the length of initList.
  * @param poolptr a reference to the bytepool to store the information of the initializable objects in.
+ * @return The first error found by the function (or Success if there was no error).
  */
 TXError init(Initializable* initList, std::size_t length, BytePoolBase &pool);
 
