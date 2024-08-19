@@ -8,6 +8,7 @@ namespace IO = EVT::core::IO;
 namespace core::rtos::wrapper {
 
 class UARTTX: Initializable {
+public:
     UARTTX(IO::UART&);
 };
 
