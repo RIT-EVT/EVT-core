@@ -106,7 +106,7 @@ int main() {
     // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
-    core::rtos::TXError init{};
+    core::rtos::TXError init;
     rtos::UARTTX uarttx(uart);
 
     SystemCoreClockUpdate();
