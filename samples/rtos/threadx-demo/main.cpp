@@ -9,11 +9,14 @@
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
 #include <EVT/manager.hpp>
+#include <EVT/rtos/UARTTX.hpp>
 
 ///Namespaces
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
 namespace time = EVT::core::time;
+
+namespace rtos = core::rtos::wrapper;
 
 //Needs custom data type
 //Look into entry argument when creating a thread when determining what thread it is
@@ -102,6 +105,9 @@ int main() {
 
     // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+
+    core::rtos::TXError init{};
+    rtos::UARTTX uarttx(uart);
 
     SystemCoreClockUpdate();
     uart.printf("\n\rSystem Clock: %lu\n\r", SystemCoreClock);
