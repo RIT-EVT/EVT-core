@@ -5,10 +5,7 @@
 namespace IO = EVT::core::IO;
 namespace core::rtos::wrapper {
 
-UARTTX::UARTTX(IO::UART& uart) : uart(uart) {
-    //TODO: Used only for debugging
-uart.printf("Cunstructor called\n\r");
-}
+UARTTX::UARTTX(IO::UART& uart) : uart(uart) {}
 
 TXError UARTTX::init(BytePoolBase &pool) {
     return Success;

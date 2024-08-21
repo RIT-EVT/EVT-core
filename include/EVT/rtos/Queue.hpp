@@ -3,7 +3,7 @@
 
 #include <EVT/rtos/Initializable.hpp>
 
-namespace core::rtos {
+namespace core::rtos::wrapper {
 
 class Queue : Initializable {
 public:
@@ -15,7 +15,7 @@ public:
      * @param[in] messageSize Size (in 4-byte words) of each message in the queue.
      * @param[in] queueSize Total size (in bytes) of the queue storage area.
      */
-    Queue(const char* name, uint32_t messageSize,  uint32_t queueSize);
+    Queue(TX_QUEUE& txQueue, CHAR* name, uint32_t messageSize,  uint32_t queueSize);
 
     TXError init(BytePoolBase& pool) override;
 
@@ -45,7 +45,9 @@ private:
 
     TX_QUEUE txQueue;
 
-    const char* name;
+    ULONG myQueue = 0;
+
+    CHAR* name;
 
     uint32_t messageSize;
 

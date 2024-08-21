@@ -9,13 +9,14 @@
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
 #include <EVT/manager.hpp>
+
 #include <EVT/rtos/UARTTX.hpp>
+#include <EVT/rtos/Queue.hpp>
 
 ///Namespaces
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
 namespace time = EVT::core::time;
-
 namespace rtos = core::rtos::wrapper;
 
 //Needs custom data type
@@ -75,18 +76,18 @@ VOID tx_application_define(VOID* first_unused_memory) {
                          DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
 
         /* Allocate the stack for thread 2.  */
-        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
-
-        /* Create the main thread 2.  */
-        tx_thread_create(&thread_2, "thread 2", thread_2_entry, 0, pointer,
-                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
-
-        /* Allocate the stack for thread 3.  */
-        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
-
-        /* Create the main thread 3.  */
-        tx_thread_create(&thread_3, "thread 3", thread_3_entry, 0, pointer,
-                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
+//        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
+//
+//        /* Create the main thread 2.  */
+//        tx_thread_create(&thread_2, "thread 2", thread_2_entry, 0, pointer,
+//                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
+//
+//        /* Allocate the stack for thread 3.  */
+//        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
+//
+//        /* Create the main thread 3.  */
+//        tx_thread_create(&thread_3, "thread 3", thread_3_entry, 0, pointer,
+//                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
 
         /* Create the message queue shared by all threads. */
         tx_queue_create(&queue_0, "queue 0", TX_1_ULONG, pointer,
@@ -111,7 +112,7 @@ int main() {
 
     SystemCoreClockUpdate();
     //TODO: Delete uart.printf and edit uarttx.printf message
-    uart.printf("\n\rUART: System Clock: %lu\n\r", SystemCoreClock);
+//    uart.printf("\n\rUART: System Clock: %lu\n\r", SystemCoreClock);
     uarttx.printf("\n\rUARTTX: System Clock: %lu\n\r", SystemCoreClock);
 
     tx_kernel_enter();
@@ -180,8 +181,7 @@ void thread_0_entry(ULONG thread_input) {
                         thread2_count, thread2_sum, thread2_sum / thread2_count);
         }
 
-        //TODO: Uncomment before committing
-//        semaphore_status = tx_semaphore_put(&semaphore_0);
+        semaphore_status = tx_semaphore_put(&semaphore_0);
         tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
     }
 }
