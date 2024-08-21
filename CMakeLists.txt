@@ -113,7 +113,10 @@ if(USE_RTOS)
     set(THREADX_ARCH "cortex_m4")
     set(THREADX_TOOLCHAIN "gnu")
     add_subdirectory(libs/threadx)
-    target_sources(${PROJECT_NAME} PRIVATE src/rtos/f4xx/tx_initialize_low_level.s)
+    target_sources(${PROJECT_NAME} PRIVATE
+            src/rtos/f4xx/tx_initialize_low_level.s
+            src/rtos/Threadx.cpp
+            src/rtos/UARTTX.cpp)
 endif()
 
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")

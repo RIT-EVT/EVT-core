@@ -106,11 +106,13 @@ int main() {
     // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
-    core::rtos::TXError init;
+    // Setup UARTTX
     rtos::UARTTX uarttx(uart);
 
     SystemCoreClockUpdate();
-    uart.printf("\n\rSystem Clock: %lu\n\r", SystemCoreClock);
+    //TODO: Delete uart.printf and edit uarttx.printf message
+    uart.printf("\n\rUART: System Clock: %lu\n\r", SystemCoreClock);
+    uarttx.printf("\n\rUARTTX: System Clock: %lu\n\r", SystemCoreClock);
 
     tx_kernel_enter();
 
@@ -178,7 +180,8 @@ void thread_0_entry(ULONG thread_input) {
                         thread2_count, thread2_sum, thread2_sum / thread2_count);
         }
 
-        semaphore_status = tx_semaphore_put(&semaphore_0);
+        //TODO: Uncomment before committing
+//        semaphore_status = tx_semaphore_put(&semaphore_0);
         tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
     }
 }
