@@ -3,11 +3,11 @@
 
 namespace core::rtos {
 
-Mutex::Mutex(const char* name, bool priorityInheritance)
+Mutex::Mutex(char* name, bool priorityInheritance)
     : txMutex(), name(name), priorityInheritance(priorityInheritance) {}
 
 TXError Mutex::init(BytePoolBase &pool) {
-    return tx_mutex_create(&txMutex, name, (UINT)priorityInheritance);
+    return static_cast<TXError>(tx_mutex_create(&txMutex, name, (UINT)priorityInheritance));
 }
 
 Mutex::~Mutex() {
@@ -15,15 +15,15 @@ Mutex::~Mutex() {
 }
 
 TXError Mutex::get(uint32_t waitOption) {
-    return tx_semaphore_get(&txMutex);
+    return static_cast<TXError>(tx_mutex_get(&txMutex, waitOption));
 }
 
 TXError Mutex::put() {
-    return tx_semaphore_put(&txMutex);
+    return static_cast<TXError>(tx_mutex_put(&txMutex));
 }
 
 TXError Mutex::prioritize() {
-    return tx_semaphore_prioritize(&txMutex);
+    return static_cast<TXError>(tx_mutex_prioritize(&txMutex));
 }
 
 } //namespace core::rtos

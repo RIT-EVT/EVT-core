@@ -3,11 +3,11 @@
 
 namespace core::rtos {
 
-Semaphore::Semaphore(const char* name, uint32_t initialCount)
+Semaphore::Semaphore(char* name, uint32_t initialCount)
     : txSemaphore(), name(name), initialCount(initialCount) {}
 
 TXError Semaphore::init(BytePoolBase& pool) {
-    return tx_semaphore_create(&txSemaphore, name, initialCount);
+    return static_cast<TXError>(tx_semaphore_create(&txSemaphore, name, initialCount));
 }
 
 Semaphore::~Semaphore() {
@@ -15,23 +15,23 @@ Semaphore::~Semaphore() {
 }
 
 TXError Semaphore::get(uint32_t waitOption) {
-    return tx_semaphore_get(&txSemaphore);
+    return static_cast<TXError>(tx_semaphore_get(&txSemaphore, waitOption));
 }
 
 TXError Semaphore::put() {
-    return tx_semaphore_put(&txSemaphore);
+    return static_cast<TXError>(tx_semaphore_put(&txSemaphore));
 }
 
 TXError Semaphore::putNotify() {
-    return tx_semaphore_put_notify(&txSemaphore);
+    return static_cast<TXError>(tx_semaphore_put_notify(&txSemaphore, ));
 }
 
 TXError Semaphore::prioritize() {
-    return tx_semaphore_prioritize(&txSemaphore);
+    return static_cast<TXError>(tx_semaphore_prioritize(&txSemaphore));
 }
 
-TXError Semaphore::ceilingPut() {
-    return tx_semaphore_ceiling_put(&txSemaphore);
+TXError Semaphore::ceilingPut(uint32_t newCeiling) {
+    return static_cast<TXError>(tx_semaphore_ceiling_put(&txSemaphore, newCeiling));
 }
 
 } //namespace core::rtos

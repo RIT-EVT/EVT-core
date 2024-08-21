@@ -14,7 +14,7 @@ public:
      * @param[in] priorityInheritance Whether or not threads currently holding this mutex should raise their priority
      * to that of the highest priority thread waiting for the mutex.
      */
-    Mutex(const char *name, bool priorityInheritance);
+    Mutex(char *name, bool priorityInheritance);
 
     TXError init(BytePoolBase &pool) override;
 
@@ -38,7 +38,7 @@ private:
     /**
      * Pointer to the name of the Mutex.
      */
-    const char* name;
+    char* name;
 
     /**
      * Whether this mutex has priority inheritance.

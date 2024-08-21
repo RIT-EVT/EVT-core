@@ -15,7 +15,7 @@ public:
      * @param[in] name The name of the Semaphore.
      * @param[in] initialCount What number the Semaphore will start at.
      */
-    Semaphore(const char* name, uint32_t initialCount);
+    Semaphore(char* name, uint32_t initialCount);
 
     /**
      * Semaphore Destructor.
@@ -30,7 +30,7 @@ public:
 
     TXError prioritize();
 
-    TXError ceilingPut();
+    TXError ceilingPut(uint32_t newCeiling);
 
     TXError init(BytePoolBase& pool) override;
 
@@ -42,7 +42,7 @@ private:
     /**
      * The name of the Semaphore.
      */
-    const char* name;
+    char* name;
     /**
      * The count the Semaphore will be initialized with.
      */

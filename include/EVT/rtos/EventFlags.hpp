@@ -12,9 +12,9 @@ public:
     /**
      * Constructor for an EventFlags.
      *
-     * @param name the name of the EventFlags.
+     * @param[in] name the name of the EventFlags.
      */
-    EventFlags(const char* name);
+    EventFlags(char* name);
 
     TXError init(core::rtos::BytePoolBase &pool) override;
 
@@ -35,12 +35,12 @@ public:
     /**
      * Gets the eventFlags of the mask according to the getOption
      *
-     * @param mask A bitmask describing what flags are requested.
-     * @param waitforAllFlags If the method should wait for EVERY flag in the bitmask
+     * @param[in] mask A bitmask describing what flags are requested.
+     * @param[in] waitforAllFlags If the method should wait for EVERY flag in the bitmask
      * to be true, or just ANY flag in the bitmask to be true.
      * @param[in] clear If the method should clear outputted flags.
-     * @param output A pointer a place to store the outputted flags.
-     * @param waitOption How long (in ticks) the calling thread should wait for this method to
+     * @param[out] output A pointer a place to store the outputted flags.
+     * @param[in] waitOption How long (in ticks) the calling thread should wait for this method to
      * return, or Enums::TXWait::WaitForever to wait forever.
      * @return The first error found by the function (or Success if there was no error).
      */
@@ -49,7 +49,7 @@ public:
     /**
      * Registers a function that will be called whenever an event flag in this group is set.
      *
-     * @param notifyFunction The function that will be called whenever an event flag in the group is set.
+     * @param[in] notifyFunction The function that will be called whenever an event flag in the group is set.
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError registerNotifyFunction(void (*notifyFunction)(EventFlags* eventFlags));
@@ -58,7 +58,7 @@ private:
     /**
      * The name of this object.
      */
-    const char * name;
+    char* name;
 
     /**
      * The threadx struct that represents this object in the threadx kernel.
@@ -80,4 +80,4 @@ private:
 
 } //namespace core::rtos
 
-#endif _EVT_RTOS_EVENTFLAGS
+#endif //_EVT_RTOS_EVENTFLAGS

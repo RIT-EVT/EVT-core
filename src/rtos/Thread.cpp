@@ -23,57 +23,67 @@ template<typename T>
 TXError Thread<T>::init(core::rtos::BytePoolBase& pool) {
     void *stackStart;
     stackStart = pool.allocateMemory(stackSize, NoWait);
-    tx_thread_create(&txThread, name, entryFunction, data, stackStart,
+    uint32_t errorCode = tx_thread_create(&txThread, name, entryFunction, data, stackStart,
                      stackSize, priority, preemptThreshold, timeSlice, autoStart ? TX_AUTO_START : TX_DONT_START);
+    return static_cast<TXError>(errorCode);
 }
 
 template<typename T>
 TXError Thread<T>::registerEntryExitNotification(void(*notifyFunction)(Thread<T>, uint32_t)) {
     storedNotifyFunction = notifyFunction;
-    tx_thread_entry_exit_notify(&txThread, txNotifyFunction);
+    uint32_t errorCode = tx_thread_entry_exit_notify(&txThread, txNotifyFunction);
+    return static_cast<TXError>(errorCode);
 }
 
 template<typename T>
 TXError Thread<T>::setPreemptThreshold(uint32_t newThreshold, uint32_t* oldThresholdOut) {
     preemptThreshold = newThreshold;
-    tx_thread_preemption_change(&txThread, newThreshold, oldThresholdOut);
+    uint32_t errorCode = tx_thread_preemption_change(&txThread, newThreshold, (UINT*)oldThresholdOut);
+    return static_cast<TXError>(errorCode);
 }
 
 template<typename T>
 TXError Thread<T>::setPriority(uint32_t newPriority, uint32_t* oldPriorityOut) {
     priority = newPriority;
-    tx_thread_priority_change(&txThread, newPriority, oldPriorityOut);
+    uint32_t errorCode = tx_thread_priority_change(&txThread, newPriority, (UINT*)oldPriorityOut);
+    return static_cast<TXError>(errorCode);
 }
 
 template<typename T>
 TXError Thread<T>::setTimeSlice(uint32_t newTimeSlice, uint32_t* oldTimeSliceOut) {
     timeSlice = newTimeSlice;
-    tx_thread_time_slice_change(&txThread, newTimeSlice, oldTimeSliceOut);
+    uint32_t errorCode = tx_thread_time_slice_change(&txThread, newTimeSlice, oldTimeSliceOut);
+    return static_cast<TXError>(errorCode);
 }
 
 template<typename T>
 TXError Thread<T>::reset() {
-    tx_thread_reset(&txThread);
+    uint32_t errorCode = tx_thread_reset(&txThread);
+    return static_cast<TXError>(errorCode);
 }
 
 template<typename T>
 TXError Thread<T>::resume() {
-    tx_thread_resume(&txThread);
+    uint32_t errorCode = tx_thread_resume(&txThread);
+    return static_cast<TXError>(errorCode);
 }
 
 template<typename T>
 TXError Thread<T>::suspend() {
-    tx_thread_suspend(&txThread);
+    uint32_t errorCode = tx_thread_suspend(&txThread);
+    return static_cast<TXError>(errorCode);
 }
 
 template<typename T>
 TXError Thread<T>::terminate() {
-    tx_thread_terminate(&txThread);
+    uint32_t errorCode = tx_thread_terminate(&txThread);
+    return static_cast<TXError>(errorCode);
 }
 
 template<typename T>
 TXError Thread<T>::abortWait() {
-    tx_thread_wait_abort(&txThread)
+    uint32_t errorCode = tx_thread_wait_abort(&txThread);
+    return static_cast<TXError>(errorCode);
 }
 
 } //namespace core::rtos
