@@ -1,16 +1,15 @@
 
 #include <EVT/rtos/Queue.hpp>
-#include <../../../libs/threadx/common/inc/tx_api.h>
+#include <EVT/rtos/Enums.hpp>
 
-namespace core::rtos::wrapper {
+namespace core::rtos {
 
-Queue::Queue(TX_QUEUE& txQueue, CHAR* name, uint32_t messageSize, uint32_t queueSize)
-    : txQueue(txQueue), name(name), messageSize(messageSize), queueSize(queueSize) {}
+Queue::Queue(char* name, uint32_t messageSize, uint32_t queueSize)
+    : name(name), messageSize(messageSize), queueSize(queueSize), storedNotifyFunction() {}
 
 TXError Queue::init(BytePoolBase& pool) {
     void* poolPointer = pool.allocateMemory(queueSize, NoWait);
-    myQueue = tx_queue_create(&txQueue, name, messageSize, poolPointer, queueSize);
-    return static_cast<TXError>(myQueue);
+    return static_cast<TXError>(tx_queue_create(&txQueue, name, messageSize, poolPointer, queueSize));
 }
 
 Queue::~Queue() {
@@ -18,11 +17,11 @@ Queue::~Queue() {
 }
 
 TXError Queue::flush() {
-    return tx_queue_flush(&txQueue);
+    return static_cast<TXError>(tx_queue_flush(&txQueue));
 }
 
 TXError Queue::prioritize() {
-    return tx_queue_prioritize(&txQueue);
+    return static_cast<TXError>(tx_queue_prioritize(&txQueue));
 }
 
 TXError Queue::recieve(void* destination, uint32_t waitOption) {
@@ -31,7 +30,7 @@ TXError Queue::recieve(void* destination, uint32_t waitOption) {
 
 TXError Queue::registerNotifyFunction(void(*notifyFunction)(Queue*)) {
     storedNotifyFunction = notifyFunction;
-    return tx_queue_send_notify(&txQueue, txNotifyFunction);
+    return static_cast<TXError>(tx_queue_send_notify(&txQueue, *this.txNotifyFunction));
 }
 
 TXError Queue::send(void* source, uint32_t waitOption) {
@@ -39,7 +38,7 @@ TXError Queue::send(void* source, uint32_t waitOption) {
 }
 
 TXError Queue::frontSend(void* source, uint32_t waitOption) {
-    return tx_queue_front_send(&txQueue, source, waitOption);
+    return static_cast<TXError>(tx_queue_front_send(&txQueue, source, waitOption));
 }
 
 } //namespace core::rtos
