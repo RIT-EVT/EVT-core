@@ -7,6 +7,7 @@ namespace core::rtos::wrapper {
 
 UARTTX::UARTTX(IO::UART& uart) : uart(uart) {}
 
+//TODO: IDK
 TXError UARTTX::init(BytePoolBase &pool) {
     return Success;
 }

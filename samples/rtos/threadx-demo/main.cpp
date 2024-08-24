@@ -3,7 +3,7 @@
  * This will make 4 threads and send data between them.
  */
 
-#include "tx_api.h"
+#include <tx_api.h>
 #include <EVT/dev/LED.hpp>
 #include <EVT/io/GPIO.hpp>
 #include <EVT/io/UART.hpp>
@@ -18,9 +18,6 @@ namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
 namespace time = EVT::core::time;
 namespace rtos = core::rtos::wrapper;
-
-//Needs custom data type
-//Look into entry argument when creating a thread when determining what thread it is
 
 ///Defines
 #define DEMO_STACK_SIZE 1024
@@ -76,18 +73,18 @@ VOID tx_application_define(VOID* first_unused_memory) {
                          DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
 
         /* Allocate the stack for thread 2.  */
-//        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
-//
-//        /* Create the main thread 2.  */
-//        tx_thread_create(&thread_2, "thread 2", thread_2_entry, 0, pointer,
-//                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
-//
-//        /* Allocate the stack for thread 3.  */
-//        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
-//
-//        /* Create the main thread 3.  */
-//        tx_thread_create(&thread_3, "thread 3", thread_3_entry, 0, pointer,
-//                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
+        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
+
+        /* Create the main thread 2.  */
+        tx_thread_create(&thread_2, "thread 2", thread_2_entry, 0, pointer,
+                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
+
+        /* Allocate the stack for thread 3.  */
+        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
+
+        /* Create the main thread 3.  */
+        tx_thread_create(&thread_3, "thread 3", thread_3_entry, 0, pointer,
+                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
 
         /* Create the message queue shared by all threads. */
         tx_queue_create(&queue_0, "queue 0", TX_1_ULONG, pointer,
@@ -111,7 +108,7 @@ int main() {
     rtos::UARTTX uarttx(uart);
 
     SystemCoreClockUpdate();
-    //TODO: Delete uart.printf and edit uarttx.printf message
+    // TODO: Delete uart.printf and edit uarttx.printf message
 //    uart.printf("\n\rUART: System Clock: %lu\n\r", SystemCoreClock);
     uarttx.printf("\n\rUARTTX: System Clock: %lu\n\r", SystemCoreClock);
 
