@@ -76,7 +76,7 @@ void init() {
 
 } // namespace core::platform
 
-namespace core::DEV {
+namespace core::dev {
 
 /**
  * Get an instance of an IWDG
@@ -119,7 +119,7 @@ RTC& getRTC() {
 #endif
 
 #ifdef MCU_SUPPORTED
-template <MCUTimer mcuTimer>
+template<MCUTimer mcuTimer>
 Timer& getTimer(uint32_t clockPeriod) {
     #ifdef STM32F3xx
     static Timerf3xx timer(getTIM(mcuTimer), clockPeriod);
@@ -128,9 +128,9 @@ Timer& getTimer(uint32_t clockPeriod) {
 }
 #endif
 
-} // namespace core::DEV
+} // namespace core::dev
 
-namespace core::IO {
+namespace core::io {
 
 /**
  * Get an instance of an ADC channel
@@ -138,7 +138,7 @@ namespace core::IO {
  * @param[in] pin The pin to use with the ADC
  */
 #ifdef ADC_SUPPORTED
-template <Pin pin>
+template<Pin pin>
 ADC& getADC() {
     #ifdef STM32F4xx
     static ADCf4xx adc(pin);
@@ -158,7 +158,7 @@ ADC& getADC() {
  * @param[in] rxPin CAN pin for receiving messages
  */
 #ifdef CAN_SUPPORTED
-template <Pin txPin, Pin rxPin>
+template<Pin txPin, Pin rxPin>
 CAN& getCAN(bool loopbackEnabled = false) {
     #ifdef STM32F3xx
     static CANf3xx can(txPin, rxPin, loopbackEnabled);
@@ -179,7 +179,7 @@ CAN& getCAN(bool loopbackEnabled = false) {
  * @param[in] pull The direction of the internal pull resistor
  */
 #ifdef GPIO_SUPPORTED
-template <Pin pin>
+template<Pin pin>
 GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT, GPIO::Pull pull = GPIO::Pull::PULL_DOWN) {
     #ifdef STM32F3xx
     static GPIOf3xx gpioPin(pin, direction, pull);
@@ -199,7 +199,7 @@ GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT, GPIO::Pull pu
  * @param[in] sda The I2C data pin
  */
 #ifdef I2C_SUPPORTED
-template <Pin scl, Pin sda>
+template<Pin scl, Pin sda>
 I2C& getI2C() {
     #ifdef STM32F3xx
     static I2Cf3xx i2c(scl, sda);
@@ -218,7 +218,7 @@ I2C& getI2C() {
  * @param[in] pin The pin to attach to the PWM.
  */
 #ifdef PWM_SUPPORTED
-template <Pin pin>
+template<Pin pin>
 PWM& getPWM() {
     #ifdef STM32F3xx
     static PWMf3xx pwm(pin);
@@ -240,7 +240,7 @@ PWM& getPWM() {
  * @param[in] isSwapped Whether TX and RX should be swapped; defaults to false
  */
 #ifdef UART_SUPPORTED
-template <Pin txPin, Pin rxPin>
+template<Pin txPin, Pin rxPin>
 UART& getUART(uint32_t baudrate, bool isSwapped = false) {
     #ifdef STM32F3xx
     static UARTf3xx uart(txPin, rxPin, baudrate, isSwapped);
@@ -263,7 +263,7 @@ UART& getUART(uint32_t baudrate, bool isSwapped = false) {
  * @param pinLength Number of chip select pins in the array
  */
 #ifdef SPI_SUPPORTED
-template <Pin sckPin, Pin mosiPin, Pin misoPin>
+template<Pin sckPin, Pin mosiPin, Pin misoPin>
 SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
     #ifdef STM32F3xx
     static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
@@ -283,7 +283,7 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
  * @param CSPins Array of chip select pins
  * @param pinLength Number of chip select pins in the array
  */
-template <Pin sckPin, Pin mosiPin>
+template<Pin sckPin, Pin mosiPin>
 SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
     #ifdef STM32F3xx
     static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin);
@@ -292,6 +292,6 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 }
 #endif
 
-} // namespace core::IO
+} // namespace core::io
 
 #endif

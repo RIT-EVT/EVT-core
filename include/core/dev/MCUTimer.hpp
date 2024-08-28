@@ -5,13 +5,12 @@
     #include <HALf3/stm32f3xx.h>
 #endif
 
-namespace core::DEV {
+namespace core::dev {
 
 /**
  * Enum for all the hardware timers available on the current MCU
  */
-enum class MCUTimer
-{
+enum class MCUTimer {
 #if defined(STM32F302x8)
     Timer1,
     Timer2,
@@ -76,6 +75,6 @@ TIM_TypeDef* getTIM(MCUTimer mcuTimer) {
     return timPeriph;
 }
 
-} // namespace core::DEV
+} // namespace core::dev
 
 #endif //_EVT_MCUTIMER_HPP_

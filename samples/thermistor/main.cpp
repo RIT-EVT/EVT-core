@@ -7,8 +7,8 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO   = core::IO;
-namespace DEV  = core::DEV;
+namespace io   = core::io;
+namespace dev  = core::dev;
 namespace time = core::time;
 
 /**
@@ -22,16 +22,16 @@ int main() {
     core::platform::init();
 
     // Setup IO
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     time::wait(500);
 
-    IO::ADC& adc = IO::getADC<IO::Pin::PA_0>();
+    io::ADC& adc = io::getADC<io::Pin::PA_0>();
 
     time::wait(500);
 
     // Setup the thermistor device
-    DEV::Thermistor thermistor(adc, convert);
+    dev::Thermistor thermistor(adc, convert);
 
     uart.printf("Starting thermistor test\r\n");
 

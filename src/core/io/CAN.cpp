@@ -2,7 +2,7 @@
 
 #include <core/io/CAN.hpp>
 
-namespace core::IO {
+namespace core::io {
 
 CAN::CAN(Pin txPin, Pin rxPin, bool loopbackEnabled) : txPin(txPin), rxPin(rxPin), loopbackEnabled(loopbackEnabled) {
     this->handler = nullptr;
@@ -14,4 +14,4 @@ void CAN::addIRQHandler(void (*handler)(CANMessage&, void*), void* priv) {
     this->priv    = priv;
 }
 
-} // namespace core::IO
+} // namespace core::io

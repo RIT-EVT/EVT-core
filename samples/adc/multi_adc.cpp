@@ -8,21 +8,21 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO   = core::IO;
+namespace io   = core::io;
 namespace time = core::time;
 
 int main() {
     // Initialize system
     core::platform::init();
 
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     uart.printf("Starting ADC test\r\n");
 
     time::wait(500);
 
-    IO::ADC& adc0 = IO::getADC<IO::Pin::PA_0>();
-    IO::ADC& adc1 = IO::getADC<IO::Pin::PA_1>();
+    io::ADC& adc0 = io::getADC<io::Pin::PA_0>();
+    io::ADC& adc1 = io::getADC<io::Pin::PA_1>();
 
     while (1) {
         uart.printf("--------------------\r\n");

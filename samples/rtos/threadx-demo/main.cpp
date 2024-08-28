@@ -11,8 +11,8 @@
 #include <core/manager.hpp>
 
 /// Namespaces
-namespace IO   = core::IO;
-namespace DEV  = core::DEV;
+namespace io   = core::io;
+namespace dev  = core::dev;
 namespace time = core::time;
 
 // Needs custom data type
@@ -44,7 +44,7 @@ void thread_3_entry(ULONG thread_input);
 // Merged tx_application_define and App_ThreadX_Init functions
 VOID tx_application_define(VOID* first_unused_memory) {
     VOID* memory_ptr;
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     if (tx_byte_pool_create(&tx_app_byte_pool, "Tx App memory pool", tx_byte_pool_buffer, TX_APP_MEM_POOL_SIZE)
         != TX_SUCCESS) {
@@ -133,7 +133,7 @@ int main() {
     core::platform::init();
 
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     SystemCoreClockUpdate();
     uart.printf("\n\rSystem Clock: %lu\n\r", SystemCoreClock);
@@ -155,7 +155,7 @@ ULONG thread2_sum   = 0;
 /// Function declarations
 void thread_0_entry(ULONG thread_input) {
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     srand(77);
     ULONG queue_status;
@@ -219,7 +219,7 @@ void thread_0_entry(ULONG thread_input) {
 
 void thread_1_entry(ULONG thread_input) {
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     ULONG received_message;
     ULONG queue_status;
@@ -261,7 +261,7 @@ void thread_1_entry(ULONG thread_input) {
 
 void thread_2_entry(ULONG thread_input) {
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     ULONG received_message;
     ULONG queue_status;
@@ -303,10 +303,10 @@ void thread_2_entry(ULONG thread_input) {
 
 void thread_3_entry(ULONG thread_input) {
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
-    IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();
-    DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
+    io::GPIO& ledGPIO = io::getGPIO<io::Pin::LED>();
+    dev::LED led(ledGPIO, dev::LED::ActiveState::HIGH);
 
     ULONG flag_status;
     ULONG actual_flag;

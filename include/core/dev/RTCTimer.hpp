@@ -7,7 +7,7 @@
 
 namespace time = core::time;
 
-namespace core::DEV {
+namespace core::dev {
 
 class RTCTimer : public Timer {
 public:
@@ -76,6 +76,6 @@ private:
     bool bTimerStopped;
 };
 
-} // namespace core::DEV
+} // namespace core::dev
 
 #endif // EVT_TIMER_H

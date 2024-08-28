@@ -4,23 +4,23 @@
 
 namespace time = core::time;
 
-namespace core::DEV {
+namespace core::dev {
 constexpr int asynchPrediv = 127;
 constexpr int synchPrediv  = 255;
 
 RTCf3xx::RTCf3xx()
     : halRTC{
-        RTC1,
-        {
-            // Numbers generated from STMCubeMX
-            RTC_HOURFORMAT_24,
-            asynchPrediv,
-            synchPrediv,
-            RTC_OUTPUT_DISABLE,
-            RTC_OUTPUT_TYPE_PUSHPULL,
-            RTC_OUTPUT_POLARITY_HIGH,
-        },
-    } {
+          RTC1,
+          {
+              // Numbers generated from STMCubeMX
+              RTC_HOURFORMAT_24,
+              asynchPrediv,
+              synchPrediv,
+              RTC_OUTPUT_DISABLE,
+              RTC_OUTPUT_TYPE_PUSHPULL,
+              RTC_OUTPUT_POLARITY_HIGH,
+          },
+      } {
     RCC_OscInitTypeDef RCC_OscInitStruct;
     RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
 
@@ -111,4 +111,4 @@ void RTCf3xx::setTime(core::time::TimeStamp& time) {
     HAL_RTC_SetTime(&halRTC, &rtcTime, RTC_FORMAT_BIN);
 }
 
-} // namespace core::DEV
+} // namespace core::dev

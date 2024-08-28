@@ -6,14 +6,14 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO   = core::IO;
-namespace DEV  = core::DEV;
+namespace io   = core::io;
+namespace dev  = core::dev;
 namespace time = core::time;
 
 int main() {
     core::platform::init();
 
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     uart.printf("Starting RTC test\r\n");
 
@@ -27,7 +27,7 @@ int main() {
     time.minute = 23;
     time.second = 55;
 
-    DEV::RTC& rtc = DEV::getRTC();
+    dev::RTC& rtc = dev::getRTC();
     rtc.setTime(time);
 
     time::wait(500);

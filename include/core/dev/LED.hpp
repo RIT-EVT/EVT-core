@@ -3,15 +3,14 @@
 
 #include <core/io/GPIO.hpp>
 
-namespace core::DEV {
+namespace core::dev {
 
 class LED {
 public:
     /**
      * Represents if the LED is active high or active low.
      */
-    enum class ActiveState
-    {
+    enum class ActiveState {
         HIGH = 0u,
         LOW  = 1u
     };
@@ -22,7 +21,7 @@ public:
      * @param[in] gpio GPIO pin
      * @param[in] activeState Represents if the LED is active high or active low
      */
-    LED(core::IO::GPIO& gpio, ActiveState activeState);
+    LED(core::io::GPIO& gpio, ActiveState activeState);
 
     /**
      * Toggle the current state of the LED
@@ -34,15 +33,15 @@ public:
      *
      * @param[in] state The state to set the LED to.
      */
-    void setState(core::IO::GPIO::State state);
+    void setState(core::io::GPIO::State state);
 
 private:
     /// The gpio pin used by the LED
-    core::IO::GPIO& gpio;
+    core::io::GPIO& gpio;
     /// If the LED is active high or active low
     ActiveState activeState;
 };
 
-} // namespace core::DEV
+} // namespace core::dev
 
 #endif

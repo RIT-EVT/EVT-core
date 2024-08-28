@@ -4,8 +4,8 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace DEV  = core::DEV;
-namespace IO   = core::IO;
+namespace dev  = core::dev;
+namespace io   = core::io;
 namespace time = core::time;
 
 int main() {
@@ -13,16 +13,16 @@ int main() {
     core::platform::init();
 
     // Setup UART
-    IO::UART& uart       = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-    IO::GPIO& ledGPIO    = IO::getGPIO<IO::Pin::LED>();
-    IO::GPIO& buttonGPIO = IO::getGPIO<IO::Pin::PC_3>();
+    io::UART& uart       = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
+    io::GPIO& ledGPIO    = io::getGPIO<io::Pin::LED>();
+    io::GPIO& buttonGPIO = io::getGPIO<io::Pin::PC_3>();
 
-    DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
+    dev::LED led(ledGPIO, dev::LED::ActiveState::HIGH);
 
-    DEV::Button button = DEV::Button(buttonGPIO);
+    dev::Button button = dev::Button(buttonGPIO);
 
     while (true) {
-        IO::GPIO::State buttonStatus = button.getState();
+        io::GPIO::State buttonStatus = button.getState();
         uart.printf("Button Status: %d \n", buttonStatus);
 
         led.setState(buttonStatus);

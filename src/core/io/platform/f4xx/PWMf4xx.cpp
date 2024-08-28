@@ -1,7 +1,7 @@
 #include <core/io/platform/f4xx/GPIOf4xx.hpp>
 #include <core/io/platform/f4xx/PWMf4xx.hpp>
 
-namespace core::IO {
+namespace core::io {
 
 /**
  * Get the TIM instance and channel associated with a pin. This information
@@ -209,4 +209,4 @@ uint32_t PWMf4xx::getDutyCycle() { return dutyCycle; }
 
 uint32_t PWMf4xx::getPeriod() { return period; }
 
-} // namespace core::IO
+} // namespace core::io

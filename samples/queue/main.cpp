@@ -10,7 +10,7 @@
 #include <core/manager.hpp>
 #include <core/utils/types/FixedQueue.hpp>
 
-namespace IO    = core::IO;
+namespace io    = core::io;
 namespace types = core::types;
 
 /**
@@ -37,7 +37,7 @@ public:
     }
 
     // For easier debugging
-    void print(IO::UART* uart) { uart->printf("TestClass(a = %d, b = %d, c = %d)", a, b, c); }
+    void print(io::UART* uart) { uart->printf("TestClass(a = %d, b = %d, c = %d)", a, b, c); }
 };
 
 int main() {
@@ -45,7 +45,7 @@ int main() {
     core::platform::init();
 
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     ///////////////////////////////////////////////////////////////////////////
     // Test a queue of numbers, no overwritting

@@ -7,7 +7,7 @@
 
 #include <core/dev/Timer.hpp>
 
-namespace core::DEV {
+namespace core::dev {
 
 /**
  * Implementation of the Timer class for STM32f3xx MCUs
@@ -52,6 +52,6 @@ private:
     void initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod);
 };
 
-} // namespace core::DEV
+} // namespace core::dev
 
 #endif //_EVT_TIMER3xx_H

@@ -6,30 +6,30 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO  = core::IO;
-namespace DEV = core::DEV;
+namespace io  = core::io;
+namespace dev = core::dev;
 
-IO::GPIO* ledGPIO;
-IO::GPIO* interruptGPIO2Hz;
-IO::GPIO* interruptGPIOStopStart;
-IO::GPIO* reloadGPIO;
+io::GPIO* ledGPIO;
+io::GPIO* interruptGPIO2Hz;
+io::GPIO* interruptGPIOStopStart;
+io::GPIO* reloadGPIO;
 
 void timer2IRQHandler(void* htim) {
-    IO::GPIO::State state       = ledGPIO->readPin();
-    IO::GPIO::State toggleState = state == IO::GPIO::State::HIGH ? IO::GPIO::State::LOW : IO::GPIO::State::HIGH;
+    io::GPIO::State state       = ledGPIO->readPin();
+    io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
     ledGPIO->writePin(toggleState);
     interruptGPIO2Hz->writePin(toggleState);
 }
 
 void timer15IRQHandler(void* htim) {
-    IO::GPIO::State state       = interruptGPIOStopStart->readPin();
-    IO::GPIO::State toggleState = state == IO::GPIO::State::HIGH ? IO::GPIO::State::LOW : IO::GPIO::State::HIGH;
+    io::GPIO::State state       = interruptGPIOStopStart->readPin();
+    io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
     interruptGPIOStopStart->writePin(toggleState);
 }
 
 void timer16IRQHandler(void* htim) {
-    IO::GPIO::State state       = reloadGPIO->readPin();
-    IO::GPIO::State toggleState = state == IO::GPIO::State::HIGH ? IO::GPIO::State::LOW : IO::GPIO::State::HIGH;
+    io::GPIO::State state       = reloadGPIO->readPin();
+    io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
     reloadGPIO->writePin(toggleState);
 }
 
@@ -38,15 +38,15 @@ int main() {
     core::platform::init();
 
     // Setup GPIO
-    ledGPIO                = &IO::getGPIO<IO::Pin::LED>();
-    interruptGPIO2Hz       = &IO::getGPIO<IO::Pin::PC_3>(IO::GPIO::Direction::OUTPUT);
-    interruptGPIOStopStart = &IO::getGPIO<IO::Pin::PC_2>(IO::GPIO::Direction::OUTPUT);
-    reloadGPIO             = &IO::getGPIO<IO::Pin::PC_0>(IO::GPIO::Direction::OUTPUT);
+    ledGPIO                = &io::getGPIO<io::Pin::LED>();
+    interruptGPIO2Hz       = &io::getGPIO<io::Pin::PC_3>(io::GPIO::Direction::OUTPUT);
+    interruptGPIOStopStart = &io::getGPIO<io::Pin::PC_2>(io::GPIO::Direction::OUTPUT);
+    reloadGPIO             = &io::getGPIO<io::Pin::PC_0>(io::GPIO::Direction::OUTPUT);
 
     // Setup the Timer
-    DEV::Timer& timer2  = DEV::getTimer<DEV::MCUTimer::Timer2>(500);
-    DEV::Timer& timer15 = DEV::getTimer<DEV::MCUTimer::Timer15>(100);
-    DEV::Timer& timer16 = DEV::getTimer<DEV::MCUTimer::Timer16>(200);
+    dev::Timer& timer2  = dev::getTimer<dev::MCUTimer::Timer2>(500);
+    dev::Timer& timer15 = dev::getTimer<dev::MCUTimer::Timer15>(100);
+    dev::Timer& timer16 = dev::getTimer<dev::MCUTimer::Timer16>(200);
 
     timer2.startTimer(timer2IRQHandler);
     timer15.startTimer(timer15IRQHandler);

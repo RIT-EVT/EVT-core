@@ -5,7 +5,7 @@
 
 #include <core/dev/RTC.hpp>
 
-namespace core::DEV {
+namespace core::dev {
 
 /**
  * RTC implementation that makes use of the on-board real time clock
@@ -31,6 +31,6 @@ private:
     RTC_HandleTypeDef halRTC;
 };
 
-} // namespace core::DEV
+} // namespace core::dev
 
 #endif

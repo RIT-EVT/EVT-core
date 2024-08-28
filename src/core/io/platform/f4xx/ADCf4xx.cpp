@@ -19,7 +19,7 @@
 #include <core/io/platform/f4xx/ADCf4xx.hpp>
 #include <core/io/platform/f4xx/GPIOf4xx.hpp>
 
-namespace core::IO {
+namespace core::io {
 
 // Init static member variables
 ADC_HandleTypeDef ADCf4xx::halADC = {0};
@@ -189,4 +189,4 @@ void ADCf4xx::addChannel(uint8_t rank) {
     HAL_ADC_ConfigChannel(&halADC, &adcChannel);
 }
 
-} // namespace core::IO
+} // namespace core::io

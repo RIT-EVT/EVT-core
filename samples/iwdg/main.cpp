@@ -5,17 +5,17 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO   = core::IO;
-namespace DEV  = core::DEV;
+namespace io   = core::io;
+namespace dev  = core::dev;
 namespace time = core::time;
 
 int main() {
     // Initialize system
     core::platform::init();
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     // Start watchdog
-    DEV::IWDG& iwdg = DEV::getIWDG(5000);
+    dev::IWDG& iwdg = dev::getIWDG(5000);
     iwdg.init();
 
     uart.printf("Starting IWDG test...\n\r\n\r");

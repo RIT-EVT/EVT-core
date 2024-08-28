@@ -2,19 +2,19 @@
 #include <core/dev/LCD.hpp>
 #include <cstring>
 
-namespace core::DEV {
-LCD::LCD(IO::GPIO& regSelect, IO::GPIO& reset, IO::SPI& spi) : regSelect(regSelect), reset(reset), spi(spi) {
-    this->regSelect.writePin(core::IO::GPIO::State::LOW);
-    this->reset.writePin(core::IO::GPIO::State::LOW);
+namespace core::dev {
+LCD::LCD(io::GPIO& regSelect, io::GPIO& reset, io::SPI& spi) : regSelect(regSelect), reset(reset), spi(spi) {
+    this->regSelect.writePin(core::io::GPIO::State::LOW);
+    this->reset.writePin(core::io::GPIO::State::LOW);
 
     this->numberOfSections = 9;
     this->sectionsPerRow   = 3;
 }
 
-LCD::LCD(IO::GPIO& regSelect, IO::GPIO& reset, IO::SPI& spi, uint8_t numberOfSections, uint8_t sectionsPerRow)
+LCD::LCD(io::GPIO& regSelect, io::GPIO& reset, io::SPI& spi, uint8_t numberOfSections, uint8_t sectionsPerRow)
     : regSelect(regSelect), reset(reset), spi(spi) {
-    this->regSelect.writePin(core::IO::GPIO::State::LOW);
-    this->reset.writePin(core::IO::GPIO::State::LOW);
+    this->regSelect.writePin(core::io::GPIO::State::LOW);
+    this->reset.writePin(core::io::GPIO::State::LOW);
     if (sectionsPerRow > MAX_SECTION_PER_ROW) {
         sectionsPerRow = MAX_SECTION_PER_ROW;
     }
@@ -28,7 +28,7 @@ LCD::LCD(IO::GPIO& regSelect, IO::GPIO& reset, IO::SPI& spi, uint8_t numberOfSec
 }
 
 void LCD::initLCD() {
-    this->reset.writePin(core::IO::GPIO::State::HIGH);
+    this->reset.writePin(core::io::GPIO::State::HIGH);
     core::time::wait(100);
     this->commandWrite(ADCSELECT);            // ADC select
     this->commandWrite(DISPLAYOFF);           // Display OFF
@@ -42,14 +42,14 @@ void LCD::initLCD() {
 }
 
 void LCD::dataWrite(uint8_t data) {
-    this->regSelect.writePin(core::IO::GPIO::State::HIGH);
+    this->regSelect.writePin(core::io::GPIO::State::HIGH);
     this->spi.startTransmission(0);
     this->spi.write(&data, 1);
     this->spi.endTransmission(0);
 }
 
 void LCD::commandWrite(uint8_t data) {
-    this->regSelect.writePin(core::IO::GPIO::State::LOW);
+    this->regSelect.writePin(core::io::GPIO::State::LOW);
     this->spi.startTransmission(0);
     this->spi.write(&data, 1);
     this->spi.endTransmission(0);
@@ -284,4 +284,4 @@ void LCD::writeText(const char* text, uint8_t page, uint8_t column, LCD::FontSiz
         }
     }
 }
-} // namespace core::DEV
+} // namespace core::dev

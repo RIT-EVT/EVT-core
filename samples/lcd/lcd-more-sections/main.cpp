@@ -9,37 +9,37 @@
 #include <core/utils/time.hpp>
 #include <cstdio>
 
-namespace DEV  = core::DEV;
-namespace IO   = core::IO;
+namespace dev  = core::dev;
+namespace io   = core::io;
 namespace time = core::time;
 
 constexpr uint32_t SPI_SPEED = SPI_SPEED_500KHZ;
 
 constexpr uint8_t deviceCount = 1;
 
-IO::GPIO* devices[deviceCount];
+io::GPIO* devices[deviceCount];
 
 int main() {
     // Initialize system
     core::platform::init();
 
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     // Uses HUDL 1.0 Pins
-    IO::GPIO& regSelect = IO::getGPIO<IO::Pin::PA_3>(core::IO::GPIO::Direction::OUTPUT);
-    IO::GPIO& reset     = IO::getGPIO<IO::Pin::PB_3>(core::IO::GPIO::Direction::OUTPUT);
+    io::GPIO& regSelect = io::getGPIO<io::Pin::PA_3>(core::io::GPIO::Direction::OUTPUT);
+    io::GPIO& reset     = io::getGPIO<io::Pin::PB_3>(core::io::GPIO::Direction::OUTPUT);
 
-    devices[0] = &IO::getGPIO<IO::Pin::PB_12>(core::IO::GPIO::Direction::OUTPUT);
-    devices[0]->writePin(IO::GPIO::State::HIGH);
+    devices[0] = &io::getGPIO<io::Pin::PB_12>(core::io::GPIO::Direction::OUTPUT);
+    devices[0]->writePin(io::GPIO::State::HIGH);
 
     // Setup SPI
-    IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, IO::Pin::SPI_MOSI>(devices, deviceCount);
-    spi.configureSPI(SPI_SPEED, IO::SPI::SPIMode::SPI_MODE0, SPI_MSB_FIRST);
+    io::SPI& spi = io::getSPI<io::Pin::SPI_SCK, io::Pin::SPI_MOSI>(devices, deviceCount);
+    spi.configureSPI(SPI_SPEED, io::SPI::SPIMode::SPI_MODE0, SPI_MSB_FIRST);
 
     // Sets up LCD
     uart.printf("Creating LCD Object...\n\r");
-    core::DEV::LCD lcd(regSelect, reset, spi, 12, 3);
+    core::dev::LCD lcd(regSelect, reset, spi, 12, 3);
     uart.printf("Initializing LCD...\n\r");
     lcd.initLCD();
     lcd.clearLCD();

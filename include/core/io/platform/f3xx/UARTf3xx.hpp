@@ -7,7 +7,7 @@
 
 #include <HALf3/stm32f3xx.h>
 
-namespace core::IO {
+namespace core::io {
 
 class UARTf3xx : public UART {
 public:
@@ -47,6 +47,6 @@ private:
     UART_HandleTypeDef halUART;
 };
 
-} // namespace core::IO
+} // namespace core::io
 
 #endif

@@ -5,7 +5,7 @@
 
 #include <core/dev/IWDG.hpp>
 
-namespace core::DEV {
+namespace core::dev {
 
 /**
  * Implementation of the independent watchdog for STM32f3xx MCUs, which
@@ -34,6 +34,6 @@ private:
     bool isActive = false;
 };
 
-} // namespace core::DEV
+} // namespace core::dev
 
 #endif // EVT_IWDGF4XX_HPP

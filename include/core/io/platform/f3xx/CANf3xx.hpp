@@ -14,7 +14,7 @@
     #define CAN_MESSAGE_QUEUE_SIZE 100
 #endif
 
-namespace core::IO {
+namespace core::io {
 
 /**
  * STMF3xx implementation of the CAN protocol. The STM32f3xx has an on
@@ -99,6 +99,6 @@ private:
     core::types::FixedQueue<CAN_MESSAGE_QUEUE_SIZE, CANMessage> messageQueue;
 };
 
-} // namespace core::IO
+} // namespace core::io
 
 #endif

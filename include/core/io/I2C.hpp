@@ -12,7 +12,7 @@
     }                                       \
     void(0)
 
-namespace core::IO {
+namespace core::io {
 
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
@@ -32,8 +32,7 @@ public:
      * interface. Each method that interfaces over I2C could potentially
      * return one of these errors, or OK if no error.
      */
-    enum class I2CStatus
-    {
+    enum class I2CStatus {
         TIMEOUT = 0,
         BUSY    = 1,
         ERROR   = 2,
@@ -198,6 +197,6 @@ private:
     Pin sdaPin;
 };
 
-} // namespace core::IO
+} // namespace core::io
 
 #endif

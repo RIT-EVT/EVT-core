@@ -11,18 +11,18 @@
 #include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO   = core::IO;
-namespace DEV  = core::DEV;
+namespace io   = core::io;
+namespace dev  = core::dev;
 namespace time = core::time;
 namespace log  = core::log;
 
-constexpr IO::Pin A_PIN = IO::Pin::PA_8;
-constexpr IO::Pin B_PIN = IO::Pin::PA_9;
+constexpr io::Pin A_PIN = io::Pin::PA_8;
+constexpr io::Pin B_PIN = io::Pin::PA_9;
 
 int main() {
     // Init platform
     core::platform::init();
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600, true);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600, true);
 
     uart.printf("\n\rSTARTING ENCODER TEST\n\r");
 
@@ -30,10 +30,10 @@ int main() {
     log::LOGGER.setUART(&uart);
     log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
 
-    IO::GPIO& pinA = IO::getGPIO<A_PIN>(IO::GPIO::Direction::INPUT);
-    IO::GPIO& pinB = IO::getGPIO<B_PIN>(IO::GPIO::Direction::INPUT);
+    io::GPIO& pinA = io::getGPIO<A_PIN>(io::GPIO::Direction::INPUT);
+    io::GPIO& pinB = io::getGPIO<B_PIN>(io::GPIO::Direction::INPUT);
 
-    DEV::Encoder encoder(pinA, pinB, 18, 0, true);
+    dev::Encoder encoder(pinA, pinB, 18, 0, true);
 
     while (1) {
         // ENCODER MUST BE UPDATED EACH LOOP

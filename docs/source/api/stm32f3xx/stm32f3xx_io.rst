@@ -11,42 +11,42 @@ share similar implementations in EVT-core.
 ADC
 ===
 
-.. doxygenclass:: core::IO::ADCf3xx
+.. doxygenclass:: core::io::ADCf3xx
    :members:
 
 CAN
 ===
 
-.. doxygenclass:: core::IO::CANf3xx
+.. doxygenclass:: core::io::CANf3xx
    :members:
 
 GPIO
 ====
 
-.. doxygenclass:: core::IO::GPIOf3xx
+.. doxygenclass:: core::io::GPIOf3xx
    :members:
 
 I2C
 ===
 
-.. doxygenclass:: core::IO::I2Cf3xx
+.. doxygenclass:: core::io::I2Cf3xx
    :members:
 
 PWM
 ===
 
-.. doxygenclass:: core::IO::PWMf3xx
+.. doxygenclass:: core::io::PWMf3xx
    :members:
 
 SPI
 ===
 
-.. doxygenclass:: core::IO::SPIf3xx
+.. doxygenclass:: core::io::SPIf3xx
    :members:
 
 UART
 ====
 
-.. doxygenclass:: core::IO::UARTf3xx
+.. doxygenclass:: core::io::UARTf3xx
    :members:
 

@@ -5,7 +5,7 @@
 #include <core/io/UART.hpp>
 #include <cstdint>
 
-namespace dev = core::DEV;
+namespace dev = core::dev;
 
 namespace core::log {
 /** To enable the logger, compile with "cmake -D EVT_CORE_LOG_ENABLE" */
@@ -14,8 +14,7 @@ public:
     /**
      * The level at which messages should be logged
      */
-    enum class LogLevel
-    {
+    enum class LogLevel {
         DEBUG   = 0u,
         INFO    = 1u,
         WARNING = 2u,
@@ -27,7 +26,7 @@ public:
      *
      * @param[in] uart UART to be used for logging
      */
-    void setUART(IO::UART* uart);
+    void setUART(io::UART* uart);
 
     /**
      * Set the minimum log level to be displayed by the logger
@@ -55,7 +54,7 @@ public:
 
 private:
     /** UART to be used for logging */
-    IO::UART* uart;
+    io::UART* uart;
     /** Minimum log level to be displayed by the logger */
     LogLevel minLevel;
     /** Clock to be used for timestamps */

@@ -9,8 +9,8 @@
 #include <core/dev/storage/M24C32.hpp>
 #include <core/manager.hpp>
 
-namespace IO  = core::IO;
-namespace DEV = core::DEV;
+namespace io  = core::io;
+namespace dev = core::dev;
 
 /**
  * The address of the EEPROM listening for reads/writes
@@ -51,9 +51,9 @@ int main() {
     // Initialize system
     core::platform::init();
 
-    IO::I2C& i2c       = IO::getI2C<IO::Pin::PB_8, IO::Pin::PB_9>();
-    IO::UART& uart     = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-    DEV::M24C32 eeprom = DEV::M24C32(I2C_SLAVE_ADDR, i2c);
+    io::I2C& i2c       = io::getI2C<io::Pin::PB_8, io::Pin::PB_9>();
+    io::UART& uart     = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
+    dev::M24C32 eeprom = dev::M24C32(I2C_SLAVE_ADDR, i2c);
 
     uart.printf("Starting EEPROM test\n\r");
 

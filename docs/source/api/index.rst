@@ -17,31 +17,31 @@ is not strictly a rule. An LED is a simplistic example of a device.
 IWDG
 ---
 
-.. doxygenclass:: core::DEV::IWDG
+.. doxygenclass:: core::dev::IWDG
    :members:
 
 LED
 ---
 
-.. doxygenclass:: core::DEV::LED
+.. doxygenclass:: core::dev::LED
    :members:
 
 RTC
 ---
 
-.. doxygenclass:: core::DEV::RTC
+.. doxygenclass:: core::dev::RTC
    :members:
 
 Timer
 -----
 
-.. doxygenclass:: core::DEV::Timer
+.. doxygenclass:: core::dev::Timer
    :members:
 
 EEPROM
 ------
 
-.. doxygenclass:: core::DEV::EEPROM
+.. doxygenclass:: core::dev::EEPROM
    :members:
 
 IO
@@ -59,43 +59,43 @@ supported by the platform's implementation of the IO interface.
 ADC
 ---
 
-.. doxygenclass:: core::IO::ADC
+.. doxygenclass:: core::io::ADC
    :members:
 
 CAN
 ---
 
-.. doxygenclass:: core::IO::CAN
+.. doxygenclass:: core::io::CAN
    :members:
 
 GPIO
 ----
 
-.. doxygenclass:: core::IO::GPIO
+.. doxygenclass:: core::io::GPIO
    :members:
 
 I2C
 ---
 
-.. doxygenclass:: core::IO::I2C
+.. doxygenclass:: core::io::I2C
    :members:
 
 PWM
 ---
 
-.. doxygenclass:: core::IO::PWM
+.. doxygenclass:: core::io::PWM
    :members:
 
 SPI
 ---
 
-.. doxygenclass:: core::IO::SPI
+.. doxygenclass:: core::io::SPI
    :members:
 
 UART
 ----
 
-.. doxygenclass:: core::IO::UART
+.. doxygenclass:: core::io::UART
    :members:
 
 Types
@@ -104,7 +104,7 @@ Types
 CANMessage
 ----------
 
-.. doxygenclass:: core::IO::CANMessage
+.. doxygenclass:: core::io::CANMessage
    :members:
 
 Platform Implementations

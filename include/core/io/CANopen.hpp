@@ -20,7 +20,7 @@
     #define CANOPEN_QUEUE_SIZE 150
 #endif
 
-namespace core::IO {
+namespace core::io {
 
 /**
  * Get an instance of the CAN driver that can be used with the CANopen
@@ -31,7 +31,7 @@ namespace core::IO {
  * @param[in] messageQueue Queue that will be read from for receiveing CAN messages
  * @param[out] canDriver The CANopen stack driver to populate
  */
-void getCANopenCANDriver(CAN* can, types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* messageQueue,
+void getCANopenCANDriver(CAN* can, types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>* messageQueue,
                          CO_IF_CAN_DRV* canDriver);
 
 /**
@@ -42,7 +42,7 @@ void getCANopenCANDriver(CAN* can, types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CAN
  * @param[in] timer The timer interface to use
  * @param[out] timerDriver The timer driver to populate
  */
-void getCANopenTimerDriver(DEV::Timer* timer, CO_IF_TIMER_DRV* timerDriver);
+void getCANopenTimerDriver(dev::Timer* timer, CO_IF_TIMER_DRV* timerDriver);
 
 /**
  * Get an instance of the NVM (non-volitile memory) that can be used
@@ -68,8 +68,8 @@ void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver);
  * @param timerDriver[in,out] the timer driver.
  * @param canDriver[in,out] the general CAN driver.
  */
-void initializeCANopenDriver(types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* canOpenQueue, IO::CAN* can,
-                             core::DEV::Timer* timer, CO_IF_DRV* canStackDriver, CO_IF_NVM_DRV* nvmDriver,
+void initializeCANopenDriver(types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>* canOpenQueue, io::CAN* can,
+                             core::dev::Timer* timer, CO_IF_DRV* canStackDriver, CO_IF_NVM_DRV* nvmDriver,
                              CO_IF_TIMER_DRV* timerDriver, CO_IF_CAN_DRV* canDriver);
 
 /**
@@ -94,6 +94,6 @@ void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* ca
  */
 void processCANopenNode(CO_NODE* canNode);
 
-} // namespace core::IO
+} // namespace core::io
 
 #endif

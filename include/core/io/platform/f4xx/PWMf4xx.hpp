@@ -7,7 +7,7 @@
 #include <core/io/PWM.hpp>
 #include <core/io/pin.hpp>
 
-namespace core::IO {
+namespace core::io {
 
 class PWMf4xx : public PWM {
 public:
@@ -35,6 +35,6 @@ private:
     TIM_OC_InitTypeDef halChannel;
 };
 
-} // namespace core::IO
+} // namespace core::io
 
 #endif

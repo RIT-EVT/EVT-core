@@ -1,6 +1,6 @@
 #include <core/io/PWM.hpp>
 
-namespace core::IO {
+namespace core::io {
 
 PWM::PWM(Pin pin) {
     this->pin       = pin;
@@ -8,4 +8,4 @@ PWM::PWM(Pin pin) {
     this->period    = 0;
 }
 
-} // namespace core::IO
+} // namespace core::io

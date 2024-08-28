@@ -5,4 +5,4 @@
  * methods for a hardware speedup.
  */
 
-namespace core::DEV {}
+namespace core::dev {}

@@ -8,7 +8,7 @@
     #define EVT_UART_TIMEOUT 100
 #endif
 
-namespace core::IO {
+namespace core::io {
 
 // Forward declarations:
 // The different pins are hardware specific. Forward declarations to allow
@@ -36,8 +36,7 @@ public:
      * Represents the options for the parity settings that may be used when
      * setting up a UART.
      */
-    enum class Parity
-    {
+    enum class Parity {
         NONE,
         ODD,
         EVEN,
@@ -48,8 +47,7 @@ public:
     /**
      * Represents the possible lengths of words that can exist for UART.
      */
-    enum class WordLength
-    {
+    enum class WordLength {
         FIVE  = 5,
         SIX   = 6,
         SEVEN = 7,
@@ -59,8 +57,7 @@ public:
     /**
      * Represents the number of stop bits that are used.
      */
-    enum class NumStopBits
-    {
+    enum class NumStopBits {
         ONE = 1,
         TWO = 2
     };
@@ -193,6 +190,6 @@ protected:
     uint32_t baudrate;
 };
 
-} // namespace core::IO
+} // namespace core::io
 
 #endif

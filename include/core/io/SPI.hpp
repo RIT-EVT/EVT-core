@@ -21,7 +21,7 @@
 #define SPI_SPEED_62KHZ  62500
 #define SPI_SPEED_31KHZ  31250
 
-namespace core::IO {
+namespace core::io {
 
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
@@ -33,8 +33,7 @@ public:
     /**
      * Represents the current state of using the SPI interface.
      */
-    enum class SPIStatus
-    {
+    enum class SPIStatus {
         OK      = 0,
         ERROR   = 1,
         BUSY    = 2,
@@ -44,8 +43,7 @@ public:
     /**
      * Enum of SPI mode's that can be used.
      */
-    enum class SPIMode
-    {
+    enum class SPIMode {
         SPI_MODE0 = 0x01,
         SPI_MODE1 = 0x02,
         SPI_MODE2 = 0x04,
@@ -191,6 +189,6 @@ protected:
     GPIO* CSPins[MAX_PINS] = {};
 };
 
-} // namespace core::IO
+} // namespace core::io
 
 #endif

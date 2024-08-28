@@ -2,7 +2,7 @@
 #include <cstdarg>
 #include <cstdio>
 
-namespace IO = core::IO;
+namespace io = core::io;
 
 namespace core::log {
 /**
@@ -10,7 +10,7 @@ namespace core::log {
  *
  * @param uart[in] UART to be used for logging
  */
-void Logger::setUART(IO::UART* loggingUART) {
+void Logger::setUART(io::UART* loggingUART) {
 #ifdef EVT_CORE_LOG_ENABLE
     uart = loggingUART;
 #endif

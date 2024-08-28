@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <cstring>
 
-namespace core::IO {
+namespace core::io {
 
 UART::UART(Pin txPin, Pin rxPin, uint32_t baudrate) {
     this->txPin    = txPin;
@@ -36,4 +36,4 @@ char* UART::gets(char* buf, size_t size) {
     return buf;
 }
 
-} // namespace core::IO
+} // namespace core::io

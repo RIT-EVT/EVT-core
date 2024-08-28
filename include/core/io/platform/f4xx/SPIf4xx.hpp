@@ -7,7 +7,7 @@
 
 #define SPI_MAX_BAUD 4000000
 
-namespace core::IO {
+namespace core::io {
 
 class SPIf4xx : public SPI {
 public:
@@ -87,6 +87,6 @@ private:
     SPIStatus halToSPIStatus(HAL_StatusTypeDef halStatus);
 };
 
-} // namespace core::IO
+} // namespace core::io
 
 #endif

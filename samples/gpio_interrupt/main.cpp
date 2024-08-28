@@ -7,20 +7,20 @@
 #include <core/io/pin.hpp>
 #include <core/manager.hpp>
 
-namespace IO = core::IO;
+namespace io = core::io;
 
 constexpr int BAUD_RATE         = 9600;
-constexpr IO::Pin INTERRUPT_PIN = IO::Pin::PC_3;
+constexpr io::Pin INTERRUPT_PIN = io::Pin::PC_3;
 
-IO::UART* uart;
+io::UART* uart;
 
-void risingEdgeHandler(IO::GPIO* pin, void* priv) {
+void risingEdgeHandler(io::GPIO* pin, void* priv) {
     // we don't need the void* in this handler, but the registerIRQ()
     // method requires a function with these exact arguments
-    IO::GPIO::State pin_value = pin->readPin();
+    io::GPIO::State pin_value = pin->readPin();
 
     uart->printf("Received %s edge interrupt for pin C3\n\r",
-                 pin_value == IO::GPIO::State::HIGH ? "rising" : "falling");
+                 pin_value == io::GPIO::State::HIGH ? "rising" : "falling");
     uart->printf("Pin Value: %d\n\r", static_cast<uint32_t>(pin_value));
 }
 
@@ -29,11 +29,11 @@ int main() {
     core::platform::init();
 
     // Setup UART
-    uart = &IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(BAUD_RATE);
+    uart = &io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(BAUD_RATE);
 
     // Set the GPIO interrupt
-    IO::GPIO& interruptGPIO = IO::getGPIO<INTERRUPT_PIN>(IO::GPIO::Direction::INPUT);
-    interruptGPIO.registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING, risingEdgeHandler, nullptr);
+    io::GPIO& interruptGPIO = io::getGPIO<INTERRUPT_PIN>(io::GPIO::Direction::INPUT);
+    interruptGPIO.registerIRQ(io::GPIO::TriggerEdge::RISING_FALLING, risingEdgeHandler, nullptr);
 
     uart->printf("\n\rWaiting for interrupts...\n\r");
 

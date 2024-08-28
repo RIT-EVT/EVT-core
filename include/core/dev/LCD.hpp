@@ -23,7 +23,7 @@
 #define MAX_SECTION_HEIGHT  8
 #define MAX_SECTION_PER_ROW 3
 
-namespace core::DEV {
+namespace core::dev {
 /**
  * This class represents the structure to command a GLCD with
  * a ST7565 controller.
@@ -33,8 +33,7 @@ public:
     /**
      * An enumeration that can be used to select what size of text needs to be drawn to the screen.
      */
-    enum FontSize
-    {
+    enum FontSize {
         LARGE,
         SMALL
     };
@@ -47,7 +46,7 @@ public:
      * @param[in] spi SPI class for communication
      * @param[in] bitMap bitmap to display to the LCD
      */
-    LCD(core::IO::GPIO& regSelect, core::IO::GPIO& reset, core::IO::SPI& spi);
+    LCD(core::io::GPIO& regSelect, core::io::GPIO& reset, core::io::SPI& spi);
 
     /**
      * Constructor for the LCD class
@@ -58,7 +57,7 @@ public:
      * @param[in] numberOfSections number of sections that the display will show
      * @param[in] sectionsPerRow number of sections per row to display
      */
-    LCD(core::IO::GPIO& regSelect, core::IO::GPIO& reset, core::IO::SPI& spi, uint8_t numberOfSections,
+    LCD(core::io::GPIO& regSelect, core::io::GPIO& reset, core::io::SPI& spi, uint8_t numberOfSections,
         uint8_t sectionsPerRow);
 
     /**
@@ -180,16 +179,16 @@ private:
     uint8_t sectionsPerRow;
 
     /** Register select pin for the LCD */
-    core::IO::GPIO& regSelect;
+    core::io::GPIO& regSelect;
 
     /** Reset pin for the LCD */
-    core::IO::GPIO& reset;
+    core::io::GPIO& reset;
 
     /** Chip select pin for the LCD */
-    // core::IO::GPIO& chipSelect; // TODO: Need to figure out purpose of this
+    // core::io::GPIO& chipSelect; // TODO: Need to figure out purpose of this
 
     /** SPI port for the LCD controller */
-    core::IO::SPI& spi;
+    core::io::SPI& spi;
 
     /** The default section titles for the display */
     char* sectionTitles[MAX_SECTIONS] = {
@@ -205,6 +204,6 @@ private:
     };
 };
 
-} // namespace core::DEV
+} // namespace core::dev
 
 #endif

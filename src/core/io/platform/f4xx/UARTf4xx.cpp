@@ -10,7 +10,7 @@
 
 #include <HALf4/stm32f446xx.h>
 
-namespace core::IO {
+namespace core::io {
 
 UARTf4xx::UARTf4xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped) : UART(txPin, rxPin, baudrate) {
 
@@ -143,4 +143,4 @@ void UARTf4xx::writeBytes(uint8_t* bytes, size_t size) { HAL_UART_Transmit(&halU
 
 void UARTf4xx::readBytes(uint8_t* bytes, size_t size) { HAL_UART_Receive(&halUART, bytes, size, EVT_UART_TIMEOUT); }
 
-} // namespace core::IO
+} // namespace core::io

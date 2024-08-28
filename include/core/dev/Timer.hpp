@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-namespace core::DEV {
+namespace core::dev {
 
 /**
  * This class will represent an internal general purpose timer device for the STM32.
@@ -41,6 +41,6 @@ public:
     virtual void setPeriod(uint32_t clockPeriod) = 0;
 };
 
-} // namespace core::DEV
+} // namespace core::dev
 
 #endif // EVT_TIMER_HPP

@@ -9,7 +9,7 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO   = core::IO;
+namespace io   = core::io;
 namespace time = core::time;
 
 constexpr uint32_t SPI_SPEED = SPI_SPEED_4MHZ; // 4MHz
@@ -25,20 +25,20 @@ constexpr uint8_t READ_REG             = 0x28;
 
 constexpr uint8_t deviceCount = 1;
 
-IO::GPIO* devices[deviceCount];
+io::GPIO* devices[deviceCount];
 
 int main() {
     // Initialize system
     core::platform::init();
 
-    devices[0] = &IO::getGPIO<IO::Pin::SPI_CS>(IO::GPIO::Direction::OUTPUT);
-    devices[0]->writePin(IO::GPIO::State::HIGH);
+    devices[0] = &io::getGPIO<io::Pin::SPI_CS>(io::GPIO::Direction::OUTPUT);
+    devices[0]->writePin(io::GPIO::State::HIGH);
 
-    IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, IO::Pin::SPI_MOSI, IO::Pin::SPI_MISO>(devices, deviceCount);
+    io::SPI& spi = io::getSPI<io::Pin::SPI_SCK, io::Pin::SPI_MOSI, io::Pin::SPI_MISO>(devices, deviceCount);
 
-    spi.configureSPI(SPI_SPEED, IO::SPI::SPIMode::SPI_MODE3, SPI_MSB_FIRST);
+    spi.configureSPI(SPI_SPEED, io::SPI::SPIMode::SPI_MODE3, SPI_MSB_FIRST);
 
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     uart.printf("Starting SPI test\n\r");
     uint8_t byte;
@@ -48,7 +48,7 @@ int main() {
         // write a single byte
         spi.write(SINGLE_BYTE);
         // read a single byte
-        IO::SPI::SPIStatus status = spi.read(&byte);
+        io::SPI::SPIStatus status = spi.read(&byte);
         uart.printf("SPI Status: %i\n\r", status);
 
         spi.endTransmission(0);

@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-namespace core::IO {
+namespace core::io {
 
 /**
  * Represents a generic CAN message which can be sent and received
@@ -99,6 +99,6 @@ private:
     bool isExtended;
 };
 
-} // namespace core::IO
+} // namespace core::io
 
 #endif

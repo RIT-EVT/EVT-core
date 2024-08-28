@@ -21,7 +21,7 @@ extern "C" void DMA1_Channel1_IRQHandler(void) {
     HAL_ADC_IRQHandler(adcHandle);
 }
 
-namespace core::IO {
+namespace core::io {
 
 // Init static member variables
 ADC_HandleTypeDef ADCf3xx::halADC = {0};
@@ -203,4 +203,4 @@ void ADCf3xx::addChannel(uint8_t rank) {
     HAL_ADC_ConfigChannel(&halADC, &adcChannel);
 }
 
-} // namespace core::IO
+} // namespace core::io

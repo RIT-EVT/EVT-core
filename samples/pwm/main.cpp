@@ -6,14 +6,14 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO   = core::IO;
+namespace io   = core::io;
 namespace time = core::time;
 
 int main() {
     // Initialize system
     core::platform::init();
 
-    IO::PWM& pwm = IO::getPWM<IO::Pin::PA_8>();
+    io::PWM& pwm = io::getPWM<io::Pin::PA_8>();
     // 1000000 microseconds (1 second) period
     pwm.setPeriod(1000000);
     // 50 % duty cycle

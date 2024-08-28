@@ -6,7 +6,7 @@
 #include <HALf3/stm32f3xx.h>
 #include <core/io/GPIO.hpp>
 
-namespace core::IO {
+namespace core::io {
 
 class GPIOf3xx : public GPIO {
 public:
@@ -62,6 +62,6 @@ private:
     GPIO_TypeDef* port;
 };
 
-} // namespace core::IO
+} // namespace core::io
 
 #endif

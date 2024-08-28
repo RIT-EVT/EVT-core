@@ -7,7 +7,7 @@
 
 namespace time = core::time;
 
-namespace core::DEV {
+namespace core::dev {
 
 /**
  * This class represents a CTS Series 288 Rotary encoder with a 2-bit Binary resolution.
@@ -25,7 +25,7 @@ public:
      * @param[in] range range of the encoder positions
      * @param[in] initialPosition initial position the encoder is in
      */
-    Encoder(IO::GPIO& a, IO::GPIO& b, uint32_t range, uint32_t initialPosition, bool rollOver);
+    Encoder(io::GPIO& a, io::GPIO& b, uint32_t range, uint32_t initialPosition, bool rollOver);
 
     /**
      * Returns the current absolute position
@@ -48,7 +48,7 @@ public:
      * @param[in] pin pin that caused the interrupt
      * @param[in] instance instance of an encoder object
      */
-    static void aInterruptHandlerWrapper(IO::GPIO* pin, void* instance);
+    static void aInterruptHandlerWrapper(io::GPIO* pin, void* instance);
 
     /**
      * Static Wrapper for bInterruptHandler()
@@ -56,13 +56,13 @@ public:
      * @param[in] pin pin that caused the interrupt
      * @param[in] instance instance of an encoder object
      */
-    static void bInterruptHandlerWrapper(IO::GPIO* pin, void* instance);
+    static void bInterruptHandlerWrapper(io::GPIO* pin, void* instance);
 
 private:
     /** GPIO pin a */
-    IO::GPIO& a;
+    io::GPIO& a;
     /** GPIO pin b */
-    IO::GPIO& b;
+    io::GPIO& b;
 
     /** position can be in [0, range] */
     uint32_t range;
@@ -111,6 +111,6 @@ private:
     void bInterruptHandler();
 };
 
-} // namespace core::DEV
+} // namespace core::dev
 
 #endif

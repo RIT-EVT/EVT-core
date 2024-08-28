@@ -10,15 +10,15 @@
 #include <core/manager.hpp>
 #include <core/utils/log.hpp>
 
-namespace IO  = core::IO;
+namespace io  = core::io;
 namespace log = core::log;
-namespace DEV = core::DEV;
+namespace dev = core::dev;
 
 int main() {
     // Initialize system
     core::platform::init();
 
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     // Print directly to the UART to show that the file has been run despite any
     // problems with the Logger
@@ -28,7 +28,7 @@ int main() {
     // If timestamps aren't needed, don't set the logger's clock
     log::LOGGER.setUART(&uart);
     log::LOGGER.setLogLevel(log::Logger::LogLevel::INFO);
-    DEV::RTC& rtc = DEV::getRTC();
+    dev::RTC& rtc = dev::getRTC();
     log::LOGGER.setClock(&rtc);
 
     uint8_t sampleData = 0xab;

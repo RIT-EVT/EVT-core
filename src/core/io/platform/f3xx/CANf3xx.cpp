@@ -22,7 +22,7 @@ namespace {
 //
 // NOTE: Part of the reason this works is because the STM32F3xx only supports
 // a single CAN interface at a time.
-core::IO::CANf3xx* canIntf;
+core::io::CANf3xx* canIntf;
 
 // Pointer to the CAN interface, made global for similar reasons to the
 // variable above.
@@ -41,14 +41,14 @@ extern "C" void CAN_RX0_IRQHandler(void) { HAL_CAN_IRQHandler(hcan); }
  */
 extern "C" void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
     CAN_RxHeaderTypeDef rxHeader = {0};
-    uint8_t payload[core::IO::CANMessage::CAN_MAX_PAYLOAD_SIZE];
+    uint8_t payload[core::io::CANMessage::CAN_MAX_PAYLOAD_SIZE];
 
     HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rxHeader, payload);
 
     // Construct the CANmessage
     bool isExtended = rxHeader.IDE == CAN_ID_EXT;
     uint32_t id     = isExtended ? rxHeader.ExtId : rxHeader.StdId;
-    core::IO::CANMessage message(id, rxHeader.DLC, payload, isExtended);
+    core::io::CANMessage message(id, rxHeader.DLC, payload, isExtended);
 
     // Check to see if a user defined IRQ has been provided
     if (canIntf->triggerIRQ(message))
@@ -58,7 +58,7 @@ extern "C" void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
     canIntf->addCANMessage(message);
 }
 
-namespace core::IO {
+namespace core::io {
 
 CANf3xx::CANf3xx(Pin txPin, Pin rxPin, bool loopbackEnabled) : CAN(txPin, rxPin, loopbackEnabled) {
 
@@ -256,4 +256,4 @@ bool CANf3xx::triggerIRQ(CANMessage& message) {
     return true;
 }
 
-} // namespace core::IO
+} // namespace core::io

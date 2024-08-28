@@ -1,24 +1,24 @@
 #include <core/dev/Encoder.hpp>
 
-namespace core::DEV {
+namespace core::dev {
 
-Encoder::Encoder(IO::GPIO& a, IO::GPIO& b, uint32_t range, uint32_t initialPosition, bool rollOver)
+Encoder::Encoder(io::GPIO& a, io::GPIO& b, uint32_t range, uint32_t initialPosition, bool rollOver)
     : a(a), b(b), range(range), position(initialPosition), rollOver(rollOver) {
     if (position > range) {
         position = range;
     }
     // setting instance variables
     currentRelPos = readPinValues();
-    a.registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING, aInterruptHandlerWrapper, this);
-    b.registerIRQ(IO::GPIO::TriggerEdge::RISING_FALLING, bInterruptHandlerWrapper, this);
+    a.registerIRQ(io::GPIO::TriggerEdge::RISING_FALLING, aInterruptHandlerWrapper, this);
+    b.registerIRQ(io::GPIO::TriggerEdge::RISING_FALLING, bInterruptHandlerWrapper, this);
 }
 
-void Encoder::aInterruptHandlerWrapper(IO::GPIO* pin, void* instance) {
+void Encoder::aInterruptHandlerWrapper(io::GPIO* pin, void* instance) {
     auto* e = (Encoder*) instance;
     e->aInterruptHandler();
 }
 
-void Encoder::bInterruptHandlerWrapper(IO::GPIO* pin, void* instance) {
+void Encoder::bInterruptHandlerWrapper(io::GPIO* pin, void* instance) {
     auto* e = (Encoder*) instance;
     e->bInterruptHandler();
 }
@@ -154,4 +154,4 @@ bool Encoder::changePosition(int64_t change) {
     return hitCap;
 }
 
-} // namespace core::DEV
+} // namespace core::dev

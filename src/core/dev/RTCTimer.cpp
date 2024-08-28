@@ -1,6 +1,6 @@
 #include <core/dev/RTCTimer.hpp>
 
-namespace core::DEV {
+namespace core::dev {
 
 RTCTimer::RTCTimer(RTC& r) : rtc(r) {
     time = 0;
@@ -36,4 +36,4 @@ uint32_t RTCTimer::getTime() { return bTimerStopped ? time : time + rtc.getTime(
 
 bool RTCTimer::hasGoneOff() { return getTime() >= clockPeriod; }
 
-} // namespace core::DEV
+} // namespace core::dev

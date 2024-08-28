@@ -1,5 +1,5 @@
 /**
- * STMF3xx implementation of the time functionality. This code is designed
+ * STM32F4xx implementation of the time functionality. This code is designed
  * only to run on the STMF3xx.
  */
 

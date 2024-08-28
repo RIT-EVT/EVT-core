@@ -7,14 +7,14 @@
 #include <core/io/pin.hpp>
 #include <core/manager.hpp>
 
-namespace IO = core::IO;
+namespace io = core::io;
 
 int main() {
     // Initialize system
     core::platform::init();
 
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     // String to store user input
     char buf[100];

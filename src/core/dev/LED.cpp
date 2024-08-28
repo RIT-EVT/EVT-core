@@ -1,32 +1,32 @@
 #include <core/dev/LED.hpp>
 
-namespace core::DEV {
+namespace core::dev {
 
-LED::LED(core::IO::GPIO& gpio, LED::ActiveState activeState) : gpio(gpio) {
-    this->setState(core::IO::GPIO::State::LOW);
+LED::LED(core::io::GPIO& gpio, LED::ActiveState activeState) : gpio(gpio) {
+    this->setState(core::io::GPIO::State::LOW);
 }
 
 void LED::toggle() {
-    core::IO::GPIO::State currentState = this->gpio.readPin();
+    core::io::GPIO::State currentState = this->gpio.readPin();
 
-    if (core::IO::GPIO::State::LOW == currentState) {
-        this->gpio.writePin(core::IO::GPIO::State::HIGH);
+    if (core::io::GPIO::State::LOW == currentState) {
+        this->gpio.writePin(core::io::GPIO::State::HIGH);
     } else {
-        this->gpio.writePin(core::IO::GPIO::State::LOW);
+        this->gpio.writePin(core::io::GPIO::State::LOW);
     }
 }
 
-void LED::setState(core::IO::GPIO::State state) {
+void LED::setState(core::io::GPIO::State state) {
     // if the LED is active high, it's state follows from pin setting
     if (this->activeState == ActiveState::HIGH) {
         this->gpio.writePin(state);
     } else {
-        if (state == core::IO::GPIO::State::HIGH) {
-            this->gpio.writePin(core::IO::GPIO::State::LOW);
+        if (state == core::io::GPIO::State::HIGH) {
+            this->gpio.writePin(core::io::GPIO::State::LOW);
         } else {
-            this->gpio.writePin(core::IO::GPIO::State::HIGH);
+            this->gpio.writePin(core::io::GPIO::State::HIGH);
         }
     }
 }
 
-} // namespace core::DEV
+} // namespace core::dev

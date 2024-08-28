@@ -9,8 +9,8 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO   = core::IO;
-namespace DEV  = core::DEV;
+namespace io   = core::io;
+namespace dev  = core::dev;
 namespace time = core::time;
 
 int main() {
@@ -18,14 +18,14 @@ int main() {
     core::platform::init();
 
     // Setup the GPIO input pin
-    IO::GPIO& inputGPIO = IO::getGPIO<IO::Pin::PC_3>(IO::GPIO::Direction::INPUT);
+    io::GPIO& inputGPIO = io::getGPIO<io::Pin::PC_3>(io::GPIO::Direction::INPUT);
 
     // Setup the GPIO output pin
-    IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();
-    DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
+    io::GPIO& ledGPIO = io::getGPIO<io::Pin::LED>();
+    dev::LED led(ledGPIO, dev::LED::ActiveState::HIGH);
 
     while (1) {
-        IO::GPIO::State state = inputGPIO.readPin();
+        io::GPIO::State state = inputGPIO.readPin();
         led.setState(state);
 
         time::wait(10);

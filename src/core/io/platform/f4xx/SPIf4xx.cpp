@@ -5,7 +5,7 @@
 
 namespace log = core::log;
 
-namespace core::IO {
+namespace core::io {
 
 void SPIf4xx::togglePin(GPIO* pin) {
     switch (pin->readPin()) {
@@ -208,19 +208,19 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : S
 void SPIf4xx::configureSPI(uint32_t baudRate, SPIMode mode, bool firstBitMSB) {
     // set the CPOL and CPHA depending on the SPI mode
     switch (mode) {
-    case IO::SPI::SPIMode::SPI_MODE0:
+    case io::SPI::SPIMode::SPI_MODE0:
         halSPI.Init.CLKPolarity = SPI_POLARITY_LOW;
         halSPI.Init.CLKPhase    = SPI_PHASE_1EDGE;
         break;
-    case IO::SPI::SPIMode::SPI_MODE1:
+    case io::SPI::SPIMode::SPI_MODE1:
         halSPI.Init.CLKPolarity = SPI_POLARITY_LOW;
         halSPI.Init.CLKPhase    = SPI_PHASE_2EDGE;
         break;
-    case IO::SPI::SPIMode::SPI_MODE2:
+    case io::SPI::SPIMode::SPI_MODE2:
         halSPI.Init.CLKPolarity = SPI_POLARITY_HIGH;
         halSPI.Init.CLKPhase    = SPI_PHASE_1EDGE;
         break;
-    case IO::SPI::SPIMode::SPI_MODE3:
+    case io::SPI::SPIMode::SPI_MODE3:
         halSPI.Init.CLKPolarity = SPI_POLARITY_HIGH;
         halSPI.Init.CLKPhase    = SPI_PHASE_2EDGE;
         break;
@@ -317,4 +317,4 @@ SPI::SPIStatus SPIf4xx::halToSPIStatus(HAL_StatusTypeDef halStatus) {
     }
 }
 
-} // namespace core::IO
+} // namespace core::io

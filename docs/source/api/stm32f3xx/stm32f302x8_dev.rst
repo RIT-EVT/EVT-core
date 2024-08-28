@@ -8,18 +8,18 @@ devices are implemented directly for the STM32F302x8.
 IWDG
 ====
 
-.. doxygenclass:: core::DEV::IWDGf3xx
+.. doxygenclass:: core::dev::IWDGf3xx
    :members:
 
 RTC
 ===
 
-.. doxygenclass:: core::DEV::RTCf3xx
+.. doxygenclass:: core::dev::RTCf3xx
    :members:
 
 Timer
 =====
 
-.. doxygenclass:: core::DEV::Timerf3xx
+.. doxygenclass:: core::dev::Timerf3xx
    :members:
 

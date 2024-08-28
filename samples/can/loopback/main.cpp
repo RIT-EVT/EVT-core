@@ -8,7 +8,7 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO   = core::IO;
+namespace io   = core::io;
 namespace time = core::time;
 
 int main() {
@@ -16,14 +16,14 @@ int main() {
     core::platform::init();
 
     // Get CAN instance with loopback enabled
-    IO::CAN& can   = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>(true);
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::CAN& can   = io::getCAN<io::Pin::PA_12, io::Pin::PA_11>(true);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     uint8_t payload[] = {0xDE, 0xAD, 0xBE, 0xBE, 0xEF, 0x00, 0x01, 0x02};
-    IO::CANMessage transmit_message(0b00010011110, 8, &payload[0], false);
-    IO::CANMessage received_message;
+    io::CANMessage transmit_message(0b00010011110, 8, &payload[0], false);
+    io::CANMessage received_message;
 
-    IO::CAN::CANStatus result;
+    io::CAN::CANStatus result;
 
     // Attempt to join the CAN network
     result = can.connect();
@@ -35,20 +35,20 @@ int main() {
 
     uart.printf("Starting CAN testing\r\n");
 
-    if (result != IO::CAN::CANStatus::OK) {
+    if (result != io::CAN::CANStatus::OK) {
         uart.printf("Failed to connect to CAN network\r\n");
         return 1;
     }
 
     while (true) {
         result = can.transmit(transmit_message);
-        if (result != IO::CAN::CANStatus::OK) {
+        if (result != io::CAN::CANStatus::OK) {
             uart.printf("Failed to transmit message\r\n");
             return 1;
         }
 
         result = can.receive(&received_message, false);
-        if (result != IO::CAN::CANStatus::OK) {
+        if (result != io::CAN::CANStatus::OK) {
             uart.printf("Failed to receive message\r\n");
             continue;
         }

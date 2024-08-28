@@ -3,7 +3,7 @@
 
 #include <core/io/types/CANMessage.hpp>
 
-namespace core::IO {
+namespace core::io {
 
 CANMessage::CANMessage(uint32_t id, uint8_t dataLength, uint8_t* payload, bool isExtended) {
     this->id = id;
@@ -44,4 +44,4 @@ CANMessage& CANMessage::operator=(const CANMessage& other) {
 
 bool CANMessage::isCANExtended() { return this->isExtended; }
 
-} // namespace core::IO
+} // namespace core::io

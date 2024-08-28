@@ -9,8 +9,8 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace IO   = core::IO;
-namespace DEV  = core::DEV;
+namespace io   = core::io;
+namespace dev  = core::dev;
 namespace time = core::time;
 
 int main() {
@@ -20,7 +20,7 @@ int main() {
     // Setup the GPIO pin.
     // Notice that the pin used is called "LED". Each platform has a dedicated
     // LED pin, for the f3xx that is PB_13.
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     time::wait(500);
 

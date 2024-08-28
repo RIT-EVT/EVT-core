@@ -5,8 +5,7 @@
 TIM_HandleTypeDef halTimers[4];
 void (*timerInterruptHandlers[4])(void* htim) = {nullptr};
 
-enum class timerInterruptIndex
-{
+enum class timerInterruptIndex {
     TIM2_IDX  = 0u,
     TIM15_IDX = 1u,
     TIM16_IDX = 2u,
@@ -101,7 +100,7 @@ uint8_t getTimerInterruptIndex(TIM_TypeDef* peripheral) {
     return interruptIdx;
 }
 
-namespace core::DEV {
+namespace core::dev {
 
 Timerf3xx::Timerf3xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
     initTimer(timerPeripheral, clockPeriod);
@@ -159,4 +158,4 @@ void Timerf3xx::setPeriod(uint32_t clockPeriod) {
     stopTimer();
     initTimer(this->halTimer->Instance, clockPeriod);
 }
-} // namespace core::DEV
+} // namespace core::dev

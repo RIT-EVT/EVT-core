@@ -5,7 +5,7 @@
 #include <core/io/UART.hpp>
 #include <cstdint>
 
-namespace core::IO {
+namespace core::io {
 
 class UARTf4xx : public UART {
 public:
@@ -50,5 +50,5 @@ private:
     /// HAL representation of the UART
     UART_HandleTypeDef halUART;
 };
-} // namespace core::IO
+} // namespace core::io
 #endif

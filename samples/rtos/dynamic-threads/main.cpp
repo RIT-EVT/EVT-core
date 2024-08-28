@@ -12,8 +12,8 @@
 #include <core/manager.hpp>
 
 /// Namespaces
-namespace IO   = core::IO;
-namespace DEV  = core::DEV;
+namespace io   = core::io;
+namespace dev  = core::dev;
 namespace time = core::time;
 
 /// Defines
@@ -47,7 +47,7 @@ typedef void (*EntryFunction)(ULONG thread_input);
 ThreadData dataArray[ThreadNum + 1];
 
 void ThreadCreator(TX_BYTE_POOL* byte_pool, TX_THREAD* thread, EntryFunction thread_entry, ULONG thread_input) {
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
     char* pointer  = static_cast<char*>(TX_NULL);
 
     tx_byte_allocate(byte_pool, (void**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
@@ -73,7 +73,7 @@ void ThreadCreator(TX_BYTE_POOL* byte_pool, TX_THREAD* thread, EntryFunction thr
 // Merged tx_application_define and App_ThreadX_Init functions
 void tx_application_define(void* first_unused_memory) {
     void* memory_ptr;
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     if (tx_byte_pool_create(&tx_app_byte_pool, "Tx App memory pool", tx_byte_pool_buffer, TX_APP_MEM_POOL_SIZE)
         != TX_SUCCESS) {
@@ -101,7 +101,7 @@ void tx_application_define(void* first_unused_memory) {
 int main() {
     core::platform::init();
 
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     SystemCoreClockUpdate();
     uart.printf("\n\rSystem Clock: %lu\n\r", SystemCoreClock);
@@ -119,7 +119,7 @@ ULONG generator_sum   = 0;
 /// Function declarations
 void generator_entry(ULONG thread_input) {
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     srand(77);
     ULONG queue_status;
@@ -187,7 +187,7 @@ void generator_entry(ULONG thread_input) {
 
 void worker_entry(ULONG thread_input) {
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     ULONG received_message;
     ULONG queue_status;
@@ -232,10 +232,10 @@ void worker_entry(ULONG thread_input) {
 
 void event_entry(ULONG thread_input) {
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
-    IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();
-    DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
+    io::GPIO& ledGPIO = io::getGPIO<io::Pin::LED>();
+    dev::LED led(ledGPIO, dev::LED::ActiveState::HIGH);
 
     ULONG flag_status;
     ULONG actual_flag;

@@ -9,8 +9,8 @@
 #include <HALf3/stm32f3xx_hal_rcc.h>
 #include <core/platform/f3xx/stm32f3xx.hpp>
 
-void (*INTERRUPT_HANDLERS[16])(core::IO::GPIO* pin, void* priv) = {nullptr};
-core::IO::GPIO* INTERRUPT_GPIOS[16]                             = {nullptr};
+void (*INTERRUPT_HANDLERS[16])(core::io::GPIO* pin, void* priv) = {nullptr};
+core::io::GPIO* INTERRUPT_GPIOS[16]                             = {nullptr};
 void* INTERRUPT_ARGS[16]                                        = {nullptr};
 
 extern "C" void EXTI0_IRQHandler(void) { HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0); }
@@ -48,7 +48,7 @@ extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     }
 }
 
-namespace core::IO {
+namespace core::io {
 
 GPIOf3xx::GPIOf3xx(Pin pin, GPIO::Direction direction, Pull pull) : GPIO(pin, direction, pull) {
 
@@ -202,4 +202,4 @@ void GPIOf3xx::gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins, uint8_t nu
         }
     }
 }
-} // namespace core::IO
+} // namespace core::io

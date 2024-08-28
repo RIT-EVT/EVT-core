@@ -1,6 +1,6 @@
 #include <core/io/I2C.hpp>
 
-namespace core::IO {
+namespace core::io {
 
 I2C::I2C(Pin sclPin, Pin sdaPin) : sclPin(sclPin), sdaPin(sdaPin) {}
 
@@ -54,4 +54,4 @@ I2C::I2CStatus I2C::readReg(uint8_t addr, uint8_t* reg, uint8_t regLength, uint8
     return I2C::I2CStatus::OK;
 }
 
-} // namespace core::IO
+} // namespace core::io

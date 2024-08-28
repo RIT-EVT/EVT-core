@@ -6,7 +6,7 @@
 
 #include <core/io/ADC.hpp>
 
-namespace core::IO {
+namespace core::io {
 
 class ADCf4xx : public ADC {
 public:
@@ -61,6 +61,6 @@ private:
     void addChannel(uint8_t rank);
 };
 
-} // namespace core::IO
+} // namespace core::io
 
 #endif

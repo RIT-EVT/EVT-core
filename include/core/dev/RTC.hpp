@@ -3,7 +3,7 @@
 
 #include <core/utils/time.hpp>
 
-namespace core::DEV {
+namespace core::dev {
 
 /**
  * The RTC is the real time clock interface. This class represents features
@@ -33,6 +33,6 @@ public:
     virtual void setTime(core::time::TimeStamp& time) = 0;
 };
 
-} // namespace core::DEV
+} // namespace core::dev
 
 #endif

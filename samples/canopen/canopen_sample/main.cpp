@@ -20,8 +20,8 @@
 
 #include "TestCanNode.hpp"
 
-namespace IO   = core::IO;
-namespace DEV  = core::DEV;
+namespace io   = core::io;
+namespace dev  = core::dev;
 namespace time = core::time;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,9 +39,9 @@ namespace time = core::time;
  *
  * @param message[in] The passed in CAN message that was read.
  */
-void canInterrupt(IO::CANMessage& message, void* priv) {
-    core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* queue =
-        (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*) priv;
+void canInterrupt(io::CANMessage& message, void* priv) {
+    core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>* queue =
+        (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
     if (queue != nullptr)
         queue->append(message);
 }
@@ -51,10 +51,10 @@ int main() {
     core::platform::init();
 
     // Initialize the timer
-    DEV::Timer& timer = DEV::getTimer<DEV::MCUTimer::Timer2>(100);
+    dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(100);
 
     // UART for testing
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     TestCanNode testCanNode;
 
@@ -66,10 +66,10 @@ int main() {
 
     // Will store CANopen messages that will be populated by the EVT-core CAN
     // interrupt
-    core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage> canOpenQueue;
+    core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage> canOpenQueue;
 
     // Initialize CAN, add an IRQ which will add messages to the queue above
-    IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();
+    io::CAN& can = io::getCAN<io::Pin::PA_12, io::Pin::PA_11>();
     can.addIRQHandler(canInterrupt, reinterpret_cast<void*>(&canOpenQueue));
 
     // Reserved memory for CANopen stack usage
@@ -86,19 +86,19 @@ int main() {
     CO_NODE canNode;
 
     // Attempt to join the CAN network
-    IO::CAN::CANStatus result = can.connect();
+    io::CAN::CANStatus result = can.connect();
 
     // test that the board is connected to the can network
-    if (result != IO::CAN::CANStatus::OK) {
+    if (result != io::CAN::CANStatus::OK) {
         uart.printf("Failed to connect to CAN network\r\n");
         return 1;
     }
 
     // Initialize all the CANOpen drivers.
-    IO::initializeCANopenDriver(&canOpenQueue, &can, &timer, &canStackDriver, &nvmDriver, &timerDriver, &canDriver);
+    io::initializeCANopenDriver(&canOpenQueue, &can, &timer, &canStackDriver, &nvmDriver, &timerDriver, &canDriver);
 
     // Initialize the CANOpen node we are using.
-    IO::initializeCANopenNode(&canNode, &testCanNode, &canStackDriver, sdoBuffer, appTmrMem);
+    io::initializeCANopenNode(&canNode, &testCanNode, &canStackDriver, sdoBuffer, appTmrMem);
 
     // Set the node to operational mode
     CONmtSetMode(&canNode.Nmt, CO_OPERATIONAL);
@@ -119,7 +119,7 @@ int main() {
             lastValue = testCanNode.getSampleData();
         }
 
-        IO::processCANopenNode(&canNode);
+        io::processCANopenNode(&canNode);
         // Wait for new data to come in
         time::wait(10);
     }

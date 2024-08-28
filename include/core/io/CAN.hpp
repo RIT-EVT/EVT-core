@@ -9,7 +9,7 @@
     #define EVT_CAN_TIMEOUT 255
 #endif
 
-namespace core::IO {
+namespace core::io {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
@@ -33,8 +33,7 @@ public:
      * Represents potential errors that may take place when using the CAN
      * interface.
      */
-    enum class CANStatus
-    {
+    enum class CANStatus {
         OK      = 0,
         TIMEOUT = 1,
         ERROR   = 2
@@ -146,6 +145,6 @@ protected:
     bool loopbackEnabled;
 };
 
-} // namespace core::IO
+} // namespace core::io
 
 #endif

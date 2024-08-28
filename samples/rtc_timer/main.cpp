@@ -3,18 +3,18 @@
 
 #include <core/dev/RTCTimer.hpp>
 
-namespace IO  = core::IO;
-namespace DEV = core::DEV;
+namespace io  = core::io;
+namespace dev = core::dev;
 
 int main() {
     core::platform::init();
 
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
-    // Specific implementation of DEV::RTC, clock type can vary
-    DEV::RTC& clock = DEV::getRTC();
+    // Specific implementation of dev::RTC, clock type can vary
+    dev::RTC& clock = dev::getRTC();
 
-    DEV::RTCTimer timer(clock, 5000);
+    dev::RTCTimer timer(clock, 5000);
 
     uart.printf("\r\nTimer starting!\r\n");
     uart.printf("Current time: %d\r\n", timer.getTime());
