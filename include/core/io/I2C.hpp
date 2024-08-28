@@ -32,7 +32,8 @@ public:
      * interface. Each method that interfaces over I2C could potentially
      * return one of these errors, or OK if no error.
      */
-    enum class I2CStatus {
+    enum class I2CStatus
+    {
         TIMEOUT = 0,
         BUSY    = 1,
         ERROR   = 2,

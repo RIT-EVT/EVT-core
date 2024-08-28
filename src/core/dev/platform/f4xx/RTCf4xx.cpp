@@ -10,17 +10,17 @@ constexpr int synchPrediv  = 255;
 
 RTCf4xx::RTCf4xx()
     : halRTC{
-          RTC1,
-          {
-              // Numbers generated from STMCubeMX
-              RTC_HOURFORMAT_24,
-              asynchPrediv,
-              synchPrediv,
-              RTC_OUTPUT_DISABLE,
-              RTC_OUTPUT_TYPE_PUSHPULL,
-              RTC_OUTPUT_POLARITY_HIGH,
-          },
-      } {
+        RTC1,
+        {
+            // Numbers generated from STMCubeMX
+            RTC_HOURFORMAT_24,
+            asynchPrediv,
+            synchPrediv,
+            RTC_OUTPUT_DISABLE,
+            RTC_OUTPUT_TYPE_PUSHPULL,
+            RTC_OUTPUT_POLARITY_HIGH,
+        },
+    } {
     RCC_OscInitTypeDef RCC_OscInitStruct;
     RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
 

@@ -20,7 +20,7 @@
 
 namespace core::types {
 
-template <size_t maxSize, class Element>
+template<size_t maxSize, class Element>
 class FixedQueue {
 public:
     /**

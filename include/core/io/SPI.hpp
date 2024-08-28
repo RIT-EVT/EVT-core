@@ -33,7 +33,8 @@ public:
     /**
      * Represents the current state of using the SPI interface.
      */
-    enum class SPIStatus {
+    enum class SPIStatus
+    {
         OK      = 0,
         ERROR   = 1,
         BUSY    = 2,
@@ -43,7 +44,8 @@ public:
     /**
      * Enum of SPI mode's that can be used.
      */
-    enum class SPIMode {
+    enum class SPIMode
+    {
         SPI_MODE0 = 0x01,
         SPI_MODE1 = 0x02,
         SPI_MODE2 = 0x04,

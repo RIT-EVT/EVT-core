@@ -33,7 +33,8 @@ public:
      * Represents potential errors that may take place when using the CAN
      * interface.
      */
-    enum class CANStatus {
+    enum class CANStatus
+    {
         OK      = 0,
         TIMEOUT = 1,
         ERROR   = 2

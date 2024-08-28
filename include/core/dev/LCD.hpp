@@ -33,7 +33,8 @@ public:
     /**
      * An enumeration that can be used to select what size of text needs to be drawn to the screen.
      */
-    enum FontSize {
+    enum FontSize
+    {
         LARGE,
         SMALL
     };
