@@ -10,8 +10,7 @@ public:
     /**
      * Represents if the LED is active high or active low.
      */
-    enum class ActiveState
-    {
+    enum class ActiveState {
         HIGH = 0u,
         LOW  = 1u
     };

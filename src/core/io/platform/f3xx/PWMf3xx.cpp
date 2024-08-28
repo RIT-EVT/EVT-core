@@ -466,13 +466,8 @@ PWMf3xx::PWMf3xx(Pin pin) : PWM(pin) {
     Pin myPins[]              = {pin};
     uint8_t numOfPins         = 1;
 
-    GPIOf3xx::gpioStateInit(&gpioInit,
-                            myPins,
-                            numOfPins,
-                            GPIO_MODE_AF_PP,
-                            GPIO_NOPULL,
-                            GPIO_SPEED_FREQ_LOW,
-                            alternateFunction);
+    GPIOf3xx::gpioStateInit(
+        &gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, alternateFunction);
 }
 
 void PWMf3xx::setDutyCycle(uint32_t dutyCycle) {

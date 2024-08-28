@@ -14,8 +14,7 @@ public:
     /**
      * The level at which messages should be logged
      */
-    enum class LogLevel
-    {
+    enum class LogLevel {
         DEBUG   = 0u,
         INFO    = 1u,
         WARNING = 2u,

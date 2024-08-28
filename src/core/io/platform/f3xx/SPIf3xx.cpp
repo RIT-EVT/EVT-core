@@ -137,23 +137,13 @@ SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin
         Pin spiPins[]     = {mosiPin, misoPin};
         uint8_t numOfPins = 2;
 
-        GPIOf3xx::gpioStateInit(&GPIOInit,
-                                spiPins,
-                                numOfPins,
-                                GPIO_MODE_AF_PP,
-                                GPIO_NOPULL,
-                                GPIO_SPEED_FREQ_HIGH,
-                                altId);
+        GPIOf3xx::gpioStateInit(
+            &GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
         // init sckPin
         spiPins[0] = sckPin;
         numOfPins  = 1;
-        GPIOf3xx::gpioStateInit(&GPIOInit,
-                                spiPins,
-                                numOfPins,
-                                GPIO_MODE_AF_PP,
-                                GPIO_NOPULL,
-                                GPIO_SPEED_FREQ_HIGH,
-                                altId);
+        GPIOf3xx::gpioStateInit(
+            &GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
 
         halSPI.Init.Mode      = SPI_MODE_MASTER;
         halSPI.Init.Direction = SPI_DIRECTION_2LINES;
@@ -209,13 +199,8 @@ SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : S
         Pin spiPins[]     = {mosiPin, sckPin};
         uint8_t numOfPins = 2;
 
-        GPIOf3xx::gpioStateInit(&GPIOInit,
-                                spiPins,
-                                numOfPins,
-                                GPIO_MODE_AF_PP,
-                                GPIO_NOPULL,
-                                GPIO_SPEED_FREQ_HIGH,
-                                altId);
+        GPIOf3xx::gpioStateInit(
+            &GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
 
         halSPI.Init.Mode      = SPI_MODE_MASTER;
         halSPI.Init.Direction = SPI_DIRECTION_1LINE;

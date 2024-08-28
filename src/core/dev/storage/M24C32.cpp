@@ -85,12 +85,8 @@ void M24C32::writeBytes(uint32_t address, uint8_t* dataArr, uint8_t numBytes) {
 
         uint8_t bytesToWrite = maxBytes > numBytes ? numBytes : maxBytes;
 
-        i2c.writeMemReg(i2cSlaveAddress,
-                        currentAddress,
-                        currentBufferPtr,
-                        bytesToWrite,
-                        MEM_ADDRESS_SIZE,
-                        MAX_WRITE_TIME);
+        i2c.writeMemReg(
+            i2cSlaveAddress, currentAddress, currentBufferPtr, bytesToWrite, MEM_ADDRESS_SIZE, MAX_WRITE_TIME);
         bytesWritten += bytesToWrite;
         currentAddress += bytesWritten;
         currentBufferPtr = &dataArr[bytesWritten];

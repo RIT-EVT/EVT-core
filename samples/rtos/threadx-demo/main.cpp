@@ -62,61 +62,29 @@ VOID tx_application_define(VOID* first_unused_memory) {
         tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
 
         /* Create the main thread 0.  */
-        tx_thread_create(&thread_0,
-                         "thread 0",
-                         thread_0_entry,
-                         0,
-                         pointer,
-                         DEMO_STACK_SIZE,
-                         1,
-                         1,
-                         TX_NO_TIME_SLICE,
-                         TX_AUTO_START);
+        tx_thread_create(
+            &thread_0, "thread 0", thread_0_entry, 0, pointer, DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
 
         /* Allocate the stack for thread 1.  */
         tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
 
         /* Create the main thread 1.  */
-        tx_thread_create(&thread_1,
-                         "thread 1",
-                         thread_1_entry,
-                         0,
-                         pointer,
-                         DEMO_STACK_SIZE,
-                         1,
-                         1,
-                         TX_NO_TIME_SLICE,
-                         TX_AUTO_START);
+        tx_thread_create(
+            &thread_1, "thread 1", thread_1_entry, 0, pointer, DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
 
         /* Allocate the stack for thread 2.  */
         tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
 
         /* Create the main thread 2.  */
-        tx_thread_create(&thread_2,
-                         "thread 2",
-                         thread_2_entry,
-                         0,
-                         pointer,
-                         DEMO_STACK_SIZE,
-                         1,
-                         1,
-                         TX_NO_TIME_SLICE,
-                         TX_AUTO_START);
+        tx_thread_create(
+            &thread_2, "thread 2", thread_2_entry, 0, pointer, DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
 
         /* Allocate the stack for thread 3.  */
         tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
 
         /* Create the main thread 3.  */
-        tx_thread_create(&thread_3,
-                         "thread 3",
-                         thread_3_entry,
-                         0,
-                         pointer,
-                         DEMO_STACK_SIZE,
-                         1,
-                         1,
-                         TX_NO_TIME_SLICE,
-                         TX_AUTO_START);
+        tx_thread_create(
+            &thread_3, "thread 3", thread_3_entry, 0, pointer, DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
 
         /* Create the message queue shared by all threads. */
         tx_queue_create(&queue_0, "queue 0", TX_1_ULONG, pointer, DEMO_QUEUE_SIZE * sizeof(ULONG));

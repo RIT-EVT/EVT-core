@@ -5,8 +5,7 @@
 TIM_HandleTypeDef halTimers[4];
 void (*timerInterruptHandlers[4])(void* htim) = {nullptr};
 
-enum class timerInterruptIndex
-{
+enum class timerInterruptIndex {
     TIM2_IDX  = 0u,
     TIM15_IDX = 1u,
     TIM16_IDX = 2u,

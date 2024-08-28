@@ -13,8 +13,7 @@ namespace core::io {
  * the pin is on and the number of the pin. We referenced MBed's documentation for generating
  * these values.
  */
-enum class Pin
-{
+enum class Pin {
     PA_0  = 0x00,
     PA_1  = 0x01,
     PA_2  = 0x02,

@@ -66,13 +66,8 @@ CANf3xx::CANf3xx(Pin txPin, Pin rxPin, bool loopbackEnabled) : CAN(txPin, rxPin,
     GPIO_InitTypeDef gpioInit = {0};
     Pin canPins[]             = {txPin, rxPin};
     uint8_t numOfPins         = 2;
-    GPIOf3xx::gpioStateInit(&gpioInit,
-                            canPins,
-                            numOfPins,
-                            GPIO_MODE_AF_OD,
-                            GPIO_PULLUP,
-                            GPIO_SPEED_FREQ_HIGH,
-                            GPIO_AF9_CAN);
+    GPIOf3xx::gpioStateInit(
+        &gpioInit, canPins, numOfPins, GPIO_MODE_AF_OD, GPIO_PULLUP, GPIO_SPEED_FREQ_HIGH, GPIO_AF9_CAN);
 }
 
 CAN::CANStatus CANf3xx::connect(bool autoBusOff) {

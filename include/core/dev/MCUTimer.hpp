@@ -10,8 +10,7 @@ namespace core::dev {
 /**
  * Enum for all the hardware timers available on the current MCU
  */
-enum class MCUTimer
-{
+enum class MCUTimer {
 #if defined(STM32F302x8)
     Timer1,
     Timer2,
