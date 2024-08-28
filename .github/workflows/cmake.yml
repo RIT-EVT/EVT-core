@@ -31,7 +31,7 @@ jobs:
         run: |
           sudo apt-get install gcc-arm-none-eabi
           sudo apt-get install clang-format-15
-          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-12 10000
+          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-15 10000
 
       # Build the code for all supported chips
       - name: F302 Build
