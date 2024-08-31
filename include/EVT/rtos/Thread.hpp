@@ -5,6 +5,7 @@
 #include <EVT/rtos/Initializable.hpp>
 #include <cstdint>
 
+
 namespace core::rtos {
 
 template <typename T>
@@ -43,6 +44,8 @@ public:
      * and when the thread completes or is terminated.
      *
      * @param[in] notifyFunction The function that will be called.
+     *  The first argument will contain a pointer to this thread.
+     *  The second argument will be the threadID of this thread.
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError registerEntryExitNotification(void(*notifyFunction)(Thread<T>, uint32_t));
@@ -162,9 +165,21 @@ private:
     /**
      * Method that will actually be registered with the tx kernel, just calls the stored notify function.
      */
-    void txNotifyFunction(TX_THREAD *thread, uint32_t threadID) {
+    void memberNotifyFunction(TX_THREAD *thread, uint32_t threadID) {
         storedNotifyFunction(this, threadID);
     }
+
+    /**
+     * The type of notify function that threadx expects.
+     */
+    typedef void txNotifyFunction_t( TX_THREAD* , UINT );
+
+    /**
+     * A pointer to the function that we will register with the threadx kernel when the
+     * registerNotificationFunction method is called. This function calls memberNotifyFunction, which itself calls
+     * storedNotifyFunction, which will be set to the passed-in function for the registerNotifyFunction method.
+     */
+    txNotifyFunction_t *txNotifyFunction;
 };
 
 } // namespace core::rtos

@@ -71,11 +71,27 @@ private:
     void (*storedNotifyFunction)(EventFlags* eventFlags);
 
     /**
-     * The actual notify function that we will register with the threadx kernel
+     * The notification function that we would like threadx to call.
+     * Unfortunately, threadx cannot actually call this function because member functions implicitly
+     * have an extra argument for the object that the member function is being called on.
+     * So, in the constructor we do some weird c++ things with std::bind and std::function in
+     * order to create a non-member function that threadx can call, which is txNotifyFunction.
      */
-    void txNotifyFunction(TX_EVENT_FLAGS_GROUP* eventFlagsGroup) {
+    void memberNotifyFunction(TX_EVENT_FLAGS_GROUP* eventFlagsGroup) {
         storedNotifyFunction(this);
     }
+
+    /**
+     * The type of notify function that threadx expects.
+     */
+    typedef void txNotifyFunction_t( TX_EVENT_FLAGS_GROUP * );
+
+    /**
+     * A pointer to the function that we will register with the threadx kernel when the
+     * registerNotificationFunction method is called. This function calls memberNotifyFunction, which itself calls
+     * storedNotifyFunction, which will be set to the passed-in function for the registerNotifyFunction method.
+     */
+    txNotifyFunction_t *txNotifyFunction;
 };
 
 } //namespace core::rtos

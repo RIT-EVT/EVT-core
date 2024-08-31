@@ -1,9 +1,19 @@
 
 #include <EVT/rtos/EventFlags.hpp>
+#include <functional>
 
 namespace core::rtos {
 
-EventFlags::EventFlags(char* name) : name(name), txEventFlagsGroup() {}
+EventFlags::EventFlags(char* name) : name(name), txEventFlagsGroup() {
+    //We use bind to return a callable object that takes in only one argument, functionally removing the
+    //implicit first argument that the memberNotifyFunction has.
+    auto boundFunc = std::bind(&EventFlags::memberNotifyFunction, this, std::placeholders::_1);
+    //We wrap this callable object into a wrapFunc so we can use .target on it.
+    std::function<void(TX_EVENT_FLAGS_GROUP*)> wrapFunc = boundFunc;
+    //We use the .target method to return a c-style function pointer that we can later pass to threadx
+    //in the event that registerNotifyFunction is called.
+    txNotifyFunction = wrapFunc.target<txNotifyFunction_t>();
+}
 
 TXError EventFlags::init(core::rtos::BytePoolBase& pool) {
     return static_cast<TXError>(tx_event_flags_create(&txEventFlagsGroup, name));

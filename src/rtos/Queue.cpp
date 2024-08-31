@@ -5,7 +5,16 @@
 namespace core::rtos {
 
 Queue::Queue(char* name, uint32_t messageSize, uint32_t queueSize)
-    : name(name), messageSize(messageSize), queueSize(queueSize), storedNotifyFunction() {}
+    : name(name), messageSize(messageSize), queueSize(queueSize), storedNotifyFunction() {
+    //We use bind to return a callable object that takes in only one argument, functionally removing the
+    //implicit first argument that the memberNotifyFunction has.
+    auto boundFunc = std::bind(&Queue::memberNotifyFunction, this, std::placeholders::_1);
+    //We wrap this callable object into a wrapFunc so we can use .target on it.
+    std::function<void(TX_QUEUE*)> wrapFunc = boundFunc;
+    //We use the .target method to return a c-style function pointer that we can later pass to threadx
+    //in the event that registerNotifyFunction is called.
+    txNotifyFunction = wrapFunc.target<txNotifyFunction_t>();
+}
 
 TXError Queue::init(BytePoolBase& pool) {
     void* poolPointer = pool.allocateMemory(queueSize, NoWait);
@@ -30,7 +39,7 @@ TXError Queue::recieve(void* destination, uint32_t waitOption) {
 
 TXError Queue::registerNotifyFunction(void(*notifyFunction)(Queue*)) {
     storedNotifyFunction = notifyFunction;
-    return static_cast<TXError>(tx_queue_send_notify(&txQueue, *this.txNotifyFunction));
+    return static_cast<TXError>(tx_queue_send_notify(&txQueue, txNotifyFunction));
 }
 
 TXError Queue::send(void* source, uint32_t waitOption) {

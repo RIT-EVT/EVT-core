@@ -1,5 +1,6 @@
 
 #include <EVT/rtos/Thread.hpp>
+#include <functional>
 
 namespace core::rtos {
 
@@ -7,15 +8,20 @@ template<typename T>
 Thread<T>::Thread(const char* name, void (*entryFunction)(T*), T* data, std::size_t stackSize,
                   uint32_t priority, uint32_t preemptThreshold, uint32_t timeSlice, bool autoStart)
     : name(name), entryFunction(entryFunction), data(data), stackSize(stackSize), priority(priority),
-        preemptThreshold(preemptThreshold), timeSlice(timeSlice), autoStart(autoStart) {}
+        preemptThreshold(preemptThreshold), timeSlice(timeSlice), autoStart(autoStart) {
+    //We use bind to return a callable object that takes in only one argument, functionally removing the
+    //implicit first argument that the memberNotifyFunction has.
+    auto boundFunc = std::bind(&Thread<T>::memberNotifyFunction, this, std::placeholders::_1, std::placeholders::_2);
+    //We wrap this callable object into a wrapFunc so we can use .target on it.
+    std::function<void(TX_QUEUE*)> wrapFunc = boundFunc;
+    //We use the .target method to return a c-style function pointer that we can later pass to threadx
+    //in the event that registerNotifyFunction is called.
+    txNotifyFunction = wrapFunc.target<txNotifyFunction_t>();
+}
 
-
-/**
- * TODO: should the deconstructor call terminate() before calling delete?
- * Otherwise if the thread is not finished, the delete function will not actually work
- */
 template<typename T>
 Thread<T>::~Thread() {
+    tx_thread_terminate(&txThread);
     tx_thread_delete(&txThread);
 }
 

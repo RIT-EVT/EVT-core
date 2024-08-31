@@ -2,6 +2,7 @@
 #define EVT_RTOS_QUEUE_
 
 #include <EVT/rtos/Initializable.hpp>
+#include <functional>
 
 namespace core::rtos {
 
@@ -53,9 +54,21 @@ private:
 
     void(*storedNotifyFunction)(Queue*);
 
-    void txNotifyFunction(TX_QUEUE* queue) {
+    void memberNotifyFunction(TX_QUEUE* queue) {
         storedNotifyFunction(this);
     }
+
+    /**
+     * The type of notify function that threadx expects.
+     */
+    typedef void txNotifyFunction_t( TX_QUEUE * );
+
+    /**
+     * A pointer to the function that we will register with the threadx kernel when the
+     * registerNotificationFunction method is called. This function calls memberNotifyFunction, which itself calls
+     * storedNotifyFunction, which will be set to the passed-in function for the registerNotifyFunction method.
+     */
+    txNotifyFunction_t *txNotifyFunction;
 };
 
 } // namespace core::rtos
