@@ -46,7 +46,7 @@ private:
     /**
      * Handles the initialization of the timer module.  Actually configures the device and enables it.
      * @param[in] timerPeripheral  The timer peripheral to configure. Possible options for this board are
-     * TIM2, TIM15, TIM16, TIM17.  It is up to the user to verify that resource conflicts
+     * TIM2, TIM3, TIM4, TIM5, TIM9, TIM10, TIM11, TIM12, TIM13, TIM14.  It is up to the user to verify that resource conflicts
      * @param[in] clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
      */
     void initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod);
