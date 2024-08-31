@@ -1,5 +1,6 @@
 /**
  * This sample will demo the basic functionality for the timer driver
+ * TIMERS 15/16 DO NOT WORK ON F4xx! Change ALL the 15/16's to 3/4's and it should work - Travis Brown
  */
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
