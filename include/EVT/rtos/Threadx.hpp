@@ -19,6 +19,12 @@ namespace core::rtos {
  */
 TXError init(Initializable* initList, std::size_t length, BytePoolBase &pool);
 
+    /**
+     * Relinquishes control of the currently running thread, suspending it and allowing the
+     * threadx kernel to pick another thread to run.
+     */
+void relinquish();
+
 } // namespace core::rtos
 
 #endif//EVT_RTOS_THREADX_

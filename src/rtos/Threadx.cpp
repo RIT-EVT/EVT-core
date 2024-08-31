@@ -21,4 +21,9 @@ TXError init(Initializable* initList, std::size_t length, BytePoolBase &pool) {
     }
 }
 
+void relinquish() {
+    //this method doesn't take any arguments in reality but this appeases the compiler
+    tx_thread_relinquish(0);
+}
+
 }//namespace core::rtos
