@@ -1,15 +1,20 @@
 #include <EVT/dev/platform/f4xx/Timerf4xx.hpp>
-
 #include <EVT/platform/f4xx/stm32f4xx.hpp>
 
-TIM_HandleTypeDef halTimers[4];
-void (*timerInterruptHandlers[4])(void* htim) = {nullptr};
+TIM_HandleTypeDef halTimers[10];
+void (*timerInterruptHandlers[10])(void* htim) = {nullptr};
 
 enum class timerInterruptIndex {
     TIM2_IDX = 0u,
     TIM3_IDX = 1u,
     TIM4_IDX = 2u,
-    TIM5_IDX = 3u
+    TIM5_IDX = 3u,
+    TIM9_IDX = 4u,
+    TIM10_IDX = 5u,
+    TIM11_IDX = 6u,
+    TIM12_IDX = 7u,
+    TIM13_IDX = 8u,
+    TIM14_IDX = 9u
 };
 
 uint8_t getTimerInterruptIndex(TIM_TypeDef* peripheral);
@@ -30,6 +35,24 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim) {
     } else if (peripheral == TIM5) {
         __HAL_RCC_TIM5_CLK_ENABLE();
         irqNum = TIM5_IRQn;
+    } else if (peripheral == TIM9) {
+        __HAL_RCC_TIM9_CLK_ENABLE();
+        irqNum = TIM1_BRK_TIM9_IRQn;
+    } else if (peripheral == TIM10) {
+        __HAL_RCC_TIM10_CLK_ENABLE(); // todo!!!! Go through and make sure all these timers work...
+        irqNum = TIM1_UP_TIM10_IRQn;
+    } else if (peripheral == TIM11) {
+        __HAL_RCC_TIM11_CLK_ENABLE();
+        irqNum = TIM1_TRG_COM_TIM11_IRQn;
+    } else if (peripheral == TIM12) {
+        __HAL_RCC_TIM12_CLK_ENABLE();
+        irqNum = TIM8_BRK_TIM12_IRQn;
+    } else if (peripheral == TIM13) {
+        __HAL_RCC_TIM13_CLK_ENABLE();
+        irqNum = TIM8_UP_TIM13_IRQn;
+    } else if (peripheral == TIM14) {
+        __HAL_RCC_TIM14_CLK_ENABLE();
+        irqNum = TIM8_TRG_COM_TIM14_IRQn;
     } else {
         return;// Should never reach, but if an invalid peripheral is passed in then simply return
     }
@@ -54,6 +77,24 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
     } else if (peripheral == TIM5) {
         __HAL_RCC_TIM5_CLK_DISABLE();
         irqNum = TIM5_IRQn;
+    } else if (peripheral == TIM9) {
+        __HAL_RCC_TIM9_CLK_DISABLE();
+        irqNum = TIM1_BRK_TIM9_IRQn;
+    } else if (peripheral == TIM10) {
+        __HAL_RCC_TIM10_CLK_DISABLE();
+        irqNum = TIM1_UP_TIM10_IRQn;
+    } else if (peripheral == TIM11) {
+        __HAL_RCC_TIM11_CLK_DISABLE();
+        irqNum = TIM1_TRG_COM_TIM11_IRQn;
+    } else if (peripheral == TIM12) {
+        __HAL_RCC_TIM12_CLK_DISABLE();
+        irqNum = TIM8_BRK_TIM12_IRQn;
+    } else if (peripheral == TIM13) {
+        __HAL_RCC_TIM13_CLK_DISABLE();
+        irqNum = TIM8_UP_TIM13_IRQn;
+    } else if (peripheral == TIM14) {
+        __HAL_RCC_TIM14_CLK_DISABLE();
+        irqNum = TIM8_TRG_COM_TIM14_IRQn;
     } else {
         return;// Should never reach, but if an invalid peripheral is passed in then simply return
     }
@@ -74,7 +115,7 @@ extern "C" void TIM4_IRQHandler(void) {
 }
 
 extern "C" void TIM5_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM5)]);
+    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM5)]);   // todo: Add irq handlers for the rest
 }
 
 extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
@@ -101,6 +142,18 @@ uint8_t getTimerInterruptIndex(TIM_TypeDef* peripheral) {
         interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM4_IDX);
     } else if (peripheral == TIM5) {
         interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM5_IDX);
+    } else if (peripheral == TIM9) {
+        interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM9_IDX);
+    } else if (peripheral == TIM10) {
+        interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM10_IDX);
+    } else if (peripheral == TIM11) {
+        interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM11_IDX);
+    } else if (peripheral == TIM12) {
+        interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM12_IDX);
+    } else if (peripheral == TIM13) {
+        interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM13_IDX);
+    } else if (peripheral == TIM14) {
+        interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM14_IDX);
     } else {
         interruptIdx = -1;
     }
