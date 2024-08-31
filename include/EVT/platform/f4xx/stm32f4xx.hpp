@@ -3,8 +3,8 @@
 
 namespace EVT::core::platform {
 
-// stm32f4xx_init() sets clock speed to 8MHz
-constexpr uint32_t CLK_SPEED = 8000000;
+// stm32f4xx_init() sets clock speed to 50MHz
+constexpr uint32_t CLK_SPEED = 50000000;
 
 // Interrupt Priority Mappings. 0 is high and 15 is low
 constexpr uint32_t CAN_INTERRUPT_PRIORITY = 4;
