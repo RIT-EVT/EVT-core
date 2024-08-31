@@ -44,9 +44,12 @@
     #define SPI_SUPPORTED
     #define ADC_SUPPORTED
     #define RTC_SUPPORTED
+    #define MCU_SUPPORTED
 
+    #include <EVT/dev/MCUTimer.hpp>
     #include <EVT/io/platform/f4xx/ADCf4xx.hpp>
     #include <EVT/platform/f4xx/stm32f4xx.hpp>
+    #include <EVT/dev/platform/f4xx/Timerf4xx.hpp>
     //    #include <EVT/io/platform/f4xx/CANf4xx.hpp>
     #include <EVT/dev/platform/f4xx/IWDGf4xx.hpp>
     #include <EVT/dev/platform/f4xx/RTCf4xx.hpp>
@@ -124,6 +127,10 @@ Timer& getTimer(uint32_t clockPeriod) {
     static Timerf3xx timer(getTIM(mcuTimer), clockPeriod);
     return timer;
     #endif
+    #ifdef STM32F4xx
+    static Timerf4xx timer(getTIM(mcuTimer), clockPeriod);
+    return timer;
+#endif
 }
 #endif
 
