@@ -4,8 +4,8 @@
 
 namespace core::rtos {
 
-Queue::Queue(char* name, uint32_t messageSize, uint32_t queueSize)
-    : name(name), messageSize(messageSize), queueSize(queueSize), storedNotifyFunction() {
+Queue::Queue(char* name, uint32_t messageSize, uint32_t numMessages)
+    : name(name), messageSize(messageSize), queueSize(messageSize*numMessages), storedNotifyFunction() {
     //We use bind to return a callable object that takes in only one argument, functionally removing the
     //implicit first argument that the memberNotifyFunction has.
     auto boundFunc = std::bind(&Queue::memberNotifyFunction, this, std::placeholders::_1);

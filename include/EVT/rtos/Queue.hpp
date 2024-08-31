@@ -10,15 +10,17 @@ class Queue : Initializable {
 public:
 
     /**
-     * Constructs a Queue object, but does not initiaize it (must call init before using).
+     * Constructs a Queue object, but does not initiaize it (must call init before using).\n\n
+     *
+     * NOTE: It is technically possible to overflow the size of the queue. If (messageSize * numMessages) is greater
+     * than the max value of a uint32_t (roughly 4.2 billion), the calculation will overflow and your queue will be
+     * incorrectly sized.
      *
      * @param[in] name The name of the queue.
      * @param[in] messageSize Size (in 4-byte words) of each message in the queue.
-     * @param[in] queueSize Total size (in bytes) of the queue storage area.
+     * @param[in] numMessages Number of messages in the queue.
      */
-    Queue(char* name, uint32_t messageSize,  uint32_t queueSize);
-
-    TXError init(BytePoolBase& pool) override;
+    Queue(char* name, uint32_t messageSize,  uint32_t numMessages);
 
     /**
      * Queue Deconstructor.
@@ -42,6 +44,8 @@ public:
     TXError send(void* source, uint32_t waitOption);
 
     TXError frontSend(void* source, uint32_t waitOption);
+
+    TXError init(BytePoolBase& pool) override;
 private:
 
     TX_QUEUE txQueue;
