@@ -27,9 +27,13 @@ Thread<T>::~Thread() {
 
 template<typename T>
 TXError Thread<T>::init(core::rtos::BytePoolBase& pool) {
+    //allocate memory for the thread
     void *stackStart;
-    stackStart = pool.allocateMemory(stackSize, NoWait);
-    uint32_t errorCode = tx_thread_create(&txThread, name, entryFunction, data, stackStart,
+    uint32_t errorCode = pool.allocateMemory(stackSize, &stackStart, NoWait);
+    TXError error = static_cast<TXError>(errorCode);
+    if (error != Success) return error;
+    //create the thread only if the memory allocation succeeded.
+    errorCode = tx_thread_create(&txThread, name, entryFunction, data, stackStart,
                      stackSize, priority, preemptThreshold, timeSlice, autoStart ? TX_AUTO_START : TX_DONT_START);
     return static_cast<TXError>(errorCode);
 }

@@ -29,7 +29,7 @@ public:
 
     TXError init() override;
 
-    void* allocateMemory(std::size_t amount, uint32_t waitOption) override;
+    TXError allocateMemory(std::size_t amount, void** memoryPointer,uint32_t waitOption) override;
 
 private:
     /**

@@ -70,8 +70,6 @@ public:
      */
     TXError setPriority(uint32_t newPriority, uint32_t* oldPriorityOut);
 
-    //TODO: tx_thread_relinquish exists in tx_api.h, but doesn't seem to have an implementation... Figure out if it is needed/
-
     /**
      * Sets the timeSlice of the thread to the new value specified.
      *
@@ -115,7 +113,6 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError abortWait();
-
 
 private:
     /**

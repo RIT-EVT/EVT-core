@@ -18,11 +18,9 @@ TXError BytePool<SIZE>::init() {
 }
 
 template<std::size_t SIZE>
-void* BytePool<SIZE>::allocateMemory(std::size_t amount, uint32_t waitOption) {
-    void* output;
-    tx_byte_allocate(&txBytePool, &output, amount, waitOption);
-    //TODO: this implementation swallows the error code that tx_byte_allocate can return
-    return output;
+TXError BytePool<SIZE>::allocateMemory(std::size_t amount, void** memoryPointer, uint32_t waitOption) {
+    uint32_t errorCode = tx_byte_allocate(&txBytePool, memoryPointer, amount, waitOption);
+    return static_cast<TXError>(errorCode);
 }
 
 } //namespace core::rtos

@@ -17,7 +17,12 @@ Queue::Queue(char* name, uint32_t messageSize, uint32_t queueSize)
 }
 
 TXError Queue::init(BytePoolBase& pool) {
-    void* poolPointer = pool.allocateMemory(queueSize, NoWait);
+    void* poolPointer;
+    //allocate memory on the pool
+    uint32_t errorCode = pool.allocateMemory(queueSize, &poolPointer, NoWait);
+    TXError error = static_cast<TXError>(errorCode);
+    if (error != Success) return error;
+    //create the queue only if the memory allocation succeeds
     return static_cast<TXError>(tx_queue_create(&txQueue, name, messageSize, poolPointer, queueSize));
 }
 
