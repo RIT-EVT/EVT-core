@@ -36,9 +36,6 @@ enum class MCUTimer {
     Timer3,
     Timer4,
     Timer5,
-    Timer6,
-    Timer7,
-    Timer8,
     Timer9,
     Timer10,
     Timer11,
@@ -60,62 +57,81 @@ TIM_TypeDef* getTIM(MCUTimer mcuTimer) {
 #if defined(STM32F302x8)
     case MCUTimer::Timer1:
         timPeriph = TIM1;
+        break;
     case MCUTimer::Timer2:
         timPeriph = TIM2;
+        break;
     case MCUTimer::Timer6:
         timPeriph = TIM6;
+        break;
     case MCUTimer::Timer15:
         timPeriph = TIM15;
+        break;
     case MCUTimer::Timer16:
         timPeriph = TIM16;
+        break;
     case MCUTimer::Timer17:
         timPeriph = TIM17;
+        break;
 #elif defined(STM32F334x8)
     case MCUTimer::Timer1:
         timPeriph = TIM1;
+        break;
     case MCUTimer::Timer2:
         timPeriph = TIM2;
+        break;
     case MCUTimer::Timer3:
         timPeriph = TIM3;
+        break;
     case MCUTimer::Timer6:
         timPeriph = TIM6;
+        break;
     case MCUTimer::Timer7:
         timPeriph = TIM7;
+        break;
     case MCUTimer::Timer15:
         timPeriph = TIM15;
+        break;
     case MCUTimer::Timer16:
         timPeriph = TIM16;
+        break;
     case MCUTimer::Timer17:
         timPeriph = TIM17;
+        break;
 #elif defined(STM32F446xx)
     case MCUTimer::Timer1:
         timPeriph = TIM1;
+        break;
     case MCUTimer::Timer2:
         timPeriph = TIM2;
+        break;
     case MCUTimer::Timer3:
         timPeriph = TIM3;
+        break;
     case MCUTimer::Timer4:
         timPeriph = TIM4;
+        break;
     case MCUTimer::Timer5:
         timPeriph = TIM5;
-    case MCUTimer::Timer6:
-        timPeriph = TIM6;
-    case MCUTimer::Timer7:
-        timPeriph = TIM7;
-    case MCUTimer::Timer8:
-        timPeriph = TIM8;
+        break;
     case MCUTimer::Timer9:
         timPeriph = TIM9;
+        break;
     case MCUTimer::Timer10:
         timPeriph = TIM10;
+        break;
     case MCUTimer::Timer11:
         timPeriph = TIM11;
+        break;
     case MCUTimer::Timer12:
         timPeriph = TIM12;
+        break;
     case MCUTimer::Timer13:
         timPeriph = TIM13;
+        break;
     case MCUTimer::Timer14:
         timPeriph = TIM14;
+        break;
 #endif
     }
 
