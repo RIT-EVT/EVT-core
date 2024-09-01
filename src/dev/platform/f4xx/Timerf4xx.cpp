@@ -1,4 +1,5 @@
 #include <EVT/dev/platform/f4xx/Timerf4xx.hpp>
+
 #include <EVT/platform/f4xx/stm32f4xx.hpp>
 
 TIM_HandleTypeDef halTimers[10];
@@ -115,7 +116,31 @@ extern "C" void TIM4_IRQHandler(void) {
 }
 
 extern "C" void TIM5_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM5)]);   // todo: Add irq handlers for the rest
+    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM5)]);
+}
+
+extern "C" void TIM9_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM9)]);
+}
+
+extern "C" void TIM10_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM10)]);
+}
+
+extern "C" void TIM11_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM11)]);
+}
+
+extern "C" void TIM12_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM12)]);
+}
+
+extern "C" void TIM13_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM13)]);
+}
+
+extern "C" void TIM14_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM14)]);
 }
 
 extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
