@@ -31,7 +31,6 @@ enum class MCUTimer {
     Timer16,
     Timer17,
 #elif defined(STM32F446xx)
-    Timer1,
     Timer2,
     Timer3,
     Timer4,
@@ -99,9 +98,6 @@ TIM_TypeDef* getTIM(MCUTimer mcuTimer) {
         timPeriph = TIM17;
         break;
 #elif defined(STM32F446xx)
-    case MCUTimer::Timer1:
-        timPeriph = TIM1;
-        break;
     case MCUTimer::Timer2:
         timPeriph = TIM2;
         break;
