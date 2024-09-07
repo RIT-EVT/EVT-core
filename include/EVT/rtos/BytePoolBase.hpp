@@ -1,8 +1,3 @@
-/**
- * A pure virtual class that allows us to pass the BytePoolBase template class into external methods
- * without the compiler complaining. After initialization, the BytePoolBase class should always be referenced
- * as a BytePool, and never as a BytePoolBase. There should be no methods that accept a BytePoolBase as an argument.
- */
 
 #ifndef _EVT_RTOS_BYTEPOOL_
 #define _EVT_RTOS_BYTEPOOL_
@@ -12,6 +7,10 @@
 
 namespace core::rtos {
 
+/**
+ * A pure virtual class that allows us to pass the BytePool template class into
+ * external methods without the compiler complaining.
+ */
 class BytePoolBase {
 public:
 

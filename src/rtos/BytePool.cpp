@@ -13,8 +13,13 @@ BytePool<SIZE>::~BytePool() {
 }
 
 template<std::size_t SIZE>
+TXError BytePool<SIZE>::releaseMemory(void * memoryPointer) {
+    return static_cast<TXError>(tx_byte_release(memoryPointer));
+}
+
+template<std::size_t SIZE>
 TXError BytePool<SIZE>::init() {
-    return tx_byte_pool_create(&txBytePool, name, buffer, SIZE);
+    return static_cast<TXError>(tx_byte_pool_create(&txBytePool, name, buffer, SIZE));
 }
 
 template<std::size_t SIZE>

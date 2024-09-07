@@ -5,6 +5,12 @@
 
 namespace core::rtos {
 
+/**
+ * Class that wraps a Threadx Mutex. Mutexes are used to create mutual exclusion between threads.\n\n
+ *
+ * This class extends Initializable, and like all other Initializable classes must be passed into the
+ * Threadx::startKernel() method as part of the initList parameter.
+ */
 class Mutex : Initializable {
 public:
     /**
@@ -23,10 +29,29 @@ public:
      */
     ~Mutex();
 
-    TXError get(uint32_t waitOption);
+    /**
+     * Attempts to obtain access to this Mutex. If the mutex is already in use by another thread,
+     * the calling thread will wait for waitOption ticks for the mutex to be obtained.
+     *
+     * @param waitOption How long (in ticks) the calling thread should wait for the mutex to be available.
+     * Use Enums::TXWait::WaitForever to wait forever.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError acquire(uint32_t waitOption);
 
-    TXError put();
+    /**
+     * Releases control of the mutex, allowing other threads to acquire it.
+     *
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError release();
 
+    /**
+     * Prioritizes the list of waiting threads, placing the highest priority waiting thread at the front of the list.
+     * (Does not effect the order of the other waiting threads).
+     *
+     * @return The first error found by the function (or Success if there was no error).
+     */
     TXError prioritize();
 
 private:

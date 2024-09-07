@@ -7,7 +7,14 @@
 
 
 namespace core::rtos {
-
+/**
+ * Class that wraps a ThreadX Thread. Each thread represents a relatively independent task that will operate
+ * "concurrently" with other threads. Each thread has its own stack, which is allocated in a BytePool.\n\n
+ *
+ * This class extends Initializable, and like all other Initializable classes must be passed into the
+ * Threadx::startKernel() method as part of the initList parameter.
+ * @tparam T what type of data the thread's entry function will take.
+ */
 template <typename T>
 class Thread : Initializable {
 public:
@@ -43,14 +50,12 @@ public:
      * Registers a function to be called when the thread initially is entered
      * and when the thread completes or is terminated.
      *
-     * @param[in] notifyFunction The function that will be called.
-     *  The first argument will contain a pointer to this thread.
-     *  The second argument will be the threadID of this thread.
+     * @param[in] notifyFunction The pointer to the function that will be called.\n
+     *  The first argument to this function will contain a pointer to this thread.\n
+     *  The second argument to this function will be the threadID of this thread.
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError registerEntryExitNotification(void(*notifyFunction)(Thread<T>, uint32_t));
-
-    //TODO: do we really need a thread info get function?
 
     /**
      * Sets the preemptThreshold of the thread to the new values specified.
@@ -119,34 +124,42 @@ private:
      * Threadx struct that holds the information for the thread.
      */
     TX_THREAD txThread;
+
     /**
      * Pointer to the name of this thread.
      */
     const char* name;
+
     /**
      * The function this thread will be running.
      */
     void (*entryFunction)(T*);
+
     /**
      * The data the thread function requires.
      */
     T* data;
+
     /**
      * How much stack space the thread requires.
      */
     std::size_t stackSize;
+
     /**
      * The priority rating of this thread.
      */
     uint32_t priority;
+
     /**
      * The preemption rating of this thread.
      */
     uint32_t preemptThreshold;
+
     /**
      * The time slice of this thread.
      */
     uint32_t timeSlice;
+
     /**
      * Whether this thread will start when initialized or not.
      */

@@ -41,8 +41,8 @@ TXError Semaphore::prioritize() {
     return static_cast<TXError>(tx_semaphore_prioritize(&txSemaphore));
 }
 
-TXError Semaphore::ceilingPut(uint32_t newCeiling) {
-    return static_cast<TXError>(tx_semaphore_ceiling_put(&txSemaphore, newCeiling));
+TXError Semaphore::ceilingPut(uint32_t ceiling) {
+    return static_cast<TXError>(tx_semaphore_ceiling_put(&txSemaphore, ceiling));
 }
 
 } //namespace core::rtos

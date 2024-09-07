@@ -1,16 +1,23 @@
 
-#ifndef _EVT_RTOS_EVENTFLAGS
-#define _EVT_RTOS_EVENTFLAGS
+#ifndef _EVT_RTOS_EVENTFLAGS_
+#define _EVT_RTOS_EVENTFLAGS_
 
 #include <EVT/rtos/Initializable.hpp>
 
 namespace core::rtos {
 
+/**
+ * Class that wraps a ThreadX Event Flags Group. Event flags are essentially
+ * a 32-bit mask, with each bit representing a different flag.\n\n
+ *
+ * This class extends Initializable, and like all other Initializable classes must be passed into the
+ * Threadx::startKernel() method as part of the initList parameter.
+ */
 class EventFlags : Initializable {
 public:
 
     /**
-     * Constructor for an EventFlags.
+     * Constructor for EventFlags.
      *
      * @param[in] name the name of the EventFlags.
      */
@@ -33,15 +40,15 @@ public:
     TXError set(uint32_t mask, bool clearNonMaskedFlags);
 
     /**
-     * Gets the eventFlags of the mask according to the getOption
+     * Gets the eventFlags of the mask according to the getOption.
      *
      * @param[in] mask A bitmask describing what flags are requested.
-     * @param[in] waitforAllFlags If the method should wait for EVERY flag in the bitmask
+     * @param[in] waitForAllFlags If the method should wait for EVERY flag in the bitmask
      * to be true, or just ANY flag in the bitmask to be true.
      * @param[in] clear If the method should clear outputted flags.
      * @param[out] output A pointer a place to store the outputted flags.
      * @param[in] waitOption How long (in ticks) the calling thread should wait for this method to
-     * return, or Enums::TXWait::WaitForever to wait forever.
+     * return. Use Enums::TXWait::WaitForever to wait forever.
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError get(uint32_t mask, bool waitForAllFlags, bool clear, uint32_t* output, uint32_t waitOption);
@@ -96,4 +103,4 @@ private:
 
 } //namespace core::rtos
 
-#endif //_EVT_RTOS_EVENTFLAGS
+#endif //_EVT_RTOS_EVENTFLAGS_

@@ -4,8 +4,15 @@
 
 namespace core::rtos {
 
+/**
+ * Enum representing the possible range of Error Codes from ThreadX.\n\n
+ *
+ * Note that it is technically possible for methods that return TXError
+ * to return a value outside of the enum, so when this enum is used in a switch statement
+ * there ALWAYS should be an "default" case.
+ */
 enum TXError {
-    Success = 0x00u,
+    Success = TX_SUCCESS,
     Deleted,
     PoolError,
     PtrError,
@@ -21,8 +28,8 @@ enum TXError {
     NoInstance,
     ThreadError,
     PriorityError,
-    NoMemory = 0x10u,
-    StartError = 0x10u,
+    NoMemory = TX_NO_MEMORY,
+    StartError = TX_START_ERROR,
     DeleteError,
     ResumeError,
     CallerError,
@@ -41,11 +48,14 @@ enum TXError {
     NotDone,
     CeilingExceeded,
     InvalidCeiling,
-    FeatureNotEnabled = 0xFFu
+    FeatureNotEnabled = TX_FEATURE_NOT_ENABLED
 };
 
+/**
+ * Enum to shorthand No Wait and Wait Forever wait options in TX.
+ */
 enum TXWait {
-    NoWait = 0u,
+    NoWait = TX_NO_WAIT,
     WaitForever = TX_WAIT_FOREVER
 };
 

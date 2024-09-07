@@ -9,6 +9,10 @@
 
 namespace core::rtos {
 
+/**
+ * Abstract class that represents a ThreadX wrapper object that must be passed into the
+ * Threadx::startKernel() method as part of the initList parameter.
+ */
 class Initializable {
 public:
     /**
