@@ -11,11 +11,21 @@ void (*INTERRUPT_HANDLERS[16])(core::io::GPIO* pin, void* priv) = {nullptr};
 core::io::GPIO* INTERRUPT_GPIOS[16]                             = {nullptr};
 void* INTERRUPT_ARGS[16]                                        = {nullptr};
 
-extern "C" void EXTI0_IRQHandler(void) { HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0); }
-extern "C" void EXTI1_IRQHandler(void) { HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1); }
-extern "C" void EXTI2_TSC_IRQHandler(void) { HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2); }
-extern "C" void EXTI3_IRQHandler(void) { HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_3); }
-extern "C" void EXTI4_IRQHandler(void) { HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4); }
+extern "C" void EXTI0_IRQHandler(void) {
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
+}
+extern "C" void EXTI1_IRQHandler(void) {
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
+}
+extern "C" void EXTI2_TSC_IRQHandler(void) {
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);
+}
+extern "C" void EXTI3_IRQHandler(void) {
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_3);
+}
+extern "C" void EXTI4_IRQHandler(void) {
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
+}
 extern "C" void EXTI9_5_IRQHandler(void) {
     HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
     HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_6);
@@ -95,7 +105,9 @@ void GPIOf4xx::writePin(GPIO::State state) {
     HAL_GPIO_WritePin(this->port, this->halPin, static_cast<GPIO_PinState>(state));
 }
 
-GPIO::State GPIOf4xx::readPin() { return static_cast<GPIO::State>(HAL_GPIO_ReadPin(this->port, this->halPin)); }
+GPIO::State GPIOf4xx::readPin() {
+    return static_cast<GPIO::State>(HAL_GPIO_ReadPin(this->port, this->halPin));
+}
 
 void GPIOf4xx::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin, void* priv), void* priv) {
     GPIO_InitTypeDef gpioInit;

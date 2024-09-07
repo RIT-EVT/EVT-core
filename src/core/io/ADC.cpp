@@ -2,6 +2,8 @@
 
 namespace core::io {
 
-ADC::ADC(Pin pin) { this->pin = pin; }
+ADC::ADC(Pin pin) {
+    this->pin = pin;
+}
 
 } // namespace core::io

@@ -205,7 +205,9 @@ static void canClose(void) {}
 /**
  * Interrupt handler for the timer, updates that the timer has gone off
  */
-void timerHandler(void* halTim) { timerCounter++; }
+void timerHandler(void* halTim) {
+    timerCounter++;
+}
 
 /**
  * Initiailize the timer driver.
@@ -244,7 +246,9 @@ static uint8_t timerUpdate(void) {
 /**
  * Get the difference between the current value and the target value
  */
-static uint32_t timerDelay(void) { return timerCounter > counterTarget ? 0 : counterTarget - timerCounter; }
+static uint32_t timerDelay(void) {
+    return timerCounter > counterTarget ? 0 : counterTarget - timerCounter;
+}
 
 /**
  * Stop the timer, currently does nothing.

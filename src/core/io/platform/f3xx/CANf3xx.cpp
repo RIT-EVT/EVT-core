@@ -30,7 +30,9 @@ CAN_HandleTypeDef* hcan;
 
 } // namespace
 
-extern "C" void CAN_RX0_IRQHandler(void) { HAL_CAN_IRQHandler(hcan); }
+extern "C" void CAN_RX0_IRQHandler(void) {
+    HAL_CAN_IRQHandler(hcan);
+}
 
 /**
  * Interrupt handler for incoming CAN messages. The messages are added to

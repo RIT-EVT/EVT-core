@@ -200,8 +200,12 @@ void PWMf4xx::setPeriod(uint32_t period) {
     setDutyCycle(this->dutyCycle);
 }
 
-uint32_t PWMf4xx::getDutyCycle() { return dutyCycle; }
+uint32_t PWMf4xx::getDutyCycle() {
+    return dutyCycle;
+}
 
-uint32_t PWMf4xx::getPeriod() { return period; }
+uint32_t PWMf4xx::getPeriod() {
+    return period;
+}
 
 } // namespace core::io

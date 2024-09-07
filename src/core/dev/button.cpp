@@ -6,7 +6,9 @@ Button::Button(io::GPIO& gpio, io::GPIO::State pressedState) : gpio(gpio), press
     this->timeSinceLastPress = 0;
 }
 
-io::GPIO::State Button::getState() { return this->gpio.readPin(); }
+io::GPIO::State Button::getState() {
+    return this->gpio.readPin();
+}
 
 bool Button::debounce(uint32_t debounceTime) {
     if (time::millis() - this->timeSinceLastPress > debounceTime) {

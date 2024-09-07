@@ -37,7 +37,9 @@ public:
     }
 
     // For easier debugging
-    void print(io::UART* uart) { uart->printf("TestClass(a = %d, b = %d, c = %d)", a, b, c); }
+    void print(io::UART* uart) {
+        uart->printf("TestClass(a = %d, b = %d, c = %d)", a, b, c);
+    }
 };
 
 int main() {

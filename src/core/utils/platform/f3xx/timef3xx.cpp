@@ -27,5 +27,7 @@ void wait(uint32_t ms) {
 /**
  * Reads the system ticks from HAL_GetTicks
  */
-uint32_t millis() { return HAL_GetTick(); }
+uint32_t millis() {
+    return HAL_GetTick();
+}
 } // namespace core::time

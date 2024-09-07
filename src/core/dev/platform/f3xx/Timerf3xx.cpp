@@ -61,13 +61,21 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
     HAL_NVIC_DisableIRQ(irqNum);
 }
 
-extern "C" void TIM2_IRQHandler(void) { HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM2)]); }
+extern "C" void TIM2_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM2)]);
+}
 
-extern "C" void TIM15_IRQHandler(void) { HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM15)]); }
+extern "C" void TIM15_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM15)]);
+}
 
-extern "C" void TIM16_IRQHandler(void) { HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM16)]); }
+extern "C" void TIM16_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM16)]);
+}
 
-extern "C" void TIM17_IRQHandler(void) { HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM17)]); }
+extern "C" void TIM17_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM17)]);
+}
 
 extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
     uint8_t interruptIdx = getTimerInterruptIndex(htim->Instance);
@@ -139,7 +147,9 @@ void Timerf3xx::startTimer(void (*irqHandler)(void* htim)) {
     startTimer();
 }
 
-void Timerf3xx::stopTimer() { HAL_TIM_Base_Stop_IT(this->halTimer); }
+void Timerf3xx::stopTimer() {
+    HAL_TIM_Base_Stop_IT(this->halTimer);
+}
 
 void Timerf3xx::startTimer() {
     stopTimer(); // Stop timer in case it was already running

@@ -13,10 +13,14 @@ namespace core::time {
 /**
  * Calls HAL wait, assumes HAL_Init() has been called
  */
-void wait(uint32_t ms) { HAL_Delay(ms); }
+void wait(uint32_t ms) {
+    HAL_Delay(ms);
+}
 
 /**
  * Reads the system ticks from HAL_GetTicks
  */
-uint32_t millis() { return HAL_GetTick(); }
+uint32_t millis() {
+    return HAL_GetTick();
+}
 } // namespace core::time

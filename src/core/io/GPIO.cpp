@@ -3,7 +3,9 @@
 namespace core::io {
 
 // Setup instance variables
-GPIO::GPIO(Pin pin) { this->pin = pin; }
+GPIO::GPIO(Pin pin) {
+    this->pin = pin;
+}
 
 GPIO::GPIO(Pin pin, Direction direction, Pull pull) {
     this->pin       = pin;

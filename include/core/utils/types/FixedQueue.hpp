@@ -103,14 +103,18 @@ public:
      *
      * @return True if the queue is full, false otherwise.
      */
-    bool isFull() { return size == maxCapacity; }
+    bool isFull() {
+        return size == maxCapacity;
+    }
 
     /**
      * Get is the queue is empty.
      *
      * @return True if the queue is empty, false otherwise.
      */
-    bool isEmpty() { return size == 0; }
+    bool isEmpty() {
+        return size == 0;
+    }
 
     /**
      * Check to see if an element can be inserted. If overwritting is enabled,
@@ -119,7 +123,9 @@ public:
      *
      * @return True if the queue is not full or if overwritting is enabled.
      */
-    bool canInsert() { return withOverwrite || !isFull(); }
+    bool canInsert() {
+        return withOverwrite || !isFull();
+    }
 
 private:
     /** The elements stored in the queue */

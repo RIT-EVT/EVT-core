@@ -16,7 +16,9 @@ namespace time = core::time;
  * function will look like. In actuality, this will be determined through
  * testing/reading the thermistor datasheet.
  */
-uint32_t convert(uint32_t voltage) { return voltage / 2; }
+uint32_t convert(uint32_t voltage) {
+    return voltage / 2;
+}
 
 int main() {
     core::platform::init();

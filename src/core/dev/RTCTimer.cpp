@@ -30,10 +30,16 @@ void RTCTimer::reloadTimer() {
     bTimerStopped = false;
 }
 
-void RTCTimer::setPeriod(uint32_t clock) { clockPeriod = clock / 1000; }
+void RTCTimer::setPeriod(uint32_t clock) {
+    clockPeriod = clock / 1000;
+}
 
-uint32_t RTCTimer::getTime() { return bTimerStopped ? time : time + rtc.getTime() - startTime; }
+uint32_t RTCTimer::getTime() {
+    return bTimerStopped ? time : time + rtc.getTime() - startTime;
+}
 
-bool RTCTimer::hasGoneOff() { return getTime() >= clockPeriod; }
+bool RTCTimer::hasGoneOff() {
+    return getTime() >= clockPeriod;
+}
 
 } // namespace core::dev

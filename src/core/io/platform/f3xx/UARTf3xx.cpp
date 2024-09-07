@@ -110,11 +110,17 @@ void UARTf3xx::setFormat(WordLength wordLength, Parity parity, NumStopBits numSt
     halUART.Init.Parity     = static_cast<uint32_t>(numStopBits);
 }
 
-void UARTf3xx::sendBreak() { HAL_LIN_SendBreak(&halUART); }
+void UARTf3xx::sendBreak() {
+    HAL_LIN_SendBreak(&halUART);
+}
 
-bool UARTf3xx::isReadable() { return halUART.pRxBuffPtr != nullptr; }
+bool UARTf3xx::isReadable() {
+    return halUART.pRxBuffPtr != nullptr;
+}
 
-bool UARTf3xx::isWritable() { return halUART.pTxBuffPtr == nullptr; }
+bool UARTf3xx::isWritable() {
+    return halUART.pTxBuffPtr == nullptr;
+}
 
 void UARTf3xx::putc(char c) {
     auto* data = reinterpret_cast<uint8_t*>(&c);
@@ -147,12 +153,20 @@ void UARTf3xx::printf(const char* format, ...) {
     va_end(args);
 }
 
-void UARTf3xx::write(uint8_t byte) { putc(static_cast<uint8_t>(byte)); }
+void UARTf3xx::write(uint8_t byte) {
+    putc(static_cast<uint8_t>(byte));
+}
 
-uint8_t UARTf3xx::read() { return static_cast<uint8_t>(getc()); }
+uint8_t UARTf3xx::read() {
+    return static_cast<uint8_t>(getc());
+}
 
-void UARTf3xx::writeBytes(uint8_t* bytes, size_t size) { HAL_UART_Transmit(&halUART, bytes, size, EVT_UART_TIMEOUT); }
+void UARTf3xx::writeBytes(uint8_t* bytes, size_t size) {
+    HAL_UART_Transmit(&halUART, bytes, size, EVT_UART_TIMEOUT);
+}
 
-void UARTf3xx::readBytes(uint8_t* bytes, size_t size) { HAL_UART_Receive(&halUART, bytes, size, EVT_UART_TIMEOUT); }
+void UARTf3xx::readBytes(uint8_t* bytes, size_t size) {
+    HAL_UART_Receive(&halUART, bytes, size, EVT_UART_TIMEOUT);
+}
 
 } // namespace core::io
