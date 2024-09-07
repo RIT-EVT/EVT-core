@@ -5,15 +5,15 @@
  *
  * @author Collin Bolles
  */
-#include <EVT/io/CAN.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/io/CAN.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
-namespace IO = EVT::core::IO;
-namespace time = EVT::core::time;
+namespace io   = core::io;
+namespace time = core::time;
 
-void canIRQHandler(IO::CANMessage& message, void* priv) {
-    IO::UART* uart = (IO::UART*) priv;
+void canIRQHandler(io::CANMessage& message, void* priv) {
+    io::UART* uart = (io::UART*) priv;
     uart->printf("Message received\r\n");
     uart->printf("Message id: 0x%X \r\n", message.getId());
     uart->printf("Message length: %d\r\n", message.getDataLength());
@@ -28,26 +28,26 @@ void canIRQHandler(IO::CANMessage& message, void* priv) {
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     // Get CAN instance with loopback enabled
-    IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::CAN& can   = io::getCAN<io::Pin::PA_12, io::Pin::PA_11>();
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
     can.addIRQHandler(canIRQHandler, &uart);
 
     // CAN message that will be sent
     uint8_t payload[] = {0xDE, 0xAD, 0xBE, 0xBE, 0xEF, 0x00, 0x01, 0x02};
-    IO::CANMessage transmit_message(1, 8, &payload[0], true);
-    IO::CANMessage received_message;
+    io::CANMessage transmit_message(1, 8, &payload[0], true);
+    io::CANMessage received_message;
 
     uart.printf("Starting CAN testing\r\n");
 
-    IO::CAN::CANStatus result;
+    io::CAN::CANStatus result;
 
     // Attempt to join the CAN network
     result = can.connect();
 
-    if (result != IO::CAN::CANStatus::OK) {
+    if (result != io::CAN::CANStatus::OK) {
         uart.printf("Failed to connect to the CAN network\r\n");
         return 1;
     }
@@ -55,7 +55,7 @@ int main() {
     while (true) {
         // Transmit every second
         result = can.transmit(transmit_message);
-        if (result != IO::CAN::CANStatus::OK) {
+        if (result != io::CAN::CANStatus::OK) {
             uart.printf("Failed to transmit message\r\n");
             return 1;
         }

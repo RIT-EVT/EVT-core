@@ -1,15 +1,15 @@
 /**
  * This example prints out temperature reading from a thermistor
  */
-#include <EVT/dev/Thermistor.hpp>
-#include <EVT/io/ADC.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/dev/Thermistor.hpp>
+#include <core/io/ADC.hpp>
+#include <core/io/UART.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
-namespace IO = EVT::core::IO;
-namespace DEV = EVT::core::DEV;
-namespace time = EVT::core::time;
+namespace io   = core::io;
+namespace dev  = core::dev;
+namespace time = core::time;
 
 /**
  * Note, this conversion function is just to show off how a conversion
@@ -21,27 +21,25 @@ uint32_t convert(uint32_t voltage) {
 }
 
 int main() {
-    EVT::core::platform::init();
+    core::platform::init();
 
     // Setup IO
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     time::wait(500);
 
-    IO::ADC& adc = IO::getADC<IO::Pin::PA_0>();
+    io::ADC& adc = io::getADC<io::Pin::PA_0>();
 
     time::wait(500);
 
     // Setup the thermistor device
-    DEV::Thermistor thermistor(adc, convert);
+    dev::Thermistor thermistor(adc, convert);
 
     uart.printf("Starting thermistor test\r\n");
 
     while (1) {
-        uart.printf("Temperature: %dmC\r\n",
-                    static_cast<int>(thermistor.getTempCelcius()));
-        uart.printf("Voltage: %dV\r\n",
-                    static_cast<int>(thermistor.getRawADC()));
+        uart.printf("Temperature: %dmC\r\n", static_cast<int>(thermistor.getTempCelcius()));
+        uart.printf("Voltage: %dV\r\n", static_cast<int>(thermistor.getRawADC()));
         time::wait(100);
     }
 }

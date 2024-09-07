@@ -7,13 +7,13 @@
  */
 #include <stdint.h>
 
-#include <EVT/io/I2C.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/io/I2C.hpp>
+#include <core/io/UART.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
-namespace IO = EVT::core::IO;
-namespace time = EVT::core::time;
+namespace io   = core::io;
+namespace time = core::time;
 
 /** The address of the arduino listening for I2C requests */
 constexpr uint8_t I2C_SLAVE_ADDR = 0x04;
@@ -24,10 +24,10 @@ constexpr uint8_t K_REGISTER = 0x01;
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
-    IO::I2C& i2c = IO::getI2C<IO::Pin::PB_8, IO::Pin::PB_9>();
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::I2C& i2c   = io::getI2C<io::Pin::PB_8, io::Pin::PB_9>();
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     uart.printf("Starting I2C test\n\r");
 
@@ -36,10 +36,9 @@ int main() {
 
         // Read the value of 'o'
         uint8_t oValue;
-        IO::I2C::I2CStatus status = i2c.readReg(I2C_SLAVE_ADDR, O_REGISTER, &oValue);
-        if (status != IO::I2C::I2CStatus::OK) {
-            uart.printf("Failed read 'o' register with I2C::I2CStatus: %d\n\r",
-                        status);
+        io::I2C::I2CStatus status = i2c.readReg(I2C_SLAVE_ADDR, O_REGISTER, &oValue);
+        if (status != io::I2C::I2CStatus::OK) {
+            uart.printf("Failed read 'o' register with I2C::I2CStatus: %d\n\r", status);
             break;
         }
 
@@ -48,9 +47,8 @@ int main() {
         // Read the value of 'k'
         uint8_t kValue;
         status = i2c.readReg(I2C_SLAVE_ADDR, K_REGISTER, &kValue);
-        if (status != IO::I2C::I2CStatus::OK) {
-            uart.printf("Failed read 'k' register with I2C::I2CStatus: %d\n\r",
-                        status);
+        if (status != io::I2C::I2CStatus::OK) {
+            uart.printf("Failed read 'k' register with I2C::I2CStatus: %d\n\r", status);
             break;
         }
 

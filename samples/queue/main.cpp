@@ -5,13 +5,13 @@
  *
  * @author Collin Bolles
  */
-#include <EVT/io/UART.hpp>
-#include <EVT/io/pin.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/types/FixedQueue.hpp>
+#include <core/io/UART.hpp>
+#include <core/io/pin.hpp>
+#include <core/manager.hpp>
+#include <core/utils/types/FixedQueue.hpp>
 
-namespace IO = EVT::core::IO;
-namespace types = EVT::core::types;
+namespace io    = core::io;
+namespace types = core::types;
 
 /**
  * Test class for showing off having a custom class in the FixedQueue.
@@ -37,17 +37,17 @@ public:
     }
 
     // For easier debugging
-    void print(IO::UART* uart) {
+    void print(io::UART* uart) {
         uart->printf("TestClass(a = %d, b = %d, c = %d)", a, b, c);
     }
 };
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     ///////////////////////////////////////////////////////////////////////////
     // Test a queue of numbers, no overwritting
@@ -80,8 +80,7 @@ int main() {
 
     // Try to pop from empty queue
     int value;
-    uart.printf("numberQueue.pop() success ? ->%d\r\n",
-                numberQueue.pop(&value));
+    uart.printf("numberQueue.pop() success ? ->%d\r\n", numberQueue.pop(&value));
 
     ///////////////////////////////////////////////////////////////////////////
     // Test a queue of numbers, with overwritting
@@ -94,10 +93,8 @@ int main() {
         uart.printf("numberQueueOverwrite.append(%d)\n\r", i);
         numberQueueOverwrite.append(i);
     }
-    uart.printf("numberQueueOverwrite.isFull() -> %d\r\n",
-                numberQueueOverwrite.isFull());
-    uart.printf("numberQueueOverwrite.canInsert() -> %d\r\n",
-                numberQueueOverwrite.canInsert());
+    uart.printf("numberQueueOverwrite.isFull() -> %d\r\n", numberQueueOverwrite.isFull());
+    uart.printf("numberQueueOverwrite.canInsert() -> %d\r\n", numberQueueOverwrite.canInsert());
 
     // Add ten more numbers
     for (int i = 10; i < 20; i++) {

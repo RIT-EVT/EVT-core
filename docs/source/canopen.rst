@@ -361,16 +361,16 @@ news is that all of it is essentially boiler plate code.
     */
    #include <stdint.h>
 
-   #include <EVT/dev/platform/f3xx/f302x8/Timerf302x8.hpp>
-   #include <EVT/io/ADC.hpp>
-   #include <EVT/io/CAN.hpp>
-   #include <EVT/io/UART.hpp>
-   #include <EVT/io/manager.hpp>
-   #include <EVT/io/types/CANMessage.hpp>
-   #include <EVT/utils/time.hpp>
-   #include <EVT/utils/types/FixedQueue.hpp>
+   #include <core/dev/platform/f3xx/f302x8/Timerf302x8.hpp>
+   #include <core/io/ADC.hpp>
+   #include <core/io/CAN.hpp>
+   #include <core/io/UART.hpp>
+   #include <core/io/manager.hpp>
+   #include <core/io/types/CANMessage.hpp>
+   #include <core/utils/time.hpp>
+   #include <core/utils/types/FixedQueue.hpp>
 
-   #include <EVT/io/CANopen.hpp>
+   #include <core/io/CANopen.hpp>
 
    #include <Canopen/co_core.h>
    #include <Canopen/co_if.h>
@@ -378,9 +378,9 @@ news is that all of it is essentially boiler plate code.
 
    #include "RPDOCanNode.hpp"
 
-   namespace IO = EVT::core::IO;
-   namespace DEV = EVT::core::DEV;
-   namespace time = EVT::core::time;
+   namespace io = core::io;
+   namespace dev = core::dev;
+   namespace time = core::time;
 
    ///////////////////////////////////////////////////////////////////////////////
    // EVT-core CAN callback and CAN setup. This will include logic to set
@@ -397,9 +397,9 @@ news is that all of it is essentially boiler plate code.
     *
     * @param message[in] The passed in CAN message that was read.
     */
-   void canInterrupt(IO::CANMessage& message, void* priv) {
-       EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* queue =
-           (EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>*) priv;
+   void canInterrupt(io::CANMessage& message, void* priv) {
+       core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>* queue =
+           (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
        if (queue != nullptr)
            queue->append(message);
    }
@@ -435,21 +435,21 @@ news is that all of it is essentially boiler plate code.
 
    int main() {
        // Initialize system
-       IO::init();
+       io::init();
 
        // Will store CANopen messages that will be populated by the EVT-core CAN
        // interrupt
-       EVT::core::types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage> canOpenQueue;
+       core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage> canOpenQueue;
 
        // Intialize CAN, add an IRQ which will add messages to the queue above
-       IO::CAN& can = IO::getCAN<IO::Pin::PA_12, IO::Pin::PA_11>();
+       io::CAN& can = io::getCAN<io::Pin::PA_12, io::Pin::PA_11>();
        can.addIRQHandler(canInterrupt, reinterpret_cast<void*>(&canOpenQueue));
 
        // Initialize the timer
-       DEV::Timerf302x8 timer(TIM2, 100);
+       dev::Timerf302x8 timer(TIM2, 100);
 
        // UART for testing
-       IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+       io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
        timer.stopTimer();
 
        RPDOCanNode testCanNode;
@@ -459,9 +459,9 @@ news is that all of it is essentially boiler plate code.
        CO_TMR_MEM appTmrMem[4];
 
        // Attempt to join the CAN network
-       IO::CAN::CANStatus result = can.connect();
+       io::CAN::CANStatus result = can.connect();
 
-       if (result != IO::CAN::CANStatus::OK) {
+       if (result != io::CAN::CANStatus::OK) {
            uart.printf("Failed to connect to CAN network\r\n");
            return 1;
        }
@@ -478,9 +478,9 @@ news is that all of it is essentially boiler plate code.
        CO_IF_TIMER_DRV timerDriver;
        CO_IF_NVM_DRV nvmDriver;
 
-       IO::getCANopenCANDriver(&can, &canOpenQueue, &canDriver);
-       IO::getCANopenTimerDriver(&timer, &timerDriver);
-       IO::getCANopenNVMDriver(&nvmDriver);
+       io::getCANopenCANDriver(&can, &canOpenQueue, &canDriver);
+       io::getCANopenTimerDriver(&timer, &timerDriver);
+       io::getCANopenNVMDriver(&nvmDriver);
 
        canStackDriver.Can = &canDriver;
        canStackDriver.Timer = &timerDriver;
@@ -488,7 +488,7 @@ news is that all of it is essentially boiler plate code.
 
        CO_NODE_SPEC canSpec = {
            .NodeId = 0x01,
-           .Baudrate = IO::CAN::DEFAULT_BAUD,
+           .Baudrate = io::CAN::DEFAULT_BAUD,
            .Dict = testCanNode.getObjectDictionary(),
            .DictLen = testCanNode.getNumElements(),
            .EmcyCode = NULL,

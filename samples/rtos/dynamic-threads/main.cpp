@@ -5,23 +5,23 @@
  */
 
 #include "tx_api.h"
-#include <EVT/dev/LED.hpp>
-#include <EVT/io/GPIO.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/io/pin.hpp>
-#include <EVT/manager.hpp>
+#include <core/dev/LED.hpp>
+#include <core/io/GPIO.hpp>
+#include <core/io/UART.hpp>
+#include <core/io/pin.hpp>
+#include <core/manager.hpp>
 
-///Namespaces
-namespace IO = EVT::core::IO;
-namespace DEV = EVT::core::DEV;
-namespace time = EVT::core::time;
+/// Namespaces
+namespace io   = core::io;
+namespace dev  = core::dev;
+namespace time = core::time;
 
-///Defines
-#define DEMO_STACK_SIZE 1024
-#define DEMO_QUEUE_SIZE 100
+/// Defines
+#define DEMO_STACK_SIZE      1024
+#define DEMO_QUEUE_SIZE      100
 #define TX_APP_MEM_POOL_SIZE 6536
 
-///Variables
+/// Variables
 static UCHAR tx_byte_pool_buffer[TX_APP_MEM_POOL_SIZE];
 static TX_BYTE_POOL tx_app_byte_pool;
 TX_QUEUE queue_0;
@@ -31,7 +31,7 @@ const int ThreadNum = 2;
 TX_THREAD generator;
 TX_THREAD event;
 
-///Function Prototypes
+/// Function Prototypes
 void generator_entry(ULONG thread_input);
 void worker_entry(ULONG thread_input);
 void event_entry(ULONG thread_input);
@@ -47,12 +47,20 @@ typedef void (*EntryFunction)(ULONG thread_input);
 ThreadData dataArray[ThreadNum + 1];
 
 void ThreadCreator(TX_BYTE_POOL* byte_pool, TX_THREAD* thread, EntryFunction thread_entry, ULONG thread_input) {
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-    char* pointer = static_cast<char*>(TX_NULL);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
+    char* pointer  = static_cast<char*>(TX_NULL);
 
     tx_byte_allocate(byte_pool, (void**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
-    ULONG status = tx_thread_create(thread, "dynamic thread", thread_entry, thread_input, pointer,
-                                    DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
+    ULONG status = tx_thread_create(thread,
+                                    "dynamic thread",
+                                    thread_entry,
+                                    thread_input,
+                                    pointer,
+                                    DEMO_STACK_SIZE,
+                                    1,
+                                    1,
+                                    TX_NO_TIME_SLICE,
+                                    TX_AUTO_START);
 
     if (status != TX_SUCCESS) {
         uart.printf("\n\rThread not be created %lu\n\r", status);
@@ -65,16 +73,16 @@ void ThreadCreator(TX_BYTE_POOL* byte_pool, TX_THREAD* thread, EntryFunction thr
 // Merged tx_application_define and App_ThreadX_Init functions
 void tx_application_define(void* first_unused_memory) {
     void* memory_ptr;
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
-    if (tx_byte_pool_create(&tx_app_byte_pool, "Tx App memory pool", tx_byte_pool_buffer, TX_APP_MEM_POOL_SIZE) != TX_SUCCESS) {
+    if (tx_byte_pool_create(&tx_app_byte_pool, "Tx App memory pool", tx_byte_pool_buffer, TX_APP_MEM_POOL_SIZE)
+        != TX_SUCCESS) {
         uart.printf("\n\rByte pool could not be created\n\r");
     } else {
-        memory_ptr = (void*) &tx_app_byte_pool;
+        memory_ptr              = (void*) &tx_app_byte_pool;
         TX_BYTE_POOL* byte_pool = (TX_BYTE_POOL*) memory_ptr;
 
-        tx_queue_create(&queue_0, "queue 0", TX_1_ULONG, tx_byte_pool_buffer,
-                        DEMO_QUEUE_SIZE * sizeof(ULONG));
+        tx_queue_create(&queue_0, "queue 0", TX_1_ULONG, tx_byte_pool_buffer, DEMO_QUEUE_SIZE * sizeof(ULONG));
 
         tx_semaphore_create(&semaphore_0, "counting semaphore 0", 1);
 
@@ -91,9 +99,9 @@ void tx_application_define(void* first_unused_memory) {
 }
 
 int main() {
-    EVT::core::platform::init();
+    core::platform::init();
 
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     SystemCoreClockUpdate();
     uart.printf("\n\rSystem Clock: %lu\n\r", SystemCoreClock);
@@ -103,15 +111,15 @@ int main() {
     return 0;
 }
 
-ULONG global_count = 0;//Times a random number has been sent and received
-ULONG global_sum = 0;  //Sum of random numbers
+ULONG global_count    = 0; // Times a random number has been sent and received
+ULONG global_sum      = 0; // Sum of random numbers
 ULONG generator_count = 0;
-ULONG generator_sum = 0;
+ULONG generator_sum   = 0;
 
-///Function declarations
+/// Function declarations
 void generator_entry(ULONG thread_input) {
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     srand(77);
     ULONG queue_status;
@@ -144,25 +152,33 @@ void generator_entry(ULONG thread_input) {
                         "\tcount: %lu\r\n"
                         "\tsum: %lu\r\n"
                         "\taverage: %lu\r\n",
-                        global_count, global_sum, global_sum / global_count);
+                        global_count,
+                        global_sum,
+                        global_sum / global_count);
 
             uart.printf("Generator:\r\n"
                         "\tcount: %lu\r\n"
                         "\tsum: %lu\r\n"
                         "\taverage: %lu\r\n",
-                        generator_count, generator_sum, generator_sum / generator_count);
+                        generator_count,
+                        generator_sum,
+                        generator_sum / generator_count);
 
             uart.printf("Worker 1:\r\n"
                         "\tsum: %lu\r\n"
                         "\tcount: %lu\r\n"
                         "\taverage: %lu\r\n",
-                        data1->sum, data1->count, data1->sum / data1->count);
+                        data1->sum,
+                        data1->count,
+                        data1->sum / data1->count);
 
             uart.printf("Worker 2:\r\n"
                         "\tsum: %lu\r\n"
                         "\tcount: %lu\r\n"
                         "\taverage: %lu\r\n\r\n",
-                        data2->sum, data2->count, data2->sum / data2->count);
+                        data2->sum,
+                        data2->count,
+                        data2->sum / data2->count);
         }
         tx_semaphore_put(&semaphore_0);
         tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
@@ -171,7 +187,7 @@ void generator_entry(ULONG thread_input) {
 
 void worker_entry(ULONG thread_input) {
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     ULONG received_message;
     ULONG queue_status;
@@ -183,8 +199,7 @@ void worker_entry(ULONG thread_input) {
 
     while (1) {
         /* Retrieve a message from the queue. */
-        queue_status = tx_queue_receive(&queue_0, &received_message,
-                                        TX_WAIT_FOREVER);
+        queue_status = tx_queue_receive(&queue_0, &received_message, TX_WAIT_FOREVER);
 
         /* Get the semaphore with suspension. */
         tx_semaphore_get(&semaphore_0, TX_WAIT_FOREVER);
@@ -205,7 +220,10 @@ void worker_entry(ULONG thread_input) {
                     "\tcount: %lu\r\n"
                     "\tsum: %lu\r\n"
                     "\r\n",
-                    thread_input + 1, received_message, data->count, data->sum);
+                    thread_input + 1,
+                    received_message,
+                    data->count,
+                    data->sum);
 
         tx_semaphore_put(&semaphore_0);
         tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
@@ -214,10 +232,10 @@ void worker_entry(ULONG thread_input) {
 
 void event_entry(ULONG thread_input) {
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
-    IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();
-    DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
+    io::GPIO& ledGPIO = io::getGPIO<io::Pin::LED>();
+    dev::LED led(ledGPIO, dev::LED::ActiveState::HIGH);
 
     ULONG flag_status;
     ULONG actual_flag;
