@@ -58,7 +58,7 @@ public:
     /**
      * Register a function to be called whenever this Semaphore is put.
      *
-     * @param notifyFunction The function to be called when a message is sent to the queue.
+     * @param notifyFunction The function to be called when a the semaphore is put.
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError registerNotifyFunction(void(*notifyFunction)(Semaphore*));

@@ -28,17 +28,21 @@ public:
      */
     ~BytePool();
 
-    /**
-     * Releases the memory at the given pointer from the BytePool.
-     *
-     * @param[in] memoryPointer pointer to the memory to release.
-     * @return The first error found by the function (or Success if there was no error).
-     */
-    TXError releaseMemory(void* memoryPointer);
+    TXError releaseMemory(void* memoryPointer) override;
 
     TXError init() override;
 
     TXError allocateMemory(std::size_t amount, void** memoryPointer,uint32_t waitOption) override;
+
+    TXError getAvailableBytes(uint32_t *availableBytes) override;
+
+    TXError getFragments(uint32_t *fragments) override;
+
+    TXError getNumSuspendedThreads(uint32_t *numSuspendedThreads) override;
+
+    TXError getNameOfFirstSuspendedThread(char **name) override;
+
+    TXError getName(char **name) override;
 
 private:
     /**

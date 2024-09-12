@@ -7,6 +7,10 @@
 
 namespace core::rtos {
 
+static Initializable *initializableList;
+static std::size_t initListLength;
+static BytePoolBase *mainThreadPool;
+
 /**
  * Allocates a bytepool to store all of the Initializable objects passed into
  * this function, initializes them, and begins the threadx kernel.

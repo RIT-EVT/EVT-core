@@ -10,6 +10,7 @@ namespace core::rtos {
  * Class that wraps a ThreadX Event Flags Group. Event flags are essentially
  * a 32-bit mask, with each bit representing a different flag.\n\n
  *
+ *
  * This class extends Initializable, and like all other Initializable classes must be passed into the
  * Threadx::startKernel() method as part of the initList parameter.
  */

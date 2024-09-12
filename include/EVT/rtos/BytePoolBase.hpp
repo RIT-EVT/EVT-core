@@ -29,6 +29,55 @@ public:
      * Initializes the bytepool within the threadx kernel.
      */
     virtual TXError init() = 0;
+
+    /**
+     * Releases the memory at the given pointer from the BytePool.
+     *
+     * @param[in] memoryPointer pointer to the memory to release.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+     virtual TXError releaseMemory(void* memoryPointer) = 0;
+
+     /**
+      * Retrieves the number of unallocated bytes left in the BytePool.
+      *
+      * @param[out] availableBytes a pointer to a place to store the number of available bytes.
+      * @return The first error found by the function (or Success if there was no error).
+      */
+     virtual TXError getAvailableBytes(uint32_t* availableBytes) = 0;
+
+     /**
+      * Retrieves the number of fragments the BytePool has been split into.
+      *
+      * @param[out] fragments a pointer to a place to store the number of fragments.
+      * @return The first error found by the function (or Success if there was no error).
+      */
+     virtual TXError getFragments(uint32_t* fragments) = 0;
+
+     /**
+      * Retrieves the name of the first suspended thread.
+      *
+      * @param name a pointer to a place to store the name pointer.
+      * @return The first error found by the function (or Success if there was no error).
+      */
+     virtual TXError getNameOfFirstSuspendedThread(char** name) = 0;
+
+     /**
+      * Retrieves the number of threads that are suspended on this BytePool.
+      *
+      * @param numSuspendedThreads a pointer to a place to store the number of suspended threads.
+      * @return The first error found by the function (or Success if there was no error).
+      */
+     virtual TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads) = 0;
+
+     /**
+      * Retrieves the name of this BytePool.
+      *
+      * @param name a pointer to a place to store the name pointer.
+      * @return The first error found by the function (or Success if there was no error).
+      */
+     virtual TXError getName(char** name) = 0;
+
 };
 
 } //namespace core::rtos

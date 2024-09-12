@@ -22,14 +22,22 @@ TXError init(Initializable* initList, std::size_t length, BytePoolBase &pool) {
     }
 }
 
+void tx_application_define(void* first_unused_memory) {
+    init(initializableList, initListLength, *mainThreadPool);
+}
+
 TXError startKernel(Initializable* initList, std::size_t length, BytePoolBase *pool) {
-    tx_kernel_enter();
+    initializableList = initList;
+    initListLength = length;
+    mainThreadPool = pool;
+    //this method doesn't take any arguments in reality but this appeases the compiler
+    tx_kernel_enter(0);
     return Success;
 }
 
 void relinquish() {
     //this method doesn't take any arguments in reality but this appeases the compiler
-    tx_thread_relinquish();
+    tx_thread_relinquish(0);
 }
 
 }//namespace core::rtos

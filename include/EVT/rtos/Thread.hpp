@@ -22,7 +22,7 @@ public:
     /**
      * Constructor for a Thread object. Thread will not start until init() method is called.
      *
-     * @param[in] name pointer to a null-terminated character string representing the name of the thread
+     * @param[in] name Pointer to a null-terminated character string representing the name of the thread.
      * @param[in] entryFunction Function the thread will be running.
      * @param[in] data Data the thread's function requires.
      * @param[in] stackSize How much stack space this thread is allocated.
