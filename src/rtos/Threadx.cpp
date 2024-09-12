@@ -22,7 +22,7 @@ TXError init(Initializable* initList, std::size_t length, BytePoolBase &pool) {
     }
 }
 
-void tx_application_define(void* first_unused_memory) {
+extern void tx_application_define(void* first_unused_memory) {
     init(initializableList, initListLength, *mainThreadPool);
 }
 
