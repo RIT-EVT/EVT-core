@@ -17,7 +17,7 @@ namespace core::rtos {
  * @param poolptr a reference to the bytepool to store the information of the initializable objects in.
  * @return The first error found by the function (or Success if there was no error).
  */
-TXError startKernel(Initializable* initList, std::size_t length, BytePoolBase &pool);
+TXError startKernel(Initializable* initList, std::size_t length, BytePoolBase *pool);
 
     /**
      * Relinquishes control of the currently running thread, suspending it and allowing the

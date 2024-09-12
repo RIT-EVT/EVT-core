@@ -115,9 +115,14 @@ if(USE_RTOS)
     add_subdirectory(libs/threadx)
     target_sources(${PROJECT_NAME} PRIVATE
             src/rtos/f4xx/tx_initialize_low_level.s
+            src/rtos/BytePool.cpp
+            src/rtos/EventFlags.cpp
+            src/rtos/Mutex.cpp
+            src/rtos/Queue.cpp
+            src/rtos/Semaphore.cpp
+            src/rtos/Thread.cpp
             src/rtos/Threadx.cpp
-            src/rtos/UARTTX.cpp
-            src/rtos/Queue.cpp)
+            src/rtos/UARTTX.cpp)
 endif()
 
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")

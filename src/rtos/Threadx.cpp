@@ -1,5 +1,6 @@
 
 #include <EVT/rtos/Threadx.hpp>
+#include <EVT/rtos/BytePool.hpp>
 #include <EVT/utils/log.hpp>
 
 namespace log = EVT::core::log;
@@ -21,9 +22,14 @@ TXError init(Initializable* initList, std::size_t length, BytePoolBase &pool) {
     }
 }
 
+TXError startKernel(Initializable* initList, std::size_t length, BytePoolBase *pool) {
+    tx_kernel_enter();
+    return Success;
+}
+
 void relinquish() {
     //this method doesn't take any arguments in reality but this appeases the compiler
-    tx_thread_relinquish(0);
+    tx_thread_relinquish();
 }
 
 }//namespace core::rtos

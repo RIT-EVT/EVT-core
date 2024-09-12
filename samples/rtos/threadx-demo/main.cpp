@@ -12,31 +12,41 @@
 
 #include <EVT/rtos/UARTTX.hpp>
 #include <EVT/rtos/Queue.hpp>
+#include <EVT/rtos/BytePool.hpp>
 
 ///Namespaces
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
 namespace time = EVT::core::time;
-namespace rtos = core::rtos::wrapper;
+namespace rtos = core::rtos;
 
 ///Defines
 #define DEMO_STACK_SIZE 1024
 #define DEMO_QUEUE_SIZE 100
-#define TX_APP_MEM_POOL_SIZE 6536
+#define TX_APP_MEM_POOL_SIZE 65536
 
 ///Variables
 static UCHAR tx_byte_pool_buffer[TX_APP_MEM_POOL_SIZE];
 static TX_BYTE_POOL tx_app_byte_pool;
 
+///TODO: UART thread test
+TX_THREAD thread_uart;
+TX_THREAD thread_temp1;
+TX_THREAD thread_temp2;
 TX_THREAD thread_0;
 TX_THREAD thread_1;
 TX_THREAD thread_2;
 TX_THREAD thread_3;
 TX_QUEUE queue_0;
+TX_QUEUE queue_uart;
 TX_SEMAPHORE semaphore_0;
 TX_EVENT_FLAGS_GROUP event_flags_0;
 
 ///Function Prototypes
+///TODO: UART thread test
+void thread_uart_entry(ULONG thread_input);
+void thread_temp1_entry(ULONG thread_input);
+void thread_temp2_entry(ULONG thread_input);
 void thread_0_entry(ULONG thread_input);
 void thread_1_entry(ULONG thread_input);
 void thread_2_entry(ULONG thread_input);
@@ -58,37 +68,62 @@ VOID tx_application_define(VOID* first_unused_memory) {
         /* USER CODE BEGIN App_ThreadX_Init */
         char* pointer = static_cast<char*>(TX_NULL);
 
-        /* Allocate the stack for thread 0.  */
+        /* Allocate the stack for thread UART.  */
         tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
 
-        /* Create the main thread 0.  */
-        tx_thread_create(&thread_0, "thread 0", thread_0_entry, 0, pointer,
+        /* Create the main thread UART  */
+        tx_thread_create(&thread_uart, "thread UART", thread_uart_entry, 0, pointer,
                          DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
 
-        /* Allocate the stack for thread 1.  */
+        /* Allocate the stack for thread temp 1.  */
         tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
 
-        /* Create the main thread 1.  */
-        tx_thread_create(&thread_1, "thread 1", thread_1_entry, 0, pointer,
+        /* Create the main thread temp 2.  */
+        tx_thread_create(&thread_temp1, "thread temp 1", thread_temp1_entry, 0, pointer,
                          DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
 
-        /* Allocate the stack for thread 2.  */
+        /* Allocate the stack for thread temp 2.  */
         tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
 
-        /* Create the main thread 2.  */
-        tx_thread_create(&thread_2, "thread 2", thread_2_entry, 0, pointer,
+        /* Create the main thread temp 2.  */
+        tx_thread_create(&thread_temp2, "thread temp 2", thread_temp2_entry, 0, pointer,
                          DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
 
-        /* Allocate the stack for thread 3.  */
-        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
+//        /* Allocate the stack for thread 0.  */
+//        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
+//
+//        /* Create the main thread 0.  */
+//        tx_thread_create(&thread_0, "thread 0", thread_0_entry, 0, pointer,
+//                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
 
-        /* Create the main thread 3.  */
-        tx_thread_create(&thread_3, "thread 3", thread_3_entry, 0, pointer,
-                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
+//        /* Allocate the stack for thread 1.  */
+//        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
+//
+//        /* Create the main thread 1.  */
+//        tx_thread_create(&thread_1, "thread 1", thread_1_entry, 0, pointer,
+//                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
+//
+//        /* Allocate the stack for thread 2.  */
+//        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
+//
+//        /* Create the main thread 2.  */
+//        tx_thread_create(&thread_2, "thread 2", thread_2_entry, 0, pointer,
+//                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
+//
+//        /* Allocate the stack for thread 3.  */
+//        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
+//
+//        /* Create the main thread 3.  */
+//        tx_thread_create(&thread_3, "thread 3", thread_3_entry, 0, pointer,
+//                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
 
         /* Create the message queue shared by all threads. */
         tx_queue_create(&queue_0, "queue 0", TX_1_ULONG, pointer,
                         DEMO_QUEUE_SIZE * sizeof(ULONG));
+
+        /* Create the message queue to be used by uart to print data. */
+//        tx_queue_create(&queue_uart, "queue uart", TX_1_ULONG, pointer,
+//                        DEMO_QUEUE_SIZE * sizeof(ULONG));
 
         /* Create the semaphore used by all threads. */
         tx_semaphore_create(&semaphore_0, "counting semaphore 0", 1);
@@ -104,14 +139,22 @@ int main() {
     // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
-    // Setup UARTTX
-    rtos::UARTTX uarttx(uart);
+    rtos::wrapper::UARTTX uarttx(uart);
+    rtos::Queue q1("queue", 4, 8);
+
+    rtos::BytePoolBase *txPool;
+    rtos::Initializable *arr[2] = {
+        &q1, &uarttx
+    };
+
+    rtos::startKernel(*arr, 2,txPool);
+
+//   for(auto a: arr) {
+//       a->init(*txPool);
+//   }
 
     SystemCoreClockUpdate();
-    // TODO: Delete uart.printf and edit uarttx.printf message
-//    uart.printf("\n\rUART: System Clock: %lu\n\r", SystemCoreClock);
-    uarttx.printf("\n\rUARTTX: System Clock: %lu\n\r", SystemCoreClock);
-
+    uart.printf("\n\rSystem Clock: %lu\n\r", SystemCoreClock);
     tx_kernel_enter();
 
     return 0;
@@ -126,7 +169,71 @@ ULONG thread1_sum = 0;
 ULONG thread2_count = 0;
 ULONG thread2_sum = 0;
 
-///Function declarations
+///Function definitions
+void thread_uart_entry(ULONG thread_input) {
+    // Setup UART
+    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+
+    ULONG received_message;
+    ULONG queue_status;
+
+    // Setup UARTTX
+    rtos::wrapper::UARTTX uarttx(uart);
+    uarttx.printf("\n\rUARTTX: Thread_uart created\n\r");
+    uart.printf("\n\rUART: Thread_uart created\n\r");
+
+    /* Delay ensures that thread 1 and thread 2 are created before thread 0 adds to the queue. */
+    tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
+
+    while (1) {
+
+        /* Retrieve a message from the queue. */
+        queue_status = tx_queue_receive(&queue_uart, &received_message,
+                                        TX_WAIT_FOREVER);
+
+        if(queue_status == SUCCESS) {
+            uarttx.printf("\n\rThread_uart: %lu\n\r", received_message);
+        }
+
+    }
+}
+
+void thread_temp1_entry(ULONG thread_input) {
+    // Setup UART
+    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+
+    ULONG queue_status;
+    ULONG num=0;
+
+    // Setup UARTTX
+    rtos::wrapper::UARTTX uarttx(uart);
+//    uarttx.printf("\n\rThread_temp 1 created\n\r");
+
+    tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
+
+    while (1) {
+        num++;
+        /* Send message to queue 0. */
+        queue_status = tx_queue_send(&queue_uart, &num, TX_WAIT_FOREVER);
+    }
+}
+
+void thread_temp2_entry(ULONG thread_input) {
+    // Setup UART
+    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+
+    ULONG queue_status;
+
+    // Setup UARTTX
+    rtos::wrapper::UARTTX uarttx(uart);
+//    uarttx.printf("\n\rThread_temp 2 created\n\r");
+
+    tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
+
+    while (1) {
+
+    }
+}
 void thread_0_entry(ULONG thread_input) {
     // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);

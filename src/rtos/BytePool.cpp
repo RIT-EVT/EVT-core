@@ -1,10 +1,11 @@
 
 #include <EVT/rtos/BytePool.hpp>
+#include <EVT/rtos/BytePoolBase.hpp>
 
 namespace core::rtos {
 
 template<std::size_t SIZE>
-BytePool<SIZE>::BytePool(const char* name)
+BytePool<SIZE>::BytePool(char* name)
     : txBytePool(), name(name), buffer() {}
 
 template<std::size_t SIZE>

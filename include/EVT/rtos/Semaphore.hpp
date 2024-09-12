@@ -13,7 +13,7 @@ namespace core::rtos {
  * This class extends Initializable, and like all other Initializable classes must be passed into the
  * Threadx::startKernel() method as part of the initList parameter.
  */
-class Semaphore : Initializable {
+class Semaphore : public Initializable {
 public:
     /**
      * Constructs a Semaphore object, but does not initialize it (must call init before using).

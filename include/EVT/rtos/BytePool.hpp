@@ -13,7 +13,7 @@ namespace core::rtos {
  * @tparam SIZE How large the bytepool is.
  */
 template <std::size_t SIZE>
-class BytePool : BytePoolBase {
+class BytePool : public BytePoolBase {
 public:
     /**
      * Constructs a BytePoolBase, including creating a buffer to hold the
@@ -21,7 +21,7 @@ public:
      *
      * @param[in] name A pointer to the name of the BytePool.
      */
-    BytePool(const char* name);
+    BytePool(char* name);
 
     /**
      * BytePool deconstructor.
@@ -44,7 +44,7 @@ private:
     /**
      * A pointer to the name of the Bytepool.
      */
-    const char* name;
+    char* name;
 
     /**
      * Buffer for the bytepool, SIZE bytes large.

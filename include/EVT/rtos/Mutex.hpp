@@ -11,7 +11,7 @@ namespace core::rtos {
  * This class extends Initializable, and like all other Initializable classes must be passed into the
  * Threadx::startKernel() method as part of the initList parameter.
  */
-class Mutex : Initializable {
+class Mutex : public Initializable {
 public:
     /**
      * Constructs a Mutex object, but does not initialize it (must call init before using).

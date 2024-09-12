@@ -16,7 +16,7 @@ namespace core::rtos {
  * @tparam T what type of data the thread's entry function will take.
  */
 template <typename T>
-class Thread : Initializable {
+class Thread : public Initializable {
 public:
 
     /**
