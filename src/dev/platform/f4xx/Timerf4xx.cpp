@@ -247,7 +247,7 @@ void Timerf4xx::startTimer() {
 }
 
 void Timerf4xx::reloadTimer() {
-    this->halTimer->Instance->CNT &= ~(0xFFFFFFFF);// Clear the Counter register to reset the timer
+    this->halTimer->Instance->CNT = 0;// Clear the Counter register to reset the timer
 }
 
 void Timerf4xx::setPeriod(uint32_t clockPeriod) {
