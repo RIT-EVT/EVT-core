@@ -213,7 +213,7 @@ void Timerf4xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
     clockConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
     HAL_TIM_ConfigClockSource(&htim, &clockConfig);
 
-    // Timers 9-14 are NOT master mode compatible, so don't set config for those
+    // Timers 9-14 are NOT master mode compatible, so waste of time to go through config
     if (getTimerInterruptIndex(timerPeripheral) < static_cast<uint8_t>(timerInterruptIndex::TIM9_IDX)) {
         masterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
         masterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
