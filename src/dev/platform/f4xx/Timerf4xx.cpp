@@ -40,7 +40,7 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim) {
         __HAL_RCC_TIM9_CLK_ENABLE();
         irqNum = TIM1_BRK_TIM9_IRQn;
     } else if (peripheral == TIM10) {
-        __HAL_RCC_TIM10_CLK_ENABLE(); // todo!!!! Go through and make sure all these timers work...
+        __HAL_RCC_TIM10_CLK_ENABLE();
         irqNum = TIM1_UP_TIM10_IRQn;
     } else if (peripheral == TIM11) {
         __HAL_RCC_TIM11_CLK_ENABLE();
@@ -119,27 +119,27 @@ extern "C" void TIM5_IRQHandler(void) {
     HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM5)]);
 }
 
-extern "C" void TIM9_IRQHandler(void) {
+extern "C" void TIM1_BRK_TIM9_IRQHandler(void) {
     HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM9)]);
 }
 
-extern "C" void TIM10_IRQHandler(void) {
+extern "C" void TIM1_UP_TIM10_IRQHandler(void) {
     HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM10)]);
 }
 
-extern "C" void TIM11_IRQHandler(void) {
+extern "C" void TIM1_TRG_COM_TIM11_IRQHandler(void) {
     HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM11)]);
 }
 
-extern "C" void TIM12_IRQHandler(void) {
+extern "C" void TIM8_BRK_TIM12_IRQHandler(void) {
     HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM12)]);
 }
 
-extern "C" void TIM13_IRQHandler(void) {
+extern "C" void TIM8_UP_TIM13_IRQHandler(void) {
     HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM13)]);
 }
 
-extern "C" void TIM14_IRQHandler(void) {
+extern "C" void TIM8_TRG_COM_TIM14_IRQHandler(void) {
     HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM14)]);
 }
 
@@ -154,7 +154,7 @@ extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
  * Returns the corresponding index for the given timer device as stored in the
  * timerInterruptHandlers array
  * @param htim the TIM_TypeDef pointer to the timer device
- * @return an uint8_t between 0-3 corresponding to an element of timerInterruptHandlers
+ * @return an uint8_t between 0-9 corresponding to an element of timerInterruptHandlers
  */
 uint8_t getTimerInterruptIndex(TIM_TypeDef* peripheral) {
     uint8_t interruptIdx;
@@ -213,9 +213,12 @@ void Timerf4xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
     clockConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
     HAL_TIM_ConfigClockSource(&htim, &clockConfig);
 
-    masterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-    masterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-    HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
+    // Timers 9-14 are NOT master mode compatible, so don't set config for those
+    if (getTimerInterruptIndex(timerPeripheral) < static_cast<uint8_t>(timerInterruptIndex::TIM9_IDX)) {
+        masterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+        masterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+        HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
+    }
 }
 
 void Timerf4xx::startTimer(void (*irqHandler)(void* htim)) {
