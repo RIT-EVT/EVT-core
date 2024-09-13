@@ -16,9 +16,8 @@ class Timerf4xx : public Timer {
 public:
     /**
      * Will initialize the timer device on the STM with the given period and the given IRQ Handler
-     * that triggers with the given period.  Starts the timer
-     * @param timerPeripheral[in] The timer peripheral to configure.  Possible options for this board are
-     * TIM2, TIM3, TIM4, TIM5, TIM9, TIM10, TIM11, TIM12, TIM13, TIM14.  It is up to the user to verify
+     * that triggers with the given period.
+     * @param timerPeripheral[in] The timer peripheral to configure.  It is up to the user to verify
      * that resource conflicts do not occur.
      *
      * @param[in] timerPeripheral The timer to use
@@ -45,9 +44,7 @@ private:
 
     /**
      * Handles the initialization of the timer module.  Actually configures the device and enables it.
-     * @param[in] timerPeripheral  The timer peripheral to configure.  Possible options for this board are
-     * TIM2, TIM3, TIM4, TIM5, TIM9, TIM10, TIM11, TIM12, TIM13, TIM14.  It is up to the user to verify that
-     * resource conflicts do not occur.
+     * @param[in] timerPeripheral  The timer peripheral to configure.
      * @param[in] clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
      */
     void initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod);
