@@ -57,15 +57,15 @@ public:
      /**
       * Retrieves the name of the first suspended thread.
       *
-      * @param name a pointer to a place to store the name pointer.
+      * @param[out] name a pointer to a place to store the name pointer.
       * @return The first error found by the function (or Success if there was no error).
       */
-     virtual TXError getNameOfFirstSuspendedThread(char** name) = 0;
+     virtual TXError getNameOfFirstSuspendedThread(char** threadName) = 0;
 
      /**
       * Retrieves the number of threads that are suspended on this BytePool.
       *
-      * @param numSuspendedThreads a pointer to a place to store the number of suspended threads.
+      * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
       * @return The first error found by the function (or Success if there was no error).
       */
      virtual TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads) = 0;
@@ -73,7 +73,7 @@ public:
      /**
       * Retrieves the name of this BytePool.
       *
-      * @param name a pointer to a place to store the name pointer.
+      * @param[out] name a pointer to a place to store the name pointer.
       * @return The first error found by the function (or Success if there was no error).
       */
      virtual TXError getName(char** name) = 0;

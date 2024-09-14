@@ -21,28 +21,63 @@ public:
      *
      * @param[in] name A pointer to the name of the BytePool.
      */
-    BytePool(char* name);
+    BytePool(char* name) : txBytePool(), name(name), buffer() {}
 
     /**
      * BytePool deconstructor.
      */
-    ~BytePool();
+    ~BytePool() {
+        tx_byte_pool_delete(&txBytePool);
+    }
 
-    TXError releaseMemory(void* memoryPointer) override;
+    TXError releaseMemory(void* memoryPointer) override {
+        return static_cast<TXError>(tx_byte_release(memoryPointer));
+    }
 
-    TXError init() override;
+    TXError init() override {
+        return static_cast<TXError>(tx_byte_pool_create(&txBytePool, name, buffer, SIZE));
+    }
 
-    TXError allocateMemory(std::size_t amount, void** memoryPointer,uint32_t waitOption) override;
+    TXError allocateMemory(std::size_t amount, void** memoryPointer, uint32_t waitOption) override {
+        uint32_t errorCode = tx_byte_allocate(&txBytePool, memoryPointer, amount, waitOption);
+        return static_cast<TXError>(errorCode);
+    }
 
-    TXError getAvailableBytes(uint32_t *availableBytes) override;
+    TXError getAvailableBytes(uint32_t *availableBytes) override {
+        uint32_t status = tx_byte_pool_info_get(&txBytePool, nullptr, availableBytes,
+                                                nullptr, nullptr, nullptr, nullptr);
+        return static_cast<TXError>(status);
+    }
 
-    TXError getFragments(uint32_t *fragments) override;
+    TXError getFragments(uint32_t *fragments) override {
+        uint32_t status = tx_byte_pool_info_get(&txBytePool, nullptr, nullptr,
+                                                fragments, nullptr, nullptr, nullptr);
+        return static_cast<TXError>(status);
+    }
 
-    TXError getNumSuspendedThreads(uint32_t *numSuspendedThreads) override;
+    TXError getNameOfFirstSuspendedThread(char** threadName) override {
+        TX_THREAD* thread;
+        uint32_t status = tx_byte_pool_info_get(&txBytePool, nullptr, nullptr,
+                                                nullptr, &thread, nullptr, nullptr);
+        if (status != Success)
+            return static_cast<TXError>(status);
 
-    TXError getNameOfFirstSuspendedThread(char **name) override;
+        status = tx_thread_info_get(thread, threadName, nullptr, nullptr, nullptr,
+                                    nullptr, nullptr, nullptr, nullptr);
 
-    TXError getName(char **name) override;
+        return static_cast<TXError>(status);
+    }
+
+    TXError getNumSuspendedThreads(uint32_t *numSuspendedThreads) override {
+        uint32_t status = tx_byte_pool_info_get(&txBytePool, nullptr, nullptr,
+                                                nullptr, nullptr, numSuspendedThreads, nullptr);
+        return static_cast<TXError>(status);
+    }
+
+    TXError getName(char **name) override {
+        *name = this->name;
+        return Success;
+    }
 
 private:
     /**
