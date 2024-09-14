@@ -1,6 +1,5 @@
 /**
  * This sample will demo the basic functionality for the timer driver
- * TIMERS 15/16 DO NOT WORK ON F4xx! Change ALL the 15/16's to 3/4's and it should work - Travis Brown
  */
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
@@ -46,6 +45,7 @@ int main() {
 
     // Setup the Timer
     DEV::Timer& timer2 = DEV::getTimer<DEV::MCUTimer::Timer2>(500);
+    // F4xx does not support Timers 15 & 16, change them to Timer11 & Timer12
     DEV::Timer& timer15 = DEV::getTimer<DEV::MCUTimer::Timer15>(100);
     DEV::Timer& timer16 = DEV::getTimer<DEV::MCUTimer::Timer16>(200);
 
