@@ -5,7 +5,7 @@
 TIM_HandleTypeDef halTimers[10];
 void (*timerInterruptHandlers[10])(void* htim) = {nullptr};
 
-enum class timerInterruptIndex {
+enum timerInterruptIndex {
     TIM2_IDX = 0u,
     TIM3_IDX = 1u,
     TIM4_IDX = 2u,
@@ -160,25 +160,25 @@ uint8_t getTimerInterruptIndex(TIM_TypeDef* peripheral) {
     uint8_t interruptIdx;
 
     if (peripheral == TIM2) {
-        interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM2_IDX);
+        interruptIdx = timerInterruptIndex::TIM2_IDX;
     } else if (peripheral == TIM3) {
-        interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM3_IDX);
+        interruptIdx = timerInterruptIndex::TIM3_IDX;
     } else if (peripheral == TIM4) {
-        interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM4_IDX);
+        interruptIdx = timerInterruptIndex::TIM4_IDX;
     } else if (peripheral == TIM5) {
-        interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM5_IDX);
+        interruptIdx = timerInterruptIndex::TIM5_IDX;
     } else if (peripheral == TIM9) {
-        interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM9_IDX);
+        interruptIdx = timerInterruptIndex::TIM9_IDX;
     } else if (peripheral == TIM10) {
-        interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM10_IDX);
+        interruptIdx = timerInterruptIndex::TIM10_IDX;
     } else if (peripheral == TIM11) {
-        interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM11_IDX);
+        interruptIdx = timerInterruptIndex::TIM11_IDX;
     } else if (peripheral == TIM12) {
-        interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM12_IDX);
+        interruptIdx = timerInterruptIndex::TIM12_IDX;
     } else if (peripheral == TIM13) {
-        interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM13_IDX);
+        interruptIdx = timerInterruptIndex::TIM13_IDX;
     } else if (peripheral == TIM14) {
-        interruptIdx = static_cast<uint8_t>(timerInterruptIndex::TIM14_IDX);
+        interruptIdx = timerInterruptIndex::TIM14_IDX;
     } else {
         interruptIdx = -1;
     }
@@ -214,7 +214,7 @@ void Timerf4xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
     HAL_TIM_ConfigClockSource(&htim, &clockConfig);
 
     // Timers 9-14 are NOT master mode compatible, so waste of time to go through config
-    if (getTimerInterruptIndex(timerPeripheral) < static_cast<uint8_t>(timerInterruptIndex::TIM9_IDX)) {
+    if (getTimerInterruptIndex(timerPeripheral) < timerInterruptIndex::TIM9_IDX) {
         masterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
         masterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
         HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
