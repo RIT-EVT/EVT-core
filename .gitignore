@@ -16,3 +16,5 @@ venv/
 .DS_Store
 
 .vscode/
+
+.cache/
