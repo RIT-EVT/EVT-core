@@ -199,10 +199,10 @@ void Timerf4xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
 
     htim.Instance = timerPeripheral;
     uint32_t prescaler = SystemCoreClock / 1000;
-    htim.Init.Prescaler = prescaler;// Sets f_CK_PSC to 1000 Hz
+    htim.Init.Prescaler = prescaler - 1;// Sets f_CK_PSC to 1000 Hz
     // Allows period increments of 1 ms with max of 2^(32) ms.
     htim.Init.CounterMode = TIM_COUNTERMODE_UP;
-    htim.Init.Period = clockPeriod;
+    htim.Init.Period = clockPeriod - 1;
     htim.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     htim.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
     HAL_TIM_Base_Init(&htim);
