@@ -62,6 +62,38 @@ public:
      */
     TXError registerNotifyFunction(void (*notifyFunction)(EventFlags* eventFlags));
 
+    /**
+      * Retrieves the name of this EvenFlags.
+      *
+      * @param[out] name a pointer to a place to store the name pointer.
+      * @return The first error found by the function (or Success if there was no error).
+      */
+    TXError getName(char **name);
+
+    /**
+     * Retrieves the current values that the flags are set to as a uint32.
+     *
+     * @param[out] flags a pointer to a place to store the flags.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getCurrentFlags(uint32_t *flags);
+
+    /**
+      * Retrieves the name of the first suspended thread.
+      *
+      * @param[out] name a pointer to a place to store the name pointer.
+      * @return The first error found by the function (or Success if there was no error).
+      */
+    TXError getNameOfFirstSuspendedThread(char **threadName);
+
+    /**
+      * Retrieves the number of threads that are suspended on this EventFlags.
+      *
+      * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
+      * @return The first error found by the function (or Success if there was no error).
+      */
+    TXError getNumSuspendedThreads(uint32_t *numSuspendedThreads);
+
 private:
     /**
      * The name of this object.

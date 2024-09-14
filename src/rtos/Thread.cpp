@@ -47,21 +47,18 @@ TXError Thread<T>::registerEntryExitNotification(void(*notifyFunction)(Thread<T>
 
 template<typename T>
 TXError Thread<T>::setPreemptThreshold(uint32_t newThreshold, uint32_t* oldThresholdOut) {
-    preemptThreshold = newThreshold;
     uint32_t errorCode = tx_thread_preemption_change(&txThread, newThreshold, (UINT*)oldThresholdOut);
     return static_cast<TXError>(errorCode);
 }
 
 template<typename T>
 TXError Thread<T>::setPriority(uint32_t newPriority, uint32_t* oldPriorityOut) {
-    priority = newPriority;
     uint32_t errorCode = tx_thread_priority_change(&txThread, newPriority, (UINT*)oldPriorityOut);
     return static_cast<TXError>(errorCode);
 }
 
 template<typename T>
 TXError Thread<T>::setTimeSlice(uint32_t newTimeSlice, uint32_t* oldTimeSliceOut) {
-    timeSlice = newTimeSlice;
     uint32_t errorCode = tx_thread_time_slice_change(&txThread, newTimeSlice, oldTimeSliceOut);
     return static_cast<TXError>(errorCode);
 }

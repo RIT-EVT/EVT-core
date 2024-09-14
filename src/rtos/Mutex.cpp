@@ -26,4 +26,40 @@ TXError Mutex::prioritize() {
     return static_cast<TXError>(tx_mutex_prioritize(&txMutex));
 }
 
+TXError Mutex::getName(char** name) {
+    *name = this->name;
+    return Success;
+}
+
+TXError Mutex::getOwnershipCount(uint32_t* ownershipCount) {
+    uint32_t status = tx_mutex_info_get(&txMutex, nullptr, ownershipCount, nullptr, nullptr, nullptr, nullptr);
+    return static_cast<TXError>(status);
+}
+
+TXError Mutex::getNameOfOwner(char** ownerName) {
+    uint32_t status = tx_mutex_info_get(&txMutex, nullptr, nullptr, ownerName, nullptr, nullptr, nullptr);
+    return static_cast<TXError>(status);
+}
+
+TXError Mutex::getNameOfFirstSuspendedThread(char** threadName) {
+    TX_THREAD *thread;
+    uint32_t status = tx_mutex_info_get(&txMutex, nullptr, nullptr, nullptr, thread, nullptr, nullptr);
+    //exit early if the call failed
+    if (status != Success)
+        return static_cast<TXError>(status);
+
+    //read the name off the struct
+    status = tx_thread_info_get(thread, threadName, nullptr, nullptr, nullptr,
+                                nullptr, nullptr, nullptr, nullptr);
+
+    return static_cast<TXError>(status);
+}
+
+TXError Mutex::getNumSuspendedThreads(uint32_t* numSuspendedThreads) {
+    uint32_t status = tx_mutex_info_get(&txMutex, nullptr, nullptr, nullptr, nullptr, numSuspendedThreads, nullptr);
+    return static_cast<TXError>(status);
+}
+
+
+
 } //namespace core::rtos

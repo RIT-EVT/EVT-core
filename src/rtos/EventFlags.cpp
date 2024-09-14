@@ -39,4 +39,35 @@ TXError EventFlags::registerNotifyFunction(void (*notifyFunction)(core::rtos::Ev
     return static_cast<TXError>(tx_event_flags_set_notify(&txEventFlagsGroup, txNotifyFunction));
 }
 
+TXError EventFlags::getName(char** name) {
+    *name = (this->name);
+    return Success;
+}
+
+TXError EventFlags::getCurrentFlags(uint32_t* flags) {
+    uint32_t status = tx_event_flags_info_get(&txEventFlagsGroup, nullptr, flags, nullptr, nullptr, nullptr);
+    return static_cast<TXError>(status);
+}
+
+TXError EventFlags::getNameOfFirstSuspendedThread(char** threadName) {
+    //grab a pointer to the first suspended thread struct
+    TX_THREAD *thread;
+    uint32_t status = tx_event_flags_info_get(&txEventFlagsGroup, nullptr, nullptr, &thread, nullptr, nullptr);
+
+    //exit early if the call failed
+    if (status != Success)
+        return static_cast<TXError>(status);
+
+    //read the name off the struct
+    status = tx_thread_info_get(thread, threadName, nullptr, nullptr, nullptr,
+                                nullptr, nullptr, nullptr, nullptr);
+
+    return static_cast<TXError>(status);
+}
+
+TXError EventFlags::getNumSuspendedThreads(uint32_t* numSuspendedThreads) {
+    uint32_t status = tx_event_flags_info_get(&txEventFlagsGroup, nullptr, nullptr, nullptr, numSuspendedThreads, nullptr);
+    return static_cast<TXError>(status);
+}
+
 } //namespace core::rtos

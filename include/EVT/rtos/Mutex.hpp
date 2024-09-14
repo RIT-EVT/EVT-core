@@ -54,6 +54,48 @@ public:
      */
     TXError prioritize();
 
+    /**
+      * Retrieves the name of this Mutex.
+      *
+      * @param[out] name a pointer to a place to store the name pointer.
+      * @return The first error found by the function (or Success if there was no error).
+      */
+    TXError getName(char **name);
+
+    /**
+     * Retrieves the ownership count of this mutex. The ownership count is how many times the current
+     * owner of this mutex has locked this mutex. Each time the owner unlocks this mutex, the ownership
+     * count is decremented. Only when ownershipCount reaches 0 does the mutex actually unlock.
+     *
+     * @param[out] ownershipCount a pointer to a place to store the ownership count.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getOwnershipCount(uint32_t *ownershipCount);
+
+    /**
+     * Retrieves the name of the thread that currently owns this mutex.
+     *
+     * @param[out] name a pointer to a place to store the name of the owner of the thread.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getNameOfOwner(char **ownerName);
+
+    /**
+     * Retrieves the name of the first suspended thread.
+     *
+     * @param[out] threadName a pointer to a place to store the name of the first suspended thread.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getNameOfFirstSuspendedThread(char **threadName);
+
+    /**
+      * Retrieves the number of threads that are suspended on this Mutex.
+      *
+      * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
+      * @return The first error found by the function (or Success if there was no error).
+      */
+    TXError getNumSuspendedThreads(uint32_t *numSuspendedThreads);
+
 private:
     /**
      * Threadx struct that actually holds all of the information for the Mutex.

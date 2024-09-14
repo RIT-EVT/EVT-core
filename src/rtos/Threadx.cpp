@@ -30,14 +30,12 @@ TXError startKernel(Initializable* initList, std::size_t length, BytePoolBase *p
     initializableList = initList;
     initListLength = length;
     mainThreadPool = pool;
-    //this method doesn't take any arguments in reality but this appeases the compiler
-    tx_kernel_enter(0);
+    tx_kernel_enter();
     return Success;
 }
 
 void relinquish() {
-    //this method doesn't take any arguments in reality but this appeases the compiler
-    tx_thread_relinquish(0);
+    tx_thread_relinquish();
 }
 
 }//namespace core::rtos

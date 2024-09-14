@@ -92,6 +92,8 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError frontSend(void* messagePointer, uint32_t waitOption);
+
+
 private:
 
     /**
