@@ -76,14 +76,17 @@ CAN::CANStatus CANf3xx::connect(bool autoBusOff) {
     // Initialize HAL CAN
     // Bit timing values calculated from the website
     // http://www.bittiming.can-wiki.info/
-    uint32_t mode                 = loopbackEnabled ? CAN_MODE_LOOPBACK : CAN_MODE_NORMAL;
+    // Sample point of 87.5% and selecting a time quanta number of 16.
+    uint32_t mode = loopbackEnabled ? CAN_MODE_LOOPBACK : CAN_MODE_NORMAL;
+
     halCAN.Instance               = CAN1;
-    halCAN.Init.Prescaler         = 1;
+    halCAN.Init.Prescaler         = (HAL_RCC_GetHCLKFreq() / DEFAULT_BAUD / 16);
     halCAN.Init.Mode              = mode;
     halCAN.Init.SyncJumpWidth     = CAN_SJW_1TQ;
     halCAN.Init.TimeSeg1          = CAN_BS1_13TQ;
     halCAN.Init.TimeSeg2          = CAN_BS2_2TQ;
     halCAN.Init.TimeTriggeredMode = DISABLE;
+
     if (autoBusOff) {
         halCAN.Init.AutoBusOff = ENABLE;
     } else {
