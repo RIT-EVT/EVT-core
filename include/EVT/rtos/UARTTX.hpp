@@ -24,11 +24,11 @@ public:
 
     TXError init(BytePoolBase &pool) override;
 
-    void addQueuart(const char* message);
-
-    void getQueuart();
-
     void printf(const char* format, ...);
+
+    void addQueuart(char* buffer, std::size_t size);
+
+    void readQueuart();
 
     void setBaudrate(uint32_t baudrate);
 
@@ -64,8 +64,6 @@ private:
     UART_HandleTypeDef halUART;
 
     Queue queue;
-
-    const char* txMessage;
 
     static UCHAR tx_byte_pool_buffer[65536];
 

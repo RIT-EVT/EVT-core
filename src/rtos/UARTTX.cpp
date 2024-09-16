@@ -15,43 +15,33 @@ TXError UARTTX::init(BytePoolBase &pool) {
     return queue.init(pool);
 }
 
-void UARTTX::addQueuart(const char* message){
+void UARTTX::printf(const char* format, ...) {
+    va_list args; /* Access the variable argument list */
+    va_start(args, format); /* Tells the args variable to point to the format parameter first */
+
+    char buffer[256]; /* Buffer array to hold the message */
+    vsnprintf(buffer, sizeof(buffer), format, args); /* vsnprint formats the string and stores it in the buffer array */
+
+    addQueuart(buffer, sizeof(buffer)); /* Add formatted message to queue*/
+
+    va_end(args); /* Cleans va_list once the message has been sent */
+}
+
+void UARTTX::addQueuart(char* buffer, std::size_t size){
     /**
      * 1. Check message.
      * 2. If message size is acceptable add it to queue.
      * 3. If message size is not acceptable return an error.
      */
 
-    std::string s(message);
-
-    if(s.size() != 4) {
-        message = "queue Error";
-        queue.send(&message, NoWait);
-    }
-    else {
-        /// Add message to queue.
-        queue.send(&message, NoWait);
-        copyUART.printf("queue added");
-    }
+    queue.send(buffer, WaitForever);
 }
 
-void UARTTX::getQueuart() {
-    queue.receive(&txMessage, NoWait);
-    copyUART.printf(txMessage);
-}
-
-void UARTTX::printf(const char* format, ...) {
-    va_list args; /* Access the variable argument list */
-    va_start(args, format); /* Tells the args variable to point to the format parameter first */
+void UARTTX::readQueuart() {
     char buffer[256]; /* Buffer array to hold the message */
-    vsnprintf(buffer, sizeof(buffer), format, args); /* vsnprint formats the string and stores it in the buffer array */
-
-    addQueuart(buffer);
-    getQueuart();
-//    copyUART.printf(buffer); /* Send the buffer data over UART */
-
-    va_end(args); /* Cleans va_list once the message has been sent */
-}
+    queue.receive(buffer,WaitForever); /* Receives the message and assigns it to the buffer variable */
+    copyUART.printf(buffer);
+};
 
 void UARTTX::setBaudrate(uint32_t baudrate) {
     this->halUART.Init.BaudRate = baudrate;

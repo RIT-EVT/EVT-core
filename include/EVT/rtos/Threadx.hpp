@@ -7,9 +7,9 @@
 
 namespace core::rtos {
 
-static Initializable *initializableList;
-static std::size_t initListLength;
-static BytePoolBase *mainThreadPool;
+
+
+extern "C" void tx_application_define(void* first_unused_memory);
 
 /**
  * Allocates a bytepool to store all of the Initializable objects passed into

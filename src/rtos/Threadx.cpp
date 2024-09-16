@@ -23,13 +23,13 @@ TXError init(Initializable* initList, std::size_t length, BytePoolBase &pool) {
 }
 
 extern void tx_application_define(void* first_unused_memory) {
-    init(initializableList, initListLength, *mainThreadPool);
+//    init(initializableList, initListLength, *mainThreadPool);
 }
 
 TXError startKernel(Initializable* initList, std::size_t length, BytePoolBase *pool) {
-    initializableList = initList;
-    initListLength = length;
-    mainThreadPool = pool;
+//    initializableList = initList;
+//    initListLength = length;
+//    mainThreadPool = pool;
     tx_kernel_enter();
     return Success;
 }

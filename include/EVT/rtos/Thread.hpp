@@ -193,12 +193,12 @@ private:
     /**
      * The function this thread will be running.
      */
-    void (*entryFunction)(T*);
+    void (*entryFunction)(T);
 
     /**
      * The data the thread function requires.
      */
-    T* data;
+    T data;
 
     /**
      * How much stack space the thread requires.
