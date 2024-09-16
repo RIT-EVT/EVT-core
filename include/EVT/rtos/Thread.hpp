@@ -4,6 +4,7 @@
 
 #include <EVT/rtos/Initializable.hpp>
 #include <cstdint>
+#include <functional>
 
 
 namespace core::rtos {
@@ -23,28 +24,59 @@ public:
      * Constructor for a Thread object. Thread will not start until init() method is called.
      *
      * @param[in] name Pointer to a null-terminated character string representing the name of the thread.
-     * @param[in] entryFunction Function the thread will be running.
-     * @param[in] data Data the thread's function requires.
-     * @param[in] stackSize How much stack space this thread is allocated.
+     * @param[in] entryFunction Pointer to the function the thread will be running.
+     * @param[in] data Pointer to the data the thread's function requires.
+     * @param[in] stackSize How much stack space (in bytes) this thread is allocated.
      * @param[in] priority The initial priority of the thread (lower value = higher priority).
-     * @param[in] preemptThreshold The value of the preemption threshold of the thread.
-     * @param[in] timeSlice How much time the thread will run before the scheduler may switch to another thread.
+     * @param[in] preemptThreshold The value of the preemption threshold of the thread, which specifies what
+     * priority of threads can interrupt this thread while running. \n\n
+     * A thread with a priority of 5 and a preemption threshold of 3, for instance, can only be interrupted by threads
+     * with priorities 0,1,2, or 3. Without a preemption threshold, any thread with higher priority than the running
+     * thread would be able to interrupt it.
+     * @param[in] timeSlice How much time (in ticks) the thread will run before the scheduler may switch to another thread.
      * @param[in] autoStart Whether the thread starts as soon as it is initialized or is created suspended.
      */
-    Thread(const char* name, void (*entryFunction)(T*), T* data, std::size_t stackSize, uint32_t priority,
-           uint32_t preemptThreshold, uint32_t timeSlice, bool autoStart);
+    Thread(const char* name, void (*entryFunction)(T), T data, std::size_t stackSize, uint32_t priority,
+           uint32_t preemptThreshold, uint32_t timeSlice, bool autoStart)
+        : name(name), entryFunction(entryFunction), data(data), stackSize(stackSize), priority(priority),
+          preemptThreshold(preemptThreshold), timeSlice(timeSlice), autoStart(autoStart) {
+
+        //We use bind to return a callable object that takes in only one argument, functionally removing the
+        //implicit first argument that the memberNotifyFunction has.
+        auto boundFunc = std::bind(&Thread<T>::memberNotifyFunction, this, std::placeholders::_1, std::placeholders::_2);
+
+        //We wrap this callable object into a wrapFunc so we can use .target on it.
+        std::function<void(TX_QUEUE*)> wrapFunc = boundFunc;
+
+        //We use the .target method to return a c-style function pointer that we can later pass to threadx
+        //in the event that registerNotifyFunction is called.
+        txNotifyFunction = wrapFunc.target<txNotifyFunction_t>();
+    }
 
     /**
      * Creates the threadx thread and possibly starts it, depending on the autostart constructor parameter.
      *
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError init(BytePoolBase &pool) override;
+    TXError init(BytePoolBase &pool) override {
+        //allocate memory for the thread
+        void *stackStart;
+        uint32_t errorCode = pool.allocateMemory(stackSize, &stackStart, NoWait);
+        TXError error = static_cast<TXError>(errorCode);
+        if (error != Success) return error;
+        //create the thread only if the memory allocation succeeded.
+        errorCode = tx_thread_create(&txThread, name, entryFunction, data, stackStart, stackSize, priority,
+                                     preemptThreshold, timeSlice, autoStart ? TX_AUTO_START : TX_DONT_START);
+        return static_cast<TXError>(errorCode);
+    }
 
     /**
      * Thread Deconstructor
      */
-    ~Thread();
+    ~Thread() {
+        tx_thread_terminate(&txThread);
+        tx_thread_delete(&txThread);
+    }
 
     /**
      * Registers a function to be called when the thread initially is entered
@@ -55,7 +87,11 @@ public:
      *  The second argument to this function will be the threadID of this thread.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError registerEntryExitNotification(void(*notifyFunction)(Thread<T>, uint32_t));
+    TXError registerEntryExitNotification(void(*notifyFunction)(Thread<T>, uint32_t)) {
+        storedNotifyFunction = notifyFunction;
+        uint32_t errorCode = tx_thread_entry_exit_notify(&txThread, txNotifyFunction);
+        return static_cast<TXError>(errorCode);
+    }
 
     /**
      * Sets the preemptThreshold of the thread to the new values specified.
@@ -64,7 +100,10 @@ public:
      * @param[out] oldThresholdOut A pointer to a space to store the previous value of the preemptThreshold
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError setPreemptThreshold(uint32_t newThreshold, uint32_t* oldThresholdOut);
+    TXError setPreemptThreshold(uint32_t newThreshold, uint32_t* oldThresholdOut) {
+        uint32_t errorCode = tx_thread_preemption_change(&txThread, newThreshold, (UINT*)oldThresholdOut);
+        return static_cast<TXError>(errorCode);
+    }
 
     /**
      * Sets the priority of the thread to the new value specified.
@@ -73,7 +112,10 @@ public:
      * @param[out] oldPriorityOut A pointer to a space to store the previous value of the priority.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError setPriority(uint32_t newPriority, uint32_t* oldPriorityOut);
+    TXError setPriority(uint32_t newPriority, uint32_t* oldPriorityOut) {
+        uint32_t errorCode = tx_thread_priority_change(&txThread, newPriority, (UINT*)oldPriorityOut);
+        return static_cast<TXError>(errorCode);
+    }
 
     /**
      * Sets the timeSlice of the thread to the new value specified.
@@ -82,42 +124,60 @@ public:
      * @param[out] oldTimeSliceOutput A pointer to a space to store the previous value of the timeSlice.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError setTimeSlice(uint32_t newTimeSlice, uint32_t* oldTimeSliceOut);
+    TXError setTimeSlice(uint32_t newTimeSlice, uint32_t* oldTimeSliceOut) {
+        uint32_t errorCode = tx_thread_time_slice_change(&txThread, newTimeSlice, oldTimeSliceOut);
+        return static_cast<TXError>(errorCode);
+    }
 
     /**
      * Resets the thread so it is prepared to run the entry function again.
      *
      * @return Enum representing the first error found by the function (or Success if there was no error).
      */
-    TXError reset();
+    TXError reset() {
+        uint32_t errorCode = tx_thread_reset(&txThread);
+        return static_cast<TXError>(errorCode);
+    }
 
     /**
      * Resumes the thread if it is suspended.
      *
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError resume();
+    TXError resume() {
+        uint32_t errorCode = tx_thread_resume(&txThread);
+        return static_cast<TXError>(errorCode);
+    }
 
     /**
      * Suspends the thread.
      *
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError suspend();
+    TXError suspend() {
+        uint32_t errorCode = tx_thread_suspend(&txThread);
+        return static_cast<TXError>(errorCode);
+    }
 
     /**
      * Terminates the thread. Once this thread is terminated, it cannot be restarted.
      *
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError terminate();
+    TXError terminate() {
+        uint32_t errorCode = tx_thread_terminate(&txThread);
+        return static_cast<TXError>(errorCode);
+    }
 
     /**
      * Aborts whatever wait this thread is in, returning WaitAborted to the method that this thread was waiting in.
      *
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError abortWait();
+    TXError abortWait() {
+        uint32_t errorCode = tx_thread_wait_abort(&txThread);
+        return static_cast<TXError>(errorCode);
+    }
 
 private:
     /**
