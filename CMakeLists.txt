@@ -28,53 +28,53 @@ add_library(${PROJECT_NAME} STATIC)
 
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE
-        src/io/ADC.cpp
-        src/io/CAN.cpp
-        src/io/CANopen.cpp
-        src/io/GPIO.cpp
-        src/io/I2C.cpp
-        src/io/PWM.cpp
-        src/io/UART.cpp
-        src/io/SPI.cpp
-        src/io/types/CANMessage.cpp
-        src/dev/button.cpp
-        src/dev/Encoder.cpp
-        src/dev/LED.cpp
-        src/dev/LCD.cpp
-        src/dev/RTCTimer.cpp
-        src/dev/storage/M24C32.cpp
-        src/dev/Thermistor.cpp
-        src/utils/log.cpp)
+        src/core/io/ADC.cpp
+        src/core/io/CAN.cpp
+        src/core/io/CANopen.cpp
+        src/core/io/GPIO.cpp
+        src/core/io/I2C.cpp
+        src/core/io/PWM.cpp
+        src/core/io/UART.cpp
+        src/core/io/SPI.cpp
+        src/core/io/types/CANMessage.cpp
+        src/core/dev/button.cpp
+        src/core/dev/Encoder.cpp
+        src/core/dev/LED.cpp
+        src/core/dev/LCD.cpp
+        src/core/dev/RTCTimer.cpp
+        src/core/dev/storage/M24C32.cpp
+        src/core/dev/Thermistor.cpp
+        src/core/utils/log.cpp)
 
 get_directory_property(COMPDEFS COMPILE_DEFINITIONS)
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
     target_sources(${PROJECT_NAME} PRIVATE
-    src/utils/platform/f3xx/timef3xx.cpp
-    src/dev/platform/f3xx/Timerf3xx.cpp
-    src/platform/f3xx/stm32f302x8.cpp
-    src/io/platform/f3xx/ADCf3xx.cpp
-    src/io/platform/f3xx/CANf3xx.cpp
-    src/io/platform/f3xx/GPIOf3xx.cpp
-    src/io/platform/f3xx/I2Cf3xx.cpp
-    src/io/platform/f3xx/PWMf3xx.cpp
-    src/io/platform/f3xx/UARTf3xx.cpp
-    src/io/platform/f3xx/SPIf3xx.cpp
-    src/dev/platform/f3xx/IWDGf3xx.cpp
-    src/dev/platform/f3xx/RTCf3xx.cpp)
+    src/core/utils/platform/f3xx/timef3xx.cpp
+    src/core/dev/platform/f3xx/Timerf3xx.cpp
+    src/core/platform/f3xx/stm32f302x8.cpp
+    src/core/io/platform/f3xx/ADCf3xx.cpp
+    src/core/io/platform/f3xx/CANf3xx.cpp
+    src/core/io/platform/f3xx/GPIOf3xx.cpp
+    src/core/io/platform/f3xx/I2Cf3xx.cpp
+    src/core/io/platform/f3xx/PWMf3xx.cpp
+    src/core/io/platform/f3xx/UARTf3xx.cpp
+    src/core/io/platform/f3xx/SPIf3xx.cpp
+    src/core/dev/platform/f3xx/IWDGf3xx.cpp
+    src/core/dev/platform/f3xx/RTCf3xx.cpp)
 elseif(COMPDEFS MATCHES "(.*)STM32F4xx(.*)")
     target_sources(${PROJECT_NAME} PRIVATE
-    src/utils/platform/f4xx/timef4xx.cpp
-    src/platform/f4xx/stm32f446xx.cpp
-    src/io/platform/f4xx/ADCf4xx.cpp
-    src/io/platform/f4xx/CANf4xx.cpp
-    src/io/platform/f4xx/GPIOf4xx.cpp
-    src/io/platform/f4xx/I2Cf4xx.cpp
-    src/io/platform/f4xx/PWMf4xx.cpp
-    src/io/platform/f4xx/UARTf4xx.cpp
-    src/io/platform/f4xx/SPIf4xx.cpp
-    src/dev/platform/f4xx/IWDGf4xx.cpp
-    src/dev/platform/f4xx/RTCf4xx.cpp
-    src/dev/platform/f4xx/Timerf4xx.cpp)
+    src/core/utils/platform/f4xx/timef4xx.cpp
+    src/core/platform/f4xx/stm32f446xx.cpp
+    src/core/io/platform/f4xx/ADCf4xx.cpp
+    src/core/io/platform/f4xx/CANf4xx.cpp
+    src/core/io/platform/f4xx/GPIOf4xx.cpp
+    src/core/io/platform/f4xx/I2Cf4xx.cpp
+    src/core/io/platform/f4xx/PWMf4xx.cpp
+    src/core/io/platform/f4xx/UARTf4xx.cpp
+    src/core/io/platform/f4xx/SPIf4xx.cpp
+    src/core/dev/platform/f4xx/IWDGf4xx.cpp
+    src/core/dev/platform/f4xx/RTCf4xx.cpp
+    src/core/dev/platform/f4xx/Timerf4xx.cpp)
 else()
     message(FATAL_ERROR "the HAL didnt compile in top level CMake")
 endif()
@@ -114,7 +114,7 @@ if(USE_RTOS)
     set(THREADX_ARCH "cortex_m4")
     set(THREADX_TOOLCHAIN "gnu")
     add_subdirectory(libs/threadx)
-    target_sources(${PROJECT_NAME} PRIVATE src/rtos/f4xx/tx_initialize_low_level.s)
+    target_sources(${PROJECT_NAME} PRIVATE src/core/rtos/f4xx/tx_initialize_low_level.s)
 endif()
 
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")

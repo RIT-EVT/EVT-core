@@ -2,18 +2,18 @@
  * This example shows off a basic PWM signal. You will need to use a logic
  * analyzer to see the generated square wave.
  */
-#include <EVT/io/PWM.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/io/PWM.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
-namespace IO = EVT::core::IO;
-namespace time = EVT::core::time;
+namespace io   = core::io;
+namespace time = core::time;
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
-    IO::PWM& pwm = IO::getPWM<IO::Pin::PA_8>();
+    io::PWM& pwm = io::getPWM<io::Pin::PA_8>();
     // 1000000 microseconds (1 second) period
     pwm.setPeriod(1000000);
     // 50 % duty cycle

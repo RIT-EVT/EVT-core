@@ -1,26 +1,26 @@
-#include <EVT/dev/LED.hpp>
-#include <EVT/dev/button.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/dev/LED.hpp>
+#include <core/dev/button.hpp>
+#include <core/io/UART.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
-namespace DEV = EVT::core::DEV;
-namespace IO = EVT::core::IO;
-namespace time = EVT::core::time;
+namespace dev  = core::dev;
+namespace io   = core::io;
+namespace time = core::time;
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-    IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();
-    IO::GPIO& buttonGPIO = IO::getGPIO<IO::Pin::PC_3>();
+    io::UART& uart         = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
+    io::GPIO& ledGPIO      = io::getGPIO<io::Pin::LED>();
+    io::GPIO& buttonGPIO   = io::getGPIO<io::Pin::PC_3>();
     uint32_t debounceStart = time::millis();
 
-    DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
+    dev::LED led(ledGPIO, dev::LED::ActiveState::HIGH);
 
-    DEV::Button button = DEV::Button(buttonGPIO);
+    dev::Button button = dev::Button(buttonGPIO);
 
     uart.printf("Debounce Start: %d\n", debounceStart);
 

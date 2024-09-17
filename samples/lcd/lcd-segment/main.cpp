@@ -1,45 +1,46 @@
 /**
-* Sample code for displaying a segmented display on an LCD.
-*/
+ * Sample code for displaying a segmented display on an LCD.
+ */
 
 #include <cstdio>
 
-#include <EVT/dev/LCD.hpp>
-#include <EVT/dev/LED.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/dev/LCD.hpp>
+#include <core/dev/LED.hpp>
+#include <core/io/UART.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
-namespace DEV = EVT::core::DEV;
-namespace IO = EVT::core::IO;
-namespace time = EVT::core::time;
+namespace dev  = core::dev;
+namespace io   = core::io;
+namespace time = core::time;
 
 constexpr uint32_t SPI_SPEED = SPI_SPEED_500KHZ;
 
 constexpr uint8_t deviceCount = 1;
 
-IO::GPIO* devices[deviceCount];
+io::GPIO* devices[deviceCount];
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     // Uses HUDL 1.0 Pins
-    IO::GPIO& regSelect = IO::getGPIO<IO::Pin::PA_3>(EVT::core::IO::GPIO::Direction::OUTPUT);
-    IO::GPIO& reset = IO::getGPIO<IO::Pin::PB_3>(EVT::core::IO::GPIO::Direction::OUTPUT);
-    devices[0] = &IO::getGPIO<IO::Pin::PB_12>(EVT::core::IO::GPIO::Direction::OUTPUT);
-    devices[0]->writePin(IO::GPIO::State::HIGH);
+    io::GPIO& regSelect = io::getGPIO<io::Pin::PA_3>(core::io::GPIO::Direction::OUTPUT);
+    io::GPIO& reset     = io::getGPIO<io::Pin::PB_3>(core::io::GPIO::Direction::OUTPUT);
+
+    devices[0] = &io::getGPIO<io::Pin::PB_12>(core::io::GPIO::Direction::OUTPUT);
+    devices[0]->writePin(io::GPIO::State::HIGH);
 
     // Setup SPI
-    IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, IO::Pin::SPI_MOSI>(devices, deviceCount);
-    spi.configureSPI(SPI_SPEED, IO::SPI::SPIMode::SPI_MODE0, SPI_MSB_FIRST);
+    io::SPI& spi = io::getSPI<io::Pin::SPI_SCK, io::Pin::SPI_MOSI>(devices, deviceCount);
+    spi.configureSPI(SPI_SPEED, io::SPI::SPIMode::SPI_MODE0, SPI_MSB_FIRST);
 
     // Sets up LCD
     uart.printf("Creating LCD Object...\n\r");
-    EVT::core::DEV::LCD lcd(regSelect, reset, spi);
+    core::dev::LCD lcd(regSelect, reset, spi);
     uart.printf("Initializing LCD...\n\r");
     lcd.initLCD();
     lcd.clearLCD();
