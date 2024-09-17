@@ -50,6 +50,6 @@ private:
     void initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod);
 };
 
-}// namespace core::dev
+} // namespace core::dev
 
-#endif//_EVT_TIMER4xx_H
+#endif //_EVT_TIMER4xx_H

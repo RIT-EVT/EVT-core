@@ -48,9 +48,9 @@
     #define MCU_SUPPORTED
 
     #include <core/dev/MCUTimer.hpp>
+    #include <core/dev/platform/f4xx/Timerf4xx.hpp>
     #include <core/io/platform/f4xx/ADCf4xx.hpp>
     #include <core/platform/f4xx/stm32f4xx.hpp>
-    #include <core/dev/platform/f4xx/Timerf4xx.hpp>
     //    #include <core/io/platform/f4xx/CANf4xx.hpp>
     #include <core/dev/platform/f4xx/IWDGf4xx.hpp>
     #include <core/dev/platform/f4xx/RTCf4xx.hpp>
@@ -131,7 +131,7 @@ Timer& getTimer(uint32_t clockPeriod) {
     #ifdef STM32F4xx
     static Timerf4xx timer(getTIM(mcuTimer), clockPeriod);
     return timer;
-#endif
+    #endif
 }
 #endif
 

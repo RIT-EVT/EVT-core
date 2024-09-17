@@ -6,11 +6,11 @@ TIM_HandleTypeDef halTimers[10];
 void (*timerInterruptHandlers[10])(void* htim) = {nullptr};
 
 enum timerInterruptIndex {
-    TIM2_IDX = 0u,
-    TIM3_IDX = 1u,
-    TIM4_IDX = 2u,
-    TIM5_IDX = 3u,
-    TIM9_IDX = 4u,
+    TIM2_IDX  = 0u,
+    TIM3_IDX  = 1u,
+    TIM4_IDX  = 2u,
+    TIM5_IDX  = 3u,
+    TIM9_IDX  = 4u,
     TIM10_IDX = 5u,
     TIM11_IDX = 6u,
     TIM12_IDX = 7u,
@@ -55,7 +55,7 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim) {
         __HAL_RCC_TIM14_CLK_ENABLE();
         irqNum = TIM8_TRG_COM_TIM14_IRQn;
     } else {
-        return;// Should never reach, but if an invalid peripheral is passed in then simply return
+        return; // Should never reach, but if an invalid peripheral is passed in then simply return
     }
 
     HAL_NVIC_SetPriority(irqNum, core::platform::TIMER_INTERRUPT_PRIORITY, 0);
@@ -97,7 +97,7 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
         __HAL_RCC_TIM14_CLK_DISABLE();
         irqNum = TIM8_TRG_COM_TIM14_IRQn;
     } else {
-        return;// Should never reach, but if an invalid peripheral is passed in then simply return
+        return; // Should never reach, but if an invalid peripheral is passed in then simply return
     }
 
     HAL_NVIC_DisableIRQ(irqNum);
@@ -195,19 +195,19 @@ Timerf4xx::Timerf4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
 
 void Timerf4xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
     this->clockPeriod = clockPeriod;
-    auto& htim = halTimers[getTimerInterruptIndex(timerPeripheral)];
+    auto& htim        = halTimers[getTimerInterruptIndex(timerPeripheral)];
 
-    htim.Instance = timerPeripheral;
-    uint32_t prescaler = SystemCoreClock / 1000;
-    htim.Init.Prescaler = prescaler - 1;// Sets f_CK_PSC to 1000 Hz
+    htim.Instance       = timerPeripheral;
+    uint32_t prescaler  = SystemCoreClock / 1000;
+    htim.Init.Prescaler = prescaler - 1; // Sets f_CK_PSC to 1000 Hz
     // Allows period increments of 1 ms with max of 2^(32) ms.
-    htim.Init.CounterMode = TIM_COUNTERMODE_UP;
-    htim.Init.Period = clockPeriod - 1;
-    htim.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    htim.Init.CounterMode       = TIM_COUNTERMODE_UP;
+    htim.Init.Period            = clockPeriod - 1;
+    htim.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
     htim.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
     HAL_TIM_Base_Init(&htim);
 
-    TIM_ClockConfigTypeDef clockConfig = {0};
+    TIM_ClockConfigTypeDef clockConfig   = {0};
     TIM_MasterConfigTypeDef masterConfig = {0};
 
     clockConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
@@ -216,7 +216,7 @@ void Timerf4xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
     // Timers 9-14 are NOT master mode compatible, so waste of time to go through config
     if (getTimerInterruptIndex(timerPeripheral) < timerInterruptIndex::TIM9_IDX) {
         masterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-        masterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+        masterConfig.MasterSlaveMode     = TIM_MASTERSLAVEMODE_DISABLE;
         HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
     }
 }
@@ -238,7 +238,7 @@ void Timerf4xx::stopTimer() {
 void Timerf4xx::startTimer() {
     // If timer is not waiting to start, stop it
     if (halTimer->State != HAL_TIM_STATE_READY)
-        stopTimer();// Stop timer in case it was already running
+        stopTimer(); // Stop timer in case it was already running
 
     auto htim = this->halTimer;
     // Clear the interrupt flag so interrupt doesn't trigger immediately
@@ -247,11 +247,11 @@ void Timerf4xx::startTimer() {
 }
 
 void Timerf4xx::reloadTimer() {
-    this->halTimer->Instance->CNT = 0;// Clear the Counter register to reset the timer
+    this->halTimer->Instance->CNT = 0; // Clear the Counter register to reset the timer
 }
 
 void Timerf4xx::setPeriod(uint32_t clockPeriod) {
     stopTimer();
     initTimer(this->halTimer->Instance, clockPeriod);
 }
-}// namespace core::dev
+} // namespace core::dev
