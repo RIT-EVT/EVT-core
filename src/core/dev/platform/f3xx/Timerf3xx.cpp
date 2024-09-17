@@ -143,8 +143,9 @@ void Timerf3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
 void Timerf3xx::startTimer(void (*irqHandler)(void* htim)) {
     TIM_TypeDef* timerPeripheral = this->halTimer->Instance;
     // If timer is not waiting to start, stop it
-    if (halTimer->State != HAL_TIM_STATE_READY)
+    if (halTimer->State != HAL_TIM_STATE_READY) {
         stopTimer();
+    }
 
     timerInterruptHandlers[getTimerInterruptIndex(timerPeripheral)] = irqHandler;
     startTimer();
@@ -156,8 +157,9 @@ void Timerf3xx::stopTimer() {
 
 void Timerf3xx::startTimer() {
     // If timer is not waiting to start, stop it
-    if (halTimer->State != HAL_TIM_STATE_READY)
+    if (halTimer->State != HAL_TIM_STATE_READY) {
         stopTimer(); // Stop timer in case it was already running
+    }
 
     auto htim = this->halTimer;
     // Clear the interrupt flag so interrupt doesn't trigger immediately
