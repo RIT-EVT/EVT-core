@@ -121,10 +121,10 @@ void Timerf3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
 
     htim.Instance       = timerPeripheral;
     uint32_t prescaler  = core::platform::CLK_SPEED / 1000;
-    htim.Init.Prescaler = prescaler; // Sets f_CK_PSC to 1000 Hz
+    htim.Init.Prescaler = prescaler - 1; // Sets f_CK_PSC to 1000 Hz
     // Allows period increments of 1 ms with max of 2^(32) ms.
     htim.Init.CounterMode       = TIM_COUNTERMODE_UP;
-    htim.Init.Period            = clockPeriod;
+    htim.Init.Period            = clockPeriod - 1;
     htim.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
     htim.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
     HAL_TIM_Base_Init(&htim);
@@ -142,7 +142,11 @@ void Timerf3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
 
 void Timerf3xx::startTimer(void (*irqHandler)(void* htim)) {
     TIM_TypeDef* timerPeripheral = this->halTimer->Instance;
-    stopTimer();
+    // If timer is not waiting to start, stop it
+    if (halTimer->State != HAL_TIM_STATE_READY) {
+        stopTimer();
+    }
+
     timerInterruptHandlers[getTimerInterruptIndex(timerPeripheral)] = irqHandler;
     startTimer();
 }
@@ -152,7 +156,10 @@ void Timerf3xx::stopTimer() {
 }
 
 void Timerf3xx::startTimer() {
-    stopTimer(); // Stop timer in case it was already running
+    // If timer is not waiting to start, stop it
+    if (halTimer->State != HAL_TIM_STATE_READY) {
+        stopTimer(); // Stop timer in case it was already running
+    }
 
     auto htim = this->halTimer;
     // Clear the interrupt flag so interrupt doesn't trigger immediately
@@ -161,7 +168,7 @@ void Timerf3xx::startTimer() {
 }
 
 void Timerf3xx::reloadTimer() {
-    this->halTimer->Instance->CNT &= ~(0xFFFFFFFF); // Clear the Counter register to reset the timer
+    this->halTimer->Instance->CNT = 0; // Clear the Counter register to reset the timer
 }
 
 void Timerf3xx::setPeriod(uint32_t clockPeriod) {
