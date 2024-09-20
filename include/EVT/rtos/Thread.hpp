@@ -6,8 +6,8 @@
 #include <cstdint>
 #include <functional>
 
-
 namespace core::rtos {
+
 /**
  * Class that wraps a ThreadX Thread. Each thread represents a relatively independent task that will operate
  * "concurrently" with other threads. Each thread has its own stack, which is allocated in a BytePool.\n\n
@@ -36,21 +36,11 @@ public:
      * @param[in] timeSlice How much time (in ticks) the thread will run before the scheduler may switch to another thread.
      * @param[in] autoStart Whether the thread starts as soon as it is initialized or is created suspended.
      */
-    Thread(const char* name, void (*entryFunction)(T), T data, std::size_t stackSize, uint32_t priority,
+    Thread(char* name, void (*entryFunction)(T), T data, std::size_t stackSize, uint32_t priority,
            uint32_t preemptThreshold, uint32_t timeSlice, bool autoStart)
         : name(name), entryFunction(entryFunction), data(data), stackSize(stackSize), priority(priority),
-          preemptThreshold(preemptThreshold), timeSlice(timeSlice), autoStart(autoStart) {
+          preemptThreshold(preemptThreshold), timeSlice(timeSlice), autoStart(autoStart), txNotifyFunction(txThreadNotifyFunctionTemplate<this>) {
 
-        //We use bind to return a callable object that takes in only one argument, functionally removing the
-        //implicit first argument that the memberNotifyFunction has.
-        auto boundFunc = std::bind(&Thread<T>::memberNotifyFunction, this, std::placeholders::_1, std::placeholders::_2);
-
-        //We wrap this callable object into a wrapFunc so we can use .target on it.
-        std::function<void(TX_QUEUE*)> wrapFunc = boundFunc;
-
-        //We use the .target method to return a c-style function pointer that we can later pass to threadx
-        //in the event that registerNotifyFunction is called.
-        txNotifyFunction = wrapFunc.target<txNotifyFunction_t>();
     }
 
     /**
@@ -65,8 +55,9 @@ public:
         TXError error = static_cast<TXError>(errorCode);
         if (error != Success) return error;
         //create the thread only if the memory allocation succeeded.
-        errorCode = tx_thread_create(&txThread, name, entryFunction, data, stackStart, stackSize, priority,
-                                     preemptThreshold, timeSlice, autoStart ? TX_AUTO_START : TX_DONT_START);
+        errorCode = tx_thread_create(&txThread, name, (void (*)(ULONG))entryFunction, (ULONG)data, stackStart,
+                                     stackSize, priority,preemptThreshold, timeSlice,
+                                     autoStart ? TX_AUTO_START : TX_DONT_START);
         return static_cast<TXError>(errorCode);
     }
 
@@ -88,7 +79,7 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError registerEntryExitNotification(void(*notifyFunction)(Thread<T>, uint32_t)) {
-        storedNotifyFunction = notifyFunction;
+        storedThreadNotifyFunction = reinterpret_cast<void(*)(Initializable*, uint32_t)>(notifyFunction);
         uint32_t errorCode = tx_thread_entry_exit_notify(&txThread, txNotifyFunction);
         return static_cast<TXError>(errorCode);
     }
@@ -188,7 +179,7 @@ private:
     /**
      * Pointer to the name of this thread.
      */
-    const char* name;
+    char* name;
 
     /**
      * The function this thread will be running.
@@ -226,30 +217,9 @@ private:
     bool autoStart;
 
     /**
-     * Stores a notify function after the registerNotifyFunction method is called.
-     * This is necessary so that programmers are given a thread object when their notify function is called
-     * instead of TX's thread struct.
+     * Place to hold the template txNotifyFunctionTemplate
      */
-    void(*storedNotifyFunction)(Thread<T>, uint32_t);
-
-    /**
-     * Method that will actually be registered with the tx kernel, just calls the stored notify function.
-     */
-    void memberNotifyFunction(TX_THREAD *thread, uint32_t threadID) {
-        storedNotifyFunction(this, threadID);
-    }
-
-    /**
-     * The type of notify function that threadx expects.
-     */
-    typedef void txNotifyFunction_t( TX_THREAD* , UINT );
-
-    /**
-     * A pointer to the function that we will register with the threadx kernel when the
-     * registerNotificationFunction method is called. This function calls memberNotifyFunction, which itself calls
-     * storedNotifyFunction, which will be set to the passed-in function for the registerNotifyFunction method.
-     */
-    txNotifyFunction_t *txNotifyFunction;
+    void(*txNotifyFunction)(TX_THREAD*, UINT);
 };
 
 } // namespace core::rtos

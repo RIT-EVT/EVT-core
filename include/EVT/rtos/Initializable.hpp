@@ -22,7 +22,39 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     virtual TXError init(BytePoolBase &pool) = 0;
+
+    /**
+     * The notify function that has been registered with this initializable object.
+     * Must be public for template function reasons, but should be internally used only.
+     * DO NOT CALL THIS
+     */
+    void(*storedNotifyFunction)(Initializable*);
+
+    void(*storedThreadNotifyFunction)(Initializable*, uint32_t id);
 };
+
+/**
+ * Template function that serves as a static wrapper for the storedNotifyFunction.
+ * This is only used within the Initializable class(es) and should not be used externally.
+ * @tparam initializable a pointer to the object this instance of the method was created for.
+ * @tparam txType the type of tx struct this instance of the method takes in.
+ */
+template<Initializable* initializable, typename txType>
+void txNotifyFunctionTemplate( txType * queueStruct ) {
+    initializable->storedNotifyFunction(initializable);
+}
+
+/**
+ * A template function that literally just functions as a static wrapper for the storedNotifyFunction of a thread.
+ * This is only used internally to the Thread class and should never be called externally.
+ * @tparam T The argument the thread takes
+ * @tparam thread The specific thread this function is for
+ */
+template<Initializable * initializable>
+void txThreadNotifyFunctionTemplate( TX_THREAD* threadStruct, UINT id) {
+    initializable->storedThreadNotifyFunction(initializable, id);
+}
+
 
 } //namespace core::rtos
 

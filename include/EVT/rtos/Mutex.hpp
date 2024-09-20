@@ -54,6 +54,8 @@ public:
      */
     TXError prioritize();
 
+    //Getters
+
     /**
       * Retrieves the name of this Mutex.
       *

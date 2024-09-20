@@ -5,15 +5,9 @@
 namespace core::rtos {
 
 Queue::Queue(char* name, uint32_t messageSize, uint32_t numMessages)
-    : name(name), messageSize(messageSize), queueSize(messageSize*numMessages), storedNotifyFunction() {
-    //We use bind to return a callable object that takes in only one argument, functionally removing the
-    //implicit first argument that the memberNotifyFunction has.
-    auto boundFunc = std::bind(&Queue::memberNotifyFunction, this, std::placeholders::_1);
-    //We wrap this callable object into a wrapFunc so we can use .target on it.
-    std::function<void(TX_QUEUE*)> wrapFunc = boundFunc;
-    //We use the .target method to return a c-style function pointer that we can later pass to threadx
-    //in the event that registerNotifyFunction is called.
-    txNotifyFunction = wrapFunc.target<txNotifyFunction_t>();
+    : name(name), messageSize(messageSize), queueSize(messageSize*numMessages),
+      txNotifyFunction(txNotifyFunctionTemplate<this, TX_QUEUE>) {
+
 }
 
 TXError Queue::init(BytePoolBase& pool) {
@@ -43,7 +37,7 @@ TXError Queue::receive(void* destination, uint32_t waitOption) {
 }
 
 TXError Queue::registerNotifyFunction(void(*notifyFunction)(Queue*)) {
-    storedNotifyFunction = notifyFunction;
+    storedNotifyFunction = reinterpret_cast<void (*)(Initializable*)>(notifyFunction);
     return static_cast<TXError>(tx_queue_send_notify(&txQueue, txNotifyFunction));
 }
 
@@ -54,5 +48,40 @@ TXError Queue::send(void* messagePointer, uint32_t waitOption) {
 TXError Queue::frontSend(void* messagePointer, uint32_t waitOption) {
     return static_cast<TXError>(tx_queue_front_send(&txQueue, messagePointer, waitOption));
 }
+
+TXError Queue::getName(char** name) {
+    *name = this->name;
+    return Success;
+}
+
+TXError Queue::getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages) {
+    uint32_t status = tx_queue_info_get(&txQueue, nullptr, numEnqueuedMessages, nullptr, nullptr, nullptr, nullptr);
+    return static_cast<TXError>(status);
+}
+
+TXError Queue::getAvailableStorage(uint32_t* numAvailableMessages) {
+    uint32_t status = tx_queue_info_get(&txQueue, nullptr, nullptr, numAvailableMessages, nullptr, nullptr, nullptr);
+    return static_cast<TXError>(status);
+}
+
+TXError Queue::getNameOfFirstSuspendedThread(char** threadName) {
+    TX_THREAD *thread;
+    uint32_t status = tx_queue_info_get(&txQueue, nullptr, nullptr, nullptr, &thread, nullptr, nullptr);
+    //exit early if the call failed
+    if (status != Success)
+        return static_cast<TXError>(status);
+
+    //read the name off the struct
+    status = tx_thread_info_get(thread, threadName, nullptr, nullptr, nullptr,
+                                nullptr, nullptr, nullptr, nullptr);
+
+    return static_cast<TXError>(status);
+}
+
+TXError Queue::getNumSuspendedThreads(uint32_t* numSuspendedThreads) {
+    uint32_t status = tx_queue_info_get(&txQueue, nullptr, nullptr, nullptr, nullptr, numSuspendedThreads, nullptr);
+    return static_cast<TXError>(status);
+}
+
 
 } //namespace core::rtos
