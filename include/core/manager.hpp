@@ -38,27 +38,29 @@
 #endif
 
 #ifdef STM32F4xx
-    #define GPIO_SUPPORTED
-    #define UART_SUPPORTED
-    #define PWM_SUPPORTED
-    #define SPI_SUPPORTED
     #define ADC_SUPPORTED
-    #define RTC_SUPPORTED
+    #define CAN_SUPPORTED
+    #define GPIO_SUPPORTED
     #define I2C_SUPPORTED
     #define MCU_SUPPORTED
+    #define PWM_SUPPORTED
+    #define RTC_SUPPORTED
+    #define SPI_SUPPORTED
+    #define UART_SUPPORTED
 
     #include <core/dev/MCUTimer.hpp>
-    #include <core/dev/platform/f4xx/Timerf4xx.hpp>
-    #include <core/io/platform/f4xx/ADCf4xx.hpp>
-    #include <core/platform/f4xx/stm32f4xx.hpp>
-    //    #include <core/io/platform/f4xx/CANf4xx.hpp>
     #include <core/dev/platform/f4xx/IWDGf4xx.hpp>
     #include <core/dev/platform/f4xx/RTCf4xx.hpp>
+    #include <core/dev/platform/f4xx/Timerf4xx.hpp>
+    #include <core/io/platform/f4xx/ADCf4xx.hpp>
+    #include <core/io/platform/f4xx/CANf4xx.hpp>
     #include <core/io/platform/f4xx/GPIOf4xx.hpp>
     #include <core/io/platform/f4xx/I2Cf4xx.hpp>
     #include <core/io/platform/f4xx/PWMf4xx.hpp>
     #include <core/io/platform/f4xx/SPIf4xx.hpp>
     #include <core/io/platform/f4xx/UARTf4xx.hpp>
+    #include <core/platform/f4xx/stm32f4xx.hpp>
+
 #endif
 
 namespace core::platform {
