@@ -240,18 +240,19 @@ void SPIf3xx::configureSPI(uint32_t baudRate, SPIMode mode, bool firstBitMSB) {
         break;
     }
 
-    // configure the clock prescaler to the closest baudrate to the requested
+    // configure the clock prescaler to the closest baudrate to the requested.
     uint32_t prescaler = (HAL_RCC_GetHCLKFreq() / baudRate);
-    // Convert the prescaler number to the bit value incrementally (log2)
+    // Convert the prescaler number to the bit value incrementally (log2), produces the value + 1.
     halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
     while (prescaler >>= 1) {
         halSPI.Init.BaudRatePrescaler++;
     }
-    // Max value is a prescaler of 256 or 0x07+1.
+
+    // The max value of the prescaler is 256 which is represented by 0x07+1.
     if (halSPI.Init.BaudRatePrescaler > 0x8) {
         halSPI.Init.BaudRatePrescaler = 0x8;
     }
-    // Shift left 3 to correct bit position.
+    // Shift left 3 to correct bit position in the register and subtract one.
     halSPI.Init.BaudRatePrescaler = (halSPI.Init.BaudRatePrescaler - 1) << 3;
 
     // configure the bit order of the data; MSB or LSB
