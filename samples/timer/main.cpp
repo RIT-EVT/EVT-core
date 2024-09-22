@@ -44,7 +44,8 @@ int main() {
     reloadGPIO             = &io::getGPIO<io::Pin::PC_0>(io::GPIO::Direction::OUTPUT);
 
     // Setup the Timer
-    dev::Timer& timer2  = dev::getTimer<dev::MCUTimer::Timer2>(500);
+    dev::Timer& timer2 = dev::getTimer<dev::MCUTimer::Timer2>(500);
+    // F4xx does not support Timers 15 & 16, change them to Timer11 & Timer12
     dev::Timer& timer15 = dev::getTimer<dev::MCUTimer::Timer15>(100);
     dev::Timer& timer16 = dev::getTimer<dev::MCUTimer::Timer16>(200);
 
