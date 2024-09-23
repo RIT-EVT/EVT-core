@@ -120,7 +120,7 @@ void Timerf3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
     auto& htim        = halTimers[getTimerInterruptIndex(timerPeripheral)];
 
     htim.Instance       = timerPeripheral;
-    uint32_t prescaler  = core::platform::CLK_SPEED / 1000;
+    uint32_t prescaler  = HAL_RCC_GetHCLKFreq() / 1000;
     htim.Init.Prescaler = prescaler - 1; // Sets f_CK_PSC to 1000 Hz
     // Allows period increments of 1 ms with max of 2^(32) ms.
     htim.Init.CounterMode       = TIM_COUNTERMODE_UP;

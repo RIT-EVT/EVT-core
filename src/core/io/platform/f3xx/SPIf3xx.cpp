@@ -240,24 +240,20 @@ void SPIf3xx::configureSPI(uint32_t baudRate, SPIMode mode, bool firstBitMSB) {
         break;
     }
 
-    // configure the clock prescaler to the closest baudrate to the requested
-    if (baudRate >= SPI_MAX_BAUD) {
-        halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-    } else if (baudRate >= SPI_MAX_BAUD / 2) {
-        halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
-    } else if (baudRate >= SPI_MAX_BAUD / 4) {
-        halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
-    } else if (baudRate >= SPI_MAX_BAUD / 8) {
-        halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
-    } else if (baudRate >= SPI_MAX_BAUD / 16) {
-        halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
-    } else if (baudRate >= SPI_MAX_BAUD / 32) {
-        halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
-    } else if (baudRate >= SPI_MAX_BAUD / 64) {
-        halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
-    } else {
-        halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
+    // configure the clock prescaler to the closest baudrate to the requested.
+    uint32_t prescaler = (HAL_RCC_GetHCLKFreq() / baudRate);
+    // Convert the prescaler number to the bit value incrementally (log2), produces the value + 1.
+    halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+    while (prescaler >>= 1) {
+        halSPI.Init.BaudRatePrescaler++;
     }
+
+    // The max value of the prescaler is 256 which is represented by 0x07+1.
+    if (halSPI.Init.BaudRatePrescaler > 0x8) {
+        halSPI.Init.BaudRatePrescaler = 0x8;
+    }
+    // Shift left 3 to correct bit position in the register and subtract one.
+    halSPI.Init.BaudRatePrescaler = (halSPI.Init.BaudRatePrescaler - 1) << 3;
 
     // configure the bit order of the data; MSB or LSB
     if (firstBitMSB) {
@@ -319,12 +315,12 @@ SPI::SPIStatus SPIf3xx::halToSPIStatus(HAL_StatusTypeDef halStatus) {
     switch (halStatus) {
     case HAL_OK:
         return SPIStatus::OK;
-    case HAL_ERROR:
-        return SPIStatus::ERROR;
     case HAL_BUSY:
         return SPIStatus::BUSY;
     case HAL_TIMEOUT:
         return SPIStatus::TIMEOUT;
+    default: // HAL_ERROR:
+        return SPIStatus::ERROR;
     }
 }
 

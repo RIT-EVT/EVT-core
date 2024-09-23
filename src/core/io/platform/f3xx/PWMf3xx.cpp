@@ -497,7 +497,7 @@ void PWMf3xx::setPeriod(uint32_t period) {
 
     uint32_t autoReload;
     uint32_t prescaler      = -1;
-    uint64_t clockFrequency = HAL_RCC_GetSysClockFreq();
+    uint64_t clockFrequency = HAL_RCC_GetHCLKFreq();
 
     // Required loop in order to determine a prescaler which will bring the
     // autoreload value into a valid range.
