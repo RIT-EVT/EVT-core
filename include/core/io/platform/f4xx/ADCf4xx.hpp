@@ -37,7 +37,7 @@ private:
     // Max value for a 12 bit ADC reading (2^12 - 1)
     static constexpr uint32_t MAX_RAW = 4095;
     /// This is static since the STM32F3xx only had a single ADC which
-    /// supports multiple channels, so I made this one only use a single ADC.
+    /// supports multiple channels, so I made this one only use a single ADC. todo: look into this being static
     /// The F446re has 3 12 bit ADC's. Currently not able to use the other 2.
     /// The ADC will be initialized once then each channel will be added on.
     static ADC_HandleTypeDef halADC;
@@ -47,6 +47,14 @@ private:
     /// channel
     static uint16_t buffer[MAX_CHANNELS];
     static DMA_HandleTypeDef halDMA;
+
+    /**
+     * Checks if the channel that is being initialized supports the ADC peripheral that it is being initialized on.
+     * @param periph the ADC peripheral being used
+     * @param channel the channel trying to be initialized
+     * @return
+     */
+    static bool checkSupport(ADCPeriph periph, uint32_t channel);
 
     /**
      * Initialize the HAL ADC handler. This should only have to be run once
