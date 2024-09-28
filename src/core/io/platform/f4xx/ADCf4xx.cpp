@@ -44,6 +44,8 @@ ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
     // "Rank" represents the order in which the channels are added
     // Also represents the total number of added channels
     static uint8_t rank[] = {1, 1, 1};
+
+    // Value of currently used ADC (For array access)
     uint8_t adcNum = getADCNum();
 
     // Maximum number of ADC channels have already been added
@@ -51,7 +53,6 @@ ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
         return;
     }
 
-    // Value of currently used ADC (For array access)
 
     // Initialization of each HAL ADC should only take place once since
     // each individual ADC has multiple channels supported
