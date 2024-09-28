@@ -8,6 +8,10 @@
 
 namespace core::io {
 
+enum class ADCPeriph {
+    ONE
+};
+
 class ADCf3xx : public ADC {
 public:
     /**

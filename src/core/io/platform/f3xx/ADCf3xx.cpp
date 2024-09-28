@@ -29,7 +29,7 @@ Pin ADCf3xx::channels[MAX_CHANNELS];
 uint16_t ADCf3xx::buffer[MAX_CHANNELS];
 DMA_HandleTypeDef ADCf3xx::halDMA = {0};
 
-ADCf3xx::ADCf3xx(Pin pin) : ADC(pin) {
+ADCf3xx::ADCf3xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
     // Flag representing if the ADC has been configured yet
     static bool halADCisInit = false;
     // "Rank" represents the order in which the channels are added
