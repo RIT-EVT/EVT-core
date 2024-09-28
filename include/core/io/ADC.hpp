@@ -47,6 +47,7 @@ public:
 protected:
     /// The pin the ADC is attached to
     Pin pin;
+    /// The ADC being used
     ADCPeriph adcPeriph;
 };
 
