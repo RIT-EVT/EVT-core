@@ -21,8 +21,8 @@ int main() {
 
     time::wait(500);
 
-    io::ADC& adc0 = io::getADC<io::Pin::PA_0>();
-    io::ADC& adc1 = io::getADC<io::Pin::PA_1>();
+    io::ADC& adc0 = io::getADC<io::Pin::PA_0,  io::ADCPeriph::ONE>();
+    io::ADC& adc1 = io::getADC<io::Pin::PA_2, io::ADCPeriph::TWO>();
 
     while (1) {
         uart.printf("--------------------\r\n");

@@ -3,7 +3,7 @@
 namespace core::io {
 
 ADC::ADC(Pin pin, ADCPeriph adcPeriph) {
-    this->pin = pin;
+    this->pin       = pin;
     this->adcPeriph = adcPeriph;
 }
 

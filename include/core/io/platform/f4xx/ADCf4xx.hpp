@@ -9,9 +9,9 @@
 namespace core::io {
 
 enum class ADCPeriph {
-ONE,
-TWO,
-THREE
+    ONE,
+    TWO,
+    THREE
 };
 
 class ADCf4xx : public ADC {
