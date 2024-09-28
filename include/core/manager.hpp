@@ -152,7 +152,7 @@ ADC& getADC() {
     return adc;
     #endif
     #ifdef STM32F3xx
-    static ADCf3xx adc(pin);
+    static ADCf3xx adc(pin, adcPeriph);
     return adc;
     #endif
 }
