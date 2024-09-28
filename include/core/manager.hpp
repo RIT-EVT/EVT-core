@@ -145,10 +145,10 @@ namespace core::io {
  * @param[in] pin The pin to use with the ADC
  */
 #ifdef ADC_SUPPORTED
-template<Pin pin>
+template<Pin pin, ADCPeriph adcPeriph = ADCPeriph::ONE>
 ADC& getADC() {
     #ifdef STM32F4xx
-    static ADCf4xx adc(pin);
+    static ADCf4xx adc(pin, adcPeriph);
     return adc;
     #endif
     #ifdef STM32F3xx

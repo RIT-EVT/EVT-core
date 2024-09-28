@@ -21,7 +21,7 @@ public:
      *
      * @param[in] pin The pin to setup for ADC
      */
-    ADCf4xx(Pin pin, ADCPeriph adcPeriph);
+    ADCf4xx(Pin pin, ADCPeriph adcPeriph = ADCPeriph::ONE);
 
     float read();
 

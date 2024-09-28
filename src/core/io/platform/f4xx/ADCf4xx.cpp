@@ -37,7 +37,7 @@ Pin ADCf4xx::channels[NUM_ADCS][MAX_CHANNELS];
 uint16_t ADCf4xx::buffer[NUM_ADCS][MAX_CHANNELS];
 DMA_HandleTypeDef ADCf4xx::halDMA[] = {{0},{0},{0}};
 
-ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph = ADCPeriph::ONE) : ADC(pin, adcPeriph) {
+ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
     // Flag representing if the ADC has been configured yet
     static bool halADCisInit[] = {false, false, false};
 
