@@ -81,8 +81,7 @@ float ADCf4xx::read() {
 }
 
 uint32_t ADCf4xx::readRaw() {
-    // Search through list of channels to determine which DMA buffer index to
-    // use
+    // Search through list of channels to determine which DMA buffer index to use
     uint8_t channelNum = 0;
     uint8_t adcNum = getADCNum();
     while (channels[adcNum][channelNum] != pin)
@@ -149,12 +148,15 @@ void ADCf4xx::initDMA() {
     switch (adcNum) {
         case ADC1_SLOT:
             dma->Instance         = DMA2_Stream0;
+            dma->Init.Channel     = DMA_CHANNEL_0;
             break;
         case ADC2_SLOT:
-            dma->Instance         = DMA2_Stream1;
+            dma->Instance         = DMA2_Stream2;
+            dma->Init.Channel     = DMA_CHANNEL_1;
             break;
         case ADC3_SLOT:
-            dma->Instance         = DMA2_Stream2;
+            dma->Instance         = DMA2_Stream1;
+            dma->Init.Channel     = DMA_CHANNEL_2;
             break;
         default:
             return; // Should never get here
@@ -263,11 +265,11 @@ inline bool ADCf4xx::checkSupport(ADCPeriph periph, uint32_t channel) {
     // Checks if the channel contains the bit signifying the proper ADC peripheral support
     switch (periph) {
         case ADCPeriph::ONE:
-            return channel & (1 < ADC1SHIFT);
+            return channel & (1 << ADC1SHIFT);
         case ADCPeriph::TWO:
-            return channel & (1 < ADC2SHIFT);
+            return channel & (1 << ADC2SHIFT);
         case ADCPeriph::THREE:
-            return channel & (1 < ADC3SHIFT);
+            return channel & (1 << ADC3SHIFT);
     }
 }
 
