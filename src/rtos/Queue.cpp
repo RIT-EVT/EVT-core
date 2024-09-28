@@ -4,9 +4,10 @@
 
 namespace core::rtos {
 
+//TODO: uncomment txNotifyFunction when it is fixed
 Queue::Queue(char* name, uint32_t messageSize, uint32_t numMessages)
-    : name(name), messageSize(messageSize), queueSize(messageSize*numMessages),
-      txNotifyFunction(txNotifyFunctionTemplate<this, TX_QUEUE>) {
+    : name(name), messageSize(messageSize), queueSize(messageSize*numMessages)/*,
+      txNotifyFunction(txNotifyFunctionTemplate<this, TX_QUEUE>)*/ {
 
 }
 

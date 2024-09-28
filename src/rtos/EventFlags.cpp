@@ -4,8 +4,9 @@
 
 namespace core::rtos {
 
-EventFlags::EventFlags(char* name) : name(name), txEventFlagsGroup(),
-                                     txNotifyFunction(txNotifyFunctionTemplate<this, TX_EVENT_FLAGS_GROUP>) {
+//TODO: uncomment txNotifyFunction when it is fixed
+EventFlags::EventFlags(char* name) : name(name), txEventFlagsGroup()/*,
+                                     txNotifyFunction(txNotifyFunctionTemplate<this, TX_EVENT_FLAGS_GROUP>)*/ {
 
 }
 

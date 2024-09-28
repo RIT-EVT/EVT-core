@@ -39,8 +39,9 @@ public:
     Thread(char* name, void (*entryFunction)(T), T data, std::size_t stackSize, uint32_t priority,
            uint32_t preemptThreshold, uint32_t timeSlice, bool autoStart)
         : name(name), entryFunction(entryFunction), data(data), stackSize(stackSize), priority(priority),
-          preemptThreshold(preemptThreshold), timeSlice(timeSlice), autoStart(autoStart), txNotifyFunction(txThreadNotifyFunctionTemplate<this>) {
-
+          preemptThreshold(preemptThreshold), timeSlice(timeSlice),
+          autoStart(autoStart)/*, txNotifyFunction(txThreadNotifyFunctionTemplate<this>)*/ {
+        //TODO: uncomment txNotifyFunction when it is fixed
     }
 
     /**

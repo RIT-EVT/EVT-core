@@ -21,7 +21,7 @@ public:
      *
      * @param[in] name A pointer to the name of the BytePool.
      */
-    BytePool(char* name) : txBytePool(), name(name), buffer() {}
+    BytePool(char* name) : name(name), buffer(), txBytePool() {}
 
     /**
      * BytePool deconstructor.

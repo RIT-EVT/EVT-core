@@ -33,6 +33,8 @@ public:
     void(*storedThreadNotifyFunction)(Initializable*, uint32_t id);
 };
 
+//Template functions for notify functions
+
 /**
  * Template function that serves as a static wrapper for the storedNotifyFunction.
  * This is only used within the Initializable class(es) and should not be used externally.
