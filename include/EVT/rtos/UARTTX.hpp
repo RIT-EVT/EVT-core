@@ -4,6 +4,8 @@
 #include <EVT/rtos/Initializable.hpp>
 #include <EVT/rtos/Threadx.hpp>
 #include <EVT/rtos/Queue.hpp>
+#include <EVT/rtos/Semaphore.hpp>
+#include <EVT/rtos/Thread.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
 #include <HALf4/stm32f4xx.h>
@@ -20,43 +22,47 @@ public:
      *
      * @param[in] uart A UART instance.
      */
-    UARTTX(IO::UART&);
+    explicit UARTTX(IO::UART& uart, std::size_t threadStackSize = 384, uint32_t threadPriorityLevel = 10u,
+           uint32_t threadPreemptThreshold = 0, uint32_t threadTimeSlice = MS_TO_TICKS(50));
 
     TXError init(BytePoolBase &pool) override;
 
-    void printf(const char* format, ...);
+    void printf(const char* format, ...) override;
 
     void addQueuart(char* buffer, std::size_t size);
 
     void readQueuart();
 
-    void setBaudrate(uint32_t baudrate);
+    void setBaudrate(uint32_t baudrate) override;
 
     void setFormat(WordLength wordLength = WordLength::EIGHT,
                            Parity parity = Parity::NONE,
-                           NumStopBits numStopBits = NumStopBits::ONE);
+                           NumStopBits numStopBits = NumStopBits::ONE) override;
 
-    void sendBreak();
+    void sendBreak() override;
 
-    bool isReadable();
+    bool isReadable() override;
 
-    bool isWritable();
+    bool isWritable() override;
 
-    void putc(char c);
+    void putc(char c) override;
 
-    void puts(const char* s);
+    void puts(const char* s) override;
 
-    char getc();
+    char getc() override;
 
-    void write(uint8_t byte);
+    void write(uint8_t byte) override;
 
-    uint8_t read();
+    uint8_t read() override;
 
-    void writeBytes(uint8_t* bytes, size_t size);
+    void writeBytes(uint8_t* bytes, size_t size) override;
 
-    void readBytes(uint8_t* bytes, size_t size);
+    void readBytes(uint8_t* bytes, size_t size) override;
 
 private:
+
+    void (*threadEntryFunction)(UARTTX*);
+
     /// UART object
     IO::UART& copyUART;
 
@@ -64,6 +70,8 @@ private:
     UART_HandleTypeDef halUART;
 
     Queue queue;
+
+    Thread<UARTTX*> thread;
 
     static UCHAR tx_byte_pool_buffer[65536];
 

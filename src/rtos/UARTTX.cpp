@@ -1,18 +1,43 @@
 #include <EVT/rtos/UARTTX.hpp>
 #include <cstdarg>
 #include <cstdio>
+#include <cstdint>
 
 namespace IO = EVT::core::IO;
 namespace core::rtos::wrapper {
 
-UARTTX::UARTTX(IO::UART& uart)
-    : UART(uart), copyUART(uart), queue("UART queue", 4, 8) {
-    /// queue( name of queue, size of each message, number of messages being sent )
+/**
+ * static definition for all the uarttx thread entry functions
+ * @param[in] uarttx the specific uartttx object this
+ */
+static void uartThreadEntryFunction(UARTTX* uarttx) {
+    /*
+    this->readQueuart();
+    this->printf("\n\rUARTTX: Thread_uart created\n\r");
+    this->readQueuart();
+    */
+
+    rtos::sleep(S_TO_TICKS(1));
+
+    while (1) {
+        uarttx->readQueuart();
+    }
+}
+
+UARTTX::UARTTX(IO::UART& uart, std::size_t threadStackSize, uint32_t threadPriorityLevel,
+               uint32_t threadPreemptThreshold, uint32_t threadTimeSlice)
+    : UART(uart), copyUART(uart), queue("UART Queue", 4, 8),
+      thread("UART Thread", uartThreadEntryFunction, this, threadStackSize,
+             threadPriorityLevel, threadPreemptThreshold, threadTimeSlice, true) {
 }
 
 //TODO: Get Rueuart to fix this.
 TXError UARTTX::init(BytePoolBase &pool) {
-    return queue.init(pool);
+    uint32_t status = queue.init(pool);
+    if (status != TX_SUCCESS)
+        return static_cast<TXError>(status);
+    status = thread.init(pool);
+    return static_cast<TXError>(status);
 }
 
 void UARTTX::printf(const char* format, ...) {

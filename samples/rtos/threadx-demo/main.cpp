@@ -49,74 +49,12 @@ typedef struct thread_0_args {
 
 ///Function Prototypes
 ///TODO: UART thread test
-void thread_uart_entry(ULONG thread_input);
+void thread_uart_entry(ULONG arg);
 void thread_0_entry(thread_0_args_t* args);
 void thread_1_entry(ULONG thread_input);
 void thread_2_entry(ULONG thread_input);
 void thread_3_entry(ULONG thread_input);
 
-//Merged tx_application_define and App_ThreadX_Init functions
-//VOID tx_application_define(VOID* first_unused_memory) {
-//    VOID* memory_ptr;
-//    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-//
-//    if (tx_byte_pool_create(&tx_app_byte_pool, "Tx App memory pool", tx_byte_pool_buffer, TX_APP_MEM_POOL_SIZE) != TX_SUCCESS) {
-//        uart.printf("\n\rByte pool could not be created\n\r");
-//    } else {
-//
-//        memory_ptr = (VOID*) &tx_app_byte_pool;
-//
-//        TX_BYTE_POOL* byte_pool = (TX_BYTE_POOL*) memory_ptr;
-//
-//        /* USER CODE BEGIN App_ThreadX_Init */
-//        char* pointer = static_cast<char*>(TX_NULL);
-//
-//        /* Allocate the stack for thread 0.  */
-//        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
-//
-//        /* Create the main thread 0.  */
-//        tx_thread_create(&thread_0, "thread 0", thread_0_entry, 0, pointer,
-//                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
-//
-//        /* Allocate the stack for thread 1.  */
-//        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
-//
-////        /* Create the main thread 1.  */
-////        tx_thread_create(&thread_1, "thread 1", thread_1_entry, 0, pointer,
-////                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
-////
-////        /* Allocate the stack for thread 2.  */
-////        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
-////
-////        /* Create the main thread 2.  */
-////        tx_thread_create(&thread_2, "thread 2", thread_2_entry, 0, pointer,
-////                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
-////
-////        /* Allocate the stack for thread 3.  */
-////        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
-////
-////        /* Create the main thread 3.  */
-////        tx_thread_create(&thread_3, "thread 3", thread_3_entry, 0, pointer,
-////                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
-//
-//        /* Create the message queue shared by all threads. */
-//        tx_queue_create(&queue_0, "queue 0", TX_1_ULONG, pointer,
-//                        DEMO_QUEUE_SIZE * sizeof(ULONG));
-//
-//        /* Create the semaphore used by all threads. */
-//        tx_semaphore_create(&semaphore_0, "counting semaphore 0", 1);
-//
-//        tx_event_flags_create(&event_flags_0, "event flags 0");
-//
-//        ///Thread Safe
-//        /* Allocate the stack for thread UART.  */
-//        tx_byte_allocate(byte_pool, (VOID**) &pointer, DEMO_STACK_SIZE, TX_NO_WAIT);
-//
-//        /* Create the main thread UART  */
-//        tx_thread_create(&thread_uart, "thread UART", thread_uart_entry, 0, pointer,
-//                         DEMO_STACK_SIZE, 1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
-//    }
-//}
 
 int main() {
     // Initialize system
@@ -132,16 +70,11 @@ int main() {
 
     thread_0_args_t thread_0_args = {&q1, &semaphore};
 
-    ULONG uart_arg = 2;
-    ULONG thread0_arg = 2;
-
-    rtos::Thread<ULONG> uart_thread("UART Thread", thread_uart_entry, uart_arg, 64, 0, 1, 32, true);
     rtos::Thread<thread_0_args_t*> thread0("Worker Thread 0", thread_0_entry, &thread_0_args, 64, 0, 2, 32, true);
 
 
-
     rtos::Initializable *arr[3] = {
-        &q1, &uarttx, &uart_thread
+        &q1, &uarttx
     };
 
     rtos::startKernel(*arr, 3, txPool);
@@ -179,7 +112,7 @@ void thread_0_entry(thread_0_args_t* args) {
         num = rand() % 25 + 1;
 
         /* Send message to queue 0. */
-        queue_status = args->queue->send(&num, TX_WAIT_FOREVER);
+        queue_status = args->queue->send(&num, rtos::TXWait::WaitForever);
         if (queue_status != rtos::TXError::Success) {
             //we could throw an error here
         }
@@ -189,33 +122,33 @@ void thread_0_entry(thread_0_args_t* args) {
 
         uarttx.printf("\n\rThread 0: %lu\n\r", num);
 
-//        if (queue_status == TX_SUCCESS) {
-//            thread0_count++;
-//            thread0_sum += num;
-//        }
-//
-//        if (thread0_count % 10 == 0) {
-//            uarttx.printf("Global count: %lu\r\n"
-//                        "Global sum: %lu\r\n"
-//                        "Global average: %lu\r\n",
-//                        global_count, global_sum, global_sum / global_count);
-//
-//            uarttx.printf("Thread 0 count: %lu\r\n"
-//                        "Thread 0 sum: %lu\r\n"
-//                        "Thread 0 average: %lu\r\n",
-//                        thread0_count, thread0_sum, thread0_sum / thread0_count);
-//
-//            uarttx.printf("Thread 1 count: %lu\r\n"
-//                        "Thread 1 sum: %lu\r\n"
-//                        "Thread 1 average: %lu\r\n",
-//                        thread1_count, thread1_sum, thread1_sum / thread1_count);
-//
-//            uarttx.printf("Thread 2 count: %lu\r\n"
-//                        "Thread 2 sum: %lu\r\n"
-//                        "Thread 2 average: %lu\r\n"
-//                        "\r\n",
-//                        thread2_count, thread2_sum, thread2_sum / thread2_count);
-//        }
+        if (queue_status == rtos::TXError::Success) {
+            thread0_count++;
+            thread0_sum += num;
+        }
+
+        if (thread0_count % 10 == 0) {
+            uarttx.printf("Global count: %lu\r\n"
+                        "Global sum: %lu\r\n"
+                        "Global average: %lu\r\n",
+                        global_count, global_sum, global_sum / global_count);
+
+            uarttx.printf("Thread 0 count: %lu\r\n"
+                        "Thread 0 sum: %lu\r\n"
+                        "Thread 0 average: %lu\r\n",
+                        thread0_count, thread0_sum, thread0_sum / thread0_count);
+
+            uarttx.printf("Thread 1 count: %lu\r\n"
+                        "Thread 1 sum: %lu\r\n"
+                        "Thread 1 average: %lu\r\n",
+                        thread1_count, thread1_sum, thread1_sum / thread1_count);
+
+            uarttx.printf("Thread 2 count: %lu\r\n"
+                        "Thread 2 sum: %lu\r\n"
+                        "Thread 2 average: %lu\r\n"
+                        "\r\n",
+                        thread2_count, thread2_sum, thread2_sum / thread2_count);
+        }
 
         args->semaphore->put();
         rtos::sleep(S_TO_TICKS(1));
@@ -330,36 +263,5 @@ void thread_3_entry(ULONG thread_input) {
         }
 
         tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
-    }
-}
-
-void thread_uart_entry(ULONG thread_input) {
-    // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-    rtos::wrapper::UARTTX uarttx(uart);
-
-    ULONG received_message;
-
-    uarttx.readQueuart();
-    uarttx.printf("\n\rUARTTX: Thread_uart created\n\r");
-    uarttx.readQueuart();
-
-    /* Delay ensures that thread 1 and thread 2 are created before thread 0 adds to the queue. */
-    tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
-
-    while (1) {
-        tx_semaphore_get(&semaphore_0, TX_WAIT_FOREVER);
-
-        uarttx.readQueuart();
-
-        /* Retrieve a message from the queue. */
-//        tx_queue_receive(&queue_0, &received_message,
-//                         TX_WAIT_FOREVER);
-
-//        uarttx.printf("\n\rUARTTX received %lu\n\r", received_message);
-        uarttx.readQueuart();
-
-        tx_semaphore_put(&semaphore_0);
-//        tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
     }
 }
