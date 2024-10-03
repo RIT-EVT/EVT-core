@@ -22,8 +22,8 @@ public:
      *
      * @param[in] uart A UART instance.
      */
-    explicit UARTTX(IO::UART& uart, std::size_t threadStackSize = 384, uint32_t threadPriorityLevel = 10u,
-           uint32_t threadPreemptThreshold = 0, uint32_t threadTimeSlice = MS_TO_TICKS(50));
+    explicit UARTTX(IO::UART& uart, std::size_t threadStackSize = 1024, uint32_t threadPriorityLevel = 1u,
+           uint32_t threadPreemptThreshold = 0u, uint32_t threadTimeSlice = MS_TO_TICKS(500));
 
     TXError init(BytePoolBase &pool) override;
 

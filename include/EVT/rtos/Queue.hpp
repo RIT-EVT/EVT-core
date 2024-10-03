@@ -24,7 +24,7 @@ public:
      * incorrectly sized. Take care to ensure this does not happen.
      *
      * @param[in] name The name of the queue.
-     * @param[in] messageSize Size (in 4-byte words) of each message in the queue.
+     * @param[in] messageSize Size (in 4-byte words) of each message in the queue. The message size can be at most 16.
      * @param[in] numMessages Number of messages in the queue.
      */
     Queue(char* name, uint32_t messageSize,  uint32_t numMessages);

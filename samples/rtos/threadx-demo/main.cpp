@@ -8,9 +8,12 @@
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
 #include <EVT/manager.hpp>
+#include <EVT/utils/log.hpp>
+
 
 #include <EVT/rtos/Semaphore.hpp>
 #include <EVT/rtos/Enums.hpp>
+#include <EVT/rtos/EventFlags.hpp>
 #include <EVT/rtos/BytePool.hpp>
 #include <EVT/rtos/Queue.hpp>
 #include <EVT/rtos/Thread.hpp>
@@ -20,6 +23,7 @@
 namespace IO = EVT::core::IO;
 namespace DEV = EVT::core::DEV;
 namespace time = EVT::core::time;
+namespace log = EVT::core::log;
 namespace rtos = core::rtos;
 
 ///Defines
@@ -45,15 +49,23 @@ TX_EVENT_FLAGS_GROUP event_flags_0;
 typedef struct thread_0_args {
     rtos::Queue* queue;
     rtos::Semaphore* semaphore;
+    rtos::wrapper::UARTTX* uarttx;
 } thread_0_args_t;
+
+typedef struct other_thread_args {
+    rtos::Queue* queue;
+    rtos::Semaphore* semaphore;
+    rtos::wrapper::UARTTX* uarttx;
+    rtos::EventFlags* eventFlags;
+} other_thread_args_t;
 
 ///Function Prototypes
 ///TODO: UART thread test
 void thread_uart_entry(ULONG arg);
 void thread_0_entry(thread_0_args_t* args);
-void thread_1_entry(ULONG thread_input);
-void thread_2_entry(ULONG thread_input);
-void thread_3_entry(ULONG thread_input);
+void thread_1_entry(other_thread_args_t* args);
+void thread_2_entry(other_thread_args_t* args);
+void thread_3_entry(other_thread_args_t* args);
 
 
 int main() {
@@ -63,21 +75,42 @@ int main() {
     // Setup UART
     IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
 
+    log::LOGGER.setUART(&uart);
+    log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
+
     rtos::wrapper::UARTTX uarttx(uart);
     rtos::Queue q1("queue", 4, 8);
     rtos::BytePool<TX_APP_MEM_POOL_SIZE> txPool("txBytePool");
     rtos::Semaphore semaphore("Semaphore 1", 0);
+    rtos::EventFlags eventFlags("Event Flags");
 
-    thread_0_args_t thread_0_args = {&q1, &semaphore};
+    //create thread 0
+    thread_0_args_t thread_0_args = {&q1, &semaphore, &uarttx};
+    rtos::Thread<thread_0_args_t*> thread0("Worker Thread 0", thread_0_entry, &thread_0_args,
+                                           DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
 
-    rtos::Thread<thread_0_args_t*> thread0("Worker Thread 0", thread_0_entry, &thread_0_args, 64, 0, 2, 32, true);
+    //create thread1
+    other_thread_args_t other_thread_args = {&q1, &semaphore, &uarttx, &eventFlags};
+    rtos::Thread<other_thread_args_t *> thread1("Thread 1", thread_1_entry, &other_thread_args,
+                                               DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
+
+    rtos::Thread<other_thread_args_t *> thread2("Thread 2", thread_2_entry, &other_thread_args,
+                                               DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
+
+    rtos::Thread<other_thread_args_t *> thread3("Thread 3", thread_3_entry, &other_thread_args,
+                                               DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
 
 
-    rtos::Initializable *arr[3] = {
-        &q1, &uarttx
+
+    uart.printf("About to start the kernel.\n\r");
+
+
+
+    rtos::Initializable *arr[] = {
+        &thread0, &uarttx,&q1,&semaphore, &eventFlags, &thread1, &thread2, &thread3
     };
 
-    rtos::startKernel(*arr, 3, txPool);
+    rtos::startKernel(arr, 8, txPool);
 
     return 0;
 }
@@ -93,15 +126,13 @@ ULONG thread2_sum = 0;
 
 ///Function definitions
 void thread_0_entry(thread_0_args_t* args) {
-    // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-    rtos::wrapper::UARTTX uarttx(uart);
-
     srand(77);
     rtos::TXError queue_status;
     ULONG num;
 
-    uarttx.printf("\n\rThread 0 Created\n\r");
+    //IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    //uart.printf("test\n\r");
+    args->uarttx->printf("\n\rThread 0 Created\n\r");
 
     /* Delay ensures that thread 1 and thread 2 are created before thread 0 adds to the queue. */
     //tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
@@ -120,7 +151,7 @@ void thread_0_entry(thread_0_args_t* args) {
         /* Take semaphore when it is released. */
         args->semaphore->get(rtos::WaitForever);
 
-        uarttx.printf("\n\rThread 0: %lu\n\r", num);
+        args->uarttx->printf("\n\rThread 0: %lu\n\r", num);
 
         if (queue_status == rtos::TXError::Success) {
             thread0_count++;
@@ -128,22 +159,22 @@ void thread_0_entry(thread_0_args_t* args) {
         }
 
         if (thread0_count % 10 == 0) {
-            uarttx.printf("Global count: %lu\r\n"
+            args->uarttx->printf("Global count: %lu\r\n"
                         "Global sum: %lu\r\n"
                         "Global average: %lu\r\n",
                         global_count, global_sum, global_sum / global_count);
 
-            uarttx.printf("Thread 0 count: %lu\r\n"
+            args->uarttx->printf("Thread 0 count: %lu\r\n"
                         "Thread 0 sum: %lu\r\n"
                         "Thread 0 average: %lu\r\n",
                         thread0_count, thread0_sum, thread0_sum / thread0_count);
 
-            uarttx.printf("Thread 1 count: %lu\r\n"
+            args->uarttx->printf("Thread 1 count: %lu\r\n"
                         "Thread 1 sum: %lu\r\n"
                         "Thread 1 average: %lu\r\n",
                         thread1_count, thread1_sum, thread1_sum / thread1_count);
 
-            uarttx.printf("Thread 2 count: %lu\r\n"
+            args->uarttx->printf("Thread 2 count: %lu\r\n"
                         "Thread 2 sum: %lu\r\n"
                         "Thread 2 average: %lu\r\n"
                         "\r\n",
@@ -155,29 +186,26 @@ void thread_0_entry(thread_0_args_t* args) {
     }
 }
 
-void thread_1_entry(ULONG thread_input) {
-    // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-    rtos::wrapper::UARTTX uarttx(uart);
+void thread_1_entry(other_thread_args_t* args) {
 
     ULONG received_message;
-    ULONG queue_status;
-    ULONG semaphore_status;
-    UINT flag_status;
+    rtos::TXError queue_status;
+    rtos::TXError semaphore_status;
+    rtos::TXError flag_status;
 
-    uarttx.printf("Thread 1 Created\n\r");
+    args->uarttx->printf("Thread 1 Created\n\r");
 
     while (1) {
         /* Retrieve a message from the queue. */
-        queue_status = tx_queue_receive(&queue_0, &received_message,
-                                        TX_WAIT_FOREVER);
+        queue_status = args->queue->receive(&received_message, rtos::WaitForever);
 
         /* Get the semaphore with suspension. */
-        semaphore_status = tx_semaphore_get(&semaphore_0, TX_WAIT_FOREVER);
+        semaphore_status = args->semaphore->get(rtos::WaitForever);
 
-        if (queue_status == TX_SUCCESS) {
+        if (queue_status == rtos::Success) {
             if (received_message >= 20) {
-                flag_status = tx_event_flags_set(&event_flags_0, 0x1, TX_OR);
+                //flag_status = tx_event_flags_set(&event_flags_0, 0x1, TX_OR);
+                flag_status = args->eventFlags->set(0x1, false);
             }
 
             global_count++;
@@ -186,40 +214,39 @@ void thread_1_entry(ULONG thread_input) {
             thread1_sum += received_message;
         }
 
-        uarttx.printf("Thread 1 received message: %lu\r\n"
+        args->uarttx->printf("Thread 1 received message: %lu\r\n"
                     "Thread 1 count: %lu\r\n"
                     "Thread 1 sum: %lu\r\n"
                     "\r\n",
                     received_message, thread1_count, thread1_sum);
 
-        semaphore_status = tx_semaphore_put(&semaphore_0);
-        tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
+        //semaphore_status = tx_semaphore_put(&semaphore_0);
+        semaphore_status = args->semaphore->put();
+        //tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
+        rtos::sleep(S_TO_TICKS(1));
     }
 }
 
-void thread_2_entry(ULONG thread_input) {
-    // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-    rtos::wrapper::UARTTX uarttx(uart);
+void thread_2_entry(other_thread_args_t* args) {
 
     ULONG received_message;
-    ULONG queue_status;
-    ULONG semaphore_status;
-    UINT flag_status;
+    rtos::TXError queue_status;
+    rtos::TXError semaphore_status;
+    rtos::TXError flag_status;
 
-    uarttx.printf("Thread 2 Created\n\r");
+    args->uarttx->printf("Thread 2 Created\n\r");
 
     while (1) {
         /* Retrieve a message from the queue. */
-        queue_status = tx_queue_receive(&queue_0, &received_message,
-                                        TX_WAIT_FOREVER);
+        queue_status = args->queue->receive(&received_message, rtos::WaitForever);
 
         /* Get the semaphore with suspension. */
-        semaphore_status = tx_semaphore_get(&semaphore_0, TX_WAIT_FOREVER);
+        semaphore_status = args->semaphore->get(rtos::WaitForever);
 
-        if (queue_status == TX_SUCCESS) {
+        if (queue_status == rtos::Success) {
             if (received_message >= 20) {
-                flag_status = tx_event_flags_set(&event_flags_0, 0x1, TX_OR);
+                //flag_status = tx_event_flags_set(&event_flags_0, 0x1, TX_OR);
+                flag_status = args->eventFlags->set(0x1, false);
             }
 
             global_count++;
@@ -228,40 +255,37 @@ void thread_2_entry(ULONG thread_input) {
             thread2_sum += received_message;
         }
 
-        uarttx.printf("Thread 2 received message: %lu\r\n"
+        args->uarttx->printf("Thread 2 received message: %lu\r\n"
                     "Thread 2 count: %lu\r\n"
                     "Thread 2 sum: %lu\r\n"
                     "\r\n",
                     received_message, thread2_count, thread2_sum);
 
-        semaphore_status = tx_semaphore_put(&semaphore_0);
-        tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
+        semaphore_status = args->semaphore->put();
+        rtos::sleep(S_TO_TICKS(1));
     }
 }
 
-void thread_3_entry(ULONG thread_input) {
-    // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-    rtos::wrapper::UARTTX uarttx(uart);
+void thread_3_entry(other_thread_args_t* args) {
 
     IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();
     DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
 
-    ULONG flag_status;
+    rtos::TXError flag_status;
     ULONG actual_flag;
 
-    uarttx.printf("Thread 3 Created\n\r\n\r");
+    args->uarttx->printf("Thread 3 Created\n\r\n\r");
 
     while (1) {
-        flag_status = tx_event_flags_get(&event_flags_0, 0x1, TX_OR_CLEAR, &actual_flag, TX_WAIT_FOREVER);
+        flag_status = args->eventFlags->get(0x1, false, true, &actual_flag, rtos::WaitForever);
 
-        if (flag_status == TX_SUCCESS) {
-            uarttx.printf("Thread 3 flag set\n\r\n\r");
+        if (flag_status == rtos::Success) {
+            args->uarttx->printf("Thread 3 flag set\n\r\n\r");
             led.toggle();
-            tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
+            rtos::sleep(S_TO_TICKS(1));
             led.toggle();
         }
 
-        tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
+        rtos::sleep(S_TO_TICKS(1));
     }
 }

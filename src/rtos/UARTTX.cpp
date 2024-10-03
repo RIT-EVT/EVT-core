@@ -1,8 +1,12 @@
 #include <EVT/rtos/UARTTX.hpp>
+#include <EVT/utils/log.hpp>
+
 #include <cstdarg>
 #include <cstdio>
 #include <cstdint>
 
+
+namespace log = EVT::core::log;
 namespace IO = EVT::core::IO;
 namespace core::rtos::wrapper {
 
@@ -12,9 +16,9 @@ namespace core::rtos::wrapper {
  */
 static void uartThreadEntryFunction(UARTTX* uarttx) {
     /*
-    this->readQueuart();
-    this->printf("\n\rUARTTX: Thread_uart created\n\r");
-    this->readQueuart();
+    uarttx->readQueuart();
+    uarttx->printf("\n\rUARTTX: Thread_uart created\n\r");
+    uarttx->readQueuart();
     */
 
     rtos::sleep(S_TO_TICKS(1));
@@ -26,7 +30,7 @@ static void uartThreadEntryFunction(UARTTX* uarttx) {
 
 UARTTX::UARTTX(IO::UART& uart, std::size_t threadStackSize, uint32_t threadPriorityLevel,
                uint32_t threadPreemptThreshold, uint32_t threadTimeSlice)
-    : UART(uart), copyUART(uart), queue("UART Queue", 4, 8),
+    : UART(uart), copyUART(uart), queue("UART Queue", 16, 10),
       thread("UART Thread", uartThreadEntryFunction, this, threadStackSize,
              threadPriorityLevel, threadPreemptThreshold, threadTimeSlice, true) {
 }
@@ -34,8 +38,10 @@ UARTTX::UARTTX(IO::UART& uart, std::size_t threadStackSize, uint32_t threadPrior
 //TODO: Get Rueuart to fix this.
 TXError UARTTX::init(BytePoolBase &pool) {
     uint32_t status = queue.init(pool);
-    if (status != TX_SUCCESS)
+    if (status != TX_SUCCESS) {
+        log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Errored on UARTTX Queue initialization. Error code %u", status);
         return static_cast<TXError>(status);
+    }
     status = thread.init(pool);
     return static_cast<TXError>(status);
 }
@@ -44,6 +50,7 @@ void UARTTX::printf(const char* format, ...) {
     va_list args; /* Access the variable argument list */
     va_start(args, format); /* Tells the args variable to point to the format parameter first */
 
+    //todo: the queue can only take in messages of at most 32 bytes. Need to maybe split long messages into multiple queue messages?
     char buffer[256]; /* Buffer array to hold the message */
     vsnprintf(buffer, sizeof(buffer), format, args); /* vsnprint formats the string and stores it in the buffer array */
 

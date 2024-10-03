@@ -27,9 +27,11 @@ public:
      * @param[in] entryFunction Pointer to the function the thread will be running.
      * @param[in] data Pointer to the data the thread's function requires.
      * @param[in] stackSize How much stack space (in bytes) this thread is allocated.
+     * This must be greater than Threadx's minimum stack size, which is currently 200 bytes.
      * @param[in] priority The initial priority of the thread (lower value = higher priority).
      * @param[in] preemptThreshold The value of the preemption threshold of the thread, which specifies what
-     * priority of threads can interrupt this thread while running. \n\n
+     * priority of threads can interrupt this thread while running. This must be a higher priority than the
+     * priority of the thread.\n\n
      * A thread with a priority of 5 and a preemption threshold of 3, for instance, can only be interrupted by threads
      * with priorities 0,1,2, or 3. Without a preemption threshold, any thread with higher priority than the running
      * thread would be able to interrupt it.
@@ -38,7 +40,7 @@ public:
      */
     Thread(char* name, void (*entryFunction)(T), T data, std::size_t stackSize, uint32_t priority,
            uint32_t preemptThreshold, uint32_t timeSlice, bool autoStart)
-        : name(name), entryFunction(entryFunction), data(data), stackSize(stackSize), priority(priority),
+        : txThread(), name(name), entryFunction(entryFunction), data(data), stackSize(stackSize), priority(priority),
           preemptThreshold(preemptThreshold), timeSlice(timeSlice),
           autoStart(autoStart)/*, txNotifyFunction(txThreadNotifyFunctionTemplate<this>)*/ {
         //TODO: uncomment txNotifyFunction when it is fixed

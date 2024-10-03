@@ -8,30 +8,31 @@ namespace log = EVT::core::log;
 namespace core::rtos {
 
 namespace {
-    Initializable* initializableList;
+    Initializable** initializableList;
     std::size_t initListLength;
     BytePoolBase *mainThreadPool;
 }
 
-TXError init(Initializable* initList, std::size_t length, BytePoolBase &pool) {
+TXError init(Initializable* initList[], std::size_t length, BytePoolBase &pool) {
     TXError errorCode = pool.init();
     if (errorCode != Success)
         return errorCode;
 
     for (std::size_t i = 0; i < length; i++) {
-        errorCode = initList[i].init(pool);
+        errorCode = initList[i]->init(pool);
         if (errorCode != Success) {
-            log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Errored on item %u in initializer list.", i);
+            log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Errored on item %u in initializer list.\n\rError code: %u", i, errorCode);
             return errorCode;
         }
     }
+    return errorCode;
 }
 
 extern "C" void tx_application_define(void* first_unused_memory) {
     init(initializableList, initListLength, *mainThreadPool);
 }
 
-TXError startKernel(Initializable* initList, std::size_t length, BytePoolBase &pool) {
+TXError startKernel(Initializable* initList[], std::size_t length, BytePoolBase &pool) {
     initializableList = initList;
     initListLength = length;
     mainThreadPool = &pool;
