@@ -49,6 +49,17 @@ private:
     static uint16_t buffer[NUM_ADCS][MAX_CHANNELS];
     static DMA_HandleTypeDef halDMA[NUM_ADCS];
 
+    typedef struct ADC_State {
+        ADC_HandleTypeDef halADC;
+        uint8_t rank = 1;
+        bool isADCInit;
+        Pin channels[MAX_CHANNELS];
+        uint16_t buffer[MAX_CHANNELS];
+        DMA_HandleTypeDef halDMA;
+    } ADC_State_t;
+
+    static ADC_State_t adcArray[NUM_ADCS];
+
     /**
      * Checks if the channel that is being initialized supports the ADC peripheral that it is being initialized on.
      * @param periph the ADC peripheral being used
