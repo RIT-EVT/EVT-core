@@ -2,9 +2,6 @@
 
 namespace core::io {
 
-ADC::ADC(Pin pin, ADCPeriph adcPeriph) {
-    this->pin       = pin;
-    this->adcPeriph = adcPeriph;
-}
+ADC::ADC(Pin pin, ADCPeriph adcPeriph) : pin(pin),  adcPeriph(adcPeriph) { }
 
 } // namespace core::io
