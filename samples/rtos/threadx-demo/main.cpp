@@ -31,21 +31,6 @@ namespace rtos = core::rtos;
 #define DEMO_QUEUE_SIZE 100
 #define TX_APP_MEM_POOL_SIZE 65536
 
-///Variables
-static UCHAR tx_byte_pool_buffer[TX_APP_MEM_POOL_SIZE];
-static TX_BYTE_POOL tx_app_byte_pool;
-
-///TODO: UART thread test
-TX_THREAD thread_uart;
-TX_THREAD thread_0;
-TX_THREAD thread_1;
-TX_THREAD thread_2;
-TX_THREAD thread_3;
-TX_QUEUE queue_0;
-TX_QUEUE queue_uart;
-TX_SEMAPHORE semaphore_0;
-TX_EVENT_FLAGS_GROUP event_flags_0;
-
 typedef struct thread_0_args {
     rtos::Queue* queue;
     rtos::Semaphore* semaphore;
@@ -61,7 +46,6 @@ typedef struct other_thread_args {
 
 ///Function Prototypes
 ///TODO: UART thread test
-void thread_uart_entry(ULONG arg);
 void thread_0_entry(thread_0_args_t* args);
 void thread_1_entry(other_thread_args_t* args);
 void thread_2_entry(other_thread_args_t* args);
@@ -133,11 +117,12 @@ void thread_0_entry(thread_0_args_t* args) {
     //IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
     //uart.printf("test\n\r");
     args->uarttx->printf("\n\rThread 0 Created\n\r");
+    args->uarttx->printf("\n\rThis is a very long message wow it is so long that's so crazy how long this is wowee\n\r");
 
     /* Delay ensures that thread 1 and thread 2 are created before thread 0 adds to the queue. */
     //tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
     //could be replaced by:
-    core::rtos::sleep(S_TO_TICKS(1));
+    //core::rtos::sleep(S_TO_TICKS(1));
 
     while (1) {
         num = rand() % 25 + 1;

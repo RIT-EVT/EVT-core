@@ -11,9 +11,37 @@
 #include <HALf4/stm32f4xx.h>
 #include <string>
 
+#define UARTTX_QUEUE_MESSAGE_SIZE 16
+#define UARTTX_QUEUE_NUM_MESSAGES 32
+#define UARTTX_DEFAULT_STACK_SIZE 1024
+#define UARTTX_DEFAULT_PRIORITY_LEVEL 1u
+#define UARTTX_DEFAULT_PREEMPT_THRESHOLD 0u
+#define UARTTX_DEFAULT_TIME_SLICE MS_TO_TICKS(500)
+
 namespace IO = EVT::core::IO;
 namespace core::rtos::wrapper {
 
+/**
+ * Class that represents a threadsafe implementation of UART.
+ * UARRTX uses a queue to buffer print statements sent to it. It uses a thread to empty that queue periodically.\n\n
+ *
+ *
+ * NOTE: The thread does not empty the queue when it is full. It simply waits until
+ * the scheduler gives it priority to print the contents of the queue to UART.\n\n
+ *
+ *
+ * NOTE: In some cases it may be possible that UARRTX never prints if there is
+ * always a higher priority thread able to run, so it should be given as high a
+ * priority as possible without it interfering with the normal execution of threads.\n\n
+ *
+ *
+ * NOTE: UARRTX's own thread must NEVER print to UARTTX. If it does this while
+ * the queue is full, it will suspend on the queue and since it is the only
+ * thread that can empty the queue, it will never stop suspending. If this occurs,
+ * any threads that then try to write to UARRTX will also suspend forever, which
+ * will lead to your code slowly shutting down for no discernable reason.
+ * There is no need to modify UARTTX's thread's method, so don't. Don't do it.
+ */
 class UARTTX: public Initializable, IO::UART {
 public:
 
@@ -21,9 +49,18 @@ public:
      * Constructor for thread safe uart class.
      *
      * @param[in] uart A UART instance.
+     * @param[in] threadStackSize the stack size of the UARTTX thread.
+     * Setting it below the default size may cause issues.
+     * @param[in] threadPriorityLevel The priority level of the UART Thread.
+     * Setting it too low may result in UART never actually outputting.
+     * @param[in] threadPreemptThreshold The preemption threshold of the UART thread.
+     * Unless you absolutely need a thread to be able to interrupt this thread, do not
+     * set this thread to a lower priority than the default because interrupting the thread
+     * while it is running is likely to just cause the UART output to break immediately.
+     * @param[in] threadTimeSlice The default minimum timeslice of this thread.
      */
-    explicit UARTTX(IO::UART& uart, std::size_t threadStackSize = 1024, uint32_t threadPriorityLevel = 1u,
-           uint32_t threadPreemptThreshold = 0u, uint32_t threadTimeSlice = MS_TO_TICKS(500));
+    explicit UARTTX(IO::UART& uart, std::size_t threadStackSize = UARTTX_DEFAULT_STACK_SIZE, uint32_t threadPriorityLevel = UARTTX_DEFAULT_PRIORITY_LEVEL,
+           uint32_t threadPreemptThreshold = UARTTX_DEFAULT_PREEMPT_THRESHOLD, uint32_t threadTimeSlice = UARTTX_DEFAULT_TIME_SLICE);
 
     TXError init(BytePoolBase &pool) override;
 
@@ -60,7 +97,7 @@ public:
     void readBytes(uint8_t* bytes, size_t size) override;
 
 private:
-
+    /// Pointer to store this thread's entry function
     void (*threadEntryFunction)(UARTTX*);
 
     /// UART object
@@ -69,13 +106,11 @@ private:
     /// HAL representation of the UART
     UART_HandleTypeDef halUART;
 
+    /// The queue that buffers the messages to be sent to uart
     Queue queue;
 
+    /// The thread that empties the queue and prints it's contents to uart
     Thread<UARTTX*> thread;
-
-    static UCHAR tx_byte_pool_buffer[65536];
-
-    static TX_BYTE_POOL tx_app_byte_pool;
 };
 
 }// namespace core::rtos::wrapper

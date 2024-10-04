@@ -5,24 +5,19 @@
 #include <cstdio>
 #include <cstdint>
 
-
 namespace log = EVT::core::log;
 namespace IO = EVT::core::IO;
 namespace core::rtos::wrapper {
 
 /**
- * static definition for all the uarttx thread entry functions
- * @param[in] uarttx the specific uartttx object this
+ * static definition for all the uarttx thread entry functions.
+ * This should not need to be modified, but if you do modify it you must
+ * NEVER EVER call uarttx->printf() or any method that calls that method in
+ * this thread. See Note 3 in the UARTTX header comment for more information on why.
+ *
+ * @param[in] uarttx the specific uartttx object this entry function is running on.
  */
 static void uartThreadEntryFunction(UARTTX* uarttx) {
-    /*
-    uarttx->readQueuart();
-    uarttx->printf("\n\rUARTTX: Thread_uart created\n\r");
-    uarttx->readQueuart();
-    */
-
-    rtos::sleep(S_TO_TICKS(1));
-
     while (1) {
         uarttx->readQueuart();
     }
@@ -30,15 +25,15 @@ static void uartThreadEntryFunction(UARTTX* uarttx) {
 
 UARTTX::UARTTX(IO::UART& uart, std::size_t threadStackSize, uint32_t threadPriorityLevel,
                uint32_t threadPreemptThreshold, uint32_t threadTimeSlice)
-    : UART(uart), copyUART(uart), queue("UART Queue", 16, 10),
+    : UART(uart), copyUART(uart), queue("UART Queue", UARTTX_QUEUE_MESSAGE_SIZE, UARTTX_QUEUE_NUM_MESSAGES),
       thread("UART Thread", uartThreadEntryFunction, this, threadStackSize,
              threadPriorityLevel, threadPreemptThreshold, threadTimeSlice, true) {
 }
 
 //TODO: Get Rueuart to fix this.
 TXError UARTTX::init(BytePoolBase &pool) {
-    uint32_t status = queue.init(pool);
-    if (status != TX_SUCCESS) {
+    TXError status = queue.init(pool);
+    if (status != Success) {
         log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Errored on UARTTX Queue initialization. Error code %u", status);
         return static_cast<TXError>(status);
     }
@@ -50,11 +45,19 @@ void UARTTX::printf(const char* format, ...) {
     va_list args; /* Access the variable argument list */
     va_start(args, format); /* Tells the args variable to point to the format parameter first */
 
-    //todo: the queue can only take in messages of at most 32 bytes. Need to maybe split long messages into multiple queue messages?
     char buffer[256]; /* Buffer array to hold the message */
     vsnprintf(buffer, sizeof(buffer), format, args); /* vsnprint formats the string and stores it in the buffer array */
 
-    addQueuart(buffer, sizeof(buffer)); /* Add formatted message to queue*/
+    //split longer messages into 32 (31 + null-termination) bit chunks.
+    char temp[32];
+    uint32_t len = strlen(buffer);
+    for (int i = 0; i < len; i+=31) {
+        memccpy(temp, buffer+i, '\0', 31);
+        temp[31] = 0;
+        addQueuart(temp, 32);
+    }
+
+    //addQueuart(buffer, sizeof(buffer)); /* Add formatted message to queue*/
 
     va_end(args); /* Cleans va_list once the message has been sent */
 }
