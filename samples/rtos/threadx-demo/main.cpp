@@ -126,7 +126,6 @@ void thread_0_entry(thread_0_args_t* args) {
 
     //this is to test that the uarttx handles long messages correctly
     args->uarttx->printf("\n\rThis is a very long message wow it is so long that's so crazy how long this is wowee\n\r");
-
     while (1) {
         num = rand() % 25 + 1;
 

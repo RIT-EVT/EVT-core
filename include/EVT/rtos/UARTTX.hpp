@@ -62,13 +62,13 @@ public:
     explicit UARTTX(IO::UART& uart, std::size_t threadStackSize = UARTTX_DEFAULT_STACK_SIZE, uint32_t threadPriorityLevel = UARTTX_DEFAULT_PRIORITY_LEVEL,
            uint32_t threadPreemptThreshold = UARTTX_DEFAULT_PREEMPT_THRESHOLD, uint32_t threadTimeSlice = UARTTX_DEFAULT_TIME_SLICE);
 
+    //Inherited Initializable methods
+
     TXError init(BytePoolBase &pool) override;
 
+    //Inherited UART methods
+
     void printf(const char* format, ...) override;
-
-    void addQueuart(char* buffer, std::size_t size);
-
-    void readQueuart();
 
     void setBaudrate(uint32_t baudrate) override;
 
@@ -96,7 +96,57 @@ public:
 
     void readBytes(uint8_t* bytes, size_t size) override;
 
+    //UARTTX Queue Informational Methods
+
+    /**
+     * Retrieves the number of enqueued messages in this UARTTX's Queue.
+     *
+     * @param[out] numEnqueuedMessages a pointer to a place to store the number of enqueued messages.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getNumberOfEnqueuedMessages(uint32_t *numEnqueuedMessages);
+
+    /**
+     * Retrieves the number of more messages this UARTTX's Queue can fit.
+     *
+     * @param[out] numAvailableMessages a pointer to the place to store the number of more messages the queue can fit.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getAvailableQueueStorage(uint32_t *numAvailableMessages);
+
+    /**
+     * Retrieves the name of the first thread suspended on sending a message to this UARTTX.
+     *
+     * @param[out] threadName a pointer to a place to store the name of the first suspended thread.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getNameOfFirstSuspendedThread(char **threadName);
+
+    /**
+      * Retrieves the number of threads that are suspended on this UARTTX.
+      *
+      * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
+      * @return The first error found by the function (or Success if there was no error).
+      */
+    TXError getNumSuspendedThreads(uint32_t *numSuspendedThreads);
+
+    //must be public so the static method can call it
+    /**
+     * Reads from the queue and actually sends it to UART. Called by the UARTTX Thread's entry function.
+     * Do not call this anywhere else.
+     */
+    void readQueuart();
+
 private:
+
+    /**
+     * Adds the given string to the Queue of messages to be sent to UART.
+     *
+     * @param[in] buffer a pointer to the string we are sending to UART.
+     * @param[in] size the maximum size of the buffer we are sending.
+     */
+    void addQueuart(char* buffer, std::size_t size);
+
     /// Pointer to store this thread's entry function
     void (*threadEntryFunction)(UARTTX*);
 

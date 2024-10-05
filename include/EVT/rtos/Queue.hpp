@@ -82,8 +82,8 @@ public:
     TXError send(void* messagePointer, uint32_t waitOption);
 
     /**
-     * Attempts to send a message to the queue. If the queue is full, the calling thread will suspend for
-     * waitOption ticks for the queue to empty enough to send the message.
+     * Attempts to send a message to the front of the queue. If the queue is full,
+     * the calling thread will suspend for waitOption ticks for the queue to empty enough to send the message.
      *
      * @param[in] messagePointer A pointer to the message that will be copied to the queue.
      * @param[in] waitOption How long (in ticks) the calling thread should wait for the mutex to be available.

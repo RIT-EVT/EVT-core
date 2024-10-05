@@ -25,8 +25,8 @@ static void uartThreadEntryFunction(UARTTX* uarttx) {
 
 UARTTX::UARTTX(IO::UART& uart, std::size_t threadStackSize, uint32_t threadPriorityLevel,
                uint32_t threadPreemptThreshold, uint32_t threadTimeSlice)
-    : UART(uart), copyUART(uart), queue("UART Queue", UARTTX_QUEUE_MESSAGE_SIZE, UARTTX_QUEUE_NUM_MESSAGES),
-      thread("UART Thread", uartThreadEntryFunction, this, threadStackSize,
+    : UART(uart), copyUART(uart), queue("UARTTX Queue", UARTTX_QUEUE_MESSAGE_SIZE, UARTTX_QUEUE_NUM_MESSAGES),
+      thread("UARTTX Thread", uartThreadEntryFunction, this, threadStackSize,
              threadPriorityLevel, threadPreemptThreshold, threadTimeSlice, true) {
 }
 
@@ -57,23 +57,15 @@ void UARTTX::printf(const char* format, ...) {
         addQueuart(temp, 32);
     }
 
-    //addQueuart(buffer, sizeof(buffer)); /* Add formatted message to queue*/
-
     va_end(args); /* Cleans va_list once the message has been sent */
 }
 
 void UARTTX::addQueuart(char* buffer, std::size_t size){
-    /**
-     * 1. Check message.
-     * 2. If message size is acceptable add it to queue.
-     * 3. If message size is not acceptable return an error.
-     */
-
     queue.send(buffer, WaitForever);
 }
 
 void UARTTX::readQueuart() {
-    char buffer[256]; /* Buffer array to hold the message */
+    char buffer[64]; /* Buffer array to hold the message - messages are at most 32 bytes long, but it gets angry if we set this buffer to be too small */
     queue.receive(buffer,WaitForever); /* Receives the message and assigns it to the buffer variable */
     copyUART.printf(buffer);
 };
@@ -135,6 +127,22 @@ void UARTTX::writeBytes(uint8_t* bytes, size_t size) {
 
 void UARTTX::readBytes(uint8_t* bytes, size_t size) {
     HAL_UART_Receive(&halUART, bytes, size, EVT_UART_TIMEOUT);
+}
+
+TXError UARTTX::getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages) {
+    return queue.getNumberOfEnqueuedMessages(numEnqueuedMessages);
+}
+
+TXError UARTTX::getAvailableQueueStorage(uint32_t* numAvailableMessages) {
+    return queue.getAvailableStorage(numAvailableMessages);
+}
+
+TXError UARTTX::getNameOfFirstSuspendedThread(char** threadName) {
+    return queue.getNameOfFirstSuspendedThread(threadName);
+}
+
+TXError UARTTX::getNumSuspendedThreads(uint32_t* numSuspendedThreads) {
+    return queue.getNumSuspendedThreads(numSuspendedThreads);
 }
 
 }// namespace core::rtos::wrapper
