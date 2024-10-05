@@ -14,6 +14,7 @@ namespace core::io {
  * these values.
  */
 enum class Pin {
+    DUMMY = -1, // THIS INTENTIONALLY DOES NOT POINT TO A PIN
     PA_0  = 0x00,
     PA_1  = 0x01,
     PA_2  = 0x02,
