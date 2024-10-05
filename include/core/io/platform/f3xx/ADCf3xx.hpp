@@ -8,6 +8,10 @@
 
 namespace core::io {
 
+enum class ADCPeriph {
+    ONE
+};
+
 class ADCf3xx : public ADC {
 public:
     /**
@@ -15,7 +19,7 @@ public:
      *
      * @param[in] pin The pin to setup for ADC
      */
-    ADCf3xx(Pin pin);
+    ADCf3xx(Pin pin, ADCPeriph adcPeriph);
 
     float read();
 
