@@ -31,50 +31,42 @@ namespace core::io {
 // Combines the channel memory value with the ADC peripherals it supports into one uint32_t
 #define CHANNEL_SET(adc1, adc2, adc3, ch) (ch | (adc1 << ADC1SHIFT) | (adc2 << ADC2SHIFT) | (adc3 << ADC3SHIFT))
 
-// Init static member variables
-//ADC_HandleTypeDef ADCf4xx::halADC[] = {{0}, {0}, {0}};
-//Pin ADCf4xx::channels[NUM_ADCS][MAX_CHANNELS];
-//uint16_t ADCf4xx::buffer[NUM_ADCS][MAX_CHANNELS];
-//DMA_HandleTypeDef ADCf4xx::halDMA[] = {{0}, {0}, {0}};
-
-
-ADCf4xx::ADC_State_t ADCf4xx::adcArray[] = {{},{},{}};
+ADCf4xx::ADC_State_t ADCf4xx::adcArray[3];
+uint8_t ADCf4xx::rank = 1;
+uint16_t ADCf4xx::buffer[] = {0};
 
 ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
-    // Flag representing if the ADC has been configured yet
-//    static bool halADCisInit[] = {false, false, false};
 
-    // "Rank" represents the order in which the channels are added
-    // Also represents the total number of added channels
-//    static uint8_t rank[] = {1, 1, 1};
-    ADCf4xx::ADC_State_t adc = adcArray[getADCNum()];
+    ADCf4xx::ADC_State_t* adcState = &adcArray[getADCNum()];
 
     // Maximum number of ADC channels have already been added
-    if (adc.rank == MAX_CHANNELS) { // old 'rank[adcNum] == MAX_CHANNELS'
+//    if (adcState->rank == MAX_CHANNELS) {
+    if (rank == MAX_CHANNELS) {
         return;
     }
 
     // Initialization of each HAL ADC should only take place once since
     // each individual ADC has multiple channels supported
-    if (adc.isADCInit) {                     // old 'isADCInit[adcNum]'
-        HAL_ADC_Stop_DMA(&adc.halADC); // old '&halADC[adcNum]'
-        HAL_DMA_DeInit(&adc.halDMA);  // old '&halDMA[adcNum]'
+    if (adcState->isADCInit) {
+        HAL_ADC_Stop_DMA(&adcState->halADC);
+        HAL_DMA_DeInit(&adcState->halDMA);
     } else {
         __HAL_RCC_DMA2_CLK_ENABLE();
-        adc.isADCInit = true; // old 'isADCInit[adcNum]'
+        adcState->isADCInit = true;
     }
 
-    addChannel(adc.rank); // old 'rank[adcNum]'
-
-    initADC(adc.rank); // old 'rank[adcNum]'
+//    addChannel(adcState->rank);
+    addChannel(rank);
+//    initADC(adcState->rank);
+    initADC(rank);
 
     initDMA();
 
-//    HAL_ADC_Start_DMA(&halADC[adcNum], reinterpret_cast<uint32_t*>(&buffer[adcNum][0]), rank[adcNum]);
-    HAL_ADC_Start_DMA(&adc.halADC, reinterpret_cast<uint32_t*>(&adc.buffer[0]), adc.rank);
+//    HAL_ADC_Start_DMA(&adcState->halADC, reinterpret_cast<uint32_t*>(&adcState->buffer[0]), adcState->rank);
+    HAL_ADC_Start_DMA(&adcState->halADC, reinterpret_cast<uint32_t*>(&buffer[0]), rank);
 
-    //    rank[adcNum]++;
-    adc.rank++;
+//    adcState->rank++;
+    rank++;
 }
 
 float ADCf4xx::read() {
@@ -86,10 +78,10 @@ uint32_t ADCf4xx::readRaw() {
     // Search through list of channels to determine which DMA buffer index to
     // use
     uint8_t channelNum = 0;
-    ADCf4xx::ADC_State_t adcState = adcArray[getADCNum()];
-    while (adcState.channels[channelNum] != pin)
+    ADCf4xx::ADC_State_t* adcState = &adcArray[getADCNum()];
+    while (adcState->channels[channelNum] != pin)
         channelNum++;
-    return adcState.buffer[channelNum];
+    return buffer[channelNum];
 }
 
 float ADCf4xx::readPercentage() {
@@ -101,44 +93,44 @@ void ADCf4xx::initADC(uint8_t num_channels) {
     /** Configure the global features of the ADC (Clock, Resolution, Data
      * Alignment and number of conversion)
      */
-    ADCf4xx::ADC_State_t adcState = adcArray[getADCNum()];
-    ADC_HandleTypeDef* adc = &adcState.halADC;
+    ADCf4xx::ADC_State_t* adcState = &adcArray[getADCNum()];
+    ADC_HandleTypeDef* halADC = &adcState->halADC;
     // Set instance to the ADC peripheral being using
-    adc->Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV2;
-    adc->Init.Resolution            = ADC_RESOLUTION_12B;
-    adc->Init.ScanConvMode          = ENABLE;
-    adc->Init.ContinuousConvMode    = ENABLE;
-    adc->Init.DiscontinuousConvMode = DISABLE;
-    adc->Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_NONE;
-    adc->Init.ExternalTrigConv      = ADC_SOFTWARE_START;
-    adc->Init.DataAlign             = ADC_DATAALIGN_RIGHT;
-    adc->Init.NbrOfConversion       = num_channels;
-    adc->Init.DMAContinuousRequests = ENABLE;
-    adc->Init.EOCSelection          = ADC_EOC_SEQ_CONV;
+    halADC->Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV2;
+    halADC->Init.Resolution            = ADC_RESOLUTION_12B;
+    halADC->Init.ScanConvMode          = ENABLE;
+    halADC->Init.ContinuousConvMode    = ENABLE;
+    halADC->Init.DiscontinuousConvMode = DISABLE;
+    halADC->Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_NONE;
+    halADC->Init.ExternalTrigConv      = ADC_SOFTWARE_START;
+    halADC->Init.DataAlign             = ADC_DATAALIGN_RIGHT;
+    halADC->Init.NbrOfConversion       = num_channels;
+    halADC->Init.DMAContinuousRequests = ENABLE;
+    halADC->Init.EOCSelection          = ADC_EOC_SEQ_CONV;
 
     switch (getADCNum()) {
     case ADC1_SLOT:
-        adc->Instance = ADC1;
+        halADC->Instance = ADC1;
         __HAL_RCC_ADC1_CLK_ENABLE();
         break;
     case ADC2_SLOT:
-        adc->Instance = ADC2;
+        halADC->Instance = ADC2;
         __HAL_RCC_ADC2_CLK_ENABLE();
         break;
     case ADC3_SLOT:
-        adc->Instance = ADC3;
+        halADC->Instance = ADC3;
         __HAL_RCC_ADC3_CLK_ENABLE();
         break;
     default:
         return; // Should never get here
     }
-    HAL_ADC_Init(adc);
+    HAL_ADC_Init(halADC);
 }
 
 void ADCf4xx::initDMA() {
     uint8_t adcNum = getADCNum();
-    ADCf4xx::ADC_State_t adcState = adcArray[adcNum];
-    DMA_HandleTypeDef * dma = &adcState.halDMA;
+    ADCf4xx::ADC_State_t* adcState = &adcArray[adcNum];
+    DMA_HandleTypeDef* dma = &adcState->halDMA;
     switch (adcNum) {
         case ADC1_SLOT:
             dma->Instance     = DMA2_Stream0;
@@ -165,16 +157,15 @@ void ADCf4xx::initDMA() {
     dma->Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
 
     HAL_DMA_Init(dma);
-    __HAL_LINKDMA(&adcState.halADC, DMA_Handle, *dma);
+    __HAL_LINKDMA(&adcState->halADC, DMA_Handle, *dma);
 }
 
 void ADCf4xx::addChannel(uint8_t rank) {
     GPIO_InitTypeDef gpioInit;
-    Pin myPins[]      = {pin};
     uint8_t numOfPins = 1;
     uint32_t channel;
-    uint8_t adcNum = getADCNum();
-    ADCf4xx::ADC_State_t adcState = adcArray[adcNum];
+    Pin myPins[] = {pin};
+    ADCf4xx::ADC_State_t* adcState = &adcArray[getADCNum()];
 
     GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
@@ -245,14 +236,14 @@ void ADCf4xx::addChannel(uint8_t rank) {
     }
 
     // Subtract 1 because rank starts at 1
-    channels[adcNum][rank - 1] = pin;
+    adcState->channels[rank - 1] = pin;
 
     adcChannel.Rank         = rank;
     adcChannel.SamplingTime = ADC_SAMPLETIME_480CYCLES;
     adcChannel.Offset       = 0;
     adcChannel.Offset       = 0x000;
 
-    HAL_ADC_ConfigChannel(&adcState.halADC, &adcChannel);
+    HAL_ADC_ConfigChannel(&adcState->halADC, &adcChannel);
 }
 
 inline bool ADCf4xx::checkSupport(ADCPeriph periph, uint32_t channel) {
