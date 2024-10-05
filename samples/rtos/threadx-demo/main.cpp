@@ -62,44 +62,49 @@ int main() {
     log::LOGGER.setUART(&uart);
     log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
 
+    //create all the initializable methods
     rtos::wrapper::UARTTX uarttx(uart);
-    rtos::Queue q1("queue", 4, 8);
+    rtos::Queue q1("queue", 16, 8);
     rtos::BytePool<TX_APP_MEM_POOL_SIZE> txPool("txBytePool");
-    rtos::Semaphore semaphore("Semaphore 1", 0);
+    rtos::Semaphore semaphore("Semaphore 1", 1);
     rtos::EventFlags eventFlags("Event Flags");
 
-    //create thread 0
+    //create the thread 0 argument struct
     thread_0_args_t thread_0_args = {&q1, &semaphore, &uarttx};
+
+    //create thread 0
     rtos::Thread<thread_0_args_t*> thread0("Worker Thread 0", thread_0_entry, &thread_0_args,
                                            DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
 
-    //create thread1
+    //create the struct that holds the other thread arguments
     other_thread_args_t other_thread_args = {&q1, &semaphore, &uarttx, &eventFlags};
+
+    //create thread1
     rtos::Thread<other_thread_args_t *> thread1("Thread 1", thread_1_entry, &other_thread_args,
                                                DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
-
+    //create thread2
     rtos::Thread<other_thread_args_t *> thread2("Thread 2", thread_2_entry, &other_thread_args,
                                                DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
-
+    //create thread3
     rtos::Thread<other_thread_args_t *> thread3("Thread 3", thread_3_entry, &other_thread_args,
                                                DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
-
-
 
     uart.printf("About to start the kernel.\n\r");
 
 
-
+    //create the initializable array
     rtos::Initializable *arr[] = {
         &thread0, &uarttx,&q1,&semaphore, &eventFlags, &thread1, &thread2, &thread3
     };
 
+    //start the kernel
     rtos::startKernel(arr, 8, txPool);
 
+    //the startKernel method doesn't actually return so this will never happen.
     return 0;
 }
 
-ULONG global_count = 0;//Times a random number has been sent and received
+ULONG global_count = 0; //Times a random number has been sent and received
 ULONG global_sum = 0;  //Sum of random numbers
 ULONG thread0_count = 0;
 ULONG thread0_sum = 0;
@@ -112,17 +117,15 @@ ULONG thread2_sum = 0;
 void thread_0_entry(thread_0_args_t* args) {
     srand(77);
     rtos::TXError queue_status;
-    ULONG num;
+    uint32_t num;
 
     //IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
     //uart.printf("test\n\r");
     args->uarttx->printf("\n\rThread 0 Created\n\r");
-    args->uarttx->printf("\n\rThis is a very long message wow it is so long that's so crazy how long this is wowee\n\r");
 
-    /* Delay ensures that thread 1 and thread 2 are created before thread 0 adds to the queue. */
-    //tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
-    //could be replaced by:
-    //core::rtos::sleep(S_TO_TICKS(1));
+
+    //this is to test that the uarttx handles long messages correctly
+    args->uarttx->printf("\n\rThis is a very long message wow it is so long that's so crazy how long this is wowee\n\r");
 
     while (1) {
         num = rand() % 25 + 1;
@@ -130,7 +133,7 @@ void thread_0_entry(thread_0_args_t* args) {
         /* Send message to queue 0. */
         queue_status = args->queue->send(&num, rtos::TXWait::WaitForever);
         if (queue_status != rtos::TXError::Success) {
-            //we could throw an error here
+            args->uarttx->printf("Error on Thread 0 send to queue: %u", queue_status);
         }
 
         /* Take semaphore when it is released. */
@@ -172,7 +175,6 @@ void thread_0_entry(thread_0_args_t* args) {
 }
 
 void thread_1_entry(other_thread_args_t* args) {
-
     ULONG received_message;
     rtos::TXError queue_status;
     rtos::TXError semaphore_status;
@@ -205,7 +207,6 @@ void thread_1_entry(other_thread_args_t* args) {
                     "\r\n",
                     received_message, thread1_count, thread1_sum);
 
-        //semaphore_status = tx_semaphore_put(&semaphore_0);
         semaphore_status = args->semaphore->put();
         //tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
         rtos::sleep(S_TO_TICKS(1));
@@ -213,7 +214,6 @@ void thread_1_entry(other_thread_args_t* args) {
 }
 
 void thread_2_entry(other_thread_args_t* args) {
-
     ULONG received_message;
     rtos::TXError queue_status;
     rtos::TXError semaphore_status;

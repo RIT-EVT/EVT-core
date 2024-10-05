@@ -13,7 +13,7 @@ namespace core::rtos::wrapper {
  * static definition for all the uarttx thread entry functions.
  * This should not need to be modified, but if you do modify it you must
  * NEVER EVER call uarttx->printf() or any method that calls that method in
- * this thread. See Note 3 in the UARTTX header comment for more information on why.
+ * this thread. See Notes in the UARTTX header comment for more information on why.
  *
  * @param[in] uarttx the specific uartttx object this entry function is running on.
  */
