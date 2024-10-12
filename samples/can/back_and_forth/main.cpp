@@ -35,9 +35,17 @@ int main() {
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
     can.addIRQHandler(canIRQHandler, &uart);
 
-    // CAN message that will be sent
+    uint8_t count = 0;
+// CAN message that will be sent
+#ifdef STM32F446xx
     uint8_t payload[] = {0xDE, 0xAD, 0xBE, 0xBE, 0xEF, 0x00, 0x01, 0x02};
-    io::CANMessage transmit_message(1, 8, &payload[0], true);
+    uint8_t id        = 4;
+#else
+    uint8_t payload[] = {0xBE, 0xEF, 0xBE, 0xDE, 0xAD, 0x09, 0x08, 0x07};
+    uint8_t id        = 3;
+#endif
+
+    io::CANMessage transmit_message(id, 8, &payload[0], false);
     io::CANMessage received_message;
 
     uart.printf("Starting CAN testing\r\n");
@@ -54,11 +62,13 @@ int main() {
 
     while (true) {
         // Transmit every second
-        result = can.transmit(transmit_message);
+        payload[7] = count;
+        result     = can.transmit(transmit_message);
         if (result != io::CAN::CANStatus::OK) {
             uart.printf("Failed to transmit message\r\n");
             return 1;
         }
+        count++;
 
         time::wait(1000);
     }

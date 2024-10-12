@@ -30,7 +30,7 @@ CAN_HandleTypeDef* hcan;
 
 } // namespace
 
-extern "C" void CAN_RX0_IRQHandler(void) {
+extern "C" void CAN1_RX0_IRQHandler(void) {
     HAL_CAN_IRQHandler(hcan);
 }
 
@@ -150,7 +150,6 @@ CAN::CANStatus CANf4xx::transmit(CANMessage& message) {
     else
         txHeader.StdId = message.getId();
     txHeader.IDE = message.isCANExtended() ? CAN_ID_EXT : CAN_ID_STD;
-    // TODO: Consider having remote setting be part of CAN message
     txHeader.RTR                = CAN_RTR_DATA;
     txHeader.DLC                = message.getDataLength();
     txHeader.TransmitGlobalTime = DISABLE;
