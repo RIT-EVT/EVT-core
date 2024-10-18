@@ -6,6 +6,7 @@
 #include <EVT/rtos/Queue.hpp>
 #include <EVT/rtos/Semaphore.hpp>
 #include <EVT/rtos/Thread.hpp>
+#include <EVT/rtos/Mutex.hpp>
 #include <EVT/io/UART.hpp>
 #include <EVT/io/pin.hpp>
 #include <HALf4/stm32f4xx.h>
@@ -82,17 +83,9 @@ public:
 
     bool isWritable() override;
 
-    void putc(char c) override;
-
-    void puts(const char* s) override;
-
     char getc() override;
 
-    void write(uint8_t byte) override;
-
     uint8_t read() override;
-
-    void writeBytes(uint8_t* bytes, size_t size) override;
 
     void readBytes(uint8_t* bytes, size_t size) override;
 
@@ -139,28 +132,38 @@ public:
 
 private:
 
+    void putc(char c) override;
+
+    void puts(const char* s) override;
+
+    void write(uint8_t byte) override;
+
+    void writeBytes(uint8_t* bytes, size_t size) override;
+
     /**
      * Adds the given string to the Queue of messages to be sent to UART.
      *
-     * @param[in] buffer a pointer to the string we are sending to UART.
-     * @param[in] size the maximum size of the buffer we are sending.
+     * @param[in] buffer a pointer to the string we are sending to UART. (String must be less than or equal to 16 words (64 bytes))
      */
-    void addQueuart(char* buffer, std::size_t size);
+    void addQueuart(char* buffer);
 
-    /// Pointer to store this thread's entry function
+    /// Pointer to store this thread's entry function.
     void (*threadEntryFunction)(UARTTX*);
 
-    /// UART object
+    /// UART object.
     IO::UART& copyUART;
 
-    /// HAL representation of the UART
+    /// HAL representation of the UART.
     UART_HandleTypeDef halUART;
 
-    /// The queue that buffers the messages to be sent to uart
+    /// The queue that buffers the messages to be sent to uart.
     Queue queue;
 
-    /// The thread that empties the queue and prints it's contents to uart
+    /// The thread that empties the queue and prints it's contents to uart.
     Thread<UARTTX*> thread;
+
+    /// The mutex that makes sure only one thread reads from UART at a time.
+    Mutex readMutex;
 };
 
 }// namespace core::rtos::wrapper

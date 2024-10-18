@@ -31,10 +31,22 @@ namespace rtos = core::rtos;
 #define DEMO_QUEUE_SIZE 100
 #define TX_APP_MEM_POOL_SIZE 65536
 
+typedef struct counters {
+    uint32_t global_count; //Times a random number has been sent and received
+    uint32_t global_sum;  //Sum of random numbers
+    uint32_t thread0_count;
+    uint32_t thread0_sum;
+    uint32_t thread1_count;
+    uint32_t thread1_sum;
+    uint32_t thread2_count;
+    uint32_t thread2_sum;
+} counters_t;
+
 typedef struct thread_0_args {
     rtos::Queue* queue;
     rtos::Semaphore* semaphore;
     rtos::wrapper::UARTTX* uarttx;
+    counters_t* counters;
 } thread_0_args_t;
 
 typedef struct other_thread_args {
@@ -42,6 +54,8 @@ typedef struct other_thread_args {
     rtos::Semaphore* semaphore;
     rtos::wrapper::UARTTX* uarttx;
     rtos::EventFlags* eventFlags;
+    uint8_t num;
+    counters_t* counters;
 } other_thread_args_t;
 
 ///Function Prototypes
@@ -64,29 +78,37 @@ int main() {
 
     //create all the initializable methods
     rtos::wrapper::UARTTX uarttx(uart);
-    rtos::Queue q1("queue", 16, 8);
-    rtos::BytePool<TX_APP_MEM_POOL_SIZE> txPool("txBytePool");
-    rtos::Semaphore semaphore("Semaphore 1", 1);
-    rtos::EventFlags eventFlags("Event Flags");
+    rtos::Queue q1((char*)"queue", 16, 8);
+    rtos::BytePool<TX_APP_MEM_POOL_SIZE> txPool((char*)"txBytePool");
+    rtos::Semaphore semaphore((char*)"Semaphore 1", 1);
+    rtos::EventFlags eventFlags((char*)"Event Flags");
+
+    counters_t counters = {
+        0,0,0,0,0,0,0,0
+    };
 
     //create the thread 0 argument struct
-    thread_0_args_t thread_0_args = {&q1, &semaphore, &uarttx};
+    thread_0_args_t thread_0_args = {&q1, &semaphore, &uarttx, &counters};
 
     //create thread 0
-    rtos::Thread<thread_0_args_t*> thread0("Worker Thread 0", thread_0_entry, &thread_0_args,
+    rtos::Thread<thread_0_args_t*> thread0((char*)"Worker Thread 0", thread_0_entry, &thread_0_args,
                                            DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
 
     //create the struct that holds the other thread arguments
-    other_thread_args_t other_thread_args = {&q1, &semaphore, &uarttx, &eventFlags};
+    other_thread_args_t thread_1_args = {&q1, &semaphore, &uarttx, &eventFlags, 1, &counters};
+
+    other_thread_args_t thread_2_args = {&q1, &semaphore, &uarttx, &eventFlags, 2, &counters};
+
+    other_thread_args_t thread_3_args = {&q1, &semaphore, &uarttx, &eventFlags, 3, &counters};
 
     //create thread1
-    rtos::Thread<other_thread_args_t *> thread1("Thread 1", thread_1_entry, &other_thread_args,
+    rtos::Thread<other_thread_args_t *> thread1((char*)"Thread 1", thread_1_entry, &thread_1_args,
                                                DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
     //create thread2
-    rtos::Thread<other_thread_args_t *> thread2("Thread 2", thread_2_entry, &other_thread_args,
+    rtos::Thread<other_thread_args_t *> thread2((char*)"Thread 2", thread_1_entry, &thread_2_args,
                                                DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
     //create thread3
-    rtos::Thread<other_thread_args_t *> thread3("Thread 3", thread_3_entry, &other_thread_args,
+    rtos::Thread<other_thread_args_t *> thread3((char*)"Thread 3", thread_3_entry, &thread_3_args,
                                                DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
 
     uart.printf("About to start the kernel.\n\r");
@@ -103,15 +125,6 @@ int main() {
     //the startKernel method doesn't actually return so this will never happen.
     return 0;
 }
-
-ULONG global_count = 0; //Times a random number has been sent and received
-ULONG global_sum = 0;  //Sum of random numbers
-ULONG thread0_count = 0;
-ULONG thread0_sum = 0;
-ULONG thread1_count = 0;
-ULONG thread1_sum = 0;
-ULONG thread2_count = 0;
-ULONG thread2_sum = 0;
 
 ///Function definitions
 void thread_0_entry(thread_0_args_t* args) {
@@ -141,35 +154,43 @@ void thread_0_entry(thread_0_args_t* args) {
         args->uarttx->printf("\n\rThread 0: %lu\n\r", num);
 
         if (queue_status == rtos::TXError::Success) {
-            thread0_count++;
-            thread0_sum += num;
+            args->counters->thread0_count++;
+            args->counters->thread0_sum += num;
         }
 
-        if (thread0_count % 10 == 0) {
+        if (args->counters->thread0_count % 10 == 0) {
             args->uarttx->printf("Global count: %lu\r\n"
                         "Global sum: %lu\r\n"
                         "Global average: %lu\r\n",
-                        global_count, global_sum, global_sum / global_count);
+                                 args->counters->global_count,
+                                 args->counters->global_sum,
+                                 args->counters->global_sum / args->counters->global_count);
 
             args->uarttx->printf("Thread 0 count: %lu\r\n"
                         "Thread 0 sum: %lu\r\n"
                         "Thread 0 average: %lu\r\n",
-                        thread0_count, thread0_sum, thread0_sum / thread0_count);
+                                 args->counters->thread0_count,
+                                 args->counters->thread0_sum,
+                                 args->counters->thread0_sum / args->counters->thread0_count);
 
             args->uarttx->printf("Thread 1 count: %lu\r\n"
                         "Thread 1 sum: %lu\r\n"
                         "Thread 1 average: %lu\r\n",
-                        thread1_count, thread1_sum, thread1_sum / thread1_count);
+                                 args->counters->thread1_count,
+                                 args->counters->thread1_sum,
+                                 args->counters->thread1_sum / args->counters->thread1_count);
 
             args->uarttx->printf("Thread 2 count: %lu\r\n"
                         "Thread 2 sum: %lu\r\n"
                         "Thread 2 average: %lu\r\n"
                         "\r\n",
-                        thread2_count, thread2_sum, thread2_sum / thread2_count);
+                                 args->counters->thread2_count,
+                                 args->counters->thread2_sum,
+                                 args->counters->thread2_sum / args->counters->thread2_count);
         }
 
         args->semaphore->put();
-        rtos::sleep(S_TO_TICKS(1));
+        //rtos::sleep(S_TO_TICKS(1));
     }
 }
 
@@ -179,7 +200,7 @@ void thread_1_entry(other_thread_args_t* args) {
     rtos::TXError semaphore_status;
     rtos::TXError flag_status;
 
-    args->uarttx->printf("Thread 1 Created\n\r");
+    args->uarttx->printf("Thread %u Created\n\r", args->num);
 
     while (1) {
         /* Retrieve a message from the queue. */
@@ -194,59 +215,28 @@ void thread_1_entry(other_thread_args_t* args) {
                 flag_status = args->eventFlags->set(0x1, false);
             }
 
-            global_count++;
-            global_sum += received_message;
-            thread1_count++;
-            thread1_sum += received_message;
+            args->counters->global_count++;
+            args->counters->global_sum += received_message;
+
+            if (args->num == 1) {
+                args->counters->thread1_count++;
+                args->counters->thread1_sum += received_message;
+            } else if (args->num == 2) {
+                args->counters->thread2_count++;
+                args->counters->thread1_sum += received_message;
+            }
+
         }
 
-        args->uarttx->printf("Thread 1 received message: %lu\r\n"
-                    "Thread 1 count: %lu\r\n"
-                    "Thread 1 sum: %lu\r\n"
+        args->uarttx->printf("Thread %u received message: %lu\r\n"
+                    "Thread %u count: %lu\r\n"
+                    "Thread %u sum: %lu\r\n"
                     "\r\n",
-                    received_message, thread1_count, thread1_sum);
+                    args->num, received_message, args->num, args->counters->thread1_count, args->num, args->counters->thread1_sum);
 
         semaphore_status = args->semaphore->put();
         //tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
-        rtos::sleep(S_TO_TICKS(1));
-    }
-}
-
-void thread_2_entry(other_thread_args_t* args) {
-    ULONG received_message;
-    rtos::TXError queue_status;
-    rtos::TXError semaphore_status;
-    rtos::TXError flag_status;
-
-    args->uarttx->printf("Thread 2 Created\n\r");
-
-    while (1) {
-        /* Retrieve a message from the queue. */
-        queue_status = args->queue->receive(&received_message, rtos::WaitForever);
-
-        /* Get the semaphore with suspension. */
-        semaphore_status = args->semaphore->get(rtos::WaitForever);
-
-        if (queue_status == rtos::Success) {
-            if (received_message >= 20) {
-                //flag_status = tx_event_flags_set(&event_flags_0, 0x1, TX_OR);
-                flag_status = args->eventFlags->set(0x1, false);
-            }
-
-            global_count++;
-            global_sum += received_message;
-            thread2_count++;
-            thread2_sum += received_message;
-        }
-
-        args->uarttx->printf("Thread 2 received message: %lu\r\n"
-                    "Thread 2 count: %lu\r\n"
-                    "Thread 2 sum: %lu\r\n"
-                    "\r\n",
-                    received_message, thread2_count, thread2_sum);
-
-        semaphore_status = args->semaphore->put();
-        rtos::sleep(S_TO_TICKS(1));
+        //rtos::sleep(S_TO_TICKS(1));
     }
 }
 
@@ -270,6 +260,6 @@ void thread_3_entry(other_thread_args_t* args) {
             led.toggle();
         }
 
-        rtos::sleep(S_TO_TICKS(1));
+        //rtos::sleep(S_TO_TICKS(1));
     }
 }

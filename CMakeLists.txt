@@ -116,7 +116,7 @@ if(USE_RTOS)
     target_sources(${PROJECT_NAME} PRIVATE
             src/rtos/f4xx/tx_initialize_low_level.s
             src/rtos/EventFlags.cpp
-            #src/rtos/Mutex.cpp
+            src/rtos/Mutex.cpp
             src/rtos/Queue.cpp
             src/rtos/Semaphore.cpp
             src/rtos/Threadx.cpp
