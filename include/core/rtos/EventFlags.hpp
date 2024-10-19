@@ -16,7 +16,6 @@ namespace core::rtos {
  */
 class EventFlags : public Initializable {
 public:
-
     /**
      * Constructor for EventFlags.
      *
@@ -24,7 +23,7 @@ public:
      */
     EventFlags(char* name);
 
-    TXError init(core::rtos::BytePoolBase &pool) override;
+    TXError init(core::rtos::BytePoolBase& pool) override;
 
     /**
      * Destructor for an EventFlags.
@@ -63,12 +62,12 @@ public:
     TXError registerNotifyFunction(void (*notifyFunction)(EventFlags* eventFlags));
 
     /**
-      * Retrieves the name of this EvenFlags.
-      *
-      * @param[out] name a pointer to a place to store the name pointer.
-      * @return The first error found by the function (or Success if there was no error).
-      */
-    TXError getName(char **name);
+     * Retrieves the name of this EvenFlags.
+     *
+     * @param[out] name a pointer to a place to store the name pointer.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getName(char** name);
 
     /**
      * Retrieves the current values that the flags are set to as a uint32.
@@ -76,23 +75,23 @@ public:
      * @param[out] flags a pointer to a place to store the flags.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError getCurrentFlags(uint32_t *flags);
+    TXError getCurrentFlags(uint32_t* flags);
 
     /**
-      * Retrieves the name of the first suspended thread.
-      *
-      * @param[out] name a pointer to a place to store the name pointer.
-      * @return The first error found by the function (or Success if there was no error).
-      */
-    TXError getNameOfFirstSuspendedThread(char **threadName);
+     * Retrieves the name of the first suspended thread.
+     *
+     * @param[out] name a pointer to a place to store the name pointer.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getNameOfFirstSuspendedThread(char** threadName);
 
     /**
-      * Retrieves the number of threads that are suspended on this EventFlags.
-      *
-      * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
-      * @return The first error found by the function (or Success if there was no error).
-      */
-    TXError getNumSuspendedThreads(uint32_t *numSuspendedThreads);
+     * Retrieves the number of threads that are suspended on this EventFlags.
+     *
+     * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
 private:
     /**
@@ -108,16 +107,16 @@ private:
     /**
      * The type of notify function that threadx expects.
      */
-    typedef void txNotifyFunction_t( TX_EVENT_FLAGS_GROUP * );
+    typedef void txNotifyFunction_t(TX_EVENT_FLAGS_GROUP*);
 
     /**
      * A pointer to the function that we will register with the threadx kernel when the
      * registerNotificationFunction method is called. This function calls memberNotifyFunction, which itself calls
      * storedNotifyFunction, which will be set to the passed-in function for the registerNotifyFunction method.
      */
-    txNotifyFunction_t *txNotifyFunction;
+    txNotifyFunction_t* txNotifyFunction;
 };
 
-} //namespace core::rtos
+} // namespace core::rtos
 
 #endif //_EVT_RTOS_EVENTFLAGS_

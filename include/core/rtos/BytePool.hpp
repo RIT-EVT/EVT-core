@@ -11,7 +11,7 @@ namespace core::rtos {
  * via the allocateMemory() and releaseMemory() methods.
  * @tparam SIZE How large the bytepool is.
  */
-template <std::size_t SIZE>
+template<std::size_t SIZE>
 class BytePool : public BytePoolBase {
 public:
     /**
@@ -42,38 +42,35 @@ public:
         return static_cast<TXError>(errorCode);
     }
 
-    TXError getAvailableBytes(uint32_t *availableBytes) override {
-        uint32_t status = tx_byte_pool_info_get(&txBytePool, nullptr, availableBytes,
-                                                nullptr, nullptr, nullptr, nullptr);
+    TXError getAvailableBytes(uint32_t* availableBytes) override {
+        uint32_t status =
+            tx_byte_pool_info_get(&txBytePool, nullptr, availableBytes, nullptr, nullptr, nullptr, nullptr);
         return static_cast<TXError>(status);
     }
 
-    TXError getFragments(uint32_t *fragments) override {
-        uint32_t status = tx_byte_pool_info_get(&txBytePool, nullptr, nullptr,
-                                                fragments, nullptr, nullptr, nullptr);
+    TXError getFragments(uint32_t* fragments) override {
+        uint32_t status = tx_byte_pool_info_get(&txBytePool, nullptr, nullptr, fragments, nullptr, nullptr, nullptr);
         return static_cast<TXError>(status);
     }
 
     TXError getNameOfFirstSuspendedThread(char** threadName) override {
         TX_THREAD* thread;
-        uint32_t status = tx_byte_pool_info_get(&txBytePool, nullptr, nullptr,
-                                                nullptr, &thread, nullptr, nullptr);
+        uint32_t status = tx_byte_pool_info_get(&txBytePool, nullptr, nullptr, nullptr, &thread, nullptr, nullptr);
         if (status != Success)
             return static_cast<TXError>(status);
 
-        status = tx_thread_info_get(thread, threadName, nullptr, nullptr, nullptr,
-                                    nullptr, nullptr, nullptr, nullptr);
+        status = tx_thread_info_get(thread, threadName, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
 
         return static_cast<TXError>(status);
     }
 
-    TXError getNumSuspendedThreads(uint32_t *numSuspendedThreads) override {
-        uint32_t status = tx_byte_pool_info_get(&txBytePool, nullptr, nullptr,
-                                                nullptr, nullptr, numSuspendedThreads, nullptr);
+    TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads) override {
+        uint32_t status =
+            tx_byte_pool_info_get(&txBytePool, nullptr, nullptr, nullptr, nullptr, numSuspendedThreads, nullptr);
         return static_cast<TXError>(status);
     }
 
-    TXError getName(char **name) override {
+    TXError getName(char** name) override {
         *name = this->name;
         return Success;
     }
@@ -95,7 +92,6 @@ private:
     TX_BYTE_POOL txBytePool;
 };
 
-} //namespace core::rtos
-
+} // namespace core::rtos
 
 #endif //_EVT_RTOS_BYTEPOOLBASE_

@@ -2,11 +2,11 @@
 #include <core/utils/log.hpp>
 
 #include <cstdarg>
-#include <cstdio>
 #include <cstdint>
+#include <cstdio>
 
 namespace log = core::log;
-namespace io = core::io;
+namespace io  = core::io;
 namespace core::rtos::wrapper {
 
 /**
@@ -25,14 +25,13 @@ static void uartThreadEntryFunction(UARTTX* uarttx) {
 
 UARTTX::UARTTX(IO::UART& uart, std::size_t threadStackSize, uint32_t threadPriorityLevel,
                uint32_t threadPreemptThreshold, uint32_t threadTimeSlice)
-    : UART(uart), copyUART(uart), queue((char*)"UARTTX Queue", UARTTX_QUEUE_MESSAGE_SIZE, UARTTX_QUEUE_NUM_MESSAGES),
-      thread((char*)"UARTTX Thread", uartThreadEntryFunction, this, threadStackSize,
-             threadPriorityLevel, threadPreemptThreshold, threadTimeSlice, true),
-      readMutex((char*)"UARTTX Read Mutex", true) {
-}
+    : UART(uart), copyUART(uart), queue((char*) "UARTTX Queue", UARTTX_QUEUE_MESSAGE_SIZE, UARTTX_QUEUE_NUM_MESSAGES),
+      thread((char*) "UARTTX Thread", uartThreadEntryFunction, this, threadStackSize, threadPriorityLevel,
+             threadPreemptThreshold, threadTimeSlice, true),
+      readMutex((char*) "UARTTX Read Mutex", true) {}
 
-//TODO: Get Rueuart to fix this.
-TXError UARTTX::init(BytePoolBase &pool) {
+// TODO: Get Rueuart to fix this.
+TXError UARTTX::init(BytePoolBase& pool) {
     TXError status = queue.init(pool);
     if (status != Success) {
         log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Errored on UARTTX Queue initialization. Error code %u", status);
@@ -43,45 +42,45 @@ TXError UARTTX::init(BytePoolBase &pool) {
 }
 
 void UARTTX::printf(const char* format, ...) {
-    va_list args; /* Access the variable argument list */
+    va_list args;           /* Access the variable argument list */
     va_start(args, format); /* Tells the args variable to point to the format parameter first */
 
-    char buffer[256]; /* Buffer array to hold the message */
+    char buffer[256];                                /* Buffer array to hold the message */
     vsnprintf(buffer, sizeof(buffer), format, args); /* vsnprint formats the string and stores it in the buffer array */
 
-    //split longer messages into 64 (63 + null-termination) bit chunks.
+    // split longer messages into 64 (63 + null-termination) bit chunks.
     char temp[64];
-    memset(temp, 0, 64); //clear the memory to 0 just in case
+    memset(temp, 0, 64); // clear the memory to 0 just in case
     uint32_t len = strlen(buffer);
-    for (uint32_t i = 0; i < len; i+=63) {
-        memccpy(temp, buffer+i, '\0', 63);
-        temp[63] = '\0'; //set the last bit to the null terminator (should already be that but just in case)
+    for (uint32_t i = 0; i < len; i += 63) {
+        memccpy(temp, buffer + i, '\0', 63);
+        temp[63] = '\0'; // set the last bit to the null terminator (should already be that but just in case)
         addQueuart(temp);
     }
 
     va_end(args); /* Cleans va_list once the message has been sent */
 }
 
-void UARTTX::addQueuart(char* buffer){
+void UARTTX::addQueuart(char* buffer) {
     queue.send(buffer, WaitForever);
 }
 
 void UARTTX::readQueuart() {
-    char buffer[64]; /* Buffer array to hold the message - messages are at most 32 bytes long, but it gets angry if we set this buffer to be too small */
-    queue.receive(buffer,WaitForever); /* Receives the message and assigns it to the buffer variable */
+    char buffer[64]; /* Buffer array to hold the message - messages are at most 32 bytes long, but it gets angry if we
+                        set this buffer to be too small */
+    queue.receive(buffer, WaitForever); /* Receives the message and assigns it to the buffer variable */
     copyUART.printf(buffer);
 };
 
 void UARTTX::setBaudrate(uint32_t baudrate) {
     this->halUART.Init.BaudRate = baudrate;
-    this->baudrate = baudrate;
+    this->baudrate              = baudrate;
 }
 
-void UARTTX::setFormat(WordLength wordLength, Parity parity,
-                         NumStopBits numStopBits) {
+void UARTTX::setFormat(WordLength wordLength, Parity parity, NumStopBits numStopBits) {
     halUART.Init.WordLength = static_cast<uint32_t>(wordLength);
-    halUART.Init.Parity = static_cast<uint32_t>(parity);
-    halUART.Init.Parity = static_cast<uint32_t>(numStopBits);
+    halUART.Init.Parity     = static_cast<uint32_t>(parity);
+    halUART.Init.Parity     = static_cast<uint32_t>(numStopBits);
 }
 
 void UARTTX::sendBreak() {
@@ -111,8 +110,7 @@ void UARTTX::puts(const char* s) {
 char UARTTX::getc() {
     readMutex.acquire(TXWait::WaitForever);
     uint8_t c;
-    while (HAL_UART_Receive(&halUART, &c, 1, EVT_UART_TIMEOUT) == HAL_TIMEOUT) {
-    }
+    while (HAL_UART_Receive(&halUART, &c, 1, EVT_UART_TIMEOUT) == HAL_TIMEOUT) {}
     readMutex.release();
     return static_cast<char>(c);
 }
@@ -151,4 +149,4 @@ TXError UARTTX::getNumSuspendedThreads(uint32_t* numSuspendedThreads) {
     return queue.getNumSuspendedThreads(numSuspendedThreads);
 }
 
-}// namespace core::rtos::wrapper
+} // namespace core::rtos::wrapper

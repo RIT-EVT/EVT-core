@@ -1,23 +1,23 @@
 #ifndef EVT_TX_UART_H
 #define EVT_TX_UART_H
 
+#include <HALf4/stm32f4xx.h>
+#include <core/io/UART.hpp>
+#include <core/io/pin.hpp>
 #include <core/rtos/Initializable.hpp>
-#include <core/rtos/Threadx.hpp>
+#include <core/rtos/Mutex.hpp>
 #include <core/rtos/Queue.hpp>
 #include <core/rtos/Semaphore.hpp>
 #include <core/rtos/Thread.hpp>
-#include <core/rtos/Mutex.hpp>
-#include <core/io/UART.hpp>
-#include <core/io/pin.hpp>
-#include <HALf4/stm32f4xx.h>
+#include <core/rtos/Threadx.hpp>
 #include <string>
 
-#define UARTTX_QUEUE_MESSAGE_SIZE 16
-#define UARTTX_QUEUE_NUM_MESSAGES 32
-#define UARTTX_DEFAULT_STACK_SIZE 1024
-#define UARTTX_DEFAULT_PRIORITY_LEVEL 1u
+#define UARTTX_QUEUE_MESSAGE_SIZE        16
+#define UARTTX_QUEUE_NUM_MESSAGES        32
+#define UARTTX_DEFAULT_STACK_SIZE        1024
+#define UARTTX_DEFAULT_PRIORITY_LEVEL    1u
 #define UARTTX_DEFAULT_PREEMPT_THRESHOLD 0u
-#define UARTTX_DEFAULT_TIME_SLICE MS_TO_TICKS(500)
+#define UARTTX_DEFAULT_TIME_SLICE        MS_TO_TICKS(500)
 
 namespace IO = core::io;
 namespace core::rtos::wrapper {
@@ -43,9 +43,8 @@ namespace core::rtos::wrapper {
  * will lead to your code slowly shutting down for no discernable reason.
  * There is no need to modify UARTTX's thread's method, so don't. Don't do it.
  */
-class UARTTX: public Initializable, io::UART {
+class UARTTX : public Initializable, io::UART {
 public:
-
     /**
      * Constructor for thread safe uart class.
      *
@@ -60,22 +59,23 @@ public:
      * while it is running is likely to just cause the UART output to break immediately.
      * @param[in] threadTimeSlice The default minimum timeslice of this thread.
      */
-    explicit UARTTX(IO::UART& uart, std::size_t threadStackSize = UARTTX_DEFAULT_STACK_SIZE, uint32_t threadPriorityLevel = UARTTX_DEFAULT_PRIORITY_LEVEL,
-           uint32_t threadPreemptThreshold = UARTTX_DEFAULT_PREEMPT_THRESHOLD, uint32_t threadTimeSlice = UARTTX_DEFAULT_TIME_SLICE);
+    explicit UARTTX(IO::UART& uart, std::size_t threadStackSize = UARTTX_DEFAULT_STACK_SIZE,
+                    uint32_t threadPriorityLevel    = UARTTX_DEFAULT_PRIORITY_LEVEL,
+                    uint32_t threadPreemptThreshold = UARTTX_DEFAULT_PREEMPT_THRESHOLD,
+                    uint32_t threadTimeSlice        = UARTTX_DEFAULT_TIME_SLICE);
 
-    //Inherited Initializable methods
+    // Inherited Initializable methods
 
-    TXError init(BytePoolBase &pool) override;
+    TXError init(BytePoolBase& pool) override;
 
-    //Inherited UART methods
+    // Inherited UART methods
 
     void printf(const char* format, ...) override;
 
     void setBaudrate(uint32_t baudrate) override;
 
-    void setFormat(WordLength wordLength = WordLength::EIGHT,
-                           Parity parity = Parity::NONE,
-                           NumStopBits numStopBits = NumStopBits::ONE) override;
+    void setFormat(WordLength wordLength = WordLength::EIGHT, Parity parity = Parity::NONE,
+                   NumStopBits numStopBits = NumStopBits::ONE) override;
 
     void sendBreak() override;
 
@@ -89,7 +89,7 @@ public:
 
     void readBytes(uint8_t* bytes, size_t size) override;
 
-    //UARTTX Queue Informational Methods
+    // UARTTX Queue Informational Methods
 
     /**
      * Retrieves the number of enqueued messages in this UARTTX's Queue.
@@ -97,7 +97,7 @@ public:
      * @param[out] numEnqueuedMessages a pointer to a place to store the number of enqueued messages.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError getNumberOfEnqueuedMessages(uint32_t *numEnqueuedMessages);
+    TXError getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages);
 
     /**
      * Retrieves the number of more messages this UARTTX's Queue can fit.
@@ -105,7 +105,7 @@ public:
      * @param[out] numAvailableMessages a pointer to the place to store the number of more messages the queue can fit.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError getAvailableQueueStorage(uint32_t *numAvailableMessages);
+    TXError getAvailableQueueStorage(uint32_t* numAvailableMessages);
 
     /**
      * Retrieves the name of the first thread suspended on sending a message to this UARTTX.
@@ -113,17 +113,17 @@ public:
      * @param[out] threadName a pointer to a place to store the name of the first suspended thread.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError getNameOfFirstSuspendedThread(char **threadName);
+    TXError getNameOfFirstSuspendedThread(char** threadName);
 
     /**
-      * Retrieves the number of threads that are suspended on this UARTTX.
-      *
-      * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
-      * @return The first error found by the function (or Success if there was no error).
-      */
-    TXError getNumSuspendedThreads(uint32_t *numSuspendedThreads);
+     * Retrieves the number of threads that are suspended on this UARTTX.
+     *
+     * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
-    //must be public so the static method can call it
+    // must be public so the static method can call it
     /**
      * Reads from the queue and actually sends it to UART. Called by the UARTTX Thread's entry function.
      * Do not call this anywhere else.
@@ -131,7 +131,6 @@ public:
     void readQueuart();
 
 private:
-
     void putc(char c) override;
 
     void puts(const char* s) override;
@@ -143,7 +142,8 @@ private:
     /**
      * Adds the given string to the Queue of messages to be sent to UART.
      *
-     * @param[in] buffer a pointer to the string we are sending to UART. (String must be less than or equal to 16 words (64 bytes))
+     * @param[in] buffer a pointer to the string we are sending to UART. (String must be less than or equal to 16 words
+     * (64 bytes))
      */
     void addQueuart(char* buffer);
 
@@ -166,6 +166,6 @@ private:
     Mutex readMutex;
 };
 
-}// namespace core::rtos::wrapper
+} // namespace core::rtos::wrapper
 
-#endif//EVT_TX_UART_H
+#endif // EVT_TX_UART_H

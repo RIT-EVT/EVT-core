@@ -11,9 +11,9 @@ UART::UART(Pin txPin, Pin rxPin, uint32_t baudrate) {
     this->baudrate = baudrate;
 }
 
-UART::UART(const UART& uart){
-    txPin = uart.txPin;
-    rxPin = uart.rxPin;
+UART::UART(const UART& uart) {
+    txPin    = uart.txPin;
+    rxPin    = uart.rxPin;
     baudrate = uart.baudrate;
 }
 

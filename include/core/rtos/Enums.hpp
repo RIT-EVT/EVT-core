@@ -30,7 +30,7 @@ enum TXError {
     NoInstance,
     ThreadError,
     PriorityError,
-    NoMemory = TX_NO_MEMORY,
+    NoMemory   = TX_NO_MEMORY,
     StartError = TX_START_ERROR,
     DeleteError,
     ResumeError,
@@ -57,9 +57,9 @@ enum TXError {
  * Enum to shorthand No Wait and Wait Forever wait options in TX.
  */
 enum TXWait {
-    NoWait = TX_NO_WAIT,
+    NoWait      = TX_NO_WAIT,
     WaitForever = TX_WAIT_FOREVER
 };
 
-} //namespace core::rtos
-#endif //EVT_RTOS_ENUMS_
+} // namespace core::rtos
+#endif // EVT_RTOS_ENUMS_

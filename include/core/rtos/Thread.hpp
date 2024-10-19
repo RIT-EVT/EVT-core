@@ -15,10 +15,9 @@ namespace core::rtos {
  * Threadx::startKernel() method as part of the initList parameter.
  * @tparam T what type of data the thread's entry function will take.
  */
-template <typename T>
+template<typename T>
 class Thread : public Initializable {
 public:
-
     /**
      * Constructor for a Thread object. Thread will not start until init() method is called.
      *
@@ -34,15 +33,16 @@ public:
      * A thread with a priority of 5 and a preemption threshold of 3, for instance, can only be interrupted by threads
      * with priorities 0,1,2, or 3. Without a preemption threshold, any thread with higher priority than the running
      * thread would be able to interrupt it.
-     * @param[in] timeSlice How much time (in ticks) the thread will run before the scheduler may switch to another thread.
+     * @param[in] timeSlice How much time (in ticks) the thread will run before the scheduler may switch to another
+     * thread.
      * @param[in] autoStart Whether the thread starts as soon as it is initialized or is created suspended.
      */
     Thread(char* name, void (*entryFunction)(T), T data, std::size_t stackSize, uint32_t priority,
            uint32_t preemptThreshold, uint32_t timeSlice, bool autoStart)
         : txThread(), name(name), entryFunction(entryFunction), data(data), stackSize(stackSize), priority(priority),
           preemptThreshold(preemptThreshold), timeSlice(timeSlice),
-          autoStart(autoStart)/*, txNotifyFunction(txThreadNotifyFunctionTemplate<this>)*/ {
-        //TODO: uncomment txNotifyFunction when it is fixed
+          autoStart(autoStart) /*, txNotifyFunction(txThreadNotifyFunctionTemplate<this>)*/ {
+        // TODO: uncomment txNotifyFunction when it is fixed
     }
 
     /**
@@ -50,15 +50,23 @@ public:
      *
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError init(BytePoolBase &pool) override {
-        //allocate memory for the thread
-        void *stackStart;
+    TXError init(BytePoolBase& pool) override {
+        // allocate memory for the thread
+        void* stackStart;
         uint32_t errorCode = pool.allocateMemory(stackSize, &stackStart, NoWait);
-        TXError error = static_cast<TXError>(errorCode);
-        if (error != Success) return error;
-        //create the thread only if the memory allocation succeeded.
-        errorCode = tx_thread_create(&txThread, name, (void (*)(ULONG))entryFunction, (ULONG)data, stackStart,
-                                     stackSize, priority,preemptThreshold, timeSlice,
+        TXError error      = static_cast<TXError>(errorCode);
+        if (error != Success)
+            return error;
+        // create the thread only if the memory allocation succeeded.
+        errorCode = tx_thread_create(&txThread,
+                                     name,
+                                     (void (*)(ULONG)) entryFunction,
+                                     (ULONG) data,
+                                     stackStart,
+                                     stackSize,
+                                     priority,
+                                     preemptThreshold,
+                                     timeSlice,
                                      autoStart ? TX_AUTO_START : TX_DONT_START);
         return static_cast<TXError>(errorCode);
     }
@@ -80,9 +88,9 @@ public:
      *  The second argument to this function will be the threadID of this thread.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError registerEntryExitNotification(void(*notifyFunction)(Thread<T>, uint32_t)) {
-        storedThreadNotifyFunction = reinterpret_cast<void(*)(Initializable*, uint32_t)>(notifyFunction);
-        uint32_t errorCode = tx_thread_entry_exit_notify(&txThread, txNotifyFunction);
+    TXError registerEntryExitNotification(void (*notifyFunction)(Thread<T>, uint32_t)) {
+        storedThreadNotifyFunction = reinterpret_cast<void (*)(Initializable*, uint32_t)>(notifyFunction);
+        uint32_t errorCode         = tx_thread_entry_exit_notify(&txThread, txNotifyFunction);
         return static_cast<TXError>(errorCode);
     }
 
@@ -94,7 +102,7 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError setPreemptThreshold(uint32_t newThreshold, uint32_t* oldThresholdOut) {
-        uint32_t errorCode = tx_thread_preemption_change(&txThread, newThreshold, (UINT*)oldThresholdOut);
+        uint32_t errorCode = tx_thread_preemption_change(&txThread, newThreshold, (UINT*) oldThresholdOut);
         return static_cast<TXError>(errorCode);
     }
 
@@ -106,7 +114,7 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError setPriority(uint32_t newPriority, uint32_t* oldPriorityOut) {
-        uint32_t errorCode = tx_thread_priority_change(&txThread, newPriority, (UINT*)oldPriorityOut);
+        uint32_t errorCode = tx_thread_priority_change(&txThread, newPriority, (UINT*) oldPriorityOut);
         return static_cast<TXError>(errorCode);
     }
 
@@ -221,9 +229,9 @@ private:
     /**
      * Place to hold the template txNotifyFunctionTemplate
      */
-    void(*txNotifyFunction)(TX_THREAD*, UINT);
+    void (*txNotifyFunction)(TX_THREAD*, UINT);
 };
 
 } // namespace core::rtos
 
-#endif//EVT_RTOS_THREAD_
+#endif // EVT_RTOS_THREAD_

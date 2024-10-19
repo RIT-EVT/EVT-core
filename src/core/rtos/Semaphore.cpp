@@ -4,8 +4,7 @@
 namespace core::rtos {
 
 Semaphore::Semaphore(char* name, uint32_t initialCount)
-    : txSemaphore(), name(name), initialCount(initialCount), storedNotifyFunction() {
-}
+    : txSemaphore(), name(name), initialCount(initialCount), storedNotifyFunction() {}
 
 TXError Semaphore::init(BytePoolBase& pool) {
     return static_cast<TXError>(tx_semaphore_create(&txSemaphore, name, initialCount));
@@ -23,7 +22,7 @@ TXError Semaphore::put() {
     return static_cast<TXError>(tx_semaphore_put(&txSemaphore));
 }
 
-TXError Semaphore::registerNotifyFunction(void(*notifyFunction)(Semaphore*)) {
+TXError Semaphore::registerNotifyFunction(void (*notifyFunction)(Semaphore*)) {
     storedNotifyFunction = notifyFunction;
     return static_cast<TXError>(tx_semaphore_put_notify(&txSemaphore, txNotifyFunction));
 }
@@ -47,15 +46,14 @@ TXError Semaphore::getCount(uint32_t* currentCount) {
 }
 
 TXError Semaphore::getNameOfFirstSuspendedThread(char** threadName) {
-    TX_THREAD *thread;
+    TX_THREAD* thread;
     uint32_t status = tx_semaphore_info_get(&txSemaphore, nullptr, nullptr, &thread, nullptr, nullptr);
-    //exit early if the call failed
+    // exit early if the call failed
     if (status != Success)
         return static_cast<TXError>(status);
 
-    //read the name off the struct
-    status = tx_thread_info_get(thread, threadName, nullptr, nullptr, nullptr,
-                                nullptr, nullptr, nullptr, nullptr);
+    // read the name off the struct
+    status = tx_thread_info_get(thread, threadName, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
 
     return static_cast<TXError>(status);
 }
@@ -65,5 +63,4 @@ TXError Semaphore::getNumSuspendedThreads(uint32_t* numSuspendedThreads) {
     return static_cast<TXError>(status);
 }
 
-
-} //namespace core::rtos
+} // namespace core::rtos
