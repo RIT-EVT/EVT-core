@@ -45,26 +45,16 @@ ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
         return;
     }
 
-    // Initialization of each HAL ADC should only take place once since
-    // each individual ADC has multiple channels supported
-    if (adcState->isADCInit) {
-        HAL_ADC_Stop_DMA(&adcState->halADC);
-        HAL_DMA_DeInit(&adcState->halDMA);
-    } else {
-        __HAL_RCC_DMA2_CLK_ENABLE();
-        adcState->isADCInit = true;
-    }
-
+    initADC(rank);
 //    addChannel(adcState->rank);
     addChannel(rank);
 //    initADC(adcState->rank);
-    initADC(rank);
 
-    initDMA();
+//    initDMA();
 
 //    HAL_ADC_Start_DMA(&adcState->halADC, reinterpret_cast<uint32_t*>(&adcState->buffer[0]), adcState->rank);
-    HAL_ADC_Start_DMA(&adcState->halADC, reinterpret_cast<uint32_t*>(&buffer[0]), rank);
-
+//    HAL_ADC_Start_DMA(&adcState->halADC, reinterpret_cast<uint32_t*>(&buffer[0]), rank);
+    HAL_ADC_Start(&adcState->halADC);
 //    adcState->rank++;
     rank++;
 }
@@ -79,9 +69,14 @@ uint32_t ADCf4xx::readRaw() {
     // use
     uint8_t channelNum = 0;
     ADCf4xx::ADC_State_t* adcState = &adcArray[getADCNum()];
-    while (adcState->channels[channelNum] != pin)
-        channelNum++;
-    return buffer[channelNum];
+
+    HAL_ADC_PollForConversion(&adcState->halADC, HAL_MAX_DELAY);
+    return HAL_ADC_GetValue(&adcState->halADC);
+
+//    while (adcState->channels[channelNum] != pin)
+//        channelNum++;
+//
+//    return buffer[channelNum];
 }
 
 float ADCf4xx::readPercentage() {
@@ -105,7 +100,7 @@ void ADCf4xx::initADC(uint8_t num_channels) {
     halADC->Init.ExternalTrigConv      = ADC_SOFTWARE_START;
     halADC->Init.DataAlign             = ADC_DATAALIGN_RIGHT;
     halADC->Init.NbrOfConversion       = num_channels;
-    halADC->Init.DMAContinuousRequests = ENABLE;
+    halADC->Init.DMAContinuousRequests = DISABLE;
     halADC->Init.EOCSelection          = ADC_EOC_SEQ_CONV;
 
     switch (getADCNum()) {
@@ -239,7 +234,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
     adcState->channels[rank - 1] = pin;
 
     adcChannel.Rank         = rank;
-    adcChannel.SamplingTime = ADC_SAMPLETIME_480CYCLES;
+    adcChannel.SamplingTime = ADC_SAMPLETIME_3CYCLES;
     adcChannel.Offset       = 0;
     adcChannel.Offset       = 0x000;
 
