@@ -21,7 +21,7 @@ int main() {
 
    time::wait(500);
 
-   IO::ADC& adc0 = IO::getADC<IO::Pin::PA_0>();
+   IO::ADC& adc0 = IO::getADC<IO::Pin::PC_4>();
 
    while (1) {
        uart.printf("--------------------\r\n");
