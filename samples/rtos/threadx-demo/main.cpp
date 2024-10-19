@@ -10,6 +10,7 @@
 #include <EVT/manager.hpp>
 #include <EVT/utils/log.hpp>
 
+///rtos includes
 
 #include <EVT/rtos/Semaphore.hpp>
 #include <EVT/rtos/Enums.hpp>
@@ -31,6 +32,9 @@ namespace rtos = core::rtos;
 #define DEMO_QUEUE_SIZE 100
 #define TX_APP_MEM_POOL_SIZE 65536
 
+/**
+ * Struct definition that holds all the counters for each thread.
+ */
 typedef struct counters {
     uint32_t global_count; //Times a random number has been sent and received
     uint32_t global_sum;  //Sum of random numbers
@@ -47,7 +51,7 @@ typedef struct thread_0_args {
     rtos::Semaphore* semaphore;
     rtos::wrapper::UARTTX* uarttx;
     counters_t* counters;
-} thread_0_args_t;
+} controller_thread_args_t;
 
 typedef struct other_thread_args {
     rtos::Queue* queue;
@@ -59,11 +63,9 @@ typedef struct other_thread_args {
 } other_thread_args_t;
 
 ///Function Prototypes
-///TODO: UART thread test
-void thread_0_entry(thread_0_args_t* args);
-void thread_1_entry(other_thread_args_t* args);
-void thread_2_entry(other_thread_args_t* args);
-void thread_3_entry(other_thread_args_t* args);
+void controllerThreadEntry(controller_thread_args_t* args);
+void otherThreadEntry(other_thread_args_t* args);
+void semaphoreThreadEntry(other_thread_args_t* args);
 
 
 int main() {
@@ -76,25 +78,26 @@ int main() {
     log::LOGGER.setUART(&uart);
     log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
 
-    //create all the initializable methods
+    //create all the initializable objects
     rtos::wrapper::UARTTX uarttx(uart);
     rtos::Queue q1((char*)"queue", 16, 8);
     rtos::BytePool<TX_APP_MEM_POOL_SIZE> txPool((char*)"txBytePool");
     rtos::Semaphore semaphore((char*)"Semaphore 1", 1);
     rtos::EventFlags eventFlags((char*)"Event Flags");
 
+    //create the counters (they all start at 0)
     counters_t counters = {
         0,0,0,0,0,0,0,0
     };
 
     //create the thread 0 argument struct
-    thread_0_args_t thread_0_args = {&q1, &semaphore, &uarttx, &counters};
+    controller_thread_args_t controllerThreadArgs = {&q1, &semaphore, &uarttx, &counters};
 
     //create thread 0
-    rtos::Thread<thread_0_args_t*> thread0((char*)"Worker Thread 0", thread_0_entry, &thread_0_args,
+    rtos::Thread<controller_thread_args_t*> controllerThread((char*)"Controller Thread", controllerThreadEntry, &controllerThreadArgs,
                                            DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
 
-    //create the struct that holds the other thread arguments
+    //create the structs that holds the other thread arguments
     other_thread_args_t thread_1_args = {&q1, &semaphore, &uarttx, &eventFlags, 1, &counters};
 
     other_thread_args_t thread_2_args = {&q1, &semaphore, &uarttx, &eventFlags, 2, &counters};
@@ -102,24 +105,24 @@ int main() {
     other_thread_args_t thread_3_args = {&q1, &semaphore, &uarttx, &eventFlags, 3, &counters};
 
     //create thread1
-    rtos::Thread<other_thread_args_t *> thread1((char*)"Thread 1", thread_1_entry, &thread_1_args,
+    rtos::Thread<other_thread_args_t *> thread1((char*)"Thread 1", otherThreadEntry, &thread_1_args,
                                                DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
     //create thread2
-    rtos::Thread<other_thread_args_t *> thread2((char*)"Thread 2", thread_1_entry, &thread_2_args,
+    rtos::Thread<other_thread_args_t *> thread2((char*)"Thread 2", otherThreadEntry, &thread_2_args,
                                                DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
     //create thread3
-    rtos::Thread<other_thread_args_t *> thread3((char*)"Thread 3", thread_3_entry, &thread_3_args,
+    rtos::Thread<other_thread_args_t *> semaphoreThread((char*)"Thread 3", semaphoreThreadEntry, &thread_3_args,
                                                DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
 
     uart.printf("About to start the kernel.\n\r");
 
 
-    //create the initializable array
+    //create the initializable array- this must include all the initializable objects
     rtos::Initializable *arr[] = {
-        &thread0, &uarttx,&q1,&semaphore, &eventFlags, &thread1, &thread2, &thread3
+        &controllerThread, &uarttx,&q1,&semaphore, &eventFlags, &thread1, &thread2, &semaphoreThread
     };
 
-    //start the kernel
+    //start the kernel (the kernel takes in the array of initializables and initializes them when the threadx kernel starts)
     rtos::startKernel(arr, 8, txPool);
 
     //the startKernel method doesn't actually return so this will never happen.
@@ -127,7 +130,7 @@ int main() {
 }
 
 ///Function definitions
-void thread_0_entry(thread_0_args_t* args) {
+void controllerThreadEntry(controller_thread_args_t* args) {
     srand(77);
     rtos::TXError queue_status;
     uint32_t num;
@@ -190,11 +193,11 @@ void thread_0_entry(thread_0_args_t* args) {
         }
 
         args->semaphore->put();
-        //rtos::sleep(S_TO_TICKS(1));
+        rtos::sleep(S_TO_TICKS(1));
     }
 }
 
-void thread_1_entry(other_thread_args_t* args) {
+void otherThreadEntry(other_thread_args_t* args) {
     ULONG received_message;
     rtos::TXError queue_status;
     rtos::TXError semaphore_status;
@@ -235,12 +238,11 @@ void thread_1_entry(other_thread_args_t* args) {
                     args->num, received_message, args->num, args->counters->thread1_count, args->num, args->counters->thread1_sum);
 
         semaphore_status = args->semaphore->put();
-        //tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 1);
-        //rtos::sleep(S_TO_TICKS(1));
+        rtos::sleep(S_TO_TICKS(1));
     }
 }
 
-void thread_3_entry(other_thread_args_t* args) {
+void semaphoreThreadEntry(other_thread_args_t* args) {
 
     IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();
     DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
@@ -260,6 +262,6 @@ void thread_3_entry(other_thread_args_t* args) {
             led.toggle();
         }
 
-        //rtos::sleep(S_TO_TICKS(1));
+        rtos::sleep(S_TO_TICKS(1));
     }
 }
