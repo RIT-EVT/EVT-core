@@ -132,7 +132,7 @@ int main() {
      * be manually called. Also, make sure the length of the array is correct in startKernel.
      */
     rtos::Initializable* arr[] = {
-        &controllerThread, &uarttx, &q1, &semaphore, &eventFlags, &thread1, &thread2, &semaphoreThread};
+        &controllerThread, &uarttx, &q1, &semaphore, &eventFlags, &thread1, &thread2, &eventFlagThread};
 
     // start the kernel (the kernel takes in the array of initializables and initializes them when the threadx kernel
     // starts)
