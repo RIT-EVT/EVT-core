@@ -4,7 +4,6 @@
 
 #include <core/rtos/Initializable.hpp>
 #include <cstdint>
-#include <functional>
 
 namespace core::rtos {
 

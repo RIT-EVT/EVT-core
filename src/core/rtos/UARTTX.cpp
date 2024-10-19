@@ -5,8 +5,8 @@
 #include <cstdio>
 #include <cstdint>
 
-namespace log = EVT::core::log;
-namespace IO = EVT::core::IO;
+namespace log = core::log;
+namespace io = core::io;
 namespace core::rtos::wrapper {
 
 /**

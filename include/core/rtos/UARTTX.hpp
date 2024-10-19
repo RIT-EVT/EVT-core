@@ -19,7 +19,7 @@
 #define UARTTX_DEFAULT_PREEMPT_THRESHOLD 0u
 #define UARTTX_DEFAULT_TIME_SLICE MS_TO_TICKS(500)
 
-namespace IO = EVT::core::IO;
+namespace IO = core::io;
 namespace core::rtos::wrapper {
 
 /**
@@ -43,7 +43,7 @@ namespace core::rtos::wrapper {
  * will lead to your code slowly shutting down for no discernable reason.
  * There is no need to modify UARTTX's thread's method, so don't. Don't do it.
  */
-class UARTTX: public Initializable, IO::UART {
+class UARTTX: public Initializable, io::UART {
 public:
 
     /**
