@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include <EVT/io/GPIO.hpp>
+#include <core/io/GPIO.hpp>
 
 #ifndef EVT_SPI_TIMEOUT
     #define EVT_SPI_TIMEOUT 100
@@ -12,16 +12,16 @@
 #define SPI_MSB_FIRST true
 #define SPI_LSB_FIRST false
 
-#define SPI_SPEED_4MHZ 4000000
-#define SPI_SPEED_2MHZ 2000000
-#define SPI_SPEED_1MHZ 1000000
+#define SPI_SPEED_4MHZ   4000000
+#define SPI_SPEED_2MHZ   2000000
+#define SPI_SPEED_1MHZ   1000000
 #define SPI_SPEED_500KHZ 500000
 #define SPI_SPEED_250KHZ 250000
 #define SPI_SPEED_125KHZ 125000
-#define SPI_SPEED_62KHZ 62500
-#define SPI_SPEED_31KHZ 31250
+#define SPI_SPEED_62KHZ  62500
+#define SPI_SPEED_31KHZ  31250
 
-namespace EVT::core::IO {
+namespace core::io {
 
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
@@ -34,9 +34,9 @@ public:
      * Represents the current state of using the SPI interface.
      */
     enum class SPIStatus {
-        OK = 0,
-        ERROR = 1,
-        BUSY = 2,
+        OK      = 0,
+        ERROR   = 1,
+        BUSY    = 2,
         TIMEOUT = 3,
     };
 
@@ -189,6 +189,6 @@ protected:
     GPIO* CSPins[MAX_PINS] = {};
 };
 
-}// namespace EVT::core::IO
+} // namespace core::io
 
 #endif

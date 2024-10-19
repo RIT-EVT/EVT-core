@@ -1,33 +1,33 @@
 #ifndef _EVT_LCD_
 #define _EVT_LCD_
 
-#include <EVT/io/GPIO.hpp>
-#include <EVT/io/SPI.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/io/pin.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/io/GPIO.hpp>
+#include <core/io/SPI.hpp>
+#include <core/io/UART.hpp>
+#include <core/io/pin.hpp>
+#include <core/utils/time.hpp>
 #include <stdint.h>
 
-#define ADCSELECT 0xA0
-#define DISPLAYOFF 0xAE
-#define COMDIRSCAN 0xC8
-#define LCDBIASET 0xA2
-#define POWERCONTROLSET 0x2F
-#define RESRATIOSET 0x26
+#define ADCSELECT            0xA0
+#define DISPLAYOFF           0xAE
+#define COMDIRSCAN           0xC8
+#define LCDBIASET            0xA2
+#define POWERCONTROLSET      0x2F
+#define RESRATIOSET          0x26
 #define ELECTRONICVOLCOMMAND 0x81
-#define ELECTRONICVOLVALUE 0x11
-#define DISPLAYON 0xAF
-#define DISPLAYOFF 0xAE
+#define ELECTRONICVOLVALUE   0x11
+#define DISPLAYON            0xAF
+#define DISPLAYOFF           0xAE
 
-#define MAX_SECTIONS 12
-#define MAX_SECTION_HEIGHT 8
+#define MAX_SECTIONS        12
+#define MAX_SECTION_HEIGHT  8
 #define MAX_SECTION_PER_ROW 3
 
-namespace EVT::core::DEV {
+namespace core::dev {
 /**
-* This class represents the structure to command a GLCD with
-* a ST7565 controller.
-*/
+ * This class represents the structure to command a GLCD with
+ * a ST7565 controller.
+ */
 class LCD {
 public:
     /**
@@ -46,18 +46,19 @@ public:
      * @param[in] spi SPI class for communication
      * @param[in] bitMap bitmap to display to the LCD
      */
-    LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi);
+    LCD(core::io::GPIO& regSelect, core::io::GPIO& reset, core::io::SPI& spi);
 
     /**
-      * Constructor for the LCD class
-      *
-      * @param[in] regSelect Register select pin
-      * @param[in] reset Reset pin
-      * @param[in] spi SPI class for communication
-      * @param[in] numberOfSections number of sections that the display will show
-      * @param[in] sectionsPerRow number of sections per row to display
-      */
-    LCD(EVT::core::IO::GPIO& regSelect, EVT::core::IO::GPIO& reset, EVT::core::IO::SPI& spi, uint8_t numberOfSections, uint8_t sectionsPerRow);
+     * Constructor for the LCD class
+     *
+     * @param[in] regSelect Register select pin
+     * @param[in] reset Reset pin
+     * @param[in] spi SPI class for communication
+     * @param[in] numberOfSections number of sections that the display will show
+     * @param[in] sectionsPerRow number of sections per row to display
+     */
+    LCD(core::io::GPIO& regSelect, core::io::GPIO& reset, core::io::SPI& spi, uint8_t numberOfSections,
+        uint8_t sectionsPerRow);
 
     /**
      * Writes data to the LCD
@@ -178,16 +179,16 @@ private:
     uint8_t sectionsPerRow;
 
     /** Register select pin for the LCD */
-    EVT::core::IO::GPIO& regSelect;
+    core::io::GPIO& regSelect;
 
     /** Reset pin for the LCD */
-    EVT::core::IO::GPIO& reset;
+    core::io::GPIO& reset;
 
     /** Chip select pin for the LCD */
-    //EVT::core::IO::GPIO& chipSelect; // TODO: Need to figure out purpose of this
+    // core::io::GPIO& chipSelect; // TODO: Need to figure out purpose of this
 
     /** SPI port for the LCD controller */
-    EVT::core::IO::SPI& spi;
+    core::io::SPI& spi;
 
     /** The default section titles for the display */
     char* sectionTitles[MAX_SECTIONS] = {
@@ -203,6 +204,6 @@ private:
     };
 };
 
-}// namespace EVT::core::DEV
+} // namespace core::dev
 
 #endif

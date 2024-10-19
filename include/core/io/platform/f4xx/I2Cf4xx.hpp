@@ -5,13 +5,13 @@
 
 #include <HALf4/stm32f4xx.h>
 
-#include <EVT/io/I2C.hpp>
+#include <core/io/I2C.hpp>
 
 #ifndef EVT_I2C_TIMEOUT
     #define EVT_I2C_TIMEOUT 100
 #endif
 
-namespace EVT::core::IO {
+namespace core::io {
 
 class I2Cf4xx : public I2C {
 public:
@@ -32,21 +32,15 @@ public:
 
     I2C::I2CStatus read(uint8_t addr, uint8_t* bytes, uint8_t length) override;
 
-    I2C::I2CStatus writeMemReg(uint8_t addr, uint32_t memAddress,
-                               uint8_t byte, uint16_t memAddSize,
+    I2C::I2CStatus writeMemReg(uint8_t addr, uint32_t memAddress, uint8_t byte, uint16_t memAddSize,
                                uint8_t maxWriteTime) override;
 
-    I2C::I2CStatus readMemReg(uint8_t addr, uint32_t memAddress,
-                              uint8_t* byte,
-                              uint16_t memAddSize) override;
+    I2C::I2CStatus readMemReg(uint8_t addr, uint32_t memAddress, uint8_t* byte, uint16_t memAddSize) override;
 
-    I2C::I2CStatus writeMemReg(uint8_t addr, uint32_t memAddress,
-                               uint8_t* bytes, uint8_t size,
-                               uint16_t memAddSize,
+    I2C::I2CStatus writeMemReg(uint8_t addr, uint32_t memAddress, uint8_t* bytes, uint8_t size, uint16_t memAddSize,
                                uint8_t maxWriteTime) override;
 
-    I2C::I2CStatus readMemReg(uint8_t addr, uint32_t memAddress,
-                              uint8_t* bytes, uint8_t size,
+    I2C::I2CStatus readMemReg(uint8_t addr, uint32_t memAddress, uint8_t* bytes, uint8_t size,
                               uint16_t memAddSize) override;
 
 private:
@@ -64,6 +58,6 @@ private:
     static I2C::I2CStatus halToI2CStatus(HAL_StatusTypeDef halStatus);
 };
 
-}// namespace EVT::core::IO
+} // namespace core::io
 
 #endif

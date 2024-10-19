@@ -13,13 +13,13 @@
  * For commit from before code was removed, refer to commit 81624521a8b2c4b66480193e88cf32782aaee84d.
  */
 
-#include <EVT/io/pin.hpp>
-#include <EVT/io/platform/f4xx/ADCf4xx.hpp>
-#include <EVT/io/platform/f4xx/GPIOf4xx.hpp>
 #include <HALf4/stm32f4xx.h>
 #include <HALf4/stm32f4xx_hal_adc.h>
+#include <core/io/pin.hpp>
+#include <core/io/platform/f4xx/ADCf4xx.hpp>
+#include <core/io/platform/f4xx/GPIOf4xx.hpp>
 
-namespace EVT::core::IO {
+namespace core::io {
 
 // Init static member variables
 ADC_HandleTypeDef ADCf4xx::halADC = {0};
@@ -56,8 +56,7 @@ ADCf4xx::ADCf4xx(Pin pin) : ADC(pin) {
 
     initDMA();
 
-    HAL_ADC_Start_DMA(&halADC, reinterpret_cast<uint32_t*>(&buffer[0]),
-                      rank);
+    HAL_ADC_Start_DMA(&halADC, reinterpret_cast<uint32_t*>(&buffer[0]), rank);
 
     rank++;
 }
@@ -84,34 +83,34 @@ float ADCf4xx::readPercentage() {
 void ADCf4xx::initADC(uint8_t num_channels) {
     /** Configure the global features of the ADC (Clock, Resolution, Data
      * Alignment and number of conversion)
-      */
-    halADC.Instance = ADC1;
-    halADC.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
-    halADC.Init.Resolution = ADC_RESOLUTION_12B;
-    halADC.Init.ScanConvMode = ENABLE;
-    halADC.Init.ContinuousConvMode = ENABLE;
+     */
+    halADC.Instance                   = ADC1;
+    halADC.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV2;
+    halADC.Init.Resolution            = ADC_RESOLUTION_12B;
+    halADC.Init.ScanConvMode          = ENABLE;
+    halADC.Init.ContinuousConvMode    = ENABLE;
     halADC.Init.DiscontinuousConvMode = DISABLE;
-    halADC.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-    halADC.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-    halADC.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-    halADC.Init.NbrOfConversion = num_channels;
+    halADC.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_NONE;
+    halADC.Init.ExternalTrigConv      = ADC_SOFTWARE_START;
+    halADC.Init.DataAlign             = ADC_DATAALIGN_RIGHT;
+    halADC.Init.NbrOfConversion       = num_channels;
     halADC.Init.DMAContinuousRequests = ENABLE;
-    halADC.Init.EOCSelection = ADC_EOC_SEQ_CONV;
+    halADC.Init.EOCSelection          = ADC_EOC_SEQ_CONV;
 
     __HAL_RCC_ADC1_CLK_ENABLE();
     HAL_ADC_Init(&halADC);
 }
 
 void ADCf4xx::initDMA() {
-    halDMA.Instance = DMA2_Stream0;
-    halDMA.Init.Direction = DMA_PERIPH_TO_MEMORY;
-    halDMA.Init.PeriphInc = DMA_PINC_DISABLE;
-    halDMA.Init.MemInc = DMA_MINC_ENABLE;
+    halDMA.Instance                 = DMA2_Stream0;
+    halDMA.Init.Direction           = DMA_PERIPH_TO_MEMORY;
+    halDMA.Init.PeriphInc           = DMA_PINC_DISABLE;
+    halDMA.Init.MemInc              = DMA_MINC_ENABLE;
     halDMA.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
-    halDMA.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-    halDMA.Init.Mode = DMA_CIRCULAR;
-    halDMA.Init.Priority = DMA_PRIORITY_VERY_HIGH;
-    halDMA.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+    halDMA.Init.MemDataAlignment    = DMA_MDATAALIGN_HALFWORD;
+    halDMA.Init.Mode                = DMA_CIRCULAR;
+    halDMA.Init.Priority            = DMA_PRIORITY_VERY_HIGH;
+    halDMA.Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
 
     HAL_DMA_Init(&halDMA);
     __HAL_LINKDMA(&halADC, DMA_Handle, halDMA);
@@ -119,11 +118,10 @@ void ADCf4xx::initDMA() {
 
 void ADCf4xx::addChannel(uint8_t rank) {
     GPIO_InitTypeDef gpioInit;
-    Pin myPins[] = {pin};
+    Pin myPins[]      = {pin};
     uint8_t numOfPins = 1;
 
-    GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG,
-                            GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
+    GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;
 
@@ -177,18 +175,18 @@ void ADCf4xx::addChannel(uint8_t rank) {
         adcChannel.Channel = ADC_CHANNEL_15;
         break;
     default:
-        break;// Should never get here
+        break; // Should never get here
     }
 
     // Subtract 1 because rank starts at 1
     channels[rank - 1] = pin;
 
-    adcChannel.Rank = rank;
+    adcChannel.Rank         = rank;
     adcChannel.SamplingTime = ADC_SAMPLETIME_480CYCLES;
-    adcChannel.Offset = 0;
-    adcChannel.Offset = 0x000;
+    adcChannel.Offset       = 0;
+    adcChannel.Offset       = 0x000;
 
     HAL_ADC_ConfigChannel(&halADC, &adcChannel);
 }
 
-}// namespace EVT::core::IO
+} // namespace core::io

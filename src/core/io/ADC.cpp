@@ -1,9 +1,9 @@
-#include <EVT/io/ADC.hpp>
+#include <core/io/ADC.hpp>
 
-namespace EVT::core::IO {
+namespace core::io {
 
 ADC::ADC(Pin pin) {
     this->pin = pin;
 }
 
-}// namespace EVT::core::IO
+} // namespace core::io

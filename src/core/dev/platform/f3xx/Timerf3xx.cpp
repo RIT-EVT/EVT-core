@@ -1,12 +1,12 @@
-#include <EVT/dev/platform/f3xx/Timerf3xx.hpp>
+#include <core/dev/platform/f3xx/Timerf3xx.hpp>
 
-#include <EVT/platform/f3xx/stm32f3xx.hpp>
+#include <core/platform/f3xx/stm32f3xx.hpp>
 
 TIM_HandleTypeDef halTimers[4];
 void (*timerInterruptHandlers[4])(void* htim) = {nullptr};
 
 enum class timerInterruptIndex {
-    TIM2_IDX = 0u,
+    TIM2_IDX  = 0u,
     TIM15_IDX = 1u,
     TIM16_IDX = 2u,
     TIM17_IDX = 3u
@@ -31,10 +31,10 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim) {
         __HAL_RCC_TIM17_CLK_ENABLE();
         irqNum = TIM17_IRQn;
     } else {
-        return;// Should never reach, but if an invalid peripheral is passed in then simply return
+        return; // Should never reach, but if an invalid peripheral is passed in then simply return
     }
 
-    HAL_NVIC_SetPriority(irqNum, EVT::core::platform::TIMER_INTERRUPT_PRIORITY, 0);
+    HAL_NVIC_SetPriority(irqNum, core::platform::TIMER_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(irqNum);
 }
 
@@ -55,7 +55,7 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
         __HAL_RCC_TIM17_CLK_DISABLE();
         irqNum = TIM17_IRQn;
     } else {
-        return;// Should never reach, but if an invalid peripheral is passed in then simply return
+        return; // Should never reach, but if an invalid peripheral is passed in then simply return
     }
 
     HAL_NVIC_DisableIRQ(irqNum);
@@ -108,7 +108,7 @@ uint8_t getTimerInterruptIndex(TIM_TypeDef* peripheral) {
     return interruptIdx;
 }
 
-namespace EVT::core::DEV {
+namespace core::dev {
 
 Timerf3xx::Timerf3xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
     initTimer(timerPeripheral, clockPeriod);
@@ -117,32 +117,36 @@ Timerf3xx::Timerf3xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
 
 void Timerf3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
     this->clockPeriod = clockPeriod;
-    auto& htim = halTimers[getTimerInterruptIndex(timerPeripheral)];
+    auto& htim        = halTimers[getTimerInterruptIndex(timerPeripheral)];
 
-    htim.Instance = timerPeripheral;
-    uint32_t prescaler = EVT::core::platform::CLK_SPEED / 1000;
-    htim.Init.Prescaler = prescaler;// Sets f_CK_PSC to 1000 Hz
+    htim.Instance       = timerPeripheral;
+    uint32_t prescaler  = HAL_RCC_GetHCLKFreq() / 1000;
+    htim.Init.Prescaler = prescaler - 1; // Sets f_CK_PSC to 1000 Hz
     // Allows period increments of 1 ms with max of 2^(32) ms.
-    htim.Init.CounterMode = TIM_COUNTERMODE_UP;
-    htim.Init.Period = clockPeriod;
-    htim.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    htim.Init.CounterMode       = TIM_COUNTERMODE_UP;
+    htim.Init.Period            = clockPeriod - 1;
+    htim.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
     htim.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
     HAL_TIM_Base_Init(&htim);
 
-    TIM_ClockConfigTypeDef clockConfig = {0};
+    TIM_ClockConfigTypeDef clockConfig   = {0};
     TIM_MasterConfigTypeDef masterConfig = {0};
 
     clockConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
     HAL_TIM_ConfigClockSource(&htim, &clockConfig);
 
     masterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-    masterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+    masterConfig.MasterSlaveMode     = TIM_MASTERSLAVEMODE_DISABLE;
     HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
 }
 
 void Timerf3xx::startTimer(void (*irqHandler)(void* htim)) {
     TIM_TypeDef* timerPeripheral = this->halTimer->Instance;
-    stopTimer();
+    // If timer is not waiting to start, stop it
+    if (halTimer->State != HAL_TIM_STATE_READY) {
+        stopTimer();
+    }
+
     timerInterruptHandlers[getTimerInterruptIndex(timerPeripheral)] = irqHandler;
     startTimer();
 }
@@ -152,7 +156,10 @@ void Timerf3xx::stopTimer() {
 }
 
 void Timerf3xx::startTimer() {
-    stopTimer();// Stop timer in case it was already running
+    // If timer is not waiting to start, stop it
+    if (halTimer->State != HAL_TIM_STATE_READY) {
+        stopTimer(); // Stop timer in case it was already running
+    }
 
     auto htim = this->halTimer;
     // Clear the interrupt flag so interrupt doesn't trigger immediately
@@ -161,11 +168,11 @@ void Timerf3xx::startTimer() {
 }
 
 void Timerf3xx::reloadTimer() {
-    this->halTimer->Instance->CNT &= ~(0xFFFFFFFF);// Clear the Counter register to reset the timer
+    this->halTimer->Instance->CNT = 0; // Clear the Counter register to reset the timer
 }
 
 void Timerf3xx::setPeriod(uint32_t clockPeriod) {
     stopTimer();
     initTimer(this->halTimer->Instance, clockPeriod);
 }
-}// namespace EVT::core::DEV
+} // namespace core::dev

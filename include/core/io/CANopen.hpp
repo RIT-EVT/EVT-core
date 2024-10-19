@@ -9,18 +9,18 @@
 #include "CANDevice.hpp"
 #include "co_core.h"
 
-#include <EVT/dev/RTC.hpp>
-#include <EVT/dev/Timer.hpp>
-#include <EVT/io/CAN.hpp>
-#include <EVT/io/types/CANMessage.hpp>
-#include <EVT/utils/types/FixedQueue.hpp>
+#include <core/dev/RTC.hpp>
+#include <core/dev/Timer.hpp>
+#include <core/io/CAN.hpp>
+#include <core/io/types/CANMessage.hpp>
+#include <core/utils/types/FixedQueue.hpp>
 
-//Allows for resizable CANOpen queue if needed
+// Allows for resizable CANOpen queue if needed
 #ifndef CANOPEN_QUEUE_SIZE
     #define CANOPEN_QUEUE_SIZE 150
 #endif
 
-namespace EVT::core::IO {
+namespace core::io {
 
 /**
  * Get an instance of the CAN driver that can be used with the CANopen
@@ -31,8 +31,7 @@ namespace EVT::core::IO {
  * @param[in] messageQueue Queue that will be read from for receiveing CAN messages
  * @param[out] canDriver The CANopen stack driver to populate
  */
-void getCANopenCANDriver(CAN* can,
-                         types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* messageQueue,
+void getCANopenCANDriver(CAN* can, types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>* messageQueue,
                          CO_IF_CAN_DRV* canDriver);
 
 /**
@@ -43,7 +42,7 @@ void getCANopenCANDriver(CAN* can,
  * @param[in] timer The timer interface to use
  * @param[out] timerDriver The timer driver to populate
  */
-void getCANopenTimerDriver(DEV::Timer* timer, CO_IF_TIMER_DRV* timerDriver);
+void getCANopenTimerDriver(dev::Timer* timer, CO_IF_TIMER_DRV* timerDriver);
 
 /**
  * Get an instance of the NVM (non-volitile memory) that can be used
@@ -69,7 +68,9 @@ void getCANopenNVMDriver(CO_IF_NVM_DRV* nvmDriver);
  * @param timerDriver[in,out] the timer driver.
  * @param canDriver[in,out] the general CAN driver.
  */
-void initializeCANopenDriver(types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessage>* canOpenQueue, IO::CAN* can, EVT::core::DEV::Timer* timer, CO_IF_DRV* canStackDriver, CO_IF_NVM_DRV* nvmDriver, CO_IF_TIMER_DRV* timerDriver, CO_IF_CAN_DRV* canDriver);
+void initializeCANopenDriver(types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>* canOpenQueue, io::CAN* can,
+                             core::dev::Timer* timer, CO_IF_DRV* canStackDriver, CO_IF_NVM_DRV* nvmDriver,
+                             CO_IF_TIMER_DRV* timerDriver, CO_IF_CAN_DRV* canDriver);
 
 /**
  * This function initializes a CO_NODE by taking in the CANDevice,
@@ -82,7 +83,8 @@ void initializeCANopenDriver(types::FixedQueue<CANOPEN_QUEUE_SIZE, IO::CANMessag
  * @param sdoBuffer[in] the sdoBuffer
  * @param appTmrMem[in] the appTmrMem
  */
-void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* canStackDriver, uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE], CO_TMR_MEM appTmrMem[16]);
+void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* canStackDriver,
+                           uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE], CO_TMR_MEM appTmrMem[16]);
 
 /**
  * Takes in a reference to a CO_NODE and processes events
@@ -92,6 +94,6 @@ void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* ca
  */
 void processCANopenNode(CO_NODE* canNode);
 
-}// namespace EVT::core::IO
+} // namespace core::io
 
 #endif

@@ -3,13 +3,13 @@
 
 #include <stdint.h>
 
-#include <EVT/io/types/CANMessage.hpp>
+#include <core/io/types/CANMessage.hpp>
 
 #ifndef EVT_CAN_TIMEOUT
     #define EVT_CAN_TIMEOUT 255
 #endif
 
-namespace EVT::core::IO {
+namespace core::io {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
@@ -34,9 +34,9 @@ public:
      * interface.
      */
     enum class CANStatus {
-        OK = 0,
+        OK      = 0,
         TIMEOUT = 1,
-        ERROR = 2
+        ERROR   = 2
     };
 
     /**
@@ -94,7 +94,7 @@ public:
      * Instantiates a new CAN filter using the 16-bit ID-Mask mode. If a filter bank
      * that is already in use is provided, the existing filter will be overwritten.
      * A second pair of filter Id and mask can be given to the same filter bank.
-     * 
+     *
      * @param[in] filterExplicitId 11-bit identifier that must be an exact match to pass
      * @param[in] filterMask 16-bit mask where [1] means care and [0] means don't care
      * @param[in] filterBank value between 0-13 where the filter info is stored
@@ -105,7 +105,7 @@ public:
     /**
      * Enable or disable a filter that lets through any CAN messages that, following the CANopen
      * standard, begin with the Emergency code of 001
-     * 
+     *
      * @param[in] state Enum passed to set filter functional state
      * @return The status associated with setting the energency filter state
      */
@@ -144,6 +144,7 @@ protected:
     /** If CAN should operate in loop back mode */
     bool loopbackEnabled;
 };
-}// namespace EVT::core::IO
+
+} // namespace core::io
 
 #endif

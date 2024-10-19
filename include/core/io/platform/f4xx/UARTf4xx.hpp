@@ -1,11 +1,11 @@
 #ifndef _EVT_UARTf4xx_
 #define _EVT_UARTf4xx_
 
-#include <EVT/io/UART.hpp>
 #include <HALf4/stm32f4xx.h>
+#include <core/io/UART.hpp>
 #include <cstdint>
 
-namespace EVT::core::IO {
+namespace core::io {
 
 class UARTf4xx : public UART {
 public:
@@ -21,8 +21,7 @@ public:
 
     void setBaudrate(uint32_t baudrate);
 
-    void setFormat(WordLength wordLength = WordLength::EIGHT,
-                   Parity parity = Parity::NONE,
+    void setFormat(WordLength wordLength = WordLength::EIGHT, Parity parity = Parity::NONE,
                    NumStopBits numStopBits = NumStopBits::ONE);
 
     void sendBreak();
@@ -51,5 +50,5 @@ private:
     /// HAL representation of the UART
     UART_HandleTypeDef halUART;
 };
-}// namespace EVT::core::IO
+} // namespace core::io
 #endif

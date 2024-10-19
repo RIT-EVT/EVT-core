@@ -3,9 +3,9 @@
 
 #include <HALf3/stm32f3xx.h>
 
-#include <EVT/dev/RTC.hpp>
+#include <core/dev/RTC.hpp>
 
-namespace EVT::core::DEV {
+namespace core::dev {
 
 /**
  * RTC implementation that makes use of the on-board real time clock
@@ -20,17 +20,17 @@ public:
      */
     RTCf3xx();
 
-    void getTime(EVT::core::time::TimeStamp& time) override;
+    void getTime(core::time::TimeStamp& time) override;
 
     uint32_t getTime() override;
 
-    void setTime(EVT::core::time::TimeStamp& time) override;
+    void setTime(core::time::TimeStamp& time) override;
 
 private:
     /** Instance of the HAL RTC interface */
     RTC_HandleTypeDef halRTC;
 };
 
-}// namespace EVT::core::DEV
+} // namespace core::dev
 
 #endif

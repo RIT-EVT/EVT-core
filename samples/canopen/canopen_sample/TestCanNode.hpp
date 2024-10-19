@@ -1,8 +1,8 @@
 #include <co_core.h>
 #include <cstdint>
 
-#include <EVT/io/CANDevice.hpp>
-#include <EVT/io/CANOpenMacros.hpp>
+#include <core/io/CANDevice.hpp>
+#include <core/io/CANOpenMacros.hpp>
 
 /**
  * Representation of the CAN node. Handles constructing the object
@@ -50,9 +50,9 @@ public:
     uint8_t getNumElements() override;
 
     /**
-    * Get the device's node ID
-    *
-    * @return The node ID of the can device.
+     * Get the device's node ID
+     *
+     * @return The node ID of the can device.
      */
     uint8_t getNodeID() override;
 

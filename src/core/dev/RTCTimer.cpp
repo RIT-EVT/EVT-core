@@ -1,6 +1,6 @@
-#include <EVT/dev/RTCTimer.hpp>
+#include <core/dev/RTCTimer.hpp>
 
-namespace EVT::core::DEV {
+namespace core::dev {
 
 RTCTimer::RTCTimer(RTC& r) : rtc(r) {
     time = 0;
@@ -15,7 +15,7 @@ RTCTimer::RTCTimer(RTC& r, uint32_t clock) : rtc(r) {
 }
 
 void RTCTimer::startTimer() {
-    startTime = rtc.getTime();
+    startTime     = rtc.getTime();
     bTimerStopped = false;
 }
 
@@ -25,8 +25,8 @@ void RTCTimer::stopTimer() {
 }
 
 void RTCTimer::reloadTimer() {
-    time = 0;
-    startTime = rtc.getTime();
+    time          = 0;
+    startTime     = rtc.getTime();
     bTimerStopped = false;
 }
 
@@ -42,4 +42,4 @@ bool RTCTimer::hasGoneOff() {
     return getTime() >= clockPeriod;
 }
 
-}// namespace EVT::core::DEV
+} // namespace core::dev

@@ -20,12 +20,15 @@
 #include <core/rtos/Thread.hpp>
 #include <core/rtos/UARTTX.hpp>
 
-///Namespaces
-namespace IO = core::IO;
-namespace DEV = EVT::core::DEV;
-namespace time = EVT::core::time;
-namespace log = EVT::core::log;
+/// Namespaces
+namespace io   = core::io;
+namespace dev  = core::dev;
+namespace time = core::time;
+namespace log = core::log;
 namespace rtos = core::rtos;
+
+// Needs custom data type
+// Look into entry argument when creating a thread when determining what thread it is
 
 ///Defines
 #define DEMO_STACK_SIZE 1024
@@ -70,10 +73,10 @@ void semaphoreThreadEntry(other_thread_args_t* args);
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     // Setup UART
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     log::LOGGER.setUART(&uart);
     log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
@@ -244,8 +247,8 @@ void otherThreadEntry(other_thread_args_t* args) {
 
 void semaphoreThreadEntry(other_thread_args_t* args) {
 
-    IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();
-    DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
+    io::GPIO& ledGPIO = io::getGPIO<io::Pin::LED>();
+    dev::LED led(ledGPIO, dev::LED::ActiveState::HIGH);
 
     rtos::TXError flag_status;
     ULONG actual_flag;

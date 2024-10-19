@@ -18,7 +18,7 @@
 
 #include <stdint.h>
 
-namespace EVT::core::types {
+namespace core::types {
 
 template<size_t maxSize, class Element>
 class FixedQueue {
@@ -32,11 +32,11 @@ public:
      *      Defaults to false
      */
     FixedQueue(bool withOverwrite = false) {
-        this->maxCapacity = maxSize;
-        this->front = &elements[0];
-        this->back = &elements[0];
-        this->end = &elements[maxCapacity];
-        this->size = 0;
+        this->maxCapacity   = maxSize;
+        this->front         = &elements[0];
+        this->back          = &elements[0];
+        this->end           = &elements[maxCapacity];
+        this->size          = 0;
         this->withOverwrite = withOverwrite;
     }
 
@@ -147,6 +147,6 @@ private:
     bool withOverwrite;
 };
 
-}// namespace EVT::core::types
+} // namespace core::types
 
 #endif

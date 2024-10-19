@@ -1,24 +1,24 @@
 #ifndef INCLUDE_EVT_UTILS_LOG_HPP_
 #define INCLUDE_EVT_UTILS_LOG_HPP_
 
-#include <EVT/dev/RTC.hpp>
-#include <EVT/io/UART.hpp>
+#include <core/dev/RTC.hpp>
+#include <core/io/UART.hpp>
 #include <cstdint>
 
-namespace dev = EVT::core::DEV;
+namespace dev = core::dev;
 
-namespace EVT::core::log {
+namespace core::log {
 /** To enable the logger, compile with "cmake -D EVT_CORE_LOG_ENABLE" */
 class Logger {
 public:
     /**
-    * The level at which messages should be logged
-    */
+     * The level at which messages should be logged
+     */
     enum class LogLevel {
-        DEBUG = 0u,
-        INFO = 1u,
+        DEBUG   = 0u,
+        INFO    = 1u,
         WARNING = 2u,
-        ERROR = 3u,
+        ERROR   = 3u,
     };
 
     /**
@@ -26,7 +26,7 @@ public:
      *
      * @param[in] uart UART to be used for logging
      */
-    void setUART(IO::UART* uart);
+    void setUART(io::UART* uart);
 
     /**
      * Set the minimum log level to be displayed by the logger
@@ -54,7 +54,7 @@ public:
 
 private:
     /** UART to be used for logging */
-    IO::UART* uart;
+    io::UART* uart;
     /** Minimum log level to be displayed by the logger */
     LogLevel minLevel;
     /** Clock to be used for timestamps */
@@ -65,6 +65,7 @@ private:
 // creating a new one each time this header is included
 /** Global Logger instance */
 extern Logger LOGGER;
-}// namespace EVT::core::log
 
-#endif// INCLUDE_EVT_UTILS_LOG_HPP_
+} // namespace core::log
+
+#endif // INCLUDE_EVT_UTILS_LOG_HPP_

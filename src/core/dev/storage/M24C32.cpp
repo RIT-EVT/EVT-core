@@ -1,8 +1,8 @@
-#include <EVT/dev/storage/M24C32.hpp>
+#include <core/dev/storage/M24C32.hpp>
 
-namespace EVT::core::DEV {
+namespace core::dev {
 
-M24C32::M24C32(uint8_t i2cSlaveAddress, IO::I2C& i2c) : i2cSlaveAddress(i2cSlaveAddress), i2c(i2c) {}
+M24C32::M24C32(uint8_t i2cSlaveAddress, io::I2C& i2c) : i2cSlaveAddress(i2cSlaveAddress), i2c(i2c) {}
 
 uint8_t M24C32::readByte(uint32_t address) {
     uint8_t buffer[1];
@@ -26,7 +26,7 @@ uint32_t M24C32::readWord(uint32_t address) {
 
 void M24C32::readBytes(uint32_t address, uint8_t* buffer, uint8_t numBytes) {
     uint16_t currentAddress = address;
-    uint8_t bytesRead = 0;
+    uint8_t bytesRead       = 0;
 
     uint8_t* currentBufferPtr = buffer;
 
@@ -76,7 +76,7 @@ void M24C32::writeWord(uint32_t address, uint32_t data) {
 
 void M24C32::writeBytes(uint32_t address, uint8_t* dataArr, uint8_t numBytes) {
     uint16_t currentAddress = address;
-    uint8_t bytesWritten = 0;
+    uint8_t bytesWritten    = 0;
 
     uint8_t* currentBufferPtr = dataArr;
 
@@ -85,7 +85,8 @@ void M24C32::writeBytes(uint32_t address, uint8_t* dataArr, uint8_t numBytes) {
 
         uint8_t bytesToWrite = maxBytes > numBytes ? numBytes : maxBytes;
 
-        i2c.writeMemReg(i2cSlaveAddress, currentAddress, currentBufferPtr, bytesToWrite, MEM_ADDRESS_SIZE, MAX_WRITE_TIME);
+        i2c.writeMemReg(
+            i2cSlaveAddress, currentAddress, currentBufferPtr, bytesToWrite, MEM_ADDRESS_SIZE, MAX_WRITE_TIME);
         bytesWritten += bytesToWrite;
         currentAddress += bytesWritten;
         currentBufferPtr = &dataArr[bytesWritten];
@@ -101,4 +102,4 @@ void M24C32::writeWords(uint8_t address, uint32_t* dataArr, uint8_t numWords) {
     auto* tempDataArr = reinterpret_cast<uint8_t*>(dataArr);
     writeBytes(address, tempDataArr, numWords * 4);
 }
-}// namespace EVT::core::DEV
+} // namespace core::dev

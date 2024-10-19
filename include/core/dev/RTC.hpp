@@ -1,9 +1,9 @@
 #ifndef _EVT_RTC_
 #define _EVT_RTC_
 
-#include <EVT/utils/time.hpp>
+#include <core/utils/time.hpp>
 
-namespace EVT::core::DEV {
+namespace core::dev {
 
 /**
  * The RTC is the real time clock interface. This class represents features
@@ -16,7 +16,7 @@ public:
      *
      * @param[out] time The time struct to populate
      */
-    virtual void getTime(EVT::core::time::TimeStamp& time) = 0;
+    virtual void getTime(core::time::TimeStamp& time) = 0;
 
     /**
      * Get the timestamp since epoch in seconds
@@ -30,9 +30,9 @@ public:
      *
      * @param[in] time The time to set the RTC to use.
      */
-    virtual void setTime(EVT::core::time::TimeStamp& time) = 0;
+    virtual void setTime(core::time::TimeStamp& time) = 0;
 };
 
-}// namespace EVT::core::DEV
+} // namespace core::dev
 
 #endif

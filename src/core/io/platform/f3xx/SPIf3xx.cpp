@@ -1,13 +1,13 @@
-#include <EVT/io/platform/f3xx/SPIf3xx.hpp>
+#include <core/io/platform/f3xx/SPIf3xx.hpp>
 
-#include <EVT/io/pin.hpp>
-#include <EVT/io/platform/f3xx/GPIOf3xx.hpp>
+#include <core/io/pin.hpp>
+#include <core/io/platform/f3xx/GPIOf3xx.hpp>
 
-#include <EVT/utils/log.hpp>
+#include <core/utils/log.hpp>
 
-namespace log = EVT::core::log;
+namespace log = core::log;
 
-namespace EVT::core::IO {
+namespace core::io {
 
 void SPIf3xx::togglePin(GPIO* pin) {
     switch (pin->readPin()) {
@@ -92,12 +92,13 @@ uint8_t SPIf3xx::getSCKPortID(Pin sckPin) {
 #endif
 }
 
-SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin) : SPI(CSPins, pinLength, sckPin, mosiPin, misoPin) {
-    uint8_t mosiPort = getMOSIPortID(mosiPin);
-    uint8_t misoPort = getMISOPortID(misoPin);
-    uint8_t sckPort = getSCKPortID(sckPin);
+SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin)
+    : SPI(CSPins, pinLength, sckPin, mosiPin, misoPin) {
+    uint8_t mosiPort          = getMOSIPortID(mosiPin);
+    uint8_t misoPort          = getMISOPortID(misoPin);
+    uint8_t sckPort           = getSCKPortID(sckPin);
     GPIO_InitTypeDef GPIOInit = {0};
-    uint8_t altId = 0x00U;
+    uint8_t altId             = 0x00U;
 
     if (mosiPort == misoPort && misoPort == sckPort) {
         switch (mosiPort) {
@@ -133,36 +134,36 @@ SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin
 
         // gpioStateInit only supports initializing up to 2 pins, so this must be done
         // init mosiPin and misoPin
-        Pin spiPins[] = {mosiPin, misoPin};
+        Pin spiPins[]     = {mosiPin, misoPin};
         uint8_t numOfPins = 2;
 
-        GPIOf3xx::gpioStateInit(&GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP,
-                                GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+        GPIOf3xx::gpioStateInit(
+            &GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
         // init sckPin
         spiPins[0] = sckPin;
-        numOfPins = 1;
-        GPIOf3xx::gpioStateInit(&GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP,
-                                GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+        numOfPins  = 1;
+        GPIOf3xx::gpioStateInit(
+            &GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
 
-        halSPI.Init.Mode = SPI_MODE_MASTER;
+        halSPI.Init.Mode      = SPI_MODE_MASTER;
         halSPI.Init.Direction = SPI_DIRECTION_2LINES;
-        halSPI.Init.DataSize = SPI_DATASIZE_8BIT;
+        halSPI.Init.DataSize  = SPI_DATASIZE_8BIT;
 
         // advanced settings
-        halSPI.Init.TIMode = SPI_TIMODE_DISABLE;
+        halSPI.Init.TIMode         = SPI_TIMODE_DISABLE;
         halSPI.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-        halSPI.Init.CRCPolynomial = 7;
-        halSPI.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
-        halSPI.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
-        halSPI.Init.NSS = SPI_NSS_SOFT;
+        halSPI.Init.CRCPolynomial  = 7;
+        halSPI.Init.CRCLength      = SPI_CRC_LENGTH_DATASIZE;
+        halSPI.Init.NSSPMode       = SPI_NSS_PULSE_DISABLE;
+        halSPI.Init.NSS            = SPI_NSS_SOFT;
     }
 }
 
 SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : SPI(CSPins, pinLength, sckPin, mosiPin) {
-    uint8_t mosiPort = getMOSIPortID(mosiPin);
-    uint8_t sckPort = getSCKPortID(sckPin);
+    uint8_t mosiPort          = getMOSIPortID(mosiPin);
+    uint8_t sckPort           = getSCKPortID(sckPin);
     GPIO_InitTypeDef GPIOInit = {0};
-    uint8_t altId = 0x00U;
+    uint8_t altId             = 0x00U;
 
     if (mosiPort == sckPort) {
         switch (mosiPort) {
@@ -195,68 +196,64 @@ SPIf3xx::SPIf3xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin) : S
             break;
         }
 
-        Pin spiPins[] = {mosiPin, sckPin};
+        Pin spiPins[]     = {mosiPin, sckPin};
         uint8_t numOfPins = 2;
 
-        GPIOf3xx::gpioStateInit(&GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP,
-                                GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+        GPIOf3xx::gpioStateInit(
+            &GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
 
-        halSPI.Init.Mode = SPI_MODE_MASTER;
+        halSPI.Init.Mode      = SPI_MODE_MASTER;
         halSPI.Init.Direction = SPI_DIRECTION_1LINE;
-        halSPI.Init.DataSize = SPI_DATASIZE_8BIT;
+        halSPI.Init.DataSize  = SPI_DATASIZE_8BIT;
 
         // advanced settings
-        halSPI.Init.TIMode = SPI_TIMODE_DISABLE;
+        halSPI.Init.TIMode         = SPI_TIMODE_DISABLE;
         halSPI.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-        halSPI.Init.CRCPolynomial = 7;
-        halSPI.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
-        halSPI.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
-        halSPI.Init.NSS = SPI_NSS_SOFT;
+        halSPI.Init.CRCPolynomial  = 7;
+        halSPI.Init.CRCLength      = SPI_CRC_LENGTH_DATASIZE;
+        halSPI.Init.NSSPMode       = SPI_NSS_PULSE_DISABLE;
+        halSPI.Init.NSS            = SPI_NSS_SOFT;
     }
 }
 
 void SPIf3xx::configureSPI(uint32_t baudRate, SPIMode mode, bool firstBitMSB) {
     // set the CPOL and CPHA depending on the SPI mode
     switch (mode) {
-    case IO::SPI::SPIMode::SPI_MODE0:
+    case io::SPI::SPIMode::SPI_MODE0:
         halSPI.Init.CLKPolarity = SPI_POLARITY_LOW;
-        halSPI.Init.CLKPhase = SPI_PHASE_1EDGE;
+        halSPI.Init.CLKPhase    = SPI_PHASE_1EDGE;
         break;
-    case IO::SPI::SPIMode::SPI_MODE1:
+    case io::SPI::SPIMode::SPI_MODE1:
         halSPI.Init.CLKPolarity = SPI_POLARITY_LOW;
-        halSPI.Init.CLKPhase = SPI_PHASE_2EDGE;
+        halSPI.Init.CLKPhase    = SPI_PHASE_2EDGE;
         break;
-    case IO::SPI::SPIMode::SPI_MODE2:
+    case io::SPI::SPIMode::SPI_MODE2:
         halSPI.Init.CLKPolarity = SPI_POLARITY_HIGH;
-        halSPI.Init.CLKPhase = SPI_PHASE_1EDGE;
+        halSPI.Init.CLKPhase    = SPI_PHASE_1EDGE;
         break;
-    case IO::SPI::SPIMode::SPI_MODE3:
+    case io::SPI::SPIMode::SPI_MODE3:
         halSPI.Init.CLKPolarity = SPI_POLARITY_HIGH;
-        halSPI.Init.CLKPhase = SPI_PHASE_2EDGE;
+        halSPI.Init.CLKPhase    = SPI_PHASE_2EDGE;
         break;
     default:
         log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid SPI Mode");
         break;
     }
 
-    // configure the clock prescaler to the closest baudrate to the requested
-    if (baudRate >= SPI_MAX_BAUD) {
-        halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-    } else if (baudRate >= SPI_MAX_BAUD / 2) {
-        halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
-    } else if (baudRate >= SPI_MAX_BAUD / 4) {
-        halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
-    } else if (baudRate >= SPI_MAX_BAUD / 8) {
-        halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
-    } else if (baudRate >= SPI_MAX_BAUD / 16) {
-        halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
-    } else if (baudRate >= SPI_MAX_BAUD / 32) {
-        halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
-    } else if (baudRate >= SPI_MAX_BAUD / 64) {
-        halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
-    } else {
-        halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
+    // configure the clock prescaler to the closest baudrate to the requested.
+    uint32_t prescaler = (HAL_RCC_GetHCLKFreq() / baudRate);
+    // Convert the prescaler number to the bit value incrementally (log2), produces the value + 1.
+    halSPI.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+    while (prescaler >>= 1) {
+        halSPI.Init.BaudRatePrescaler++;
     }
+
+    // The max value of the prescaler is 256 which is represented by 0x07+1.
+    if (halSPI.Init.BaudRatePrescaler > 0x8) {
+        halSPI.Init.BaudRatePrescaler = 0x8;
+    }
+    // Shift left 3 to correct bit position in the register and subtract one.
+    halSPI.Init.BaudRatePrescaler = (halSPI.Init.BaudRatePrescaler - 1) << 3;
 
     // configure the bit order of the data; MSB or LSB
     if (firstBitMSB) {
@@ -316,11 +313,15 @@ SPI::SPIStatus SPIf3xx::read(uint8_t* bytes, uint8_t length) {
  */
 SPI::SPIStatus SPIf3xx::halToSPIStatus(HAL_StatusTypeDef halStatus) {
     switch (halStatus) {
-    case HAL_OK: return SPIStatus::OK;
-    case HAL_ERROR: return SPIStatus::ERROR;
-    case HAL_BUSY: return SPIStatus::BUSY;
-    case HAL_TIMEOUT: return SPIStatus::TIMEOUT;
+    case HAL_OK:
+        return SPIStatus::OK;
+    case HAL_BUSY:
+        return SPIStatus::BUSY;
+    case HAL_TIMEOUT:
+        return SPIStatus::TIMEOUT;
+    default: // HAL_ERROR:
+        return SPIStatus::ERROR;
     }
 }
 
-}// namespace EVT::core::IO
+} // namespace core::io

@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-namespace EVT::core::IO {
+namespace core::io {
 
 // Forward declarations:
 // The different pins are hardware specific. Forware declarationsto allow
@@ -48,6 +48,6 @@ protected:
     Pin pin;
 };
 
-}// namespace EVT::core::IO
+} // namespace core::io
 
 #endif

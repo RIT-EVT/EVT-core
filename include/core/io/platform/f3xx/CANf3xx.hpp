@@ -6,15 +6,15 @@
 #include <HALf3/stm32f3xx.h>
 #include <HALf3/stm32f3xx_hal_can.h>
 
-#include <EVT/io/CAN.hpp>
-#include <EVT/utils/types/FixedQueue.hpp>
+#include <core/io/CAN.hpp>
+#include <core/utils/types/FixedQueue.hpp>
 
-//Allows for resizable CAN queue if needed
+// Allows for resizable CAN queue if needed
 #ifndef CAN_MESSAGE_QUEUE_SIZE
     #define CAN_MESSAGE_QUEUE_SIZE 100
 #endif
 
-namespace EVT::core::IO {
+namespace core::io {
 
 /**
  * STMF3xx implementation of the CAN protocol. The STM32f3xx has an on
@@ -43,7 +43,7 @@ public:
      * For the STM32f3xx this involves attempting to startup the CAN
      * interface. This could cause an error in the case of invalid
      * parameters.
-     * 
+     *
      * @param[in] autoBusOff Indicates the state halCAN.Init.AutoBusOff should be in
      *
      * @return CANStatus::OK on success, CANStatus::ERROR otherwise
@@ -96,9 +96,9 @@ private:
     /** Instance of the HAL can interface */
     CAN_HandleTypeDef halCAN;
     /** Queue which holds received CAN messages */
-    EVT::core::types::FixedQueue<CAN_MESSAGE_QUEUE_SIZE, CANMessage> messageQueue;
+    core::types::FixedQueue<CAN_MESSAGE_QUEUE_SIZE, CANMessage> messageQueue;
 };
 
-}// namespace EVT::core::IO
+} // namespace core::io
 
 #endif

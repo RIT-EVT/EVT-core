@@ -5,11 +5,11 @@
 
 #include <HALf3/stm32f3xx.h>
 
-#include <EVT/io/SPI.hpp>
+#include <core/io/SPI.hpp>
 
 #define SPI_MAX_BAUD 4000000
 
-namespace EVT::core::IO {
+namespace core::io {
 
 class SPIf3xx : public SPI {
 public:
@@ -89,6 +89,6 @@ private:
     SPIStatus halToSPIStatus(HAL_StatusTypeDef halStatus);
 };
 
-}// namespace EVT::core::IO
+} // namespace core::io
 
 #endif

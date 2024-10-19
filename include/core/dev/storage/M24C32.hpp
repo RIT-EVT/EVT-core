@@ -1,10 +1,10 @@
 #ifndef EVT_M24C32
 #define EVT_M24C32
 
-#include <EVT/dev/storage/EEPROM.hpp>
-#include <EVT/io/I2C.hpp>
+#include <core/dev/storage/EEPROM.hpp>
+#include <core/io/I2C.hpp>
 
-namespace EVT::core::DEV {
+namespace core::dev {
 
 class M24C32 : public EEPROM {
 public:
@@ -15,7 +15,7 @@ public:
      * @param[in] i2cSlaveAddress Slave address to use for I2C communication
      * @param[in] i2c I2C instance to communicate over
      */
-    M24C32(uint8_t i2cSlaveAddress, IO::I2C& i2c);
+    M24C32(uint8_t i2cSlaveAddress, io::I2C& i2c);
 
     uint8_t readByte(uint32_t address) override;
 
@@ -54,8 +54,9 @@ private:
     /** Slave address for this device to be used for I2C communication */
     uint8_t i2cSlaveAddress;
     /** I2C instance to be used for I2C communication */
-    IO::I2C& i2c;
+    io::I2C& i2c;
 };
-}// namespace EVT::core::DEV
 
-#endif//EVT_M24C32
+} // namespace core::dev
+
+#endif // EVT_M24C32

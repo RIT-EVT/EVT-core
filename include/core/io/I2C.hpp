@@ -12,7 +12,7 @@
     }                                       \
     void(0)
 
-namespace EVT::core::IO {
+namespace core::io {
 
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
@@ -34,9 +34,9 @@ public:
      */
     enum class I2CStatus {
         TIMEOUT = 0,
-        BUSY = 1,
-        ERROR = 2,
-        OK = 3
+        BUSY    = 1,
+        ERROR   = 2,
+        OK      = 3
     };
 
     /**
@@ -117,8 +117,7 @@ public:
      * @param[in] length The number of bytes in the data
      * @return The status of attempting to write out to the register
      */
-    virtual I2CStatus writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
-                               uint8_t* bytes, uint8_t length);
+    virtual I2CStatus writeReg(uint8_t addr, uint8_t* reg, uint8_t regLength, uint8_t* bytes, uint8_t length);
 
     /**
      * Read a value from a register.
@@ -130,8 +129,7 @@ public:
      * @param[in] length The size of the data returned by the register in bytes
      * @return The status of reading from the register
      */
-    virtual I2CStatus readReg(uint8_t addr, uint8_t* reg, uint8_t regLength,
-                              uint8_t* bytes, uint8_t length);
+    virtual I2CStatus readReg(uint8_t addr, uint8_t* reg, uint8_t regLength, uint8_t* bytes, uint8_t length);
 
     /**
      * Write a single byte to a register in memory.
@@ -144,8 +142,7 @@ public:
      * @param[in] memAddSize The number of bytes in the memory address (1 or 2)
      * @return The status of writing out a memory register
      */
-    virtual I2CStatus writeMemReg(uint8_t addr, uint32_t memAddress,
-                                  uint8_t byte, uint16_t memAddSize,
+    virtual I2CStatus writeMemReg(uint8_t addr, uint32_t memAddress, uint8_t byte, uint16_t memAddSize,
                                   uint8_t maxWriteTime) = 0;
 
     /**
@@ -160,8 +157,7 @@ public:
      * @param[in] memAddSize The number of bytes in the memory address (1 or 2)
      * @return The result of attempting to read from memory
      */
-    virtual I2CStatus readMemReg(uint8_t addr, uint32_t memAddress,
-                                 uint8_t* byte, uint16_t memAddSize) = 0;
+    virtual I2CStatus readMemReg(uint8_t addr, uint32_t memAddress, uint8_t* byte, uint16_t memAddSize) = 0;
 
     /**
      * Write a number of bytes to consecutive registers in memory, starting at a specified register.
@@ -175,9 +171,7 @@ public:
      * @param[in] memAddSize The number of bytes in the memory address (1 or 2)
      * @return The status of writing out to the memory address
      */
-    virtual I2CStatus writeMemReg(uint8_t addr, uint32_t memAddress,
-                                  uint8_t* byte, uint8_t size,
-                                  uint16_t memAddSize,
+    virtual I2CStatus writeMemReg(uint8_t addr, uint32_t memAddress, uint8_t* byte, uint8_t size, uint16_t memAddSize,
                                   uint8_t maxWriteTime) = 0;
 
     /**
@@ -193,8 +187,7 @@ public:
      * @param[out] output The value to store the read back memory
      * @return The status of reading from the memory address;
      */
-    virtual I2CStatus readMemReg(uint8_t addr, uint32_t memAddress,
-                                 uint8_t* byte, uint8_t size,
+    virtual I2CStatus readMemReg(uint8_t addr, uint32_t memAddress, uint8_t* byte, uint8_t size,
                                  uint16_t memAddSize) = 0;
 
 private:
@@ -204,6 +197,6 @@ private:
     Pin sdaPin;
 };
 
-}// namespace EVT::core::IO
+} // namespace core::io
 
 #endif

@@ -1,7 +1,7 @@
 #ifndef _EVT_IWDG_
 #define _EVT_IWDG_
 
-namespace EVT::core::DEV {
+namespace core::dev {
 
 /**
  * The IWDG is the independent watchdog, which is used to detect software failures.
@@ -20,6 +20,6 @@ public:
     virtual void refresh() = 0;
 };
 
-}// namespace EVT::core::DEV
+} // namespace core::dev
 
 #endif

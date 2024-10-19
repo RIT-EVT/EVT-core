@@ -1,26 +1,26 @@
-#include <EVT/utils/log.hpp>
+#include <core/utils/log.hpp>
 #include <cstdarg>
 #include <cstdio>
 
-namespace IO = EVT::core::IO;
+namespace io = core::io;
 
-namespace EVT::core::log {
+namespace core::log {
 /**
  * Set the UART to be used for logging
  *
  * @param uart[in] UART to be used for logging
  */
-void Logger::setUART(IO::UART* loggingUART) {
+void Logger::setUART(io::UART* loggingUART) {
 #ifdef EVT_CORE_LOG_ENABLE
     uart = loggingUART;
 #endif
 }
 
 /**
-* Set the minimum log level to be displayed by the logger
-*
-* @param level[in] Minimum log level to be displayed by the logger
-*/
+ * Set the minimum log level to be displayed by the logger
+ *
+ * @param level[in] Minimum log level to be displayed by the logger
+ */
 void Logger::setLogLevel(Logger::LogLevel level) {
 #ifdef EVT_CORE_LOG_ENABLE
     minLevel = level;
@@ -92,4 +92,4 @@ void Logger::log(LogLevel level, const char* format, ...) {
 }
 
 Logger LOGGER;
-}// namespace EVT::core::log
+} // namespace core::log

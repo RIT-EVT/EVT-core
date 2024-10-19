@@ -1,13 +1,13 @@
 #ifndef EVT_TIMER_H
 #define EVT_TIMER_H
 
-#include <EVT/dev/RTC.hpp>
-#include <EVT/dev/Timer.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/dev/RTC.hpp>
+#include <core/dev/Timer.hpp>
+#include <core/utils/time.hpp>
 
-namespace time = EVT::core::time;
+namespace time = core::time;
 
-namespace EVT::core::DEV {
+namespace core::dev {
 
 class RTCTimer : public Timer {
 public:
@@ -76,6 +76,6 @@ private:
     bool bTimerStopped;
 };
 
-}// namespace EVT::core::DEV
+} // namespace core::dev
 
-#endif//EVT_TIMER_H
+#endif // EVT_TIMER_H

@@ -4,9 +4,9 @@
 #include <HALf4/stm32f4xx.h>
 #include <HALf4/stm32f4xx_hal.h>
 
-#include <EVT/io/ADC.hpp>
+#include <core/io/ADC.hpp>
 
-namespace EVT::core::IO {
+namespace core::io {
 
 class ADCf4xx : public ADC {
 public:
@@ -61,6 +61,6 @@ private:
     void addChannel(uint8_t rank);
 };
 
-}// namespace EVT::core::IO
+} // namespace core::io
 
 #endif

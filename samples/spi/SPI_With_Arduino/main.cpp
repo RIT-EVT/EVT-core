@@ -4,41 +4,41 @@
  *
  */
 
-#include <EVT/io/GPIO.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/io/GPIO.hpp>
+#include <core/io/UART.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
-namespace IO = EVT::core::IO;
-namespace time = EVT::core::time;
+namespace io   = core::io;
+namespace time = core::time;
 
-constexpr uint32_t SPI_SPEED = SPI_SPEED_4MHZ;// 4MHz
+constexpr uint32_t SPI_SPEED = SPI_SPEED_4MHZ; // 4MHz
 
 /** The address of the arduino listening for I2C requests */
-constexpr uint8_t SINGLE_BYTE = 0x10;
-constexpr uint8_t READ_MULTIPLE_BYTE = 0x11;
-uint8_t BYTE_MULTIPLE[] = {0x40, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F};
+constexpr uint8_t SINGLE_BYTE          = 0x10;
+constexpr uint8_t READ_MULTIPLE_BYTE   = 0x11;
+uint8_t BYTE_MULTIPLE[]                = {0x40, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F};
 constexpr uint8_t BYTE_MULTIPLE_LENGTH = 9;
-constexpr uint8_t WRITE_REG = 0x20;
-constexpr uint8_t WRITE_REG_BYTE = 0xF3;
-constexpr uint8_t READ_REG = 0x28;
+constexpr uint8_t WRITE_REG            = 0x20;
+constexpr uint8_t WRITE_REG_BYTE       = 0xF3;
+constexpr uint8_t READ_REG             = 0x28;
 
 constexpr uint8_t deviceCount = 1;
 
-IO::GPIO* devices[deviceCount];
+io::GPIO* devices[deviceCount];
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
-    devices[0] = &IO::getGPIO<IO::Pin::SPI_CS>(IO::GPIO::Direction::OUTPUT);
-    devices[0]->writePin(IO::GPIO::State::HIGH);
+    devices[0] = &io::getGPIO<io::Pin::SPI_CS>(io::GPIO::Direction::OUTPUT);
+    devices[0]->writePin(io::GPIO::State::HIGH);
 
-    IO::SPI& spi = IO::getSPI<IO::Pin::SPI_SCK, IO::Pin::SPI_MOSI, IO::Pin::SPI_MISO>(devices, deviceCount);
+    io::SPI& spi = io::getSPI<io::Pin::SPI_SCK, io::Pin::SPI_MOSI, io::Pin::SPI_MISO>(devices, deviceCount);
 
-    spi.configureSPI(SPI_SPEED, IO::SPI::SPIMode::SPI_MODE3, SPI_MSB_FIRST);
+    spi.configureSPI(SPI_SPEED, io::SPI::SPIMode::SPI_MODE3, SPI_MSB_FIRST);
 
-    IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     uart.printf("Starting SPI test\n\r");
     uint8_t byte;
@@ -48,7 +48,7 @@ int main() {
         // write a single byte
         spi.write(SINGLE_BYTE);
         // read a single byte
-        IO::SPI::SPIStatus status = spi.read(&byte);
+        io::SPI::SPIStatus status = spi.read(&byte);
         uart.printf("SPI Status: %i\n\r", status);
 
         spi.endTransmission(0);

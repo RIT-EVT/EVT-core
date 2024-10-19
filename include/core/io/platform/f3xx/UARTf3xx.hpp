@@ -3,11 +3,11 @@
 
 #include <cstdint>
 
-#include <EVT/io/UART.hpp>
+#include <core/io/UART.hpp>
 
 #include <HALf3/stm32f3xx.h>
 
-namespace EVT::core::IO {
+namespace core::io {
 
 class UARTf3xx : public UART {
 public:
@@ -22,8 +22,7 @@ public:
      */
     UARTf3xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped);
     void setBaudrate(uint32_t baudrate) override;
-    void setFormat(WordLength wordLength = WordLength::EIGHT,
-                   Parity parity = Parity::NONE,
+    void setFormat(WordLength wordLength = WordLength::EIGHT, Parity parity = Parity::NONE,
                    NumStopBits numStopBits = NumStopBits::ONE) override;
 
     void sendBreak() override;
@@ -48,6 +47,6 @@ private:
     UART_HandleTypeDef halUART;
 };
 
-}// namespace EVT::core::IO
+} // namespace core::io
 
 #endif

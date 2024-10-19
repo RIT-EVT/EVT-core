@@ -1,12 +1,12 @@
-#include <EVT/dev/button.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/dev/button.hpp>
+#include <core/utils/time.hpp>
 
-namespace EVT::core::DEV {
-Button::Button(IO::GPIO& gpio, IO::GPIO::State pressedState) : gpio(gpio), pressedState(pressedState) {
+namespace core::dev {
+Button::Button(io::GPIO& gpio, io::GPIO::State pressedState) : gpio(gpio), pressedState(pressedState) {
     this->timeSinceLastPress = 0;
 }
 
-IO::GPIO::State Button::getState() {
+io::GPIO::State Button::getState() {
     return this->gpio.readPin();
 }
 
@@ -21,4 +21,4 @@ bool Button::debounce(uint32_t debounceTime) {
     return false;
 }
 
-}// namespace EVT::core::DEV
+} // namespace core::dev

@@ -1,19 +1,17 @@
 #include <stdint.h>
 
-#include <EVT/io/CAN.hpp>
+#include <core/io/CAN.hpp>
 
-namespace EVT::core::IO {
+namespace core::io {
 
-CAN::CAN(Pin txPin, Pin rxPin, bool loopbackEnabled) : txPin(txPin),
-                                                       rxPin(rxPin),
-                                                       loopbackEnabled(loopbackEnabled) {
+CAN::CAN(Pin txPin, Pin rxPin, bool loopbackEnabled) : txPin(txPin), rxPin(rxPin), loopbackEnabled(loopbackEnabled) {
     this->handler = nullptr;
-    this->priv = nullptr;
+    this->priv    = nullptr;
 }
 
 void CAN::addIRQHandler(void (*handler)(CANMessage&, void*), void* priv) {
     this->handler = handler;
-    this->priv = priv;
+    this->priv    = priv;
 }
 
-}// namespace EVT::core::IO
+} // namespace core::io

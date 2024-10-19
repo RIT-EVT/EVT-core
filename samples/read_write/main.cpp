@@ -3,30 +3,29 @@
  * setup as an input and the state of that GPIO is reflected in the state of
  * the other GPIO connected to an LED.
  */
-#include <EVT/dev/LED.hpp>
-#include <EVT/io/GPIO.hpp>
-#include <EVT/io/pin.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/time.hpp>
+#include <core/dev/LED.hpp>
+#include <core/io/GPIO.hpp>
+#include <core/io/pin.hpp>
+#include <core/manager.hpp>
+#include <core/utils/time.hpp>
 
-namespace IO = EVT::core::IO;
-namespace DEV = EVT::core::DEV;
-namespace time = EVT::core::time;
+namespace io   = core::io;
+namespace dev  = core::dev;
+namespace time = core::time;
 
 int main() {
     // Initialize system
-    EVT::core::platform::init();
+    core::platform::init();
 
     // Setup the GPIO input pin
-    IO::GPIO& inputGPIO = IO::getGPIO<IO::Pin::PC_3>(
-        IO::GPIO::Direction::INPUT);
+    io::GPIO& inputGPIO = io::getGPIO<io::Pin::PC_3>(io::GPIO::Direction::INPUT);
 
     // Setup the GPIO output pin
-    IO::GPIO& ledGPIO = IO::getGPIO<IO::Pin::LED>();
-    DEV::LED led(ledGPIO, DEV::LED::ActiveState::HIGH);
+    io::GPIO& ledGPIO = io::getGPIO<io::Pin::LED>();
+    dev::LED led(ledGPIO, dev::LED::ActiveState::HIGH);
 
     while (1) {
-        IO::GPIO::State state = inputGPIO.readPin();
+        io::GPIO::State state = inputGPIO.readPin();
         led.setState(state);
 
         time::wait(10);

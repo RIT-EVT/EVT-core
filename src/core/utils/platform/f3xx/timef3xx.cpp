@@ -6,10 +6,10 @@
 #include <HALf3/stm32f3xx_hal.h>
 #include <HALf3/stm32f3xx_it.h>
 
-#include <EVT/utils/time.hpp>
+#include <core/utils/time.hpp>
 #include <cstdint>
 
-namespace EVT::core::time {
+namespace core::time {
 /**
  * Calls HAL wait, assumes HAL_Init() has been called
  */
@@ -30,4 +30,4 @@ void wait(uint32_t ms) {
 uint32_t millis() {
     return HAL_GetTick();
 }
-}// namespace EVT::core::time
+} // namespace core::time

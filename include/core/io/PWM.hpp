@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-namespace EVT::core::IO {
+namespace core::io {
 
 // Forward declarations:
 // The diferent pins are hardware specific. Forward declarations to allow
@@ -57,6 +57,6 @@ protected:
     uint32_t period;
 };
 
-}// namespace EVT::core::IO
+} // namespace core::io
 
 #endif

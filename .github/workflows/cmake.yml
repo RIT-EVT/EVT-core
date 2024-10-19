@@ -7,7 +7,7 @@ name: CMake
 # Define the workflow's triggers
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 # Set necessary environment variables
 env:
@@ -30,8 +30,8 @@ jobs:
       - name: Install Compiler and Linter
         run: |
           sudo apt-get install gcc-arm-none-eabi
-          sudo apt-get install clang-format-12
-          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-12 10000
+          sudo apt-get install clang-format-15
+          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-15 10000
 
       # Build the code for all supported chips
       - name: F302 Build
@@ -47,8 +47,7 @@ jobs:
       - name: F446 Build
         run: |
           cmake -DTARGET_DEV=STM32F446xx -B ${{github.workspace}}/build
-#          cmake --build ${{github.workspace}}/build
-
+        # cmake --build ${{github.workspace}}/build
       # Apply clang-format formatting to the branch and create a new commit if any files are changed
       - name: Apply Formatting
         run: |
