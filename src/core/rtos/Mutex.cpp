@@ -1,5 +1,5 @@
 
-#include <EVT/rtos/Mutex.hpp>
+#include <core/rtos/Mutex.hpp>
 
 namespace core::rtos {
 

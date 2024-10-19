@@ -3,8 +3,8 @@
 #define _EVT_RTOS_Initializeable_
 
 #include <tx_api.h>
-#include <EVT/rtos/BytePoolBase.hpp>
-#include <EVT/rtos/Enums.hpp>
+#include <core/rtos/BytePoolBase.hpp>
+#include <core/rtos/Enums.hpp>
 
 namespace core::rtos {
 

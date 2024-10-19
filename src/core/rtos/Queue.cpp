@@ -1,6 +1,6 @@
 
-#include <EVT/rtos/Queue.hpp>
-#include <EVT/rtos/Enums.hpp>
+#include <core/rtos/Queue.hpp>
+#include <core/rtos/Enums.hpp>
 
 namespace core::rtos {
 

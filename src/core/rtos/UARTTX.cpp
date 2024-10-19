@@ -1,5 +1,5 @@
-#include <EVT/rtos/UARTTX.hpp>
-#include <EVT/utils/log.hpp>
+#include <core/rtos/UARTTX.hpp>
+#include <core/utils/log.hpp>
 
 #include <cstdarg>
 #include <cstdio>

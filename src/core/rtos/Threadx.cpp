@@ -1,7 +1,7 @@
 
-#include <EVT/rtos/Threadx.hpp>
-#include <EVT/rtos/BytePool.hpp>
-#include <EVT/utils/log.hpp>
+#include <core/rtos/Threadx.hpp>
+#include <core/rtos/BytePool.hpp>
+#include <core/utils/log.hpp>
 
 namespace log = EVT::core::log;
 

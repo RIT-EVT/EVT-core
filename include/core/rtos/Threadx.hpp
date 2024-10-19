@@ -2,7 +2,7 @@
 #ifndef EVT_RTOS_THREADX_
 #define EVT_RTOS_THREADX_
 
-#include <EVT/rtos/Initializable.hpp>
+#include <core/rtos/Initializable.hpp>
 #include <cstdint>
 
 #define S_TO_TICKS(n) ((uint32_t)(n) * TX_TIMER_TICKS_PER_SECOND)

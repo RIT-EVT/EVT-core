@@ -2,7 +2,7 @@
 #ifndef EVT_RTOS_THREAD_
 #define EVT_RTOS_THREAD_
 
-#include <EVT/rtos/Initializable.hpp>
+#include <core/rtos/Initializable.hpp>
 #include <cstdint>
 #include <functional>
 

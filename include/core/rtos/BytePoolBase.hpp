@@ -4,7 +4,7 @@
 
 
 #include <tx_api.h>
-#include <EVT/rtos/Enums.hpp>
+#include <core/rtos/Enums.hpp>
 #include <cstdint>
 
 namespace core::rtos {

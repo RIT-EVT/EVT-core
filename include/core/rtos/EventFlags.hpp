@@ -2,7 +2,7 @@
 #ifndef _EVT_RTOS_EVENTFLAGS_
 #define _EVT_RTOS_EVENTFLAGS_
 
-#include <EVT/rtos/Initializable.hpp>
+#include <core/rtos/Initializable.hpp>
 
 namespace core::rtos {
 

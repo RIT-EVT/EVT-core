@@ -1,7 +1,7 @@
 #ifndef EVT_RTOS_QUEUE_
 #define EVT_RTOS_QUEUE_
 
-#include <EVT/rtos/Initializable.hpp>
+#include <core/rtos/Initializable.hpp>
 #include <functional>
 
 namespace core::rtos {

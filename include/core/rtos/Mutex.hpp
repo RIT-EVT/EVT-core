@@ -1,7 +1,7 @@
 #ifndef EVT_RTOS_MUTEX_
 #define EVT_RTOS_MUTEX_
 
-#include <EVT/rtos/Initializable.hpp>
+#include <core/rtos/Initializable.hpp>
 
 namespace core::rtos {
 

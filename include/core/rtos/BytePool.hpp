@@ -1,7 +1,7 @@
 #ifndef _EVT_RTOS_BYTEPOOLBASE_
 #define _EVT_RTOS_BYTEPOOLBASE_
 
-#include <EVT/rtos/BytePoolBase.hpp>
+#include <core/rtos/BytePoolBase.hpp>
 #include <cstdint>
 
 namespace core::rtos {

@@ -3,25 +3,25 @@
  * This will make 4 threads and send data between them.
  */
 
-#include <EVT/dev/LED.hpp>
-#include <EVT/io/GPIO.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/io/pin.hpp>
-#include <EVT/manager.hpp>
-#include <EVT/utils/log.hpp>
+#include <core/dev/LED.hpp>
+#include <core/io/GPIO.hpp>
+#include <core/io/UART.hpp>
+#include <core/io/pin.hpp>
+#include <core/manager.hpp>
+#include <core/utils/log.hpp>
 
 ///rtos includes
 
-#include <EVT/rtos/Semaphore.hpp>
-#include <EVT/rtos/Enums.hpp>
-#include <EVT/rtos/EventFlags.hpp>
-#include <EVT/rtos/BytePool.hpp>
-#include <EVT/rtos/Queue.hpp>
-#include <EVT/rtos/Thread.hpp>
-#include <EVT/rtos/UARTTX.hpp>
+#include <core/rtos/Semaphore.hpp>
+#include <core/rtos/Enums.hpp>
+#include <core/rtos/EventFlags.hpp>
+#include <core/rtos/BytePool.hpp>
+#include <core/rtos/Queue.hpp>
+#include <core/rtos/Thread.hpp>
+#include <core/rtos/UARTTX.hpp>
 
 ///Namespaces
-namespace IO = EVT::core::IO;
+namespace IO = core::IO;
 namespace DEV = EVT::core::DEV;
 namespace time = EVT::core::time;
 namespace log = EVT::core::log;

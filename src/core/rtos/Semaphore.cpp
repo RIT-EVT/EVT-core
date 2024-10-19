@@ -1,19 +1,10 @@
 
-#include <EVT/rtos/Semaphore.hpp>
-#include <functional>
+#include <core/rtos/Semaphore.hpp>
 
 namespace core::rtos {
 
 Semaphore::Semaphore(char* name, uint32_t initialCount)
     : txSemaphore(), name(name), initialCount(initialCount), storedNotifyFunction() {
-    //We use bind to return a callable object that takes in only one argument, functionally removing the
-    //implicit first argument that the memberNotifyFunction has.
-    auto boundFunc = std::bind(&Semaphore::memberNotifyFunction, this, std::placeholders::_1);
-    //We wrap this callable object into a wrapFunc so we can use .target on it.
-    std::function<void(TX_SEMAPHORE *)> wrapFunc = boundFunc;
-    //We use the .target method to return a c-style function pointer that we can later pass to threadx
-    //in the event that registerNotifyFunction is called.
-    txNotifyFunction = wrapFunc.target<txNotifyFunction_t>();
 }
 
 TXError Semaphore::init(BytePoolBase& pool) {

@@ -1,5 +1,5 @@
 
-#include <EVT/rtos/EventFlags.hpp>
+#include <core/rtos/EventFlags.hpp>
 
 
 namespace core::rtos {

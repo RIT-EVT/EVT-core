@@ -1,14 +1,14 @@
 #ifndef EVT_TX_UART_H
 #define EVT_TX_UART_H
 
-#include <EVT/rtos/Initializable.hpp>
-#include <EVT/rtos/Threadx.hpp>
-#include <EVT/rtos/Queue.hpp>
-#include <EVT/rtos/Semaphore.hpp>
-#include <EVT/rtos/Thread.hpp>
-#include <EVT/rtos/Mutex.hpp>
-#include <EVT/io/UART.hpp>
-#include <EVT/io/pin.hpp>
+#include <core/rtos/Initializable.hpp>
+#include <core/rtos/Threadx.hpp>
+#include <core/rtos/Queue.hpp>
+#include <core/rtos/Semaphore.hpp>
+#include <core/rtos/Thread.hpp>
+#include <core/rtos/Mutex.hpp>
+#include <core/io/UART.hpp>
+#include <core/io/pin.hpp>
 #include <HALf4/stm32f4xx.h>
 #include <string>
 
