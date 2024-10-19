@@ -27,9 +27,6 @@ namespace time = core::time;
 namespace log = core::log;
 namespace rtos = core::rtos;
 
-// Needs custom data type
-// Look into entry argument when creating a thread when determining what thread it is
-
 ///Defines
 #define DEMO_STACK_SIZE 1024
 #define DEMO_QUEUE_SIZE 100
@@ -49,13 +46,19 @@ typedef struct counters {
     uint32_t thread2_sum;
 } counters_t;
 
-typedef struct thread_0_args {
+/**
+ * Struct that holds the arguments for the controller thread
+ */
+typedef struct controller_thread_args {
     rtos::Queue* queue;
     rtos::Semaphore* semaphore;
     rtos::wrapper::UARTTX* uarttx;
     counters_t* counters;
 } controller_thread_args_t;
 
+/**
+ * Struct that holds the arguments for all other threads
+ */
 typedef struct other_thread_args {
     rtos::Queue* queue;
     rtos::Semaphore* semaphore;
@@ -65,10 +68,10 @@ typedef struct other_thread_args {
     counters_t* counters;
 } other_thread_args_t;
 
-///Function Prototypes
+///Function Prototypes (allows us to actually implement the functions below main)
 void controllerThreadEntry(controller_thread_args_t* args);
 void otherThreadEntry(other_thread_args_t* args);
-void semaphoreThreadEntry(other_thread_args_t* args);
+void eventFlagThreadEntry(other_thread_args_t* args);
 
 
 int main() {
@@ -81,9 +84,8 @@ int main() {
     log::LOGGER.setUART(&uart);
     log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
 
-    //create all the initializable objects
     rtos::wrapper::UARTTX uarttx(uart);
-    rtos::Queue q1((char*)"queue", 16, 8);
+    rtos::Queue q1((char*)"queue", 16, 20);
     rtos::BytePool<TX_APP_MEM_POOL_SIZE> txPool((char*)"txBytePool");
     rtos::Semaphore semaphore((char*)"Semaphore 1", 1);
     rtos::EventFlags eventFlags((char*)"Event Flags");
@@ -114,13 +116,19 @@ int main() {
     rtos::Thread<other_thread_args_t *> thread2((char*)"Thread 2", otherThreadEntry, &thread_2_args,
                                                DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
     //create thread3
-    rtos::Thread<other_thread_args_t *> semaphoreThread((char*)"Thread 3", semaphoreThreadEntry, &thread_3_args,
+    rtos::Thread<other_thread_args_t *> eventFlagThread((char*)"Thread 3", eventFlagThreadEntry, &thread_3_args,
                                                DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
 
     uart.printf("About to start the kernel.\n\r");
 
 
-    //create the initializable array- this must include all the initializable objects
+    /*
+     * Most RTOS objects are initializable, which means we need to register them with the threadx kernel for them
+     * to function. This is done by putting all these initializable objects into an array (see below),
+     * and then passing that array into the startKernel method.
+     * If an object neeeds to be created and initialized after the kernel has been started, it's initialize method must
+     * be manually called. Also, make sure the length of the array is correct in startKernel.
+     */
     rtos::Initializable *arr[] = {
         &controllerThread, &uarttx,&q1,&semaphore, &eventFlags, &thread1, &thread2, &semaphoreThread
     };
@@ -132,7 +140,12 @@ int main() {
     return 0;
 }
 
-///Function definitions
+//Function definitions
+
+/**
+ * Controller Thread Entry Function, generates a random number then waits for the semaphore and writes stats to UART.
+ * @param args the argument struct this thread needs.
+ */
 void controllerThreadEntry(controller_thread_args_t* args) {
     srand(77);
     rtos::TXError queue_status;
@@ -200,6 +213,11 @@ void controllerThreadEntry(controller_thread_args_t* args) {
     }
 }
 
+/**
+ * Entry Function for Threads 1 and 2. Waits to get a message in the queue from the controller thread, then
+ * increases its specific value in the counter struct and prints some stuff.
+ * @param args the argument struct this thread needs.
+ */
 void otherThreadEntry(other_thread_args_t* args) {
     ULONG received_message;
     rtos::TXError queue_status;
@@ -217,7 +235,6 @@ void otherThreadEntry(other_thread_args_t* args) {
 
         if (queue_status == rtos::Success) {
             if (received_message >= 20) {
-                //flag_status = tx_event_flags_set(&event_flags_0, 0x1, TX_OR);
                 flag_status = args->eventFlags->set(0x1, false);
             }
 
@@ -245,7 +262,11 @@ void otherThreadEntry(other_thread_args_t* args) {
     }
 }
 
-void semaphoreThreadEntry(other_thread_args_t* args) {
+/**
+ * Event Flag Thread Entry Function. Literally just waits for the event flag 0x1 to be up and then prints that it was set.
+ * @param args the arguments this thread needs.
+ */
+void eventFlagThreadEntry(other_thread_args_t* args) {
 
     io::GPIO& ledGPIO = io::getGPIO<io::Pin::LED>();
     dev::LED led(ledGPIO, dev::LED::ActiveState::HIGH);
