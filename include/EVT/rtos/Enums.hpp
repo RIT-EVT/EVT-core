@@ -2,6 +2,8 @@
 #ifndef EVT_RTOS_ENUMS_
 #define EVT_RTOS_ENUMS_
 
+#include <tx_api.h>
+
 namespace core::rtos {
 
 /**

@@ -1,7 +1,6 @@
 #ifndef _EVT_RTOS_BYTEPOOLBASE_
 #define _EVT_RTOS_BYTEPOOLBASE_
 
-#include <../../../libs/threadx/common/inc/tx_api.h>
 #include <EVT/rtos/BytePoolBase.hpp>
 #include <cstdint>
 

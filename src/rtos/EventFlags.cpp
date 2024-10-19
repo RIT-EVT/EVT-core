@@ -1,6 +1,6 @@
 
 #include <EVT/rtos/EventFlags.hpp>
-#include <functional>
+
 
 namespace core::rtos {
 

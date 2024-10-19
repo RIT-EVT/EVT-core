@@ -2,6 +2,8 @@
 #ifndef _EVT_RTOS_BYTEPOOL_
 #define _EVT_RTOS_BYTEPOOL_
 
+
+#include <tx_api.h>
 #include <EVT/rtos/Enums.hpp>
 #include <cstdint>
 
