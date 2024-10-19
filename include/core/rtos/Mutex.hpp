@@ -20,9 +20,9 @@ public:
      * @param[in] priorityInheritance Whether or not threads currently holding this mutex should raise their priority
      * to that of the highest priority thread waiting for the mutex.
      */
-    Mutex(char *name, bool priorityInheritance);
+    Mutex(char* name, bool priorityInheritance);
 
-    TXError init(BytePoolBase &pool) override;
+    TXError init(BytePoolBase& pool) override;
 
     /**
      * Mutex Destructor.
@@ -54,15 +54,15 @@ public:
      */
     TXError prioritize();
 
-    //Getters
+    // Getters
 
     /**
-      * Retrieves the name of this Mutex.
-      *
-      * @param[out] name a pointer to a place to store the name pointer.
-      * @return The first error found by the function (or Success if there was no error).
-      */
-    TXError getName(char **name);
+     * Retrieves the name of this Mutex.
+     *
+     * @param[out] name a pointer to a place to store the name pointer.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getName(char** name);
 
     /**
      * Retrieves the ownership count of this mutex. The ownership count is how many times the current
@@ -72,7 +72,7 @@ public:
      * @param[out] ownershipCount a pointer to a place to store the ownership count.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError getOwnershipCount(uint32_t *ownershipCount);
+    TXError getOwnershipCount(uint32_t* ownershipCount);
 
     /**
      * Retrieves the name of the thread that currently owns this mutex.
@@ -80,7 +80,7 @@ public:
      * @param[out] name a pointer to a place to store the name of the owner of the thread.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError getNameOfOwner(char **ownerName);
+    TXError getNameOfOwner(char** ownerName);
 
     /**
      * Retrieves the name of the first suspended thread.
@@ -88,15 +88,15 @@ public:
      * @param[out] threadName a pointer to a place to store the name of the first suspended thread.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError getNameOfFirstSuspendedThread(char **threadName);
+    TXError getNameOfFirstSuspendedThread(char** threadName);
 
     /**
-      * Retrieves the number of threads that are suspended on this Mutex.
-      *
-      * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
-      * @return The first error found by the function (or Success if there was no error).
-      */
-    TXError getNumSuspendedThreads(uint32_t *numSuspendedThreads);
+     * Retrieves the number of threads that are suspended on this Mutex.
+     *
+     * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
 private:
     /**
@@ -117,4 +117,4 @@ private:
 
 } // namespace core::rtos
 
-#endif //EVT_RTOS_MUTEX_
+#endif // EVT_RTOS_MUTEX_

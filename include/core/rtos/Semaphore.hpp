@@ -61,7 +61,7 @@ public:
      * @param notifyFunction The function to be called when a the semaphore is put.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError registerNotifyFunction(void(*notifyFunction)(Semaphore*));
+    TXError registerNotifyFunction(void (*notifyFunction)(Semaphore*));
 
     /**
      * Prioritizes the list of waiting threads, placing the highest priority waiting thread at the front of the list.
@@ -72,12 +72,12 @@ public:
     TXError prioritize();
 
     /**
-      * Retrieves the name of this Semaphore.
-      *
-      * @param[out] name a pointer to a place to store the name pointer.
-      * @return The first error found by the function (or Success if there was no error).
-      */
-    TXError getName(char **name);
+     * Retrieves the name of this Semaphore.
+     *
+     * @param[out] name a pointer to a place to store the name pointer.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getName(char** name);
 
     /**
      * Gets the current count of this Semaphore.
@@ -85,7 +85,7 @@ public:
      * @param currentCount a pointer to a place to store the count.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError getCount(uint32_t *currentCount);
+    TXError getCount(uint32_t* currentCount);
 
     /**
      * Retrieves the name of the first suspended thread.
@@ -93,15 +93,15 @@ public:
      * @param[out] threadName a pointer to a place to store the name of the first suspended thread.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError getNameOfFirstSuspendedThread(char **threadName);
+    TXError getNameOfFirstSuspendedThread(char** threadName);
 
     /**
-      * Retrieves the number of threads that are suspended on this Semaphore.
-      *
-      * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
-      * @return The first error found by the function (or Success if there was no error).
-      */
-    TXError getNumSuspendedThreads(uint32_t *numSuspendedThreads);
+     * Retrieves the number of threads that are suspended on this Semaphore.
+     *
+     * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
 private:
     /**
@@ -122,7 +122,7 @@ private:
     /**
      * The notify function that has been registered with this event flag.
      */
-    void(*storedNotifyFunction)(Semaphore*);
+    void (*storedNotifyFunction)(Semaphore*);
 
     /**
      * The notification function that we would like threadx to call.
@@ -131,23 +131,23 @@ private:
      * So, in the constructor we do some weird c++ things with std::bind and std::function in
      * order to create a non-member function that threadx can call, which is txNotifyFunction.
      */
-    void memberNotifyFunction(TX_SEMAPHORE * queue) {
+    void memberNotifyFunction(TX_SEMAPHORE* queue) {
         storedNotifyFunction(this);
     }
 
     /**
      * The type of notify function that threadx expects.
      */
-    typedef void txNotifyFunction_t( TX_SEMAPHORE * );
+    typedef void txNotifyFunction_t(TX_SEMAPHORE*);
 
     /**
      * A pointer to the function that we will register with the threadx kernel when the
      * registerNotificationFunction method is called. This function calls memberNotifyFunction, which itself calls
      * storedNotifyFunction, which will be set to the passed-in function for the registerNotifyFunction method.
      */
-    txNotifyFunction_t *txNotifyFunction;
+    txNotifyFunction_t* txNotifyFunction;
 };
 
 } // namespace core::rtos
 
-#endif//EVT_RTOS_SEMAPHORE_
+#endif // EVT_RTOS_SEMAPHORE_

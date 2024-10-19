@@ -15,7 +15,6 @@ namespace core::rtos {
  */
 class Queue : public Initializable {
 public:
-
     /**
      * Constructs a Queue object, but does not initiaize it (must call init before using).\n\n
      *
@@ -27,7 +26,7 @@ public:
      * @param[in] messageSize Size (in 4-byte words) of each message in the queue. The message size can be at most 16.
      * @param[in] numMessages Number of messages in the queue.
      */
-    Queue(char* name, uint32_t messageSize,  uint32_t numMessages);
+    Queue(char* name, uint32_t messageSize, uint32_t numMessages);
 
     TXError init(BytePoolBase& pool) override;
 
@@ -68,7 +67,7 @@ public:
      * @param notifyFunction The function to be called when a message is sent to the queue.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError registerNotifyFunction(void(*notifyFunction)(Queue*));
+    TXError registerNotifyFunction(void (*notifyFunction)(Queue*));
 
     /**
      * Attempts to send a message to the queue. If the queue is full, the calling thread will suspend for
@@ -92,15 +91,15 @@ public:
      */
     TXError frontSend(void* messagePointer, uint32_t waitOption);
 
-    //Getters
+    // Getters
 
     /**
-      * Retrieves the name of this Queue.
-      *
-      * @param[out] name a pointer to a place to store the name pointer.
-      * @return The first error found by the function (or Success if there was no error).
-      */
-    TXError getName(char **name);
+     * Retrieves the name of this Queue.
+     *
+     * @param[out] name a pointer to a place to store the name pointer.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getName(char** name);
 
     /**
      * Retrieves the number of enqueued messages in this Queue.
@@ -108,7 +107,7 @@ public:
      * @param[out] numEnqueuedMessages a pointer to a place to store the number of enqueued messages.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError getNumberOfEnqueuedMessages(uint32_t *numEnqueuedMessages);
+    TXError getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages);
 
     /**
      * Retrieves the number of more messages the Queue can fit.
@@ -116,7 +115,7 @@ public:
      * @param[out] numAvailableMessages a pointer to the place to store the number of more messages the queue can fit.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError getAvailableStorage(uint32_t *numAvailableMessages);
+    TXError getAvailableStorage(uint32_t* numAvailableMessages);
 
     /**
      * Retrieves the name of the first suspended thread.
@@ -124,18 +123,17 @@ public:
      * @param[out] threadName a pointer to a place to store the name of the first suspended thread.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError getNameOfFirstSuspendedThread(char **threadName);
+    TXError getNameOfFirstSuspendedThread(char** threadName);
 
     /**
-      * Retrieves the number of threads that are suspended on this Queue.
-      *
-      * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
-      * @return The first error found by the function (or Success if there was no error).
-      */
-    TXError getNumSuspendedThreads(uint32_t *numSuspendedThreads);
+     * Retrieves the number of threads that are suspended on this Queue.
+     *
+     * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
 private:
-
     /**
      * The name of this object.
      */
@@ -161,9 +159,9 @@ private:
      * registerNotificationFunction method is called. This function calls memberNotifyFunction, which itself calls
      * storedNotifyFunction, which will be set to the passed-in function for the registerNotifyFunction method.
      */
-    void (*txNotifyFunction)( TX_QUEUE * );
+    void (*txNotifyFunction)(TX_QUEUE*);
 };
 
 } // namespace core::rtos
 
-#endif//EVT_RTOS_QUEUE_
+#endif // EVT_RTOS_QUEUE_
