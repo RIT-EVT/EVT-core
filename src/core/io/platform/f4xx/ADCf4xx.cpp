@@ -39,23 +39,14 @@ ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
 
     ADCf4xx::ADC_State_t* adcState = &adcArray[getADCNum()];
 
-    // Maximum number of ADC channels have already been added
-//    if (adcState->rank == MAX_CHANNELS) {
     if (rank == MAX_CHANNELS) {
         return;
     }
 
     initADC(rank);
-//    addChannel(adcState->rank);
     addChannel(rank);
-//    initADC(adcState->rank);
 
-//    initDMA();
-
-//    HAL_ADC_Start_DMA(&adcState->halADC, reinterpret_cast<uint32_t*>(&adcState->buffer[0]), adcState->rank);
-//    HAL_ADC_Start_DMA(&adcState->halADC, reinterpret_cast<uint32_t*>(&buffer[0]), rank);
     HAL_ADC_Start(&adcState->halADC);
-//    adcState->rank++;
     rank++;
 }
 
@@ -65,18 +56,10 @@ float ADCf4xx::read() {
 }
 
 uint32_t ADCf4xx::readRaw() {
-    // Search through list of channels to determine which DMA buffer index to
-    // use
-    uint8_t channelNum = 0;
     ADCf4xx::ADC_State_t* adcState = &adcArray[getADCNum()];
 
     HAL_ADC_PollForConversion(&adcState->halADC, HAL_MAX_DELAY);
     return HAL_ADC_GetValue(&adcState->halADC);
-
-//    while (adcState->channels[channelNum] != pin)
-//        channelNum++;
-//
-//    return buffer[channelNum];
 }
 
 float ADCf4xx::readPercentage() {
