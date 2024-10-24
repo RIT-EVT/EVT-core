@@ -4,11 +4,14 @@
 #include <string.h>
 
 #include <core/io/pin.hpp>
+#include <core/io/platform/f4xx/GPIOf4xx.hpp>
 #include <core/io/platform/f4xx/UARTf4xx.hpp>
 
-#include <core/io/platform/f4xx/GPIOf4xx.hpp>
-
 #include <HALf4/stm32f446xx.h>
+
+#include <core/utils/log.hpp>
+
+namespace log = core::log;
 
 namespace core::io {
 
@@ -38,7 +41,18 @@ UARTf4xx::UARTf4xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped) : UA
     case Pin::PC_10:
         portID = 3;
         break;
+    case Pin::PA_0:
+        portID = 4;
+        break;
+    case Pin::PC_12:
+        portID = 5;
+        break;
+    case Pin::PC_6:
+        portID = 6;
+        break;
     default:
+        portID = -1;
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid TX Pin"); // this will just crash probably.
         break;
     }
 
@@ -70,7 +84,36 @@ UARTf4xx::UARTf4xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped) : UA
         alt_id = GPIO_AF7_USART3;
 
         break;
+    case 4:
+        halUART.Instance = UART4;
+
+        if (!(__HAL_RCC_UART4_IS_CLK_ENABLED()))
+            __HAL_RCC_UART4_CLK_ENABLE();
+
+        alt_id = GPIO_AF8_UART4;
+
+        break;
+    case 5:
+        halUART.Instance = UART5;
+
+        if (!(__HAL_RCC_UART5_IS_CLK_ENABLED()))
+            __HAL_RCC_UART5_CLK_ENABLE();
+
+        alt_id = GPIO_AF8_UART5;
+
+        break;
+    case 6:
+        halUART.Instance = USART6;
+
+        if (!(__HAL_RCC_USART6_IS_CLK_ENABLED()))
+            __HAL_RCC_USART6_CLK_ENABLE();
+
+        alt_id = GPIO_AF8_USART6;
+
+        break;
     default:
+        alt_id = -1;
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid Port ID"); // this will most likely just crash.
         break;
     }
 
