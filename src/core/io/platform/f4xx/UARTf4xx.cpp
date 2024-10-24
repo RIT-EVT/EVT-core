@@ -4,15 +4,14 @@
 #include <string.h>
 
 #include <core/io/pin.hpp>
-#include <core/io/platform/f4xx/UARTf4xx.hpp>
 #include <core/io/platform/f4xx/GPIOf4xx.hpp>
+#include <core/io/platform/f4xx/UARTf4xx.hpp>
 
 #include <HALf4/stm32f446xx.h>
 
 #include <core/utils/log.hpp>
 
 namespace log = core::log;
-
 
 namespace core::io {
 
@@ -50,10 +49,10 @@ UARTf4xx::UARTf4xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped) : UA
         break;
     case Pin::PC_6:
         portID = 6;
-         break;
+        break;
     default:
         portID = -1;
-        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid TX Pin"); //this will just crash probably.
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid TX Pin"); // this will just crash probably.
         break;
     }
 
@@ -114,7 +113,7 @@ UARTf4xx::UARTf4xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped) : UA
         break;
     default:
         alt_id = -1;
-        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid Port ID"); //this will most likely just crash.
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Invalid Port ID"); // this will most likely just crash.
         break;
     }
 

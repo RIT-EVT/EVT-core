@@ -300,7 +300,7 @@ SPI::SPIStatus SPIf4xx::halToSPIStatus(HAL_StatusTypeDef halStatus) {
     case HAL_TIMEOUT:
         return SPIStatus::TIMEOUT;
     default:
-        //this should never happen
+        // this should never happen
         return SPI::SPIStatus::ERROR;
     }
 }

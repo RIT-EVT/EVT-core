@@ -116,10 +116,10 @@ void Encoder::setRangeAndPosition(uint32_t newRange, uint32_t newPosition) {
 int8_t Encoder::readPinValues() {
     uint8_t aPos = (bool) a.readPin();
     uint8_t bPos = (bool) b.readPin();
-    //Calculating and returning the position.
-    //Position is in graycode, not binary.
-    uint8_t comb = (bPos<<1) | aPos;
-    switch(comb) {
+    // Calculating and returning the position.
+    // Position is in graycode, not binary.
+    uint8_t comb = (bPos << 1) | aPos;
+    switch (comb) {
     case 0b00:
         return 0;
     case 0b01:
@@ -129,7 +129,7 @@ int8_t Encoder::readPinValues() {
     case 0b10:
         return 3;
     default:
-        //this default case will never really happen.
+        // this default case will never really happen.
         return 0;
     }
 }
