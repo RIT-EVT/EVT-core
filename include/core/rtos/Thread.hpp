@@ -182,7 +182,7 @@ public:
         return static_cast<TXError>(errorCode);
     }
 
-    //Getters
+    // Getters
 
     /**
      * Retrieves the name of this thread.
@@ -202,9 +202,8 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError getState(TXThreadState* state) {
-        uint32_t errorCode = tx_thread_info_get(&txThread, nullptr, (UINT*)state,
-                                               nullptr,nullptr, nullptr,
-                                               nullptr,nullptr, nullptr);
+        uint32_t errorCode =
+            tx_thread_info_get(&txThread, nullptr, (UINT*) state, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
         return static_cast<TXError>(errorCode);
     }
 
@@ -215,9 +214,8 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError getRunCount(uint32_t* runCount) {
-        uint32_t errorCode = tx_thread_info_get(&txThread, nullptr, nullptr,
-                                                runCount,nullptr, nullptr,
-                                                nullptr,nullptr, nullptr);
+        uint32_t errorCode =
+            tx_thread_info_get(&txThread, nullptr, nullptr, runCount, nullptr, nullptr, nullptr, nullptr, nullptr);
         return static_cast<TXError>(errorCode);
     }
 
@@ -228,9 +226,8 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError getPriority(uint32_t* priority) {
-        uint32_t errorCode = tx_thread_info_get(&txThread, nullptr, nullptr,
-                                                nullptr,(UINT*)priority, nullptr,
-                                                nullptr,nullptr, nullptr);
+        uint32_t errorCode = tx_thread_info_get(
+            &txThread, nullptr, nullptr, nullptr, (UINT*) priority, nullptr, nullptr, nullptr, nullptr);
         return static_cast<TXError>(errorCode);
     }
 
@@ -241,9 +238,8 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError getPreemptThreshold(uint32_t* preemptThreshold) {
-        uint32_t errorCode = tx_thread_info_get(&txThread, nullptr, nullptr,
-                                                nullptr,nullptr,(UINT*)preemptThreshold,
-                                                nullptr,nullptr, nullptr);
+        uint32_t errorCode = tx_thread_info_get(
+            &txThread, nullptr, nullptr, nullptr, nullptr, (UINT*) preemptThreshold, nullptr, nullptr, nullptr);
         return static_cast<TXError>(errorCode);
     }
 
@@ -254,9 +250,8 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError getTimeSlice(uint32_t* timeSlice) {
-        uint32_t errorCode = tx_thread_info_get(&txThread, nullptr, nullptr,
-                                                nullptr,nullptr,nullptr,
-                                                timeSlice,nullptr, nullptr);
+        uint32_t errorCode =
+            tx_thread_info_get(&txThread, nullptr, nullptr, nullptr, nullptr, nullptr, timeSlice, nullptr, nullptr);
         return static_cast<TXError>(errorCode);
     }
 
