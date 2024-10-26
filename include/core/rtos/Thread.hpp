@@ -13,7 +13,8 @@ namespace core::rtos {
  *
  * This class extends Initializable, and like all other Initializable classes must be passed into the
  * Threadx::startKernel() method as part of the initList parameter.
- * @tparam T what type of data the thread's entry function will take.
+ * @tparam T what type of data the thread's entry function will take. Should be at most 32 bits. (so generally should be
+ * a pointer)
  */
 template<typename T>
 class Thread : public Initializable {
@@ -52,6 +53,7 @@ public:
      */
     TXError init(BytePoolBase& pool) override {
         // allocate memory for the thread
+
         void* stackStart;
         uint32_t errorCode = pool.allocateMemory(stackSize, &stackStart, NoWait);
         TXError error      = static_cast<TXError>(errorCode);
@@ -177,6 +179,84 @@ public:
      */
     TXError abortWait() {
         uint32_t errorCode = tx_thread_wait_abort(&txThread);
+        return static_cast<TXError>(errorCode);
+    }
+
+    //Getters
+
+    /**
+     * Retrieves the name of this thread.
+     *
+     * @param[out] name a pointer to a place to put the name pointer.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getName(char** name) {
+        *name = this->name;
+        return Success;
+    }
+
+    /**
+     * Retrieves the state of this thread.
+     *
+     * @param[out] state a pointer to a place to put the state of the thread.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getState(TXThreadState* state) {
+        uint32_t errorCode = tx_thread_info_get(&txThread, nullptr, (UINT*)state,
+                                               nullptr,nullptr, nullptr,
+                                               nullptr,nullptr, nullptr);
+        return static_cast<TXError>(errorCode);
+    }
+
+    /**
+     * Retrieves the run count of this thread.
+     *
+     * @param[out] runCount a pointer to a place to put the run count.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getRunCount(uint32_t* runCount) {
+        uint32_t errorCode = tx_thread_info_get(&txThread, nullptr, nullptr,
+                                                runCount,nullptr, nullptr,
+                                                nullptr,nullptr, nullptr);
+        return static_cast<TXError>(errorCode);
+    }
+
+    /**
+     * Retrieves the priority of this thread.
+     *
+     * @param priority a pointer to a place to put the priority.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getPriority(uint32_t* priority) {
+        uint32_t errorCode = tx_thread_info_get(&txThread, nullptr, nullptr,
+                                                nullptr,(UINT*)priority, nullptr,
+                                                nullptr,nullptr, nullptr);
+        return static_cast<TXError>(errorCode);
+    }
+
+    /**
+     * Retrieves the preemption threshold of this thread.
+     *
+     * @param[out] preemptThreshold a place to put the preempt threshold.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getPreemptThreshold(uint32_t* preemptThreshold) {
+        uint32_t errorCode = tx_thread_info_get(&txThread, nullptr, nullptr,
+                                                nullptr,nullptr,(UINT*)preemptThreshold,
+                                                nullptr,nullptr, nullptr);
+        return static_cast<TXError>(errorCode);
+    }
+
+    /**
+     * Retrieves the time slice of this thread.
+     *
+     * @param[out] timeSlice a place to put the time slice.
+     * @return The first error found by the function (or Success if there was no error).
+     */
+    TXError getTimeSlice(uint32_t* timeSlice) {
+        uint32_t errorCode = tx_thread_info_get(&txThread, nullptr, nullptr,
+                                                nullptr,nullptr,nullptr,
+                                                timeSlice,nullptr, nullptr);
         return static_cast<TXError>(errorCode);
     }
 

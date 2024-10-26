@@ -54,6 +54,27 @@ enum TXError {
 };
 
 /**
+ * Enum that represents the states a thread can be in.
+ */
+enum TXThreadState {
+    Ready = TX_READY,
+    Completed,
+    Terminated,
+    Suspended,
+    Sleep,
+    SueueSuspended,
+    SemaphoreSuspended,
+    EventFlag,
+    BlockMemory,
+    ByteMemory,
+    IODriver,
+    File,
+    TcpIp,
+    MutexSuspended,
+    PriorityChange
+};
+
+/**
  * Enum to shorthand No Wait and Wait Forever wait options in TX.
  */
 enum TXWait {
