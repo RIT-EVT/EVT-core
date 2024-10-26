@@ -27,21 +27,24 @@ public:
      * @param[in] expirationFunction the function the timer will call when it expires
      * @param[in] expirationInput the input to the expiration function.
      * @param[in] initialTicks how long (in ticks) this timer will wait after it is activated.
-     * @param[in] rescheduleTicks how long (in ticks) this timer will wait between calls to the function after the first.
-     * (if 0, timer will be a one-shot and run only once)
-     * @param[in] autoActivate If the timer will activate upon being initialized. If false, the timer will wait to be externally activated.
+     * @param[in] rescheduleTicks how long (in ticks) this timer will wait between calls to the function after the
+     * first. (if 0, timer will be a one-shot and run only once)
+     * @param[in] autoActivate If the timer will activate upon being initialized. If false, the timer will wait to be
+     * externally activated.
      */
-    Timer(char* name, void (*expirationFunction)(T), T expirationInput,
-          uint32_t initialTicks, uint32_t rescheduleTicks, bool autoActivate)
+    Timer(char* name, void (*expirationFunction)(T), T expirationInput, uint32_t initialTicks, uint32_t rescheduleTicks,
+          bool autoActivate)
         : txTimer(), name(name), expirationFunction(expirationFunction), expirationInput(expirationInput),
-          initialTicks(initialTicks), rescheduleTicks(rescheduleTicks), autoActivate(autoActivate) {
-
-    }
-
+          initialTicks(initialTicks), rescheduleTicks(rescheduleTicks), autoActivate(autoActivate) {}
 
     TXError init(BytePoolBase& pool) override {
-        uint32_t errorCode = tx_timer_create(&txTimer, name, expirationFunction, expirationInput,
-                                             initialTicks, rescheduleTicks, (uint32_t)autoActivate);
+        uint32_t errorCode = tx_timer_create(&txTimer,
+                                             name,
+                                             expirationFunction,
+                                             expirationInput,
+                                             initialTicks,
+                                             rescheduleTicks,
+                                             (uint32_t) autoActivate);
         return static_cast<TXError>(errorCode);
     }
 
@@ -102,8 +105,7 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError isActive(bool* active) {
-        uint32_t errorCode = tx_timer_info_get(&txTimer, nullptr, (UINT*)active,
-                                              nullptr, nullptr, nullptr);
+        uint32_t errorCode = tx_timer_info_get(&txTimer, nullptr, (UINT*) active, nullptr, nullptr, nullptr);
         return static_cast<TXError>(errorCode);
     }
 
@@ -114,8 +116,7 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError getRemainingTicks(uint32_t* remainingTicks) {
-        uint32_t errorCode = tx_timer_info_get(&txTimer, nullptr, nullptr,
-                                               remainingTicks, nullptr, nullptr);
+        uint32_t errorCode = tx_timer_info_get(&txTimer, nullptr, nullptr, remainingTicks, nullptr, nullptr);
         return static_cast<TXError>(errorCode);
     }
 
@@ -126,8 +127,7 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError getRescheduleTicks(uint32_t* rescheduleTicks) {
-        uint32_t errorCode = tx_timer_info_get(&txTimer, nullptr, nullptr,
-                                               nullptr, rescheduleTicks, nullptr);
+        uint32_t errorCode = tx_timer_info_get(&txTimer, nullptr, nullptr, nullptr, rescheduleTicks, nullptr);
         return static_cast<TXError>(errorCode);
     }
 
@@ -169,7 +169,5 @@ private:
 };
 
 } // namespace core::rtos
-
-
 
 #endif // EVT_TIMER_HPP
