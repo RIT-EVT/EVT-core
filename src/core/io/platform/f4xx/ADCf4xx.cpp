@@ -33,7 +33,7 @@ namespace core::io {
 #define CHANNEL_SET(adc1, adc2, adc3, ch) (ch | (adc1 << ADC1SHIFT) | (adc2 << ADC2SHIFT) | (adc3 << ADC3SHIFT))
 
 ADCf4xx::ADC_State_t ADCf4xx::adcArray[3];
-uint8_t ADCf4xx::rank = 1;
+uint8_t ADCf4xx::rank   = 1;
 bool ADCf4xx::timerInit = false;
 
 ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
@@ -96,7 +96,7 @@ void ADCf4xx::initADC(uint8_t num_channels) {
      * Alignment and number of conversion)
      */
     ADCf4xx::ADC_State_t* adcState = &adcArray[getADCNum()];
-    ADC_HandleTypeDef* halADC = &adcState->halADC;
+    ADC_HandleTypeDef* halADC      = &adcState->halADC;
     // Set instance to the ADC peripheral being using
     halADC->Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV2;
     halADC->Init.Resolution            = ADC_RESOLUTION_12B;
@@ -130,24 +130,24 @@ void ADCf4xx::initADC(uint8_t num_channels) {
 }
 
 void ADCf4xx::initDMA() {
-    uint8_t adcNum = getADCNum();
+    uint8_t adcNum                 = getADCNum();
     ADCf4xx::ADC_State_t* adcState = &adcArray[adcNum];
-    DMA_HandleTypeDef* dma = &adcState->halDMA;
+    DMA_HandleTypeDef* dma         = &adcState->halDMA;
     switch (adcNum) {
-        case ADC1_SLOT:
-            dma->Instance     = DMA2_Stream0;
-            dma->Init.Channel = DMA_CHANNEL_0;
-            break;
-        case ADC2_SLOT:
-            dma->Instance     = DMA2_Stream2;
-            dma->Init.Channel = DMA_CHANNEL_1;
-            break;
-        case ADC3_SLOT:
-            dma->Instance     = DMA2_Stream1;
-            dma->Init.Channel = DMA_CHANNEL_2;
-            break;
-        default:
-            return; // Should never get here
+    case ADC1_SLOT:
+        dma->Instance     = DMA2_Stream0;
+        dma->Init.Channel = DMA_CHANNEL_0;
+        break;
+    case ADC2_SLOT:
+        dma->Instance     = DMA2_Stream2;
+        dma->Init.Channel = DMA_CHANNEL_1;
+        break;
+    case ADC3_SLOT:
+        dma->Instance     = DMA2_Stream1;
+        dma->Init.Channel = DMA_CHANNEL_2;
+        break;
+    default:
+        return; // Should never get here
     }
     dma->Init.Direction           = DMA_PERIPH_TO_MEMORY;
     dma->Init.PeriphInc           = DMA_PINC_DISABLE;
@@ -192,7 +192,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
     GPIO_InitTypeDef gpioInit;
     uint8_t numOfPins = 1;
     uint32_t channel;
-    Pin myPins[] = {pin};
+    Pin myPins[]                   = {pin};
     ADCf4xx::ADC_State_t* adcState = &adcArray[getADCNum()];
 
     GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
