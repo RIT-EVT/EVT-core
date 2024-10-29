@@ -14,6 +14,7 @@
  */
 
 #include <HALf4/stm32f4xx.h>
+#include <core/platform/f4xx/stm32f4xx.hpp>
 #include <HALf4/stm32f4xx_hal_adc.h>
 #include <core/io/pin.hpp>
 #include <core/io/platform/f4xx/ADCf4xx.hpp>
@@ -33,21 +34,40 @@ namespace core::io {
 
 ADCf4xx::ADC_State_t ADCf4xx::adcArray[3];
 uint8_t ADCf4xx::rank = 1;
-uint16_t ADCf4xx::buffer[] = {0};
+bool ADCf4xx::timerInit = false;
 
 ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
-
     ADCf4xx::ADC_State_t* adcState = &adcArray[getADCNum()];
 
-    if (rank == MAX_CHANNELS) {
+    if (adcState->rank == MAX_CHANNELS) {
         return;
     }
 
-    initADC(rank);
-    addChannel(rank);
+    if (timerInit) {
+        HAL_TIM_Base_DeInit(&htim8); // Stop Timer8 (Trigger Source For ADC's)
+        timerInit = false;
+    }
 
-    HAL_ADC_Start(&adcState->halADC);
-    rank++;
+    if (adcState->isADCInit) {
+        HAL_ADC_Stop_DMA(&adcState->halADC);
+        HAL_DMA_DeInit(&adcState->halDMA);
+    } else {
+        __HAL_RCC_DMA2_CLK_ENABLE();
+        adcState->isADCInit = true;
+    }
+
+    initDMA();
+    initADC(adcState->rank);
+    addChannel(adcState->rank);
+
+    if (!timerInit) {
+        InitTimer();
+        HAL_TIM_Base_Start(&htim8); // Start Timer8 (Trigger Source For ADC's)
+        timerInit = true;
+    }
+
+    HAL_ADC_Start_DMA(&adcState->halADC, reinterpret_cast<uint32_t*>(&adcState->buffer[0]), adcState->rank);
+    adcState->rank++;
 }
 
 float ADCf4xx::read() {
@@ -58,8 +78,12 @@ float ADCf4xx::read() {
 uint32_t ADCf4xx::readRaw() {
     ADCf4xx::ADC_State_t* adcState = &adcArray[getADCNum()];
 
-    HAL_ADC_PollForConversion(&adcState->halADC, HAL_MAX_DELAY);
-    return HAL_ADC_GetValue(&adcState->halADC);
+    uint8_t channelNum = 0;
+    while (adcState->channels[channelNum] != pin) {
+        channelNum++;
+    }
+
+    return adcState->buffer[channelNum];
 }
 
 float ADCf4xx::readPercentage() {
@@ -77,14 +101,14 @@ void ADCf4xx::initADC(uint8_t num_channels) {
     halADC->Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV2;
     halADC->Init.Resolution            = ADC_RESOLUTION_12B;
     halADC->Init.ScanConvMode          = ENABLE;
-    halADC->Init.ContinuousConvMode    = ENABLE;
+    halADC->Init.ContinuousConvMode    = DISABLE;
     halADC->Init.DiscontinuousConvMode = DISABLE;
-    halADC->Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_NONE;
-    halADC->Init.ExternalTrigConv      = ADC_SOFTWARE_START;
+    halADC->Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_RISING;
+    halADC->Init.ExternalTrigConv      = ADC_EXTERNALTRIGCONV_T8_TRGO;
     halADC->Init.DataAlign             = ADC_DATAALIGN_RIGHT;
     halADC->Init.NbrOfConversion       = num_channels;
-    halADC->Init.DMAContinuousRequests = DISABLE;
-    halADC->Init.EOCSelection          = ADC_EOC_SEQ_CONV;
+    halADC->Init.DMAContinuousRequests = ENABLE;
+    halADC->Init.EOCSelection          = ADC_EOC_SINGLE_CONV;
 
     switch (getADCNum()) {
     case ADC1_SLOT:
@@ -131,10 +155,36 @@ void ADCf4xx::initDMA() {
     dma->Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     dma->Init.MemDataAlignment    = DMA_MDATAALIGN_HALFWORD;
     dma->Init.Mode                = DMA_CIRCULAR;
-    dma->Init.Priority            = DMA_PRIORITY_VERY_HIGH;
-    dma->Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
+    dma->Init.Priority            = DMA_PRIORITY_HIGH; // todo: was ..._VERY_HIGH
+    dma->Init.FIFOMode            = DMA_FIFOMODE_DISABLE;  // todo: WORKS ENABLED
+    dma->Init.FIFOThreshold       = DMA_FIFO_THRESHOLD_FULL;
+    dma->Init.MemBurst            = DMA_MBURST_SINGLE;
+    dma->Init.PeriphBurst         = DMA_PBURST_SINGLE;
 
     HAL_DMA_Init(dma);
+
+    switch (adcNum) {
+    case ADC1_SLOT:
+        dma->Instance     = DMA2_Stream0;
+        dma->Init.Channel = DMA_CHANNEL_0;
+        HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, platform::ADC_INTERRUPT_PRIORITY, 0);
+        HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+        break;
+    case ADC2_SLOT:
+        dma->Instance     = DMA2_Stream2;
+        dma->Init.Channel = DMA_CHANNEL_1;
+        HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, platform::ADC_INTERRUPT_PRIORITY, 0);
+        HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
+        break;
+    case ADC3_SLOT:
+        dma->Instance     = DMA2_Stream1;
+        dma->Init.Channel = DMA_CHANNEL_2;
+        HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, platform::ADC_INTERRUPT_PRIORITY, 0);
+        HAL_NVIC_EnableIRQ(DMA2_Stream1_IRQn);
+        break;
+    default:
+        return; // Should never get here
+    }
     __HAL_LINKDMA(&adcState->halADC, DMA_Handle, *dma);
 }
 
@@ -245,6 +295,26 @@ uint8_t ADCf4xx::getADCNum() {
     case ADCPeriph::THREE:
         return ADC3_SLOT;
     }
+}
+void ADCf4xx::InitTimer() {
+
+        TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+        TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+        htim8.Instance = TIM8;
+        htim8.Init.Prescaler = 0;
+        htim8.Init.CounterMode = TIM_COUNTERMODE_UP;
+        htim8.Init.Period = 64000;
+        htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+        htim8.Init.RepetitionCounter = 0;
+        htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+        HAL_TIM_Base_Init(&htim8);
+        sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+        HAL_TIM_ConfigClockSource(&htim8, &sClockSourceConfig);
+
+        sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
+        sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+        HAL_TIMEx_MasterConfigSynchronization(&htim8, &sMasterConfig);
 }
 
 } // namespace core::io

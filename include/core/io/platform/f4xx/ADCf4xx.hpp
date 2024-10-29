@@ -46,9 +46,12 @@ private:
     /// Static list of all channels supported by the ADC
 //    static Pin channels[NUM_ADCS][MAX_CHANNELS];
     /// Buffer for DMA where each spot represents the value read in from a channel
-    static uint16_t buffer[MAX_CHANNELS];
+//    static uint16_t buffer[MAX_CHANNELS];
 //    static DMA_HandleTypeDef halDMA[NUM_ADCS];
-        static uint8_t rank;
+    static uint8_t rank;
+    static bool timerInit;
+    TIM_HandleTypeDef htim8;
+
     typedef struct ADC_State {
         ADC_HandleTypeDef halADC = {0};
         uint8_t rank = 1;
@@ -57,7 +60,7 @@ private:
                                       Pin::DUMMY, Pin::DUMMY, Pin::DUMMY, Pin::DUMMY,
                                       Pin::DUMMY, Pin::DUMMY, Pin::DUMMY, Pin::DUMMY,
                                       Pin::DUMMY, Pin::DUMMY, Pin::DUMMY, Pin::DUMMY};
-//        uint16_t buffer[MAX_CHANNELS] = {0};
+        uint16_t buffer[MAX_CHANNELS] = {0};
         DMA_HandleTypeDef halDMA = {0};
     } ADC_State_t;
 
@@ -93,6 +96,8 @@ private:
      *      was added to the ADC starting at 1
      */
     void addChannel(uint8_t rank);
+
+    void InitTimer();
 };
 
 } // namespace core::io
