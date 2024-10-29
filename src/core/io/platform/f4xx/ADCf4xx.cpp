@@ -14,11 +14,11 @@
  */
 
 #include <HALf4/stm32f4xx.h>
-#include <core/platform/f4xx/stm32f4xx.hpp>
 #include <HALf4/stm32f4xx_hal_adc.h>
 #include <core/io/pin.hpp>
 #include <core/io/platform/f4xx/ADCf4xx.hpp>
 #include <core/io/platform/f4xx/GPIOf4xx.hpp>
+#include <core/platform/f4xx/stm32f4xx.hpp>
 
 namespace core::io {
 #define ADC1_SLOT 0
@@ -155,8 +155,8 @@ void ADCf4xx::initDMA() {
     dma->Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     dma->Init.MemDataAlignment    = DMA_MDATAALIGN_HALFWORD;
     dma->Init.Mode                = DMA_CIRCULAR;
-    dma->Init.Priority            = DMA_PRIORITY_HIGH; // todo: was ..._VERY_HIGH
-    dma->Init.FIFOMode            = DMA_FIFOMODE_DISABLE;  // todo: WORKS ENABLED
+    dma->Init.Priority            = DMA_PRIORITY_HIGH;    // todo: was ..._VERY_HIGH
+    dma->Init.FIFOMode            = DMA_FIFOMODE_DISABLE; // todo: WORKS ENABLED
     dma->Init.FIFOThreshold       = DMA_FIFO_THRESHOLD_FULL;
     dma->Init.MemBurst            = DMA_MBURST_SINGLE;
     dma->Init.PeriphBurst         = DMA_PBURST_SINGLE;
@@ -298,23 +298,23 @@ uint8_t ADCf4xx::getADCNum() {
 }
 void ADCf4xx::InitTimer() {
 
-        TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-        TIM_MasterConfigTypeDef sMasterConfig = {0};
+    TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+    TIM_MasterConfigTypeDef sMasterConfig     = {0};
 
-        htim8.Instance = TIM8;
-        htim8.Init.Prescaler = 0;
-        htim8.Init.CounterMode = TIM_COUNTERMODE_UP;
-        htim8.Init.Period = 64000;
-        htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-        htim8.Init.RepetitionCounter = 0;
-        htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
-        HAL_TIM_Base_Init(&htim8);
-        sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-        HAL_TIM_ConfigClockSource(&htim8, &sClockSourceConfig);
+    htim8.Instance               = TIM8;
+    htim8.Init.Prescaler         = 0;
+    htim8.Init.CounterMode       = TIM_COUNTERMODE_UP;
+    htim8.Init.Period            = 64000;
+    htim8.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
+    htim8.Init.RepetitionCounter = 0;
+    htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+    HAL_TIM_Base_Init(&htim8);
+    sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+    HAL_TIM_ConfigClockSource(&htim8, &sClockSourceConfig);
 
-        sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
-        sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-        HAL_TIMEx_MasterConfigSynchronization(&htim8, &sMasterConfig);
+    sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
+    sMasterConfig.MasterSlaveMode     = TIM_MASTERSLAVEMODE_DISABLE;
+    HAL_TIMEx_MasterConfigSynchronization(&htim8, &sMasterConfig);
 }
 
 } // namespace core::io
