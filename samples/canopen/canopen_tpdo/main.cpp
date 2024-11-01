@@ -9,6 +9,7 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 #include <core/utils/types/FixedQueue.hpp>
+#include <core/utils/log.hpp>
 
 #include <core/io/CANopen.hpp>
 
@@ -17,6 +18,7 @@
 namespace io   = core::io;
 namespace dev  = core::dev;
 namespace time = core::time;
+namespace log  = core::log;
 
 ///////////////////////////////////////////////////////////////////////////////
 // EVT-core CAN callback and CAN setup. This will include logic to set
@@ -34,20 +36,19 @@ namespace time = core::time;
  * @param message[in] The passed in CAN message that was read.
  */
 
-io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
 // create a can interrupt handler
 void canInterrupt(io::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
 
     // print out raw received data
-    uart.printf("Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
+    log::LOGGER.log(log::Logger::LogLevel::INFO, "Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
     uint8_t* data = message.getPayload();
     for (int i = 0; i < message.getDataLength(); i++) {
-        uart.printf("%X ", *data);
+        log::LOGGER.log(log::Logger::LogLevel::INFO, "%X ", *data);
         data++;
     }
-    uart.printf("\r\n");
+    log::LOGGER.log(log::Logger::LogLevel::INFO, "\r\n");
 
     if (queue != nullptr)
         queue->append(message);
@@ -55,18 +56,20 @@ void canInterrupt(io::CANMessage& message, void* priv) {
 
 // setup a TPDO event handler to print the raw TPDO message when sending
 extern "C" void COPdoTransmit(CO_IF_FRM* frm) {
-    uart.printf("Sending PDO as 0x%X with length %d and data: ", frm->Identifier, frm->DLC);
+    log::LOGGER.log(log::Logger::LogLevel::INFO, "Sending PDO as 0x%X with length %d and data: ", frm->Identifier, frm->DLC);
     uint8_t* data = frm->Data;
     for (int i = 0; i < frm->DLC; i++) {
-        uart.printf("%X ", *data);
+        log::LOGGER.log(log::Logger::LogLevel::INFO, "%X ", *data);
         data++;
     }
-    uart.printf("\r\n");
+    log::LOGGER.log(log::Logger::LogLevel::INFO, "\r\n");
 }
 
 int main() {
     // Initialize system
     core::platform::init();
+
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     // create the TPDO node
     TPDOCanNode testCanNode;
