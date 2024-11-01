@@ -20,6 +20,39 @@
 #include <core/io/platform/f4xx/ADCf4xx.hpp>
 #include <core/io/platform/f4xx/GPIOf4xx.hpp>
 
+namespace {
+/// This is made as a global variable so that it is accessible in the
+// interrupt.
+DMA_HandleTypeDef* dmaHandle[3];
+ADC_HandleTypeDef* adcHandle[3];
+
+} // namespace
+
+extern "C" void DMA2_Stream0_IRQHandler(void) {
+    HAL_DMA_IRQHandler(dmaHandle[0]);
+    HAL_ADC_IRQHandler(adcHandle[0]);
+}
+
+/**
+  * @brief This function handles DMA2 stream1 global interrupt.
+ */
+extern "C" void DMA2_Stream1_IRQHandler(void)
+{
+    HAL_DMA_IRQHandler(dmaHandle[2]);
+    HAL_ADC_IRQHandler(adcHandle[2]);
+}
+
+/**
+  * @brief This function handles DMA2 stream2 global interrupt.
+ */
+extern "C" void DMA2_Stream2_IRQHandler(void)
+{
+    HAL_DMA_IRQHandler(dmaHandle[1]);
+    HAL_ADC_IRQHandler(adcHandle[1]);
+
+}
+
+
 namespace core::io {
 #define ADC1_SLOT 0
 #define ADC2_SLOT 1
@@ -33,11 +66,11 @@ namespace core::io {
 #define CHANNEL_SET(adc1, adc2, adc3, ch) (ch | (adc1 << ADC1SHIFT) | (adc2 << ADC2SHIFT) | (adc3 << ADC3SHIFT))
 
 ADCf4xx::ADC_State_t ADCf4xx::adcArray[3];
-uint8_t ADCf4xx::rank   = 1;
 bool ADCf4xx::timerInit = false;
 
 ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
-    ADCf4xx::ADC_State_t* adcState = &adcArray[getADCNum()];
+    uint8_t adcNum = getADCNum();
+    ADCf4xx::ADC_State_t* adcState = &adcArray[adcNum];
 
     if (adcState->rank == MAX_CHANNELS) {
         return;
@@ -60,7 +93,11 @@ ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
     initADC(adcState->rank);
     addChannel(adcState->rank);
 
+    dmaHandle[adcNum] = &this->adcArray[adcNum].halDMA;
+    adcHandle[adcNum] = &this->adcArray[adcNum].halADC;
+
     if (!timerInit) {
+        __HAL_RCC_TIM8_CLK_ENABLE();
         InitTimer();
         HAL_TIM_Base_Start(&htim8); // Start Timer8 (Trigger Source For ADC's)
         timerInit = true;
@@ -156,7 +193,7 @@ void ADCf4xx::initDMA() {
     dma->Init.MemDataAlignment    = DMA_MDATAALIGN_HALFWORD;
     dma->Init.Mode                = DMA_CIRCULAR;
     dma->Init.Priority            = DMA_PRIORITY_HIGH; // todo: was ..._VERY_HIGH
-    dma->Init.FIFOMode            = DMA_FIFOMODE_DISABLE;  // todo: WORKS ENABLED
+    dma->Init.FIFOMode            = DMA_FIFOMODE_DISABLE;  // todo: CUBEIDE WORKS WITH ENABLED
     dma->Init.FIFOThreshold       = DMA_FIFO_THRESHOLD_FULL;
     dma->Init.MemBurst            = DMA_MBURST_SINGLE;
     dma->Init.PeriphBurst         = DMA_PBURST_SINGLE;
@@ -269,7 +306,6 @@ void ADCf4xx::addChannel(uint8_t rank) {
     adcChannel.Rank         = rank;
     adcChannel.SamplingTime = ADC_SAMPLETIME_3CYCLES;
     adcChannel.Offset       = 0;
-    adcChannel.Offset       = 0x000;
 
     HAL_ADC_ConfigChannel(&adcState->halADC, &adcChannel);
 }
@@ -286,7 +322,7 @@ inline bool ADCf4xx::checkSupport(ADCPeriph periph, uint32_t channel) {
     }
 }
 
-uint8_t ADCf4xx::getADCNum() {
+inline uint8_t ADCf4xx::getADCNum() {
     switch (adcPeriph) {
     case ADCPeriph::ONE:
         return ADC1_SLOT;
@@ -296,8 +332,8 @@ uint8_t ADCf4xx::getADCNum() {
         return ADC3_SLOT;
     }
 }
-void ADCf4xx::InitTimer() {
 
+void ADCf4xx::InitTimer() {
         TIM_ClockConfigTypeDef sClockSourceConfig = {0};
         TIM_MasterConfigTypeDef sMasterConfig = {0};
 
@@ -316,5 +352,4 @@ void ADCf4xx::InitTimer() {
         sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
         HAL_TIMEx_MasterConfigSynchronization(&htim8, &sMasterConfig);
 }
-
 } // namespace core::io
