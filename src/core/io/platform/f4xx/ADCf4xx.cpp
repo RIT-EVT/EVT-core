@@ -34,24 +34,20 @@ extern "C" void DMA2_Stream0_IRQHandler(void) {
 }
 
 /**
-  * @brief This function handles DMA2 stream1 global interrupt.
+ * @brief This function handles DMA2 stream1 global interrupt.
  */
-extern "C" void DMA2_Stream1_IRQHandler(void)
-{
+extern "C" void DMA2_Stream1_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle[2]);
     HAL_ADC_IRQHandler(adcHandle[2]);
 }
 
 /**
-  * @brief This function handles DMA2 stream2 global interrupt.
+ * @brief This function handles DMA2 stream2 global interrupt.
  */
-extern "C" void DMA2_Stream2_IRQHandler(void)
-{
+extern "C" void DMA2_Stream2_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle[1]);
     HAL_ADC_IRQHandler(adcHandle[1]);
-
 }
-
 
 namespace core::io {
 #define ADC1_SLOT 0
@@ -69,7 +65,7 @@ ADCf4xx::ADC_State_t ADCf4xx::adcArray[3];
 bool ADCf4xx::timerInit = false;
 
 ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
-    uint8_t adcNum = getADCNum();
+    uint8_t adcNum                 = getADCNum();
     ADCf4xx::ADC_State_t* adcState = &adcArray[adcNum];
 
     if (adcState->rank == MAX_CHANNELS) {
@@ -334,8 +330,8 @@ inline uint8_t ADCf4xx::getADCNum() {
 }
 
 void ADCf4xx::InitTimer() {
-        TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-        TIM_MasterConfigTypeDef sMasterConfig     = {0};
+    TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+    TIM_MasterConfigTypeDef sMasterConfig     = {0};
 
     htim8.Instance               = TIM8;
     htim8.Init.Prescaler         = 0;
