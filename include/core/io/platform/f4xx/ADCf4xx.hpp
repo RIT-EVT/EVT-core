@@ -42,26 +42,38 @@ private:
     /// supports multiple channels, so I made this one only use a single ADC.
     /// The F446re has 3 12 bit ADC's. Currently not able to use the other 2.
     /// The ADC will be initialized once then each channel will be added on.
-//    static ADC_HandleTypeDef halADC[NUM_ADCS];
+    //    static ADC_HandleTypeDef halADC[NUM_ADCS];
     /// Static list of all channels supported by the ADC
-//    static Pin channels[NUM_ADCS][MAX_CHANNELS];
+    //    static Pin channels[NUM_ADCS][MAX_CHANNELS];
     /// Buffer for DMA where each spot represents the value read in from a channel
-//    static uint16_t buffer[MAX_CHANNELS];
-//    static DMA_HandleTypeDef halDMA[NUM_ADCS];
+    //    static uint16_t buffer[MAX_CHANNELS];
+    //    static DMA_HandleTypeDef halDMA[NUM_ADCS];
     static uint8_t rank;
     static bool timerInit;
     TIM_HandleTypeDef htim8;
 
     typedef struct ADC_State {
-        ADC_HandleTypeDef halADC = {0};
-        uint8_t rank = 1;
-        bool isADCInit = false;
-        Pin channels[MAX_CHANNELS] = {Pin::DUMMY, Pin::DUMMY, Pin::DUMMY, Pin::DUMMY,
-                                      Pin::DUMMY, Pin::DUMMY, Pin::DUMMY, Pin::DUMMY,
-                                      Pin::DUMMY, Pin::DUMMY, Pin::DUMMY, Pin::DUMMY,
-                                      Pin::DUMMY, Pin::DUMMY, Pin::DUMMY, Pin::DUMMY};
+        ADC_HandleTypeDef halADC      = {0};
+        uint8_t rank                  = 1;
+        bool isADCInit                = false;
+        Pin channels[MAX_CHANNELS]    = {Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY};
         uint16_t buffer[MAX_CHANNELS] = {0};
-        DMA_HandleTypeDef halDMA = {0};
+        DMA_HandleTypeDef halDMA      = {0};
     } ADC_State_t;
 
     static ADC_State_t adcArray[NUM_ADCS];
