@@ -22,11 +22,10 @@ namespace {
 /// This is made as a global variable so that it is accessible in the interrupt.
 DMA_HandleTypeDef* dmaHandle[3];
 ADC_HandleTypeDef* adcHandle[3];
-
 } // namespace
 
 /**
- * @brief This function handles DMA2 stream0 global interrupt.
+ * @brief This function handles DMA2 stream0 global interrupt. (For ADC 1)
  */
 extern "C" void DMA2_Stream0_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle[0]);
@@ -34,19 +33,19 @@ extern "C" void DMA2_Stream0_IRQHandler(void) {
 }
 
 /**
- * @brief This function handles DMA2 stream1 global interrupt.
- */
-extern "C" void DMA2_Stream1_IRQHandler(void) {
-    HAL_DMA_IRQHandler(dmaHandle[2]);
-    HAL_ADC_IRQHandler(adcHandle[2]);
-}
-
-/**
- * @brief This function handles DMA2 stream2 global interrupt.
+ * @brief This function handles DMA2 stream2 global interrupt. (For ADC 2)
  */
 extern "C" void DMA2_Stream2_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle[1]);
     HAL_ADC_IRQHandler(adcHandle[1]);
+}
+
+/**
+ * @brief This function handles DMA2 stream1 global interrupt. (For ADC 3)
+ */
+extern "C" void DMA2_Stream1_IRQHandler(void) {
+    HAL_DMA_IRQHandler(dmaHandle[2]);
+    HAL_ADC_IRQHandler(adcHandle[2]);
 }
 
 namespace core::io {
@@ -65,10 +64,12 @@ ADCf4xx::ADC_State_t ADCf4xx::adcArray[3];
 bool ADCf4xx::timerInit = false;
 
 ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
+    // Get adc state being updated
     uint8_t adcNum                 = getADCNum();
     ADCf4xx::ADC_State_t* adcState = &adcArray[adcNum];
 
     if (adcState->rank == MAX_CHANNELS) {
+        log::LOGGER.log(log::Logger::LogLevel::WARNING, "ADC %d ALREADY HAS MAX PINS!!", (adcNum + 1));
         return;
     }
 
