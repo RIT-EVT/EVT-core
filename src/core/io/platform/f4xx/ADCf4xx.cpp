@@ -166,6 +166,7 @@ void ADCf4xx::initDMA() {
     uint8_t adcNum                 = getADCNum();
     ADCf4xx::ADC_State_t* adcState = &adcArray[adcNum];
     DMA_HandleTypeDef* dma         = &adcState->halDMA;
+    // Set DMA instance to proper config settings
     switch (adcNum) {
     case ADC1_SLOT:
         dma->Instance     = DMA2_Stream0;
@@ -188,7 +189,7 @@ void ADCf4xx::initDMA() {
     dma->Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     dma->Init.MemDataAlignment    = DMA_MDATAALIGN_HALFWORD;
     dma->Init.Mode                = DMA_CIRCULAR;
-    dma->Init.Priority            = DMA_PRIORITY_HIGH;
+    dma->Init.Priority            = DMA_PRIORITY_VERY_HIGH;
     dma->Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
     dma->Init.FIFOThreshold       = DMA_FIFO_THRESHOLD_FULL;
     dma->Init.MemBurst            = DMA_MBURST_SINGLE;
@@ -198,20 +199,14 @@ void ADCf4xx::initDMA() {
 
     switch (adcNum) {
     case ADC1_SLOT:
-        dma->Instance     = DMA2_Stream0;
-        dma->Init.Channel = DMA_CHANNEL_0;
         HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, platform::ADC_INTERRUPT_PRIORITY, 0);
         HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
         break;
     case ADC2_SLOT:
-        dma->Instance     = DMA2_Stream2;
-        dma->Init.Channel = DMA_CHANNEL_1;
         HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, platform::ADC_INTERRUPT_PRIORITY, 0);
         HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
         break;
     case ADC3_SLOT:
-        dma->Instance     = DMA2_Stream1;
-        dma->Init.Channel = DMA_CHANNEL_2;
         HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, platform::ADC_INTERRUPT_PRIORITY, 0);
         HAL_NVIC_EnableIRQ(DMA2_Stream1_IRQn);
         break;
