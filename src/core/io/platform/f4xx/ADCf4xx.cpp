@@ -2,15 +2,12 @@
  * DISCLAIMER: THIS MIGHT BREAK AT ANY POINT AND/OR NOT WORK FOR CERTAIN PURPOSES
  *
  * This DMA ADC is different than f3xx DMA ADC!
- * This DMA ADC does NOT use the interrupts, as when interrupts were enabled it
- * would constantly interrupt, not letting the print statements or anything
- * else happen.
- * Tried to fix this by changing the sampletime and clock prescaler values, but
- * nothing worked.
- * This was "fixed" by commenting out the NVIC_EnableIRQ, stopping the interrupt
- * from ever being enabled.
+ * f4xx DMA ADC uses a timer to trigger conversions. Timer frequency is 1kHz.
  *
- * For commit from before code was removed, refer to commit 81624521a8b2c4b66480193e88cf32782aaee84d.
+ * Timers were used to slow down ADC DMA interrupts, as when allowed to convert constantly as how f3xx is,
+ * the interrupts stopped the program from doing anything else besides interrupt calls.
+ *
+ * WARNING: DOES NOT WORK ON PINS THAT ARE ALREADY IN USE (LIKE UART PINS)
  */
 
 #include <HALf4/stm32f4xx.h>
@@ -19,15 +16,18 @@
 #include <core/io/platform/f4xx/ADCf4xx.hpp>
 #include <core/io/platform/f4xx/GPIOf4xx.hpp>
 #include <core/platform/f4xx/stm32f4xx.hpp>
+#include <core/utils/log.hpp>
 
 namespace {
-/// This is made as a global variable so that it is accessible in the
-// interrupt.
+/// This is made as a global variable so that it is accessible in the interrupt.
 DMA_HandleTypeDef* dmaHandle[3];
 ADC_HandleTypeDef* adcHandle[3];
 
 } // namespace
 
+/**
+ * @brief This function handles DMA2 stream0 global interrupt.
+ */
 extern "C" void DMA2_Stream0_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle[0]);
     HAL_ADC_IRQHandler(adcHandle[0]);
@@ -188,8 +188,8 @@ void ADCf4xx::initDMA() {
     dma->Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     dma->Init.MemDataAlignment    = DMA_MDATAALIGN_HALFWORD;
     dma->Init.Mode                = DMA_CIRCULAR;
-    dma->Init.Priority            = DMA_PRIORITY_HIGH;    // todo: was ..._VERY_HIGH
-    dma->Init.FIFOMode            = DMA_FIFOMODE_DISABLE; // todo: CUBEIDE WORKS WITH ENABLED
+    dma->Init.Priority            = DMA_PRIORITY_HIGH;
+    dma->Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
     dma->Init.FIFOThreshold       = DMA_FIFO_THRESHOLD_FULL;
     dma->Init.MemBurst            = DMA_MBURST_SINGLE;
     dma->Init.PeriphBurst         = DMA_PBURST_SINGLE;
@@ -226,7 +226,8 @@ void ADCf4xx::addChannel(uint8_t rank) {
     uint8_t numOfPins = 1;
     uint32_t channel;
     Pin myPins[]                   = {pin};
-    ADCf4xx::ADC_State_t* adcState = &adcArray[getADCNum()];
+    uint8_t adcNum = getADCNum();
+    ADCf4xx::ADC_State_t* adcState = &adcArray[adcNum];
 
     GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
@@ -292,8 +293,9 @@ void ADCf4xx::addChannel(uint8_t rank) {
         // Masks channel back to proper value (Zero's out ADC information bits)
         adcChannel.Channel = channel & 0x1F;
     } else {
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "ADC %d DOES NOT SUPPORT PIN 0x%x!!", (adcNum + 1), pin);
         // Causes HARD FAULT if pin does not support the ADC peripheral being used. THIS IS INTENTIONAL!
-        adcChannel.Channel = *((uint32_t*) 0U);
+        *((volatile int*)0xFFFFFFFF) = 0; // This address is invalid
     }
 
     // Subtract 1 because rank starts at 1
@@ -336,7 +338,7 @@ void ADCf4xx::InitTimer() {
     htim8.Instance               = TIM8;
     htim8.Init.Prescaler         = 0;
     htim8.Init.CounterMode       = TIM_COUNTERMODE_UP;
-    htim8.Init.Period            = 64000;
+    htim8.Init.Period            = (SystemCoreClock / 1000) - 1;
     htim8.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
     htim8.Init.RepetitionCounter = 0;
     htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
