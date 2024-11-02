@@ -226,7 +226,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
     uint8_t numOfPins = 1;
     uint32_t channel;
     Pin myPins[]                   = {pin};
-    uint8_t adcNum = getADCNum();
+    uint8_t adcNum                 = getADCNum();
     ADCf4xx::ADC_State_t* adcState = &adcArray[adcNum];
 
     GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
@@ -295,7 +295,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
     } else {
         log::LOGGER.log(log::Logger::LogLevel::ERROR, "ADC %d DOES NOT SUPPORT PIN 0x%x!!", (adcNum + 1), pin);
         // Causes HARD FAULT if pin does not support the ADC peripheral being used. THIS IS INTENTIONAL!
-        *((volatile int*)0xFFFFFFFF) = 0; // This address is invalid
+        *((volatile int*) 0xFFFFFFFF) = 0; // This address is invalid
     }
 
     // Subtract 1 because rank starts at 1
