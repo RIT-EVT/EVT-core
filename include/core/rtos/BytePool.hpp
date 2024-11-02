@@ -7,8 +7,8 @@
 namespace core::rtos {
 
 /**
- * Template class that wraps a Threadx BytePool. The BytePool can be used essentially as a heap 
- * within a static block of memory via the allocateMemory() and releaseMemory() methods. 
+ * Template class that wraps a Threadx BytePool. The BytePool can be used essentially as a heap
+ * within a static block of memory via the allocateMemory() and releaseMemory() methods.
  * @tparam SIZE How large the bytepool is.
  */
 template<std::size_t SIZE>

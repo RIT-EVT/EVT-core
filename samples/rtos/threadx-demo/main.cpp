@@ -86,9 +86,9 @@ int main() {
     rtos::EventFlags eventFlags((char*) "Event Flags");
 
     // create the counters (they all start at 0)
-    uint32_t counter_array[] = {0,0,0};
-    uint32_t sum_array[] = {0,0,0};
-    counters_t counters = {3, 0, 0, counter_array, sum_array};
+    uint32_t counter_array[] = {0, 0, 0};
+    uint32_t sum_array[]     = {0, 0, 0};
+    counters_t counters      = {3, 0, 0, counter_array, sum_array};
 
     // create the thread 0 argument struct
     controller_thread_args_t controllerThreadArgs = {&q1, &semaphore, &uarttx, &counters};
@@ -188,9 +188,12 @@ void controllerThreadEntry(controller_thread_args_t* args) {
                 args->uarttx->printf("Thread %lu count: %lu\r\n"
                                      "Thread %lu sum: %lu\r\n"
                                      "Thread %lu average: %lu\r\n",
-                                     i, args->counters->count_array[i],
-                                     i, args->counters->sum_array[i],
-                                     i, args->counters->sum_array[i] / args->counters->count_array[i]);
+                                     i,
+                                     args->counters->count_array[i],
+                                     i,
+                                     args->counters->sum_array[i],
+                                     i,
+                                     args->counters->sum_array[i] / args->counters->count_array[i]);
             }
         }
 
@@ -227,10 +230,9 @@ void workerThreadEntry(worker_thread_args_t* args) {
             args->counters->global_count++;
             args->counters->global_sum += received_message;
 
-            //update arrays
+            // update arrays
             args->counters->count_array[args->num]++;
             args->counters->sum_array[args->num] += received_message;
-
         }
 
         args->uarttx->printf("Thread %u received message: %lu\r\n"

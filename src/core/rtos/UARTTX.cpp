@@ -33,7 +33,8 @@ UARTTX::UARTTX(io::UART& uart, std::size_t threadStackSize, uint32_t threadPrior
 TXError UARTTX::init(BytePoolBase& pool) {
     TXError status = queue.init(pool);
     if (status != SUCCESS) {
-        log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Errored on UARTTX Queue initialization. Error code %u\n", status);
+        log::LOGGER.log(
+            log::Logger::LogLevel::DEBUG, "Errored on UARTTX Queue initialization. Error code %u\n", status);
         return static_cast<TXError>(status);
     }
     status = thread.init(pool);
@@ -68,7 +69,7 @@ void UARTTX::readQueuart() {
     char buffer[64]; /* Buffer array to hold the message - messages are at most 32 bytes long, but it gets angry if we
                         set this buffer to be too small */
     queue.receive(buffer, WAIT_FOREVER); /* Receives the message and assigns it to the buffer variable */
-    copyUART.writeBytes((uint8_t*)(buffer), strlen(buffer));
+    copyUART.writeBytes((uint8_t*) (buffer), strlen(buffer));
 };
 
 void UARTTX::setBaudrate(uint32_t baudrate) {

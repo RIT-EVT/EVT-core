@@ -78,7 +78,7 @@ enum TXThreadState {
  * Enum to shorthand No Wait and Wait Forever wait options in TX.
  */
 enum TXWait {
-    NO_WAIT     = TX_NO_WAIT,
+    NO_WAIT      = TX_NO_WAIT,
     WAIT_FOREVER = TX_WAIT_FOREVER
 };
 

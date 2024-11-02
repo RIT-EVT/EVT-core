@@ -14,7 +14,7 @@ namespace core::rtos {
 class Mutex : public Initializable {
 public:
     /**
-     * Constructs a Mutex object, but does not initialize it (must call init or startKernel or another method that 
+     * Constructs a Mutex object, but does not initialize it (must call init or startKernel or another method that
      * registers the Mutex with the ThreadX kernel before using).
      *
      * @param[in] name A pointer to the name of the Mutex.

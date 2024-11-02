@@ -34,9 +34,9 @@ TXError startKernel(Initializable** initList, std::size_t length, BytePoolBase& 
 TXError bulkInitialize(Initializable** initList, std::size_t length, BytePoolBase& pool);
 
 /**
-* Relinquishes control of the currently running thread, suspending it and allowing the
-* threadx kernel to pick another thread to run.
-*/
+ * Relinquishes control of the currently running thread, suspending it and allowing the
+ * threadx kernel to pick another thread to run.
+ */
 void relinquish();
 
 /**
