@@ -11,8 +11,7 @@ venv/
 # IDE Files
 .idea/
 .vscode/
+.cache/
 
 # macOS files
 .DS_Store
-
-.vscode/

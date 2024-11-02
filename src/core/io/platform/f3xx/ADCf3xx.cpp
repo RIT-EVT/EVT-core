@@ -69,8 +69,7 @@ float ADCf3xx::read() {
 }
 
 uint32_t ADCf3xx::readRaw() {
-    // Search through list of channels to determine which DMA buffer index to
-    // use
+    // Search through list of channels to determine which DMA buffer index to use
     uint8_t channelNum = 0;
     while (channels[channelNum] != pin)
         channelNum++;
@@ -87,7 +86,7 @@ void ADCf3xx::initADC(uint8_t num_channels) {
 
     // TODO: Figure out ADC calibration
 
-    halADC.Init.ClockPrescaler   = ADC_CLOCK_SYNC_PCLK_DIV1; // Use AHB clock (8MHz) w/o division for ADC clock
+    halADC.Init.ClockPrescaler   = ADC_CLOCK_SYNC_PCLK_DIV4; // Use AHB clock (8MHz) w/ division for ADC clock
     halADC.Init.Resolution       = ADC_RESOLUTION_12B;
     halADC.Init.DataAlign        = ADC_DATAALIGN_RIGHT;
     halADC.Init.ScanConvMode     = ADC_SCAN_ENABLE;
@@ -112,8 +111,7 @@ void ADCf3xx::initDMA() {
     // HAL_ADC_Stop(&halADC);
 
     // TODO: Add some way of selecting the next available DMA channel
-    // Ideally we would have a "DMA" class dedicated to DMA resource
-    // allocation.
+    // Ideally we would have a "DMA" class dedicated to DMA resource allocation.
     halDMA.Instance                 = DMA1_Channel1;
     halDMA.Init.Direction           = DMA_PERIPH_TO_MEMORY;
     halDMA.Init.PeriphInc           = DMA_PINC_DISABLE;
