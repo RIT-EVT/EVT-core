@@ -6,8 +6,8 @@
 #include <core/io/ADC.hpp>
 #include <core/io/UART.hpp>
 #include <core/manager.hpp>
-#include <core/utils/time.hpp>
 #include <core/utils/log.hpp>
+#include <core/utils/time.hpp>
 
 namespace io   = core::io;
 namespace time = core::time;
