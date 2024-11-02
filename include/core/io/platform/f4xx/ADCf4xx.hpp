@@ -43,7 +43,6 @@ private:
     // Timer handle for TIM8, used to configure and control the timer instance
     TIM_HandleTypeDef htim8;
 
-
     /**
      * @brief Structure to represent the state of an ADC instance.
      *
@@ -63,9 +62,21 @@ private:
         ADC_HandleTypeDef halADC      = {0};
         uint8_t rank                  = 1;
         bool isADCInit                = false;
-        Pin channels[MAX_CHANNELS]    = {Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,
-                                         Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,
-                                         Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,
+        Pin channels[MAX_CHANNELS]    = {Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
+                                         Pin::DUMMY,
                                          Pin::DUMMY};
         uint16_t buffer[MAX_CHANNELS] = {0};
         DMA_HandleTypeDef halDMA      = {0};
