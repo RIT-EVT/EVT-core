@@ -10,7 +10,6 @@ namespace core::rtos {
  * Class that wraps a ThreadX Event Flags Group. Event flags are essentially
  * a 32-bit mask, with each bit representing a different flag.\n\n
  *
- *
  * This class extends Initializable, and like all other Initializable classes must be passed into the
  * Threadx::startKernel() method as part of the initList parameter.
  */
@@ -46,12 +45,12 @@ public:
      * @param[in] waitForAllFlags If the method should wait for EVERY flag in the bitmask
      * to be true, or just ANY flag in the bitmask to be true.
      * @param[in] clear If the method should clear outputted flags.
-     * @param[out] output A pointer a place to store the outputted flags.
      * @param[in] waitOption How long (in ticks) the calling thread should wait for this method to
      * return. Use Enums::TXWait::WaitForever to wait forever.
+     * @param[out] output A pointer to store the set flags in.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError get(uint32_t mask, bool waitForAllFlags, bool clear, uint32_t* output, uint32_t waitOption);
+    TXError get(uint32_t mask, bool waitForAllFlags, bool clear, uint32_t waitOption, uint32_t* output);
 
     /**
      * Registers a function that will be called whenever an event flag in this group is set.
@@ -64,7 +63,7 @@ public:
     /**
      * Retrieves the name of this EvenFlags.
      *
-     * @param[out] name a pointer to a place to store the name pointer.
+     * @param[out] name A pointer to a place to store the name pointer.
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError getName(char** name);
@@ -72,7 +71,7 @@ public:
     /**
      * Retrieves the current values that the flags are set to as a uint32.
      *
-     * @param[out] flags a pointer to a place to store the flags.
+     * @param[out] flags A pointer to a place to store the flags.
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError getCurrentFlags(uint32_t* flags);
@@ -80,7 +79,7 @@ public:
     /**
      * Retrieves the name of the first suspended thread.
      *
-     * @param[out] name a pointer to a place to store the name pointer.
+     * @param[out] name A pointer to a place to store the name pointer.
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError getNameOfFirstSuspendedThread(char** threadName);
@@ -88,7 +87,7 @@ public:
     /**
      * Retrieves the number of threads that are suspended on this EventFlags.
      *
-     * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
+     * @param[out] numSuspendedThreads A pointer to a place to store the number of suspended threads.
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);

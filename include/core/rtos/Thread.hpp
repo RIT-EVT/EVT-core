@@ -55,9 +55,9 @@ public:
         // allocate memory for the thread
 
         void* stackStart;
-        uint32_t errorCode = pool.allocateMemory(stackSize, &stackStart, NoWait);
+        uint32_t errorCode = pool.allocateMemory(stackSize, NO_WAIT, &stackStart);
         TXError error      = static_cast<TXError>(errorCode);
-        if (error != Success)
+        if (error != SUCCESS)
             return error;
         // create the thread only if the memory allocation succeeded.
         errorCode = tx_thread_create(&txThread,
@@ -192,7 +192,7 @@ public:
      */
     TXError getName(char** name) {
         *name = this->name;
-        return Success;
+        return SUCCESS;
     }
 
     /**

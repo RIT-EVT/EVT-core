@@ -12,19 +12,38 @@
 #include <core/rtos/Threadx.hpp>
 #include <string>
 
-#define UARTTX_QUEUE_MESSAGE_SIZE        16
-#define UARTTX_QUEUE_NUM_MESSAGES        32
-#define UARTTX_DEFAULT_STACK_SIZE        1024
-#define UARTTX_DEFAULT_PRIORITY_LEVEL    1u
-#define UARTTX_DEFAULT_PREEMPT_THRESHOLD 0u
-#define UARTTX_DEFAULT_TIME_SLICE        MS_TO_TICKS(500)
+//All defines wrapped in ifndefs so we can set them externally.
 
-namespace IO = core::io;
+#ifndef UARTTX_QUEUE_MESSAGE_SIZE
+#define UARTTX_QUEUE_MESSAGE_SIZE        16
+#endif //UARTTX_QUEUE_MESSAGE_SIZE
+
+#ifndef UARTTX_QUEUE_NUM_MESSAGES
+#define UARTTX_QUEUE_NUM_MESSAGES        32
+#endif //UARTTX_QUEUE_NUM_MESSAGES
+
+#ifndef UARTTX_DEFAULT_STACK_SIZE
+#define UARTTX_DEFAULT_STACK_SIZE        1024
+#endif //UARTTX_DEFAULT_STACK_SIZE
+
+#ifndef UARTTX_DEFAULT_PRIORITY_LEVEL
+#define UARTTX_DEFAULT_PRIORITY_LEVEL    1u
+#endif //UARTTX_DEFAULT_PRIORITY_LEVEL
+
+#ifndef UARTTX_DEFAULT_PREEMPT_THRESHOLD
+#define UARTTX_DEFAULT_PREEMPT_THRESHOLD 0u
+#endif //UARTTX_DEFAULT_PREEMPT_THRESHOLD
+
+#ifndef UARTTX_DEFAULT_TIME_SLICE
+#define UARTTX_DEFAULT_TIME_SLICE        MS_TO_TICKS(500)
+#endif //UARTTX_DEFAULT_TIME_SLICE
+
+namespace io = core::io;
 namespace core::rtos::wrapper {
 
 /**
  * Class that represents a threadsafe implementation of UART.
- * UARRTX uses a queue to buffer print statements sent to it. It uses a thread to empty that queue periodically.\n\n
+ * UARTTX uses a queue to buffer print statements sent to it. It then uses a thread to empty the queue periodically.\n\n
  *
  *
  * NOTE: The thread does not empty the queue when it is full. It simply waits until
@@ -59,7 +78,7 @@ public:
      * while it is running is likely to just cause the UART output to break immediately.
      * @param[in] threadTimeSlice The default minimum timeslice of this thread.
      */
-    explicit UARTTX(IO::UART& uart, std::size_t threadStackSize = UARTTX_DEFAULT_STACK_SIZE,
+    explicit UARTTX(io::UART& uart, std::size_t threadStackSize = UARTTX_DEFAULT_STACK_SIZE,
                     uint32_t threadPriorityLevel    = UARTTX_DEFAULT_PRIORITY_LEVEL,
                     uint32_t threadPreemptThreshold = UARTTX_DEFAULT_PREEMPT_THRESHOLD,
                     uint32_t threadTimeSlice        = UARTTX_DEFAULT_TIME_SLICE);
@@ -94,7 +113,7 @@ public:
     /**
      * Retrieves the number of enqueued messages in this UARTTX's Queue.
      *
-     * @param[out] numEnqueuedMessages a pointer to a place to store the number of enqueued messages.
+     * @param[out] numEnqueuedMessages A pointer to store the number of enqueued messages in.
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages);
@@ -102,7 +121,7 @@ public:
     /**
      * Retrieves the number of more messages this UARTTX's Queue can fit.
      *
-     * @param[out] numAvailableMessages a pointer to the place to store the number of more messages the queue can fit.
+     * @param[out] numAvailableMessages A pointer to store the number of additional messages that the queue can fit.
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError getAvailableQueueStorage(uint32_t* numAvailableMessages);
@@ -140,10 +159,11 @@ private:
     void writeBytes(uint8_t* bytes, size_t size) override;
 
     /**
-     * Adds the given string to the Queue of messages to be sent to UART.
+     * Adds the given string to the Queue of messages to be sent to UART,
+     * splitting it into multiple Queue messages if the string is too long
+     * (each of the messages will be 16 words).
      *
-     * @param[in] buffer a pointer to the string we are sending to UART. (String must be less than or equal to 16 words
-     * (64 bytes))
+     * @param[in] buffer a pointer to the string we are sending to the Queue.
      */
     void addQueuart(char* buffer);
 
@@ -151,7 +171,7 @@ private:
     void (*threadEntryFunction)(UARTTX*);
 
     /// UART object.
-    IO::UART& copyUART;
+    io::UART& copyUART;
 
     /// HAL representation of the UART.
     UART_HandleTypeDef halUART;

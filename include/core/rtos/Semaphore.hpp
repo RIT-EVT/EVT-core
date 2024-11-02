@@ -53,7 +53,7 @@ public:
      * @param[in] ceiling the max value we want this command to be able to put the semaphore to.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError ceilingPut(uint32_t ceiling);
+    TXError putWithCeiling(uint32_t ceiling);
 
     /**
      * Register a function to be called whenever this Semaphore is put.

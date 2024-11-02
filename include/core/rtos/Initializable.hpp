@@ -39,9 +39,10 @@ public:
  * This is only used within the Initializable class(es) and should not be used externally.
  * @tparam initializable a pointer to the object this instance of the method was created for.
  * @tparam txType the type of tx struct this instance of the method takes in.
+ * @param[in] txStruct The pointer to the struct that triggered this notification function.
  */
 template<Initializable* initializable, typename txType>
-void txNotifyFunctionTemplate(txType* queueStruct) {
+void txNotifyFunctionTemplate(txType* txStruct) {
     initializable->storedNotifyFunction(initializable);
 }
 
@@ -50,6 +51,8 @@ void txNotifyFunctionTemplate(txType* queueStruct) {
  * This is only used internally to the Thread class and should never be called externally.
  * @tparam T The argument the thread takes
  * @tparam thread The specific thread this function is for
+ * @param[in] threadStruct The pointer to the thread struct that triggered this notification function.
+ * @param[in] id A value representing why the notification was called (thread entry, thread exit).
  */
 template<Initializable* initializable>
 void txThreadNotifyFunctionTemplate(TX_THREAD* threadStruct, UINT id) {

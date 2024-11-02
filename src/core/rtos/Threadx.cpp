@@ -15,20 +15,10 @@ BytePoolBase* mainThreadPool;
 
 TXError init(Initializable* initList[], std::size_t length, BytePoolBase& pool) {
     TXError errorCode = pool.init();
-    if (errorCode != Success)
+    if (errorCode != SUCCESS)
         return errorCode;
 
-    for (std::size_t i = 0; i < length; i++) {
-        errorCode = initList[i]->init(pool);
-        if (errorCode != Success) {
-            log::LOGGER.log(log::Logger::LogLevel::DEBUG,
-                            "Errored on item %u in initializer list.\n\rError code: %u",
-                            i,
-                            errorCode);
-            return errorCode;
-        }
-    }
-    return errorCode;
+    return bulkInitialize(initList, length, pool);
 }
 
 extern "C" void tx_application_define(void* first_unused_memory) {
@@ -40,7 +30,22 @@ TXError startKernel(Initializable* initList[], std::size_t length, BytePoolBase&
     initListLength    = length;
     mainThreadPool    = &pool;
     tx_kernel_enter();
-    return Success;
+    return SUCCESS;
+}
+
+TXError bulkInitialize(Initializable** initList, std::size_t length, BytePoolBase& pool) {
+    TXError errorCode;
+    for (std::size_t i = 0; i < length; i++) {
+        errorCode = initList[i]->init(pool);
+        if (errorCode != SUCCESS) {
+            log::LOGGER.log(log::Logger::LogLevel::DEBUG,
+                            "Errored on item %u in initializer list.\n\rError code: %u",
+                            i,
+                            errorCode);
+            return errorCode;
+        }
+    }
+    return errorCode;
 }
 
 void relinquish() {

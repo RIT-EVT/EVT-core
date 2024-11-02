@@ -14,10 +14,11 @@ namespace core::rtos {
 class Mutex : public Initializable {
 public:
     /**
-     * Constructs a Mutex object, but does not initialize it (must call init before using).
+     * Constructs a Mutex object, but does not initialize it (must call init or startKernel or another method that 
+     * registers the Mutex with the ThreadX kernel before using).
      *
      * @param[in] name A pointer to the name of the Mutex.
-     * @param[in] priorityInheritance Whether or not threads currently holding this mutex should raise their priority
+     * @param[in] priorityInheritance Whether or not threads currently holding this mutex should raise their priority.
      * to that of the highest priority thread waiting for the mutex.
      */
     Mutex(char* name, bool priorityInheritance);
@@ -85,7 +86,7 @@ public:
     /**
      * Retrieves the name of the first suspended thread.
      *
-     * @param[out] threadName a pointer to a place to store the name of the first suspended thread.
+     * @param[out] threadName A return pointer to store the name of the first suspended thread.
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError getNameOfFirstSuspendedThread(char** threadName);

@@ -21,7 +21,7 @@ TXError EventFlags::set(uint32_t mask, bool clearNonMaskedFlags) {
     return static_cast<TXError>(tx_event_flags_set(&txEventFlagsGroup, mask, clearNonMaskedFlags ? TX_AND : TX_OR));
 }
 
-TXError EventFlags::get(uint32_t mask, bool waitForAllFlags, bool clear, uint32_t* output, uint32_t waitOption) {
+TXError EventFlags::get(uint32_t mask, bool waitForAllFlags, bool clear, uint32_t waitOption, uint32_t* output) {
     uint32_t option = waitForAllFlags ? TX_AND : TX_OR;
     // the TX_AND_CLEAR and TX_AND_OR options are respectively 1 more than their no clear versions, which is why this
     // works.
@@ -31,13 +31,12 @@ TXError EventFlags::get(uint32_t mask, bool waitForAllFlags, bool clear, uint32_
 
 TXError EventFlags::registerNotifyFunction(void (*notifyFunction)(EventFlags*)) {
     storedNotifyFunction = reinterpret_cast<void (*)(Initializable*)>(notifyFunction);
-    ;
     return static_cast<TXError>(tx_event_flags_set_notify(&txEventFlagsGroup, txNotifyFunction));
 }
 
 TXError EventFlags::getName(char** name) {
     *name = (this->name);
-    return Success;
+    return SUCCESS;
 }
 
 TXError EventFlags::getCurrentFlags(uint32_t* flags) {
@@ -51,7 +50,7 @@ TXError EventFlags::getNameOfFirstSuspendedThread(char** threadName) {
     uint32_t status = tx_event_flags_info_get(&txEventFlagsGroup, nullptr, nullptr, &thread, nullptr, nullptr);
 
     // exit early if the call failed
-    if (status != Success)
+    if (status != SUCCESS)
         return static_cast<TXError>(status);
 
     // read the name off the struct

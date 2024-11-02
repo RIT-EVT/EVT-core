@@ -23,18 +23,17 @@ static void uartThreadEntryFunction(UARTTX* uarttx) {
     }
 }
 
-UARTTX::UARTTX(IO::UART& uart, std::size_t threadStackSize, uint32_t threadPriorityLevel,
+UARTTX::UARTTX(io::UART& uart, std::size_t threadStackSize, uint32_t threadPriorityLevel,
                uint32_t threadPreemptThreshold, uint32_t threadTimeSlice)
     : UART(uart), copyUART(uart), queue((char*) "UARTTX Queue", UARTTX_QUEUE_MESSAGE_SIZE, UARTTX_QUEUE_NUM_MESSAGES),
       thread((char*) "UARTTX Thread", uartThreadEntryFunction, this, threadStackSize, threadPriorityLevel,
              threadPreemptThreshold, threadTimeSlice, true),
       readMutex((char*) "UARTTX Read Mutex", true) {}
 
-// TODO: Get Rueuart to fix this.
 TXError UARTTX::init(BytePoolBase& pool) {
     TXError status = queue.init(pool);
-    if (status != Success) {
-        log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Errored on UARTTX Queue initialization. Error code %u", status);
+    if (status != SUCCESS) {
+        log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Errored on UARTTX Queue initialization. Error code %u\n", status);
         return static_cast<TXError>(status);
     }
     status = thread.init(pool);
@@ -48,6 +47,12 @@ void UARTTX::printf(const char* format, ...) {
     char buffer[256];                                /* Buffer array to hold the message */
     vsnprintf(buffer, sizeof(buffer), format, args); /* vsnprint formats the string and stores it in the buffer array */
 
+    addQueuart(buffer);
+
+    va_end(args); /* Cleans va_list once the message has been sent */
+}
+
+void UARTTX::addQueuart(char* buffer) {
     // split longer messages into 64 (63 + null-termination) bit chunks.
     char temp[64];
     memset(temp, 0, 64); // clear the memory to 0 just in case
@@ -55,21 +60,15 @@ void UARTTX::printf(const char* format, ...) {
     for (uint32_t i = 0; i < len; i += 63) {
         memccpy(temp, buffer + i, '\0', 63);
         temp[63] = '\0'; // set the last bit to the null terminator (should already be that but just in case)
-        addQueuart(temp);
+        queue.send(temp, WAIT_FOREVER);
     }
-
-    va_end(args); /* Cleans va_list once the message has been sent */
-}
-
-void UARTTX::addQueuart(char* buffer) {
-    queue.send(buffer, WaitForever);
 }
 
 void UARTTX::readQueuart() {
     char buffer[64]; /* Buffer array to hold the message - messages are at most 32 bytes long, but it gets angry if we
                         set this buffer to be too small */
-    queue.receive(buffer, WaitForever); /* Receives the message and assigns it to the buffer variable */
-    copyUART.printf(buffer);
+    queue.receive(buffer, WAIT_FOREVER); /* Receives the message and assigns it to the buffer variable */
+    copyUART.writeBytes((uint8_t*)(buffer), strlen(buffer));
 };
 
 void UARTTX::setBaudrate(uint32_t baudrate) {
@@ -108,7 +107,7 @@ void UARTTX::puts(const char* s) {
 }
 
 char UARTTX::getc() {
-    readMutex.acquire(TXWait::WaitForever);
+    readMutex.acquire(TXWait::WAIT_FOREVER);
     uint8_t c;
     while (HAL_UART_Receive(&halUART, &c, 1, EVT_UART_TIMEOUT) == HAL_TIMEOUT) {}
     readMutex.release();
@@ -128,7 +127,7 @@ void UARTTX::writeBytes(uint8_t* bytes, size_t size) {
 }
 
 void UARTTX::readBytes(uint8_t* bytes, size_t size) {
-    readMutex.acquire(TXWait::WaitForever);
+    readMutex.acquire(TXWait::WAIT_FOREVER);
     HAL_UART_Receive(&halUART, bytes, size, EVT_UART_TIMEOUT);
     readMutex.release();
 }

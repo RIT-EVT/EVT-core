@@ -7,8 +7,8 @@
 namespace core::rtos {
 
 /**
- * Template class that wraps a Threadx BytePool. The BytePool can be used essentially as a heap,
- * via the allocateMemory() and releaseMemory() methods.
+ * Template class that wraps a Threadx BytePool. The BytePool can be used essentially as a heap 
+ * within a static block of memory via the allocateMemory() and releaseMemory() methods. 
  * @tparam SIZE How large the bytepool is.
  */
 template<std::size_t SIZE>
@@ -37,7 +37,7 @@ public:
         return static_cast<TXError>(tx_byte_pool_create(&txBytePool, name, buffer, SIZE));
     }
 
-    TXError allocateMemory(std::size_t amount, void** memoryPointer, uint32_t waitOption) override {
+    TXError allocateMemory(std::size_t amount, uint32_t waitOption, void** memoryPointer) override {
         uint32_t errorCode = tx_byte_allocate(&txBytePool, memoryPointer, amount, waitOption);
         return static_cast<TXError>(errorCode);
     }
@@ -56,7 +56,7 @@ public:
     TXError getNameOfFirstSuspendedThread(char** threadName) override {
         TX_THREAD* thread;
         uint32_t status = tx_byte_pool_info_get(&txBytePool, nullptr, nullptr, nullptr, &thread, nullptr, nullptr);
-        if (status != Success)
+        if (status != SUCCESS)
             return static_cast<TXError>(status);
 
         status = tx_thread_info_get(thread, threadName, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
@@ -72,7 +72,7 @@ public:
 
     TXError getName(char** name) override {
         *name = this->name;
-        return Success;
+        return SUCCESS;
     }
 
 private:

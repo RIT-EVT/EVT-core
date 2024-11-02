@@ -4,7 +4,7 @@
 namespace core::rtos {
 
 Semaphore::Semaphore(char* name, uint32_t initialCount)
-    : txSemaphore(), name(name), initialCount(initialCount), storedNotifyFunction() {}
+    : name(name), txSemaphore(), initialCount(initialCount), storedNotifyFunction() {}
 
 TXError Semaphore::init(BytePoolBase& pool) {
     return static_cast<TXError>(tx_semaphore_create(&txSemaphore, name, initialCount));
@@ -31,13 +31,13 @@ TXError Semaphore::prioritize() {
     return static_cast<TXError>(tx_semaphore_prioritize(&txSemaphore));
 }
 
-TXError Semaphore::ceilingPut(uint32_t ceiling) {
+TXError Semaphore::putWithCeiling(uint32_t ceiling) {
     return static_cast<TXError>(tx_semaphore_ceiling_put(&txSemaphore, ceiling));
 }
 
 TXError Semaphore::getName(char** name) {
     *name = this->name;
-    return Success;
+    return SUCCESS;
 }
 
 TXError Semaphore::getCount(uint32_t* currentCount) {
@@ -49,7 +49,7 @@ TXError Semaphore::getNameOfFirstSuspendedThread(char** threadName) {
     TX_THREAD* thread;
     uint32_t status = tx_semaphore_info_get(&txSemaphore, nullptr, nullptr, &thread, nullptr, nullptr);
     // exit early if the call failed
-    if (status != Success)
+    if (status != SUCCESS)
         return static_cast<TXError>(status);
 
     // read the name off the struct
