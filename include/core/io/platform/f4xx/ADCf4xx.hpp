@@ -38,39 +38,34 @@ private:
     static constexpr float VREF_POS = 3.3;
     // Max value for a 12 bit ADC reading (2^12 - 1)
     static constexpr uint32_t MAX_RAW = 4095;
-    /// This is static since the STM32F3xx only had a single ADC which
-    /// supports multiple channels, so I made this one only use a single ADC.
-    /// The F446re has 3 12 bit ADC's. Currently not able to use the other 2.
-    /// The ADC will be initialized once then each channel will be added on.
-    //    static ADC_HandleTypeDef halADC[NUM_ADCS];
-    /// Static list of all channels supported by the ADC
-    //    static Pin channels[NUM_ADCS][MAX_CHANNELS];
-    /// Buffer for DMA where each spot represents the value read in from a channel
-    //    static uint16_t buffer[MAX_CHANNELS];
-    //    static DMA_HandleTypeDef halDMA[NUM_ADCS];
-    static uint8_t rank;
+    // Flag to indicate if the timer has been initialized
     static bool timerInit;
+    // Timer handle for TIM8, used to configure and control the timer instance
     TIM_HandleTypeDef htim8;
 
+
+    /**
+     * @brief Structure to represent the state of an ADC instance.
+     *
+     * This structure holds the configuration and current state for an ADC instance, including the
+     * HAL handle for the ADC and DMA, channel configurations, and data buffers for readings.
+     *
+     * halADC: HAL handle for configuring and controlling the ADC peripheral.
+     * rank: The ADC channel rank in the sequence (starts at 1).
+     * isADCInit: Flag to indicate whether the ADC has been initialized.
+     * channels: Array of pins mapped to ADC channels. Initialized to all Pin::DUMMY.
+     *             The array size is defined by MAX_CHANNELS.
+     * buffer: Array to store ADC values for each channel, indexed according to the channels array.
+     *           Each entry corresponds to a specific ADC channel.
+     * halDMA: HAL handle for configuring and controlling DMA for the ADC.
+     */
     typedef struct ADC_State {
         ADC_HandleTypeDef halADC      = {0};
         uint8_t rank                  = 1;
         bool isADCInit                = false;
-        Pin channels[MAX_CHANNELS]    = {Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
+        Pin channels[MAX_CHANNELS]    = {Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,
+                                         Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,
+                                         Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,Pin::DUMMY,
                                          Pin::DUMMY};
         uint16_t buffer[MAX_CHANNELS] = {0};
         DMA_HandleTypeDef halDMA      = {0};
@@ -91,6 +86,7 @@ private:
      * @return
      */
     uint8_t getADCNum();
+
     /**
      * Initialize the HAL ADC handler. This should only have to be run once
      */
@@ -109,6 +105,9 @@ private:
      */
     void addChannel(uint8_t rank);
 
+    /**
+     * Initializes Timer 8 to control ADC conversion frequency
+     */
     void InitTimer();
 };
 
