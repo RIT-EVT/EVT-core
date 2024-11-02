@@ -5,7 +5,6 @@
  */
 
 #include <core/io/GPIO.hpp>
-#include <core/io/SPI.hpp>
 #include <core/io/UART.hpp>
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
@@ -13,7 +12,7 @@
 namespace io   = core::io;
 namespace time = core::time;
 
-constexpr uint32_t SPI_SPEED = SPI_SPEED_500KHZ; // 500KHz
+constexpr uint32_t SPI_SPEED = SPI_SPEED_62KHZ; // 62.5KHz
 
 constexpr uint8_t deviceCount = 1;
 

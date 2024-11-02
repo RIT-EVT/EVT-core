@@ -5,6 +5,9 @@
 
 namespace core::platform {
 
+// stm32f302x8_init() sets clock speed to 8 MHz
+constexpr uint32_t CLK_SPEED = 8000000;
+
 // Interrupt Priority Mappings.  0 is high and 15 is low
 constexpr uint32_t CAN_INTERRUPT_PRIORITY   = 4;
 constexpr uint32_t ADC_INTERRUPT_PRIORITY   = 5;
