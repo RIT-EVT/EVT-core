@@ -128,15 +128,11 @@ public:
      */
     static constexpr uint32_t DEFAULT_BAUD = 500000;
 
-private:
+protected:
     /** The CAN transmit pin */
     Pin txPin;
     /** The CAN receive pin */
     Pin rxPin;
-    /** Represents if filtering should take place for CAN ids */
-    bool filtering;
-
-protected:
     /** Function pointer to call for the interrupt handler */
     void (*handler)(CANMessage&, void* priv);
     /** Private data to pass into the IRQ handler */

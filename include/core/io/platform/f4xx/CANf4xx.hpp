@@ -92,6 +92,9 @@ public:
      */
     bool triggerIRQ(CANMessage& message);
 
+    /** Second filter bank start index*/
+    static constexpr uint8_t SECOND_FILTER_BANK_INDEX = 14;
+
 private:
     /** Instance of the HAL can interface */
     CAN_HandleTypeDef halCAN;
