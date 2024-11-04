@@ -195,20 +195,6 @@ CAN::CANStatus CANf4xx::connect(bool autoBusOff) {
     HAL_NVIC_SetPriority(IRQn, core::platform::CAN_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(IRQn);
 
-    // By default - filter that accepts all incoming messages
-    // // TODO per can filter configuration
-    // CAN_FilterTypeDef defaultFilter;
-    // defaultFilter.FilterBank           = 0;
-    // defaultFilter.FilterMode           = CAN_FILTERMODE_IDMASK;
-    // defaultFilter.FilterScale          = CAN_FILTERSCALE_32BIT;
-    // defaultFilter.FilterIdHigh         = 0x0000;
-    // defaultFilter.FilterIdLow          = 0x0000;
-    // defaultFilter.FilterMaskIdHigh     = 0x0000;
-    // defaultFilter.FilterMaskIdLow      = 0xFFFF;
-    // defaultFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-    // defaultFilter.FilterActivation     = ENABLE;
-    // defaultFilter.SlaveStartFilterBank = CANf4xx::SECOND_FILTER_BANK_INDEX;
-
     if (addCANFilter(0, 0, 0) != CANStatus::OK) {
         return CANStatus::ERROR;
     }
@@ -295,22 +281,6 @@ CAN::CANStatus CANf4xx::receive(CANMessage* message, bool blocking) {
 }
 
 CAN::CANStatus CANf4xx::addCANFilter(uint16_t filterExplicitId, uint16_t filterMask, uint8_t filterBank) {
-
-    // CAN_FilterTypeDef defaultFilter;
-    // defaultFilter.FilterBank           = 0;
-    // defaultFilter.FilterMode           = CAN_FILTERMODE_IDMASK;
-    // defaultFilter.FilterScale          = CAN_FILTERSCALE_32BIT;
-
-    // defaultFilter.FilterIdHigh         = 0x0000;
-    // defaultFilter.FilterIdLow          = 0x0000;
-    // defaultFilter.FilterMaskIdHigh     = 0x0000;
-    // defaultFilter.FilterMaskIdLow      = 0xFFFF;
-    // defaultFilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-
-    // if (HAL_CAN_ConfigFilter(&halCAN, &defaultFilter) != HAL_OK) {
-    //     return CANStatus::ERROR;
-    // }
-
     CAN_FilterTypeDef newFilter;
     if (halCAN.Instance == CAN1) {
         newFilter.FilterBank = filterBank;
