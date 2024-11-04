@@ -1,10 +1,8 @@
 /**
- * DISCLAIMER: THIS MIGHT BREAK AT ANY POINT AND/OR NOT WORK FOR CERTAIN PURPOSES
- *
  * This DMA ADC is different than f3xx DMA ADC!
- * f4xx DMA ADC uses a timer to trigger conversions. Timer frequency is 1kHz.
+ * f4xx DMA ADC uses a timer to trigger ADC conversions. Timer frequency is 1kHz.
  *
- * Timers were used to slow down ADC DMA interrupts, as when allowed to convert constantly as how f3xx is,
+ * Timers were added to slow down ADC DMA interrupts, as when they ADC DMA is allowed to convert constantly,
  * the interrupts stopped the program from doing anything else besides interrupt calls.
  *
  * WARNING: DOES NOT WORK ON PINS THAT ARE ALREADY IN USE (LIKE UART PINS)
