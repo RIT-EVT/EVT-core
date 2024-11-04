@@ -37,7 +37,7 @@ int main() {
 
     // CAN message that will be sent
     uint8_t payload[] = {0xDE, 0xAD, 0xBE, 0xBE, 0xEF, 0x00, 0x01, 0x02};
-    io::CANMessage transmit_message(1, 8, &payload[0], false);
+    io::CANMessage transmit_message(1, 8, &payload[0], true);
     io::CANMessage received_message;
 
     uart.printf("Starting CAN testing\r\n");

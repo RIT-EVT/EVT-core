@@ -288,7 +288,7 @@ CAN::CANStatus CANf4xx::addCANFilter(uint16_t filterExplicitId, uint16_t filterM
         newFilter.FilterBank = filterBank + CANf4xx::SECOND_FILTER_BANK_INDEX;
     }
     newFilter.FilterMode  = CAN_FILTERMODE_IDMASK;
-    newFilter.FilterScale = CAN_FILTERSCALE_32BIT;
+    newFilter.FilterScale = CAN_FILTERSCALE_16BIT;
 
     newFilter.FilterIdHigh         = filterExplicitId << 5; // must shift 11-bits to MSB of 16-bits
     newFilter.FilterIdLow          = 0;
