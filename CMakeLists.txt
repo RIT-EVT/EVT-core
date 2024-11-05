@@ -32,7 +32,7 @@ target_sources(${PROJECT_NAME} PRIVATE
         src/core/io/GPIO.cpp
         src/core/io/I2C.cpp
         src/core/io/PWM.cpp
-        src/core/io/PWMINPUT.cpp
+#        src/core/io/PWMINPUT.cpp
         src/core/io/UART.cpp
         src/core/io/SPI.cpp
         src/core/io/types/CANMessage.cpp
@@ -48,7 +48,6 @@ target_sources(${PROJECT_NAME} PRIVATE
 get_directory_property(COMPDEFS COMPILE_DEFINITIONS)
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
     target_sources(${PROJECT_NAME} PRIVATE
-    src/core/utils/platform/f3xx/timef3xx.cpp
     src/core/dev/platform/f3xx/Timerf3xx.cpp
     src/core/platform/f3xx/stm32f302x8.cpp
     src/core/io/platform/f3xx/ADCf3xx.cpp

@@ -5,4 +5,12 @@
 #ifndef EVT_PWMINPUT_HPP
 #define EVT_PWMINPUT_HPP
 
+namespace core::io {
+
+class PWMINPUT {
+
+public:
+};
+
+}
 #endif // EVT_PWMINPUT_HPP
