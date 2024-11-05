@@ -84,7 +84,8 @@ private:
      * This device will then broadcast the value via a triggered PDO.
      */
     uint8_t sampleDataA;
-    uint8_t sampleDataB;
+    uint16_t sampleDataB;
+    uint8_t sampleDataArray[2];
 
     /**
      * Have to know the size of the object dictionary for initialization
@@ -131,7 +132,7 @@ private:
         // accessed via SDO and depending on configuration PDO
         DATA_LINK_START_KEY_21XX(0, 0x02),
         DATA_LINK_21XX(0x00, 0x01, CO_TUNSIGNED8, &sampleDataA),
-        DATA_LINK_21XX(0x00, 0x02, CO_TUNSIGNED8, &sampleDataB),
+        DATA_LINK_21XX(0x00, 0x02, CO_TUNSIGNED16, &sampleDataB),
 
         // End of dictionary marker
         CO_OBJ_DICT_ENDMARK,

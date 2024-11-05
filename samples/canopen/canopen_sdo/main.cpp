@@ -19,6 +19,22 @@ namespace io   = core::io;
 namespace dev  = core::dev;
 namespace time = core::time;
 
+// create a can interrupt handler
+void canInterrupt(io::CANMessage& message, void* priv) {
+    auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
+
+    // print out raw received data
+    log::LOGGER.log(log::Logger::LogLevel::INFO, "Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
+    uint8_t* data = message.getPayload();
+    for (int i = 0; i < message.getDataLength(); i++) {
+        log::LOGGER.log(log::Logger::LogLevel::INFO, "%X ", *data);
+        data++;
+    }
+    log::LOGGER.log(log::Logger::LogLevel::INFO, "\r\n");
+
+    if (queue != nullptr)
+        queue->append(message);
+}
 
 int main() {
     // Initialize system
@@ -45,6 +61,7 @@ int main() {
 
     // Initialize CAN, add an IRQ which will add messages to the queue above
     io::CAN& can = io::getCAN<io::Pin::PA_12, io::Pin::PA_11>();
+    can.addIRQHandler(canInterrupt, reinterpret_cast<void*>(&canOpenQueue));
 
     // Reserved memory for CANopen stack usage
     uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE];
@@ -87,9 +104,9 @@ int main() {
     ///////////////////////////////////////////////////////////////////////////
 
     while (1) {
-        testCanNode.SDOTransfer(canNode);
+//        testCanNode.SDOTransfer(canNode);
 
-//        testCanNode.SDOReceive(canNode);
+        testCanNode.SDOReceive(canNode);
 
         io::processCANopenNode(&canNode);
         // Wait for new data to come in
