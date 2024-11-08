@@ -126,7 +126,7 @@ void ADCf4xx::initADC(uint8_t num_channels) {
     /** Configure the global features of the ADC (Clock, Resolution, Data
      * Alignment and number of conversion)
      */
-    ADC_HandleTypeDef* halADC      = &adcState->halADC;
+    ADC_HandleTypeDef* halADC = &adcState->halADC;
     // Set instance to the ADC peripheral being using
     halADC->Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV2;
     halADC->Init.Resolution            = ADC_RESOLUTION_12B;
@@ -160,8 +160,8 @@ void ADCf4xx::initADC(uint8_t num_channels) {
 }
 
 void ADCf4xx::initDMA() {
-    uint8_t adcNum                 = getADCNum();
-    DMA_HandleTypeDef* dma         = &adcState->halDMA;
+    uint8_t adcNum         = getADCNum();
+    DMA_HandleTypeDef* dma = &adcState->halDMA;
     // Set DMA instance to proper config settings
     switch (adcNum) {
     case ADC1_SLOT:
