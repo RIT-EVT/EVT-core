@@ -90,9 +90,8 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError registerEntryExitNotification(void (*notifyFunction)(Thread<T>, uint32_t)) {
-        storedThreadNotifyFunction = reinterpret_cast<void (*)(Initializable*, uint32_t)>(notifyFunction);
-        uint32_t errorCode         = tx_thread_entry_exit_notify(&txThread, txNotifyFunction);
-        return static_cast<TXError>(errorCode);
+        //TODO: registerEntryExitNotification must be implemented
+        return FEATURE_NOT_ENABLED;
     }
 
     /**

@@ -22,8 +22,8 @@ TXError Semaphore::put() {
 }
 
 TXError Semaphore::registerNotifyFunction(void (*notifyFunction)(Semaphore*)) {
-    storedNotifyFunction = notifyFunction;
-    return static_cast<TXError>(tx_semaphore_put_notify(&txSemaphore, txNotifyFunction));
+    //TODO: registerNotifyFunction must be implemented
+    return FEATURE_NOT_ENABLED;
 }
 
 TXError Semaphore::prioritize() {

@@ -3,10 +3,8 @@
 
 namespace core::rtos {
 
-// TODO: uncomment txNotifyFunction when it is fixed
 Queue::Queue(char* name, uint32_t messageSize, uint32_t numMessages)
-    : name(name), messageSize(messageSize), queueSize(messageSize * numMessages) /*,
-         txNotifyFunction(txNotifyFunctionTemplate<this, TX_QUEUE>)*/
+    : name(name), messageSize(messageSize), queueSize(messageSize * numMessages)
 {}
 
 TXError Queue::init(BytePoolBase& pool) {
@@ -37,8 +35,8 @@ TXError Queue::receive(void* destination, uint32_t waitOption) {
 }
 
 TXError Queue::registerNotifyFunction(void (*notifyFunction)(Queue*)) {
-    storedNotifyFunction = reinterpret_cast<void (*)(Initializable*)>(notifyFunction);
-    return static_cast<TXError>(tx_queue_send_notify(&txQueue, txNotifyFunction));
+    //TODO: registerNotifyFunction must be implemented
+    return FEATURE_NOT_ENABLED;
 }
 
 TXError Queue::send(void* messagePointer, uint32_t waitOption) {
