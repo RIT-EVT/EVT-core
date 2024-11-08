@@ -20,6 +20,7 @@ public:
      * Setup the given pin for ADC usage
      *
      * @param[in] pin The pin to setup for ADC
+     * @param[in] adcPeriph The ADC peripheral being used
      */
     ADCf4xx(Pin pin, ADCPeriph adcPeriph);
 
@@ -91,14 +92,14 @@ private:
      * @param channel the channel trying to be initialized
      * @return true if channel is supported by ADCPeriph
      */
-    static bool checkSupport(ADCPeriph periph, uint32_t channel);
+    inline bool checkSupport(ADCPeriph periph, uint32_t channel);
 
     /**
      * Returns the ADC number that is in use. Depends on the ADCPeriph enum to check
      *
      * @return The adc number that is being used in this specific object
      */
-    uint8_t getADCNum();
+    inline uint8_t getADCNum();
 
     /**
      * Initialize the HAL ADC handler. This should only have to be run once
