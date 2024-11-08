@@ -92,27 +92,11 @@ public:
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
 private:
-    /**
-     * The name of this object.
-     */
+    /** The name of this object */
     char* name;
 
-    /**
-     * The threadx struct that represents this object in the threadx kernel.
-     */
+    /** The threadx struct that represents this object in the threadx kernel */
     TX_EVENT_FLAGS_GROUP txEventFlagsGroup;
-
-    /**
-     * The type of notify function that threadx expects.
-     */
-    typedef void txNotifyFunction_t(TX_EVENT_FLAGS_GROUP*);
-
-    /**
-     * A pointer to the function that we will register with the threadx kernel when the
-     * registerNotificationFunction method is called. This function calls memberNotifyFunction, which itself calls
-     * storedNotifyFunction, which will be set to the passed-in function for the registerNotifyFunction method.
-     */
-    txNotifyFunction_t* txNotifyFunction;
 };
 
 } // namespace core::rtos

@@ -102,25 +102,14 @@ public:
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
 private:
-    /**
-     * The name of the Semaphore.
-     */
+    /** The name of the Semaphore */
     char* name;
 
-    /**
-     * Threadx struct that actually holds all of the information for the Semaphore.
-     */
+    /** Threadx struct that actually holds all of the information for the Semaphore */
     TX_SEMAPHORE txSemaphore;
 
-    /**
-     * The count the Semaphore will be initialized with.
-     */
+    /** The count the Semaphore will be initialized with */
     const uint32_t initialCount;
-
-    /**
-     * The notify function that has been registered with this event flag.
-     */
-    void (*storedNotifyFunction)(Semaphore*);
 };
 
 } // namespace core::rtos

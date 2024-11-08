@@ -100,19 +100,13 @@ public:
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
 private:
-    /**
-     * Threadx struct that actually holds all of the information for the Mutex.
-     */
+    /** Threadx struct that actually holds all of the information for the Mutex */
     TX_MUTEX txMutex;
 
-    /**
-     * Pointer to the name of the Mutex.
-     */
+    /** Pointer to the name of the Mutex */
     char* name;
 
-    /**
-     * Whether this mutex has priority inheritance.
-     */
+    /** Whether this mutex has priority inheritance */
     const bool priorityInheritance;
 };
 

@@ -167,22 +167,22 @@ private:
      */
     void addQueuart(char* buffer);
 
-    /// Pointer to store this thread's entry function.
+    /** Pointer to store this thread's entry function */
     void (*threadEntryFunction)(UARTTX*);
 
-    /// UART object.
+    /** UART object */
     io::UART& copyUART;
 
-    /// HAL representation of the UART.
+    /** HAL representation of the UART */
     UART_HandleTypeDef halUART;
 
-    /// The queue that buffers the messages to be sent to uart.
+    /** Queue that buffers the messages to be sent to uart */
     Queue queue;
 
-    /// The thread that empties the queue and prints it's contents to uart.
+    /** Thread that empties the queue and prints it's contents to uart */
     Thread<UARTTX*> thread;
 
-    /// The mutex that makes sure only one thread reads from UART at a time.
+    /** Mutex that makes sure only one thread reads from UART at a time */
     Mutex readMutex;
 };
 

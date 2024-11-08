@@ -134,32 +134,17 @@ public:
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
 private:
-    /**
-     * The name of this object.
-     */
+    /** The name of this object */
     char* name;
 
-    /**
-     * The threadx struct that represents this object in the threadx kernel.
-     */
+    /** The threadx struct that represents this object in the threadx kernel */
     TX_QUEUE txQueue;
 
-    /**
-     * How large (in words) each message in the queue is.
-     */
+    /** How large (in words) each message in the queue is */
     uint32_t messageSize;
 
-    /**
-     * How large the entire queue is (calculated at constructor by messageSize * numMessages).
-     */
+    /** How large the entire queue is (calculated at constructor by messageSize * numMessages) */
     uint32_t queueSize;
-
-    /**
-     * A pointer to the function that we will register with the threadx kernel when the
-     * registerNotificationFunction method is called. This function calls memberNotifyFunction, which itself calls
-     * storedNotifyFunction, which will be set to the passed-in function for the registerNotifyFunction method.
-     */
-    void (*txNotifyFunction)(TX_QUEUE*);
 };
 
 } // namespace core::rtos

@@ -131,39 +131,25 @@ public:
     }
 
 private:
-    /**
-     * The threadx struct that represents this object in the threadx kernel.
-     */
+    /** The threadx struct that represents this object in the threadx kernel */
     TX_TIMER txTimer;
 
-    /**
-     * the name of this object
-     */
+    /** the name of this object */
     char* name;
 
-    /**
-     * The expiration function registered to this timer.
-     */
+    /** The expiration function registered to this timer */
     void (*expirationFunction)(T);
 
-    /**
-     * The input to the expiration function.
-     */
+    /** The input to the expiration function */
     T expirationInput;
 
-    /**
-     * How long (in ticks) the timer will wait to call the expiration function after it has been activated.
-     */
+    /** How long (in ticks) the timer will wait to call the expiration function after it has been activated */
     uint32_t initialTicks;
 
-    /**
-     * How long (in ticks) the timer will wait to call the expiration function after it has been called once.
-     */
+    /** How long (in ticks) the timer will wait to call the expiration function after it has been called once */
     uint32_t rescheduleTicks;
 
-    /**
-     * If the timer activates after being initialized. If false, the timer will have to be externally activated.
-     */
+    /** If the timer activates after being initialized. If false, the timer will have to be externally activated */
     bool autoActivate;
 };
 

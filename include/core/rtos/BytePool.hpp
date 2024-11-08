@@ -15,10 +15,10 @@ template<std::size_t SIZE>
 class BytePool : public BytePoolBase {
 public:
     /**
-     * Constructs a BytePoolBase, including creating a buffer to hold the
+     * Constructs a BytePool, including creating a buffer to hold the
      * information for the pool and the buffer for the pool itself.
      *
-     * @param[in] name A pointer to the name of the BytePool.
+     * @param[in] name String name of the BytePool.
      */
     BytePool(char* name) : name(name), buffer(), txBytePool() {}
 
@@ -30,16 +30,18 @@ public:
     }
 
     TXError releaseMemory(void* memoryPointer) override {
-        return static_cast<TXError>(tx_byte_release(memoryPointer));
+        uint32_t status = tx_byte_release(memoryPointer);
+        return static_cast<TXError>(status);
     }
 
     TXError init() override {
-        return static_cast<TXError>(tx_byte_pool_create(&txBytePool, name, buffer, SIZE));
+        uint32_t status = tx_byte_pool_create(&txBytePool, name, buffer, SIZE);
+        return static_cast<TXError>(status);
     }
 
     TXError allocateMemory(std::size_t amount, uint32_t waitOption, void** memoryPointer) override {
-        uint32_t errorCode = tx_byte_allocate(&txBytePool, memoryPointer, amount, waitOption);
-        return static_cast<TXError>(errorCode);
+        uint32_t status = tx_byte_allocate(&txBytePool, memoryPointer, amount, waitOption);
+        return static_cast<TXError>(status);
     }
 
     TXError getAvailableBytes(uint32_t* availableBytes) override {
@@ -76,19 +78,13 @@ public:
     }
 
 private:
-    /**
-     * A pointer to the name of the Bytepool.
-     */
+    /** A pointer to the name of the Bytepool */
     char* name;
 
-    /**
-     * Buffer for the bytepool, SIZE bytes large.
-     */
+    /** Buffer for the bytepool, SIZE bytes large */
     uint8_t buffer[SIZE];
 
-    /**
-     * The struct that the threadx application uses to hold information about the bytepool.
-     */
+    /** The struct that the threadx application uses to hold information about the bytepool */
     TX_BYTE_POOL txBytePool;
 };
 

@@ -188,7 +188,7 @@ public:
      * @param[out] name a pointer to a place to put the name pointer.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError getName(char** name) {
+    TXError getName(char* const * name) {
         *name = this->name;
         return SUCCESS;
     }
@@ -254,55 +254,32 @@ public:
     }
 
 private:
-    /**
-     * Threadx struct that holds the information for the thread.
-     */
+    /** Threadx struct that holds the information for the thread */
     TX_THREAD txThread;
 
-    /**
-     * Pointer to the name of this thread.
-     */
+    /** Pointer to the name of this thread */
     char* name;
 
-    /**
-     * The function this thread will be running.
-     */
+    /** The function this thread will be running */
     void (*entryFunction)(T);
 
-    /**
-     * The data the thread function requires.
-     */
+    /** The data the thread function requires */
     T data;
 
-    /**
-     * How much stack space the thread requires.
-     */
+    /** How much stack space the thread requires */
     std::size_t stackSize;
 
-    /**
-     * The priority rating of this thread.
-     */
+    /** The priority rating of this thread */
     uint32_t priority;
 
-    /**
-     * The preemption rating of this thread.
-     */
+    /** The preemption rating of this thread */
     uint32_t preemptThreshold;
 
-    /**
-     * The time slice of this thread.
-     */
+    /** The time slice of this thread */
     uint32_t timeSlice;
 
-    /**
-     * Whether this thread will start when initialized or not.
-     */
+    /** Whether this thread will start when initialized or not */
     bool autoStart;
-
-    /**
-     * Place to hold the template txNotifyFunctionTemplate
-     */
-    void (*txNotifyFunction)(TX_THREAD*, UINT);
 };
 
 } // namespace core::rtos

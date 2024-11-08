@@ -33,7 +33,7 @@ TXError startKernel(Initializable* initList[], std::size_t length, BytePoolBase&
 }
 
 TXError bulkInitialize(Initializable** initList, std::size_t length, BytePoolBase& pool) {
-    TXError errorCode;
+    TXError errorCode = SUCCESS;
     for (std::size_t i = 0; i < length; i++) {
         errorCode = initList[i]->init(pool);
         if (errorCode != SUCCESS) {
