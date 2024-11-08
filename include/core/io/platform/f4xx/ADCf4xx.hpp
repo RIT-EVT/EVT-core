@@ -42,7 +42,7 @@ private:
     // Flag to indicate if the timer has been initialized
     static bool timerInit;
     // Timer handle for TIM8, used to configure and control the timer instance
-    TIM_HandleTypeDef htim8;
+    static TIM_HandleTypeDef htim8;
 
     /**
      * Structure to represent the state of an ADC instance.
@@ -84,7 +84,7 @@ private:
     };
 
     static ADC_State_t adcArray[NUM_ADCS];
-
+    ADC_State_t* adcState;
     /**
      * Checks if the channel that is being initialized supports the ADC peripheral that it is being initialized on.
      *

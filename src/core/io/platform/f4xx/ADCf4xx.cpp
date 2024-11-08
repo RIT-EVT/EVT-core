@@ -64,8 +64,8 @@ bool ADCf4xx::timerInit = false;
 
 ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
     // Get adc state being updated
-    uint8_t adcNum                 = getADCNum();
-    ADCf4xx::ADC_State_t* adcState = &adcArray[adcNum];
+    uint8_t adcNum = getADCNum();
+    adcState       = &adcArray[adcNum];
 
     if (adcState->rank == MAX_CHANNELS) {
         log::LOGGER.log(log::Logger::LogLevel::WARNING, "ADC %d ALREADY HAS MAX PINS!!", (adcNum + 1));
@@ -109,8 +109,6 @@ float ADCf4xx::read() {
 }
 
 uint32_t ADCf4xx::readRaw() {
-    ADCf4xx::ADC_State_t* adcState = &adcArray[getADCNum()];
-
     uint8_t channelNum = 0;
     while (adcState->channels[channelNum] != pin) {
         channelNum++;
@@ -128,7 +126,6 @@ void ADCf4xx::initADC(uint8_t num_channels) {
     /** Configure the global features of the ADC (Clock, Resolution, Data
      * Alignment and number of conversion)
      */
-    ADCf4xx::ADC_State_t* adcState = &adcArray[getADCNum()];
     ADC_HandleTypeDef* halADC      = &adcState->halADC;
     // Set instance to the ADC peripheral being using
     halADC->Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV2;
@@ -164,7 +161,6 @@ void ADCf4xx::initADC(uint8_t num_channels) {
 
 void ADCf4xx::initDMA() {
     uint8_t adcNum                 = getADCNum();
-    ADCf4xx::ADC_State_t* adcState = &adcArray[adcNum];
     DMA_HandleTypeDef* dma         = &adcState->halDMA;
     // Set DMA instance to proper config settings
     switch (adcNum) {
@@ -220,9 +216,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
     GPIO_InitTypeDef gpioInit;
     uint8_t numOfPins = 1;
     uint32_t channel;
-    Pin pins[]                     = {pin};
-    uint8_t adcNum                 = getADCNum();
-    ADCf4xx::ADC_State_t* adcState = &adcArray[adcNum];
+    Pin pins[] = {pin};
 
     GPIOf4xx::gpioStateInit(&gpioInit, pins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
@@ -288,7 +282,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
         // Masks channel back to proper value (Zero's out ADC information bits)
         adcChannel.Channel = channel & 0x1F;
     } else {
-        log::LOGGER.log(log::Logger::LogLevel::ERROR, "ADC %d DOES NOT SUPPORT PIN 0x%x!!", (adcNum + 1), pin);
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "ADC %d DOES NOT SUPPORT PIN 0x%x!!", (getADCNum() + 1), pin);
         // Causes HARD FAULT if pin does not support the ADC peripheral being used. THIS IS INTENTIONAL!
         *((volatile int*) 0xFFFFFFFF) = 0; // This address is invalid
     }
