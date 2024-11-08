@@ -20,7 +20,6 @@ namespace {
 /// This is made as a global variable so that it is accessible in the interrupt.
 DMA_HandleTypeDef* dmaHandle[3];
 ADC_HandleTypeDef* adcHandle[3];
-} // namespace
 
 /**
  * This function handles DMA2 stream0 global interrupt. (For ADC 1)
@@ -45,6 +44,7 @@ extern "C" void DMA2_Stream1_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle[2]);
     HAL_ADC_IRQHandler(adcHandle[2]);
 }
+} // namespace
 
 namespace core::io {
 constexpr uint8_t ADC1_SLOT = 0;
