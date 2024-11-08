@@ -6,7 +6,8 @@
 namespace core::rtos {
 
 /**
- * Class that wraps a ThreadX Mutex. Mutexes are used to create mutual exclusion between threads.\n\n
+ * Class that wraps a ThreadX Mutex. Mutexes are used to create mutual exclusion between threads.
+ * \n\n
  *
  * This class extends Initializable, and like all other Initializable classes must be passed into the
  * Threadx::startKernel() method as part of the initList parameter.
@@ -23,12 +24,12 @@ public:
      */
     Mutex(char* name, bool priorityInheritance);
 
-    TXError init(BytePoolBase& pool) override;
-
     /**
      * Mutex Destructor.
      */
     ~Mutex();
+
+    TXError init(BytePoolBase& pool) override;
 
     /**
      * Attempt to obtain access to this Mutex. If the mutex is already in use by another thread,

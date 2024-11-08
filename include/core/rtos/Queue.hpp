@@ -7,8 +7,9 @@
 namespace core::rtos {
 
 /**
- * Class that wraps a ThreadX Queue. Queues are a FIFO data structure, and threadx queues provide additional
- * functionality for interacting with queues in a threaded environment.\n\n
+ * Class that wraps a ThreadX Queue. Queues are a FIFO data structure, and ThreadX queues provide additional
+ * functionality for interacting with queues in a threaded environment.
+ * \n\n
  *
  * This class extends Initializable, and like all other Initializable classes must be passed into the
  * Threadx::startKernel() method as part of the initList parameter.
@@ -28,12 +29,12 @@ public:
      */
     Queue(char* name, uint32_t messageSize, uint32_t numMessages);
 
-    TXError init(BytePoolBase& pool) override;
-
     /**
      * Queue Deconstructor
      */
     ~Queue();
+
+    TXError init(BytePoolBase& pool) override;
 
     /**
      * Flush the queue, emptying all of the messages out of it

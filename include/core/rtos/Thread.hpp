@@ -45,6 +45,14 @@ public:
     }
 
     /**
+     * Thread Deconstructor
+     */
+    ~Thread() {
+        tx_thread_terminate(&txThread);
+        tx_thread_delete(&txThread);
+    }
+
+    /**
      * Create the threadx thread and possibly start it, depending on the autostart constructor parameter
      *
      * @return The first error found by the function or Success if there was no error
@@ -69,14 +77,6 @@ public:
                                      timeSlice,
                                      autoStart ? TX_AUTO_START : TX_DONT_START);
         return static_cast<TXError>(errorCode);
-    }
-
-    /**
-     * Thread Deconstructor
-     */
-    ~Thread() {
-        tx_thread_terminate(&txThread);
-        tx_thread_delete(&txThread);
     }
 
     /**

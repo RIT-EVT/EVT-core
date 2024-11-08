@@ -36,6 +36,14 @@ public:
         : txTimer(), name(name), expirationFunction(expirationFunction), expirationInput(expirationInput),
           initialTicks(initialTicks), rescheduleTicks(rescheduleTicks), autoActivate(autoActivate) {}
 
+    /**
+     * Timer deconstructor. Deactivate and delete the timer
+     */
+    ~Timer() {
+        tx_timer_deactivate(&txTimer);
+        tx_timer_delete(&txTimer);
+    }
+
     TXError init(BytePoolBase& pool) override {
         uint32_t errorCode = tx_timer_create(&txTimer,
                                              name,
@@ -45,14 +53,6 @@ public:
                                              rescheduleTicks,
                                              (uint32_t) autoActivate);
         return static_cast<TXError>(errorCode);
-    }
-
-    /**
-     * Timer deconstructor. Deactivate and delete the timer
-     */
-    ~Timer() {
-        tx_timer_deactivate(&txTimer);
-        tx_timer_delete(&txTimer);
     }
 
     /**

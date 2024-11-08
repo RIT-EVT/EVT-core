@@ -6,8 +6,9 @@
 namespace core::rtos {
 
 /**
- * Class that wraps a ThreadX Event Flags Group. Event flags are essentially
- * a 32-bit mask, with each bit representing a different flag.\n\n
+ * Class that wraps a ThreadX Event Flags Group. Event Flags are essentially
+ * a 32-bit unsigned integer, with each bit representing a different flag.
+ * \n\n
  *
  * This class extends Initializable, and like all other Initializable classes must be passed into the
  * Threadx::startKernel() method as part of the initList parameter.
@@ -21,24 +22,25 @@ public:
      */
     EventFlags(char* name);
 
-    TXError init(core::rtos::BytePoolBase& pool) override;
-
     /**
      * Destructor for EventFlags.
      */
     ~EventFlags();
 
+    TXError init(core::rtos::BytePoolBase& pool) override;
+
     /**
-     * Set the eventFlags of the mask according to the setOption
+     * Set the eventFlags defined by the mask
      *
      * @param[in] mask A bitmask describing what flags are to be interacted with
-     * @param[in] clearNonMaskedFlags If true, all the flags not included in the mask will be set to 0
+     * @param[in] clearNonMaskedFlags If true, all the flags not included in the mask will be set to 0.
+     * (true is equivalent to AND-ing with the mask, false is equivalent to OR-ing with the mask)
      * @return The first error found by the function or Success if there was no error
      */
     TXError set(uint32_t mask, bool clearNonMaskedFlags);
 
     /**
-     * Get the eventFlags of the mask according to the getOption
+     * Get the eventFlags defined by the mask
      *
      * @param[in] mask A bitmask describing what flags are requested
      * @param[in] waitForAllFlags If the method should wait for EVERY flag in the bitmask
@@ -47,7 +49,7 @@ public:
      * @param[in] waitOption How long (in ticks) the calling thread should wait for this method to
      * return. Use Enums::TXWait::WaitForever to wait forever
      * @param[out] output A pointer to store the set flags in
-     * @return The first error found by the function or Success if there was no error.
+     * @return The first error found by the function or Success if there was no error
      */
     TXError get(uint32_t mask, bool waitForAllFlags, bool clear, uint32_t waitOption, uint32_t* output);
 

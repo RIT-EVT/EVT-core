@@ -21,12 +21,12 @@ public:
      */
     Semaphore(char* name, uint32_t initialCount);
 
-    TXError init(BytePoolBase& pool) override;
-
     /**
      * Semaphore Destructor
      */
     ~Semaphore();
+
+    TXError init(BytePoolBase& pool) override;
 
     /**
      * Get an instance of the semaphore. If there is no instance to get, the calling thread will suspend for

@@ -1,14 +1,15 @@
-#ifndef EVT_RTOS_ENUMS_
-#define EVT_RTOS_ENUMS_
+#ifndef _EVT_RTOS_ENUMS_
+#define _EVT_RTOS_ENUMS_
 
 #include <tx_api.h>
 
 namespace core::rtos {
 
 /**
- * Enum representing the possible range of Error Codes from ThreadX.\n\n
+ * Enum representing the possible error codes returned by ThreadX
+ * \n\n
  *
- * Note that it is technically possible for methods that return TXError to
+ * Note: It is technically possible for methods that return TXError to
  * return a value outside of the enum, so when this enum is used in a switch
  * statement there ALWAYS should be an "default" case.
  */
@@ -53,7 +54,7 @@ enum TXError {
 };
 
 /**
- * Enum that represents the states a thread can be in.
+ * Enum that represents the states a thread can be in
  */
 enum TXThreadState {
     READ = TX_READY,
@@ -74,7 +75,7 @@ enum TXThreadState {
 };
 
 /**
- * Enum to shorthand No Wait and Wait Forever wait options in TX.
+ * Enum to shorthand No Wait and Wait Forever wait options in TX
  */
 enum TXWait {
     NO_WAIT      = TX_NO_WAIT,
@@ -82,4 +83,4 @@ enum TXWait {
 };
 
 } // namespace core::rtos
-#endif // EVT_RTOS_ENUMS_
+#endif // _EVT_RTOS_ENUMS_
