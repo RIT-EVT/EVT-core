@@ -56,7 +56,10 @@ namespace core::io {
 #define ADC3SHIFT 7
 
 // Combines the channel memory value with the ADC peripherals it supports into one uint32_t
-#define CHANNEL_SET(adc1, adc2, adc3, ch) (ch | (adc1 << ADC1SHIFT) | (adc2 << ADC2SHIFT) | (adc3 << ADC3SHIFT))
+constexpr uint32_t CHANNEL_SET(uint8_t adc1, uint8_t adc2, uint8_t adc3, uint32_t ch) {
+    return (ch | (adc1 << ADC1SHIFT) | (adc2 << ADC2SHIFT) | (adc3 << ADC3SHIFT));
+}
+
 
 bool ADCf4xx::timerInit = false;
 
