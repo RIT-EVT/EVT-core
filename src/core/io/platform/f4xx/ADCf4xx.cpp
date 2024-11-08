@@ -1,4 +1,4 @@
-/**
+/*
  * This DMA ADC is different than f3xx DMA ADC!
  * f4xx DMA ADC uses a timer to trigger ADC conversions. Timer frequency is 1kHz.
  *
