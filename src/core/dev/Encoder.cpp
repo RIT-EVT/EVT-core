@@ -98,7 +98,7 @@ void Encoder::setRangeAndPosition(uint32_t newRange, uint32_t newPosition) {
 }
 
 int8_t Encoder::readPinValues() {
-    // we are storing these as uints so we can combine them easier.
+    // We are storing these as uints so we can combine them easier.
     uint8_t aPos = a.readPin() == io::GPIO::State::HIGH;
     uint8_t bPos = b.readPin() == io::GPIO::State::HIGH;
     // Calculating and returning the position.
