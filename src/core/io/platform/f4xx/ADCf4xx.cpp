@@ -23,7 +23,7 @@ ADC_HandleTypeDef* adcHandle[3];
 } // namespace
 
 /**
- * @brief This function handles DMA2 stream0 global interrupt. (For ADC 1)
+ * This function handles DMA2 stream0 global interrupt. (For ADC 1)
  */
 extern "C" void DMA2_Stream0_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle[0]);
@@ -31,7 +31,7 @@ extern "C" void DMA2_Stream0_IRQHandler(void) {
 }
 
 /**
- * @brief This function handles DMA2 stream2 global interrupt. (For ADC 2)
+ * This function handles DMA2 stream2 global interrupt. (For ADC 2)
  */
 extern "C" void DMA2_Stream2_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle[1]);
@@ -39,7 +39,7 @@ extern "C" void DMA2_Stream2_IRQHandler(void) {
 }
 
 /**
- * @brief This function handles DMA2 stream1 global interrupt. (For ADC 3)
+ * This function handles DMA2 stream1 global interrupt. (For ADC 3)
  */
 extern "C" void DMA2_Stream1_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle[2]);
@@ -47,9 +47,9 @@ extern "C" void DMA2_Stream1_IRQHandler(void) {
 }
 
 namespace core::io {
-#define ADC1_SLOT 0
-#define ADC2_SLOT 1
-#define ADC3_SLOT 2
+constexpr uint8_t ADC1_SLOT = 0;
+constexpr uint8_t ADC2_SLOT = 1;
+constexpr uint8_t ADC3_SLOT = 2;
 
 #define ADC1SHIFT 5
 #define ADC2SHIFT 6
