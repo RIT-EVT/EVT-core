@@ -4,8 +4,7 @@
 namespace core::rtos {
 
 Queue::Queue(char* name, uint32_t messageSize, uint32_t numMessages)
-    : name(name), messageSize(messageSize), queueSize(messageSize * numMessages)
-{}
+    : name(name), messageSize(messageSize), queueSize(messageSize * numMessages) {}
 
 TXError Queue::init(BytePoolBase& pool) {
     void* poolPointer;
@@ -35,7 +34,7 @@ TXError Queue::receive(void* destination, uint32_t waitOption) {
 }
 
 TXError Queue::registerNotifyFunction(void (*notifyFunction)(Queue*)) {
-    //TODO: registerNotifyFunction must be implemented
+    // TODO: registerNotifyFunction must be implemented
     return FEATURE_NOT_ENABLED;
 }
 

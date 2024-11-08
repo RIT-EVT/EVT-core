@@ -90,7 +90,7 @@ public:
      * @return The first error found by the function (or Success if there was no error).
      */
     TXError registerEntryExitNotification(void (*notifyFunction)(Thread<T>, uint32_t)) {
-        //TODO: registerEntryExitNotification must be implemented
+        // TODO: registerEntryExitNotification must be implemented
         return FEATURE_NOT_ENABLED;
     }
 

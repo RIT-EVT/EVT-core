@@ -22,7 +22,7 @@ TXError Semaphore::put() {
 }
 
 TXError Semaphore::registerNotifyFunction(void (*notifyFunction)(Semaphore*)) {
-    //TODO: registerNotifyFunction must be implemented
+    // TODO: registerNotifyFunction must be implemented
     return FEATURE_NOT_ENABLED;
 }
 

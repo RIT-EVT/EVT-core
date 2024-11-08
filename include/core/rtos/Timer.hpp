@@ -31,14 +31,19 @@ public:
      * @param[in] autoActivate If the timer will activate upon being initialized. If false, the timer will wait to be
      * externally activated.
      */
-    Timer(char* name, void (*expirationFunction)(T), T expirationInput,
-          uint32_t initialTicks, uint32_t rescheduleTicks, bool autoActivate)
+    Timer(char* name, void (*expirationFunction)(T), T expirationInput, uint32_t initialTicks, uint32_t rescheduleTicks,
+          bool autoActivate)
         : txTimer(), name(name), expirationFunction(expirationFunction), expirationInput(expirationInput),
           initialTicks(initialTicks), rescheduleTicks(rescheduleTicks), autoActivate(autoActivate) {}
 
     TXError init(BytePoolBase& pool) override {
-        uint32_t errorCode = tx_timer_create(&txTimer, name, expirationFunction, expirationInput,
-                                             initialTicks, rescheduleTicks, (uint32_t) autoActivate);
+        uint32_t errorCode = tx_timer_create(&txTimer,
+                                             name,
+                                             expirationFunction,
+                                             expirationInput,
+                                             initialTicks,
+                                             rescheduleTicks,
+                                             (uint32_t) autoActivate);
         return static_cast<TXError>(errorCode);
     }
 

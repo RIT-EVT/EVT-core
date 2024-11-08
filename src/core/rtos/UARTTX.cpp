@@ -18,7 +18,7 @@ namespace core::rtos::wrapper {
  * @param[in] uarttx the specific uartttx object this entry function is running on.
  */
 [[noreturn]] static void uartThreadEntryFunction(UARTTX* uarttx) {
-    while(true) {
+    while (true) {
         uarttx->readQueuart();
     }
 }
