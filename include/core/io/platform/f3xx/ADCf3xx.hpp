@@ -62,6 +62,15 @@ private:
      *      was added to the ADC starting at 1
      */
     void addChannel(uint8_t rank);
+
+    /**
+     * Checks if the channel that is being initialized supports the ADC peripheral that it is being initialized on.
+     *
+     * @param periph the ADC peripheral being used
+     * @param channel the channel trying to be initialized
+     * @return true if channel is supported by ADCPeriph, false otherwise
+     */
+    inline bool checkSupport(ADCPeriph periph, uint32_t channel);
 };
 
 } // namespace core::io
