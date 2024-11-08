@@ -188,7 +188,7 @@ public:
      * @param[out] name a pointer to a place to put the name pointer.
      * @return The first error found by the function (or Success if there was no error).
      */
-    TXError getName(char* const * name) {
+    TXError getName(char* const* name) {
         *name = this->name;
         return SUCCESS;
     }
