@@ -58,7 +58,7 @@ private:
      *           Each entry corresponds to a specific ADC channel.
      * halDMA: HAL handle for configuring and controlling DMA for the ADC.
      */
-    typedef struct ADC_State {
+    struct ADC_State_t {
         ADC_HandleTypeDef halADC      = {0};
         uint8_t rank                  = 1;
         bool isADCInit                = false;
@@ -80,7 +80,7 @@ private:
                                          Pin::DUMMY};
         uint16_t buffer[MAX_CHANNELS] = {0};
         DMA_HandleTypeDef halDMA      = {0};
-    } ADC_State_t;
+    };
 
     static ADC_State_t adcArray[NUM_ADCS];
 
