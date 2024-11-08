@@ -8,7 +8,7 @@
 namespace core::rtos {
 
 /**
-* A non-templated base class that allows us to pass the BytePool template class into
+ * A non-templated base class that allows us to pass the BytePool template class into
  * external methods without the compiler complaining.
  */
 class BytePoolBase {
