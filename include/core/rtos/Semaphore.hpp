@@ -1,5 +1,3 @@
-
-
 #ifndef EVT_RTOS_SEMAPHORE_
 #define EVT_RTOS_SEMAPHORE_
 

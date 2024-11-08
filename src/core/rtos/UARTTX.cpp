@@ -17,8 +17,8 @@ namespace core::rtos::wrapper {
  *
  * @param[in] uarttx the specific uartttx object this entry function is running on.
  */
-static void uartThreadEntryFunction(UARTTX* uarttx) {
-    while (1) {
+[[noreturn]] static void uartThreadEntryFunction(UARTTX* uarttx) {
+    while(true) {
         uarttx->readQueuart();
     }
 }
@@ -70,7 +70,7 @@ void UARTTX::readQueuart() {
                         set this buffer to be too small */
     queue.receive(buffer, WAIT_FOREVER); /* Receives the message and assigns it to the buffer variable */
     copyUART.writeBytes((uint8_t*) (buffer), strlen(buffer));
-};
+}
 
 void UARTTX::setBaudrate(uint32_t baudrate) {
     this->halUART.Init.BaudRate = baudrate;

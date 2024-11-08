@@ -1,4 +1,3 @@
-
 #ifndef EVT_RTOS_THREAD_
 #define EVT_RTOS_THREAD_
 

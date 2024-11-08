@@ -1,4 +1,3 @@
-
 #include <core/rtos/BytePool.hpp>
 #include <core/rtos/Threadx.hpp>
 #include <core/utils/log.hpp>

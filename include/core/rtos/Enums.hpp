@@ -1,4 +1,3 @@
-
 #ifndef EVT_RTOS_ENUMS_
 #define EVT_RTOS_ENUMS_
 

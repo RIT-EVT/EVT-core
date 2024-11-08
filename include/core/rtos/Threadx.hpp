@@ -1,4 +1,3 @@
-
 #ifndef EVT_RTOS_THREADX_
 #define EVT_RTOS_THREADX_
 

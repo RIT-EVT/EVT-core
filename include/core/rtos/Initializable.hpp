@@ -1,4 +1,3 @@
-
 #ifndef _EVT_RTOS_Initializeable_
 #define _EVT_RTOS_Initializeable_
 

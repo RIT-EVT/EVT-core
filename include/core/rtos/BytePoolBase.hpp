@@ -1,4 +1,3 @@
-
 #ifndef _EVT_RTOS_BYTEPOOL_
 #define _EVT_RTOS_BYTEPOOL_
 

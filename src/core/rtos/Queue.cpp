@@ -1,4 +1,3 @@
-
 #include <core/rtos/Enums.hpp>
 #include <core/rtos/Queue.hpp>
 

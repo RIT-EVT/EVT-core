@@ -1,4 +1,3 @@
-
 #include <core/rtos/EventFlags.hpp>
 
 namespace core::rtos {

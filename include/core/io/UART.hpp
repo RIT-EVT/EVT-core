@@ -73,11 +73,11 @@ public:
     UART(Pin txPin, Pin rxPin, uint32_t baudrate);
 
     /**
-     * Copy constructor to be used in UARTTX class
+     * Copy constructor
      *
-     * @param[in] uart A UART object
+     * @param[in] other A UART object
      */
-    UART(const UART& uart);
+    UART(const UART& other);
 
     /**
      * Set the baudrate that the UART will operate with.

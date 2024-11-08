@@ -1,4 +1,3 @@
-
 #ifndef _EVT_RTOS_EVENTFLAGS_
 #define _EVT_RTOS_EVENTFLAGS_
 

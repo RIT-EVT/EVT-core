@@ -1,4 +1,3 @@
-
 #include <core/rtos/Mutex.hpp>
 
 namespace core::rtos {

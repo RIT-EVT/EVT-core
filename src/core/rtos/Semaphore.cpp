@@ -1,4 +1,3 @@
-
 #include <core/rtos/Semaphore.hpp>
 
 namespace core::rtos {
