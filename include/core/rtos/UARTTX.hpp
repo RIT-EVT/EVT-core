@@ -65,18 +65,18 @@ namespace core::rtos::wrapper {
 class UARTTX : public Initializable, io::UART {
 public:
     /**
-     * Constructor for thread safe uart class.
+     * Constructor for thread safe uart class
      *
-     * @param[in] uart A UART instance.
-     * @param[in] threadStackSize the stack size of the UARTTX thread.
-     * Setting it below the default size may cause issues.
+     * @param[in] uart A UART instance
+     * @param[in] threadStackSize The stack size of the UARTTX thread.
+     * Setting it below the default size may cause issues
      * @param[in] threadPriorityLevel The priority level of the UART Thread.
-     * Setting it too low may result in UART never actually outputting.
+     * Setting it too low may result in UART never actually outputting
      * @param[in] threadPreemptThreshold The preemption threshold of the UART thread.
      * Unless you absolutely need a thread to be able to interrupt this thread, do not
      * set this thread to a lower priority than the default because interrupting the thread
      * while it is running is likely to just cause the UART output to break immediately.
-     * @param[in] threadTimeSlice The default minimum timeslice of this thread.
+     * @param[in] threadTimeSlice The default minimum timeslice of this thread
      */
     explicit UARTTX(io::UART& uart, std::size_t threadStackSize = UARTTX_DEFAULT_STACK_SIZE,
                     uint32_t threadPriorityLevel    = UARTTX_DEFAULT_PRIORITY_LEVEL,
@@ -111,34 +111,34 @@ public:
     // UARTTX Queue Informational Methods
 
     /**
-     * Retrieves the number of enqueued messages in this UARTTX's Queue.
+     * Retrieve the number of enqueued messages in this UARTTX's Queue
      *
-     * @param[out] numEnqueuedMessages A pointer to store the number of enqueued messages in.
-     * @return The first error found by the function (or Success if there was no error).
+     * @param[out] numEnqueuedMessages A pointer to store the number of enqueued messages in
+     * @return The first error found by the function or Success if there was no error
      */
     TXError getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages);
 
     /**
-     * Retrieves the number of more messages this UARTTX's Queue can fit.
+     * Retrieve the number of more messages this UARTTX's Queue can fit
      *
-     * @param[out] numAvailableMessages A pointer to store the number of additional messages that the queue can fit.
-     * @return The first error found by the function (or Success if there was no error).
+     * @param[out] numAvailableMessages A pointer to store the number of additional messages that the queue can fit
+     * @return The first error found by the function or Success if there was no error
      */
     TXError getAvailableQueueStorage(uint32_t* numAvailableMessages);
 
     /**
-     * Retrieves the name of the first thread suspended on sending a message to this UARTTX.
+     * Retrieve the name of the first thread suspended on sending a message to this UARTTX
      *
-     * @param[out] threadName a pointer to a place to store the name of the first suspended thread.
-     * @return The first error found by the function (or Success if there was no error).
+     * @param[out] threadName A pointer to a place to store the name of the first suspended thread
+     * @return The first error found by the function or Success if there was no error
      */
     TXError getNameOfFirstSuspendedThread(char** threadName);
 
     /**
-     * Retrieves the number of threads that are suspended on this UARTTX.
+     * Retrieve the number of threads that are suspended on this UARTTX
      *
-     * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
-     * @return The first error found by the function (or Success if there was no error).
+     * @param[out] numSuspendedThreads A pointer to a place to store the number of suspended threads
+     * @return The first error found by the function or Success if there was no error
      */
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
@@ -161,9 +161,9 @@ private:
     /**
      * Adds the given string to the Queue of messages to be sent to UART,
      * splitting it into multiple Queue messages if the string is too long
-     * (each of the messages will be 16 words).
+     * (each of the messages will be 16 words)
      *
-     * @param[in] buffer a pointer to the string we are sending to the Queue.
+     * @param[in] buffer A pointer to the string we are sending to the Queue
      */
     void addQueuart(char* buffer);
 

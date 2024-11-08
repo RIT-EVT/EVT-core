@@ -8,19 +8,19 @@
 namespace core::rtos {
 
 /**
- * A pure virtual class that allows us to pass the BytePool template class into
+* A non-templated base class that allows us to pass the BytePool template class into
  * external methods without the compiler complaining.
  */
 class BytePoolBase {
 public:
     /**
-     * Allocates memory from the BytePool and returns a pointer to the start of it.
+     * Allocate memory from the BytePool and returns a pointer to the start of it
      *
-     * @param[in] amount how much memory (in bytes) that is requested.
+     * @param[in] amount How much memory (in bytes) that is requested
      * @param[in] waitOption How long (in ticks) the calling thread should wait for the memory to become available:
-     * 0 for no wait, and TX_WAIT_FOREVER for waiting forever.
-     * @param[out] memoryPointer a reference to the pointer to the block of memory that is requested.
-     * @return The first error found by the function (or Success if there was no error).
+     * 0 for no wait, and TX_WAIT_FOREVER for waiting forever
+     * @param[out] memoryPointer A reference to the pointer to the block of memory that is requested
+     * @return The first error found by the function or Success if there was no error
      */
     virtual TXError allocateMemory(std::size_t amount, uint32_t waitOption, void** memoryPointer) = 0;
 
@@ -30,50 +30,50 @@ public:
     virtual TXError init() = 0;
 
     /**
-     * Releases the memory at the given pointer from the BytePool.
+     * Release the memory at the given pointer from the BytePool
      *
-     * @param[in] memoryPointer pointer to the memory to release.
-     * @return The first error found by the function (or Success if there was no error).
+     * @param[in] memoryPointer A pointer to the memory to release
+     * @return The first error found by the function or Success if there was no error
      */
     virtual TXError releaseMemory(void* memoryPointer) = 0;
 
     /**
-     * Retrieves the number of unallocated bytes left in the BytePool.
+     * Retrieve the number of unallocated bytes left in the BytePool
      *
-     * @param[out] availableBytes a pointer to a place to store the number of available bytes.
-     * @return The first error found by the function (or Success if there was no error).
+     * @param[out] availableBytes A pointer to a place to store the number of available bytes
+     * @return The first error found by the function or Success if there was no error
      */
     virtual TXError getAvailableBytes(uint32_t* availableBytes) = 0;
 
     /**
-     * Retrieves the number of fragments the BytePool has been split into.
+     * Retrieve the number of fragments the BytePool has been split into
      *
-     * @param[out] fragments a pointer to a place to store the number of fragments.
-     * @return The first error found by the function (or Success if there was no error).
+     * @param[out] fragments A pointer to a place to store the number of fragments
+     * @return The first error found by the function or Success if there was no error
      */
     virtual TXError getFragments(uint32_t* fragments) = 0;
 
     /**
-     * Retrieves the name of the first suspended thread.
+     * Retrieve the name of the first suspended thread
      *
-     * @param[out] name a pointer to a place to store the name pointer.
-     * @return The first error found by the function (or Success if there was no error).
+     * @param[out] name A pointer to a place to store the name pointer
+     * @return The first error found by the function or Success if there was no error
      */
     virtual TXError getNameOfFirstSuspendedThread(char** threadName) = 0;
 
     /**
-     * Retrieves the number of threads that are suspended on this BytePool.
+     * Retrieve the number of threads that are suspended on this BytePool
      *
-     * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads.
-     * @return The first error found by the function (or Success if there was no error).
+     * @param[out] numSuspendedThreads A pointer to a place to store the number of suspended threads
+     * @return The first error found by the function or Success if there was no error
      */
     virtual TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads) = 0;
 
     /**
-     * Retrieves the name of this BytePool.
+     * Retrieve the name of this BytePool
      *
-     * @param[out] name a pointer to a place to store the name pointer.
-     * @return The first error found by the function (or Success if there was no error).
+     * @param[out] name A pointer to a place to store the name pointer
+     * @return The first error found by the function or Success if there was no error
      */
     virtual TXError getName(char** name) = 0;
 };

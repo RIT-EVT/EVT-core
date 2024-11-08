@@ -7,7 +7,7 @@
 namespace core::rtos {
 
 /**
- * Template class that wraps a Threadx BytePool. The BytePool can be used essentially as a heap
+ * Template class that wraps a ThreadX BytePool. The BytePool can be used essentially as a heap
  * within a static block of memory via the allocateMemory() and releaseMemory() methods.
  * @tparam SIZE How large the bytepool is.
  */
@@ -15,15 +15,15 @@ template<std::size_t SIZE>
 class BytePool : public BytePoolBase {
 public:
     /**
-     * Constructs a BytePool, including creating a buffer to hold the
-     * information for the pool and the buffer for the pool itself.
+     * Construct a BytePool, including creating a buffer to hold the
+     * information for the pool and the buffer for the pool itself
      *
-     * @param[in] name String name of the BytePool.
+     * @param[in] name String name of the BytePool
      */
     BytePool(char* name) : name(name), buffer(), txBytePool() {}
 
     /**
-     * BytePool deconstructor.
+     * BytePool deconstructor
      */
     ~BytePool() {
         tx_byte_pool_delete(&txBytePool);
