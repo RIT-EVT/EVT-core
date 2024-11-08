@@ -20,7 +20,7 @@ int main() {
 
     // Set up the logger to catch errors in ADC creation
     core::log::LOGGER.setUART(&uart);
-    core::log::LOGGER.setLogLevel(core::log::Logger::LogLevel::ERROR);
+    core::log::LOGGER.setLogLevel(core::log::Logger::LogLevel::INFO);
 
     uart.printf("Starting ADC test\r\n");
 
@@ -29,11 +29,11 @@ int main() {
     io::ADC& adc0 = io::getADC<io::Pin::PA_0, io::ADCPeriph::ONE>();
 
     while (1) {
-        uart.printf("--------------------\r\n");
-        uart.printf("ADC0 : %d mV\r\n", static_cast<uint32_t>(adc0.read() * 1000));
-        uart.printf("ADC0: %d%%\r\n", static_cast<uint32_t>(adc0.readPercentage() * 100));
-        uart.printf("ADC0 raw: %d\r\n\r\n", adc0.readRaw());
-        uart.printf("--------------------\r\n\r\n");
+        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "--------------------\r\n");
+        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "ADC0 : %d mV\r\n", static_cast<uint32_t>(adc0.read() * 1000));
+        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "ADC0: %d%%\r\n", static_cast<uint32_t>(adc0.readPercentage() * 100));
+        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "ADC0 raw: %d\r\n\r\n", adc0.readRaw());
+        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "--------------------\r\n\r\n");
         time::wait(500);
     }
 }

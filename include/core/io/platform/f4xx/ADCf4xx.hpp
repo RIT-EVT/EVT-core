@@ -85,6 +85,7 @@ private:
 
     static ADC_State_t adcArray[NUM_ADCS];
     ADC_State_t* adcState;
+    uint8_t adcNum;
     /**
      * Checks if the channel that is being initialized supports the ADC peripheral that it is being initialized on.
      *
