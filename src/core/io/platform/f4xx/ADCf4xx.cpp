@@ -58,7 +58,6 @@ namespace core::io {
 // Combines the channel memory value with the ADC peripherals it supports into one uint32_t
 #define CHANNEL_SET(adc1, adc2, adc3, ch) (ch | (adc1 << ADC1SHIFT) | (adc2 << ADC2SHIFT) | (adc3 << ADC3SHIFT))
 
-ADCf4xx::ADC_State_t ADCf4xx::adcArray[3];
 bool ADCf4xx::timerInit = false;
 
 ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
