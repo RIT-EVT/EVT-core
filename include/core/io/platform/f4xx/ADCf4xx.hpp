@@ -44,7 +44,7 @@ private:
     TIM_HandleTypeDef htim8;
 
     /**
-     * @brief Structure to represent the state of an ADC instance.
+     * Structure to represent the state of an ADC instance.
      *
      * This structure holds the configuration and current state for an ADC instance, including the
      * HAL handle for the ADC and DMA, channel configurations, and data buffers for readings.
@@ -86,6 +86,7 @@ private:
 
     /**
      * Checks if the channel that is being initialized supports the ADC peripheral that it is being initialized on.
+     *
      * @param periph the ADC peripheral being used
      * @param channel the channel trying to be initialized
      * @return true if channel is supported by ADCPeriph
@@ -94,7 +95,8 @@ private:
 
     /**
      * Returns the ADC number that is in use. Depends on the ADCPeriph enum to check
-     * @return
+     *
+     * @return The adc number that is being used in this specific object
      */
     uint8_t getADCNum();
 
