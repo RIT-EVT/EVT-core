@@ -221,11 +221,11 @@ void ADCf4xx::addChannel(uint8_t rank) {
     GPIO_InitTypeDef gpioInit;
     uint8_t numOfPins = 1;
     uint32_t channel;
-    Pin myPins[]                   = {pin};
+    Pin pins[]                     = {pin};
     uint8_t adcNum                 = getADCNum();
     ADCf4xx::ADC_State_t* adcState = &adcArray[adcNum];
 
-    GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
+    GPIOf4xx::gpioStateInit(&gpioInit, pins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;
 
