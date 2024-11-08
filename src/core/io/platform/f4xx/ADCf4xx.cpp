@@ -64,8 +64,8 @@ bool ADCf4xx::timerInit = false;
 
 ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
     // Get adc state being updated
-    uint8_t adcNum = getADCNum();
-    adcState       = &adcArray[adcNum];
+    adcNum   = getADCNum();
+    adcState = &adcArray[adcNum];
 
     if (adcState->rank == MAX_CHANNELS) {
         log::LOGGER.log(log::Logger::LogLevel::WARNING, "ADC %d ALREADY HAS MAX PINS!!", (adcNum + 1));
@@ -140,7 +140,7 @@ void ADCf4xx::initADC(uint8_t num_channels) {
     halADC->Init.DMAContinuousRequests = ENABLE;
     halADC->Init.EOCSelection          = ADC_EOC_SINGLE_CONV;
 
-    switch (getADCNum()) {
+    switch (adcNum) {
     case ADC1_SLOT:
         halADC->Instance = ADC1;
         __HAL_RCC_ADC1_CLK_ENABLE();
@@ -154,14 +154,14 @@ void ADCf4xx::initADC(uint8_t num_channels) {
         __HAL_RCC_ADC3_CLK_ENABLE();
         break;
     default:
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "INVALID ADC NUMBER!!");
         return; // Should never get here
     }
     HAL_ADC_Init(halADC);
 }
 
 void ADCf4xx::initDMA() {
-    uint8_t adcNum                 = getADCNum();
-    DMA_HandleTypeDef* dma         = &adcState->halDMA;
+    DMA_HandleTypeDef* dma = &adcState->halDMA;
     // Set DMA instance to proper config settings
     switch (adcNum) {
     case ADC1_SLOT:
@@ -177,6 +177,7 @@ void ADCf4xx::initDMA() {
         dma->Init.Channel = DMA_CHANNEL_2;
         break;
     default:
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "INVALID ADC NUMBER!!");
         return; // Should never get here
     }
     dma->Init.Direction           = DMA_PERIPH_TO_MEMORY;
@@ -207,6 +208,7 @@ void ADCf4xx::initDMA() {
         HAL_NVIC_EnableIRQ(DMA2_Stream1_IRQn);
         break;
     default:
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "INVALID ADC NUMBER!!");
         return; // Should never get here
     }
     __HAL_LINKDMA(&adcState->halADC, DMA_Handle, *dma);
@@ -274,6 +276,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
         break;
     default:
         channel = 0;
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "INVALID PIN 0x%x!!", pin);
         break; // Should never get here
     }
 
@@ -282,7 +285,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
         // Masks channel back to proper value (Zero's out ADC information bits)
         adcChannel.Channel = channel & 0x1F;
     } else {
-        log::LOGGER.log(log::Logger::LogLevel::ERROR, "ADC %d DOES NOT SUPPORT PIN 0x%x!!", (getADCNum() + 1), pin);
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "ADC %d DOES NOT SUPPORT PIN 0x%x!!", (adcNum + 1), pin);
         // Causes HARD FAULT if pin does not support the ADC peripheral being used. THIS IS INTENTIONAL!
         *((volatile int*) 0xFFFFFFFF) = 0; // This address is invalid
     }
