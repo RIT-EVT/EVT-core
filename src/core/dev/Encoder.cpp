@@ -28,7 +28,7 @@ void Encoder::aInterruptHandler() {
         log::LOGGER.log(log::Logger::LogLevel::DEBUG, "aInterrupt Skipped, reason: on cooldown");
         return;
     }
-    int8_t change;
+    int8_t change = 0;
     switch (currentRelPos) {
     case 0:
         change        = 1;
@@ -49,14 +49,6 @@ void Encoder::aInterruptHandler() {
     }
     interruptChange += change;
     lastAInterruptTime = time::millis();
-    log::LOGGER.log(log::Logger::LogLevel::DEBUG,
-                    "aInterrupt Called, "
-                    "\n\r\tCalculated Position: %d"
-                    "\n\r\tActual Position: %d"
-                    "\n\r\tChange: %d",
-                    currentRelPos,
-                    readPinValues(),
-                    change);
 }
 
 void Encoder::bInterruptHandler() {
@@ -64,7 +56,7 @@ void Encoder::bInterruptHandler() {
         log::LOGGER.log(log::Logger::LogLevel::DEBUG, "bInterrupt Skipped, reason: on cooldown");
         return;
     }
-    int8_t change;
+    int8_t change = 0;
     switch (currentRelPos) {
     case 0:
         change        = -1;
@@ -85,14 +77,6 @@ void Encoder::bInterruptHandler() {
     }
     interruptChange += change;
     lastBInterruptTime = time::millis();
-    log::LOGGER.log(log::Logger::LogLevel::DEBUG,
-                    "bInterrupt Called, "
-                    "\n\r\tCalculated Position: %d"
-                    "\n\r\tActual Position: %d"
-                    "\n\r\tChange: %d",
-                    currentRelPos,
-                    readPinValues(),
-                    change);
 }
 
 uint32_t Encoder::getPosition() {
@@ -114,18 +98,24 @@ void Encoder::setRangeAndPosition(uint32_t newRange, uint32_t newPosition) {
 }
 
 int8_t Encoder::readPinValues() {
-    bool aPos = (bool) a.readPin();
-    bool bPos = (bool) b.readPin();
-    // calculating and returning the position
-    if (aPos == 0 && bPos == 0) {
+    // We are storing these as uints so we can combine them easier.
+    uint8_t aPos = a.readPin() == io::GPIO::State::HIGH;
+    uint8_t bPos = b.readPin() == io::GPIO::State::HIGH;
+    // Calculating and returning the position.
+    // Position is in graycode, not binary.
+    uint8_t comb = (bPos << 1) | aPos;
+    switch (comb & 0x03) {
+    case 0b00:
         return 0;
-    } else if (aPos == 1 && bPos == 0) {
+    case 0b01:
         return 1;
-    } else if (aPos == 1 && bPos == 1) {
+    case 0b11:
         return 2;
-    } else if (aPos == 0 && bPos == 1) {
+    case 0b10:
         return 3;
     }
+    // This will never happen, the switch statement covers all possible values of comb
+    return 0;
 }
 
 bool Encoder::changePosition(int64_t change) {
