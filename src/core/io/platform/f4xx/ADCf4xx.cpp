@@ -63,7 +63,8 @@ constexpr uint32_t CHANNEL_SET(uint8_t adc1, uint8_t adc2, uint8_t adc3, uint32_
 
 bool ADCf4xx::timerInit = false;
 
-ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph), adcState(adcArray[getADCNum(adcPeriph)]), adcNum(getADCNum(adcPeriph)) {
+ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph)
+    : ADC(pin, adcPeriph), adcState(adcArray[getADCNum(adcPeriph)]), adcNum(getADCNum(adcPeriph)) {
     if (adcState.rank == MAX_CHANNELS) {
         log::LOGGER.log(log::Logger::LogLevel::WARNING, "ADC %d ALREADY HAS MAX PINS!!", (adcNum + 1));
         return;
