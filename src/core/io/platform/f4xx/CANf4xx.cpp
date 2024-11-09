@@ -13,21 +13,20 @@
 #include <core/utils/time.hpp>
 #include <core/utils/types/FixedQueue.hpp>
 
+namespace core::io {
 namespace {
 
 /**
  * Struct to hold the global pointers to the CAN F4 interfaces. This is necessary
  * for the interrupts to have a call back to the classes.
  */
-struct CANf4Global {
+struct {
     // Pointer to the CANf446xx interface
     core::io::CANf4xx* canInstance = nullptr;
 
     // Pointer to the CAN handler for HAL,
     CAN_HandleTypeDef* canHandler = nullptr;
-};
-
-struct CANf4Global globalCAN[2];
+} globalCAN[2];
 
 // Interrupt handler for CAN 1 or index 0 in the global CAN array
 extern "C" void CAN1_RX0_IRQHandler(void) {
@@ -66,25 +65,16 @@ extern "C" void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
     }
 
     // Check to see if a user defined IRQ has been provided
-    if (canInstance->triggerIRQ(message))
+    if (canInstance->triggerIRQ(message)) {
         return;
+    }
 
     canInstance->addCANMessage(message);
 }
 
 } // namespace
 
-namespace core::io {
-
-/**
- * Get the CAN ID that is associated with the given pin
- * combination. This information is pulled from the STM32F446xx
- * documentation with easier documentation on in CUBEMX
- *
- * @param sclPin The selected I2C clock pin
- * @return The port ID associated with the selected pins
- */
-static uint8_t getPortID(Pin txPin, Pin rxPin) {
+uint8_t CANf4xx::getPortID(Pin txPin, Pin rxPin) {
     uint8_t txPort = 0;
     uint8_t rxPort = 0;
 
@@ -167,17 +157,13 @@ CAN::CANStatus CANf4xx::connect(bool autoBusOff) {
     }
 
     // Configure the rest of the parameters.
-    halCAN.Init.Prescaler         = (HAL_RCC_GetHCLKFreq() / DEFAULT_BAUD / 20); // At 50MHz prescaler of 5
-    halCAN.Init.Mode              = mode;
-    halCAN.Init.SyncJumpWidth     = CAN_SJW_1TQ;
-    halCAN.Init.TimeSeg1          = CAN_BS1_8TQ;
-    halCAN.Init.TimeSeg2          = CAN_BS2_1TQ;
-    halCAN.Init.TimeTriggeredMode = DISABLE;
-    if (autoBusOff) {
-        halCAN.Init.AutoBusOff = ENABLE;
-    } else {
-        halCAN.Init.AutoBusOff = DISABLE;
-    }
+    halCAN.Init.Prescaler            = (HAL_RCC_GetHCLKFreq() / DEFAULT_BAUD / 20); // At 50MHz prescaler of 5
+    halCAN.Init.Mode                 = mode;
+    halCAN.Init.SyncJumpWidth        = CAN_SJW_1TQ;
+    halCAN.Init.TimeSeg1             = CAN_BS1_8TQ;
+    halCAN.Init.TimeSeg2             = CAN_BS2_1TQ;
+    halCAN.Init.TimeTriggeredMode    = DISABLE;
+    halCAN.Init.AutoBusOff           = autoBusOff ? ENABLE : DISABLE;
     halCAN.Init.AutoWakeUp           = DISABLE;
     halCAN.Init.AutoRetransmission   = DISABLE;
     halCAN.Init.ReceiveFifoLocked    = DISABLE;
@@ -220,10 +206,12 @@ CAN::CANStatus CANf4xx::transmit(CANMessage& message) {
     uint32_t mailbox = CAN_TX_MAILBOX0;
 
     // Set the message ID
-    if (message.isCANExtended())
+
+    if (message.isCANExtended()) {
         txHeader.ExtId = message.getId();
-    else
+    } else {
         txHeader.StdId = message.getId();
+    }
     txHeader.IDE                = message.isCANExtended() ? CAN_ID_EXT : CAN_ID_STD;
     txHeader.RTR                = CAN_RTR_DATA;
     txHeader.DLC                = message.getDataLength();
@@ -267,8 +255,9 @@ CAN::CANStatus CANf4xx::receive(CANMessage* message, bool blocking) {
     do {
         hasMessage = !messageQueue.isEmpty();
         // If the user does not want to wait for a message, return nullptr
-        if (!blocking && !hasMessage)
+        if (!blocking && !hasMessage) {
             return CANStatus::TIMEOUT;
+        }
         time::wait(1);
     } while (!hasMessage);
 
@@ -309,9 +298,9 @@ CAN::CANStatus CANf4xx::enableEmergencyFilter(uint32_t state) {
     CAN_FilterTypeDef emergencyFilter;
 
     if (halCAN.Instance == CAN1) {
-        emergencyFilter.FilterBank = 1;
+        emergencyFilter.FilterBank = CANf4xx::EMERGENCY_FILTER_BANK_INDEX;
     } else {
-        emergencyFilter.FilterBank = 1 + CANf4xx::SECOND_FILTER_BANK_INDEX;
+        emergencyFilter.FilterBank = CANf4xx::EMERGENCY_FILTER_BANK_INDEX + CANf4xx::SECOND_FILTER_BANK_INDEX;
     }
 
     emergencyFilter.FilterIdHigh     = 0x1000; // only 0001 (emergency code) allowed
@@ -332,15 +321,18 @@ CAN::CANStatus CANf4xx::enableEmergencyFilter(uint32_t state) {
 }
 
 void CANf4xx::addCANMessage(CANMessage& message) {
-    if (messageQueue.canInsert())
+    if (messageQueue.canInsert()) {
         messageQueue.append(message);
+    }
 }
 
 bool CANf4xx::triggerIRQ(CANMessage& message) {
-    if (handler == nullptr)
-        return false;
-    handler(message, priv);
-    return true;
+    if (handler != nullptr) {
+        handler(message, priv);
+        return true;
+    }
+
+    return false;
 }
 
 } // namespace core::io

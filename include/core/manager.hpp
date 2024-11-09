@@ -12,16 +12,16 @@
 #include <core/io/pin.hpp>
 
 #ifdef STM32F3xx
-    #define IWDG_SUPPORTED
-    #define RTC_SUPPORTED
-    #define MCU_SUPPORTED
     #define ADC_SUPPORTED
+    #define CAN_SUPPORTED
     #define GPIO_SUPPORTED
     #define I2C_SUPPORTED
+    #define IWDG_SUPPORTED
+    #define MCU_SUPPORTED
     #define PWM_SUPPORTED
-    #define UART_SUPPORTED
+    #define RTC_SUPPORTED
     #define SPI_SUPPORTED
-    #define CAN_SUPPORTED
+    #define UART_SUPPORTED
 
     #include <core/dev/MCUTimer.hpp>
     #include <core/dev/platform/f3xx/IWDGf3xx.hpp>

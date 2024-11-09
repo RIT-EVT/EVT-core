@@ -3,11 +3,14 @@
  * to be connected to a CAN network. Both interfaces can be connected to the same
  * network as a loop back with a CAN transceiver.
  */
+
+#include <stdint.h>
+#include <string>
+
 #include <core/io/CAN.hpp>
 #include <core/manager.hpp>
 #include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
-#include <stdint.h>
 
 namespace io   = core::io;
 namespace time = core::time;
@@ -17,28 +20,34 @@ namespace log  = core::log;
  * CAN 1 interrupt handler to print out received CAN messages.
  */
 void can1IRQHandler(io::CANMessage& message, void* priv) {
-    io::UART* uart = (io::UART*) priv;
-    uart->printf(
-        "[CAN1] Message received from %d with %d bytes containing: \r\n\t", message.getId(), message.getDataLength());
+    char messageString[50];
     uint8_t* message_payload = message.getPayload();
     for (int i = 0; i < message.getDataLength(); i++) {
-        uart->printf("0x%02X ", message_payload[i]);
+        snprintf(&messageString[i * 5], 6, "0x%02X ", message_payload[i]);
     }
-    uart->printf("\r\n\r\n");
+
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG,
+                    "[CAN1] Message received from %d with %d bytes containing: \r\n\t%s\r\n",
+                    message.getId(),
+                    message.getDataLength(),
+                    messageString);
 }
 
 /**
  * CAN 2 interrupt handler to print out received CAN messages.
  */
 void can2IRQHandler(io::CANMessage& message, void* priv) {
-    io::UART* uart = (io::UART*) priv;
-    uart->printf(
-        "[CAN2] Message received from %d with %d bytes containing: \r\n\t", message.getId(), message.getDataLength());
+    char messageString[50];
     uint8_t* message_payload = message.getPayload();
     for (int i = 0; i < message.getDataLength(); i++) {
-        uart->printf("0x%02X ", message_payload[i]);
+        snprintf(&messageString[i * 5], 6, "0x%02X ", message_payload[i]);
     }
-    uart->printf("\r\n\r\n");
+
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG,
+                    "[CAN2] Message received from %d with %d bytes containing: \r\n\t%s\r\n",
+                    message.getId(),
+                    message.getDataLength(),
+                    messageString);
 }
 
 int main() {
@@ -59,8 +68,8 @@ int main() {
     io::CAN& can2 = io::getCAN<io::Pin::PB_13, io::Pin::PB_12>();
 
     // Setup interrupt handlers
-    can1.addIRQHandler(can1IRQHandler, &uart);
-    can2.addIRQHandler(can2IRQHandler, &uart);
+    can1.addIRQHandler(can1IRQHandler, nullptr);
+    can2.addIRQHandler(can2IRQHandler, nullptr);
 
     uint8_t can1Count = 0;
     uint8_t can2Count = 0;

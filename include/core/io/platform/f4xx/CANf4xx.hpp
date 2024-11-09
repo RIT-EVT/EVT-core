@@ -17,8 +17,8 @@
 namespace core::io {
 
 /**
- * STMF4xx implementation of the CAN protocol. The STM32f4xx has an on
- * board CAN controller which adds additional features.
+ * STM32f4xx implementation of the CAN protocol. The STM32f4xx has an
+ * onboard CAN controller which adds additional features.
  *
  * 1. Ability to generate interrupts which allows users to add custom call
  * backs
@@ -92,10 +92,22 @@ public:
      */
     bool triggerIRQ(CANMessage& message);
 
+    static constexpr uint8_t EMERGENCY_FILTER_BANK_INDEX = 1;
+
     /** Second filter bank start index*/
     static constexpr uint8_t SECOND_FILTER_BANK_INDEX = 14;
 
 private:
+    /**
+     * Get the CAN ID that is associated with the given pin
+     * combination. This information is pulled from the STM32F446xx
+     * documentation with easier documentation on in CUBEMX
+     *
+     * @param sclPin The selected I2C clock pin
+     * @return The port ID associated with the selected pins
+     */
+    static uint8_t getPortID(Pin txPin, Pin rxPin);
+
     /** Instance of the HAL can interface */
     CAN_HandleTypeDef halCAN;
     /** Queue which holds received CAN messages */
