@@ -4,10 +4,10 @@
 
 #include <HALf3/stm32f3xx.h>
 
-#include <core/utils/log.hpp>
 #include <HALf3/stm32f3xx_hal_adc.h>
 #include <HALf3/stm32f3xx_hal_adc_ex.h>
 #include <core/platform/f3xx/stm32f3xx.hpp>
+#include <core/utils/log.hpp>
 
 namespace {
 /// This is made as a global variable so that it is accessible in the interrupt.
