@@ -83,8 +83,11 @@ private:
         DMA_HandleTypeDef halDMA      = {0};
     };
 
+    // Array of all ADC peripheral states
     static ADC_State_t adcArray[NUM_ADCS];
+    // The ADC peripheral state of the current object
     ADC_State_t& adcState;
+    // The number ADC peripheral which is being used in the current object
     uint8_t adcNum;
 
     /**
