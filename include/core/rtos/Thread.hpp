@@ -6,7 +6,7 @@
 
 namespace core::rtos {
 
-//todo: refactor this so that there's a base class that has most of the thread methods.
+// todo: refactor this so that there's a base class that has most of the thread methods.
 
 /**
  * Class that wraps a ThreadX Thread. Each thread represents a relatively independent task that will operate
@@ -41,9 +41,9 @@ public:
      */
     Thread(char* name, void (*entryFunction)(T), T data, std::size_t stackSize, uint32_t priority,
            uint32_t preemptThreshold, uint32_t timeSlice, bool autoStart)
-        : txThread(), name(name), entryFunction(entryFunction), data(data), stackSize(stackSize), initialPriority(priority),
-          initialPreemptThreshold(preemptThreshold), initialTimeSlice(timeSlice), autoStart(autoStart) {
-    }
+        : txThread(), name(name), entryFunction(entryFunction), data(data), stackSize(stackSize),
+          initialPriority(priority), initialPreemptThreshold(preemptThreshold), initialTimeSlice(timeSlice),
+          autoStart(autoStart) {}
 
     /**
      * Thread Deconstructor

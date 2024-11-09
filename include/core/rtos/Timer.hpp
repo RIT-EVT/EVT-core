@@ -45,8 +45,12 @@ public:
     }
 
     TXError init(BytePoolBase& pool) override {
-        uint32_t errorCode = tx_timer_create(&txTimer, name, expirationFunction,
-                                             expirationInput, initialTicks, rescheduleTicks,
+        uint32_t errorCode = tx_timer_create(&txTimer,
+                                             name,
+                                             expirationFunction,
+                                             expirationInput,
+                                             initialTicks,
+                                             rescheduleTicks,
                                              (uint32_t) autoActivate);
         return static_cast<TXError>(errorCode);
     }

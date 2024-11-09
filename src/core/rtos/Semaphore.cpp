@@ -2,8 +2,7 @@
 
 namespace core::rtos {
 
-Semaphore::Semaphore(char* name, uint32_t initialCount)
-    : name(name), txSemaphore(), initialCount(initialCount) {}
+Semaphore::Semaphore(char* name, uint32_t initialCount) : name(name), txSemaphore(), initialCount(initialCount) {}
 
 TXError Semaphore::init(BytePoolBase& pool) {
     return static_cast<TXError>(tx_semaphore_create(&txSemaphore, name, initialCount));
