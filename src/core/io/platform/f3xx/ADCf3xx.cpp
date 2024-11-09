@@ -115,8 +115,7 @@ void ADCf3xx::initADC(uint8_t num_channels) {
 }
 
 void ADCf3xx::initDMA() {
-    // Ideally we would have a "DMA" class dedicated to DMA resource
-    // allocation.
+    // Ideally we would have a "DMA" class dedicated to DMA resource allocation.
     halDMA.Instance                 = DMA1_Channel1;
     halDMA.Init.Direction           = DMA_PERIPH_TO_MEMORY;
     halDMA.Init.PeriphInc           = DMA_PINC_DISABLE;
