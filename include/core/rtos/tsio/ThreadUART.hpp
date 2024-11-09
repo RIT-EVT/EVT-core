@@ -62,7 +62,7 @@ namespace core::rtos::tsio {
  * will lead to your code slowly shutting down for no clear reason.
  * There should be no need to modify ThreadUART's thread's method.
  */
-class ThreadUART : public Initializable, io::UART {
+class ThreadUART : public Initializable, public io::UART {
 public:
     /**
      * Constructor for thread safe uart class

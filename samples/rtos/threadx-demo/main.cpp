@@ -1,8 +1,13 @@
 /**
  * This sample shows off Threadx support from Evt-core.
  * This will make 4 threads and send data between them.
+ * The first thread Generates random numbers and sends them to a Queue.
+ * The second and third threads read those random numbers and interpret them in some way,
+ * raising certain flags of an eventFlags once they have recieved a message.
+ * The fourth thread looks for certain eventFlags being raised and outputs based on that.
  */
 
+/// core includes
 #include <core/dev/LED.hpp>
 #include <core/io/GPIO.hpp>
 #include <core/io/UART.hpp>
@@ -48,7 +53,7 @@ typedef struct counters {
 typedef struct controller_thread_args {
     rtos::Queue* queue;
     rtos::Semaphore* semaphore;
-    rtos::tsio::ThreadUART* uarttx;
+    rtos::tsio::ThreadUART* threadUART;
     counters_t* counters;
 } controller_thread_args_t;
 
@@ -58,7 +63,7 @@ typedef struct controller_thread_args {
 typedef struct worker_thread_args {
     rtos::Queue* queue;
     rtos::Semaphore* semaphore;
-    rtos::tsio::ThreadUART* uarttx;
+    rtos::tsio::ThreadUART* threadUART;
     rtos::EventFlags* eventFlags;
     uint8_t num;
     counters_t* counters;
@@ -75,11 +80,11 @@ int main() {
 
     // Setup UART
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
+    rtos::tsio::ThreadUART threadUART(uart);
 
-    log::LOGGER.setUART(&uart);
+    log::LOGGER.setUART(&threadUART);
     log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
 
-    rtos::tsio::ThreadUART uarttx(uart);
     rtos::Queue q1((char*) "queue", 16, 20);
     rtos::BytePool<TX_APP_MEM_POOL_SIZE> txPool((char*) "txBytePool");
     rtos::Semaphore semaphore((char*) "Semaphore 1", 1);
@@ -91,7 +96,7 @@ int main() {
     counters_t counters      = {3, 0, 0, counter_array, sum_array};
 
     // create the thread 0 argument struct
-    controller_thread_args_t controllerThreadArgs = {&q1, &semaphore, &uarttx, &counters};
+    controller_thread_args_t controllerThreadArgs = {&q1, &semaphore, &threadUART, &counters};
 
     // create thread 0
     rtos::Thread<controller_thread_args_t*> controllerThread((char*) "Controller Thread",
@@ -104,11 +109,11 @@ int main() {
                                                              true);
 
     // create the structs that holds the other thread arguments
-    worker_thread_args_t thread_1_args = {&q1, &semaphore, &uarttx, &eventFlags, 1, &counters};
+    worker_thread_args_t thread_1_args = {&q1, &semaphore, &threadUART, &eventFlags, 1, &counters};
 
-    worker_thread_args_t thread_2_args = {&q1, &semaphore, &uarttx, &eventFlags, 2, &counters};
+    worker_thread_args_t thread_2_args = {&q1, &semaphore, &threadUART, &eventFlags, 2, &counters};
 
-    worker_thread_args_t thread_3_args = {&q1, &semaphore, &uarttx, &eventFlags, 3, &counters};
+    worker_thread_args_t thread_3_args = {&q1, &semaphore, &threadUART, &eventFlags, 3, &counters};
 
     // create thread1
     rtos::Thread<worker_thread_args_t*> thread1(
@@ -130,7 +135,7 @@ int main() {
      * be manually called. Also, make sure the length of the array is correct in startKernel.
      */
     rtos::Initializable* arr[] = {
-        &controllerThread, &uarttx, &q1, &semaphore, &eventFlags, &thread1, &thread2, &eventFlagThread};
+        &controllerThread, &threadUART, &q1, &semaphore, &eventFlags, &thread1, &thread2, &eventFlagThread};
 
     // start the kernel (the kernel takes in the array of initializables and initializes them when the threadx kernel
     // starts)
@@ -143,7 +148,8 @@ int main() {
 // Function definitions
 
 /**
- * Controller Thread Entry Function, generates a random number then waits for the semaphore and writes stats to UART.
+ * Controller Thread Entry Function, generates a random number then waits for the semaphore and writes stats to UART
+ *
  * @param args the argument struct this thread needs.
  */
 void controllerThreadEntry(controller_thread_args_t* args) {
@@ -151,12 +157,10 @@ void controllerThreadEntry(controller_thread_args_t* args) {
     rtos::TXError queue_status;
     uint32_t num;
 
-    // IO::UART& uart = IO::getUART<IO::Pin::UART_TX, IO::Pin::UART_RX>(9600);
-    // uart.printf("test\n\r");
-    args->uarttx->printf("\n\rThread 0 Created\n\r");
+    args->threadUART->printf("\n\rThread 0 Created\n\r");
 
-    // this is to test that the uarttx handles long messages correctly
-    args->uarttx->printf(
+    // Test that the threadUART handles long messages correctly
+    args->threadUART->printf(
         "\n\rThis is a very long message wow it is so long that's so crazy how long this is wowee\n\r");
     while (1) {
         num = rand() % 25 + 1;
@@ -164,13 +168,13 @@ void controllerThreadEntry(controller_thread_args_t* args) {
         /* Send message to queue 0. */
         queue_status = args->queue->send(&num, rtos::TXWait::WAIT_FOREVER);
         if (queue_status != rtos::TXError::SUCCESS) {
-            args->uarttx->printf("Error on Thread 0 send to queue: %u", queue_status);
+            args->threadUART->printf("Error on Thread 0 send to queue: %u", queue_status);
         }
 
         /* Take semaphore when it is released. */
         args->semaphore->get(rtos::WAIT_FOREVER);
 
-        args->uarttx->printf("\n\rThread 0: %lu\n\r", num);
+        args->threadUART->printf("\n\rThread 0: %lu\n\r", num);
 
         if (queue_status == rtos::TXError::SUCCESS) {
             args->counters->count_array[0]++;
@@ -178,14 +182,14 @@ void controllerThreadEntry(controller_thread_args_t* args) {
         }
 
         if (args->counters->count_array[0] % 10 == 0) {
-            args->uarttx->printf("Global count: %lu\r\n"
+            args->threadUART->printf("Global count: %lu\r\n"
                                  "Global sum: %lu\r\n"
                                  "Global average: %lu\r\n",
                                  args->counters->global_count,
                                  args->counters->global_sum,
                                  args->counters->global_sum / args->counters->global_count);
             for (uint32_t i = 0; i < args->counters->numThreads; i++) {
-                args->uarttx->printf("Thread %lu count: %lu\r\n"
+                args->threadUART->printf("Thread %lu count: %lu\r\n"
                                      "Thread %lu sum: %lu\r\n"
                                      "Thread %lu average: %lu\r\n",
                                      i,
@@ -204,7 +208,8 @@ void controllerThreadEntry(controller_thread_args_t* args) {
 
 /**
  * Entry Function for Threads 1 and 2. Waits to get a message in the queue from the controller thread, then
- * increases its specific value in the counter struct and prints some stuff.
+ * increases its specific value in the counter struct and prints some stuff
+ *
  * @param args the argument struct this thread needs.
  */
 void workerThreadEntry(worker_thread_args_t* args) {
@@ -213,7 +218,7 @@ void workerThreadEntry(worker_thread_args_t* args) {
     rtos::TXError semaphore_status;
     rtos::TXError flag_status;
 
-    args->uarttx->printf("Thread %u Created\n\r", args->num);
+    args->threadUART->printf("Thread %u Created\n\r", args->num);
 
     while (1) {
         /* Retrieve a message from the queue. */
@@ -235,7 +240,7 @@ void workerThreadEntry(worker_thread_args_t* args) {
             args->counters->sum_array[args->num] += received_message;
         }
 
-        args->uarttx->printf("Thread %u received message: %lu\r\n"
+        args->threadUART->printf("Thread %u received message: %lu\r\n"
                              "Thread %u count: %lu\r\n"
                              "Thread %u sum: %lu\r\n"
                              "\r\n",
@@ -253,7 +258,8 @@ void workerThreadEntry(worker_thread_args_t* args) {
 
 /**
  * Event Flag Thread Entry Function. Literally just waits for the event flag 0x1 to be up and then prints that it was
- * set.
+ * set
+ *
  * @param args the arguments this thread needs.
  */
 void eventFlagThreadEntry(worker_thread_args_t* args) {
@@ -264,13 +270,13 @@ void eventFlagThreadEntry(worker_thread_args_t* args) {
     rtos::TXError flag_status;
     ULONG actual_flag;
 
-    args->uarttx->printf("Thread 3 Created\n\r\n\r");
+    args->threadUART->printf("Thread 3 Created\n\r\n\r");
 
     while (1) {
         flag_status = args->eventFlags->get(0x1, false, true, rtos::WAIT_FOREVER, &actual_flag);
 
         if (flag_status == rtos::SUCCESS) {
-            args->uarttx->printf("Thread 3 flag set\n\r\n\r");
+            args->threadUART->printf("Thread 3 flag set\n\r\n\r");
             led.toggle();
             rtos::sleep(S_TO_TICKS(1));
             led.toggle();
