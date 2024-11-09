@@ -17,7 +17,7 @@
 #include <core/utils/log.hpp>
 
 namespace {
-/// This is made as a global variable so that it is accessible in the interrupt.
+/// This is made as a static variable so that it is accessible in the interrupt.
 DMA_HandleTypeDef* dmaHandle[3];
 ADC_HandleTypeDef* adcHandle[3];
 
