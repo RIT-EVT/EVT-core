@@ -20,7 +20,7 @@ public:
     /**
      * Construct a Timer object, but does not initialize it. Must call init before using \n\n
      *
-     * NOTE: T (the template parameter) should only be 32 bytes. if it is any bigger things will break.
+     * NOTE: T (the template parameter) should only be 32 bits. if it is any bigger things will break.
      *
      * @param[in] name Name of this timer
      * @param[in] expirationFunction The function the timer will call when it expires
@@ -45,12 +45,8 @@ public:
     }
 
     TXError init(BytePoolBase& pool) override {
-        uint32_t errorCode = tx_timer_create(&txTimer,
-                                             name,
-                                             expirationFunction,
-                                             expirationInput,
-                                             initialTicks,
-                                             rescheduleTicks,
+        uint32_t errorCode = tx_timer_create(&txTimer, name, expirationFunction,
+                                             expirationInput, initialTicks, rescheduleTicks,
                                              (uint32_t) autoActivate);
         return static_cast<TXError>(errorCode);
     }

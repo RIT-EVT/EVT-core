@@ -1,10 +1,12 @@
-#ifndef EVT_RTOS_THREAD_
-#define EVT_RTOS_THREAD_
+#ifndef _EVT_RTOS_THREAD_
+#define _EVT_RTOS_THREAD_
 
 #include <core/rtos/Initializable.hpp>
 #include <cstdint>
 
 namespace core::rtos {
+
+//todo: refactor this so that there's a base class that has most of the thread methods.
 
 /**
  * Class that wraps a ThreadX Thread. Each thread represents a relatively independent task that will operate
@@ -39,8 +41,9 @@ public:
      */
     Thread(char* name, void (*entryFunction)(T), T data, std::size_t stackSize, uint32_t priority,
            uint32_t preemptThreshold, uint32_t timeSlice, bool autoStart)
-        : txThread(), name(name), entryFunction(entryFunction), data(data), stackSize(stackSize), priority(priority),
-          preemptThreshold(preemptThreshold), timeSlice(timeSlice), autoStart(autoStart) {}
+        : txThread(), name(name), entryFunction(entryFunction), data(data), stackSize(stackSize), initialPriority(priority),
+          initialPreemptThreshold(preemptThreshold), initialTimeSlice(timeSlice), autoStart(autoStart) {
+    }
 
     /**
      * Thread Deconstructor
@@ -53,6 +56,7 @@ public:
     /**
      * Create the threadx thread and possibly start it, depending on the autostart constructor parameter
      *
+     * @param[in] pool pointer to the pool to allocate the thread's stack in.
      * @return The first error found by the function or Success if there was no error
      */
     TXError init(BytePoolBase& pool) override {
@@ -70,9 +74,9 @@ public:
                                      (ULONG) data,
                                      stackStart,
                                      stackSize,
-                                     priority,
-                                     preemptThreshold,
-                                     timeSlice,
+                                     initialPriority,
+                                     initialPreemptThreshold,
+                                     initialTimeSlice,
                                      autoStart ? TX_AUTO_START : TX_DONT_START);
         return static_cast<TXError>(errorCode);
     }
@@ -267,13 +271,13 @@ private:
     std::size_t stackSize;
 
     /** The priority rating of this thread */
-    uint32_t priority;
+    uint32_t initialPriority;
 
     /** The preemption rating of this thread */
-    uint32_t preemptThreshold;
+    uint32_t initialPreemptThreshold;
 
     /** The time slice of this thread */
-    uint32_t timeSlice;
+    uint32_t initialTimeSlice;
 
     /** Whether this thread will start when initialized or not */
     bool autoStart;
@@ -281,4 +285,4 @@ private:
 
 } // namespace core::rtos
 
-#endif // EVT_RTOS_THREAD_
+#endif // _EVT_RTOS_THREAD_
