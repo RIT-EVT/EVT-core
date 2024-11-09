@@ -29,7 +29,7 @@ TXError startKernel(Initializable* initList[], std::size_t length, BytePoolBase&
     initializableList = initList;
     initListLength    = length;
     mainThreadPool    = &pool;
-    //tx_kernel_enter calls tx_application_define, which initializes everything in initList.
+    // tx_kernel_enter calls tx_application_define, which initializes everything in initList.
     tx_kernel_enter();
     return SUCCESS;
 }

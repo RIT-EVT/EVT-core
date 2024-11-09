@@ -9,7 +9,7 @@ namespace log = core::log;
 namespace io  = core::io;
 namespace core::rtos::tsio {
 
-//empty namespace to isolate this entry function to this file only
+// empty namespace to isolate this entry function to this file only
 namespace {
 
 /**
@@ -26,15 +26,15 @@ namespace {
     }
 }
 
-}
+} // namespace
 
 ThreadUART::ThreadUART(io::UART& uart, std::size_t threadStackSize, uint32_t threadPriorityLevel,
-               uint32_t threadPreemptThreshold, uint32_t threadTimeSlice)
-    : UART(uart), copyUART(uart), queue((char*) "UARTTX Queue", THREADUART_QUEUE_MESSAGE_SIZE, THREADUART_QUEUE_NUM_MESSAGES),
+                       uint32_t threadPreemptThreshold, uint32_t threadTimeSlice)
+    : UART(uart), copyUART(uart),
+      queue((char*) "UARTTX Queue", THREADUART_QUEUE_MESSAGE_SIZE, THREADUART_QUEUE_NUM_MESSAGES),
       thread((char*) "UARTTX Thread", uartThreadEntryFunction, this, threadStackSize, threadPriorityLevel,
              threadPreemptThreshold, threadTimeSlice, true),
       readMutex((char*) "UARTTX Read Mutex", true) {}
-
 
 TXError ThreadUART::init(BytePoolBase& pool) {
     TXError status = queue.init(pool);
@@ -81,32 +81,31 @@ void ThreadUART::writeBytes(uint8_t* bytes, size_t size) {
     // split longer messages into 64 bit chunks.
     char temp[64];
     size_t i = 0;
-    //send all the chunks except the last message (which might be less than 64 bytes)
+    // send all the chunks except the last message (which might be less than 64 bytes)
     if (size > 64) {
-        size_t max = size-64;
+        size_t max = size - 64;
         for (i = 0; i < max; i += 64) {
-            memcpy(temp, bytes+i, 64);
+            memcpy(temp, bytes + i, 64);
             queue.send(temp, WAIT_FOREVER);
         }
     }
-    //send the last amount of bytes
-    size_t remaining_bytes = size-i;
+    // send the last amount of bytes
+    size_t remaining_bytes = size - i;
     if (remaining_bytes > 0) {
-        //clear temp (just to be safe)
+        // clear temp (just to be safe)
         memset(temp, 0, 64);
-        //copy last message into temp
-        memcpy(temp, bytes+i, remaining_bytes);
+        // copy last message into temp
+        memcpy(temp, bytes + i, remaining_bytes);
         queue.send(temp, WAIT_FOREVER);
     }
 }
-
 
 void ThreadUART::write(uint8_t byte) {
     putc(static_cast<uint8_t>(byte));
 }
 
 void ThreadUART::sendFirstQueueMessage() {
-    char buffer[64]; // Buffer array to hold the message
+    char buffer[64];                     // Buffer array to hold the message
     queue.receive(buffer, WAIT_FOREVER); // Receives the message and assigns it to the buffer variable
     copyUART.writeBytes((uint8_t*) (buffer), strlen(buffer));
 }
