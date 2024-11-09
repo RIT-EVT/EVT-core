@@ -115,9 +115,6 @@ void ADCf3xx::initADC(uint8_t num_channels) {
 }
 
 void ADCf3xx::initDMA() {
-    // HAL_ADC_Stop(&halADC);
-
-    // TODO: Add some way of selecting the next available DMA channel
     // Ideally we would have a "DMA" class dedicated to DMA resource
     // allocation.
     halDMA.Instance                 = DMA1_Channel1;
