@@ -39,6 +39,7 @@ extern "C" void DMA2_Stream2_IRQHandler(void) {
 
 /**
  * This function handles DMA2 stream1 global interrupt. (For ADC 3)
+ * This is correct, stream 1 for ADC 3. STM is odd and makes things confusing
  */
 extern "C" void DMA2_Stream1_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle[2]);
@@ -51,9 +52,9 @@ constexpr uint8_t ADC1_SLOT = 0;
 constexpr uint8_t ADC2_SLOT = 1;
 constexpr uint8_t ADC3_SLOT = 2;
 
-#define ADC1SHIFT 5
-#define ADC2SHIFT 6
-#define ADC3SHIFT 7
+constexpr uint8_t ADC1SHIFT = 5;
+constexpr uint8_t ADC2SHIFT = 6;
+constexpr uint8_t ADC3SHIFT = 7;
 
 // Combines the channel memory value with the ADC peripherals it supports into one uint32_t
 constexpr uint32_t CHANNEL_SET(uint8_t adc1, uint8_t adc2, uint8_t adc3, uint32_t ch) {
@@ -62,12 +63,11 @@ constexpr uint32_t CHANNEL_SET(uint8_t adc1, uint8_t adc2, uint8_t adc3, uint32_
 
 bool ADCf4xx::timerInit = false;
 
-ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
+ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph), adcState(adcArray[getADCNum()]) {
     // Get adc state being updated
     adcNum   = getADCNum();
-    adcState = &adcArray[adcNum];
 
-    if (adcState->rank == MAX_CHANNELS) {
+    if (adcState.rank == MAX_CHANNELS) {
         log::LOGGER.log(log::Logger::LogLevel::WARNING, "ADC %d ALREADY HAS MAX PINS!!", (adcNum + 1));
         return;
     }
@@ -77,17 +77,17 @@ ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
         timerInit = false;
     }
 
-    if (adcState->isADCInit) {
-        HAL_ADC_Stop_DMA(&adcState->halADC);
-        HAL_DMA_DeInit(&adcState->halDMA);
+    if (adcState.isADCInit) {
+        HAL_ADC_Stop_DMA(&adcState.halADC);
+        HAL_DMA_DeInit(&adcState.halDMA);
     } else {
         __HAL_RCC_DMA2_CLK_ENABLE();
-        adcState->isADCInit = true;
+        adcState.isADCInit = true;
     }
 
     initDMA();
-    initADC(adcState->rank);
-    addChannel(adcState->rank);
+    initADC(adcState.rank);
+    addChannel(adcState.rank);
 
     dmaHandle[adcNum] = &this->adcArray[adcNum].halDMA;
     adcHandle[adcNum] = &this->adcArray[adcNum].halADC;
@@ -99,8 +99,8 @@ ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
         timerInit = true;
     }
 
-    HAL_ADC_Start_DMA(&adcState->halADC, reinterpret_cast<uint32_t*>(&adcState->buffer[0]), adcState->rank);
-    adcState->rank++;
+    HAL_ADC_Start_DMA(&adcState.halADC, reinterpret_cast<uint32_t*>(&adcState.buffer[0]), adcState.rank);
+    adcState.rank++;
 }
 
 float ADCf4xx::read() {
@@ -110,11 +110,11 @@ float ADCf4xx::read() {
 
 uint32_t ADCf4xx::readRaw() {
     uint8_t channelNum = 0;
-    while (adcState->channels[channelNum] != pin) {
+    while (adcState.channels[channelNum] != pin) {
         channelNum++;
     }
 
-    return adcState->buffer[channelNum];
+    return adcState.buffer[channelNum];
 }
 
 float ADCf4xx::readPercentage() {
@@ -126,7 +126,7 @@ void ADCf4xx::initADC(uint8_t num_channels) {
     /** Configure the global features of the ADC (Clock, Resolution, Data
      * Alignment and number of conversion)
      */
-    ADC_HandleTypeDef* halADC = &adcState->halADC;
+    ADC_HandleTypeDef* halADC = &adcState.halADC;
     // Set instance to the ADC peripheral being using
     halADC->Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV2;
     halADC->Init.Resolution            = ADC_RESOLUTION_12B;
@@ -161,7 +161,7 @@ void ADCf4xx::initADC(uint8_t num_channels) {
 }
 
 void ADCf4xx::initDMA() {
-    DMA_HandleTypeDef* dma = &adcState->halDMA;
+    DMA_HandleTypeDef* dma = &adcState.halDMA;
     // Set DMA instance to proper config settings
     switch (adcNum) {
     case ADC1_SLOT:
@@ -211,7 +211,7 @@ void ADCf4xx::initDMA() {
         log::LOGGER.log(log::Logger::LogLevel::ERROR, "INVALID ADC NUMBER!!");
         return; // Should never get here
     }
-    __HAL_LINKDMA(&adcState->halADC, DMA_Handle, *dma);
+    __HAL_LINKDMA(&adcState.halADC, DMA_Handle, *dma);
 }
 
 void ADCf4xx::addChannel(uint8_t rank) {
@@ -286,18 +286,16 @@ void ADCf4xx::addChannel(uint8_t rank) {
         adcChannel.Channel = channel & 0x1F;
     } else {
         log::LOGGER.log(log::Logger::LogLevel::ERROR, "ADC %d DOES NOT SUPPORT PIN 0x%x!!", (adcNum + 1), pin);
-        // Causes HARD FAULT if pin does not support the ADC peripheral being used. THIS IS INTENTIONAL!
-        *((volatile int*) 0xFFFFFFFF) = 0; // This address is invalid
     }
 
     // Subtract 1 because rank starts at 1
-    adcState->channels[rank - 1] = pin;
+    adcState.channels[rank - 1] = pin;
 
     adcChannel.Rank         = rank;
     adcChannel.SamplingTime = ADC_SAMPLETIME_3CYCLES;
     adcChannel.Offset       = 0;
 
-    HAL_ADC_ConfigChannel(&adcState->halADC, &adcChannel);
+    HAL_ADC_ConfigChannel(&adcState.halADC, &adcChannel);
 }
 
 inline bool ADCf4xx::checkSupport(ADCPeriph periph, uint32_t channel) {
