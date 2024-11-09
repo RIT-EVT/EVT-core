@@ -63,7 +63,7 @@ constexpr uint32_t CHANNEL_SET(uint8_t adc1, uint8_t adc2, uint8_t adc3, uint32_
 
 bool ADCf4xx::timerInit = false;
 
-ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph), adcState(adcArray[getADCNum()]), adcNum(getADCNum()) {
+ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph), adcState(adcArray[getADCNum(adcPeriph)]), adcNum(getADCNum(adcPeriph)) {
     if (adcState.rank == MAX_CHANNELS) {
         log::LOGGER.log(log::Logger::LogLevel::WARNING, "ADC %d ALREADY HAS MAX PINS!!", (adcNum + 1));
         return;
@@ -91,7 +91,7 @@ ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph), adcState(a
 
     if (!timerInit) {
         __HAL_RCC_TIM8_CLK_ENABLE();
-        InitTimer();
+        initTimer();
         HAL_TIM_Base_Start(&htim8); // Start Timer8 (Trigger Source For ADC's)
         timerInit = true;
     }
@@ -307,8 +307,8 @@ inline bool ADCf4xx::checkSupport(ADCPeriph periph, uint32_t channel) {
     }
 }
 
-inline uint8_t ADCf4xx::getADCNum() {
-    switch (adcPeriph) {
+inline uint8_t ADCf4xx::getADCNum(ADCPeriph periph) {
+    switch (periph) {
     case ADCPeriph::ONE:
         return ADC1_SLOT;
     case ADCPeriph::TWO:
@@ -318,7 +318,7 @@ inline uint8_t ADCf4xx::getADCNum() {
     }
 }
 
-void ADCf4xx::InitTimer() {
+void ADCf4xx::initTimer() {
     TIM_ClockConfigTypeDef sClockSourceConfig = {0};
     TIM_MasterConfigTypeDef sMasterConfig     = {0};
 

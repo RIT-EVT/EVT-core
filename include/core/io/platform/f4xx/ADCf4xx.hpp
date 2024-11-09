@@ -94,14 +94,14 @@ private:
      * @param channel the channel trying to be initialized
      * @return true if channel is supported by ADCPeriph, false otherwise
      */
-    inline bool checkSupport(ADCPeriph periph, uint32_t channel);
+    static inline bool checkSupport(ADCPeriph periph, uint32_t channel);
 
     /**
-     * Returns the ADC number that is in use. Depends on the ADCPeriph enum to check
+     * Returns the ADC number that is in use
      *
      * @return The adc number that is being used in this specific object
      */
-    inline uint8_t getADCNum();
+    static inline uint8_t getADCNum(ADCPeriph periph);
 
     /**
      * Initialize the HAL ADC handler. This should only have to be run once
@@ -122,9 +122,10 @@ private:
     void addChannel(uint8_t rank);
 
     /**
-     * Initializes Timer 8 to control ADC conversion frequency
+     * Initializes Timer 8 to send Update Events, which the ADC listens for to do a conversion
+     * aka controls ADC conversion frequency
      */
-    void InitTimer();
+    static void initTimer();
 };
 
 } // namespace core::io
