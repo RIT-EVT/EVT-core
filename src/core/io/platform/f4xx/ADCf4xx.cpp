@@ -132,7 +132,8 @@ void ADCf4xx::initADC(uint8_t num_channels) {
     halADC->Init.ContinuousConvMode    = DISABLE;
     halADC->Init.DiscontinuousConvMode = DISABLE;
     halADC->Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_RISING;
-    halADC->Init.ExternalTrigConv      = ADC_EXTERNALTRIGCONV_T8_TRGO; // Sets conversions to be done when timer 8 sends an Update Trigger
+    halADC->Init.ExternalTrigConv =
+        ADC_EXTERNALTRIGCONV_T8_TRGO; // Sets conversions to be done when timer 8 sends an Update Trigger
     halADC->Init.DataAlign             = ADC_DATAALIGN_RIGHT;
     halADC->Init.NbrOfConversion       = num_channels;
     halADC->Init.DMAContinuousRequests = ENABLE;
@@ -321,8 +322,8 @@ inline uint8_t ADCf4xx::getADCNum(ADCPeriph periph) {
 
 /*
  * This method initializes timer 8 with a Trigger Output of "Update Trigger", with a timer frequency of 1kHz.
- * The timer does not specifically tell the exact ADC to do a conversion, it just sends a general Update Trigger every cycle.
- * The ADC's are listening for this Update Trigger from timer 8, which is set in the ADC initialization.
+ * The timer does not specifically tell the exact ADC to do a conversion, it just sends a general Update Trigger every
+ * cycle. The ADC's are listening for this Update Trigger from timer 8, which is set in the ADC initialization.
  */
 void ADCf4xx::initTimer() {
     TIM_ClockConfigTypeDef sClockSourceConfig = {0};
