@@ -17,9 +17,9 @@ TXError EventFlags::set(uint32_t mask, bool clearNonMaskedFlags) {
 }
 
 TXError EventFlags::get(uint32_t mask, bool waitForAllFlags, bool clear, uint32_t waitOption, uint32_t* output) {
-    //ThreadX packs waitForAllFlags and clear into one uint32_t option where the first bit is whether to clear,
-    // and the second bit is whether to wait.
-    uint32_t option = ((uint32_t)waitForAllFlags << 1) | ((uint32_t)clear);
+    // ThreadX packs waitForAllFlags and clear into one uint32_t option where the first bit is whether to clear,
+    //  and the second bit is whether to wait.
+    uint32_t option = ((uint32_t) waitForAllFlags << 1) | ((uint32_t) clear);
     return static_cast<TXError>(tx_event_flags_get(&txEventFlagsGroup, mask, option, output, waitOption));
 }
 

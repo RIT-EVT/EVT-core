@@ -79,9 +79,9 @@ public:
      * @param[in] threadTimeSlice The default minimum timeslice of this thread
      */
     explicit ThreadUART(io::UART& uart, std::size_t threadStackSize = THREADUART_DEFAULT_STACK_SIZE,
-                    uint32_t threadPriorityLevel    = THREADUART_DEFAULT_PRIORITY_LEVEL,
-                    uint32_t threadPreemptThreshold = THREADUART_DEFAULT_PREEMPT_THRESHOLD,
-                    uint32_t threadTimeSlice        = THREADUART_DEFAULT_TIME_SLICE);
+                        uint32_t threadPriorityLevel    = THREADUART_DEFAULT_PRIORITY_LEVEL,
+                        uint32_t threadPreemptThreshold = THREADUART_DEFAULT_PREEMPT_THRESHOLD,
+                        uint32_t threadTimeSlice        = THREADUART_DEFAULT_TIME_SLICE);
 
     // Inherited Initializable methods
 
@@ -173,7 +173,6 @@ public:
     void sendFirstQueueMessage();
 
 private:
-
     /** Pointer to store this thread's entry function */
     void (*threadEntryFunction)(ThreadUART*);
 
