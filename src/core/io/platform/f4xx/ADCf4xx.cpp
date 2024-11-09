@@ -65,7 +65,7 @@ bool ADCf4xx::timerInit = false;
 
 ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph), adcState(adcArray[getADCNum()]) {
     // Get adc state being updated
-    adcNum   = getADCNum();
+    adcNum = getADCNum();
 
     if (adcState.rank == MAX_CHANNELS) {
         log::LOGGER.log(log::Logger::LogLevel::WARNING, "ADC %d ALREADY HAS MAX PINS!!", (adcNum + 1));
