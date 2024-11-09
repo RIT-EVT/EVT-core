@@ -84,7 +84,7 @@ private:
     };
 
     static ADC_State_t adcArray[NUM_ADCS];
-    ADC_State_t* adcState;
+    ADC_State_t& adcState;
     uint8_t adcNum;
 
     /**
@@ -92,7 +92,7 @@ private:
      *
      * @param periph the ADC peripheral being used
      * @param channel the channel trying to be initialized
-     * @return true if channel is supported by ADCPeriph
+     * @return true if channel is supported by ADCPeriph, false otherwise
      */
     inline bool checkSupport(ADCPeriph periph, uint32_t channel);
 
