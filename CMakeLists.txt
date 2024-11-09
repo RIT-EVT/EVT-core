@@ -129,7 +129,7 @@ if(USE_RTOS)
             src/core/rtos/Queue.cpp
             src/core/rtos/Semaphore.cpp
             src/core/rtos/Threadx.cpp
-            src/core/rtos/UARTTX.cpp
+            src/core/rtos/tsio/ThreadUART.cpp
     )
 endif()
 

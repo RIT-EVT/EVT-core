@@ -65,12 +65,12 @@ TXError Queue::getNameOfFirstSuspendedThread(char** threadName) {
     TX_THREAD* thread;
     uint32_t status = tx_queue_info_get(&txQueue, nullptr, nullptr, nullptr, &thread, nullptr, nullptr);
     // exit early if the call failed
-    if (status != SUCCESS)
+    if (status != SUCCESS) {
         return static_cast<TXError>(status);
+    }
 
     // read the name off the struct
     status = tx_thread_info_get(thread, threadName, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
-
     return static_cast<TXError>(status);
 }
 

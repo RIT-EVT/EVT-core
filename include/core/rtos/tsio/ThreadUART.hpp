@@ -1,5 +1,5 @@
-#ifndef EVT_TX_UART_H
-#define EVT_TX_UART_H
+#ifndef _EVT_THREAD_UART_
+#define _EVT_THREAD_UART_
 
 #include <HALf4/stm32f4xx.h>
 #include <core/io/UART.hpp>
@@ -14,32 +14,32 @@
 
 // All defines wrapped in ifndefs so we can set them externally.
 
-#ifndef UARTTX_QUEUE_MESSAGE_SIZE
-    #define UARTTX_QUEUE_MESSAGE_SIZE 16
-#endif // UARTTX_QUEUE_MESSAGE_SIZE
+#ifndef THREADUART_QUEUE_MESSAGE_SIZE
+    #define THREADUART_QUEUE_MESSAGE_SIZE 16
+#endif // THREADUART_QUEUE_MESSAGE_SIZE
 
-#ifndef UARTTX_QUEUE_NUM_MESSAGES
-    #define UARTTX_QUEUE_NUM_MESSAGES 32
-#endif // UARTTX_QUEUE_NUM_MESSAGES
+#ifndef THREADUART_QUEUE_NUM_MESSAGES
+    #define THREADUART_QUEUE_NUM_MESSAGES 32
+#endif // THREADUART_QUEUE_NUM_MESSAGES
 
-#ifndef UARTTX_DEFAULT_STACK_SIZE
-    #define UARTTX_DEFAULT_STACK_SIZE 1024
-#endif // UARTTX_DEFAULT_STACK_SIZE
+#ifndef THREADUART_DEFAULT_STACK_SIZE
+    #define THREADUART_DEFAULT_STACK_SIZE 1024
+#endif // THREADUART_DEFAULT_STACK_SIZE
 
-#ifndef UARTTX_DEFAULT_PRIORITY_LEVEL
-    #define UARTTX_DEFAULT_PRIORITY_LEVEL 1u
-#endif // UARTTX_DEFAULT_PRIORITY_LEVEL
+#ifndef THREADUART_DEFAULT_PRIORITY_LEVEL
+    #define THREADUART_DEFAULT_PRIORITY_LEVEL 1u
+#endif // THREADUART_DEFAULT_PRIORITY_LEVEL
 
-#ifndef UARTTX_DEFAULT_PREEMPT_THRESHOLD
-    #define UARTTX_DEFAULT_PREEMPT_THRESHOLD 0u
-#endif // UARTTX_DEFAULT_PREEMPT_THRESHOLD
+#ifndef THREADUART_DEFAULT_PREEMPT_THRESHOLD
+    #define THREADUART_DEFAULT_PREEMPT_THRESHOLD 0u
+#endif // THREADUART_DEFAULT_PREEMPT_THRESHOLD
 
-#ifndef UARTTX_DEFAULT_TIME_SLICE
-    #define UARTTX_DEFAULT_TIME_SLICE MS_TO_TICKS(500)
-#endif // UARTTX_DEFAULT_TIME_SLICE
+#ifndef THREADUART_DEFAULT_TIME_SLICE
+    #define THREADUART_DEFAULT_TIME_SLICE MS_TO_TICKS(500)
+#endif // THREADUART_DEFAULT_TIME_SLICE
 
 namespace io = core::io;
-namespace core::rtos::wrapper {
+namespace core::rtos::tsio {
 
 /**
  * Class that represents a threadsafe implementation of UART.
@@ -50,19 +50,19 @@ namespace core::rtos::wrapper {
  * the scheduler gives it priority to print the contents of the queue to UART.\n\n
  *
  *
- * NOTE: In some cases it may be possible that UARRTX never prints if there is
+ * NOTE: In some cases it may be possible that ThreadUART never prints if there is
  * always a higher priority thread able to run, so it should be given as high a
  * priority as possible without it interfering with the normal execution of threads.\n\n
  *
  *
- * NOTE: UARRTX's own thread must NEVER print to UARTTX. If it does this while
+ * NOTE: ThreadUART's own thread must NEVER print to ThreadUART. If it does this while
  * the queue is full, it will suspend on the queue and since it is the only
  * thread that can empty the queue, it will never stop suspending. If this occurs,
- * any threads that then try to write to UARRTX will also suspend forever, which
- * will lead to your code slowly shutting down for no discernable reason.
- * There is no need to modify UARTTX's thread's method, so don't. Don't do it.
+ * any threads that then try to write to ThreadUART will also suspend forever, which
+ * will lead to your code slowly shutting down for no clear reason.
+ * There should be no need to modify ThreadUART's thread's method.
  */
-class UARTTX : public Initializable, io::UART {
+class ThreadUART : public Initializable, io::UART {
 public:
     /**
      * Constructor for thread safe uart class
@@ -78,10 +78,10 @@ public:
      * while it is running is likely to just cause the UART output to break immediately.
      * @param[in] threadTimeSlice The default minimum timeslice of this thread
      */
-    explicit UARTTX(io::UART& uart, std::size_t threadStackSize = UARTTX_DEFAULT_STACK_SIZE,
-                    uint32_t threadPriorityLevel    = UARTTX_DEFAULT_PRIORITY_LEVEL,
-                    uint32_t threadPreemptThreshold = UARTTX_DEFAULT_PREEMPT_THRESHOLD,
-                    uint32_t threadTimeSlice        = UARTTX_DEFAULT_TIME_SLICE);
+    explicit ThreadUART(io::UART& uart, std::size_t threadStackSize = THREADUART_DEFAULT_STACK_SIZE,
+                    uint32_t threadPriorityLevel    = THREADUART_DEFAULT_PRIORITY_LEVEL,
+                    uint32_t threadPreemptThreshold = THREADUART_DEFAULT_PREEMPT_THRESHOLD,
+                    uint32_t threadTimeSlice        = THREADUART_DEFAULT_TIME_SLICE);
 
     // Inherited Initializable methods
 
@@ -108,10 +108,33 @@ public:
 
     void readBytes(uint8_t* bytes, size_t size) override;
 
+    /**
+     * Copies the given string to the Queue of messages to be sent to UART,
+     * splitting it into multiple Queue messages if the string is too long
+     * (each of the messages will be 64 bytes)
+     *
+     * @param[in] s A pointer to the string we are sending to the Queue
+     */
+    void puts(const char* s);
+
+    void putc(char c) override;
+
+    /**
+     * Copies the given byte array to the Queue of messages to be sent to UART,
+     * splitting it into multiple Queue messages if the string is too long
+     * (each of the messages will be 64 bytes).
+     *
+     * @param[in] bytes pointer to the byte array we are sending to the Queue
+     * @param[in] size size of the byte array
+     */
+    void writeBytes(uint8_t* bytes, size_t size) override;
+
+    void write(uint8_t byte) override;
+
     // UARTTX Queue Informational Methods
 
     /**
-     * Retrieve the number of enqueued messages in this UARTTX's Queue
+     * Retrieve the number of enqueued messages in this ThreadUART's Queue
      *
      * @param[out] numEnqueuedMessages A pointer to store the number of enqueued messages in
      * @return The first error found by the function or Success if there was no error
@@ -119,7 +142,7 @@ public:
     TXError getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages);
 
     /**
-     * Retrieve the number of more messages this UARTTX's Queue can fit
+     * Retrieve the number of more messages this ThreadUART's Queue can fit
      *
      * @param[out] numAvailableMessages A pointer to store the number of additional messages that the queue can fit
      * @return The first error found by the function or Success if there was no error
@@ -127,7 +150,7 @@ public:
     TXError getAvailableQueueStorage(uint32_t* numAvailableMessages);
 
     /**
-     * Retrieve the name of the first thread suspended on sending a message to this UARTTX
+     * Retrieve the name of the first thread suspended on sending a message to this ThreadUART
      *
      * @param[out] threadName A pointer to a place to store the name of the first suspended thread
      * @return The first error found by the function or Success if there was no error
@@ -135,7 +158,7 @@ public:
     TXError getNameOfFirstSuspendedThread(char** threadName);
 
     /**
-     * Retrieve the number of threads that are suspended on this UARTTX
+     * Retrieve the number of threads that are suspended on this ThreadUART
      *
      * @param[out] numSuspendedThreads A pointer to a place to store the number of suspended threads
      * @return The first error found by the function or Success if there was no error
@@ -144,31 +167,15 @@ public:
 
     // must be public so the static method can call it
     /**
-     * Reads from the queue and actually sends it to UART. Called by the UARTTX Thread's entry function.
+     * Reads the first message from the queue and sends it to UART. Called by the ThreadUART Thread's entry function.
      * Do not call this anywhere else.
      */
-    void readQueuart();
+    void sendFirstQueueMessage();
 
 private:
-    void putc(char c) override;
-
-    void puts(const char* s) override;
-
-    void write(uint8_t byte) override;
-
-    void writeBytes(uint8_t* bytes, size_t size) override;
-
-    /**
-     * Adds the given string to the Queue of messages to be sent to UART,
-     * splitting it into multiple Queue messages if the string is too long
-     * (each of the messages will be 16 words)
-     *
-     * @param[in] buffer A pointer to the string we are sending to the Queue
-     */
-    void addQueuart(char* buffer);
 
     /** Pointer to store this thread's entry function */
-    void (*threadEntryFunction)(UARTTX*);
+    void (*threadEntryFunction)(ThreadUART*);
 
     /** UART object */
     io::UART& copyUART;
@@ -180,12 +187,12 @@ private:
     Queue queue;
 
     /** Thread that empties the queue and prints it's contents to uart */
-    Thread<UARTTX*> thread;
+    Thread<ThreadUART*> thread;
 
     /** Mutex that makes sure only one thread reads from UART at a time */
     Mutex readMutex;
 };
 
-} // namespace core::rtos::wrapper
+} // namespace core::rtos::tsio
 
-#endif // EVT_TX_UART_H
+#endif // _EVT_THREAD_UART_

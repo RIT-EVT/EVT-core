@@ -8,9 +8,8 @@ namespace core::rtos {
 
 namespace {
 Initializable** initializableList;
-std::size_t initListLength;
+size_t initListLength;
 BytePoolBase* mainThreadPool;
-} // namespace
 
 TXError init(Initializable* initList[], std::size_t length, BytePoolBase& pool) {
     TXError errorCode = pool.init();
@@ -24,10 +23,13 @@ extern "C" void tx_application_define(void* first_unused_memory) {
     init(initializableList, initListLength, *mainThreadPool);
 }
 
+} // namespace
+
 TXError startKernel(Initializable* initList[], std::size_t length, BytePoolBase& pool) {
     initializableList = initList;
     initListLength    = length;
     mainThreadPool    = &pool;
+    //tx_kernel_enter calls tx_application_define, which initializes everything in initList.
     tx_kernel_enter();
     return SUCCESS;
 }

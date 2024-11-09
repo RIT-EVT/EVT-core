@@ -17,7 +17,7 @@
 #include <core/rtos/Queue.hpp>
 #include <core/rtos/Semaphore.hpp>
 #include <core/rtos/Thread.hpp>
-#include <core/rtos/UARTTX.hpp>
+#include <core/rtos/tsio/ThreadUART.hpp>
 
 /// Namespaces
 namespace io   = core::io;
@@ -48,7 +48,7 @@ typedef struct counters {
 typedef struct controller_thread_args {
     rtos::Queue* queue;
     rtos::Semaphore* semaphore;
-    rtos::wrapper::UARTTX* uarttx;
+    rtos::tsio::ThreadUART* uarttx;
     counters_t* counters;
 } controller_thread_args_t;
 
@@ -58,7 +58,7 @@ typedef struct controller_thread_args {
 typedef struct worker_thread_args {
     rtos::Queue* queue;
     rtos::Semaphore* semaphore;
-    rtos::wrapper::UARTTX* uarttx;
+    rtos::tsio::ThreadUART* uarttx;
     rtos::EventFlags* eventFlags;
     uint8_t num;
     counters_t* counters;
@@ -79,7 +79,7 @@ int main() {
     log::LOGGER.setUART(&uart);
     log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
 
-    rtos::wrapper::UARTTX uarttx(uart);
+    rtos::tsio::ThreadUART uarttx(uart);
     rtos::Queue q1((char*) "queue", 16, 20);
     rtos::BytePool<TX_APP_MEM_POOL_SIZE> txPool((char*) "txBytePool");
     rtos::Semaphore semaphore((char*) "Semaphore 1", 1);
