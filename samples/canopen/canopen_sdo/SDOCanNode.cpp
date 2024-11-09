@@ -21,7 +21,7 @@ void SDOCanNode::SDOTransfer(CO_NODE node) {
 
     } else {
         /* Unable to start the SDO transfer */
-        log::LOGGER.log(log::Logger::LogLevel::WARNING, "Transfer Error");
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Transfer Error");
 
     }
 }
@@ -44,7 +44,7 @@ void SDOCanNode::SDOReceive(CO_NODE node) {
 
     } else {
         /* Unable to start the SDO transfer */
-        log::LOGGER.log(log::Logger::LogLevel::WARNING, "Receive Error");
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Receive Error");
 
     }
 }
@@ -82,11 +82,11 @@ void AppCSdoFinishCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
     if (code == 0) {
         /* read data is available in 'readValue' */
 //        sampleDataB = (sampleDataArray[0] << 8) | sampleDataArray[1];
-        log::LOGGER.log(log::Logger::LogLevel::WARNING, "Value transferred");
+        log::LOGGER.log(log::Logger::LogLevel::INFO, "Value transferred");
     }
     else {
         /* a timeout or abort is detected during SDO transfer  */
-        log::LOGGER.log(log::Logger::LogLevel::WARNING, "SDO callback don goofed 0x%x", code);
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "SDO callback don goofed 0x%x", code);
     }
 
 }
