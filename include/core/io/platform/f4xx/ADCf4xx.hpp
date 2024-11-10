@@ -83,6 +83,21 @@ private:
         DMA_HandleTypeDef halDMA      = {0};
     };
 
+    /**
+     * Bit packed struct to contain the channel along with the ADC peripherals the channel supports
+     *
+     * adc1: 1 bit. Support for ADC1 peripheral. 1 for supported, 0 for not supported.
+     * adc2: 1 bit. Support for ADC2 peripheral. 1 for supported, 0 for not supported.
+     * adc3: 1 bit. Support for ADC3 peripheral. 1 for supported, 0 for not supported.
+     * channel: 5 bits. The STM32 ADC channel value with said supported ADC peripherals
+     */
+    struct Channel_Support {
+        uint8_t adc1 : 1;
+        uint8_t adc2 : 1;
+        uint8_t adc3 : 1;
+        uint32_t channel : 5;
+    };
+
     // Array of all ADC peripheral states
     static ADC_State adcArray[NUM_ADCS];
     // The ADC peripheral state of the current object
@@ -94,17 +109,17 @@ private:
      * Check if the channel that is being initialized supports the ADC peripheral that it is being initialized on.
      *
      * @param periph the ADC peripheral being used
-     * @param channel the channel trying to be initialized
-     * @return true if channel is supported by ADCPeriph, false otherwise
+     * @param channelStruct the struct of the channel with supports to test
+     * @return true if channel is supported by the ADC peripheral, false otherwise
      */
-    static bool checkSupport(ADCPeriph periph, uint32_t channel);
+    static bool checkSupport(ADCPeriph periph, Channel_Support channelStruct);
 
     /**
      * Return the ADC number that is in use
      *
      * @return The adc number that is being used in this specific object
      */
-    static inline uint8_t getADCNum(ADCPeriph periph);
+    static uint8_t getADCNum(ADCPeriph periph);
 
     /**
      * Initialize the HAL ADC handler

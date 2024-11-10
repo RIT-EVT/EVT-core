@@ -216,73 +216,119 @@ void ADCf4xx::initDMA() {
 void ADCf4xx::addChannel(uint8_t rank) {
     GPIO_InitTypeDef gpioInit;
     uint8_t numOfPins = 1;
-    uint32_t channel;
     Pin pins[] = {pin};
 
     GPIOf4xx::gpioStateInit(&gpioInit, pins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;
-
-    // Combines the ADC channel with the ADC peripherals it supports, to avoid having multi-layered switch statements
+    Channel_Support channelStruct = {}; // Create struct and set all values to 0
+    // Combines the ADC channel with the ADC peripherals it supports into a struct, avoiding having multi-layered switch statements
     switch (pin) {
     case Pin::PA_0:
-        channel = CHANNEL_SET(1, 1, 1, ADC_CHANNEL_0);
+        channelStruct.adc1 = 1;
+        channelStruct.adc2 = 1;
+        channelStruct.adc3 = 1;
+        channelStruct.channel = ADC_CHANNEL_0;
         break;
     case Pin::PA_1:
-        channel = CHANNEL_SET(1, 1, 1, ADC_CHANNEL_1);
+        channelStruct.adc1 = 1;
+        channelStruct.adc2 = 1;
+        channelStruct.adc3 = 1;
+        channelStruct.channel = ADC_CHANNEL_1;
         break;
     case Pin::PA_2:
-        channel = CHANNEL_SET(1, 1, 1, ADC_CHANNEL_2);
+        channelStruct.adc1 = 1;
+        channelStruct.adc2 = 1;
+        channelStruct.adc3 = 1;
+        channelStruct.channel = ADC_CHANNEL_2;
         break;
     case Pin::PA_3:
-        channel = CHANNEL_SET(1, 1, 1, ADC_CHANNEL_3);
+        channelStruct.adc1 = 1;
+        channelStruct.adc2 = 1;
+        channelStruct.adc3 = 1;
+        channelStruct.channel = ADC_CHANNEL_3;
         break;
     case Pin::PA_4:
-        channel = CHANNEL_SET(1, 1, 0, ADC_CHANNEL_4);
+        channelStruct.adc1 = 1;
+        channelStruct.adc2 = 1;
+        channelStruct.adc3 = 0;
+        channelStruct.channel = ADC_CHANNEL_4;
         break;
     case Pin::PA_5:
-        channel = CHANNEL_SET(1, 1, 0, ADC_CHANNEL_5);
+        channelStruct.adc1 = 1;
+        channelStruct.adc2 = 1;
+        channelStruct.adc3 = 0;
+        channelStruct.channel = ADC_CHANNEL_5;
         break;
     case Pin::PA_6:
-        channel = CHANNEL_SET(1, 1, 0, ADC_CHANNEL_6);
+        channelStruct.adc1 = 1;
+        channelStruct.adc2 = 1;
+        channelStruct.adc3 = 0;
+        channelStruct.channel = ADC_CHANNEL_6;
         break;
     case Pin::PA_7:
-        channel = CHANNEL_SET(1, 1, 0, ADC_CHANNEL_7);
+        channelStruct.adc1 = 1;
+        channelStruct.adc2 = 1;
+        channelStruct.adc3 = 0;
+        channelStruct.channel = ADC_CHANNEL_7;
         break;
     case Pin::PB_0:
-        channel = CHANNEL_SET(1, 1, 0, ADC_CHANNEL_8);
+        channelStruct.adc1 = 1;
+        channelStruct.adc2 = 1;
+        channelStruct.adc3 = 0;
+        channelStruct.channel = ADC_CHANNEL_8;
         break;
     case Pin::PB_1:
-        channel = CHANNEL_SET(1, 1, 0, ADC_CHANNEL_9);
+        channelStruct.adc1 = 1;
+        channelStruct.adc2 = 1;
+        channelStruct.adc3 = 0;
+        channelStruct.channel = ADC_CHANNEL_9;
         break;
     case Pin::PC_0:
-        channel = CHANNEL_SET(1, 1, 1, ADC_CHANNEL_10);
+        channelStruct.adc1 = 1;
+        channelStruct.adc2 = 1;
+        channelStruct.adc3 = 1;
+        channelStruct.channel = ADC_CHANNEL_10;
         break;
     case Pin::PC_1:
-        channel = CHANNEL_SET(1, 1, 1, ADC_CHANNEL_11);
+        channelStruct.adc1 = 1;
+        channelStruct.adc2 = 1;
+        channelStruct.adc3 = 1;
+        channelStruct.channel = ADC_CHANNEL_11;
         break;
     case Pin::PC_2:
-        channel = CHANNEL_SET(1, 1, 1, ADC_CHANNEL_12);
+        channelStruct.adc1 = 1;
+        channelStruct.adc2 = 1;
+        channelStruct.adc3 = 1;
+        channelStruct.channel = ADC_CHANNEL_12;
         break;
     case Pin::PC_3:
-        channel = CHANNEL_SET(1, 1, 1, ADC_CHANNEL_13);
+        channelStruct.adc1 = 1;
+        channelStruct.adc2 = 1;
+        channelStruct.adc3 = 1;
+        channelStruct.channel = ADC_CHANNEL_13;
         break;
     case Pin::PC_4:
-        channel = CHANNEL_SET(1, 1, 0, ADC_CHANNEL_14);
+        channelStruct.adc1 = 1;
+        channelStruct.adc2 = 1;
+        channelStruct.adc3 = 0;
+        channelStruct.channel = ADC_CHANNEL_14;
         break;
     case Pin::PC_5:
-        channel = CHANNEL_SET(1, 1, 0, ADC_CHANNEL_15);
+        channelStruct.adc1 = 1;
+        channelStruct.adc2 = 1;
+        channelStruct.adc3 = 0;
+        channelStruct.channel = ADC_CHANNEL_15;
         break;
     default:
-        channel = 0;
+        // Channel Struct is set to all 0 at initialization, so no need to be set all support bits to 0
         log::LOGGER.log(log::Logger::LogLevel::ERROR, "INVALID PIN 0x%x!!", pin);
         break; // Should never get here
     }
 
     // This checks if the pin being used supports the ADC being used
-    if (checkSupport(adcPeriph, channel)) {
-        // Masks channel back to proper value (Zero's out ADC information bits)
-        adcChannel.Channel = channel & 0x1F;
+    if (checkSupport(adcPeriph, channelStruct)) {
+        adcChannel.Channel = channelStruct.channel;
     } else {
         log::LOGGER.log(log::Logger::LogLevel::ERROR, "ADC %d DOES NOT SUPPORT PIN 0x%x!!", (adcNum + 1), pin);
     }
@@ -297,19 +343,19 @@ void ADCf4xx::addChannel(uint8_t rank) {
     HAL_ADC_ConfigChannel(&adcState.halADC, &adcChannel);
 }
 
-bool ADCf4xx::checkSupport(ADCPeriph periph, uint32_t channel) {
-    // Checks if the channel contains the bit signifying the proper ADC peripheral support
+bool ADCf4xx::checkSupport(ADCPeriph periph, Channel_Support channelStruct) {
+    // Checks if the channel struct contains the bit signifying the proper ADC peripheral support
     switch (periph) {
     case ADCPeriph::ONE:
-        return channel & (1 << ADC1SHIFT);
+        return (channelStruct.adc1 == 1);
     case ADCPeriph::TWO:
-        return channel & (1 << ADC2SHIFT);
+        return (channelStruct.adc2 == 1);
     case ADCPeriph::THREE:
-        return channel & (1 << ADC3SHIFT);
+        return (channelStruct.adc3 == 1);
     }
 }
 
-inline uint8_t ADCf4xx::getADCNum(ADCPeriph periph) {
+uint8_t ADCf4xx::getADCNum(ADCPeriph periph) {
     switch (periph) {
     case ADCPeriph::ONE:
         return ADC1_SLOT;
