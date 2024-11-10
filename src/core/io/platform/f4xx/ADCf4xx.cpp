@@ -52,15 +52,6 @@ constexpr uint8_t ADC1_SLOT = 0;
 constexpr uint8_t ADC2_SLOT = 1;
 constexpr uint8_t ADC3_SLOT = 2;
 
-constexpr uint8_t ADC1SHIFT = 5;
-constexpr uint8_t ADC2SHIFT = 6;
-constexpr uint8_t ADC3SHIFT = 7;
-
-// Combines the channel memory value with the ADC peripherals it supports into one uint32_t
-constexpr uint32_t CHANNEL_SET(uint8_t adc1, uint8_t adc2, uint8_t adc3, uint32_t ch) {
-    return (ch | (adc1 << ADC1SHIFT) | (adc2 << ADC2SHIFT) | (adc3 << ADC3SHIFT));
-}
-
 bool ADCf4xx::timerInit = false;
 
 ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph)
@@ -345,14 +336,14 @@ void ADCf4xx::addChannel(uint8_t rank) {
 }
 
 bool ADCf4xx::checkSupport(ADCPeriph periph, Channel_Support channelStruct) {
-    // Checks if the channel struct contains the bit signifying the proper ADC peripheral support
+    // In c++, non-zero values (like 1) are true, and 0 is false, so no comparison is needed.
     switch (periph) {
     case ADCPeriph::ONE:
-        return (channelStruct.adc1 == 1);
+        return channelStruct.adc1;
     case ADCPeriph::TWO:
-        return (channelStruct.adc2 == 1);
+        return channelStruct.adc2;
     case ADCPeriph::THREE:
-        return (channelStruct.adc3 == 1);
+        return channelStruct.adc3;
     }
 }
 

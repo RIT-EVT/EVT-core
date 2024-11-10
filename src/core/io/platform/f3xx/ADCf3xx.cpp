@@ -23,13 +23,6 @@ extern "C" void DMA1_Channel1_IRQHandler(void) {
 
 namespace core::io {
 
-constexpr uint8_t ADC1SHIFT = 5;
-
-// Combines the channel memory value with the ADC peripherals it supports into one uint32_t
-constexpr uint32_t CHANNEL_SET(uint8_t adc1, uint32_t ch) {
-    return (ch | (adc1 << ADC1SHIFT));
-}
-
 // Init static member variables
 ADC_HandleTypeDef ADCf3xx::halADC = {0};
 Pin ADCf3xx::channels[MAX_CHANNELS];
@@ -138,60 +131,75 @@ void ADCf3xx::addChannel(uint8_t rank) {
     GPIO_InitTypeDef gpioInit;
     Pin myPins[]      = {pin};
     uint8_t numOfPins = 1;
-    uint32_t channel;
 
     GPIOf3xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;
+    Channel_Support channelStruct = {};
 
     switch (pin) {
     case Pin::PA_0:
-        channel = CHANNEL_SET(1, ADC_CHANNEL_1);
+        channelStruct.adc1    = 1;
+        channelStruct.channel = ADC_CHANNEL_1;
         break;
     case Pin::PA_1:
-        channel = CHANNEL_SET(1, ADC_CHANNEL_2);
+        channelStruct.adc1    = 1;
+        channelStruct.channel = ADC_CHANNEL_2;
         break;
     case Pin::PA_2:
-        channel = CHANNEL_SET(1, ADC_CHANNEL_3);
+        channelStruct.adc1    = 1;
+        channelStruct.channel = ADC_CHANNEL_3;
         break;
     case Pin::PA_3:
-        channel = CHANNEL_SET(1, ADC_CHANNEL_4);
+        channelStruct.adc1    = 1;
+        channelStruct.channel = ADC_CHANNEL_4;
         break;
     case Pin::PA_4:
-        channel = CHANNEL_SET(1, ADC_CHANNEL_5);
+        channelStruct.adc1    = 1;
+        channelStruct.channel = ADC_CHANNEL_5;
         break;
     case Pin::PC_0:
-        channel = CHANNEL_SET(1, ADC_CHANNEL_6);
+        channelStruct.adc1    = 1;
+        channelStruct.channel = ADC_CHANNEL_6;
         break;
     case Pin::PC_1:
-        channel = CHANNEL_SET(1, ADC_CHANNEL_7);
+        channelStruct.adc1    = 1;
+        channelStruct.channel = ADC_CHANNEL_7;
         break;
     case Pin::PC_2:
-        channel = CHANNEL_SET(1, ADC_CHANNEL_8);
+        channelStruct.adc1    = 1;
+        channelStruct.channel = ADC_CHANNEL_8;
         break;
     case Pin::PC_3:
-        channel = CHANNEL_SET(1, ADC_CHANNEL_9);
+        channelStruct.adc1    = 1;
+        channelStruct.channel = ADC_CHANNEL_9;
         break;
     case Pin::PA_6:
-        channel = CHANNEL_SET(1, ADC_CHANNEL_10);
+        channelStruct.adc1    = 1;
+        channelStruct.channel = ADC_CHANNEL_10;
         break;
     case Pin::PB_0:
-        channel = CHANNEL_SET(1, ADC_CHANNEL_11);
+        channelStruct.adc1    = 1;
+        channelStruct.channel = ADC_CHANNEL_11;
         break;
     case Pin::PB_1:
-        channel = CHANNEL_SET(1, ADC_CHANNEL_12);
+        channelStruct.adc1    = 1;
+        channelStruct.channel = ADC_CHANNEL_12;
         break;
     case Pin::PB_13:
-        channel = CHANNEL_SET(1, ADC_CHANNEL_13);
+        channelStruct.adc1    = 1;
+        channelStruct.channel = ADC_CHANNEL_13;
         break;
     case Pin::PB_11:
-        channel = CHANNEL_SET(1, ADC_CHANNEL_14);
+        channelStruct.adc1    = 1;
+        channelStruct.channel = ADC_CHANNEL_14;
         break;
     case Pin::PA_7:
-        channel = CHANNEL_SET(1, ADC_CHANNEL_15);
+        channelStruct.adc1    = 1;
+        channelStruct.channel = ADC_CHANNEL_15;
         break;
     default:
-        channel = 0;
+        // Channel Struct is set to all 0 at initialization, so no need to be set all support bits to 0
         log::LOGGER.log(log::Logger::LogLevel::ERROR, "INVALID PIN 0x%x!!", pin);
         break; // Should never get here
     }
@@ -200,9 +208,8 @@ void ADCf3xx::addChannel(uint8_t rank) {
     channels[rank - 1] = pin;
 
     // This checks if the pin being used supports the ADC being used
-    if (checkSupport(adcPeriph, channel)) {
-        // Masks channel back to proper value (Zero's out ADC information bits)
-        adcChannel.Channel = channel & 0x1F;
+    if (checkSupport(adcPeriph, channelStruct)) {
+        adcChannel.Channel = channelStruct.channel;
     } else {
         log::LOGGER.log(log::Logger::LogLevel::ERROR, "DOES NOT SUPPORT PIN 0x%x!!", pin);
     }
@@ -217,11 +224,11 @@ void ADCf3xx::addChannel(uint8_t rank) {
     HAL_ADC_ConfigChannel(&halADC, &adcChannel);
 }
 
-bool ADCf3xx::checkSupport(ADCPeriph periph, uint32_t channel) {
-    // Checks if the channel contains the bit signifying the proper ADC peripheral support
+bool ADCf3xx::checkSupport(ADCPeriph periph, Channel_Support channelStruct) {
+    // In c++, non-zero values (like 1) are true, and 0 is false, so no comparison is needed.
     switch (periph) {
     case ADCPeriph::ONE:
-        return channel & (1 << ADC1SHIFT);
+        return channelStruct.adc1;
     }
 }
 
