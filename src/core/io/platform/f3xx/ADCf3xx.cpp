@@ -217,7 +217,7 @@ void ADCf3xx::addChannel(uint8_t rank) {
     HAL_ADC_ConfigChannel(&halADC, &adcChannel);
 }
 
-inline bool ADCf3xx::checkSupport(ADCPeriph periph, uint32_t channel) {
+bool ADCf3xx::checkSupport(ADCPeriph periph, uint32_t channel) {
     // Checks if the channel contains the bit signifying the proper ADC peripheral support
     switch (periph) {
     case ADCPeriph::ONE:

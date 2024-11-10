@@ -70,7 +70,7 @@ private:
      * @param channel the channel trying to be initialized
      * @return true if channel is supported by ADCPeriph, false otherwise
      */
-    static inline bool checkSupport(ADCPeriph periph, uint32_t channel);
+    static bool checkSupport(ADCPeriph periph, uint32_t channel);
 };
 
 } // namespace core::io
