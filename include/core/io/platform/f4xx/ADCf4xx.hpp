@@ -91,7 +91,7 @@ private:
     uint8_t adcNum;
 
     /**
-     * Checks if the channel that is being initialized supports the ADC peripheral that it is being initialized on.
+     * Check if the channel that is being initialized supports the ADC peripheral that it is being initialized on.
      *
      * @param periph the ADC peripheral being used
      * @param channel the channel trying to be initialized
@@ -100,24 +100,24 @@ private:
     static bool checkSupport(ADCPeriph periph, uint32_t channel);
 
     /**
-     * Returns the ADC number that is in use
+     * Return the ADC number that is in use
      *
      * @return The adc number that is being used in this specific object
      */
     static inline uint8_t getADCNum(ADCPeriph periph);
 
     /**
-     * Initialize the HAL ADC handler. This should only have to be run once
+     * Initialize the HAL ADC handler
      */
     void initADC(uint8_t num_channels);
 
     /**
-     * Initialize the HAL DMA for the ADC, should only have to be run once
+     * Initialize the HAL DMA for the ADC
      */
     void initDMA();
 
     /**
-     * Adds an ADC channel to the HAL ADC device.
+     * Add an ADC channel to the HAL ADC device.
      *
      * @param rank The "rank" which represents the order in which the channel
      *      was added to the ADC starting at 1
@@ -125,7 +125,7 @@ private:
     void addChannel(uint8_t rank);
 
     /**
-     * Initializes Timer 8 to send Update Events, which the ADC listens for to do a conversion
+     * Initialize Timer 8 to send Update Events, which the ADC listens for to do a conversion
      * aka controls ADC conversion frequency
      */
     static void initTimer();
