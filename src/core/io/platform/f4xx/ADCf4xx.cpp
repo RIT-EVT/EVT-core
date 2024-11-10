@@ -57,7 +57,7 @@ bool ADCf4xx::timerInit = false;
 ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph)
     : ADC(pin, adcPeriph), adcState(adcArray[getADCNum(adcPeriph)]), adcNum(getADCNum(adcPeriph)) {
     if (adcState.rank == MAX_CHANNELS) {
-        log::LOGGER.log(log::Logger::LogLevel::WARNING, "ADC %d ALREADY HAS MAX PINS!!", (adcNum + 1));
+        log::LOGGER.log(log::Logger::LogLevel::WARNING, "ADC %d ALREADY HAS MAX NUMBER OF CHANNELS!!", (adcNum + 1));
         return;
     }
 
@@ -123,8 +123,8 @@ void ADCf4xx::initADC(uint8_t num_channels) {
     halADC->Init.ContinuousConvMode    = DISABLE;
     halADC->Init.DiscontinuousConvMode = DISABLE;
     halADC->Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_RISING;
-    halADC->Init.ExternalTrigConv =
-        ADC_EXTERNALTRIGCONV_T8_TRGO; // Sets conversions to be done when timer 8 sends an Update Trigger
+    // Sets conversions to be done when timer 8 sends an Update Trigger
+    halADC->Init.ExternalTrigConv      = ADC_EXTERNALTRIGCONV_T8_TRGO;
     halADC->Init.DataAlign             = ADC_DATAALIGN_RIGHT;
     halADC->Init.NbrOfConversion       = num_channels;
     halADC->Init.DMAContinuousRequests = ENABLE;

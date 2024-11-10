@@ -38,6 +38,7 @@ ADCf3xx::ADCf3xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
 
     // Maximum number of ADC channels have already been added
     if (rank == MAX_CHANNELS) {
+        log::LOGGER.log(log::Logger::LogLevel::WARNING, "ADC1 ALREADY HAS MAX NUMBER OF CHANNELS!!");
         return;
     }
 
