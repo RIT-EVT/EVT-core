@@ -216,108 +216,109 @@ void ADCf4xx::initDMA() {
 void ADCf4xx::addChannel(uint8_t rank) {
     GPIO_InitTypeDef gpioInit;
     uint8_t numOfPins = 1;
-    Pin pins[] = {pin};
+    Pin pins[]        = {pin};
 
     GPIOf4xx::gpioStateInit(&gpioInit, pins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;
     Channel_Support channelStruct = {}; // Create struct and set all values to 0
-    // Combines the ADC channel with the ADC peripherals it supports into a struct, avoiding having multi-layered switch statements
+    // Combines the ADC channel with the ADC peripherals it supports into a struct, avoiding having multi-layered switch
+    // statements
     switch (pin) {
     case Pin::PA_0:
-        channelStruct.adc1 = 1;
-        channelStruct.adc2 = 1;
-        channelStruct.adc3 = 1;
+        channelStruct.adc1    = 1;
+        channelStruct.adc2    = 1;
+        channelStruct.adc3    = 1;
         channelStruct.channel = ADC_CHANNEL_0;
         break;
     case Pin::PA_1:
-        channelStruct.adc1 = 1;
-        channelStruct.adc2 = 1;
-        channelStruct.adc3 = 1;
+        channelStruct.adc1    = 1;
+        channelStruct.adc2    = 1;
+        channelStruct.adc3    = 1;
         channelStruct.channel = ADC_CHANNEL_1;
         break;
     case Pin::PA_2:
-        channelStruct.adc1 = 1;
-        channelStruct.adc2 = 1;
-        channelStruct.adc3 = 1;
+        channelStruct.adc1    = 1;
+        channelStruct.adc2    = 1;
+        channelStruct.adc3    = 1;
         channelStruct.channel = ADC_CHANNEL_2;
         break;
     case Pin::PA_3:
-        channelStruct.adc1 = 1;
-        channelStruct.adc2 = 1;
-        channelStruct.adc3 = 1;
+        channelStruct.adc1    = 1;
+        channelStruct.adc2    = 1;
+        channelStruct.adc3    = 1;
         channelStruct.channel = ADC_CHANNEL_3;
         break;
     case Pin::PA_4:
-        channelStruct.adc1 = 1;
-        channelStruct.adc2 = 1;
-        channelStruct.adc3 = 0;
+        channelStruct.adc1    = 1;
+        channelStruct.adc2    = 1;
+        channelStruct.adc3    = 0;
         channelStruct.channel = ADC_CHANNEL_4;
         break;
     case Pin::PA_5:
-        channelStruct.adc1 = 1;
-        channelStruct.adc2 = 1;
-        channelStruct.adc3 = 0;
+        channelStruct.adc1    = 1;
+        channelStruct.adc2    = 1;
+        channelStruct.adc3    = 0;
         channelStruct.channel = ADC_CHANNEL_5;
         break;
     case Pin::PA_6:
-        channelStruct.adc1 = 1;
-        channelStruct.adc2 = 1;
-        channelStruct.adc3 = 0;
+        channelStruct.adc1    = 1;
+        channelStruct.adc2    = 1;
+        channelStruct.adc3    = 0;
         channelStruct.channel = ADC_CHANNEL_6;
         break;
     case Pin::PA_7:
-        channelStruct.adc1 = 1;
-        channelStruct.adc2 = 1;
-        channelStruct.adc3 = 0;
+        channelStruct.adc1    = 1;
+        channelStruct.adc2    = 1;
+        channelStruct.adc3    = 0;
         channelStruct.channel = ADC_CHANNEL_7;
         break;
     case Pin::PB_0:
-        channelStruct.adc1 = 1;
-        channelStruct.adc2 = 1;
-        channelStruct.adc3 = 0;
+        channelStruct.adc1    = 1;
+        channelStruct.adc2    = 1;
+        channelStruct.adc3    = 0;
         channelStruct.channel = ADC_CHANNEL_8;
         break;
     case Pin::PB_1:
-        channelStruct.adc1 = 1;
-        channelStruct.adc2 = 1;
-        channelStruct.adc3 = 0;
+        channelStruct.adc1    = 1;
+        channelStruct.adc2    = 1;
+        channelStruct.adc3    = 0;
         channelStruct.channel = ADC_CHANNEL_9;
         break;
     case Pin::PC_0:
-        channelStruct.adc1 = 1;
-        channelStruct.adc2 = 1;
-        channelStruct.adc3 = 1;
+        channelStruct.adc1    = 1;
+        channelStruct.adc2    = 1;
+        channelStruct.adc3    = 1;
         channelStruct.channel = ADC_CHANNEL_10;
         break;
     case Pin::PC_1:
-        channelStruct.adc1 = 1;
-        channelStruct.adc2 = 1;
-        channelStruct.adc3 = 1;
+        channelStruct.adc1    = 1;
+        channelStruct.adc2    = 1;
+        channelStruct.adc3    = 1;
         channelStruct.channel = ADC_CHANNEL_11;
         break;
     case Pin::PC_2:
-        channelStruct.adc1 = 1;
-        channelStruct.adc2 = 1;
-        channelStruct.adc3 = 1;
+        channelStruct.adc1    = 1;
+        channelStruct.adc2    = 1;
+        channelStruct.adc3    = 1;
         channelStruct.channel = ADC_CHANNEL_12;
         break;
     case Pin::PC_3:
-        channelStruct.adc1 = 1;
-        channelStruct.adc2 = 1;
-        channelStruct.adc3 = 1;
+        channelStruct.adc1    = 1;
+        channelStruct.adc2    = 1;
+        channelStruct.adc3    = 1;
         channelStruct.channel = ADC_CHANNEL_13;
         break;
     case Pin::PC_4:
-        channelStruct.adc1 = 1;
-        channelStruct.adc2 = 1;
-        channelStruct.adc3 = 0;
+        channelStruct.adc1    = 1;
+        channelStruct.adc2    = 1;
+        channelStruct.adc3    = 0;
         channelStruct.channel = ADC_CHANNEL_14;
         break;
     case Pin::PC_5:
-        channelStruct.adc1 = 1;
-        channelStruct.adc2 = 1;
-        channelStruct.adc3 = 0;
+        channelStruct.adc1    = 1;
+        channelStruct.adc2    = 1;
+        channelStruct.adc3    = 0;
         channelStruct.channel = ADC_CHANNEL_15;
         break;
     default:
