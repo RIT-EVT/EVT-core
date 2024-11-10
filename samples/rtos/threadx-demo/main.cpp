@@ -183,21 +183,21 @@ void controllerThreadEntry(controller_thread_args_t* args) {
 
         if (args->counters->count_array[0] % 10 == 0) {
             args->threadUART->printf("Global count: %lu\r\n"
-                                 "Global sum: %lu\r\n"
-                                 "Global average: %lu\r\n",
-                                 args->counters->global_count,
-                                 args->counters->global_sum,
-                                 args->counters->global_sum / args->counters->global_count);
+                                     "Global sum: %lu\r\n"
+                                     "Global average: %lu\r\n",
+                                     args->counters->global_count,
+                                     args->counters->global_sum,
+                                     args->counters->global_sum / args->counters->global_count);
             for (uint32_t i = 0; i < args->counters->numThreads; i++) {
                 args->threadUART->printf("Thread %lu count: %lu\r\n"
-                                     "Thread %lu sum: %lu\r\n"
-                                     "Thread %lu average: %lu\r\n",
-                                     i,
-                                     args->counters->count_array[i],
-                                     i,
-                                     args->counters->sum_array[i],
-                                     i,
-                                     args->counters->sum_array[i] / args->counters->count_array[i]);
+                                         "Thread %lu sum: %lu\r\n"
+                                         "Thread %lu average: %lu\r\n",
+                                         i,
+                                         args->counters->count_array[i],
+                                         i,
+                                         args->counters->sum_array[i],
+                                         i,
+                                         args->counters->sum_array[i] / args->counters->count_array[i]);
             }
         }
 
@@ -241,15 +241,15 @@ void workerThreadEntry(worker_thread_args_t* args) {
         }
 
         args->threadUART->printf("Thread %u received message: %lu\r\n"
-                             "Thread %u count: %lu\r\n"
-                             "Thread %u sum: %lu\r\n"
-                             "\r\n",
-                             args->num,
-                             received_message,
-                             args->num,
-                             args->counters->count_array[args->num],
-                             args->num,
-                             args->counters->sum_array[args->num]);
+                                 "Thread %u count: %lu\r\n"
+                                 "Thread %u sum: %lu\r\n"
+                                 "\r\n",
+                                 args->num,
+                                 received_message,
+                                 args->num,
+                                 args->counters->count_array[args->num],
+                                 args->num,
+                                 args->counters->sum_array[args->num]);
 
         semaphore_status = args->semaphore->put();
         rtos::sleep(S_TO_TICKS(1));
