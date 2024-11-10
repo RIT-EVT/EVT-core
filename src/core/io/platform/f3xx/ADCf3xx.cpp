@@ -22,6 +22,7 @@ extern "C" void DMA1_Channel1_IRQHandler(void) {
 }
 
 namespace core::io {
+
 constexpr uint8_t ADC1SHIFT = 5;
 
 // Combines the channel memory value with the ADC peripherals it supports into one uint32_t

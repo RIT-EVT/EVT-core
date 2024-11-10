@@ -30,19 +30,19 @@ int main() {
     io::ADC& adc1 = io::getADC<io::Pin::PA_1, io::ADCPeriph::ONE>();
 
     while (1) {
-        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "--------------------\r\n");
+        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "--------------------");
         core::log::LOGGER.log(
-            core::log::Logger::LogLevel::INFO, "ADC0 : %d mV\r\n", static_cast<uint32_t>(adc0.read() * 1000));
+            core::log::Logger::LogLevel::INFO, "ADC0 : %d mV", static_cast<uint32_t>(adc0.read() * 1000));
         core::log::LOGGER.log(
-            core::log::Logger::LogLevel::INFO, "ADC0: %d%%\r\n", static_cast<uint32_t>(adc0.readPercentage() * 100));
-        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "ADC0 raw: %d\r\n\r\n", adc0.readRaw());
+            core::log::Logger::LogLevel::INFO, "ADC0: %d%%", static_cast<uint32_t>(adc0.readPercentage() * 100));
+        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "ADC0 raw: %d\r\n", adc0.readRaw());
 
         core::log::LOGGER.log(
-            core::log::Logger::LogLevel::INFO, "ADC1 : %d mV\r\n", static_cast<uint32_t>(adc1.read() * 1000));
+            core::log::Logger::LogLevel::INFO, "ADC1 : %d mV", static_cast<uint32_t>(adc1.read() * 1000));
         core::log::LOGGER.log(
-            core::log::Logger::LogLevel::INFO, "ADC1: %d%%\r\n", static_cast<uint32_t>(adc1.readPercentage() * 100));
-        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "ADC1 raw: %d\r\n\r\n", adc1.readRaw());
-        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "--------------------\r\n\r\n");
+            core::log::Logger::LogLevel::INFO, "ADC1: %d%%", static_cast<uint32_t>(adc1.readPercentage() * 100));
+        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "ADC1 raw: %d\r\n", adc1.readRaw());
+        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "--------------------\r\n");
         time::wait(500);
     }
 }

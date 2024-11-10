@@ -29,13 +29,13 @@ int main() {
     io::ADC& adc0 = io::getADC<io::Pin::PA_0, io::ADCPeriph::ONE>();
 
     while (1) {
+        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "--------------------");
+        core::log::LOGGER.log(
+            core::log::Logger::LogLevel::INFO, "ADC0 : %d mV", static_cast<uint32_t>(adc0.read() * 1000));
+        core::log::LOGGER.log(
+            core::log::Logger::LogLevel::INFO, "ADC0: %d%%", static_cast<uint32_t>(adc0.readPercentage() * 100));
+        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "ADC0 raw: %d\r\n", adc0.readRaw());
         core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "--------------------\r\n");
-        core::log::LOGGER.log(
-            core::log::Logger::LogLevel::INFO, "ADC0 : %d mV\r\n", static_cast<uint32_t>(adc0.read() * 1000));
-        core::log::LOGGER.log(
-            core::log::Logger::LogLevel::INFO, "ADC0: %d%%\r\n", static_cast<uint32_t>(adc0.readPercentage() * 100));
-        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "ADC0 raw: %d\r\n\r\n", adc0.readRaw());
-        core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "--------------------\r\n\r\n");
         time::wait(500);
     }
 }
