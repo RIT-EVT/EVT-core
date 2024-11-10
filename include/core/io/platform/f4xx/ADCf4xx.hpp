@@ -59,7 +59,7 @@ private:
      *           Each entry corresponds to a specific ADC channel.
      * halDMA: HAL handle for configuring and controlling DMA for the ADC.
      */
-    struct ADC_State_t {
+    struct ADC_State {
         ADC_HandleTypeDef halADC      = {0};
         uint8_t rank                  = 1;
         bool isADCInit                = false;
@@ -84,9 +84,9 @@ private:
     };
 
     // Array of all ADC peripheral states
-    static ADC_State_t adcArray[NUM_ADCS];
+    static ADC_State adcArray[NUM_ADCS];
     // The ADC peripheral state of the current object
-    ADC_State_t& adcState;
+    ADC_State& adcState;
     // The number ADC peripheral which is being used in the current object
     uint8_t adcNum;
 
