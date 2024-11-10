@@ -12,11 +12,11 @@ Mutex::~Mutex() {
     tx_mutex_delete(&txMutex);
 }
 
-TXError Mutex::acquire(uint32_t waitOption) {
+TXError Mutex::get(uint32_t waitOption) {
     return static_cast<TXError>(tx_mutex_get(&txMutex, waitOption));
 }
 
-TXError Mutex::release() {
+TXError Mutex::put() {
     return static_cast<TXError>(tx_mutex_put(&txMutex));
 }
 

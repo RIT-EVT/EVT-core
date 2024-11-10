@@ -39,14 +39,14 @@ public:
      * Use Enums::TXWait::WaitForever to wait forever
      * @return The first error found by the function or Success if there was no error
      */
-    TXError acquire(uint32_t waitOption);
+    TXError get(uint32_t waitOption);
 
     /**
      * Release control of the mutex, allowing other threads to acquire it
      *
      * @return The first error found by the function or Success if there was no error
      */
-    TXError release();
+    TXError put();
 
     /**
      * Prioritize the list of waiting threads, placing the highest priority waiting thread at the front of the list.
