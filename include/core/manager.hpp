@@ -298,6 +298,10 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
     static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin);
     return spi;
     #endif
+    #ifdef STM32F4xx
+    static SPIf4xx spi(CSPins, pinLength, sckPin, mosiPin);
+    return spi;
+    #endif
 }
 #endif
 
