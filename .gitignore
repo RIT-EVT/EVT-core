@@ -1,5 +1,5 @@
 # Build files
-build/
+build*/
 html/
 latex/
 compile_commands.json

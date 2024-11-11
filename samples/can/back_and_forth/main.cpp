@@ -52,13 +52,17 @@ int main() {
         return 1;
     }
 
+    uint8_t count = 0;
     while (true) {
         // Transmit every second
+        payload[7] = count;
+        transmit_message.setPayload(payload);
         result = can.transmit(transmit_message);
         if (result != io::CAN::CANStatus::OK) {
             uart.printf("Failed to transmit message\r\n");
             return 1;
         }
+        count++;
 
         time::wait(1000);
     }
