@@ -1,5 +1,3 @@
-
-
 #include <cstring>
 #include <stdint.h>
 
@@ -110,11 +108,12 @@ uint8_t CANf4xx::getPortID(Pin txPin, Pin rxPin) {
     }
 #endif
 
-    if (txPort == rxPort) {
-        return txPort;
+    if (txPort != rxPort) {
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Mismatched CAN interfaces! %d & %d", txPort, rxPort);
+        return 0;
     }
 
-    return 0;
+    return txPort;
 }
 
 CANf4xx::CANf4xx(Pin txPin, Pin rxPin, bool loopbackEnabled) : CAN(txPin, rxPin, loopbackEnabled) {

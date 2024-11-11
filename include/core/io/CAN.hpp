@@ -133,12 +133,12 @@ protected:
     Pin txPin;
     /** The CAN receive pin */
     Pin rxPin;
-    /** Function pointer to call for the interrupt handler */
-    void (*handler)(CANMessage&, void* priv);
-    /** Private data to pass into the IRQ handler */
-    void* priv;
     /** If CAN should operate in loop back mode */
     bool loopbackEnabled;
+    /** Function pointer to call for the interrupt handler */
+    void (*handler)(CANMessage&, void* priv);
+    /** Context to pass into the IRQ handler */
+    void* priv;
 };
 
 } // namespace core::io

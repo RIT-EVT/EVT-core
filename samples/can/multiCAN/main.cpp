@@ -1,7 +1,7 @@
 /**
  * Example of CAN communication using dual CAN interfaces. The two interfaces need
- * to be connected to a CAN network. Both interfaces can be connected to the same
- * network as a loop back with a CAN transceiver.
+ * to be connected to a CAN network. Both interfaces also can be connected to the
+ * same network as a loop back with a CAN transceiver. ONLY WORKS ON STM32F4xx!
  */
 
 #include <stdint.h>
@@ -80,22 +80,20 @@ int main() {
     io::CANMessage can1TransmitMessage(1, 8, &payload1[0], false);
     io::CANMessage can2TransmitMessage(2, 8, &payload2[0], false);
 
-    uart.printf("\r\nClock: %d\r\n", SystemCoreClock);
-
-    uart.printf("Starting CAN testing\r\n");
+    log::LOGGER.log(log::Logger::LogLevel::INFO, "Starting CAN testing\r\n");
 
     io::CAN::CANStatus result;
 
     // Attempt to join the CAN network.
     result = can1.connect();
     if (result != io::CAN::CANStatus::OK) {
-        uart.printf("[CAN1] Failed to connect to the CAN network\r\n");
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "[CAN1] Failed to connect to the CAN network\r\n");
         return 1;
     }
 
     result = can2.connect();
     if (result != io::CAN::CANStatus::OK) {
-        uart.printf("[CAN2] Failed to connect to the CAN network\r\n");
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "[CAN2] Failed to connect to the CAN network\r\n");
         return 1;
     }
 
@@ -110,13 +108,13 @@ int main() {
         // Send both messages on the two different buses.
         result = can1.transmit(can1TransmitMessage);
         if (result != io::CAN::CANStatus::OK) {
-            uart.printf("[CAN1] Failed to transmit message\r\n");
+            log::LOGGER.log(log::Logger::LogLevel::ERROR, "[CAN1] Failed to transmit message\r\n");
             return 1;
         }
 
         result = can2.transmit(can2TransmitMessage);
         if (result != io::CAN::CANStatus::OK) {
-            uart.printf("[CAN2] Failed to transmit message\r\n");
+            log::LOGGER.log(log::Logger::LogLevel::ERROR, "[CAN2] Failed to transmit message\r\n");
             return 1;
         }
 
