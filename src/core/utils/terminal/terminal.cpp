@@ -1,0 +1,73 @@
+/**
+ * 
+ */
+#include <core/io/UART.hpp>
+#include <core/io/pin.hpp>
+#include <core/manager.hpp>
+#include <terminal.hpp>
+#include <cstdio>
+
+namespace utils
+{
+    class Terminal
+    {
+        Terminal::Terminal(io::Uart& uart, utils::Menu menu, int baud) : baud(baud), menu(menu), uart(uart)
+        {
+            core::platform::init();
+
+            io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(baud);
+
+            uart.printf("Starting Terminal...")
+        }
+
+        void update(char* message)
+        {
+            for(int i = 0; i < 5; i ++)
+            {
+                uart.printf("\n")
+            }
+            uart.printf(message);
+        }
+
+        char*[10] recieve()
+        {
+            char buffer[100];
+            char* argN[10];
+            uart.gets(buffer, 100);
+            
+            int c = 0;
+            char hold[20];
+            h = 0;
+            for(int i = 0; i < 100; i ++)
+            {
+                if(buffer[i] = '\0')
+                {
+                    break;
+                }
+
+                if(c >= 10)
+                {
+                    uart.printf("ERROR TOO MANY ARGUMENTS");
+                    break;
+                }
+
+                if(buffer[i] != ' ')
+                {
+                    hold[h] = buffer[i];
+                    h ++;
+                }
+                else
+                {
+                    argN[c] = hold;
+                    hold[20] = {'','','','','','','','','','','','','','','','','','','',''};
+                    h = 0;
+                    c ++;
+                }
+                
+            }
+
+            return argN;
+
+        }
+    }
+}
