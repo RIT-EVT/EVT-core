@@ -57,15 +57,15 @@ public:
      *
      * @return CANStatus::OK if we successfully de-init the CAN interface
      */
-    CANStatus disconnect();
+    CANStatus disconnect() override;
 
-    CANStatus transmit(CANMessage& message);
+    CANStatus transmit(CANMessage& message) override;
 
-    CANStatus receive(CANMessage* message, bool blocking = false);
+    CANStatus receive(CANMessage* message, bool blocking = false) override;
 
-    CANStatus addCANFilter(uint16_t filterExplicitId, uint16_t filterMask, uint8_t filterBank);
+    CANStatus addCANFilter(uint16_t filterExplicitId, uint16_t filterMask, uint8_t filterBank) override;
 
-    CANStatus enableEmergencyFilter(uint32_t state);
+    CANStatus enableEmergencyFilter(uint32_t state) override;
 
     void addIRQHandler(void (*handler)(CANMessage&, void* priv), void* priv);
 
