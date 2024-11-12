@@ -53,7 +53,7 @@ private:
      */
     struct Channel_Support {
         uint8_t adc1     : 1;
-        uint32_t channel : 5;
+        uint8_t channel : 5;
     };
 
     /**
