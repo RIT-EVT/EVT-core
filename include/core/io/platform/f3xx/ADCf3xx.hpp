@@ -52,7 +52,7 @@ private:
      * channel: 5 bits. The STM32 ADC channel value with said supported ADC peripherals
      */
     struct Channel_Support {
-        uint8_t adc1     : 1;
+        uint8_t adc1    : 1;
         uint8_t channel : 5;
     };
 
