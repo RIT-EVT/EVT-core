@@ -95,7 +95,7 @@ private:
         uint8_t adc1     : 1;
         uint8_t adc2     : 1;
         uint8_t adc3     : 1;
-        uint32_t channel : 5;
+        uint8_t channel : 5;
     };
 
     // Array of all ADC peripheral states
