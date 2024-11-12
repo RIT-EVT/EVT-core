@@ -20,9 +20,11 @@ include(${CMAKE_CURRENT_LIST_DIR}/cmake/evt-core_clang-format.cmake)
 file(STRINGS version.txt EVT_VERSION)
 
 project(EVT
-    VERSION ${EVT_VERSION}
-    LANGUAGES CXX C ASM
+        VERSION ${EVT_VERSION}
+        LANGUAGES CXX C ASM
 )
+
+add_library(${PROJECT_NAME} STATIC)
 
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE
@@ -32,7 +34,6 @@ target_sources(${PROJECT_NAME} PRIVATE
         src/core/io/GPIO.cpp
         src/core/io/I2C.cpp
         src/core/io/PWM.cpp
-#        src/core/io/PWMINPUT.cpp
         src/core/io/UART.cpp
         src/core/io/SPI.cpp
         src/core/io/types/CANMessage.cpp
@@ -48,31 +49,32 @@ target_sources(${PROJECT_NAME} PRIVATE
 get_directory_property(COMPDEFS COMPILE_DEFINITIONS)
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
     target_sources(${PROJECT_NAME} PRIVATE
-    src/core/dev/platform/f3xx/Timerf3xx.cpp
-    src/core/platform/f3xx/stm32f302x8.cpp
-    src/core/io/platform/f3xx/ADCf3xx.cpp
-    src/core/io/platform/f3xx/CANf3xx.cpp
-    src/core/io/platform/f3xx/GPIOf3xx.cpp
-    src/core/io/platform/f3xx/I2Cf3xx.cpp
-    src/core/io/platform/f3xx/PWMf3xx.cpp
-    src/core/io/platform/f3xx/UARTf3xx.cpp
-    src/core/io/platform/f3xx/SPIf3xx.cpp
-    src/core/dev/platform/f3xx/IWDGf3xx.cpp
-    src/core/dev/platform/f3xx/RTCf3xx.cpp)
+            src/core/utils/platform/f3xx/timef3xx.cpp
+            src/core/dev/platform/f3xx/Timerf3xx.cpp
+            src/core/platform/f3xx/stm32f302x8.cpp
+            src/core/io/platform/f3xx/ADCf3xx.cpp
+            src/core/io/platform/f3xx/CANf3xx.cpp
+            src/core/io/platform/f3xx/GPIOf3xx.cpp
+            src/core/io/platform/f3xx/I2Cf3xx.cpp
+            src/core/io/platform/f3xx/PWMf3xx.cpp
+            src/core/io/platform/f3xx/UARTf3xx.cpp
+            src/core/io/platform/f3xx/SPIf3xx.cpp
+            src/core/dev/platform/f3xx/IWDGf3xx.cpp
+            src/core/dev/platform/f3xx/RTCf3xx.cpp)
 elseif(COMPDEFS MATCHES "(.*)STM32F4xx(.*)")
     target_sources(${PROJECT_NAME} PRIVATE
-    src/core/utils/platform/f4xx/timef4xx.cpp
-    src/core/platform/f4xx/stm32f446xx.cpp
-    src/core/io/platform/f4xx/ADCf4xx.cpp
-    src/core/io/platform/f4xx/CANf4xx.cpp
-    src/core/io/platform/f4xx/GPIOf4xx.cpp
-    src/core/io/platform/f4xx/I2Cf4xx.cpp
-    src/core/io/platform/f4xx/PWMf4xx.cpp
-    src/core/io/platform/f4xx/UARTf4xx.cpp
-    src/core/io/platform/f4xx/SPIf4xx.cpp
-    src/core/dev/platform/f4xx/IWDGf4xx.cpp
-    src/core/dev/platform/f4xx/RTCf4xx.cpp
-    src/core/dev/platform/f4xx/Timerf4xx.cpp)
+            src/core/utils/platform/f4xx/timef4xx.cpp
+            src/core/platform/f4xx/stm32f446xx.cpp
+            src/core/io/platform/f4xx/ADCf4xx.cpp
+            src/core/io/platform/f4xx/CANf4xx.cpp
+            src/core/io/platform/f4xx/GPIOf4xx.cpp
+            src/core/io/platform/f4xx/I2Cf4xx.cpp
+            src/core/io/platform/f4xx/PWMf4xx.cpp
+            src/core/io/platform/f4xx/UARTf4xx.cpp
+            src/core/io/platform/f4xx/SPIf4xx.cpp
+            src/core/dev/platform/f4xx/IWDGf4xx.cpp
+            src/core/dev/platform/f4xx/RTCf4xx.cpp
+            src/core/dev/platform/f4xx/Timerf4xx.cpp)
 else()
     message(FATAL_ERROR "the HAL didnt compile in top level CMake")
 endif()

@@ -9,6 +9,8 @@ namespace core::io {
 
 class PWMINPUT {
 
+    PWMINPUT();
+
 public:
 };
 
