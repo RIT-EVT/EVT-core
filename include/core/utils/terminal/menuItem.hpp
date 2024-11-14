@@ -1,6 +1,9 @@
 
 namespace core:utils
 {
+
+
+    
     class MenuItem
     {
         public:
@@ -13,21 +16,17 @@ namespace core:utils
             char* text;
             void* cb;
             void* ctx;
-    }
+    };
 
-    class subMenu : public menuItem
+    class SubMenu : MenuItem
     {
         public:
 
-            SubMenu(char* option, char* text, void* cb, void* ctx, menuItem[itemCount] items)
+            SubMenu(char* option, char* text, void* cb, void* ctx, MenuItem[itemCount] items);
 
         private:
-
+        
             int itemCount = 10;
-            char* option;
-            char* text;
-            void* cb;
-            void* ctx;
-            void* items;
-    }
+            MenuItem[10] items;
+    };
 }

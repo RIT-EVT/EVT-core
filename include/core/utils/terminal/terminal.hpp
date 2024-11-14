@@ -9,8 +9,6 @@
 
 namespace io = core::io;
 
-namespace utils = core::utils;
-
 namespace core:utils 
 {
     class Terminal
@@ -22,7 +20,7 @@ namespace core:utils
              * @param uart an instance of a UART object
              * @param baud 9600 or 115200
              */
-            Terminal(io::UART& uart, int baud);
+            Terminal(io::UART& uart, utils::Menu menu);
 
             /**
              * Sends a provided message over UART

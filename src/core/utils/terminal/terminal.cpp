@@ -11,12 +11,8 @@ namespace utils
 {
     class Terminal
     {
-        Terminal::Terminal(io::Uart& uart, utils::Menu menu, int baud) : baud(baud), menu(menu), uart(uart)
+        Terminal::Terminal(io::Uart& uart, utils::Menu menu) : menu(menu), uart(uart)
         {
-            core::platform::init();
-
-            io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(baud);
-
             uart.printf("Starting Terminal...")
         }
 

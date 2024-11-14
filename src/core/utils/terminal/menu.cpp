@@ -5,6 +5,9 @@ namespace core:utils
 {
     class Menu
     {
-            Menu::Menu(menuItem[itemCount] items) : items(items){}
+            Menu::Menu(menuItem[itemCount] items) : items(items)
+            {
+                
+            }
     }
 }

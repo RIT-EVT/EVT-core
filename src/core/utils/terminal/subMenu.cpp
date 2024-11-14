@@ -5,8 +5,11 @@
 
 namespace core:utils
 {
-    class subMenu extends menuItem
+    class SubMenu : public MenuItem
     {
             SubMenu::SubMenu(char* option, char* text, void* cb, void* ctx, menuItem[itemCount] items)
+            {
+                
+            }
     }
 }
