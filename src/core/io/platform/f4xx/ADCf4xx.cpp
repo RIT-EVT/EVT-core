@@ -52,18 +52,20 @@ constexpr uint8_t ADC1_SLOT = 0;
 constexpr uint8_t ADC2_SLOT = 1;
 constexpr uint8_t ADC3_SLOT = 2;
 
-bool ADCf4xx::timerInit = false;
+ADCf4xx::ADC_State core::io::ADCf4xx::adcArray[NUM_ADCS];
+bool core::io::ADCf4xx::timerInit = false;
+TIM_HandleTypeDef core::io::ADCf4xx::htim8;
 
 ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph)
-    : ADC(pin, adcPeriph), adcState(adcArray[getADCNum(adcPeriph)]), adcNum(getADCNum(adcPeriph)) {
+    : ADC(pin, adcPeriph), adcState(ADCf4xx::adcArray[getADCNum(adcPeriph)]), adcNum(getADCNum(adcPeriph)) {
     if (adcState.rank == MAX_CHANNELS) {
         log::LOGGER.log(log::Logger::LogLevel::WARNING, "ADC %d ALREADY HAS MAX NUMBER OF CHANNELS!!", (adcNum + 1));
         return;
     }
 
-    if (timerInit) {
-        HAL_TIM_Base_DeInit(&htim8); // Stop Timer8 (Trigger Source For ADC's)
-        timerInit = false;
+    if (ADCf4xx::timerInit) {
+        HAL_TIM_Base_DeInit(&ADCf4xx::htim8); // Stop Timer8 (Trigger Source For ADC's)
+        ADCf4xx::timerInit = false;
     }
 
     if (adcState.isADCInit) {
@@ -78,14 +80,14 @@ ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph)
     initADC(adcState.rank);
     addChannel(adcState.rank);
 
-    dmaHandle[adcNum] = &this->adcArray[adcNum].halDMA;
-    adcHandle[adcNum] = &this->adcArray[adcNum].halADC;
+    dmaHandle[adcNum] = &this->ADCf4xx::adcArray[adcNum].halDMA;
+    adcHandle[adcNum] = &this->ADCf4xx::adcArray[adcNum].halADC;
 
-    if (!timerInit) {
+    if (!ADCf4xx::timerInit) {
         __HAL_RCC_TIM8_CLK_ENABLE();
         initTimer();
-        HAL_TIM_Base_Start(&htim8); // Start Timer8 (Trigger Source For ADC's)
-        timerInit = true;
+        HAL_TIM_Base_Start(&ADCf4xx::htim8); // Start Timer8 (Trigger Source For ADC's)
+        ADCf4xx::timerInit = true;
     }
 
     HAL_ADC_Start_DMA(&adcState.halADC, reinterpret_cast<uint32_t*>(&adcState.buffer[0]), adcState.rank);
@@ -319,20 +321,20 @@ void ADCf4xx::initTimer() {
     TIM_ClockConfigTypeDef sClockSourceConfig = {0};
     TIM_MasterConfigTypeDef sMasterConfig     = {0};
 
-    htim8.Instance               = TIM8;
-    htim8.Init.Prescaler         = 0;
-    htim8.Init.CounterMode       = TIM_COUNTERMODE_UP;
-    htim8.Init.Period            = (SystemCoreClock / 1000) - 1;
-    htim8.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
-    htim8.Init.RepetitionCounter = 0;
-    htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
-    HAL_TIM_Base_Init(&htim8);
+    ADCf4xx::htim8.Instance               = TIM8;
+    ADCf4xx::htim8.Init.Prescaler         = 0;
+    ADCf4xx::htim8.Init.CounterMode       = TIM_COUNTERMODE_UP;
+    ADCf4xx::htim8.Init.Period            = (SystemCoreClock / 1000) - 1;
+    ADCf4xx::htim8.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
+    ADCf4xx::htim8.Init.RepetitionCounter = 0;
+    ADCf4xx::htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+    HAL_TIM_Base_Init(&ADCf4xx::htim8);
     sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-    HAL_TIM_ConfigClockSource(&htim8, &sClockSourceConfig);
+    HAL_TIM_ConfigClockSource(&ADCf4xx::htim8, &sClockSourceConfig);
 
     sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
     sMasterConfig.MasterSlaveMode     = TIM_MASTERSLAVEMODE_DISABLE;
-    HAL_TIMEx_MasterConfigSynchronization(&htim8, &sMasterConfig);
+    HAL_TIMEx_MasterConfigSynchronization(&ADCf4xx::htim8, &sMasterConfig);
 }
 
 } // namespace core::io
