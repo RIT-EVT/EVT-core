@@ -40,36 +40,39 @@ namespace rtos = core::rtos;
  * Struct definition that holds all the counters for each thread.
  */
 typedef struct counters {
-    uint32_t numThreads;    // How many threads have been generated
-    uint32_t global_count;  // Times a random number has been sent and received
-    uint32_t global_sum;    // Sum of random numbers
-    uint32_t* count_array;  // The array of the count of how many times each thread has gotten a number
-    uint32_t* sum_array;    // The array of the sums of the counts of each thread.
+    uint32_t numThreads;   // How many threads have been generated
+    uint32_t global_count; // Times a random number has been sent and received
+    uint32_t global_sum;   // Sum of random numbers
+    uint32_t* count_array; // The array of the count of how many times each thread has gotten a number
+    uint32_t* sum_array;   // The array of the sums of the counts of each thread.
 } counters_t;
 
 /**
  * Struct that holds the arguments for the thread that generates the numbers
  */
 typedef struct number_gen_thread_args {
-    rtos::Queue* queue;                 // The queue of numbers that the number gen thread add it's generated number to
-    rtos::Semaphore* semaphore;         // A semaphore that mutually excludes the threads from accessing the queue or printing to uart at the same time
-                                        // these shouldn't necessarily need to be mutually exclusive, as they are generally thread-safe, but it also shows
-                                        // an example implementation of a semaphore.
+    rtos::Queue* queue; // The queue of numbers that the number gen thread add it's generated number to
+    rtos::Semaphore*
+        semaphore; // A semaphore that mutually excludes the threads from accessing the queue or printing to uart at the
+                   // same time these shouldn't necessarily need to be mutually exclusive, as they are generally
+                   // thread-safe, but it also shows an example implementation of a semaphore.
     rtos::tsio::ThreadUART* threadUART; // The instance of ThreadUART that this thread will use to print.
-    counters_t* counters;               // The struct of counters for the number gen thread to print out the counts of each thread
+    counters_t* counters; // The struct of counters for the number gen thread to print out the counts of each thread
 } number_gen_thread_args_t;
 
 /**
  * Struct that holds the arguments for all other threads
  */
 typedef struct number_consumer_thread_args {
-    rtos::Queue* queue;                 // The queue that the threads will pull values that the number gen thread adds
-    rtos::Semaphore* semaphore;         // A semaphore that mutually excludes the threads from accessing the queue or printing to uart
+    rtos::Queue* queue; // The queue that the threads will pull values that the number gen thread adds
+    rtos::Semaphore*
+        semaphore; // A semaphore that mutually excludes the threads from accessing the queue or printing to uart
     rtos::tsio::ThreadUART* threadUART; // The instance of ThreadUART that this thread will use to print.
-    rtos::EventFlags* eventFlags;       // the EventFlags that the number consumer threads will use to show they have gotten a number, which will
-                                        // trigger the eventFlagThread to run it's own method.
-    uint8_t num;                        // What number this thread is
-    counters_t* counters;               // the struct of counters for the number consumer threads to increase their counters when they get a number
+    rtos::EventFlags* eventFlags; // the EventFlags that the number consumer threads will use to show they have gotten a
+                                  // number, which will trigger the eventFlagThread to run it's own method.
+    uint8_t num;          // What number this thread is
+    counters_t* counters; // the struct of counters for the number consumer threads to increase their counters when they
+                          // get a number
 } number_consumer_thread_args_t;
 
 /// Function Prototypes (allows us to actually implement the functions below main)
@@ -103,13 +106,13 @@ int main() {
 
     // create thread 0
     rtos::Thread<number_gen_thread_args_t*> generatorThread((char*) "Controller Thread",
-                                                             generatorThreadEntry,
-                                                             &generatorThreadArgs,
-                                                             DEMO_STACK_SIZE,
-                                                             1,
-                                                             1,
-                                                             MS_TO_TICKS(50),
-                                                             true);
+                                                            generatorThreadEntry,
+                                                            &generatorThreadArgs,
+                                                            DEMO_STACK_SIZE,
+                                                            1,
+                                                            1,
+                                                            MS_TO_TICKS(50),
+                                                            true);
 
     // create the structs that holds the other thread arguments
     number_consumer_thread_args_t thread_1_args = {&q1, &semaphore, &threadUART, &eventFlags, 1, &counters};

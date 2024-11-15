@@ -34,8 +34,7 @@ ThreadUART::ThreadUART(io::UART& uart, std::size_t threadStackSize, uint32_t thr
       queue((char*) "ThreadUART Queue", THREADUART_QUEUE_MESSAGE_SIZE, THREADUART_QUEUE_NUM_MESSAGES),
       thread((char*) "ThreadUART Thread", uartThreadEntryFunction, this, threadStackSize, threadPriorityLevel,
              threadPreemptThreshold, threadTimeSlice, true),
-      readMutex((char*) "ThreadUART Read Mutex", true),
-      writeMutex((char*) "ThreadUART Write Mutex", true) {}
+      readMutex((char*) "ThreadUART Read Mutex", true), writeMutex((char*) "ThreadUART Write Mutex", true) {}
 
 TXError ThreadUART::init(BytePoolBase& pool) {
     TXError status = queue.init(pool);
