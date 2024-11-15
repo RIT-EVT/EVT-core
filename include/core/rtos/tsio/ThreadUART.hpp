@@ -190,6 +190,9 @@ private:
 
     /** Mutex that makes sure only one thread reads from UART at a time */
     Mutex readMutex;
+
+    /** Mutex that makes sure only one thread writes to the Queue at a time */
+    Mutex writeMutex;
 };
 
 } // namespace core::rtos::tsio

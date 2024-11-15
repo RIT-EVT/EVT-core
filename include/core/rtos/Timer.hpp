@@ -1,5 +1,5 @@
-#ifndef EVT_TIMER_HPP
-#define EVT_TIMER_HPP
+#ifndef _EVT_TIMER_HPP
+#define _EVT_TIMER_HPP
 
 #include <core/rtos/Initializable.hpp>
 
@@ -155,4 +155,4 @@ private:
 
 } // namespace core::rtos
 
-#endif // EVT_TIMER_HPP
+#endif // _EVT_TIMER_HPP

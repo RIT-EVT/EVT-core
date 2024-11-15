@@ -31,10 +31,11 @@ namespace {
 ThreadUART::ThreadUART(io::UART& uart, std::size_t threadStackSize, uint32_t threadPriorityLevel,
                        uint32_t threadPreemptThreshold, uint32_t threadTimeSlice)
     : UART(uart), copyUART(uart),
-      queue((char*) "UARTTX Queue", THREADUART_QUEUE_MESSAGE_SIZE, THREADUART_QUEUE_NUM_MESSAGES),
-      thread((char*) "UARTTX Thread", uartThreadEntryFunction, this, threadStackSize, threadPriorityLevel,
+      queue((char*) "ThreadUART Queue", THREADUART_QUEUE_MESSAGE_SIZE, THREADUART_QUEUE_NUM_MESSAGES),
+      thread((char*) "ThreadUART Thread", uartThreadEntryFunction, this, threadStackSize, threadPriorityLevel,
              threadPreemptThreshold, threadTimeSlice, true),
-      readMutex((char*) "UARTTX Read Mutex", true) {}
+      readMutex((char*) "ThreadUART Read Mutex", true),
+      writeMutex((char*) "ThreadUART Write Mutex", true) {}
 
 TXError ThreadUART::init(BytePoolBase& pool) {
     TXError status = queue.init(pool);
@@ -60,6 +61,7 @@ void ThreadUART::printf(const char* format, ...) {
 }
 
 void ThreadUART::puts(const char* s) {
+    writeMutex.get(TX_WAIT_FOREVER);
     // split longer messages into 64 (63 + null-termination) bit chunks.
     char temp[64];
     uint32_t len = strlen(s);
@@ -68,36 +70,42 @@ void ThreadUART::puts(const char* s) {
         temp[63] = '\0'; // set the last bit to the null terminator (should already be that but just in case)
         queue.send(temp, WAIT_FOREVER);
     }
+    writeMutex.put();
 }
 
 void ThreadUART::putc(char c) {
+    writeMutex.get(TX_WAIT_FOREVER);
     char temp[64];
     temp[0] = c;
     temp[1] = '\0';
     queue.send(temp, WAIT_FOREVER);
+    writeMutex.put();
 }
 
 void ThreadUART::writeBytes(uint8_t* bytes, size_t size) {
+    writeMutex.get(TX_WAIT_FOREVER);
     // split longer messages into 64 bit chunks.
+    // we send 63 bytes plus a null-terminating character, since UART is expecting a string
     char temp[64];
     size_t i = 0;
     // send all the chunks except the last message (which might be less than 64 bytes)
-    if (size > 64) {
-        size_t max = size - 64;
-        for (i = 0; i < max; i += 64) {
-            memcpy(temp, bytes + i, 64);
+    if (size > 63) {
+        size_t max = size - 63;
+        for (i = 0; i < max; i += 63) {
+            memcpy(temp, bytes + i, 63);
+            temp[63] = '\0';
             queue.send(temp, WAIT_FOREVER);
         }
     }
     // send the last amount of bytes
     size_t remaining_bytes = size - i;
     if (remaining_bytes > 0) {
-        // clear temp (just to be safe)
         memset(temp, 0, 64);
         // copy last message into temp
         memcpy(temp, bytes + i, remaining_bytes);
         queue.send(temp, WAIT_FOREVER);
     }
+    writeMutex.put();
 }
 
 void ThreadUART::write(uint8_t byte) {
@@ -134,10 +142,10 @@ bool ThreadUART::isWritable() {
 }
 
 char ThreadUART::getc() {
-    readMutex.acquire(TXWait::WAIT_FOREVER);
+    readMutex.get(TXWait::WAIT_FOREVER);
     uint8_t c;
     while (HAL_UART_Receive(&halUART, &c, 1, EVT_UART_TIMEOUT) == HAL_TIMEOUT) {}
-    readMutex.release();
+    readMutex.put();
     return static_cast<char>(c);
 }
 
@@ -146,9 +154,9 @@ uint8_t ThreadUART::read() {
 }
 
 void ThreadUART::readBytes(uint8_t* bytes, size_t size) {
-    readMutex.acquire(TXWait::WAIT_FOREVER);
+    readMutex.get(TXWait::WAIT_FOREVER);
     HAL_UART_Receive(&halUART, bytes, size, EVT_UART_TIMEOUT);
-    readMutex.release();
+    readMutex.put();
 }
 
 TXError ThreadUART::getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages) {
