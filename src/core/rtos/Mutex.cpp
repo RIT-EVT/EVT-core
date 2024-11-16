@@ -26,7 +26,7 @@ TXError Mutex::prioritize() {
 
 TXError Mutex::getName(char** name) {
     *name = this->name;
-    return SUCCESS;
+    return TXE_SUCCESS;
 }
 
 TXError Mutex::getOwnershipCount(uint32_t* ownershipCount) {
@@ -38,8 +38,9 @@ TXError Mutex::getNameOfOwner(char** ownerName) {
     TX_THREAD* owner;
     uint32_t status = tx_mutex_info_get(&txMutex, nullptr, nullptr, &owner, nullptr, nullptr, nullptr);
     // exit early if the call failed
-    if (status != SUCCESS)
+    if (status != TXE_SUCCESS) {
         return static_cast<TXError>(status);
+    }
 
     // read the name off the struct
     status = tx_thread_info_get(owner, ownerName, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
@@ -50,7 +51,7 @@ TXError Mutex::getNameOfFirstSuspendedThread(char** threadName) {
     TX_THREAD* thread;
     uint32_t status = tx_mutex_info_get(&txMutex, nullptr, nullptr, nullptr, &thread, nullptr, nullptr);
     // exit early if the call failed
-    if (status != SUCCESS) {
+    if (status != TXE_SUCCESS) {
         return static_cast<TXError>(status);
     }
 

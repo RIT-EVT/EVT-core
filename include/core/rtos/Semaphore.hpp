@@ -34,14 +34,14 @@ public:
      *
      * @param[in] waitOption How long (in ticks) the calling thread should wait for the mutex to be available.
      * Use Enums::TXWait::WaitForever to wait forever
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError get(uint32_t waitOption);
 
     /**
      * Put an instance of the semaphore
      *
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError put();
 
@@ -49,7 +49,7 @@ public:
      * Put an instance of the semaphore, up to the provided ceiling
      *
      * @param[in] ceiling the max value we want this command to be able to put the semaphore to
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError putWithCeiling(uint32_t ceiling);
 
@@ -57,7 +57,7 @@ public:
      * Register a function to be called whenever this Semaphore is put
      *
      * @param notifyFunction The function to be called when a the semaphore is put
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError registerNotifyFunction(void (*notifyFunction)(Semaphore*));
 
@@ -65,7 +65,7 @@ public:
      * Prioritize the list of waiting threads, placing the highest priority waiting thread at the front of the list
      * (Does not effect the order of the other waiting threads)
      *
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError prioritize();
 
@@ -73,7 +73,7 @@ public:
      * Retrieve the name of this Semaphore
      *
      * @param[out] name A pointer to a place to store the name pointer
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getName(char** name);
 
@@ -81,7 +81,7 @@ public:
      * Get the current count of this Semaphore
      *
      * @param currentCount A pointer to a place to store the count
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getCount(uint32_t* currentCount);
 
@@ -89,7 +89,7 @@ public:
      * Retrieve the name of the first suspended thread
      *
      * @param[out] threadName A pointer to a place to store the name of the first suspended thread
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNameOfFirstSuspendedThread(char** threadName);
 
@@ -97,7 +97,7 @@ public:
      * Retrieve the number of threads that are suspended on this Semaphore
      *
      * @param[out] numSuspendedThreads A pointer to a place to store the number of suspended threads
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 

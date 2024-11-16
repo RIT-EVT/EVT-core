@@ -22,7 +22,7 @@ TXError Semaphore::put() {
 
 TXError Semaphore::registerNotifyFunction(void (*notifyFunction)(Semaphore*)) {
     // TODO: registerNotifyFunction must be implemented
-    return FEATURE_NOT_ENABLED;
+    return TXE_FEATURE_NOT_ENABLED;
 }
 
 TXError Semaphore::prioritize() {
@@ -35,7 +35,7 @@ TXError Semaphore::putWithCeiling(uint32_t ceiling) {
 
 TXError Semaphore::getName(char** name) {
     *name = this->name;
-    return SUCCESS;
+    return TXE_SUCCESS;
 }
 
 TXError Semaphore::getCount(uint32_t* currentCount) {
@@ -47,7 +47,7 @@ TXError Semaphore::getNameOfFirstSuspendedThread(char** threadName) {
     TX_THREAD* thread;
     uint32_t status = tx_semaphore_info_get(&txSemaphore, nullptr, nullptr, &thread, nullptr, nullptr);
     // exit early if the call failed
-    if (status != SUCCESS) {
+    if (status != TXE_SUCCESS) {
         return static_cast<TXError>(status);
     }
 

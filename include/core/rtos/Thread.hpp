@@ -57,15 +57,15 @@ public:
      * Create the threadx thread and possibly start it, depending on the autostart constructor parameter
      *
      * @param[in] pool pointer to the pool to allocate the thread's stack in.
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError init(BytePoolBase& pool) override {
         // allocate memory for the thread
 
         void* stackStart;
-        uint32_t errorCode = pool.allocateMemory(stackSize, NO_WAIT, &stackStart);
+        uint32_t errorCode = pool.allocateMemory(stackSize, TXW_NO_WAIT, &stackStart);
         TXError error      = static_cast<TXError>(errorCode);
-        if (error != SUCCESS)
+        if (error != TXE_SUCCESS)
             return error;
         // create the thread only if the memory allocation succeeded.
         errorCode = tx_thread_create(&txThread,
@@ -88,11 +88,11 @@ public:
      * @param[in] notifyFunction The pointer to the function that will be called.\n
      *  The first argument to this function will contain a pointer to this thread.\n
      *  The second argument to this function will be the threadID of this thread
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError registerEntryExitNotification(void (*notifyFunction)(Thread<T>, uint32_t)) {
         // TODO: registerEntryExitNotification must be implemented
-        return FEATURE_NOT_ENABLED;
+        return TXE_FEATURE_NOT_ENABLED;
     }
 
     /**
@@ -100,7 +100,7 @@ public:
      *
      * @param[in] newThreshold The new value that the thread's preemptThreshold will be set to
      * @param[out] oldThresholdOut A pointer to a space to store the previous value of the preemptThreshold
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError setPreemptThreshold(uint32_t newThreshold, uint32_t* oldThresholdOut) {
         uint32_t errorCode = tx_thread_preemption_change(&txThread, newThreshold, (UINT*) oldThresholdOut);
@@ -112,7 +112,7 @@ public:
      *
      * @param[in] newPriority The new value that the thread's priority will be set to
      * @param[out] oldPriorityOut A pointer to a space to store the previous value of the priority
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError setPriority(uint32_t newPriority, uint32_t* oldPriorityOut) {
         uint32_t errorCode = tx_thread_priority_change(&txThread, newPriority, (UINT*) oldPriorityOut);
@@ -124,7 +124,7 @@ public:
      *
      * @param[in] newTimeSlice The new value that the thread's timeSlice will be set to
      * @param[out] oldTimeSliceOutput A pointer to a space to store the previous value of the timeSlice
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError setTimeSlice(uint32_t newTimeSlice, uint32_t* oldTimeSliceOut) {
         uint32_t errorCode = tx_thread_time_slice_change(&txThread, newTimeSlice, oldTimeSliceOut);
@@ -134,7 +134,7 @@ public:
     /**
      * Reset the thread so it is prepared to run the entry function again
      *
-     * @return Enum representing The first error found by the function or Success if there was no error
+     * @return Enum representing The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError reset() {
         uint32_t errorCode = tx_thread_reset(&txThread);
@@ -144,7 +144,7 @@ public:
     /**
      * Resume the thread if it is suspended
      *
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError resume() {
         uint32_t errorCode = tx_thread_resume(&txThread);
@@ -154,7 +154,7 @@ public:
     /**
      * Suspend the thread
      *
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError suspend() {
         uint32_t errorCode = tx_thread_suspend(&txThread);
@@ -164,7 +164,7 @@ public:
     /**
      * Terminate the thread. Once the thread is terminated, it cannot be restarted
      *
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError terminate() {
         uint32_t errorCode = tx_thread_terminate(&txThread);
@@ -174,7 +174,7 @@ public:
     /**
      * Abort whatever wait this thread is in, returning WaitAborted to the method that this thread was waiting in
      *
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError abortWait() {
         uint32_t errorCode = tx_thread_wait_abort(&txThread);
@@ -187,18 +187,18 @@ public:
      * Retrieve the name of this thread
      *
      * @param[out] name A pointer to a place to put the name pointer
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getName(char* const* name) {
         *name = this->name;
-        return SUCCESS;
+        return TXE_SUCCESS;
     }
 
     /**
      * Retrieve the state of this thread
      *
      * @param[out] state A pointer to a place to put the state of the thread
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getState(TXThreadState* state) {
         uint32_t errorCode =
@@ -210,7 +210,7 @@ public:
      * Retrieve the run count of this thread
      *
      * @param[out] runCount A pointer to a place to put the run count
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getRunCount(uint32_t* runCount) {
         uint32_t errorCode =
@@ -222,7 +222,7 @@ public:
      * Retrieve the priority of this thread
      *
      * @param priority A pointer to a place to put the priority.
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getPriority(uint32_t* priority) {
         uint32_t errorCode = tx_thread_info_get(
@@ -234,7 +234,7 @@ public:
      * Retrieve the preemption threshold of this thread
      *
      * @param[out] preemptThreshold A place to put the preempt threshold
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getPreemptThreshold(uint32_t* preemptThreshold) {
         uint32_t errorCode = tx_thread_info_get(
@@ -246,7 +246,7 @@ public:
      * Retrieve the time slice of this thread
      *
      * @param[out] timeSlice A place to put the time slice
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getTimeSlice(uint32_t* timeSlice) {
         uint32_t errorCode =

@@ -38,7 +38,7 @@ ThreadUART::ThreadUART(io::UART& uart, std::size_t threadStackSize, uint32_t thr
 
 TXError ThreadUART::init(BytePoolBase& pool) {
     TXError status = queue.init(pool);
-    if (status != SUCCESS) {
+    if (status != TXE_SUCCESS) {
         log::LOGGER.log(
             log::Logger::LogLevel::ERROR, "Errored on ThreadUART Queue initialization. Error code %u\n", status);
         return static_cast<TXError>(status);
@@ -67,7 +67,7 @@ void ThreadUART::puts(const char* s) {
     for (uint32_t i = 0; i < len; i += 63) {
         memccpy(temp, s + i, '\0', 63);
         temp[63] = '\0'; // set the last bit to the null terminator (should already be that but just in case)
-        queue.send(temp, WAIT_FOREVER);
+        queue.send(temp, TXW_WAIT_FOREVER);
     }
     writeMutex.put();
 }
@@ -77,7 +77,7 @@ void ThreadUART::putc(char c) {
     char temp[64];
     temp[0] = c;
     temp[1] = '\0';
-    queue.send(temp, WAIT_FOREVER);
+    queue.send(temp, TXW_WAIT_FOREVER);
     writeMutex.put();
 }
 
@@ -93,7 +93,7 @@ void ThreadUART::writeBytes(uint8_t* bytes, size_t size) {
         for (i = 0; i < max; i += 63) {
             memcpy(temp, bytes + i, 63);
             temp[63] = '\0';
-            queue.send(temp, WAIT_FOREVER);
+            queue.send(temp, TXW_WAIT_FOREVER);
         }
     }
     // send the last amount of bytes
@@ -102,7 +102,7 @@ void ThreadUART::writeBytes(uint8_t* bytes, size_t size) {
         memset(temp, 0, 64);
         // copy last message into temp
         memcpy(temp, bytes + i, remaining_bytes);
-        queue.send(temp, WAIT_FOREVER);
+        queue.send(temp, TXW_WAIT_FOREVER);
     }
     writeMutex.put();
 }
@@ -113,7 +113,7 @@ void ThreadUART::write(uint8_t byte) {
 
 void ThreadUART::sendFirstQueueMessage() {
     char buffer[64];                     // Buffer array to hold the message
-    queue.receive(buffer, WAIT_FOREVER); // Receives the message and assigns it to the buffer variable
+    queue.receive(buffer, TXW_WAIT_FOREVER); // Receives the message and assigns it to the buffer variable
     copyUART.writeBytes((uint8_t*) (buffer), strlen(buffer));
 }
 
@@ -141,7 +141,7 @@ bool ThreadUART::isWritable() {
 }
 
 char ThreadUART::getc() {
-    readMutex.get(TXWait::WAIT_FOREVER);
+    readMutex.get(TXWait::TXW_WAIT_FOREVER);
     uint8_t c;
     while (HAL_UART_Receive(&halUART, &c, 1, EVT_UART_TIMEOUT) == HAL_TIMEOUT) {}
     readMutex.put();
@@ -153,7 +153,7 @@ uint8_t ThreadUART::read() {
 }
 
 void ThreadUART::readBytes(uint8_t* bytes, size_t size) {
-    readMutex.get(TXWait::WAIT_FOREVER);
+    readMutex.get(TXWait::TXW_WAIT_FOREVER);
     HAL_UART_Receive(&halUART, bytes, size, EVT_UART_TIMEOUT);
     readMutex.put();
 }

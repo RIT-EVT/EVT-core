@@ -13,7 +13,7 @@ BytePoolBase* mainThreadPool;
 
 TXError init(Initializable* initList[], std::size_t length, BytePoolBase& pool) {
     TXError errorCode = pool.init();
-    if (errorCode != SUCCESS)
+    if (errorCode != TXE_SUCCESS)
         return errorCode;
 
     return bulkInitialize(initList, length, pool);
@@ -31,14 +31,14 @@ TXError startKernel(Initializable* initList[], std::size_t length, BytePoolBase&
     mainThreadPool    = &pool;
     // tx_kernel_enter calls tx_application_define, which initializes everything in initList.
     tx_kernel_enter();
-    return SUCCESS;
+    return TXE_SUCCESS;
 }
 
 TXError bulkInitialize(Initializable** initList, std::size_t length, BytePoolBase& pool) {
-    TXError errorCode = SUCCESS;
+    TXError errorCode = TXE_SUCCESS;
     for (std::size_t i = 0; i < length; i++) {
         errorCode = initList[i]->init(pool);
-        if (errorCode != SUCCESS) {
+        if (errorCode != TXE_SUCCESS) {
             log::LOGGER.log(log::Logger::LogLevel::DEBUG,
                             "Errored on item %u in initializer list.\n\rError code: %u",
                             i,

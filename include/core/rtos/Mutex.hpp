@@ -37,14 +37,14 @@ public:
      *
      * @param waitOption How long (in ticks) the calling thread should wait for the mutex to be available
      * Use Enums::TXWait::WaitForever to wait forever
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError get(uint32_t waitOption);
 
     /**
      * Release control of the mutex, allowing other threads to acquire it
      *
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError put();
 
@@ -52,7 +52,7 @@ public:
      * Prioritize the list of waiting threads, placing the highest priority waiting thread at the front of the list.
      * (Does not effect the order of the other waiting threads)
      *
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError prioritize();
 
@@ -62,7 +62,7 @@ public:
      * Retrieve the name of this Mutex
      *
      * @param[out] name a pointer to a place to store the name pointer
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getName(char** name);
 
@@ -72,7 +72,7 @@ public:
      * count is decremented. Only when ownershipCount reaches 0 does the mutex actually unlock
      *
      * @param[out] ownershipCount a pointer to a place to store the ownership count
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getOwnershipCount(uint32_t* ownershipCount);
 
@@ -80,7 +80,7 @@ public:
      * Retrieve the name of the thread that currently owns this mutex
      *
      * @param[out] name a pointer to a place to store the name of the owner of the thread
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNameOfOwner(char** ownerName);
 
@@ -88,7 +88,7 @@ public:
      * Retrieve the name of the first suspended thread
      *
      * @param[out] threadName A return pointer to store the name of the first suspended thread
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNameOfFirstSuspendedThread(char** threadName);
 
@@ -96,7 +96,7 @@ public:
      * Retrieve the number of threads that are suspended on this Mutex
      *
      * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 

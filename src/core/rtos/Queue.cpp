@@ -9,9 +9,9 @@ Queue::Queue(char* name, uint32_t messageSize, uint32_t numMessages)
 TXError Queue::init(BytePoolBase& pool) {
     void* poolPointer;
     // allocate memory on the pool
-    uint32_t errorCode = pool.allocateMemory(queueSize, NO_WAIT, &poolPointer);
+    uint32_t errorCode = pool.allocateMemory(queueSize, TXW_NO_WAIT, &poolPointer);
     TXError error      = static_cast<TXError>(errorCode);
-    if (error != SUCCESS)
+    if (error != TXE_SUCCESS)
         return error;
     // create the queue only if the memory allocation succeeds
     return static_cast<TXError>(tx_queue_create(&txQueue, name, messageSize, poolPointer, queueSize));
@@ -35,7 +35,7 @@ TXError Queue::receive(void* destination, uint32_t waitOption) {
 
 TXError Queue::registerNotifyFunction(void (*notifyFunction)(Queue*)) {
     // TODO: registerNotifyFunction must be implemented
-    return FEATURE_NOT_ENABLED;
+    return TXE_FEATURE_NOT_ENABLED;
 }
 
 TXError Queue::send(void* messagePointer, uint32_t waitOption) {
@@ -48,7 +48,7 @@ TXError Queue::sendToFront(void* messagePointer, uint32_t waitOption) {
 
 TXError Queue::getName(char** name) {
     *name = this->name;
-    return SUCCESS;
+    return TXE_SUCCESS;
 }
 
 TXError Queue::getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages) {
@@ -65,7 +65,7 @@ TXError Queue::getNameOfFirstSuspendedThread(char** threadName) {
     TX_THREAD* thread;
     uint32_t status = tx_queue_info_get(&txQueue, nullptr, nullptr, nullptr, &thread, nullptr, nullptr);
     // exit early if the call failed
-    if (status != SUCCESS) {
+    if (status != TXE_SUCCESS) {
         return static_cast<TXError>(status);
     }
 

@@ -17,7 +17,7 @@ namespace core::rtos {
  * before the threadx kernel begins
  * @param length The length of initList
  * @param[in] poolptr A reference to the bytepool to store the information of the initializable objects in
- * @return The first error found by the function or Success if there was no error
+ * @return The first error found by the function or TXE_SUCCESS if there was no error
  */
 TXError startKernel(Initializable** initList, std::size_t length, BytePoolBase& pool);
 
@@ -28,7 +28,7 @@ TXError startKernel(Initializable** initList, std::size_t length, BytePoolBase& 
  * before the threadx kernel begins
  * @param length The length of initList
  * @param[in] poolptr A reference to the bytepool to store the information of the initializable objects in
- * @return The first error found by the function or Success if there was no error
+ * @return The first error found by the function or TXE_SUCCESS if there was no error
  */
 TXError bulkInitialize(Initializable** initList, std::size_t length, BytePoolBase& pool);
 
@@ -42,7 +42,7 @@ void relinquish();
  * Sleep the currently running thread for the given amount of time. If no thread is running returns an error
  *
  * @param sleepTime How long (in ticks) the thread should sleep for
- * @return The first error found by the function or Success if there was no error
+ * @return The first error found by the function or TXE_SUCCESS if there was no error
  */
 TXError sleep(uint32_t sleepTime);
 

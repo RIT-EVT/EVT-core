@@ -35,7 +35,7 @@ public:
      * @param[in] mask A bitmask describing what flags are to be interacted with
      * @param[in] clearNonMaskedFlags If true, all the flags not included in the mask will be set to 0.
      * (true is equivalent to AND-ing with the mask, false is equivalent to OR-ing with the mask)
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError set(uint32_t mask, bool clearNonMaskedFlags);
 
@@ -49,7 +49,7 @@ public:
      * @param[in] waitOption How long (in ticks) the calling thread should wait for this method to
      * return. Use Enums::TXWait::WaitForever to wait forever
      * @param[out] output A pointer to store the set flags in
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError get(uint32_t mask, bool waitForAllFlags, bool clear, uint32_t waitOption, uint32_t* output);
 
@@ -57,7 +57,7 @@ public:
      * Register a function that will be called whenever an event flag in this group is set
      *
      * @param[in] notifyFunction The function that will be called whenever an event flag in the group is set
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError registerNotifyFunction(void (*notifyFunction)(EventFlags* eventFlags));
 
@@ -65,7 +65,7 @@ public:
      * Retrieve the name of this EventFlags
      *
      * @param[out] name A pointer to a place to store the name pointer
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getName(char** name);
 
@@ -73,7 +73,7 @@ public:
      * Retrieve the current values that the flags are set to as a uint32_t
      *
      * @param[out] flags A pointer to a place to store the flags
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getCurrentFlags(uint32_t* flags);
 
@@ -81,7 +81,7 @@ public:
      * Retrieve the name of the first suspended thread
      *
      * @param[out] name A pointer to a place to store the name pointer
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNameOfFirstSuspendedThread(char** threadName);
 
@@ -89,7 +89,7 @@ public:
      * Retrieve the number of threads that are suspended on this EventFlags
      *
      * @param[out] numSuspendedThreads A pointer to a place to store the number of suspended threads
-     * @return The first error found by the function or Success if there was no error.
+     * @return The first error found by the function or TXE_SUCCESS if there was no error.
      */
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 

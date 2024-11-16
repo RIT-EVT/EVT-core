@@ -39,7 +39,7 @@ public:
     /**
      * Flush the queue, emptying all of the messages out of it
      *
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError flush();
 
@@ -47,7 +47,7 @@ public:
      * Prioritize the list of waiting threads, placing the highest priority waiting thread at the front of the list.
      * (Does not effect the order of the other waiting threads)
      *
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError prioritize();
 
@@ -58,7 +58,7 @@ public:
      * @param[out] destination pointer to the location for the popped message to be stored
      * @param[in] waitOption How long (in ticks) the calling thread should wait for the mutex to be available.
      * Use Enums::TXWait::WaitForever to wait forever
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError receive(void* destination, uint32_t waitOption);
 
@@ -66,7 +66,7 @@ public:
      * Register a function to be called whenever a message is successfully sent to the queue
      *
      * @param notifyFunction The function to be called when a message is sent to the queue
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError registerNotifyFunction(void (*notifyFunction)(Queue*));
 
@@ -77,7 +77,7 @@ public:
      * @param[in] messagePointer A pointer to the message that will be copied to the queue
      * @param[in] waitOption How long (in ticks) the calling thread should wait for the mutex to be available.
      * Use Enums::TXWait::WaitForever to wait forever
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError send(void* messagePointer, uint32_t waitOption);
 
@@ -88,7 +88,7 @@ public:
      * @param[in] messagePointer A pointer to the message that will be copied to the queue
      * @param[in] waitOption How long (in ticks) the calling thread should wait for the mutex to be available.
      * Use Enums::TXWait::WaitForever to wait forever
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError sendToFront(void* messagePointer, uint32_t waitOption);
 
@@ -98,7 +98,7 @@ public:
      * Retrieve the name of this Queue
      *
      * @param[out] name A pointer to a place to store the name pointer
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getName(char** name);
 
@@ -106,7 +106,7 @@ public:
      * Retrieve the number of enqueued messages in this Queue
      *
      * @param[out] numEnqueuedMessages A pointer to a place to store the number of enqueued messages
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages);
 
@@ -114,7 +114,7 @@ public:
      * Retrieve the number of more messages the Queue can fit
      *
      * @param[out] numAvailableMessages A pointer to the place to store the number of more messages the queue can fit
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getAvailableStorage(uint32_t* numAvailableMessages);
 
@@ -122,7 +122,7 @@ public:
      * Retrieve the name of the first suspended thread
      *
      * @param[out] threadName A pointer to a place to store the name of the first suspended thread
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNameOfFirstSuspendedThread(char** threadName);
 
@@ -130,7 +130,7 @@ public:
      * Retrieve the number of threads that are suspended on this Queue
      *
      * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 

@@ -17,7 +17,7 @@ public:
      * Initialize this object with the kernel
      *
      * @param pool The byte pool that this initializable object will be stored in
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     virtual TXError init(BytePoolBase& pool) = 0;
 };

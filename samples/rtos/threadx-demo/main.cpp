@@ -51,11 +51,11 @@ typedef struct counters {
  * Struct that holds the arguments for the thread that generates the numbers
  */
 typedef struct number_gen_thread_args {
-    rtos::Queue* queue; // The queue of numbers that the number gen thread add it's generated number to
-    rtos::Semaphore*
-        semaphore; // A semaphore that mutually excludes the threads from accessing the queue or printing to uart at the
-                   // same time these shouldn't necessarily need to be mutually exclusive, as they are generally
-                   // thread-safe, but it also shows an example implementation of a semaphore.
+    rtos::Queue* outputQueue;   // The queue of numbers that the number gen thread add it's generated number to
+    rtos::Semaphore* semaphore; // A semaphore that mutually excludes the threads from accessing the queue or printing
+                                // to uart at the same time these shouldn't necessarily need to be mutually exclusive,
+                                // as they are generally thread-safe, but it also shows an example implementation of a
+                                // semaphore.
     rtos::tsio::ThreadUART* threadUART; // The instance of ThreadUART that this thread will use to print.
     counters_t* counters; // The struct of counters for the number gen thread to print out the counts of each thread
 } number_gen_thread_args_t;
@@ -64,9 +64,8 @@ typedef struct number_gen_thread_args {
  * Struct that holds the arguments for all other threads
  */
 typedef struct number_consumer_thread_args {
-    rtos::Queue* queue; // The queue that the threads will pull values that the number gen thread adds
-    rtos::Semaphore*
-        semaphore; // A semaphore that mutually excludes the threads from accessing the queue or printing to uart
+    rtos::Queue* inputQueue;    // The queue that the threads will pull values that the number gen thread adds
+    rtos::Semaphore* semaphore; // A semaphore that mutually excludes the threads from accessing the queue or printing to uart
     rtos::tsio::ThreadUART* threadUART; // The instance of ThreadUART that this thread will use to print.
     rtos::EventFlags* eventFlags; // the EventFlags that the number consumer threads will use to show they have gotten a
                                   // number, which will trigger the eventFlagThread to run it's own method.
@@ -172,17 +171,17 @@ void generatorThreadEntry(number_gen_thread_args_t* args) {
         num = rand() % 25 + 1;
 
         /* Send message to queue 0. */
-        queue_status = args->queue->send(&num, rtos::TXWait::WAIT_FOREVER);
-        if (queue_status != rtos::TXError::SUCCESS) {
+        queue_status = args->outputQueue->send(&num, rtos::TXWait::TXW_WAIT_FOREVER);
+        if (queue_status != rtos::TXError::TXE_SUCCESS) {
             args->threadUART->printf("Error on Thread 0 send to queue: %u", queue_status);
         }
 
         /* Take semaphore when it is released. */
-        args->semaphore->get(rtos::WAIT_FOREVER);
+        args->semaphore->get(rtos::TXW_WAIT_FOREVER);
 
         args->threadUART->printf("\n\rThread 0: %lu\n\r", num);
 
-        if (queue_status == rtos::TXError::SUCCESS) {
+        if (queue_status == rtos::TXError::TXE_SUCCESS) {
             args->counters->count_array[0]++;
             args->counters->sum_array[0] += num;
         }
@@ -228,12 +227,12 @@ void consumerThreadEntry(number_consumer_thread_args_t* args) {
 
     while (1) {
         /* Retrieve a message from the queue. */
-        queue_status = args->queue->receive(&received_message, rtos::WAIT_FOREVER);
+        queue_status = args->inputQueue->receive(&received_message, rtos::TXW_WAIT_FOREVER);
 
         /* Get the semaphore with suspension. */
-        semaphore_status = args->semaphore->get(rtos::WAIT_FOREVER);
+        semaphore_status = args->semaphore->get(rtos::TXW_WAIT_FOREVER);
 
-        if (queue_status == rtos::SUCCESS) {
+        if (queue_status == rtos::TXE_SUCCESS) {
             if (received_message >= 20) {
                 flag_status = args->eventFlags->set(0x1, false);
             }
@@ -279,9 +278,9 @@ void eventFlagThreadEntry(number_consumer_thread_args_t* args) {
     args->threadUART->printf("Thread 3 Created\n\r\n\r");
 
     while (1) {
-        flag_status = args->eventFlags->get(0x1, false, true, rtos::WAIT_FOREVER, &actual_flag);
+        flag_status = args->eventFlags->get(0x1, false, true, rtos::TXW_WAIT_FOREVER, &actual_flag);
 
-        if (flag_status == rtos::SUCCESS) {
+        if (flag_status == rtos::TXE_SUCCESS) {
             args->threadUART->printf("Thread 3 flag set\n\r\n\r");
             led.toggle();
             rtos::sleep(S_TO_TICKS(1));

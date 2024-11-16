@@ -25,12 +25,12 @@ TXError EventFlags::get(uint32_t mask, bool waitForAllFlags, bool clear, uint32_
 
 TXError EventFlags::registerNotifyFunction(void (*notifyFunction)(EventFlags*)) {
     // todo: registerNotifyFunction must be implemented
-    return FEATURE_NOT_ENABLED;
+    return TXE_FEATURE_NOT_ENABLED;
 }
 
 TXError EventFlags::getName(char** name) {
     *name = (this->name);
-    return SUCCESS;
+    return TXE_SUCCESS;
 }
 
 TXError EventFlags::getCurrentFlags(uint32_t* flags) {
@@ -44,7 +44,7 @@ TXError EventFlags::getNameOfFirstSuspendedThread(char** threadName) {
     uint32_t status = tx_event_flags_info_get(&txEventFlagsGroup, nullptr, nullptr, &thread, nullptr, nullptr);
 
     // exit early if the call failed
-    if (status != SUCCESS) {
+    if (status != TXE_SUCCESS) {
         return static_cast<TXError>(status);
     }
 

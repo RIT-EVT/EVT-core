@@ -71,11 +71,8 @@ public:
      * @param[in] threadStackSize The stack size of the UARTTX thread.
      * Setting it below the default size may cause issues
      * @param[in] threadPriorityLevel The priority level of the UART Thread.
-     * Setting it too low may result in UART never actually outputting
+     * Setting it too low may result in UART never outputting until the Queue is completely full.
      * @param[in] threadPreemptThreshold The preemption threshold of the UART thread.
-     * Unless you absolutely need a thread to be able to interrupt this thread, do not
-     * set this thread to a lower priority than the default because interrupting the thread
-     * while it is running is likely to just cause the UART output to break immediately.
      * @param[in] threadTimeSlice The default minimum timeslice of this thread
      */
     explicit ThreadUART(io::UART& uart, std::size_t threadStackSize = THREADUART_DEFAULT_STACK_SIZE,
@@ -137,7 +134,7 @@ public:
      * Retrieve the number of enqueued messages in this ThreadUART's Queue
      *
      * @param[out] numEnqueuedMessages A pointer to store the number of enqueued messages in
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages);
 
@@ -145,7 +142,7 @@ public:
      * Retrieve the number of more messages this ThreadUART's Queue can fit
      *
      * @param[out] numAvailableMessages A pointer to store the number of additional messages that the queue can fit
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getAvailableQueueStorage(uint32_t* numAvailableMessages);
 
@@ -153,7 +150,7 @@ public:
      * Retrieve the name of the first thread suspended on sending a message to this ThreadUART
      *
      * @param[out] threadName A pointer to a place to store the name of the first suspended thread
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNameOfFirstSuspendedThread(char** threadName);
 
@@ -161,7 +158,7 @@ public:
      * Retrieve the number of threads that are suspended on this ThreadUART
      *
      * @param[out] numSuspendedThreads A pointer to a place to store the number of suspended threads
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 

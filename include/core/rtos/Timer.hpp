@@ -57,7 +57,7 @@ public:
 
     /**
      * Activate the timer
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError activate() {
         uint32_t errorCode = tx_timer_activate(&txTimer);
@@ -66,7 +66,7 @@ public:
 
     /**
      * Deactivate the timer
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError deactivate() {
         uint32_t errorCode = tx_timer_deactivate(&txTimer);
@@ -77,7 +77,7 @@ public:
      * Change the initialTicks and rescheduleTicks of the function to new values
      * @param[in] newInitialTicks the new value for the initialTicks of the timer
      * @param[in] newRescheduleTicks the new value for the rescheduleTicks of the timer
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError change(uint32_t newInitialTicks, uint32_t newRescheduleTicks) {
         uint32_t errorCode = tx_timer_change(&txTimer, newInitialTicks, newRescheduleTicks);
@@ -90,7 +90,7 @@ public:
      * Retrieve the name of this timer
      *
      * @param[out] name A pointer to a place to store the name pointer
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getName(char** name) {
         *name = this->name;
@@ -101,7 +101,7 @@ public:
      * Retrieve whether the timer is currently active (i.e. running)
      *
      * @param[out] active A pointer to a place to store the active state
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError isActive(bool* active) {
         uint32_t errorCode = tx_timer_info_get(&txTimer, nullptr, (UINT*) active, nullptr, nullptr, nullptr);
@@ -112,7 +112,7 @@ public:
      * Retrieve the remaining ticks before the next call of the expiration function
      *
      * @param remainingTicks A pointer to a place to store the remaining ticks
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getRemainingTicks(uint32_t* remainingTicks) {
         uint32_t errorCode = tx_timer_info_get(&txTimer, nullptr, nullptr, remainingTicks, nullptr, nullptr);
@@ -123,7 +123,7 @@ public:
      * Retrieve the current reschedule ticks of the timer
      *
      * @param rescheduleTicks A pointer to a place to store the reschedule ticks
-     * @return The first error found by the function or Success if there was no error
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getRescheduleTicks(uint32_t* rescheduleTicks) {
         uint32_t errorCode = tx_timer_info_get(&txTimer, nullptr, nullptr, nullptr, rescheduleTicks, nullptr);

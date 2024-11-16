@@ -58,8 +58,9 @@ public:
     TXError getNameOfFirstSuspendedThread(char** threadName) override {
         TX_THREAD* thread;
         uint32_t status = tx_byte_pool_info_get(&txBytePool, nullptr, nullptr, nullptr, &thread, nullptr, nullptr);
-        if (status != SUCCESS)
+        if (status != TXE_SUCCESS) {
             return static_cast<TXError>(status);
+        }
 
         status = tx_thread_info_get(thread, threadName, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
 
@@ -74,7 +75,7 @@ public:
 
     TXError getName(char** name) override {
         *name = this->name;
-        return SUCCESS;
+        return TXE_SUCCESS;
     }
 
 private:
