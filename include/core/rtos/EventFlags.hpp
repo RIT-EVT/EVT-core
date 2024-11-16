@@ -59,7 +59,7 @@ public:
      * to be true, or just ANY flag in the bitmask to be true
      * @param[in] clear If the method should clear outputted flags
      * @param[in] waitOption How long (in ticks) the calling thread should wait for this method to
-     * return. Use Enums::TXWait::WaitForever to wait forever
+     * return. Use TXW_WAIT_FOREVER to wait forever
      * @param[out] output The returned flags
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */

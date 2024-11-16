@@ -3,22 +3,24 @@
 
 namespace core::rtos {
 
-Queue::Queue(char* name, uint32_t messageSize, uint32_t numMessages)
+Queue::Queue(char* name, uint8_t messageSize, uint32_t numMessages)
     : name(name), messageSize(messageSize), queueSize(messageSize * numMessages) {}
+
+Queue::~Queue() {
+    tx_queue_delete(&txQueue);
+}
 
 TXError Queue::init(BytePoolBase& pool) {
     void* poolPointer;
     // allocate memory on the pool
     uint32_t errorCode = pool.allocateMemory(queueSize, TXW_NO_WAIT, &poolPointer);
-    TXError error      = static_cast<TXError>(errorCode);
-    if (error != TXE_SUCCESS)
-        return error;
-    // create the queue only if the memory allocation succeeds
-    return static_cast<TXError>(tx_queue_create(&txQueue, name, messageSize, poolPointer, queueSize));
-}
 
-Queue::~Queue() {
-    tx_queue_delete(&txQueue);
+    TXError error = static_cast<TXError>(errorCode);
+    if (error != TXE_SUCCESS) {
+        return error;
+    }
+    // create the queue only if the memory allocation succeeds
+    return static_cast<TXError>(tx_queue_create(&txQueue, name, (uint32_t)messageSize, poolPointer, queueSize));
 }
 
 TXError Queue::flush() {
@@ -51,7 +53,7 @@ TXError Queue::getName(char** name) {
     return TXE_SUCCESS;
 }
 
-TXError Queue::getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages) {
+TXError Queue::getNumEnqueuedMessages(uint32_t* numEnqueuedMessages) {
     uint32_t status = tx_queue_info_get(&txQueue, nullptr, numEnqueuedMessages, nullptr, nullptr, nullptr, nullptr);
     return static_cast<TXError>(status);
 }

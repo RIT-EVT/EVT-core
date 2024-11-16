@@ -159,7 +159,7 @@ void ThreadUART::readBytes(uint8_t* bytes, size_t size) {
 }
 
 TXError ThreadUART::getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages) {
-    return queue.getNumberOfEnqueuedMessages(numEnqueuedMessages);
+    return queue.getNumEnqueuedMessages(numEnqueuedMessages);
 }
 
 TXError ThreadUART::getAvailableQueueStorage(uint32_t* numAvailableMessages) {

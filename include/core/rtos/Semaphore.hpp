@@ -2,6 +2,7 @@
 #define EVT_RTOS_SEMAPHORE_
 
 #include <core/rtos/Initializable.hpp>
+#include <core/rtos/Enums.hpp>
 
 namespace core::rtos {
 
@@ -33,7 +34,7 @@ public:
      * waitOption ticks for the semaphore to be provided an instance
      *
      * @param[in] waitOption How long (in ticks) the calling thread should wait for the mutex to be available.
-     * Use Enums::TXWait::WaitForever to wait forever
+     * Use TXW_WAIT_FOREVER to wait forever
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError get(uint32_t waitOption);

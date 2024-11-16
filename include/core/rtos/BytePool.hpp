@@ -82,11 +82,11 @@ private:
     /** The name of the Bytepool */
     char* name;
 
-    /** Buffer for the bytepool, SIZE bytes large */
-    uint8_t buffer[SIZE];
-
     /** The struct that the threadx application uses to hold information about the bytepool */
     TX_BYTE_POOL txBytePool;
+
+    /** Buffer for the bytepool, SIZE bytes large */
+    uint8_t buffer[SIZE];
 };
 
 } // namespace core::rtos

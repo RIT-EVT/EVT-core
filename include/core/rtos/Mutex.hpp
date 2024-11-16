@@ -36,7 +36,7 @@ public:
      * the calling thread will wait for waitOption ticks for the mutex to be obtained
      *
      * @param waitOption How long (in ticks) the calling thread should wait for the mutex to be available
-     * Use Enums::TXWait::WaitForever to wait forever
+     * Use TXW_WAIT_FOREVER to wait forever
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError get(uint32_t waitOption);
@@ -101,11 +101,11 @@ public:
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
 private:
-    /** Threadx struct that actually holds all of the information for the Mutex */
-    TX_MUTEX txMutex;
-
     /** Pointer to the name of the Mutex */
     char* name;
+
+    /** Threadx struct that actually holds all of the information for the Mutex */
+    TX_MUTEX txMutex;
 
     /** Whether this mutex has priority inheritance */
     const bool priorityInheritance;

@@ -17,7 +17,7 @@ namespace core::rtos {
  * @tparam T what type of data the thread's entry function will take. Should be at most 32 bits. (so generally should be
  * a pointer)
  */
-template<typename T>
+template <typename T, typename = typename std::enable_if<sizeof(T) <= 4>::type>
 class Thread : public Initializable {
 public:
     /**
@@ -65,8 +65,9 @@ public:
         void* stackStart;
         uint32_t errorCode = pool.allocateMemory(stackSize, TXW_NO_WAIT, &stackStart);
         TXError error      = static_cast<TXError>(errorCode);
-        if (error != TXE_SUCCESS)
+        if (error != TXE_SUCCESS) {
             return error;
+        }
         // create the thread only if the memory allocation succeeded.
         errorCode = tx_thread_create(&txThread,
                                      name,
@@ -255,11 +256,11 @@ public:
     }
 
 private:
-    /** Threadx struct that holds the information for the thread */
-    TX_THREAD txThread;
-
     /** Pointer to the name of this thread */
     char* name;
+
+    /** Threadx struct that holds the information for the thread */
+    TX_THREAD txThread;
 
     /** The function this thread will be running */
     void (*entryFunction)(T);

@@ -25,9 +25,9 @@ public:
      *
      * @param[in] name The name of the queue
      * @param[in] messageSize Size (in 4-byte words) of each message in the queue. The message size can be at most 16
-     * @param[in] numMessages Number of messages in the queue
+     * @param[in] numMessages Number of messages the queue can fit
      */
-    Queue(char* name, uint32_t messageSize, uint32_t numMessages);
+    Queue(char* name, uint8_t messageSize, uint32_t numMessages);
 
     /**
      * Queue Deconstructor
@@ -37,7 +37,7 @@ public:
     TXError init(BytePoolBase& pool) override;
 
     /**
-     * Flush the queue, emptying all of the messages out of it
+     * Flush the queue, deleting all the messages from it
      *
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
@@ -57,7 +57,7 @@ public:
      *
      * @param[out] destination pointer to the location for the popped message to be stored
      * @param[in] waitOption How long (in ticks) the calling thread should wait for the mutex to be available.
-     * Use Enums::TXWait::WaitForever to wait forever
+     * Use TXW_WAIT_FOREVER to wait forever
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError receive(void* destination, uint32_t waitOption);
@@ -76,7 +76,7 @@ public:
      *
      * @param[in] messagePointer A pointer to the message that will be copied to the queue
      * @param[in] waitOption How long (in ticks) the calling thread should wait for the mutex to be available.
-     * Use Enums::TXWait::WaitForever to wait forever
+     * Use TXW_WAIT_FOREVER to wait forever
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError send(void* messagePointer, uint32_t waitOption);
@@ -87,7 +87,7 @@ public:
      *
      * @param[in] messagePointer A pointer to the message that will be copied to the queue
      * @param[in] waitOption How long (in ticks) the calling thread should wait for the mutex to be available.
-     * Use Enums::TXWait::WaitForever to wait forever
+     * Use TXW_WAIT_FOREVER to wait forever
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError sendToFront(void* messagePointer, uint32_t waitOption);
@@ -108,12 +108,12 @@ public:
      * @param[out] numEnqueuedMessages The returned number of enqueued messages
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
-    TXError getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages);
+    TXError getNumEnqueuedMessages(uint32_t* numEnqueuedMessages);
 
     /**
-     * Get the number of more messages the Queue can fit
+     * Get the number of messages that the Queue has remaining space for
      *
-     * @param[out] numAvailableMessages The returned number of more messages the queue can fit
+     * @param[out] numAvailableMessages The returned number of messages the Queue has remaining space for
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getAvailableStorage(uint32_t* numAvailableMessages);
@@ -142,9 +142,9 @@ private:
     TX_QUEUE txQueue;
 
     /** How large (in words) each message in the queue is */
-    uint32_t messageSize;
+    uint8_t messageSize;
 
-    /** How large the entire queue is (calculated at constructor by messageSize * numMessages) */
+    /** How large the entire queue is (calculated in constructor by messageSize * numMessages) */
     uint32_t queueSize;
 };
 
