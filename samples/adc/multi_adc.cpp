@@ -22,7 +22,7 @@ int main() {
     core::log::LOGGER.setUART(&uart);
     core::log::LOGGER.setLogLevel(core::log::Logger::LogLevel::INFO);
 
-    core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "Starting ADC test");
+    uart.printf("Starting ADC test\r\n");
 
     time::wait(500);
 
