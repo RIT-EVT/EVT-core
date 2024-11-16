@@ -30,14 +30,26 @@ public:
     TXError init(core::rtos::BytePoolBase& pool) override;
 
     /**
-     * Set the eventFlags defined by the mask
+     * Set the eventFlags defined by the mask.
+     * Equivalent to mask | eventFlags, i.e. a bitwise OR with mask.
+     * Does not affect bits not included in the mask
      *
-     * @param[in] mask A bitmask describing what flags are to be interacted with
-     * @param[in] clearNonMaskedFlags If true, all the flags not included in the mask will be set to 0.
-     * (true is equivalent to AND-ing with the mask, false is equivalent to OR-ing with the mask)
+     * @param[in] mask The bitmask of flags to set
+     *
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
-    TXError set(uint32_t mask, bool clearNonMaskedFlags);
+    TXError set(uint32_t mask);
+
+    /**
+     * Clears the eventFlags defined by the mask.
+     * Equivalent to ~mask & eventFlags, i.e. a bitwise AND with the negation of the mask.
+     * Does not affect bits not included in the mask
+     *
+     * @param[in] mask The bitmask of flags to clear
+     *
+     * @return The first error found by the function or TXE_SUCCESS if there was no error
+     */
+    TXError clear(uint32_t mask);
 
     /**
      * Get the eventFlags defined by the mask
@@ -62,7 +74,7 @@ public:
     TXError registerNotifyFunction(void (*notifyFunction)(EventFlags* eventFlags));
 
     /**
-     * Retrieve the name of this EventFlags
+     * Get the name of this EventFlags
      *
      * @param[out] name The returned name
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -70,7 +82,7 @@ public:
     TXError getName(char** name);
 
     /**
-     * Retrieve the current values that the flags are set to as a uint32_t
+     * Get the current values that the flags are set to as a uint32_t
      *
      * @param[out] flags The returned flags
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -78,7 +90,7 @@ public:
     TXError getCurrentFlags(uint32_t* flags);
 
     /**
-     * Retrieve the name of the first suspended thread
+     * Get the name of the first suspended thread
      *
      * @param[out] name The returned name
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -86,7 +98,7 @@ public:
     TXError getNameOfFirstSuspendedThread(char** threadName);
 
     /**
-     * Retrieve the number of threads that are suspended on this EventFlags
+     * Get the number of threads that are suspended on this EventFlags
      *
      * @param[out] numSuspendedThreads The returned number of suspended threads
      * @return The first error found by the function or TXE_SUCCESS if there was no error.

@@ -38,7 +38,7 @@ public:
     virtual TXError releaseMemory(void* memoryPointer) = 0;
 
     /**
-     * Retrieve the number of unallocated bytes left in the BytePool
+     * Get the number of unallocated bytes left in the BytePool
      *
      * @param[out] availableBytes The returned number of available bytes
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -46,7 +46,7 @@ public:
     virtual TXError getAvailableBytes(uint32_t* availableBytes) = 0;
 
     /**
-     * Retrieve the number of fragments the BytePool has been split into
+     * Get the number of fragments the BytePool has been split into
      *
      * @param[out] fragments The returned number of fragments
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -54,7 +54,7 @@ public:
     virtual TXError getFragments(uint32_t* fragments) = 0;
 
     /**
-     * Retrieve the name of the first suspended thread
+     * Get the name of the first suspended thread
      *
      * @param[out] name The returned name
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -62,7 +62,7 @@ public:
     virtual TXError getNameOfFirstSuspendedThread(char** threadName) = 0;
 
     /**
-     * Retrieve the number of threads that are suspended on this BytePool
+     * Get the number of threads that are suspended on this BytePool
      *
      * @param[out] numSuspendedThreads The returned number of suspended threads
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -70,7 +70,7 @@ public:
     virtual TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads) = 0;
 
     /**
-     * Retrieve the name of this BytePool
+     * Get the name of this BytePool
      *
      * @param[out] name The returned name
      * @return The first error found by the function or TXE_SUCCESS if there was no error

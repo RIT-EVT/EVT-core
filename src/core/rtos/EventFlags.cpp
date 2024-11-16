@@ -12,8 +12,12 @@ EventFlags::~EventFlags() {
     tx_event_flags_delete(&txEventFlagsGroup);
 }
 
-TXError EventFlags::set(uint32_t mask, bool clearNonMaskedFlags) {
-    return static_cast<TXError>(tx_event_flags_set(&txEventFlagsGroup, mask, clearNonMaskedFlags ? TX_AND : TX_OR));
+TXError EventFlags::set(uint32_t mask) {
+    return static_cast<TXError>(tx_event_flags_set(&txEventFlagsGroup, mask, TX_OR));
+}
+
+TXError EventFlags::clear(uint32_t mask) {
+    return static_cast<TXError>(tx_event_flags_set(&txEventFlagsGroup, ~mask, TX_AND));
 }
 
 TXError EventFlags::get(uint32_t mask, bool waitForAllFlags, bool clear, uint32_t waitOption, uint32_t* output) {

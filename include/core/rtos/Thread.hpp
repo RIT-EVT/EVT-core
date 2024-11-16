@@ -184,7 +184,7 @@ public:
     // Getters
 
     /**
-     * Retrieve the name of this thread
+     * Get the name of this thread
      *
      * @param[out] name The returned name pointer
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -195,7 +195,7 @@ public:
     }
 
     /**
-     * Retrieve the state of this thread
+     * Get the state of this thread
      *
      * @param[out] state The returned state of the thread
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -207,7 +207,7 @@ public:
     }
 
     /**
-     * Retrieve the run count of this thread
+     * Get the run count of this thread
      *
      * @param[out] runCount The returned run count
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -219,7 +219,7 @@ public:
     }
 
     /**
-     * Retrieve the priority of this thread
+     * Get the priority of this thread
      *
      * @param priority The returned priority
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -231,7 +231,7 @@ public:
     }
 
     /**
-     * Retrieve the preemption threshold of this thread
+     * Get the preemption threshold of this thread
      *
      * @param[out] preemptThreshold The returned preempt threshold
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -243,7 +243,7 @@ public:
     }
 
     /**
-     * Retrieve the time slice of this thread
+     * Get the time slice of this thread
      *
      * @param[out] timeSlice The returned time slice
      * @return The first error found by the function or TXE_SUCCESS if there was no error

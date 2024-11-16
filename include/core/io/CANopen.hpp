@@ -78,7 +78,7 @@ void initializeCANopenDriver(types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessag
  * initializing it.
  *
  * @param canNode[in,out] the CO_NODE that is initialized.
- * @param canDevice[in] the canDevice that the object dictionary is retrieved from.
+ * @param canDevice[in] the canDevice that the object dictionary is Getd from.
  * @param canStackDriver[in] references to the drivers that will be used in initialization
  * @param sdoBuffer[in] the sdoBuffer
  * @param appTmrMem[in] the appTmrMem

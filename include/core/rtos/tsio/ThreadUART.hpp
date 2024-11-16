@@ -131,7 +131,7 @@ public:
     // UARTTX Queue Informational Methods
 
     /**
-     * Retrieve the number of enqueued messages in this ThreadUART's Queue
+     * Get the number of enqueued messages in this ThreadUART's Queue
      *
      * @param[out] numEnqueuedMessages A pointer to store the number of enqueued messages in
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -139,7 +139,7 @@ public:
     TXError getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages);
 
     /**
-     * Retrieve the number of more messages this ThreadUART's Queue can fit
+     * Get the number of more messages this ThreadUART's Queue can fit
      *
      * @param[out] numAvailableMessages A pointer to store the number of additional messages that the queue can fit
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -147,7 +147,7 @@ public:
     TXError getAvailableQueueStorage(uint32_t* numAvailableMessages);
 
     /**
-     * Retrieve the name of the first thread suspended on sending a message to this ThreadUART
+     * Get the name of the first thread suspended on sending a message to this ThreadUART
      *
      * @param[out] threadName The returned name of the first suspended thread
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -155,7 +155,7 @@ public:
     TXError getNameOfFirstSuspendedThread(char** threadName);
 
     /**
-     * Retrieve the number of threads that are suspended on this ThreadUART
+     * Get the number of threads that are suspended on this ThreadUART
      *
      * @param[out] numSuspendedThreads The returned number of suspended threads
      * @return The first error found by the function or TXE_SUCCESS if there was no error

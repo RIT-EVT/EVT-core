@@ -87,7 +87,7 @@ public:
     // Getters
 
     /**
-     * Retrieve the name of this timer
+     * Get the name of this timer
      *
      * @param[out] name The returned name
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -98,7 +98,7 @@ public:
     }
 
     /**
-     * Retrieve whether the timer is currently active (i.e. running)
+     * Get whether the timer is currently active (i.e. running)
      *
      * @param[out] active The returned active state
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -109,7 +109,7 @@ public:
     }
 
     /**
-     * Retrieve the remaining ticks before the next call of the expiration function
+     * Get the remaining ticks before the next call of the expiration function
      *
      * @param[out] remainingTicks The returned remaining ticks
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -120,7 +120,7 @@ public:
     }
 
     /**
-     * Retrieve the current reschedule ticks of the timer
+     * Get the current reschedule ticks of the timer
      *
      * @param[out] rescheduleTicks The returned reschedule ticks
      * @return The first error found by the function or TXE_SUCCESS if there was no error

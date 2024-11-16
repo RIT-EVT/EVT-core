@@ -70,7 +70,7 @@ public:
     TXError prioritize();
 
     /**
-     * Retrieve the name of this Semaphore
+     * Get the name of this Semaphore
      *
      * @param[out] name The returned name
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -86,7 +86,7 @@ public:
     TXError getCount(uint32_t* currentCount);
 
     /**
-     * Retrieve the name of the first suspended thread
+     * Get the name of the first suspended thread
      *
      * @param[out] threadName The returned name of the first suspended thread
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -94,7 +94,7 @@ public:
     TXError getNameOfFirstSuspendedThread(char** threadName);
 
     /**
-     * Retrieve the number of threads that are suspended on this Semaphore
+     * Get the number of threads that are suspended on this Semaphore
      *
      * @param[out] numSuspendedThreads The returned number of suspended threads
      * @return The first error found by the function or TXE_SUCCESS if there was no error

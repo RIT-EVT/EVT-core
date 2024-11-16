@@ -59,7 +59,7 @@ public:
     // Getters
 
     /**
-     * Retrieve the name of this Mutex
+     * Get the name of this Mutex
      *
      * @param[out] name The returned name
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -67,7 +67,7 @@ public:
     TXError getName(char** name);
 
     /**
-     * Retrieve the ownership count of this mutex. The ownership count is how many times the current
+     * Get the ownership count of this mutex. The ownership count is how many times the current
      * owner of this mutex has locked this mutex. Each time the owner unlocks this mutex, the ownership
      * count is decremented. Only when ownershipCount reaches 0 does the mutex actually unlock
      *
@@ -77,7 +77,7 @@ public:
     TXError getOwnershipCount(uint32_t* ownershipCount);
 
     /**
-     * Retrieve the name of the thread that currently owns this mutex
+     * Get the name of the thread that currently owns this mutex
      *
      * @param[out] name The returned name of the owner of the thread
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -85,7 +85,7 @@ public:
     TXError getNameOfOwner(char** ownerName);
 
     /**
-     * Retrieve the name of the first suspended thread
+     * Get the name of the first suspended thread
      *
      * @param[out] threadName The returned name of the first suspended thread
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -93,7 +93,7 @@ public:
     TXError getNameOfFirstSuspendedThread(char** threadName);
 
     /**
-     * Retrieve the number of threads that are suspended on this Mutex
+     * Get the number of threads that are suspended on this Mutex
      *
      * @param[out] numSuspendedThreads The returned number of suspended threads
      * @return The first error found by the function or TXE_SUCCESS if there was no error

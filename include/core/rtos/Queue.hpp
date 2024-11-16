@@ -95,7 +95,7 @@ public:
     // Getters
 
     /**
-     * Retrieve the name of this Queue
+     * Get the name of this Queue
      *
      * @param[out] name The returned name
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -103,7 +103,7 @@ public:
     TXError getName(char** name);
 
     /**
-     * Retrieve the number of enqueued messages in this Queue
+     * Get the number of enqueued messages in this Queue
      *
      * @param[out] numEnqueuedMessages The returned number of enqueued messages
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -111,7 +111,7 @@ public:
     TXError getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages);
 
     /**
-     * Retrieve the number of more messages the Queue can fit
+     * Get the number of more messages the Queue can fit
      *
      * @param[out] numAvailableMessages The returned number of more messages the queue can fit
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -119,7 +119,7 @@ public:
     TXError getAvailableStorage(uint32_t* numAvailableMessages);
 
     /**
-     * Retrieve the name of the first suspended thread
+     * Get the name of the first suspended thread
      *
      * @param[out] threadName The returned name of the first suspended thread
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -127,7 +127,7 @@ public:
     TXError getNameOfFirstSuspendedThread(char** threadName);
 
     /**
-     * Retrieve the number of threads that are suspended on this Queue
+     * Get the number of threads that are suspended on this Queue
      *
      * @param[out] numSuspendedThreads The returned number of suspended threads
      * @return The first error found by the function or TXE_SUCCESS if there was no error
