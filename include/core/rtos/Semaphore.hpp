@@ -1,8 +1,8 @@
 #ifndef EVT_RTOS_SEMAPHORE_
 #define EVT_RTOS_SEMAPHORE_
 
-#include <core/rtos/Initializable.hpp>
 #include <core/rtos/Enums.hpp>
+#include <core/rtos/Initializable.hpp>
 
 namespace core::rtos {
 

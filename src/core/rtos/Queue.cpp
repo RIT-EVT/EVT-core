@@ -20,7 +20,7 @@ TXError Queue::init(BytePoolBase& pool) {
         return error;
     }
     // create the queue only if the memory allocation succeeds
-    return static_cast<TXError>(tx_queue_create(&txQueue, name, (uint32_t)messageSize, poolPointer, queueSize));
+    return static_cast<TXError>(tx_queue_create(&txQueue, name, (uint32_t) messageSize, poolPointer, queueSize));
 }
 
 TXError Queue::flush() {

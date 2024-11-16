@@ -17,7 +17,7 @@ namespace core::rtos {
  * @tparam T what type of data the thread's entry function will take. Should be at most 32 bits. (so generally should be
  * a pointer)
  */
-template <typename T, typename = typename std::enable_if<sizeof(T) <= 4>::type>
+template<typename T, typename = typename std::enable_if<sizeof(T) <= 4>::type>
 class Thread : public Initializable {
 public:
     /**
