@@ -97,7 +97,7 @@ public:
     /**
      * Retrieve the name of this Queue
      *
-     * @param[out] name A pointer to a place to store the name pointer
+     * @param[out] name The returned name
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getName(char** name);
@@ -105,7 +105,7 @@ public:
     /**
      * Retrieve the number of enqueued messages in this Queue
      *
-     * @param[out] numEnqueuedMessages A pointer to a place to store the number of enqueued messages
+     * @param[out] numEnqueuedMessages The returned number of enqueued messages
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages);
@@ -113,7 +113,7 @@ public:
     /**
      * Retrieve the number of more messages the Queue can fit
      *
-     * @param[out] numAvailableMessages A pointer to the place to store the number of more messages the queue can fit
+     * @param[out] numAvailableMessages The returned number of more messages the queue can fit
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getAvailableStorage(uint32_t* numAvailableMessages);
@@ -121,7 +121,7 @@ public:
     /**
      * Retrieve the name of the first suspended thread
      *
-     * @param[out] threadName A pointer to a place to store the name of the first suspended thread
+     * @param[out] threadName The returned name of the first suspended thread
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNameOfFirstSuspendedThread(char** threadName);
@@ -129,7 +129,7 @@ public:
     /**
      * Retrieve the number of threads that are suspended on this Queue
      *
-     * @param[out] numSuspendedThreads a pointer to a place to store the number of suspended threads
+     * @param[out] numSuspendedThreads The returned number of suspended threads
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);

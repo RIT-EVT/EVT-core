@@ -48,7 +48,7 @@ public:
      * @param[in] clear If the method should clear outputted flags
      * @param[in] waitOption How long (in ticks) the calling thread should wait for this method to
      * return. Use Enums::TXWait::WaitForever to wait forever
-     * @param[out] output A pointer to store the set flags in
+     * @param[out] output The returned flags
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError get(uint32_t mask, bool waitForAllFlags, bool clear, uint32_t waitOption, uint32_t* output);
@@ -64,7 +64,7 @@ public:
     /**
      * Retrieve the name of this EventFlags
      *
-     * @param[out] name A pointer to a place to store the name pointer
+     * @param[out] name The returned name
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getName(char** name);
@@ -72,7 +72,7 @@ public:
     /**
      * Retrieve the current values that the flags are set to as a uint32_t
      *
-     * @param[out] flags A pointer to a place to store the flags
+     * @param[out] flags The returned flags
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getCurrentFlags(uint32_t* flags);
@@ -80,7 +80,7 @@ public:
     /**
      * Retrieve the name of the first suspended thread
      *
-     * @param[out] name A pointer to a place to store the name pointer
+     * @param[out] name The returned name
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNameOfFirstSuspendedThread(char** threadName);
@@ -88,7 +88,7 @@ public:
     /**
      * Retrieve the number of threads that are suspended on this EventFlags
      *
-     * @param[out] numSuspendedThreads A pointer to a place to store the number of suspended threads
+     * @param[out] numSuspendedThreads The returned number of suspended threads
      * @return The first error found by the function or TXE_SUCCESS if there was no error.
      */
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);

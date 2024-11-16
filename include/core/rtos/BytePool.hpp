@@ -79,7 +79,7 @@ public:
     }
 
 private:
-    /** A pointer to the name of the Bytepool */
+    /** The name of the Bytepool */
     char* name;
 
     /** Buffer for the bytepool, SIZE bytes large */

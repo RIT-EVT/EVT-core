@@ -72,7 +72,7 @@ public:
     /**
      * Retrieve the name of this Semaphore
      *
-     * @param[out] name A pointer to a place to store the name pointer
+     * @param[out] name The returned name
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getName(char** name);
@@ -80,7 +80,7 @@ public:
     /**
      * Get the current count of this Semaphore
      *
-     * @param currentCount A pointer to a place to store the count
+     * @param currentCount The returned count
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getCount(uint32_t* currentCount);
@@ -88,7 +88,7 @@ public:
     /**
      * Retrieve the name of the first suspended thread
      *
-     * @param[out] threadName A pointer to a place to store the name of the first suspended thread
+     * @param[out] threadName The returned name of the first suspended thread
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNameOfFirstSuspendedThread(char** threadName);
@@ -96,7 +96,7 @@ public:
     /**
      * Retrieve the number of threads that are suspended on this Semaphore
      *
-     * @param[out] numSuspendedThreads A pointer to a place to store the number of suspended threads
+     * @param[out] numSuspendedThreads The returned number of suspended threads
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);

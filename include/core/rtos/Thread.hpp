@@ -186,7 +186,7 @@ public:
     /**
      * Retrieve the name of this thread
      *
-     * @param[out] name A pointer to a place to put the name pointer
+     * @param[out] name The returned name pointer
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getName(char* const* name) {
@@ -197,7 +197,7 @@ public:
     /**
      * Retrieve the state of this thread
      *
-     * @param[out] state A pointer to a place to put the state of the thread
+     * @param[out] state The returned state of the thread
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getState(TXThreadState* state) {
@@ -209,7 +209,7 @@ public:
     /**
      * Retrieve the run count of this thread
      *
-     * @param[out] runCount A pointer to a place to put the run count
+     * @param[out] runCount The returned run count
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getRunCount(uint32_t* runCount) {
@@ -221,7 +221,7 @@ public:
     /**
      * Retrieve the priority of this thread
      *
-     * @param priority A pointer to a place to put the priority.
+     * @param priority The returned priority
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getPriority(uint32_t* priority) {
@@ -233,7 +233,7 @@ public:
     /**
      * Retrieve the preemption threshold of this thread
      *
-     * @param[out] preemptThreshold A place to put the preempt threshold
+     * @param[out] preemptThreshold The returned preempt threshold
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getPreemptThreshold(uint32_t* preemptThreshold) {
@@ -245,7 +245,7 @@ public:
     /**
      * Retrieve the time slice of this thread
      *
-     * @param[out] timeSlice A place to put the time slice
+     * @param[out] timeSlice The returned time slice
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getTimeSlice(uint32_t* timeSlice) {

@@ -89,18 +89,18 @@ public:
     /**
      * Retrieve the name of this timer
      *
-     * @param[out] name A pointer to a place to store the name pointer
+     * @param[out] name The returned name
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getName(char** name) {
         *name = this->name;
-        return SUCCESS;
+        return TXE_SUCCESS;
     }
 
     /**
      * Retrieve whether the timer is currently active (i.e. running)
      *
-     * @param[out] active A pointer to a place to store the active state
+     * @param[out] active The returned active state
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError isActive(bool* active) {
@@ -111,7 +111,7 @@ public:
     /**
      * Retrieve the remaining ticks before the next call of the expiration function
      *
-     * @param remainingTicks A pointer to a place to store the remaining ticks
+     * @param[out] remainingTicks The returned remaining ticks
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getRemainingTicks(uint32_t* remainingTicks) {
@@ -122,7 +122,7 @@ public:
     /**
      * Retrieve the current reschedule ticks of the timer
      *
-     * @param rescheduleTicks A pointer to a place to store the reschedule ticks
+     * @param[out] rescheduleTicks The returned reschedule ticks
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getRescheduleTicks(uint32_t* rescheduleTicks) {
