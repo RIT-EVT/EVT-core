@@ -121,12 +121,12 @@
     },                                                  \
     {                                                   \
         /* SDO Server Request COBID */                  \
-        .Key  = CO_KEY(0x1200, 0x01, CO_OBJ__N__R_),    \
+        .Key  = CO_KEY(0x1200, 0x01, CO_OBJ_DN__R_),    \
         .Type = CO_TUNSIGNED32,                         \
         .Data = (CO_DATA) CO_COBID_SDO_REQUEST(),       \
     },                                                  \
     { /* SDO Server Response COBID */                   \
-        .Key  = CO_KEY(0x1200, 0x02, CO_OBJ__N__R_),    \
+        .Key  = CO_KEY(0x1200, 0x02, CO_OBJ_DN__R_),    \
         .Type = CO_TUNSIGNED32,                         \
         .Data = (CO_DATA) CO_COBID_SDO_RESPONSE(),      \
     }

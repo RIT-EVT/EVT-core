@@ -30,21 +30,21 @@ void SDOCanNode::SDOReceive(CO_NODE node) {
     CO_CSDO *csdo;
     CO_ERR   err;
 
-
     csdo = COCSdoFind(&(node), 0);
     err = COCSdoRequestUpload(csdo, CO_DEV(0x2100,0x02),
                               sampleDataArray, 2,
-                              AppCSdoFinishCb, 1000);
+                              AppCSdoFinishCb, 5000);
 
     if (err == CO_ERR_NONE) {
 
         /* Transfer is started successfully */
+        log::LOGGER.log(log::Logger::LogLevel::INFO, "Sent Request");
 
         /* Note: don't use the 'readValue' until transfer is finished! */
 
     } else {
         /* Unable to start the SDO transfer */
-        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Receive Error");
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Request Error");
 
     }
 }
@@ -86,7 +86,7 @@ void AppCSdoFinishCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
     }
     else {
         /* a timeout or abort is detected during SDO transfer  */
-        log::LOGGER.log(log::Logger::LogLevel::ERROR, "SDO callback don goofed 0x%x", code);
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "SDO callback don goofed 0x%x\r\n", code);
     }
 
 }

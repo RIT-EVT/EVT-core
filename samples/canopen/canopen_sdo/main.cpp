@@ -11,6 +11,7 @@
 #include <core/utils/types/FixedQueue.hpp>
 
 #include <core/io/CANopen.hpp>
+#include <cstdio>
 
 #include "SDOCanNode.hpp"
 
@@ -23,17 +24,18 @@ namespace time = core::time;
 void canInterrupt(io::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
 
-    // print out raw received data
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
     uint8_t* data = message.getPayload();
-    for (int i = 0; i < message.getDataLength(); i++) {
-        log::LOGGER.log(log::Logger::LogLevel::INFO, "%X ", *data);
-        data++;
-    }
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "\r\n");
-
     if (queue != nullptr)
         queue->append(message);
+    char messageString[50];
+    for (int i = 0; i < message.getDataLength(); i++) {
+        snprintf(&messageString[i * 5], 6, "0x%02X ", data[i]);
+    }
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG,
+                    "[CAN1] Got RAW message from %X of length %d with data: \r\n\t%s\r\n",
+                    message.getId(),
+                    message.getDataLength(),
+                    messageString);
 }
 
 int main() {
@@ -42,7 +44,7 @@ int main() {
 
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
     log::LOGGER.setUART(&uart);
-    log::LOGGER.setLogLevel(log::Logger::LogLevel::INFO);
+    log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
 
     // create the SDO node
     SDOCanNode testCanNode;
@@ -103,14 +105,20 @@ int main() {
     ///////////////////////////////////////////////////////////////////////////
     // Main loop
     ///////////////////////////////////////////////////////////////////////////
+    uint32_t last_update = HAL_GetTick();
 
     while (1) {
 //        testCanNode.SDOTransfer(canNode);
 
-        testCanNode.SDOReceive(canNode);
+
+        if((HAL_GetTick() - last_update) >= 1000 ){ // If 1000ms have passed Receive CAN message.
+            testCanNode.SDOReceive(canNode);
+            last_update = HAL_GetTick(); // Set to current time.
+        }
 
         io::processCANopenNode(&canNode);
+
         // Wait for new data to come in
-        time::wait(500);
+        time::wait(1);
     }
 }
