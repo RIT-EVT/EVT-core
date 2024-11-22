@@ -6,6 +6,7 @@
 #include <core/io/pin.hpp>
 #include <core/manager.hpp>
 #include <menu.hpp>
+#include <string>
 
 namespace io = core::io;
 
@@ -23,22 +24,32 @@ namespace core:utils
             Terminal(io::UART& uart, utils::Menu menu);
 
             /**
+             * returns the uart instance of this terminal
+             */
+            io::UART& getUART();
+
+            /**
+             * returns the menu instance that serves as the root node of the tree containing the terminal
+             */
+            utils::Menu getMenu();
+
+            /**
              * Sends a provided message over UART
              * @param message a string message to send via UART
              */
-            void update(char* message);
+            void update(std::string message);
 
             /**
              * proccesses incoming UART messages
              */
-            char*[10] recieve();
+            std::string recieve();
 
         private:
+            // menu instance
             utils::Menu menu;
+
             // UART instance 
             io::UART uart;
-
-            int baud;
 
     }
 }

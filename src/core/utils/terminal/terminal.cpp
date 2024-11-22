@@ -5,7 +5,7 @@
 #include <core/io/pin.hpp>
 #include <core/manager.hpp>
 #include <terminal.hpp>
-#include <cstdio>
+#include <string>
 
 namespace utils
 {
@@ -16,7 +16,17 @@ namespace utils
             uart.printf("Starting Terminal...")
         }
 
-        void update(char* message)
+        io::UART& getUART()
+        {
+            return uart;
+        }
+
+        utils::Menu getMenu()
+        {
+            return menu;
+        }
+
+        void update(std::string message)
         {
             for(int i = 0; i < 5; i ++)
             {
@@ -25,14 +35,14 @@ namespace utils
             uart.printf(message);
         }
 
-        char*[10] recieve()
+        std::string[10] recieve()
         {
             char buffer[100];
-            char* argN[10];
+            std::string argN[10];
             uart.gets(buffer, 100);
             
             int c = 0;
-            char hold[20];
+            char hold[20] = {'','','','','','','','','','','','','','','','','','','',''};
             h = 0;
             for(int i = 0; i < 100; i ++)
             {
