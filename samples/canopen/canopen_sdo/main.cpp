@@ -110,7 +110,6 @@ int main() {
     while (1) {
 //        testCanNode.SDOTransfer(canNode);
 
-
         if((HAL_GetTick() - last_update) >= 1000 ){ // If 1000ms have passed Receive CAN message.
             testCanNode.SDOReceive(canNode);
             last_update = HAL_GetTick(); // Set to current time.

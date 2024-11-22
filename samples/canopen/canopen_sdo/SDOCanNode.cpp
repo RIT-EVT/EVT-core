@@ -47,6 +47,7 @@ void SDOCanNode::SDOReceive(CO_NODE node) {
         log::LOGGER.log(log::Logger::LogLevel::ERROR, "Request Error");
 
     }
+
 }
 
 uint8_t SDOCanNode::getSampleDataA() {
