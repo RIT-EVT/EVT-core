@@ -11,31 +11,31 @@
 #include <core/rtos/Threadx.hpp>
 #include <string>
 
-// All defines wrapped in ifndefs so we can set them externally.
 
-#ifndef THREADUART_QUEUE_MESSAGE_SIZE
+//Defines the size for a ThreadUART Queue message (in 4 byte words).
+//This CANNOT be bigger than 16.
+//Wrapped in an ifdef so this can be defined externally
+#ifdef THREADUART_QUEUE_MESSAGE_SIZE
+    #if THREADUART_QUEUE_MESSAGE_SIZE > 16
+        #error THREADUART_QUEUE_MESSAGE_SIZE must be less than 16.
+    #endif
+#else
     #define THREADUART_QUEUE_MESSAGE_SIZE 16
 #endif // THREADUART_QUEUE_MESSAGE_SIZE
 
+//Defines the number of message in the ThreadUART Queue.
+//Wrapped in an ifndef so this can be defined externally
 #ifndef THREADUART_QUEUE_NUM_MESSAGES
     #define THREADUART_QUEUE_NUM_MESSAGES 32
 #endif // THREADUART_QUEUE_NUM_MESSAGES
 
-#ifndef THREADUART_DEFAULT_STACK_SIZE
-    #define THREADUART_DEFAULT_STACK_SIZE 1024
-#endif // THREADUART_DEFAULT_STACK_SIZE
+#define THREADUART_DEFAULT_STACK_SIZE 1024
 
-#ifndef THREADUART_DEFAULT_PRIORITY_LEVEL
-    #define THREADUART_DEFAULT_PRIORITY_LEVEL 1u
-#endif // THREADUART_DEFAULT_PRIORITY_LEVEL
+#define THREADUART_DEFAULT_PRIORITY_LEVEL 1u
 
-#ifndef THREADUART_DEFAULT_PREEMPT_THRESHOLD
-    #define THREADUART_DEFAULT_PREEMPT_THRESHOLD 0u
-#endif // THREADUART_DEFAULT_PREEMPT_THRESHOLD
+#define THREADUART_DEFAULT_PREEMPT_THRESHOLD 0u
 
-#ifndef THREADUART_DEFAULT_TIME_SLICE
-    #define THREADUART_DEFAULT_TIME_SLICE MS_TO_TICKS(500)
-#endif // THREADUART_DEFAULT_TIME_SLICE
+#define THREADUART_DEFAULT_TIME_SLICE MS_TO_TICKS(500)
 
 namespace io = core::io;
 namespace core::rtos::tsio {
@@ -85,6 +85,12 @@ public:
 
     // Inherited UART methods
 
+    /**
+     * Add the given formatted string to the ThreadUART Queue to eventually be sent out over UART.
+     * Only the first 256 characters of the result string of the formatting will be sent
+     *
+     * @param[in] format The format string to print out
+     */
     void printf(const char* format, ...) override;
 
     void setBaudrate(uint32_t baudrate) override;

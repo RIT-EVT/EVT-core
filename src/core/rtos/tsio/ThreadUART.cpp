@@ -63,11 +63,12 @@ void ThreadUART::printf(const char* format, ...) {
 void ThreadUART::puts(const char* s) {
     writeMutex.get(TX_WAIT_FOREVER);
     // split longer messages into 64 (63 + null-termination) bit chunks.
-    char temp[64];
+    char temp[THREADUART_QUEUE_MESSAGE_SIZE];
     uint32_t len = strlen(s);
-    for (uint32_t i = 0; i < len; i += 63) {
-        memccpy(temp, s + i, '\0', 63);
-        temp[63] = '\0'; // set the last bit to the null terminator (should already be that but just in case)
+    for (uint32_t i = 0; i < len; i += THREADUART_QUEUE_MESSAGE_SIZE-1) {
+        memccpy(temp, s + i, '\0', THREADUART_QUEUE_MESSAGE_SIZE-1);
+        temp[THREADUART_QUEUE_MESSAGE_SIZE-1] = '\0'; // set the last bit to the null terminator
+                                                      // (should already be that but just in case)
         queue.send(temp, TXW_WAIT_FOREVER);
     }
     writeMutex.put();
@@ -75,7 +76,7 @@ void ThreadUART::puts(const char* s) {
 
 void ThreadUART::putc(char c) {
     writeMutex.get(TX_WAIT_FOREVER);
-    char temp[64];
+    char temp[THREADUART_QUEUE_MESSAGE_SIZE];
     temp[0] = c;
     temp[1] = '\0';
     queue.send(temp, TXW_WAIT_FOREVER);
@@ -84,23 +85,23 @@ void ThreadUART::putc(char c) {
 
 void ThreadUART::writeBytes(uint8_t* bytes, size_t size) {
     writeMutex.get(TX_WAIT_FOREVER);
-    // split longer messages into 64 bit chunks.
-    // we send 63 bytes plus a null-terminating character, since UART is expecting a string
-    char temp[64];
+    // split longer messages into THREADUART_QUEUE_MESSAGE_SIZE byte chunks.
+    // we send THREADUART_QUEUE_MESSAGE_SIZE-1 bytes plus a null-terminating character, since UART is expecting a string
+    char temp[THREADUART_QUEUE_MESSAGE_SIZE];
     size_t i = 0;
-    // send all the chunks except the last message (which might be less than 64 bytes)
-    if (size > 63) {
-        size_t max = size - 63;
-        for (i = 0; i < max; i += 63) {
-            memcpy(temp, bytes + i, 63);
-            temp[63] = '\0';
+    // send all the chunks except the last message (which might be less than THREADUART_QUEUE_MESSAGE_SIZE bytes)
+    if (size > THREADUART_QUEUE_MESSAGE_SIZE-1) {
+        size_t max = size - THREADUART_QUEUE_MESSAGE_SIZE-1;
+        for (i = 0; i < max; i += THREADUART_QUEUE_MESSAGE_SIZE-1) {
+            memcpy(temp, bytes + i, THREADUART_QUEUE_MESSAGE_SIZE-1);
+            temp[THREADUART_QUEUE_MESSAGE_SIZE-1] = '\0';
             queue.send(temp, TXW_WAIT_FOREVER);
         }
     }
     // send the last amount of bytes
     size_t remaining_bytes = size - i;
     if (remaining_bytes > 0) {
-        memset(temp, 0, 64);
+        memset(temp, 0, THREADUART_QUEUE_MESSAGE_SIZE);
         // copy last message into temp
         memcpy(temp, bytes + i, remaining_bytes);
         queue.send(temp, TXW_WAIT_FOREVER);
@@ -113,7 +114,7 @@ void ThreadUART::write(uint8_t byte) {
 }
 
 void ThreadUART::sendFirstQueueMessage() {
-    char buffer[64];                         // Buffer array to hold the message
+    char buffer[THREADUART_QUEUE_MESSAGE_SIZE];                  // Buffer array to hold the message
     queue.receive(buffer, TXW_WAIT_FOREVER); // Receives the message and assigns it to the buffer variable
     copyUART.writeBytes((uint8_t*) (buffer), strlen(buffer));
 }

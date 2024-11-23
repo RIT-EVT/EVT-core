@@ -4,7 +4,14 @@
 #include <core/rtos/Initializable.hpp>
 #include <cstdint>
 
+/**
+ * Converts seconds to rtos ticks
+ */
 #define S_TO_TICKS(n)  ((uint32_t) (n) *TX_TIMER_TICKS_PER_SECOND)
+
+/**
+ * Converts milliseconds to rtos ticks
+ */
 #define MS_TO_TICKS(n) ((uint32_t) (n) *TX_TIMER_TICKS_PER_SECOND / 1000u)
 
 namespace core::rtos {
