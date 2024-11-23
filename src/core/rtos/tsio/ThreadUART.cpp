@@ -68,7 +68,7 @@ void ThreadUART::puts(const char* s) {
     for (uint32_t i = 0; i < len; i += THREADUART_QUEUE_MESSAGE_SIZE_BYTES - 1) {
         memccpy(temp, s + i, '\0', THREADUART_QUEUE_MESSAGE_SIZE_BYTES - 1);
         temp[THREADUART_QUEUE_MESSAGE_SIZE_BYTES - 1] = '\0'; // set the last bit to the null terminator
-                                                        // (should already be that but just in case)
+                                                              // (should already be that but just in case)
         queue.send(temp, TXW_WAIT_FOREVER);
     }
     writeMutex.put();
@@ -115,7 +115,7 @@ void ThreadUART::write(uint8_t byte) {
 
 void ThreadUART::sendFirstQueueMessage() {
     char buffer[THREADUART_QUEUE_MESSAGE_SIZE_BYTES]; // Buffer array to hold the message
-    queue.receive(buffer, TXW_WAIT_FOREVER);    // Receives the message and assigns it to the buffer variable
+    queue.receive(buffer, TXW_WAIT_FOREVER);          // Receives the message and assigns it to the buffer variable
     copyUART.writeBytes((uint8_t*) (buffer), strlen(buffer));
 }
 

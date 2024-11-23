@@ -22,8 +22,8 @@
     #define THREADUART_QUEUE_MESSAGE_SIZE_WORDS 16
 #endif // THREADUART_QUEUE_MESSAGE_SIZE
 
-//Defines the size for a ThreadUART Queue message in bytes.
-#define THREADUART_QUEUE_MESSAGE_SIZE_BYTES (4*THREADUART_QUEUE_MESSAGE_SIZE_WORDS)
+// Defines the size for a ThreadUART Queue message in bytes.
+#define THREADUART_QUEUE_MESSAGE_SIZE_BYTES (4 * THREADUART_QUEUE_MESSAGE_SIZE_WORDS)
 
 // Defines the number of message in the ThreadUART Queue.
 // Wrapped in an ifndef so this can be defined externally
