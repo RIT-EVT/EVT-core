@@ -54,9 +54,9 @@ void ThreadUART::printf(const char* format, ...) {
 
     char buffer[256];                                /* Buffer array to hold the message */
     vsnprintf(buffer, sizeof(buffer), format, args); /* vsnprint formats the string and stores it in the buffer array */
+    buffer[255] = '\0';
 
     puts(buffer);
-
     va_end(args); /* Cleans va_list once the message has been sent */
 }
 

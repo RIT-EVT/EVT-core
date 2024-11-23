@@ -175,9 +175,9 @@ void UARTf4xx::printf(const char* format, ...) {
     va_list args;
     va_start(args, format);
 
-    char string[200];
+    char string[256];
     uint8_t* data = reinterpret_cast<uint8_t*>(&string);
-    if (0 < vsprintf(string, format, args)) {
+    if (0 < vsnprintf(string, sizeof(string), format, args)) {
         HAL_UART_Transmit(&halUART, data, strlen(string), EVT_UART_TIMEOUT);
     }
 
