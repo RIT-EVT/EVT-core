@@ -105,8 +105,8 @@ public:
     void readBytes(uint8_t* bytes, size_t size) override;
 
     /**
-* Copy the given byte array to the Queue of messages to be sent to UART, splitting it into multiple Queue
-* messages if the string is too long. Each of the messages will be 64 bytes
+     * Copy the given byte array to the Queue of messages to be sent to UART, splitting it into multiple Queue
+     * messages if the string is too long. Each of the messages will be 64 bytes
      *
      * @param[in] s The string we are sending to the Queue
      */

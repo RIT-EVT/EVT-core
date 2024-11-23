@@ -113,13 +113,13 @@ void ThreadUART::write(uint8_t byte) {
 }
 
 void ThreadUART::sendFirstQueueMessage() {
-    char buffer[64]; // Buffer array to hold the message
+    char buffer[64];                         // Buffer array to hold the message
     queue.receive(buffer, TXW_WAIT_FOREVER); // Receives the message and assigns it to the buffer variable
     copyUART.writeBytes((uint8_t*) (buffer), strlen(buffer));
 }
 
 void ThreadUART::setBaudrate(uint32_t baudrate) {
-        copyUART.setBaudrate(baudrate);
+    copyUART.setBaudrate(baudrate);
 }
 
 void ThreadUART::setFormat(WordLength wordLength, Parity parity, NumStopBits numStopBits) {
