@@ -51,7 +51,7 @@ typedef struct counters {
  * Struct that holds the arguments for the thread that generates the numbers
  */
 typedef struct number_gen_thread_args {
-    rtos::Queue* outputQueue;   // The queue of numbers that the number gen thread add it's generated number to
+    rtos::Queue* outputQueue; // The queue of numbers that the number gen thread add it's generated number to
 
     rtos::Semaphore* semaphore; // A semaphore that mutually excludes the threads from accessing the queue or printing
                                 // to uart at the same time these shouldn't necessarily need to be mutually exclusive,
@@ -77,7 +77,7 @@ typedef struct number_consumer_thread_args {
     rtos::EventFlags* eventFlags; // the EventFlags that the number consumer threads will use to show they have gotten a
                                   // number, which will trigger the eventFlagThread to run it's own method.
 
-    uint8_t num;                  // What number this thread is
+    uint8_t num; // What number this thread is
 
     counters_t* counters; // the struct of counters for the number consumer threads to increase their counters when they
                           // get a number
@@ -139,15 +139,13 @@ int main() {
     rtos::Thread<number_consumer_thread_args_t*> eventFlagThread(
         (char*) "Thread 3", eventFlagThreadEntry, &thread_3_args, DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
 
-
     uart.printf("\n\rAbout to start the kernel.\n\r");
 
-    //Example implementation of getting an initializable object's name
+    // Example implementation of getting an initializable object's name
     char nameTest[INITIALIZABLE_NAME_MAX_LENGTH];
     generatorThread.getName(nameTest, INITIALIZABLE_NAME_MAX_LENGTH);
 
     uart.printf("(Making sure names work) The name of the UART Thread is: %s\n\r", nameTest);
-
 
     /*
      * Most RTOS objects are initializable, which means we need to register them with the threadx kernel for them

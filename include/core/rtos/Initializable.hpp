@@ -7,7 +7,7 @@
 
 #ifndef INITIALIZABLE_NAME_MAX_LENGTH
     #define INITIALIZABLE_NAME_MAX_LENGTH 26
-#endif //INITIALIZABLE_NAME_MAX_LENGTH
+#endif // INITIALIZABLE_NAME_MAX_LENGTH
 
 namespace core::rtos {
 
@@ -38,13 +38,12 @@ public:
     void getName(char* destination, size_t size);
 
 protected:
-
     /**
      * Initializable constructor
      * @param[in] name pointer to the name of the Initializable. The first INITIALIZABLE_NAME_MAX_LENGTH bytes of the
      * name will be copied into the local name array.
      */
-    explicit Initializable(char *name);
+    explicit Initializable(char* name);
 
     /**
      * The name of this initializable object

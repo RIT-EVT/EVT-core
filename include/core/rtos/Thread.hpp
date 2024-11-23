@@ -2,8 +2,8 @@
 #define _EVT_RTOS_THREAD_
 
 #include <core/rtos/Initializable.hpp>
-#include <type_traits>
 #include <cstdint>
+#include <type_traits>
 
 namespace core::rtos {
 

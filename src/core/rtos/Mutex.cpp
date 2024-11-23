@@ -2,7 +2,8 @@
 
 namespace core::rtos {
 
-Mutex::Mutex(char* name, bool priorityInheritance) : Initializable(name), txMutex(), priorityInheritance(priorityInheritance) {}
+Mutex::Mutex(char* name, bool priorityInheritance)
+    : Initializable(name), txMutex(), priorityInheritance(priorityInheritance) {}
 
 TXError Mutex::init(BytePoolBase& pool) {
     return static_cast<TXError>(tx_mutex_create(&txMutex, name, (UINT) priorityInheritance));

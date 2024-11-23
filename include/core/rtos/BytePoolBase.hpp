@@ -7,8 +7,7 @@
 
 #ifndef BYTEPOOL_NAME_MAX_LENGTH
     #define BYTEPOOL_NAME_MAX_LENGTH 26
-#endif //BYTEPOOL_NAME_MAX_LENGTH
-
+#endif // BYTEPOOL_NAME_MAX_LENGTH
 
 namespace core::rtos {
 

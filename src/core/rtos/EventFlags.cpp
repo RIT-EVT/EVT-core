@@ -2,8 +2,7 @@
 
 namespace core::rtos {
 
-EventFlags::EventFlags(char* name) :  Initializable(name), txEventFlagsGroup() {
-}
+EventFlags::EventFlags(char* name) : Initializable(name), txEventFlagsGroup() {}
 
 TXError EventFlags::init(core::rtos::BytePoolBase& pool) {
     return static_cast<TXError>(tx_event_flags_create(&txEventFlagsGroup, name));

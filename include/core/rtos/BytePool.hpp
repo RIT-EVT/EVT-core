@@ -23,7 +23,7 @@ public:
      * The name is copied into this object
      */
     explicit BytePool(char* name) : txBytePool(), buffer() {
-        strncpy(this->name, name, BYTEPOOL_NAME_MAX_LENGTH+1);
+        strncpy(this->name, name, BYTEPOOL_NAME_MAX_LENGTH + 1);
         this->name[BYTEPOOL_NAME_MAX_LENGTH] = '\0';
     }
 
@@ -79,11 +79,11 @@ public:
     }
 
     void getName(char* destination, size_t size) override {
-        if (size > BYTEPOOL_NAME_MAX_LENGTH+1) {
-            size = BYTEPOOL_NAME_MAX_LENGTH+1;
+        if (size > BYTEPOOL_NAME_MAX_LENGTH + 1) {
+            size = BYTEPOOL_NAME_MAX_LENGTH + 1;
         }
         strncpy(destination, this->name, size);
-        destination[size-1] = 0;
+        destination[size - 1] = 0;
     }
 
 private:

@@ -100,7 +100,6 @@ public:
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
 private:
-
     /** The threadx struct that represents this object in the threadx kernel */
     TX_EVENT_FLAGS_GROUP txEventFlagsGroup;
 };
