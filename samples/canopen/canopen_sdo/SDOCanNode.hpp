@@ -33,7 +33,7 @@ public:
      *
      * @param newValue[in] The value to set sample data to
      */
-    void SDOReceive(CO_NODE node);
+    void SDOReceive(CO_NODE &node);
 
     /**
      * Get the contained sample data

@@ -26,14 +26,14 @@ void SDOCanNode::SDOTransfer(CO_NODE node) {
     }
 }
 
-void SDOCanNode::SDOReceive(CO_NODE node) {
+void SDOCanNode::SDOReceive(CO_NODE &node) {
     CO_CSDO *csdo;
     CO_ERR   err;
 
     csdo = COCSdoFind(&(node), 0);
     err = COCSdoRequestUpload(csdo, CO_DEV(0x2100,0x02),
                               sampleDataArray, 2,
-                              AppCSdoFinishCb, 5000);
+                              AppCSdoFinishCb, 1000);
 
     if (err == CO_ERR_NONE) {
 
@@ -83,7 +83,7 @@ void AppCSdoFinishCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
     if (code == 0) {
         /* read data is available in 'readValue' */
 //        sampleDataB = (sampleDataArray[0] << 8) | sampleDataArray[1];
-        log::LOGGER.log(log::Logger::LogLevel::INFO, "Value transferred");
+        log::LOGGER.log(log::Logger::LogLevel::INFO, "Value transferred %x, %x", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
     }
     else {
         /* a timeout or abort is detected during SDO transfer  */
