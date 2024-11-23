@@ -10,11 +10,10 @@
 namespace core::rtos {
 
 /**
- * Allocate a bytepool to store all of the Initializable objects passed into
- * this function, initialize them, and begin the threadx kernel
+ * Allocate a bytepool to store all of the Initializable objects passed into this function, initialize them, and begin
+ * the threadx kernel
  *
- * @param[in] initList The list of Initializable objects that must be initialized
- * before the threadx kernel begins
+ * @param[in] initList The list of Initializable objects that must be initialized before the threadx kernel begins
  * @param length The length of initList
  * @param[in] poolptr A reference to the bytepool to store the information of the initializable objects in
  * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -33,8 +32,9 @@ TXError startKernel(Initializable** initList, std::size_t length, BytePoolBase& 
 TXError bulkInitialize(Initializable** initList, std::size_t length, BytePoolBase& pool);
 
 /**
- * Relinquish control of the currently running thread, suspending it and allowing the
- * threadx kernel to pick another thread to run
+ * Relinquish control of the cpu from the currently running thread, allowing the
+ * threadx kernel to potentially pick another thread to run.
+ * If the currently running thread is the highest priority thread running, this method will not have any effect
  */
 void relinquish();
 

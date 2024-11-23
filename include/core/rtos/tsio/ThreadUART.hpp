@@ -1,7 +1,6 @@
 #ifndef _EVT_THREAD_UART_
 #define _EVT_THREAD_UART_
 
-#include <HALf4/stm32f4xx.h>
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
 #include <core/rtos/Initializable.hpp>
@@ -65,7 +64,7 @@ namespace core::rtos::tsio {
 class ThreadUART : public Initializable, public io::UART {
 public:
     /**
-     * Constructor for thread safe uart class
+     * Constructor for threadsafe UART class
      *
      * @param[in] uart A UART instance
      * @param[in] threadStackSize The stack size of the UARTTX thread.
@@ -106,26 +105,38 @@ public:
     void readBytes(uint8_t* bytes, size_t size) override;
 
     /**
-     * Copies the given string to the Queue of messages to be sent to UART,
-     * splitting it into multiple Queue messages if the string is too long
-     * (each of the messages will be 64 bytes)
+* Copy the given byte array to the Queue of messages to be sent to UART, splitting it into multiple Queue
+* messages if the string is too long. Each of the messages will be 64 bytes
      *
-     * @param[in] s A pointer to the string we are sending to the Queue
+     * @param[in] s The string we are sending to the Queue
      */
     void puts(const char* s);
 
+    /**
+     * Add a single character to the Queue of messages to be sent to UART. This single byte will take up an entire 64
+     * byte message.
+     * The charcater is encoded as a string consisting of the character and a null-terminating character
+     *
+     * @param c The character to be sent to the UART queue
+     */
     void putc(char c) override;
 
     /**
-     * Copies the given byte array to the Queue of messages to be sent to UART,
-     * splitting it into multiple Queue messages if the string is too long
-     * (each of the messages will be 64 bytes).
+     * Copy the given byte array to the Queue of messages to be sent to UART, splitting it into multiple Queue
+     * messages if the string is too long. Each of the messages will be 64 bytes
      *
-     * @param[in] bytes pointer to the byte array we are sending to the Queue
-     * @param[in] size size of the byte array
+     * @param[in] bytes The byte array we are sending to the Queue
+     * @param[in] size Size of the byte array
      */
     void writeBytes(uint8_t* bytes, size_t size) override;
 
+    /**
+     * Add a single byte to the Queue of messages to be sent to UART. This single byte will take up an entire 64 byte
+     * message.
+     * The byte is encoded as a string consisting of the byte and then immediately after a null-terminating character
+     *
+     * @param byte The byte to be sent to the UART Queue
+     */
     void write(uint8_t byte) override;
 
     // UARTTX Queue Informational Methods
@@ -139,9 +150,9 @@ public:
     TXError getNumberOfEnqueuedMessages(uint32_t* numEnqueuedMessages);
 
     /**
-     * Get the number of more messages this ThreadUART's Queue can fit
+     * Get the number of messages that this ThreadUART's Queue has remaining space for
      *
-     * @param[out] numAvailableMessages A pointer to store the number of additional messages that the queue can fit
+     * @param[out] numAvailableMessages The returned number of messages the Queue has remaining space for
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError getAvailableQueueStorage(uint32_t* numAvailableMessages);
@@ -170,14 +181,8 @@ public:
     void sendFirstQueueMessage();
 
 private:
-    /** Pointer to store this thread's entry function */
-    void (*threadEntryFunction)(ThreadUART*);
-
     /** UART object */
     io::UART& copyUART;
-
-    /** HAL representation of the UART */
-    UART_HandleTypeDef halUART;
 
     /** Queue that buffers the messages to be sent to uart */
     Queue queue;

@@ -89,8 +89,8 @@ public:
      * and when the thread completes or is terminated
      *
      * @param[in] notifyFunction The pointer to the function that will be called.\n
-     *  The first argument to this function will contain a pointer to this thread.\n
-     *  The second argument to this function will be the threadID of this thread
+     * The first argument to this function will contain a pointer to this thread.\n
+     * The second argument to this function will be the threadID of this thread
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError registerEntryExitNotification(void (*notifyFunction)(Thread<T>, uint32_t)) {

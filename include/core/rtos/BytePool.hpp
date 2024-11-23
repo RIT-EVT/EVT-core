@@ -23,7 +23,7 @@ public:
      * The name is copied into this object
      */
     explicit BytePool(char* name) : txBytePool(), buffer() {
-        strncpy(this->name, name, BYTEPOOL_NAME_MAX_LENGTH + 1);
+        strncpy(this->name, name, BYTEPOOL_NAME_MAX_LENGTH);
         this->name[BYTEPOOL_NAME_MAX_LENGTH] = '\0';
     }
 

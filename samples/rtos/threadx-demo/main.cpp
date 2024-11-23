@@ -1,6 +1,7 @@
 /**
  * This sample shows off Threadx support from Evt-core.
- * This will make 4 threads and send data between them.
+ * We use queues, semaphores, ThreadUART, EventFlags, and obviously Threads.
+ * It will make 4 threads and send data between them.
  * The first thread Generates random numbers and sends them to a Queue.
  * The second and third threads read those random numbers and interpret them in some way,
  * raising certain flags of an eventFlags once they have recieved a message.

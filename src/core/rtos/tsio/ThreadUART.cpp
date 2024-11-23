@@ -7,6 +7,7 @@
 
 namespace log = core::log;
 namespace io  = core::io;
+
 namespace core::rtos::tsio {
 
 // empty namespace to isolate this entry function to this file only
@@ -112,38 +113,35 @@ void ThreadUART::write(uint8_t byte) {
 }
 
 void ThreadUART::sendFirstQueueMessage() {
-    char buffer[64];                         // Buffer array to hold the message
+    char buffer[64]; // Buffer array to hold the message
     queue.receive(buffer, TXW_WAIT_FOREVER); // Receives the message and assigns it to the buffer variable
     copyUART.writeBytes((uint8_t*) (buffer), strlen(buffer));
 }
 
 void ThreadUART::setBaudrate(uint32_t baudrate) {
-    this->halUART.Init.BaudRate = baudrate;
-    this->baudrate              = baudrate;
+        copyUART.setBaudrate(baudrate);
 }
 
 void ThreadUART::setFormat(WordLength wordLength, Parity parity, NumStopBits numStopBits) {
-    halUART.Init.WordLength = static_cast<uint32_t>(wordLength);
-    halUART.Init.Parity     = static_cast<uint32_t>(parity);
-    halUART.Init.Parity     = static_cast<uint32_t>(numStopBits);
+    copyUART.setFormat(wordLength, parity, numStopBits);
 }
 
 void ThreadUART::sendBreak() {
-    HAL_LIN_SendBreak(&halUART);
+    copyUART.sendBreak();
 }
 
 bool ThreadUART::isReadable() {
-    return halUART.pRxBuffPtr != NULL;
+    return copyUART.isReadable();
 }
 
 bool ThreadUART::isWritable() {
-    return halUART.pTxBuffPtr == NULL;
+    return copyUART.isWritable();
 }
 
 char ThreadUART::getc() {
     readMutex.get(TXWait::TXW_WAIT_FOREVER);
     uint8_t c;
-    while (HAL_UART_Receive(&halUART, &c, 1, EVT_UART_TIMEOUT) == HAL_TIMEOUT) {}
+    c = copyUART.getc();
     readMutex.put();
     return static_cast<char>(c);
 }
@@ -154,7 +152,7 @@ uint8_t ThreadUART::read() {
 
 void ThreadUART::readBytes(uint8_t* bytes, size_t size) {
     readMutex.get(TXWait::TXW_WAIT_FOREVER);
-    HAL_UART_Receive(&halUART, bytes, size, EVT_UART_TIMEOUT);
+    copyUART.readBytes(bytes, size);
     readMutex.put();
 }
 

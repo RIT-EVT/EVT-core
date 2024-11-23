@@ -59,6 +59,7 @@ public:
 
     /**
      * Activate the timer
+     *
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError activate() {
@@ -68,6 +69,7 @@ public:
 
     /**
      * Deactivate the timer
+     *
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     TXError deactivate() {
@@ -77,6 +79,7 @@ public:
 
     /**
      * Change the initialTicks and rescheduleTicks of the function to new values
+     *
      * @param[in] newInitialTicks the new value for the initialTicks of the timer
      * @param[in] newRescheduleTicks the new value for the rescheduleTicks of the timer
      * @return The first error found by the function or TXE_SUCCESS if there was no error
@@ -84,17 +87,6 @@ public:
     TXError change(uint32_t newInitialTicks, uint32_t newRescheduleTicks) {
         uint32_t errorCode = tx_timer_change(&txTimer, newInitialTicks, newRescheduleTicks);
         return static_cast<TXError>(errorCode);
-    }
-
-    /**
-     * Get the name of this timer
-     *
-     * @param[out] name The returned name
-     * @return The first error found by the function or TXE_SUCCESS if there was no error
-     */
-    TXError getName(char** name) {
-        *name = this->name;
-        return TXE_SUCCESS;
     }
 
     /**
