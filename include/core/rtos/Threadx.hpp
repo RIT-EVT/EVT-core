@@ -7,7 +7,7 @@
 /**
  * Converts seconds to rtos ticks
  */
-#define S_TO_TICKS(n)  ((uint32_t) (n) *TX_TIMER_TICKS_PER_SECOND)
+#define S_TO_TICKS(n) ((uint32_t) (n) *TX_TIMER_TICKS_PER_SECOND)
 
 /**
  * Converts milliseconds to rtos ticks

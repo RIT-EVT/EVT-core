@@ -11,10 +11,9 @@
 #include <core/rtos/Threadx.hpp>
 #include <string>
 
-
-//Defines the size for a ThreadUART Queue message (in 4 byte words).
-//This CANNOT be bigger than 16.
-//Wrapped in an ifdef so this can be defined externally
+// Defines the size for a ThreadUART Queue message (in 4 byte words).
+// This CANNOT be bigger than 16.
+// Wrapped in an ifdef so this can be defined externally
 #ifdef THREADUART_QUEUE_MESSAGE_SIZE
     #if THREADUART_QUEUE_MESSAGE_SIZE > 16
         #error THREADUART_QUEUE_MESSAGE_SIZE must be less than 16.
@@ -23,8 +22,8 @@
     #define THREADUART_QUEUE_MESSAGE_SIZE 16
 #endif // THREADUART_QUEUE_MESSAGE_SIZE
 
-//Defines the number of message in the ThreadUART Queue.
-//Wrapped in an ifndef so this can be defined externally
+// Defines the number of message in the ThreadUART Queue.
+// Wrapped in an ifndef so this can be defined externally
 #ifndef THREADUART_QUEUE_NUM_MESSAGES
     #define THREADUART_QUEUE_NUM_MESSAGES 32
 #endif // THREADUART_QUEUE_NUM_MESSAGES
