@@ -115,13 +115,13 @@ int main() {
 
     // create thread 0
     rtos::Thread<numberGenThreadArgs*> generatorThread((char*) "Generator Thread",
-                                                            generatorThreadEntry,
-                                                            &generatorThreadArgs,
-                                                            DEMO_STACK_SIZE,
-                                                            1,
-                                                            1,
-                                                            MS_TO_TICKS(50),
-                                                            true);
+                                                       generatorThreadEntry,
+                                                       &generatorThreadArgs,
+                                                       DEMO_STACK_SIZE,
+                                                       1,
+                                                       1,
+                                                       MS_TO_TICKS(50),
+                                                       true);
 
     // create the structs that holds the other thread arguments
     numberConsumerThreadArgs thread_1_args = {&q1, &semaphore, &threadUART, &eventFlags, 1, &counters};
