@@ -2,7 +2,7 @@
 
 namespace core::rtos {
 
-Semaphore::Semaphore(char* name, uint32_t initialCount) : name(name), txSemaphore(), initialCount(initialCount) {}
+Semaphore::Semaphore(char* name, uint32_t initialCount) : Initializable(name), txSemaphore(), initialCount(initialCount) {}
 
 TXError Semaphore::init(BytePoolBase& pool) {
     return static_cast<TXError>(tx_semaphore_create(&txSemaphore, name, initialCount));
@@ -31,11 +31,6 @@ TXError Semaphore::prioritize() {
 
 TXError Semaphore::putWithCeiling(uint32_t ceiling) {
     return static_cast<TXError>(tx_semaphore_ceiling_put(&txSemaphore, ceiling));
-}
-
-TXError Semaphore::getName(char** name) {
-    *name = this->name;
-    return TXE_SUCCESS;
 }
 
 TXError Semaphore::getCount(uint32_t* currentCount) {

@@ -2,6 +2,7 @@
 #define _EVT_RTOS_EVENTFLAGS_
 
 #include <core/rtos/Initializable.hpp>
+#include <cstring>
 
 namespace core::rtos {
 
@@ -18,9 +19,10 @@ public:
     /**
      * Constructor for EventFlags.
      *
-     * @param[in] name the name of the EventFlags.
+     * @param[in] name the name of the EventFlags, should be no longer than INITIALIZABLE_NAME_MAX_LENGTH bytes.
+     * The name is copied into this object
      */
-    EventFlags(char* name);
+    explicit EventFlags(char* name);
 
     /**
      * Destructor for EventFlags.
@@ -74,14 +76,6 @@ public:
     TXError registerNotifyFunction(void (*notifyFunction)(EventFlags* eventFlags));
 
     /**
-     * Get the name of this EventFlags
-     *
-     * @param[out] name The returned name
-     * @return The first error found by the function or TXE_SUCCESS if there was no error
-     */
-    TXError getName(char** name);
-
-    /**
      * Get the current values that the flags are set to as a uint32_t
      *
      * @param[out] flags The returned flags
@@ -106,8 +100,6 @@ public:
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
 private:
-    /** The name of this object */
-    char* name;
 
     /** The threadx struct that represents this object in the threadx kernel */
     TX_EVENT_FLAGS_GROUP txEventFlagsGroup;

@@ -2,7 +2,8 @@
 
 namespace core::rtos {
 
-EventFlags::EventFlags(char* name) : name(name), txEventFlagsGroup() {}
+EventFlags::EventFlags(char* name) :  Initializable(name), txEventFlagsGroup() {
+}
 
 TXError EventFlags::init(core::rtos::BytePoolBase& pool) {
     return static_cast<TXError>(tx_event_flags_create(&txEventFlagsGroup, name));
@@ -30,11 +31,6 @@ TXError EventFlags::get(uint32_t mask, bool waitForAllFlags, bool clear, uint32_
 TXError EventFlags::registerNotifyFunction(void (*notifyFunction)(EventFlags*)) {
     // todo: registerNotifyFunction must be implemented
     return TXE_FEATURE_NOT_ENABLED;
-}
-
-TXError EventFlags::getName(char** name) {
-    *name = (this->name);
-    return TXE_SUCCESS;
 }
 
 TXError EventFlags::getCurrentFlags(uint32_t* flags) {

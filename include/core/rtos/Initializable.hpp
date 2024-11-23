@@ -5,6 +5,10 @@
 #include <core/rtos/Enums.hpp>
 #include <tx_api.h>
 
+#ifndef INITIALIZABLE_NAME_MAX_LENGTH
+    #define INITIALIZABLE_NAME_MAX_LENGTH 26
+#endif //INITIALIZABLE_NAME_MAX_LENGTH
+
 namespace core::rtos {
 
 /**
@@ -20,6 +24,32 @@ public:
      * @return The first error found by the function or TXE_SUCCESS if there was no error
      */
     virtual TXError init(BytePoolBase& pool) = 0;
+
+    /**
+     * Copy the name of this Initializable object into the character array pointed to by destination &
+     * insert a null-terminating character at the end of the given array for safety
+     *
+     * @param[out] destination Character array to copy the name into.
+     * Should be INITIALIZABLE_NAME_MAX_LENGTH bytes long
+     * @param[in] size the size of the output array. Should be INITIALIZABLE_NAME_MAX_LENGTH bytes, unless you
+     * want the name to be truncated. If the given size is larger than INITIALIZABLE_NAME_MAX_LENGTH, it will be
+     * set to INITIALIZABLE_NAME_MAX_LENGTH
+     */
+    void getName(char* destination, size_t size);
+
+protected:
+
+    /**
+     * Initializable constructor
+     * @param[in] name pointer to the name of the Initializable. The first INITIALIZABLE_NAME_MAX_LENGTH bytes of the
+     * name will be copied into the local name array.
+     */
+    explicit Initializable(char *name);
+
+    /**
+     * The name of this initializable object
+     */
+    char name[INITIALIZABLE_NAME_MAX_LENGTH];
 };
 
 } // namespace core::rtos

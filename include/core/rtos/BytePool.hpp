@@ -3,6 +3,7 @@
 
 #include <core/rtos/BytePoolBase.hpp>
 #include <cstdint>
+#include <cstring>
 
 namespace core::rtos {
 
@@ -18,9 +19,13 @@ public:
      * Construct a BytePool, including creating a buffer to hold the
      * information for the pool and the buffer for the pool itself
      *
-     * @param[in] name String name of the BytePool
+     * @param[in] name String name of the BytePool, should be no longer than BYTEPOOL_NAME_MAX_LENGTH bytes.
+     * The name is copied into this object
      */
-    BytePool(char* name) : name(name), buffer(), txBytePool() {}
+    explicit BytePool(char* name) : txBytePool(), buffer() {
+        strncpy(this->name, name, BYTEPOOL_NAME_MAX_LENGTH+1);
+        this->name[BYTEPOOL_NAME_MAX_LENGTH] = '\0';
+    }
 
     /**
      * BytePool deconstructor
@@ -73,14 +78,17 @@ public:
         return static_cast<TXError>(status);
     }
 
-    TXError getName(char** name) override {
-        *name = this->name;
-        return TXE_SUCCESS;
+    void getName(char* destination, size_t size) override {
+        if (size > BYTEPOOL_NAME_MAX_LENGTH+1) {
+            size = BYTEPOOL_NAME_MAX_LENGTH+1;
+        }
+        strncpy(destination, this->name, size);
+        destination[size-1] = 0;
     }
 
 private:
     /** The name of the Bytepool */
-    char* name;
+    char name[BYTEPOOL_NAME_MAX_LENGTH] = {};
 
     /** The struct that the threadx application uses to hold information about the bytepool */
     TX_BYTE_POOL txBytePool;

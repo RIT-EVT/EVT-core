@@ -5,6 +5,11 @@
 #include <cstdint>
 #include <tx_api.h>
 
+#ifndef BYTEPOOL_NAME_MAX_LENGTH
+    #define BYTEPOOL_NAME_MAX_LENGTH 26
+#endif //BYTEPOOL_NAME_MAX_LENGTH
+
+
 namespace core::rtos {
 
 /**
@@ -70,12 +75,14 @@ public:
     virtual TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads) = 0;
 
     /**
-     * Get the name of this BytePool
+     * Copy the name of this BytePool object into the character array pointed to by destination &
+     * insert a null-terminating character at the end of the given array for safety
      *
-     * @param[out] name The returned name
-     * @return The first error found by the function or TXE_SUCCESS if there was no error
+     * @param[out] destination Character array to copy the name into.
+     * Should be BYTEPOOL_NAME_MAX_LENGTH bytes long
+     * @param[in] size the size of the output array
      */
-    virtual TXError getName(char** name) = 0;
+    virtual void getName(char* name, size_t size) = 0;
 };
 
 } // namespace core::rtos

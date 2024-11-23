@@ -30,7 +30,7 @@ namespace {
 
 ThreadUART::ThreadUART(io::UART& uart, std::size_t threadStackSize, uint32_t threadPriorityLevel,
                        uint32_t threadPreemptThreshold, uint32_t threadTimeSlice)
-    : UART(uart), copyUART(uart),
+    : Initializable((char*) "ThreadUART"), UART(uart), copyUART(uart),
       queue((char*) "ThreadUART Queue", THREADUART_QUEUE_MESSAGE_SIZE, THREADUART_QUEUE_NUM_MESSAGES),
       thread((char*) "ThreadUART Thread", uartThreadEntryFunction, this, threadStackSize, threadPriorityLevel,
              threadPreemptThreshold, threadTimeSlice, true),

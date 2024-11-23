@@ -17,7 +17,8 @@ public:
     /**
      * Construct a Semaphore object, but does not initialize it (must call init before using)
      *
-     * @param[in] name The name of the Semaphore
+     * @param[in] name The name of the Semaphore, should be no longer than INITIALIZABLE_NAME_MAX_LENGTH bytes.
+     * The name is copied into this object
      * @param[in] initialCount What number the Semaphore will start at
      */
     Semaphore(char* name, uint32_t initialCount);
@@ -71,14 +72,6 @@ public:
     TXError prioritize();
 
     /**
-     * Get the name of this Semaphore
-     *
-     * @param[out] name The returned name
-     * @return The first error found by the function or TXE_SUCCESS if there was no error
-     */
-    TXError getName(char** name);
-
-    /**
      * Get the current count of this Semaphore
      *
      * @param currentCount The returned count
@@ -103,9 +96,6 @@ public:
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
 private:
-    /** The name of the Semaphore */
-    char* name;
-
     /** Threadx struct that actually holds all of the information for the Semaphore */
     TX_SEMAPHORE txSemaphore;
 

@@ -2,7 +2,7 @@
 
 namespace core::rtos {
 
-Mutex::Mutex(char* name, bool priorityInheritance) : txMutex(), name(name), priorityInheritance(priorityInheritance) {}
+Mutex::Mutex(char* name, bool priorityInheritance) : Initializable(name), txMutex(), priorityInheritance(priorityInheritance) {}
 
 TXError Mutex::init(BytePoolBase& pool) {
     return static_cast<TXError>(tx_mutex_create(&txMutex, name, (UINT) priorityInheritance));
@@ -22,11 +22,6 @@ TXError Mutex::put() {
 
 TXError Mutex::prioritize() {
     return static_cast<TXError>(tx_mutex_prioritize(&txMutex));
-}
-
-TXError Mutex::getName(char** name) {
-    *name = this->name;
-    return TXE_SUCCESS;
 }
 
 TXError Mutex::getOwnershipCount(uint32_t* ownershipCount) {

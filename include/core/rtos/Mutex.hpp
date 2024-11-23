@@ -18,7 +18,8 @@ public:
      * Construct a Mutex object, but do not initialize it (must call init or startKernel or another method that
      * registers the Mutex with the ThreadX kernel before using)
      *
-     * @param[in] name The name of the Mutex
+     * @param[in] name The name of the Mutex, should be no longer than INITIALIZABLE_NAME_MAX_LENGTH bytes.
+     * The name is copied into this object
      * @param[in] priorityInheritance Whether or not threads currently holding this mutex should raise their priority
      * to that of the highest priority thread waiting for the mutex
      */
@@ -56,16 +57,6 @@ public:
      */
     TXError prioritize();
 
-    // Getters
-
-    /**
-     * Get the name of this Mutex
-     *
-     * @param[out] name The returned name
-     * @return The first error found by the function or TXE_SUCCESS if there was no error
-     */
-    TXError getName(char** name);
-
     /**
      * Get the ownership count of this mutex. The ownership count is how many times the current
      * owner of this mutex has locked this mutex. Each time the owner unlocks this mutex, the ownership
@@ -101,9 +92,6 @@ public:
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
 private:
-    /** Pointer to the name of the Mutex */
-    char* name;
-
     /** Threadx struct that actually holds all of the information for the Mutex */
     TX_MUTEX txMutex;
 

@@ -4,7 +4,7 @@
 namespace core::rtos {
 
 Queue::Queue(char* name, uint8_t messageSize, uint32_t numMessages)
-    : name(name), messageSize(messageSize), queueSize(messageSize * numMessages) {}
+    : Initializable(name), messageSize(messageSize), queueSize(messageSize * numMessages) {}
 
 Queue::~Queue() {
     tx_queue_delete(&txQueue);
@@ -46,11 +46,6 @@ TXError Queue::send(void* messagePointer, uint32_t waitOption) {
 
 TXError Queue::sendToFront(void* messagePointer, uint32_t waitOption) {
     return static_cast<TXError>(tx_queue_front_send(&txQueue, messagePointer, waitOption));
-}
-
-TXError Queue::getName(char** name) {
-    *name = this->name;
-    return TXE_SUCCESS;
 }
 
 TXError Queue::getNumEnqueuedMessages(uint32_t* numEnqueuedMessages) {

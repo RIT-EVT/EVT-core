@@ -2,6 +2,7 @@
 #define _EVT_RTOS_THREAD_
 
 #include <core/rtos/Initializable.hpp>
+#include <type_traits>
 #include <cstdint>
 
 namespace core::rtos {
@@ -21,9 +22,10 @@ template<typename T, typename = typename std::enable_if<sizeof(T) <= 4>::type>
 class Thread : public Initializable {
 public:
     /**
-     * Constructor for a Thread object. Thread will not start until init() method is called
+     * Constructor for a Thread object. Thread will not start until init() method is called.
      *
-     * @param[in] name Pointer to a null-terminated character string representing the name of the thread
+     * @param[in] name The name of the Thread, should be no longer than INITIALIZABLE_NAME_MAX_LENGTH bytes.
+     * The name is copied into this object
      * @param[in] entryFunction Pointer to the function the thread will be running
      * @param[in] data Pointer to the data the thread's function requires
      * @param[in] stackSize How much stack space (in bytes) this thread is allocated.
@@ -41,7 +43,7 @@ public:
      */
     Thread(char* name, void (*entryFunction)(T), T data, std::size_t stackSize, uint32_t priority,
            uint32_t preemptThreshold, uint32_t timeSlice, bool autoStart)
-        : txThread(), name(name), entryFunction(entryFunction), data(data), stackSize(stackSize),
+        : Initializable(name), txThread(), entryFunction(entryFunction), data(data), stackSize(stackSize),
           initialPriority(priority), initialPreemptThreshold(preemptThreshold), initialTimeSlice(timeSlice),
           autoStart(autoStart) {}
 
@@ -182,19 +184,6 @@ public:
         return static_cast<TXError>(errorCode);
     }
 
-    // Getters
-
-    /**
-     * Get the name of this thread
-     *
-     * @param[out] name The returned name pointer
-     * @return The first error found by the function or TXE_SUCCESS if there was no error
-     */
-    TXError getName(char* const* name) {
-        *name = this->name;
-        return TXE_SUCCESS;
-    }
-
     /**
      * Get the state of this thread
      *
@@ -256,9 +245,6 @@ public:
     }
 
 private:
-    /** Pointer to the name of this thread */
-    char* name;
-
     /** Threadx struct that holds the information for the thread */
     TX_THREAD txThread;
 

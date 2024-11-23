@@ -52,11 +52,14 @@ typedef struct counters {
  */
 typedef struct number_gen_thread_args {
     rtos::Queue* outputQueue;   // The queue of numbers that the number gen thread add it's generated number to
+
     rtos::Semaphore* semaphore; // A semaphore that mutually excludes the threads from accessing the queue or printing
                                 // to uart at the same time these shouldn't necessarily need to be mutually exclusive,
                                 // as they are generally thread-safe, but it also shows an example implementation of a
                                 // semaphore.
+
     rtos::tsio::ThreadUART* threadUART; // The instance of ThreadUART that this thread will use to print.
+
     counters_t* counters; // The struct of counters for the number gen thread to print out the counts of each thread
 } number_gen_thread_args_t;
 
@@ -65,12 +68,17 @@ typedef struct number_gen_thread_args {
  */
 typedef struct number_consumer_thread_args {
     rtos::Queue* inputQueue; // The queue that the threads will pull values that the number gen thread adds
-    rtos::Semaphore*
-        semaphore; // A semaphore that mutually excludes the threads from accessing the queue or printing to uart
+
+    rtos::Semaphore* semaphore; // A semaphore that mutually excludes the threads from accessing the queue or
+                                // printing to uart
+
     rtos::tsio::ThreadUART* threadUART; // The instance of ThreadUART that this thread will use to print.
+
     rtos::EventFlags* eventFlags; // the EventFlags that the number consumer threads will use to show they have gotten a
                                   // number, which will trigger the eventFlagThread to run it's own method.
+
     uint8_t num;                  // What number this thread is
+
     counters_t* counters; // the struct of counters for the number consumer threads to increase their counters when they
                           // get a number
 } number_consumer_thread_args_t;
@@ -105,7 +113,7 @@ int main() {
     number_gen_thread_args_t generatorThreadArgs = {&q1, &semaphore, &threadUART, &counters};
 
     // create thread 0
-    rtos::Thread<number_gen_thread_args_t*> generatorThread((char*) "Controller Thread",
+    rtos::Thread<number_gen_thread_args_t*> generatorThread((char*) "Generator Thread",
                                                             generatorThreadEntry,
                                                             &generatorThreadArgs,
                                                             DEMO_STACK_SIZE,
@@ -131,7 +139,15 @@ int main() {
     rtos::Thread<number_consumer_thread_args_t*> eventFlagThread(
         (char*) "Thread 3", eventFlagThreadEntry, &thread_3_args, DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
 
-    uart.printf("About to start the kernel.\n\r");
+
+    uart.printf("\n\rAbout to start the kernel.\n\r");
+
+    //Example implementation of getting an initializable object's name
+    char nameTest[INITIALIZABLE_NAME_MAX_LENGTH];
+    generatorThread.getName(nameTest, INITIALIZABLE_NAME_MAX_LENGTH);
+
+    uart.printf("(Making sure names work) The name of the UART Thread is: %s\n\r", nameTest);
+
 
     /*
      * Most RTOS objects are initializable, which means we need to register them with the threadx kernel for them
@@ -164,6 +180,11 @@ void generatorThreadEntry(number_gen_thread_args_t* args) {
     uint32_t num;
 
     args->threadUART->printf("\n\rThread 0 Created\n\r");
+
+    char nameTest[INITIALIZABLE_NAME_MAX_LENGTH];
+    args->threadUART->getName(nameTest, INITIALIZABLE_NAME_MAX_LENGTH);
+
+    args->threadUART->printf("(Making sure names work) The name of the UART Thread is: %s\n\r", nameTest);
 
     // Test that the threadUART handles long messages correctly
     args->threadUART->printf(
@@ -235,7 +256,7 @@ void consumerThreadEntry(number_consumer_thread_args_t* args) {
 
         if (queue_status == rtos::TXE_SUCCESS) {
             if (received_message >= 20) {
-                flag_status = args->eventFlags->set(0x1, false);
+                flag_status = args->eventFlags->set(0b01);
             }
 
             args->counters->global_count++;

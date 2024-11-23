@@ -23,7 +23,8 @@ public:
      * than the max value of a uint32_t (roughly 4.2 billion), the calculation will overflow and your queue will be
      * incorrectly sized. Take care to ensure this does not happen.
      *
-     * @param[in] name The name of the queue
+     * @param[in] name The name of the queue, should be no longer than INITIALIZABLE_NAME_MAX_LENGTH bytes.
+     * The name is copied into this object
      * @param[in] messageSize Size (in 4-byte words) of each message in the queue. The message size can be at most 16
      * @param[in] numMessages Number of messages the queue can fit
      */
@@ -92,16 +93,6 @@ public:
      */
     TXError sendToFront(void* messagePointer, uint32_t waitOption);
 
-    // Getters
-
-    /**
-     * Get the name of this Queue
-     *
-     * @param[out] name The returned name
-     * @return The first error found by the function or TXE_SUCCESS if there was no error
-     */
-    TXError getName(char** name);
-
     /**
      * Get the number of enqueued messages in this Queue
      *
@@ -135,9 +126,6 @@ public:
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
 private:
-    /** The name of this object */
-    char* name;
-
     /** The threadx struct that represents this object in the threadx kernel */
     TX_QUEUE txQueue;
 

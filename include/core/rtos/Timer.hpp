@@ -2,6 +2,7 @@
 #define _EVT_TIMER_HPP
 
 #include <core/rtos/Initializable.hpp>
+#include <type_traits>
 
 namespace core::rtos {
 
@@ -14,7 +15,7 @@ namespace core::rtos {
  * @tparam T what type of data the timer's expiration function will take. Should be at most 32 bits. (so generally
  * should be a pointer).
  */
-template<typename T>
+template<typename T, typename = typename std::enable_if<sizeof(T) <= 4>::type>
 class Timer : public Initializable {
 public:
     /**
@@ -22,7 +23,8 @@ public:
      *
      * NOTE: T (the template parameter) should only be 32 bits. if it is any bigger things will break.
      *
-     * @param[in] name Name of this timer
+     * @param[in] name Name of this timer, should be no longer than INITIALIZABLE_NAME_MAX_LENGTH bytes.
+     * The name is copied into this object
      * @param[in] expirationFunction The function the timer will call when it expires
      * @param[in] expirationInput The input to the expiration function
      * @param[in] initialTicks How long (in ticks) this timer will wait after it is activated
@@ -33,7 +35,7 @@ public:
      */
     Timer(char* name, void (*expirationFunction)(T), T expirationInput, uint32_t initialTicks, uint32_t rescheduleTicks,
           bool autoActivate)
-        : txTimer(), name(name), expirationFunction(expirationFunction), expirationInput(expirationInput),
+        : txTimer(), Initializable(name), expirationFunction(expirationFunction), expirationInput(expirationInput),
           initialTicks(initialTicks), rescheduleTicks(rescheduleTicks), autoActivate(autoActivate) {}
 
     /**
@@ -84,8 +86,6 @@ public:
         return static_cast<TXError>(errorCode);
     }
 
-    // Getters
-
     /**
      * Get the name of this timer
      *
@@ -133,9 +133,6 @@ public:
 private:
     /** The threadx struct that represents this object in the threadx kernel */
     TX_TIMER txTimer;
-
-    /** the name of this object */
-    char* name;
 
     /** The expiration function registered to this timer */
     void (*expirationFunction)(T);

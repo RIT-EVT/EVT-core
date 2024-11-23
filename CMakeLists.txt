@@ -129,6 +129,7 @@ if(USE_RTOS)
             src/core/rtos/Queue.cpp
             src/core/rtos/Semaphore.cpp
             src/core/rtos/Threadx.cpp
+            src/core/rtos/Initializable.cpp
             src/core/rtos/tsio/ThreadUART.cpp
     )
 endif()
