@@ -4,16 +4,16 @@
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
 #include <core/manager.hpp>
-#include <terminal.hpp>
+#include <core/utils/terminal/terminal.hpp>
 #include <string>
 
 namespace utils
 {
     class Terminal
     {
-        Terminal::Terminal(io::Uart& uart, utils::Menu menu) : menu(menu), uart(uart)
+        Terminal::Terminal(io::Uart& uart, utils::Terminal::Menu menu) : menu(menu), uart(uart)
         {
-            uart.printf("Starting Terminal...")
+            uart.printf("Starting Terminal...");
         }
 
         io::UART& getUART()
@@ -30,7 +30,7 @@ namespace utils
         {
             for(int i = 0; i < 5; i ++)
             {
-                uart.printf("\n")
+                uart.printf("\n");
             }
             uart.printf(message);
         }

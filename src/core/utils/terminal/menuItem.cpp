@@ -1,7 +1,7 @@
-#include <menuItem.hpp>
+#include <core/utils/terminal/menuItem.hpp>
 #include <string>
 
-namespace core:utils
+namespace utils
 {
     class MenuItem
     {
@@ -12,11 +12,11 @@ namespace core:utils
 
             std::string toStr()
             {
-                std::string string = option 
+                std::string string = option ;
                 string += '|';
                 string += text;
-                out += "\n"
-                return string
+                out += "\n";
+                return string;
             }
 
             std::string getOption()

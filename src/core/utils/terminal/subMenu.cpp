@@ -1,13 +1,12 @@
-
-#include <menuItem.hpp>
+#include <core/utils/terminal/menuItem.hpp>
 #include <string>
 
 
-namespace core:utils
+namespace utils
 {
     class SubMenu : public MenuItem
     {
-            SubMenu::SubMenu(std::string option, std::string text, void* cb, void* ctx, menuItem[itemCount] items)
+            SubMenu::SubMenu(std::string option, std::string text, void* cb, void* ctx, utils::Terminal::MenuItem[itemCount] items)
             {
 
             }
@@ -15,14 +14,14 @@ namespace core:utils
             std::string toStr()
             {
                 //create string for line showing this sub-menu
-                std::string out = option 
-                out += "|"
+                std::string out = option ;
+                out += "|";
                 out += text;
-                out += "\n"
+                out += "\n";
                 return out;
             }
 
-            MenuItem[itemCount] getItems()
+            utils::Terminal::MenuItem[itemCount] getItems()
             {
                 return items;
             }
@@ -35,7 +34,7 @@ namespace core:utils
                 std::string text2 = it.getText();
                 void* cb2 = it.getcb();
                 void* ctx2 = it.getctx();
-                MenuItem items2[itemCount] = it.getItems();
+                utils::Terminal::MenuItem items2[itemCount] = it.getItems();
                 if(option != option2 || text != text2 || cb != cb2 || ctx != ctx2)
                 {
                     return false;

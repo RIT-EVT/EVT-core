@@ -1,12 +1,12 @@
-#include <menuItem.hpp>
-#include <subMenu.hpp>
+#include <core/utils/terminal/menuItem.hpp>
+#include <core/utils/terminal/menu.hpp>
 #include <string>
 
-namespace core:utils
+namespace utils
 {
     class Menu
     {
-            Menu::Menu(MenuItem[itemCount] items) : items(items)
+            Menu::Menu(utils::Terminal::MenuItem[itemCount] items) : items(items)
             {
 
             }
@@ -17,21 +17,21 @@ namespace core:utils
 
                 for(int i = 0; i < itemCount; i ++)
                 {
-                    out += MenuItem[0].toStr() 
+                    out += items[0].toStr() 
                     out += "\n";
                 }
 
                 return out;
             }
 
-            MenuItem[itemCount] getItems()
+            utils::Terminal::MenuItem[itemCount] getItems()
             {
                 return items;
             }
 
             bool equals(Menu mnu) : mnu(mnu)
             {
-                MenuItem items2[itemCount] = mnu.getItems();
+                utils::Terminal::MenuItem items2[itemCount] = mnu.getItems();
                 for (i = 0; i < itemCount; i ++)
                 {
                     if(!(items[i].equals(items2[i])))
