@@ -105,14 +105,17 @@ int main() {
     ///////////////////////////////////////////////////////////////////////////
     // Main loop
     ///////////////////////////////////////////////////////////////////////////
-    uint32_t last_update = HAL_GetTick();
+    uint32_t last_update_1 = HAL_GetTick();
+    uint32_t last_update_2 = HAL_GetTick();
 
     while (1) {
-//        testCanNode.SDOTransfer(canNode);
-
-        if((HAL_GetTick() - last_update) >= 1000 ){ // If 1000ms have passed Receive CAN message.
-            testCanNode.SDOReceive(canNode);
-            last_update = HAL_GetTick(); // Set to current time.
+        if((HAL_GetTick() - last_update_1) >= 1000 ){ // If 1000ms have passed Receive CAN message.
+            testCanNode.SDO_Receive(canNode);
+            last_update_1 = HAL_GetTick(); // Set to current time.
+        }
+        else if((HAL_GetTick() - last_update_2) >= 5000 ){ // If 5000ms have passed Write CAN message.
+            testCanNode.SDO_Transfer(canNode);
+            last_update_2 = HAL_GetTick(); // Set to current time.
         }
 
         io::processCANopenNode(&canNode);

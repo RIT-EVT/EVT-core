@@ -131,6 +131,51 @@ void processCANopenNode(CO_NODE* canNode) {
     COTmrProcess(&canNode->Tmr);
 }
 
+CO_ERR SDOTransfer(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry) {
+
+    CO_CSDO *csdo = COCSdoFind(&(node), 0);
+    CO_ERR   err  = COCSdoRequestDownload(csdo, entry,
+                                       data, size,
+                                       AppCSdoTransferCb, 1000);
+    return err;
+}
+
+CO_ERR SDOReceive(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry) {
+    CO_CSDO *csdo = COCSdoFind(&(node), 0);
+    CO_ERR   err  = COCSdoRequestUpload(csdo, entry,
+                                     data, size,
+                                     AppCSdoReceiveCb, 1000);
+    return err;
+}
+
+/* The application specific SDO transfer finalization callback */
+void AppCSdoTransferCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
+{
+    if (code == 0) {
+        /* read data is available in 'readValue' */
+        log::LOGGER.log(log::Logger::LogLevel::INFO, "Value transferred %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
+    }
+    else {
+        /* a timeout or abort is detected during SDO transfer  */
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "SDO callback don goofed 0x%x\r\n", code);
+    }
+
+}
+
+/* The application specific SDO receive finalization callback */
+void AppCSdoReceiveCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
+{
+    if (code == 0) {
+        /* read data is available in 'readValue' */
+        log::LOGGER.log(log::Logger::LogLevel::INFO, "Value received %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
+    }
+    else {
+        /* a timeout or abort is detected during SDO transfer  */
+
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "SDO callback don goofed 0x%x\r\n", code);
+    }
+
+}
 } // namespace core::io
 
 ///////////////////////////////////////////////////////////////////////////////

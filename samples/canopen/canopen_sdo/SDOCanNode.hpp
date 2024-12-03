@@ -5,6 +5,7 @@
 #include <co_csdo.h>
 #include <core/io/CANDevice.hpp>
 #include <core/io/CANOpenMacros.hpp>
+#include <core/io/CANOpen.hpp>
 
 /**
  * Representation of the CAN node. Handles constructing the object
@@ -26,14 +27,14 @@ public:
      *
      * @param newValue[in] The value to set sample data to
      */
-    void SDOTransfer(CO_NODE node);
+    void SDO_Transfer(CO_NODE &node);
 
     /**
      * Read Object Dictionary entry
      *
      * @param newValue[in] The value to set sample data to
      */
-    void SDOReceive(CO_NODE &node);
+    void SDO_Receive(CO_NODE &node);
 
     /**
      * Get the contained sample data
@@ -85,7 +86,7 @@ private:
      */
     uint8_t sampleDataA;
     uint16_t sampleDataB;
-    uint8_t sampleDataArray[2];
+    uint8_t sampleDataArray[2] = {0, 0};
 
     /**
      * Have to know the size of the object dictionary for initialization
@@ -138,4 +139,3 @@ private:
         CO_OBJ_DICT_ENDMARK,
     };
 };
-void AppCSdoFinishCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);

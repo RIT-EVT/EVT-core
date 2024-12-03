@@ -14,11 +14,13 @@
 #include <core/io/CAN.hpp>
 #include <core/io/types/CANMessage.hpp>
 #include <core/utils/types/FixedQueue.hpp>
+#include <core/utils/log.hpp>
 
 // Allows for resizable CANOpen queue if needed
 #ifndef CANOPEN_QUEUE_SIZE
     #define CANOPEN_QUEUE_SIZE 150
 #endif
+namespace log = core::log;
 
 namespace core::io {
 
@@ -94,6 +96,24 @@ void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* ca
  */
 void processCANopenNode(CO_NODE* canNode);
 
+/**
+ * Update Object Dictionary entry
+ *
+ * @param node[in] The SDO node
+ * @param sampleDataArray[in] The value to set sample data to
+ */
+CO_ERR SDOTransfer(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry);
+
+/**
+ * Read Object Dictionary entry
+ *
+ * @param node[in] The SDO node
+ * @param sampleDataArray[in] The value to set sample data to
+ */
+CO_ERR SDOReceive(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry);
+
+void AppCSdoTransferCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);
+void AppCSdoReceiveCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);
 } // namespace core::io
 
 #endif

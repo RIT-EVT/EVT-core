@@ -5,49 +5,41 @@ SDOCanNode::SDOCanNode() {
     sampleDataB = 0;
 }
 
-void SDOCanNode::SDOTransfer(CO_NODE node) {
+void SDOCanNode::SDO_Transfer(CO_NODE &node) {
+    sampleDataArray[0]++;
+    sampleDataArray[1]=sampleDataArray[0]*2;
 
-    CO_CSDO *csdo = COCSdoFind(&(node), 0);
-    CO_ERR   err  = COCSdoRequestDownload(csdo, CO_DEV(0x2100,0x01),
-                              &sampleDataA, 1,
-                              AppCSdoFinishCb, 1000);
+    CO_ERR err = core::io::SDOTransfer(node, sampleDataArray, 2, CO_DEV(0x2100,0x02));
 
     if (err == CO_ERR_NONE) {
 
         /* Transfer is started successfully */
-//        log::LOGGER.log(log::Logger::LogLevel::INFO, "Value Transferred: %lu", sampleDataA);
+        log::LOGGER.log(log::Logger::LogLevel::INFO, "SDOTransfer Sent Request");
 
         /* Note: don't use the 'readValue' until transfer is finished! */
 
     } else {
         /* Unable to start the SDO transfer */
-        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Transfer Error");
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "SDOTransfer Request Error");
 
     }
 }
 
-void SDOCanNode::SDOReceive(CO_NODE &node) {
-    CO_CSDO *csdo;
-    CO_ERR   err;
-
-    csdo = COCSdoFind(&(node), 0);
-    err = COCSdoRequestUpload(csdo, CO_DEV(0x2100,0x02),
-                              sampleDataArray, 2,
-                              AppCSdoFinishCb, 1000);
+void SDOCanNode::SDO_Receive(CO_NODE &node) {
+    CO_ERR err = core::io::SDOReceive(node, sampleDataArray, 1, CO_DEV(0x2100,0x01));
 
     if (err == CO_ERR_NONE) {
 
         /* Transfer is started successfully */
-        log::LOGGER.log(log::Logger::LogLevel::INFO, "Sent Request");
+        log::LOGGER.log(log::Logger::LogLevel::INFO, "SDOReceive Sent Request");
 
         /* Note: don't use the 'readValue' until transfer is finished! */
 
     } else {
         /* Unable to start the SDO transfer */
-        log::LOGGER.log(log::Logger::LogLevel::ERROR, "Request Error");
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "SDOReceive Request Error");
 
     }
-
 }
 
 uint8_t SDOCanNode::getSampleDataA() {
@@ -75,19 +67,4 @@ uint8_t SDOCanNode::getNumElements() {
 
 uint8_t SDOCanNode::getNodeID() {
     return NODE_ID;
-}
-
-/* The application specific SDO transfer finalization callback */
-void AppCSdoFinishCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
-{
-    if (code == 0) {
-        /* read data is available in 'readValue' */
-//        sampleDataB = (sampleDataArray[0] << 8) | sampleDataArray[1];
-        log::LOGGER.log(log::Logger::LogLevel::INFO, "Value transferred %x, %x", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
-    }
-    else {
-        /* a timeout or abort is detected during SDO transfer  */
-        log::LOGGER.log(log::Logger::LogLevel::ERROR, "SDO callback don goofed 0x%x\r\n", code);
-    }
-
 }
