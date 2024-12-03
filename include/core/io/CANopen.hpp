@@ -112,7 +112,22 @@ CO_ERR SDOTransfer(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry);
  */
 CO_ERR SDOReceive(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry);
 
+/**
+ * The application-specific callback function for finalizing an SDO transfer operation.
+ * @param csdo[in] is the client-SDO object.
+ * @param index[in] is the object dictionary index.
+ * @param sub[in] is the object dictionary subindex.
+ * @param code[in] indicates the completion status of the operation (0 for success, error code otherwise).
+ */
 void AppCSdoTransferCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);
+
+/**
+ * The application-specific callback function for finalizing an SDO receive operation.
+ * @param csdo[in] is the client-SDO object.
+ * @param index[in] is the object dictionary index.
+ * @param sub[in] is the object dictionary subindex.
+ * @param code[in] indicates the completion status of the operation (0 for success, error code otherwise).
+ */
 void AppCSdoReceiveCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);
 } // namespace core::io
 

@@ -25,14 +25,14 @@ public:
     /**
      * Update Object Dictionary entry
      *
-     * @param newValue[in] The value to set sample data to
+     * @param node[in] The canopen node to write to
      */
     void SDO_Transfer(CO_NODE &node);
 
     /**
      * Read Object Dictionary entry
      *
-     * @param newValue[in] The value to set sample data to
+     * @param node[in] The canopen node to read from
      */
     void SDO_Receive(CO_NODE &node);
 
