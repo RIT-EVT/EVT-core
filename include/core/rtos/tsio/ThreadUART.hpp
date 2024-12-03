@@ -9,6 +9,7 @@
 #include <core/rtos/Semaphore.hpp>
 #include <core/rtos/Thread.hpp>
 #include <core/rtos/Threadx.hpp>
+#include <core/rtos/Enums.hpp>
 #include <string>
 
 // Defines the size for a ThreadUART Queue message in 4 byte words.
@@ -20,7 +21,7 @@
     #endif
 #else
     #define THREADUART_QUEUE_MESSAGE_SIZE_WORDS 16
-#endif // THREADUART_QUEUE_MESSAGE_SIZE
+#endif // THREADUART_QUEUE_MESSAGE_SIZE_WORDS
 
 // Defines the size for a ThreadUART Queue message in bytes.
 #define THREADUART_QUEUE_MESSAGE_SIZE_BYTES (4 * THREADUART_QUEUE_MESSAGE_SIZE_WORDS)
@@ -74,12 +75,15 @@ public:
      * @param[in] threadPriorityLevel The priority level of the UART Thread.
      * Setting it too low may result in UART never outputting until the Queue is completely full.
      * @param[in] threadPreemptThreshold The preemption threshold of the UART thread.
-     * @param[in] threadTimeSlice The default minimum timeslice of this thread
+     * @param[in] threadTimeSlice The minimum amount of time the UART thread will run
+     * @param[in] writeWaitOption How long (in ticks) threads that write to the ThreadUART will wait for the queue
+     * to be empty. Use TXW_WAIT_FOREVER to wait forever, or TXW_NO_WAIT to not wait
      */
     explicit ThreadUART(io::UART& uart, std::size_t threadStackSize = THREADUART_DEFAULT_STACK_SIZE,
                         uint32_t threadPriorityLevel    = THREADUART_DEFAULT_PRIORITY_LEVEL,
                         uint32_t threadPreemptThreshold = THREADUART_DEFAULT_PREEMPT_THRESHOLD,
-                        uint32_t threadTimeSlice        = THREADUART_DEFAULT_TIME_SLICE);
+                        uint32_t threadTimeSlice        = THREADUART_DEFAULT_TIME_SLICE,
+                        uint32_t writeWaitOption = TXW_NO_WAIT);
 
     // Inherited Initializable methods
 
@@ -181,6 +185,14 @@ public:
      */
     TXError getNumSuspendedThreads(uint32_t* numSuspendedThreads);
 
+    /**
+     * Get the number of write errors the ThreadUART has had. These write errors will include errors returned if the
+     * queue is full and the readWriteWaitOption is not set to TXW_WAIT_FOREVER and a message is dropped.
+     *
+     * @return the number of write errors
+     */
+    uint32_t getNumWriteErrors() const;
+
     // must be public so the static method can call it
     /**
      * Reads the first message from the queue and sends it to UART. Called by the ThreadUART Thread's entry function.
@@ -203,6 +215,12 @@ private:
 
     /** Mutex that makes sure only one thread writes to the Queue at a time */
     Mutex writeMutex;
+
+    /** How long we will wait to read or to write UART if the queue is empty or the read mutex is taken **/
+    uint32_t waitOption;
+
+    /** How many write errors we have had when writing to the queue */
+    uint32_t writeErrors = 0;
 };
 
 } // namespace core::rtos::tsio
