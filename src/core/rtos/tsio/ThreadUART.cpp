@@ -36,7 +36,7 @@ ThreadUART::ThreadUART(io::UART& uart, std::size_t threadStackSize, uint32_t thr
       thread((char*) "ThreadUART Thread", uartThreadEntryFunction, this, threadStackSize, threadPriorityLevel,
              threadPreemptThreshold, threadTimeSlice, true),
       readMutex((char*) "ThreadUART Read Mutex", true), writeMutex((char*) "ThreadUART Write Mutex", true),
-        waitOption(writeWaitOption) {}
+      waitOption(writeWaitOption) {}
 
 TXError ThreadUART::init(BytePoolBase& pool) {
     TXError status = queue.init(pool);
@@ -93,7 +93,7 @@ void ThreadUART::putc(char c) {
     char temp[THREADUART_QUEUE_MESSAGE_SIZE_BYTES];
     temp[0] = c;
     temp[1] = '\0';
-    status = queue.send(temp, waitOption);
+    status  = queue.send(temp, waitOption);
     if (status != TXE_SUCCESS) {
         writeErrors++;
     }
@@ -116,7 +116,7 @@ void ThreadUART::writeBytes(uint8_t* bytes, size_t size) {
         for (i = 0; i < max; i += THREADUART_QUEUE_MESSAGE_SIZE_BYTES - 1) {
             memcpy(temp, bytes + i, THREADUART_QUEUE_MESSAGE_SIZE_BYTES - 1);
             temp[THREADUART_QUEUE_MESSAGE_SIZE_BYTES - 1] = '\0';
-            status = queue.send(temp, waitOption);
+            status                                        = queue.send(temp, waitOption);
             if (status != TXE_SUCCESS) {
                 writeMutex.put();
                 writeErrors++;

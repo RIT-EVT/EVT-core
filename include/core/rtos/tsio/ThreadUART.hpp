@@ -3,13 +3,13 @@
 
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
+#include <core/rtos/Enums.hpp>
 #include <core/rtos/Initializable.hpp>
 #include <core/rtos/Mutex.hpp>
 #include <core/rtos/Queue.hpp>
 #include <core/rtos/Semaphore.hpp>
 #include <core/rtos/Thread.hpp>
 #include <core/rtos/Threadx.hpp>
-#include <core/rtos/Enums.hpp>
 #include <string>
 
 // Defines the size for a ThreadUART Queue message in 4 byte words.
@@ -83,7 +83,7 @@ public:
                         uint32_t threadPriorityLevel    = THREADUART_DEFAULT_PRIORITY_LEVEL,
                         uint32_t threadPreemptThreshold = THREADUART_DEFAULT_PREEMPT_THRESHOLD,
                         uint32_t threadTimeSlice        = THREADUART_DEFAULT_TIME_SLICE,
-                        uint32_t writeWaitOption = TXW_NO_WAIT);
+                        uint32_t writeWaitOption        = TXW_NO_WAIT);
 
     // Inherited Initializable methods
 
