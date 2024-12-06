@@ -16,6 +16,7 @@
 #include <core/platform/f4xx/stm32f4xx.hpp>
 #include <core/utils/log.hpp>
 
+namespace core::io {
 namespace {
 /// This is made as a static variable so that it is accessible in the interrupt.
 DMA_HandleTypeDef* dmaHandle[3];
@@ -47,7 +48,6 @@ extern "C" void DMA2_Stream1_IRQHandler(void) {
 }
 } // namespace
 
-namespace core::io {
 constexpr uint8_t ADC1_SLOT = 0;
 constexpr uint8_t ADC2_SLOT = 1;
 constexpr uint8_t ADC3_SLOT = 2;
@@ -59,7 +59,7 @@ TIM_HandleTypeDef core::io::ADCf4xx::htim8;
 ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph)
     : ADC(pin, adcPeriph), adcState(ADCf4xx::adcArray[getADCNum(adcPeriph)]), adcNum(getADCNum(adcPeriph)) {
     if (adcState.rank == MAX_CHANNELS) {
-        log::LOGGER.log(log::Logger::LogLevel::WARNING, "ADC %d ALREADY HAS MAX NUMBER OF CHANNELS!!", (adcNum + 1));
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "ADC %d ALREADY HAS MAX NUMBER OF CHANNELS!!", (adcNum + 1));
         return;
     }
 

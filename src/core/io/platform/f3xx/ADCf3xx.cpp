@@ -9,19 +9,17 @@
 #include <core/platform/f3xx/stm32f3xx.hpp>
 #include <core/utils/log.hpp>
 
+namespace core::io {
 namespace {
 /// This is made as a global variable so that it is accessible in the interrupt.
 DMA_HandleTypeDef* dmaHandle;
 ADC_HandleTypeDef* adcHandle;
 
-} // namespace
-
 extern "C" void DMA1_Channel1_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle);
     HAL_ADC_IRQHandler(adcHandle);
 }
-
-namespace core::io {
+} // namespace
 
 // Init static member variables
 ADC_HandleTypeDef ADCf3xx::halADC = {0};
@@ -38,7 +36,7 @@ ADCf3xx::ADCf3xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
 
     // Maximum number of ADC channels have already been added
     if (rank == MAX_CHANNELS) {
-        log::LOGGER.log(log::Logger::LogLevel::WARNING, "ADC1 ALREADY HAS MAX NUMBER OF CHANNELS!!");
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "ADC1 ALREADY HAS MAX NUMBER OF CHANNELS!!");
         return;
     }
 
