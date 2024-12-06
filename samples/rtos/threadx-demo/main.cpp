@@ -95,6 +95,13 @@ int main() {
 
     // Setup UART
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
+
+    //this verifies that we have correctly replaced systick with timer 6, because ThreadX takes over systick to run
+    //the kernel. time::wait() calls on the time_base timer, which should no longer be systick
+    uart.printf("Waiting...\n\r");
+    time::wait(1000);
+    uart.printf("Waited\n\r");
+
     rtos::tsio::ThreadUART threadUART(uart);
 
     log::LOGGER.setUART(&threadUART);
@@ -118,7 +125,7 @@ int main() {
                                                        generatorThreadEntry,
                                                        &generatorThreadArgs,
                                                        DEMO_STACK_SIZE,
-                                                       1,
+                                                       2,
                                                        1,
                                                        MS_TO_TICKS(50),
                                                        true);
@@ -132,13 +139,13 @@ int main() {
 
     // create thread1
     rtos::Thread<numberConsumerThreadArgs*> thread1(
-        (char*) "Thread 1", consumerThreadEntry, &thread_1_args, DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
+        (char*) "Thread 1", consumerThreadEntry, &thread_1_args, DEMO_STACK_SIZE, 2, 1, MS_TO_TICKS(50), true);
     // create thread2
     rtos::Thread<numberConsumerThreadArgs*> thread2(
-        (char*) "Thread 2", consumerThreadEntry, &thread_2_args, DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
+        (char*) "Thread 2", consumerThreadEntry, &thread_2_args, DEMO_STACK_SIZE, 2, 1, MS_TO_TICKS(50), true);
     // create thread3
     rtos::Thread<numberConsumerThreadArgs*> eventFlagThread(
-        (char*) "Thread 3", eventFlagThreadEntry, &thread_3_args, DEMO_STACK_SIZE, 1, 1, MS_TO_TICKS(50), true);
+        (char*) "Thread 3", eventFlagThreadEntry, &thread_3_args, DEMO_STACK_SIZE, 2, 1, MS_TO_TICKS(50), true);
 
     uart.printf("\n\rAbout to start the kernel.\n\r");
 

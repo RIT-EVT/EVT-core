@@ -45,7 +45,24 @@ TXError ThreadUART::init(BytePoolBase& pool) {
             log::Logger::LogLevel::ERROR, "Errored on ThreadUART Queue initialization. Error code %u\n", status);
         return static_cast<TXError>(status);
     }
+    status = writeMutex.init(pool);
+    if (status != TXE_SUCCESS) {
+        log::LOGGER.log(
+            log::Logger::LogLevel::ERROR, "Errored on ThreadUART Write Mutex initialization. Error code %u\n", status);
+        return static_cast<TXError>(status);
+    }
+    status = readMutex.init(pool);
+    if (status != TXE_SUCCESS) {
+        log::LOGGER.log(
+            log::Logger::LogLevel::ERROR, "Errored on ThreadUART Read Mutex initialization. Error code %u\n", status);
+        return static_cast<TXError>(status);
+    }
     status = thread.init(pool);
+    if (status != TXE_SUCCESS) {
+        log::LOGGER.log(
+            log::Logger::LogLevel::ERROR, "Errored on ThreadUART Thread initialization. Error code %u\n", status);
+        return static_cast<TXError>(status);
+    }
     return static_cast<TXError>(status);
 }
 
@@ -144,7 +161,7 @@ void ThreadUART::write(uint8_t byte) {
 
 void ThreadUART::sendFirstQueueMessage() {
     char buffer[THREADUART_QUEUE_MESSAGE_SIZE_BYTES]; // Buffer array to hold the message
-    queue.receive(buffer, TXW_WAIT_FOREVER);          // Receives the message and assigns it to the buffer variable
+    queue.receive(buffer, TXW_WAIT_FOREVER);// Receives the message and assigns it to the buffer variable
     copyUART.writeBytes((uint8_t*) (buffer), strlen(buffer));
 }
 
