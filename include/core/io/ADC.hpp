@@ -6,9 +6,10 @@
 namespace core::io {
 
 // Forward declarations:
-// The different pins are hardware specific. Forware declarationsto allow
+// The different pins are hardware specific. Forward declarations to allow
 // at compilation time the decision of which pins should be used.
 enum class Pin;
+enum class ADCPeriph;
 
 class ADC {
 
@@ -18,7 +19,7 @@ public:
      *
      * @param[in] pin The pin to setup for ADC
      */
-    ADC(Pin pin);
+    ADC(Pin pin, ADCPeriph adcPeriph);
 
     /**
      * Reads the current voltage in volts on the ADC
@@ -46,6 +47,8 @@ public:
 protected:
     /// The pin the ADC is attached to
     Pin pin;
+    /// The internal ADC being used
+    ADCPeriph adcPeriph;
 };
 
 } // namespace core::io
