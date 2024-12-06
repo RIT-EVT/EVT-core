@@ -15,7 +15,6 @@
 
 #include "SDOCanNode.hpp"
 
-
 namespace io   = core::io;
 namespace dev  = core::dev;
 namespace time = core::time;

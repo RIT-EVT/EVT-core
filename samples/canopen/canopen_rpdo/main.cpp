@@ -38,7 +38,6 @@ namespace log  = core::log;
  * @param message[in] The passed in CAN message that was read.
  */
 
-
 // create a can interrupt handler
 void canInterrupt(io::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
