@@ -96,8 +96,8 @@ int main() {
     // Setup UART
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
-    //this verifies that we have correctly replaced systick with timer 6, because ThreadX takes over systick to run
-    //the kernel. time::wait() calls on the time_base timer, which should no longer be systick
+    // this verifies that we have correctly replaced systick with timer 6, because ThreadX takes over systick to run
+    // the kernel. time::wait() calls on the time_base timer, which should no longer be systick
     uart.printf("Waiting...\n\r");
     time::wait(1000);
     uart.printf("Waited\n\r");
