@@ -7,21 +7,19 @@
 #include <HALf3/stm32f3xx_hal_adc.h>
 #include <HALf3/stm32f3xx_hal_adc_ex.h>
 #include <core/platform/f3xx/stm32f3xx.hpp>
+#include <core/utils/log.hpp>
 
+namespace core::io {
 namespace {
-/// This is made as a global variable so that it is accessible in the
-// interrupt.
+/// This is made as a global variable so that it is accessible in the interrupt.
 DMA_HandleTypeDef* dmaHandle;
 ADC_HandleTypeDef* adcHandle;
-
-} // namespace
 
 extern "C" void DMA1_Channel1_IRQHandler(void) {
     HAL_DMA_IRQHandler(dmaHandle);
     HAL_ADC_IRQHandler(adcHandle);
 }
-
-namespace core::io {
+} // namespace
 
 // Init static member variables
 ADC_HandleTypeDef ADCf3xx::halADC = {0};
@@ -29,7 +27,7 @@ Pin ADCf3xx::channels[MAX_CHANNELS];
 uint16_t ADCf3xx::buffer[MAX_CHANNELS];
 DMA_HandleTypeDef ADCf3xx::halDMA = {0};
 
-ADCf3xx::ADCf3xx(Pin pin) : ADC(pin) {
+ADCf3xx::ADCf3xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
     // Flag representing if the ADC has been configured yet
     static bool halADCisInit = false;
     // "Rank" represents the order in which the channels are added
@@ -38,6 +36,7 @@ ADCf3xx::ADCf3xx(Pin pin) : ADC(pin) {
 
     // Maximum number of ADC channels have already been added
     if (rank == MAX_CHANNELS) {
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "ADC1 ALREADY HAS MAX NUMBER OF CHANNELS!!");
         return;
     }
 
@@ -69,7 +68,8 @@ float ADCf3xx::read() {
 }
 
 uint32_t ADCf3xx::readRaw() {
-    // Search through list of channels to determine which DMA buffer index to use
+    // Search through list of channels to determine which DMA buffer index to
+    // use
     uint8_t channelNum = 0;
     while (channels[channelNum] != pin)
         channelNum++;
@@ -108,9 +108,6 @@ void ADCf3xx::initADC(uint8_t num_channels) {
 }
 
 void ADCf3xx::initDMA() {
-    // HAL_ADC_Stop(&halADC);
-
-    // TODO: Add some way of selecting the next available DMA channel
     // Ideally we would have a "DMA" class dedicated to DMA resource allocation.
     halDMA.Instance                 = DMA1_Channel1;
     halDMA.Init.Direction           = DMA_PERIPH_TO_MEMORY;
@@ -137,59 +134,69 @@ void ADCf3xx::addChannel(uint8_t rank) {
     GPIOf3xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;
+    Channel_Support channelStruct;
 
     switch (pin) {
     case Pin::PA_0:
-        adcChannel.Channel = ADC_CHANNEL_1;
+        channelStruct = {.adc1 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_1)};
         break;
     case Pin::PA_1:
-        adcChannel.Channel = ADC_CHANNEL_2;
+        channelStruct = {.adc1 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_2)};
         break;
     case Pin::PA_2:
-        adcChannel.Channel = ADC_CHANNEL_3;
+        channelStruct = {.adc1 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_3)};
         break;
     case Pin::PA_3:
-        adcChannel.Channel = ADC_CHANNEL_4;
+        channelStruct = {.adc1 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_4)};
         break;
     case Pin::PA_4:
-        adcChannel.Channel = ADC_CHANNEL_5;
+        channelStruct = {.adc1 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_5)};
         break;
     case Pin::PC_0:
-        adcChannel.Channel = ADC_CHANNEL_6;
+        channelStruct = {.adc1 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_6)};
         break;
     case Pin::PC_1:
-        adcChannel.Channel = ADC_CHANNEL_7;
+        channelStruct = {.adc1 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_7)};
         break;
     case Pin::PC_2:
-        adcChannel.Channel = ADC_CHANNEL_8;
+        channelStruct = {.adc1 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_8)};
         break;
     case Pin::PC_3:
-        adcChannel.Channel = ADC_CHANNEL_9;
+        channelStruct = {.adc1 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_9)};
         break;
     case Pin::PA_6:
-        adcChannel.Channel = ADC_CHANNEL_10;
+        channelStruct = {.adc1 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_10)};
         break;
     case Pin::PB_0:
-        adcChannel.Channel = ADC_CHANNEL_11;
+        channelStruct = {.adc1 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_11)};
         break;
     case Pin::PB_1:
-        adcChannel.Channel = ADC_CHANNEL_12;
+        channelStruct = {.adc1 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_12)};
         break;
     case Pin::PB_13:
-        adcChannel.Channel = ADC_CHANNEL_13;
+        channelStruct = {.adc1 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_13)};
         break;
     case Pin::PB_11:
-        adcChannel.Channel = ADC_CHANNEL_14;
+        channelStruct = {.adc1 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_14)};
         break;
     case Pin::PA_7:
-        adcChannel.Channel = ADC_CHANNEL_15;
+        channelStruct = {.adc1 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_15)};
         break;
     default:
+        channelStruct = {}; // sets all variables to 0
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "INVALID PIN 0x%x!!", pin);
         break; // Should never get here
     }
 
     // Subtract 1 because rank starts at 1
     channels[rank - 1] = pin;
+
+    // This checks if the pin being used supports the ADC being used
+    if (checkSupport(adcPeriph, channelStruct)) {
+        adcChannel.Channel = channelStruct.channel;
+    } else {
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "DOES NOT SUPPORT PIN 0x%x!!", pin);
+    }
 
     adcChannel.Rank         = rank;
     adcChannel.SamplingTime = ADC_SAMPLETIME_601CYCLES_5;
@@ -199,6 +206,14 @@ void ADCf3xx::addChannel(uint8_t rank) {
     adcChannel.Offset       = 0x000;
 
     HAL_ADC_ConfigChannel(&halADC, &adcChannel);
+}
+
+bool ADCf3xx::checkSupport(ADCPeriph periph, Channel_Support channelStruct) {
+    // In c++, non-zero values (like 1) are true, and 0 is false, so no comparison is needed.
+    switch (periph) {
+    case ADCPeriph::ONE:
+        return channelStruct.adc1;
+    }
 }
 
 } // namespace core::io
