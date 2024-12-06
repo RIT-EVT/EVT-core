@@ -53,7 +53,7 @@ private:
      * halADC: HAL handle for configuring and controlling the ADC peripheral.
      * rank: The ADC channel rank in the sequence (starts at 1).
      * isADCInit: Flag to indicate whether the ADC has been initialized.
-     * channels: Array of pins mapped to ADC channels. Initialized to all Pin::DUMMY.
+     * channels: Array of pins mapped to ADC channels. Initialized to all Pin::INVALID.
      *             The array size is defined by MAX_CHANNELS.
      * buffer: Array to store ADC values for each channel, indexed according to the channels array.
      *           Each entry corresponds to a specific ADC channel.
@@ -63,22 +63,22 @@ private:
         ADC_HandleTypeDef halADC      = {0};
         uint8_t rank                  = 1;
         bool isADCInit                = false;
-        Pin channels[MAX_CHANNELS]    = {Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY,
-                                         Pin::DUMMY};
+        Pin channels[MAX_CHANNELS]    = {Pin::INVALID,
+                                         Pin::INVALID,
+                                         Pin::INVALID,
+                                         Pin::INVALID,
+                                         Pin::INVALID,
+                                         Pin::INVALID,
+                                         Pin::INVALID,
+                                         Pin::INVALID,
+                                         Pin::INVALID,
+                                         Pin::INVALID,
+                                         Pin::INVALID,
+                                         Pin::INVALID,
+                                         Pin::INVALID,
+                                         Pin::INVALID,
+                                         Pin::INVALID,
+                                         Pin::INVALID};
         uint16_t buffer[MAX_CHANNELS] = {0};
         DMA_HandleTypeDef halDMA      = {0};
     };
