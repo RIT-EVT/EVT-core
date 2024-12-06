@@ -194,7 +194,6 @@ void AppCSdoTransferCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code
         /* a timeout or abort is detected during SDO transfer  */
         log::LOGGER.log(log::Logger::LogLevel::ERROR, "SDO callback don goofed 0x%x\r\n", code);
     }
-
 }
 
 /* The application specific SDO receive finalization callback */

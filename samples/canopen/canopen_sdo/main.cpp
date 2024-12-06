@@ -64,7 +64,6 @@ int main() {
     io::CAN& can = io::getCAN<io::Pin::PA_12, io::Pin::PA_11>();
     can.addIRQHandler(canInterrupt, reinterpret_cast<void*>(&canOpenQueue));
 
-
     // Reserved memory for CANopen stack usage
     uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE];
     CO_TMR_MEM appTmrMem[16];
