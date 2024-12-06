@@ -14,8 +14,8 @@ namespace core::io {
  * these values.
  */
 enum class Pin {
-    INVALID = -1, // THIS INTENTIONALLY DOES NOT POINT TO A PIN. Used as a default value, so the default value is no
-                  // longer PA_O (a real pin)
+    INVALID = -1, // THIS INTENTIONALLY DOES NOT POINT TO A PIN. Used as a default value, so the default value is
+                  // no longer PA_O (a real pin)
     PA_0  = 0x00,
     PA_1  = 0x01,
     PA_2  = 0x02,
