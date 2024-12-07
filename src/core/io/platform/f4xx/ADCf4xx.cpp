@@ -1,16 +1,11 @@
-/**
- * DISCLAIMER: THIS MIGHT BREAK AT ANY POINT AND/OR NOT WORK FOR CERTAIN PURPOSES
- *
+/*
  * This DMA ADC is different than f3xx DMA ADC!
- * This DMA ADC does NOT use the interrupts, as when interrupts were enabled it
- * would constantly interrupt, not letting the print statements or anything
- * else happen.
- * Tried to fix this by changing the sampletime and clock prescaler values, but
- * nothing worked.
- * This was "fixed" by commenting out the NVIC_EnableIRQ, stopping the interrupt
- * from ever being enabled.
+ * f4xx DMA ADC uses a timer to trigger ADC conversions. Timer frequency is 1kHz.
  *
- * For commit from before code was removed, refer to commit 81624521a8b2c4b66480193e88cf32782aaee84d.
+ * Timers were added to slow down ADC DMA interrupts, as when they ADC DMA is allowed to convert constantly,
+ * the interrupts stopped the program from doing anything else besides interrupt calls.
+ *
+ * WARNING: DOES NOT WORK ON PINS THAT ARE ALREADY IN USE (LIKE UART PINS)
  */
 
 #include <HALf4/stm32f4xx.h>
@@ -18,47 +13,85 @@
 #include <core/io/pin.hpp>
 #include <core/io/platform/f4xx/ADCf4xx.hpp>
 #include <core/io/platform/f4xx/GPIOf4xx.hpp>
+#include <core/platform/f4xx/stm32f4xx.hpp>
+#include <core/utils/log.hpp>
 
 namespace core::io {
+namespace {
+/// This is made as a static variable so that it is accessible in the interrupt.
+DMA_HandleTypeDef* dmaHandle[3];
+ADC_HandleTypeDef* adcHandle[3];
 
-// Init static member variables
-ADC_HandleTypeDef ADCf4xx::halADC = {0};
-Pin ADCf4xx::channels[MAX_CHANNELS];
-uint16_t ADCf4xx::buffer[MAX_CHANNELS];
-DMA_HandleTypeDef ADCf4xx::halDMA = {0};
+/**
+ * This function handles DMA2 stream0 global interrupt. (For ADC 1)
+ */
+extern "C" void DMA2_Stream0_IRQHandler(void) {
+    HAL_DMA_IRQHandler(dmaHandle[0]);
+    HAL_ADC_IRQHandler(adcHandle[0]);
+}
 
-ADCf4xx::ADCf4xx(Pin pin) : ADC(pin) {
-    // Flag representing if the ADC has been configured yet
-    static bool halADCisInit = false;
+/**
+ * This function handles DMA2 stream2 global interrupt. (For ADC 2)
+ */
+extern "C" void DMA2_Stream2_IRQHandler(void) {
+    HAL_DMA_IRQHandler(dmaHandle[1]);
+    HAL_ADC_IRQHandler(adcHandle[1]);
+}
 
-    // "Rank" represents the order in which the channels are added
-    // Also represents the total number of added channels
-    static uint8_t rank = 1;
+/**
+ * This function handles DMA2 stream1 global interrupt. (For ADC 3)
+ * This is correct, stream 1 for ADC 3. STM is odd and makes things confusing
+ */
+extern "C" void DMA2_Stream1_IRQHandler(void) {
+    HAL_DMA_IRQHandler(dmaHandle[2]);
+    HAL_ADC_IRQHandler(adcHandle[2]);
+}
+} // namespace
 
-    // Maximum number of ADC channels have already been added
-    if (rank == MAX_CHANNELS) {
+constexpr uint8_t ADC1_SLOT = 0;
+constexpr uint8_t ADC2_SLOT = 1;
+constexpr uint8_t ADC3_SLOT = 2;
+
+ADCf4xx::ADC_State core::io::ADCf4xx::adcArray[NUM_ADCS];
+bool core::io::ADCf4xx::timerInit = false;
+TIM_HandleTypeDef core::io::ADCf4xx::htim8;
+
+ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph)
+    : ADC(pin, adcPeriph), adcState(ADCf4xx::adcArray[getADCNum(adcPeriph)]), adcNum(getADCNum(adcPeriph)) {
+    if (adcState.rank == MAX_CHANNELS) {
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "ADC %d ALREADY HAS MAX NUMBER OF CHANNELS!!", (adcNum + 1));
         return;
     }
 
-    // Initialization of the HAL ADC should only take place once since there is
-    // only one ADC device which has multiple channels supported.
-    if (halADCisInit) {
-        HAL_ADC_Stop_DMA(&halADC);
-        HAL_DMA_DeInit(&halDMA);
-    } else {
-        __HAL_RCC_DMA2_CLK_ENABLE();
-        halADCisInit = true;
+    if (ADCf4xx::timerInit) {
+        HAL_TIM_Base_DeInit(&ADCf4xx::htim8); // Stop Timer8 (Trigger Source For ADC's)
+        ADCf4xx::timerInit = false;
     }
 
-    addChannel(rank);
-
-    initADC(rank);
+    if (adcState.isADCInit) {
+        HAL_ADC_Stop_DMA(&adcState.halADC);
+        HAL_DMA_DeInit(&adcState.halDMA);
+    } else {
+        __HAL_RCC_DMA2_CLK_ENABLE();
+        adcState.isADCInit = true;
+    }
 
     initDMA();
+    initADC(adcState.rank);
+    addChannel(adcState.rank);
 
-    HAL_ADC_Start_DMA(&halADC, reinterpret_cast<uint32_t*>(&buffer[0]), rank);
+    dmaHandle[adcNum] = &this->ADCf4xx::adcArray[adcNum].halDMA;
+    adcHandle[adcNum] = &this->ADCf4xx::adcArray[adcNum].halADC;
 
-    rank++;
+    if (!ADCf4xx::timerInit) {
+        __HAL_RCC_TIM8_CLK_ENABLE();
+        initTimer();
+        HAL_TIM_Base_Start(&ADCf4xx::htim8); // Start Timer8 (Trigger Source For ADC's)
+        ADCf4xx::timerInit = true;
+    }
+
+    HAL_ADC_Start_DMA(&adcState.halADC, reinterpret_cast<uint32_t*>(&adcState.buffer[0]), adcState.rank);
+    adcState.rank++;
 }
 
 float ADCf4xx::read() {
@@ -67,12 +100,12 @@ float ADCf4xx::read() {
 }
 
 uint32_t ADCf4xx::readRaw() {
-    // Search through list of channels to determine which DMA buffer index to
-    // use
     uint8_t channelNum = 0;
-    while (channels[channelNum] != pin)
+    while (adcState.channels[channelNum] != pin) {
         channelNum++;
-    return buffer[channelNum];
+    }
+
+    return adcState.buffer[channelNum];
 }
 
 float ADCf4xx::readPercentage() {
@@ -84,109 +117,224 @@ void ADCf4xx::initADC(uint8_t num_channels) {
     /** Configure the global features of the ADC (Clock, Resolution, Data
      * Alignment and number of conversion)
      */
-    halADC.Instance                   = ADC1;
-    halADC.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV2;
-    halADC.Init.Resolution            = ADC_RESOLUTION_12B;
-    halADC.Init.ScanConvMode          = ENABLE;
-    halADC.Init.ContinuousConvMode    = ENABLE;
-    halADC.Init.DiscontinuousConvMode = DISABLE;
-    halADC.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_NONE;
-    halADC.Init.ExternalTrigConv      = ADC_SOFTWARE_START;
-    halADC.Init.DataAlign             = ADC_DATAALIGN_RIGHT;
-    halADC.Init.NbrOfConversion       = num_channels;
-    halADC.Init.DMAContinuousRequests = ENABLE;
-    halADC.Init.EOCSelection          = ADC_EOC_SEQ_CONV;
+    ADC_HandleTypeDef* halADC = &adcState.halADC;
+    // Set instance to the ADC peripheral being using
+    halADC->Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV2;
+    halADC->Init.Resolution            = ADC_RESOLUTION_12B;
+    halADC->Init.ScanConvMode          = ENABLE;
+    halADC->Init.ContinuousConvMode    = DISABLE;
+    halADC->Init.DiscontinuousConvMode = DISABLE;
+    halADC->Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_RISING;
+    // Sets conversions to be done when timer 8 sends an Update Trigger
+    halADC->Init.ExternalTrigConv      = ADC_EXTERNALTRIGCONV_T8_TRGO;
+    halADC->Init.DataAlign             = ADC_DATAALIGN_RIGHT;
+    halADC->Init.NbrOfConversion       = num_channels;
+    halADC->Init.DMAContinuousRequests = ENABLE;
+    halADC->Init.EOCSelection          = ADC_EOC_SINGLE_CONV;
 
-    __HAL_RCC_ADC1_CLK_ENABLE();
-    HAL_ADC_Init(&halADC);
+    switch (adcNum) {
+    case ADC1_SLOT:
+        halADC->Instance = ADC1;
+        __HAL_RCC_ADC1_CLK_ENABLE();
+        break;
+    case ADC2_SLOT:
+        halADC->Instance = ADC2;
+        __HAL_RCC_ADC2_CLK_ENABLE();
+        break;
+    case ADC3_SLOT:
+        halADC->Instance = ADC3;
+        __HAL_RCC_ADC3_CLK_ENABLE();
+        break;
+    default:
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "INVALID ADC NUMBER!!");
+        return; // Should never get here
+    }
+    HAL_ADC_Init(halADC);
 }
 
 void ADCf4xx::initDMA() {
-    halDMA.Instance                 = DMA2_Stream0;
-    halDMA.Init.Direction           = DMA_PERIPH_TO_MEMORY;
-    halDMA.Init.PeriphInc           = DMA_PINC_DISABLE;
-    halDMA.Init.MemInc              = DMA_MINC_ENABLE;
-    halDMA.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
-    halDMA.Init.MemDataAlignment    = DMA_MDATAALIGN_HALFWORD;
-    halDMA.Init.Mode                = DMA_CIRCULAR;
-    halDMA.Init.Priority            = DMA_PRIORITY_VERY_HIGH;
-    halDMA.Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
+    DMA_HandleTypeDef* dma = &adcState.halDMA;
+    // Set DMA instance to proper config settings
+    switch (adcNum) {
+    case ADC1_SLOT:
+        dma->Instance     = DMA2_Stream0;
+        dma->Init.Channel = DMA_CHANNEL_0;
+        break;
+    case ADC2_SLOT:
+        dma->Instance     = DMA2_Stream2;
+        dma->Init.Channel = DMA_CHANNEL_1;
+        break;
+    case ADC3_SLOT:
+        dma->Instance     = DMA2_Stream1;
+        dma->Init.Channel = DMA_CHANNEL_2;
+        break;
+    default:
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "INVALID ADC NUMBER!!");
+        return; // Should never get here
+    }
+    dma->Init.Direction           = DMA_PERIPH_TO_MEMORY;
+    dma->Init.PeriphInc           = DMA_PINC_DISABLE;
+    dma->Init.MemInc              = DMA_MINC_ENABLE;
+    dma->Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+    dma->Init.MemDataAlignment    = DMA_MDATAALIGN_HALFWORD;
+    dma->Init.Mode                = DMA_CIRCULAR;
+    dma->Init.Priority            = DMA_PRIORITY_VERY_HIGH;
+    dma->Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
+    dma->Init.FIFOThreshold       = DMA_FIFO_THRESHOLD_FULL;
+    dma->Init.MemBurst            = DMA_MBURST_SINGLE;
+    dma->Init.PeriphBurst         = DMA_PBURST_SINGLE;
 
-    HAL_DMA_Init(&halDMA);
-    __HAL_LINKDMA(&halADC, DMA_Handle, halDMA);
+    HAL_DMA_Init(dma);
+
+    switch (adcNum) {
+    case ADC1_SLOT:
+        HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, platform::ADC_INTERRUPT_PRIORITY, 0);
+        HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+        break;
+    case ADC2_SLOT:
+        HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, platform::ADC_INTERRUPT_PRIORITY, 0);
+        HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
+        break;
+    case ADC3_SLOT:
+        HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, platform::ADC_INTERRUPT_PRIORITY, 0);
+        HAL_NVIC_EnableIRQ(DMA2_Stream1_IRQn);
+        break;
+    default:
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "INVALID ADC NUMBER!!");
+        return; // Should never get here
+    }
+    __HAL_LINKDMA(&adcState.halADC, DMA_Handle, *dma);
 }
 
 void ADCf4xx::addChannel(uint8_t rank) {
     GPIO_InitTypeDef gpioInit;
-    Pin myPins[]      = {pin};
     uint8_t numOfPins = 1;
+    Pin pins[]        = {pin};
 
-    GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
+    GPIOf4xx::gpioStateInit(&gpioInit, pins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;
-
+    Channel_Support channelStruct;
+    // Combines the ADC channel with the ADC peripherals it supports into a struct, avoiding having multi-layered switch
+    // statements
     switch (pin) {
     case Pin::PA_0:
-        adcChannel.Channel = ADC_CHANNEL_0;
+        channelStruct = {.adc1 = 1, .adc2 = 1, .adc3 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_0)};
         break;
     case Pin::PA_1:
-        adcChannel.Channel = ADC_CHANNEL_1;
+        channelStruct = {.adc1 = 1, .adc2 = 1, .adc3 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_1)};
         break;
     case Pin::PA_2:
-        adcChannel.Channel = ADC_CHANNEL_2;
+        channelStruct = {.adc1 = 1, .adc2 = 1, .adc3 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_2)};
         break;
     case Pin::PA_3:
-        adcChannel.Channel = ADC_CHANNEL_3;
+        channelStruct = {.adc1 = 1, .adc2 = 1, .adc3 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_3)};
         break;
     case Pin::PA_4:
-        adcChannel.Channel = ADC_CHANNEL_4;
+        channelStruct = {.adc1 = 1, .adc2 = 1, .adc3 = 0, .channel = static_cast<uint8_t>(ADC_CHANNEL_4)};
         break;
     case Pin::PA_5:
-        adcChannel.Channel = ADC_CHANNEL_5;
+        channelStruct = {.adc1 = 1, .adc2 = 1, .adc3 = 0, .channel = static_cast<uint8_t>(ADC_CHANNEL_5)};
         break;
     case Pin::PA_6:
-        adcChannel.Channel = ADC_CHANNEL_6;
+        channelStruct = {.adc1 = 1, .adc2 = 1, .adc3 = 0, .channel = static_cast<uint8_t>(ADC_CHANNEL_6)};
         break;
     case Pin::PA_7:
-        adcChannel.Channel = ADC_CHANNEL_7;
+        channelStruct = {.adc1 = 1, .adc2 = 1, .adc3 = 0, .channel = static_cast<uint8_t>(ADC_CHANNEL_7)};
         break;
     case Pin::PB_0:
-        adcChannel.Channel = ADC_CHANNEL_8;
+        channelStruct = {.adc1 = 1, .adc2 = 1, .adc3 = 0, .channel = static_cast<uint8_t>(ADC_CHANNEL_8)};
         break;
     case Pin::PB_1:
-        adcChannel.Channel = ADC_CHANNEL_9;
+        channelStruct = {.adc1 = 1, .adc2 = 1, .adc3 = 0, .channel = static_cast<uint8_t>(ADC_CHANNEL_9)};
         break;
     case Pin::PC_0:
-        adcChannel.Channel = ADC_CHANNEL_10;
+        channelStruct = {.adc1 = 1, .adc2 = 1, .adc3 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_10)};
         break;
     case Pin::PC_1:
-        adcChannel.Channel = ADC_CHANNEL_11;
+        channelStruct = {.adc1 = 1, .adc2 = 1, .adc3 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_11)};
         break;
     case Pin::PC_2:
-        adcChannel.Channel = ADC_CHANNEL_12;
+        channelStruct = {.adc1 = 1, .adc2 = 1, .adc3 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_12)};
         break;
     case Pin::PC_3:
-        adcChannel.Channel = ADC_CHANNEL_13;
+        channelStruct = {.adc1 = 1, .adc2 = 1, .adc3 = 1, .channel = static_cast<uint8_t>(ADC_CHANNEL_13)};
         break;
     case Pin::PC_4:
-        adcChannel.Channel = ADC_CHANNEL_14;
+        channelStruct = {.adc1 = 1, .adc2 = 1, .adc3 = 0, .channel = static_cast<uint8_t>(ADC_CHANNEL_14)};
         break;
     case Pin::PC_5:
-        adcChannel.Channel = ADC_CHANNEL_15;
+        channelStruct = {.adc1 = 1, .adc2 = 1, .adc3 = 0, .channel = static_cast<uint8_t>(ADC_CHANNEL_15)};
         break;
     default:
+        channelStruct = {}; // sets all values to 0
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "INVALID PIN 0x%x!!", pin);
         break; // Should never get here
     }
 
+    // This checks if the pin being used supports the ADC being used
+    if (checkSupport(adcPeriph, channelStruct)) {
+        adcChannel.Channel = channelStruct.channel;
+    } else {
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "ADC %d DOES NOT SUPPORT PIN 0x%x!!", (adcNum + 1), pin);
+    }
+
     // Subtract 1 because rank starts at 1
-    channels[rank - 1] = pin;
+    adcState.channels[rank - 1] = pin;
 
     adcChannel.Rank         = rank;
-    adcChannel.SamplingTime = ADC_SAMPLETIME_480CYCLES;
+    adcChannel.SamplingTime = ADC_SAMPLETIME_3CYCLES;
     adcChannel.Offset       = 0;
-    adcChannel.Offset       = 0x000;
 
-    HAL_ADC_ConfigChannel(&halADC, &adcChannel);
+    HAL_ADC_ConfigChannel(&adcState.halADC, &adcChannel);
+}
+
+bool ADCf4xx::checkSupport(ADCPeriph periph, Channel_Support channelStruct) {
+    // In c++, non-zero values (like 1) are true, and 0 is false, so no comparison is needed.
+    switch (periph) {
+    case ADCPeriph::ONE:
+        return channelStruct.adc1;
+    case ADCPeriph::TWO:
+        return channelStruct.adc2;
+    case ADCPeriph::THREE:
+        return channelStruct.adc3;
+    }
+}
+
+uint8_t ADCf4xx::getADCNum(ADCPeriph periph) {
+    switch (periph) {
+    case ADCPeriph::ONE:
+        return ADC1_SLOT;
+    case ADCPeriph::TWO:
+        return ADC2_SLOT;
+    case ADCPeriph::THREE:
+        return ADC3_SLOT;
+    }
+}
+
+/*
+ * This method initializes timer 8 with a Trigger Output of "Update Trigger", with a timer frequency of 1kHz.
+ * The timer does not specifically tell the exact ADC to do a conversion, it just sends a general Update Trigger every
+ * cycle. The ADC's are listening for this Update Trigger from timer 8, which is set in the ADC initialization.
+ */
+void ADCf4xx::initTimer() {
+    TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+    TIM_MasterConfigTypeDef sMasterConfig     = {0};
+
+    ADCf4xx::htim8.Instance               = TIM8;
+    ADCf4xx::htim8.Init.Prescaler         = 0;
+    ADCf4xx::htim8.Init.CounterMode       = TIM_COUNTERMODE_UP;
+    ADCf4xx::htim8.Init.Period            = (SystemCoreClock / 1000) - 1;
+    ADCf4xx::htim8.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
+    ADCf4xx::htim8.Init.RepetitionCounter = 0;
+    ADCf4xx::htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+    HAL_TIM_Base_Init(&ADCf4xx::htim8);
+    sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+    HAL_TIM_ConfigClockSource(&ADCf4xx::htim8, &sClockSourceConfig);
+
+    sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
+    sMasterConfig.MasterSlaveMode     = TIM_MASTERSLAVEMODE_DISABLE;
+    HAL_TIMEx_MasterConfigSynchronization(&ADCf4xx::htim8, &sMasterConfig);
 }
 
 } // namespace core::io

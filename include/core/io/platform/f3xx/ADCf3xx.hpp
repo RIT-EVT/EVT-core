@@ -8,6 +8,10 @@
 
 namespace core::io {
 
+enum class ADCPeriph {
+    ONE
+};
+
 class ADCf3xx : public ADC {
 public:
     /**
@@ -15,7 +19,7 @@ public:
      *
      * @param[in] pin The pin to setup for ADC
      */
-    ADCf3xx(Pin pin);
+    ADCf3xx(Pin pin, ADCPeriph adcPeriph);
 
     float read();
 
@@ -42,6 +46,17 @@ private:
     static DMA_HandleTypeDef halDMA;
 
     /**
+     * Bit packed struct to contain the channel along with the ADC peripherals the channel supports
+     *
+     * adc1: 1 bit. Support for ADC1 peripheral. 1 for supported, 0 for not supported.
+     * channel: 5 bits. The STM32 ADC channel value with said supported ADC peripherals
+     */
+    struct Channel_Support {
+        uint8_t adc1    : 1;
+        uint8_t channel : 5;
+    };
+
+    /**
      * Initialize the HAL ADC handler. This should only have to be run once
      */
     void initADC(uint8_t num_channels);
@@ -58,6 +73,15 @@ private:
      *      was added to the ADC starting at 1
      */
     void addChannel(uint8_t rank);
+
+    /**
+     * Check if the channel that is being initialized supports the ADC peripheral that it is being initialized on.
+     *
+     * @param periph the ADC peripheral being used
+     * @param channelStruct the struct of the channel with supports to test
+     * @return true if channel is supported by the ADC peripheral, false otherwise
+     */
+    static bool checkSupport(ADCPeriph periph, Channel_Support channelStruct);
 };
 
 } // namespace core::io
