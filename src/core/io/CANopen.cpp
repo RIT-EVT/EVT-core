@@ -131,6 +131,83 @@ void processCANopenNode(CO_NODE* canNode) {
     COTmrProcess(&canNode->Tmr);
 }
 
+CO_ERR SDOTransfer(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry) {
+   /**
+    * Find the Client-SDO (CO_CSDO) object for the specified node.
+    * @param node[in] is the CANopen node to operate on.
+    * @return csdo[out] is the client-SDO object used to manage SDO communication.
+    */
+    CO_CSDO *csdo = COCSdoFind(&(node), 0);
+
+   /**
+    * Initiate an SDO download request.
+    * @param csdo[in] is the client-SDO object.
+    * @param entry[in] specifies the object dictionary entry (index and subindex).
+    * @param data[in] is the pointer to the data to be sent.
+    * @param size[in] is the size of the data to be sent.
+    * @param AppCSdoTransferCb[in] is the callback function to be called upon transfer completion.
+    * @param 1000[in] is the timeout for the operation in milliseconds.
+    * @return err[out] indicates the result of the operation (success or error code).
+    */
+    CO_ERR   err  = COCSdoRequestDownload(csdo, entry,
+                                       data, size,
+                                       AppCSdoTransferCb, 1000);
+
+   /* Return the result of the SDO transfer operation. */
+    return err;
+}
+
+CO_ERR SDOReceive(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry) {
+   /**
+    * Find the Client-SDO (CO_CSDO) object for the specified node.
+    * @param node[in] is the CANopen node to operate on.
+    * @return csdo[out] is the client-SDO object used to manage SDO communication.
+    */
+    CO_CSDO *csdo = COCSdoFind(&(node), 0);
+
+   /**
+    * Initiate an SDO upload request.
+    * @param csdo[in] is the client-SDO object.
+    * @param entry[in] specifies the object dictionary entry (index and subindex).
+    * @param data[out] is the pointer to store the received data.
+    * @param size[in] is the size of the data buffer.
+    * @param AppCSdoReceiveCb[in] is the callback function to be called upon reception completion.
+    * @param 1000[in] is the timeout for the operation in milliseconds.
+    * @return err[out] indicates the result of the operation (success or error code).
+    */
+    CO_ERR err  = COCSdoRequestUpload(csdo, entry,
+                                     data, size,
+                                     AppCSdoReceiveCb, 1000);
+
+   /* Return the result of the SDO receive operation. */
+    return err;
+}
+
+/* The application specific SDO transfer finalization callback */
+void AppCSdoTransferCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
+{
+    if (code == 0) {
+        /* read data is available in 'readValue' */
+        log::LOGGER.log(log::Logger::LogLevel::INFO, "Value transferred %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
+    }
+    else {
+        /* a timeout or abort is detected during SDO transfer  */
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "SDO callback don goofed 0x%x\r\n", code);
+    }
+}
+
+/* The application specific SDO receive finalization callback */
+void AppCSdoReceiveCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
+{
+    if (code == 0) {
+        /* read data is available in 'readValue' */
+        log::LOGGER.log(log::Logger::LogLevel::INFO, "Value received %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
+    }
+    else {
+        /* a timeout or abort is detected during SDO transfer  */
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "SDO callback don goofed 0x%x\r\n", code);
+    }
+}
 } // namespace core::io
 
 ///////////////////////////////////////////////////////////////////////////////
