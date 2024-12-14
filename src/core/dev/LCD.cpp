@@ -78,7 +78,7 @@ void LCD::driveColumn(uint8_t page, uint8_t colUp, uint8_t colLow, uint8_t data)
 }
 
 void LCD::clearLCD() {
-    uint8_t page = 0xB0; // The starting page
+    uint8_t page = 0xB0;                            // The starting page
 
     this->commandWrite(0x40);                       // Display start address + 0x40
     for (uint8_t i = 0; i < 8; i++) {               // 64 pixel display / 8 pixels per page = 8 pages
@@ -88,7 +88,7 @@ void LCD::clearLCD() {
         for (uint8_t j = 0; j < screenSizeX; j++) { // 128 columns wide
             this->dataWrite(0x00);                  // Write clear pixels
         }
-        page++; // After 128 columns, go to next page
+        page++;                                     // After 128 columns, go to next page
     }
     this->commandWrite(0xAF);
 }
@@ -110,7 +110,7 @@ void LCD::clearArea(uint8_t width, uint8_t numPages, uint8_t page, uint8_t colum
             this->dataWrite(0x00); // Write Clear Pixels
         }
 
-        page++; // After 128 columns, go to next page
+        page++;               // After 128 columns, go to next page
     }
     this->commandWrite(0xAF); // Finish Writing
 }
@@ -126,7 +126,7 @@ void LCD::setEntireScreenBitMap(const uint8_t* bitMap) {
             this->dataWrite(*bitMap);       // write pixels from bitmap
             bitMap++; // Advance the bitmap pointer by one. This means we can just grab the last one the next loop.
         }
-        page++; // after 128 columns, go to next page
+        page++;       // after 128 columns, go to next page
     }
     this->commandWrite(0xAF);
 }
@@ -149,7 +149,7 @@ void LCD::displayBitMapInArea(uint8_t* bitMap, uint8_t bitMapWidth, uint8_t numP
             bitMap++; // Advance the bitmap pointer by one. This means we can just grab the last one the next loop.
         }
 
-        page++; // After 128 columns, go to next page
+        page++;               // After 128 columns, go to next page
     }
     this->commandWrite(0xAF); // Finish writing
 }

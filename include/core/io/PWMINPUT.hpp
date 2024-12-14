@@ -14,5 +14,5 @@ class PWMINPUT {
 public:
 };
 
-}
+} // namespace core::io
 #endif // EVT_PWMINPUT_HPP
