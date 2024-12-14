@@ -114,7 +114,24 @@ if(USE_RTOS)
     set(THREADX_ARCH "cortex_m4")
     set(THREADX_TOOLCHAIN "gnu")
     add_subdirectory(libs/threadx)
-    target_sources(${PROJECT_NAME} PRIVATE src/core/rtos/f4xx/tx_initialize_low_level.s)
+
+    set(THREADX_DIR ${CMAKE_SOURCE_DIR}/libs/threadx)
+
+    target_include_directories(${PROJECT_NAME} PRIVATE
+            ${THREADX_DIR}/common/inc
+            ${THREADX_DIR}/ports/cortex_m4/gnu/inc
+    )
+
+    target_sources(${PROJECT_NAME} PRIVATE
+            src/core/rtos/f4xx/tx_initialize_low_level.s
+            src/core/rtos/EventFlags.cpp
+            src/core/rtos/Mutex.cpp
+            src/core/rtos/Queue.cpp
+            src/core/rtos/Semaphore.cpp
+            src/core/rtos/Threadx.cpp
+            src/core/rtos/Initializable.cpp
+            src/core/rtos/tsio/ThreadUART.cpp
+    )
 endif()
 
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
@@ -122,7 +139,6 @@ if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
 
     target_link_libraries(${PROJECT_NAME} PUBLIC HALf3)
 elseif(COMPDEFS MATCHES "(.*)STM32F4xx(.*)")
-
     add_subdirectory(libs/HALf4/)
     # Later this will be handled dynamically, either the HALf3 or the HALf4 will
     # be linked to
