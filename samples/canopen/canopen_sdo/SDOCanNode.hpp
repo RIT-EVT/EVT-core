@@ -2,10 +2,8 @@
 #include <core/utils/log.hpp>
 
 #include <co_core.h>
-#include <co_csdo.h>
 #include <core/io/CANDevice.hpp>
 #include <core/io/CANOpenMacros.hpp>
-#include <core/io/CANOpen.hpp>
 
 /**
  * Representation of the CAN node. Handles constructing the object
@@ -35,19 +33,6 @@ public:
      * @param node[in] The canopen node to read from
      */
     void SDO_Receive(CO_NODE &node);
-
-    /**
-     * Get the contained sample data
-     *
-     * @return The value of the sample data
-     */
-    uint8_t getSampleDataA();
-    uint16_t getSampleDataB();
-
-    /**
-     * increments counters up
-     */
-    void update();
 
     /**
      * Get a pointer to the start of the object dictionary
@@ -86,7 +71,8 @@ private:
      */
     uint8_t sampleDataA;
     uint16_t sampleDataB;
-    uint8_t sampleDataArray[2] = {0, 0};
+
+    uint8_t transferBuffArray[2]{};
 
     /**
      * Have to know the size of the object dictionary for initialization

@@ -110,25 +110,15 @@ CO_ERR SDOTransfer(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry);
  * @param node[in] The SDO node
  * @param sampleDataArray[in] The value to set sample data to
  */
-CO_ERR SDOReceive(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry);
+CO_ERR SDOReceive(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry, void (*AppCallback)(CO_NODE &node));
 
 /**
- * The application-specific callback function for finalizing an SDO transfer operation.
- * @param csdo[in] is the client-SDO object.
- * @param index[in] is the object dictionary index.
- * @param sub[in] is the object dictionary subindex.
- * @param code[in] indicates the completion status of the operation (0 for success, error code otherwise).
+ * Register a callback method for sdo
+ *
+ * @param AppCallback[in] The SDO callback method that will be registered. See AppCSdoCallback method for explanation of parameters
+ * @param context[in] The context of the application
  */
-void AppCSdoTransferCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);
-
-/**
- * The application-specific callback function for finalizing an SDO receive operation.
- * @param csdo[in] is the client-SDO object.
- * @param index[in] is the object dictionary index.
- * @param sub[in] is the object dictionary subindex.
- * @param code[in] indicates the completion status of the operation (0 for success, error code otherwise).
- */
-void AppCSdoReceiveCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);
+void registerCallBack(void (*AppCallback)(CO_CSDO *csdo, uint16_t index, uint8_t size, uint32_t entry));
 } // namespace core::io
 
 #endif

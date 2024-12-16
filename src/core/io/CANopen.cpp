@@ -1,6 +1,7 @@
 #include <core/io/CANopen.hpp>
 #include <core/io/types/CANMessage.hpp>
 #include <core/utils/types/FixedQueue.hpp>
+#include <co_csdo.h>
 
 #include <core/dev/RTC.hpp>
 
@@ -31,6 +32,11 @@ uint8_t testerStorage[MAX_SIZE];
 
 // Queue that stores the CAN messages to send to the CANopen parser
 core::types::FixedQueue<CANOPEN_QUEUE_SIZE, core::io::CANMessage>* canQueue;
+
+// SDO variables
+void* callBackContext;
+void (*callback)(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);
+
 } // namespace
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -151,19 +157,21 @@ CO_ERR SDOTransfer(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry) {
     */
     CO_ERR   err  = COCSdoRequestDownload(csdo, entry,
                                        data, size,
-                                       AppCSdoTransferCb, 1000);
+                                       callback, 1000);
 
    /* Return the result of the SDO transfer operation. */
     return err;
 }
 
-CO_ERR SDOReceive(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry) {
+CO_ERR SDOReceive(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry, void (*AppCallback)(CO_CSDO *csdo, uint16_t index, uint8_t size, uint32_t entry)){
    /**
     * Find the Client-SDO (CO_CSDO) object for the specified node.
     * @param node[in] is the CANopen node to operate on.
     * @return csdo[out] is the client-SDO object used to manage SDO communication.
     */
     CO_CSDO *csdo = COCSdoFind(&(node), 0);
+
+    core::io::registerCallBack(AppCallback);
 
    /**
     * Initiate an SDO upload request.
@@ -177,36 +185,16 @@ CO_ERR SDOReceive(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry) {
     */
     CO_ERR err  = COCSdoRequestUpload(csdo, entry,
                                      data, size,
-                                     AppCSdoReceiveCb, 1000);
+                                     callback, 1000);
 
    /* Return the result of the SDO receive operation. */
     return err;
 }
 
-/* The application specific SDO transfer finalization callback */
-void AppCSdoTransferCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
-{
-    if (code == 0) {
-        /* read data is available in 'readValue' */
-        log::LOGGER.log(log::Logger::LogLevel::INFO, "Value transferred %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
-    }
-    else {
-        /* a timeout or abort is detected during SDO transfer  */
-        log::LOGGER.log(log::Logger::LogLevel::ERROR, "SDO callback don goofed 0x%x\r\n", code);
-    }
-}
-
-/* The application specific SDO receive finalization callback */
-void AppCSdoReceiveCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
-{
-    if (code == 0) {
-        /* read data is available in 'readValue' */
-        log::LOGGER.log(log::Logger::LogLevel::INFO, "Value received %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
-    }
-    else {
-        /* a timeout or abort is detected during SDO transfer  */
-        log::LOGGER.log(log::Logger::LogLevel::ERROR, "SDO callback don goofed 0x%x\r\n", code);
-    }
+void registerCallBack(void (*AppCallback)(CO_CSDO *csdo, uint16_t index, uint8_t size, uint32_t entry)) {
+    // Assign parameter AppCallback to callback.
+    callback = AppCallback;
+    // callBackContext = context;
 }
 } // namespace core::io
 

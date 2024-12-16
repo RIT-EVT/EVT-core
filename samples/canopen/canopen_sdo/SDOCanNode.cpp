@@ -1,19 +1,40 @@
 #include "SDOCanNode.hpp"
+#include <core/io/CANopen.hpp>
 
 SDOCanNode::SDOCanNode() {
-    sampleDataA = 6;
+    sampleDataA = 0;
     sampleDataB = 0;
+    transferBuffArray[0] = 0;
+    transferBuffArray[1] = 0;
+}
+
+/**
+ * The application-specific callback function for finalizing an SDO transfer/receive operation.
+ * @param csdo[in] is the client-SDO object.
+ * @param index[in] is the object dictionary index.
+ * @param sub[in] is the object dictionary subindex.
+ * @param code[in] indicates the completion status of the operation (0 for success, error code otherwise).
+ */
+void AppCSdoCallback(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code) {
+    if (code == 0) {
+        /* read data is available in 'readValue' */
+        log::LOGGER.log(log::Logger::LogLevel::INFO, "Value transferred %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
+    }
+    else {
+        /* a timeout or abort is detected during SDO transfer  */
+        log::LOGGER.log(log::Logger::LogLevel::ERROR, "SDO callback don goofed 0x%x\r\n", code);
+    }
 }
 
 void SDOCanNode::SDO_Transfer(CO_NODE &node) {
-    /* Increment the first element of sampleDataArray by 1. */
-    sampleDataArray[0]++;
-    /* Set the second element of sampleDataArray to twice the new value of the first element. */
-    sampleDataArray[1] = sampleDataArray[0] * 2;
+    /* Increment the first element of transferBuffArray by 1. */
+    transferBuffArray[0]++;
+    /* Set the second element of transferBuffArray to twice the new value of the first element. */
+    transferBuffArray[1] = transferBuffArray[0] * 2;
 
-    /* Initiate an SDO transfer using the specified node and sampleDataArray,
+    /* Initiate an SDO transfer using the specified node and transferBuffArray,
      * targeting object dictionary entry 0x2100:02. */
-    CO_ERR err = core::io::SDOTransfer(node, sampleDataArray, 2, CO_DEV(0x2100,0x02));
+    CO_ERR err = core::io::SDOTransfer(node, transferBuffArray, 2, CO_DEV(0x2100,0x02));
 
     /* Check if the SDO transfer was successfully started. */
     if (err == CO_ERR_NONE) {
@@ -28,9 +49,11 @@ void SDOCanNode::SDO_Transfer(CO_NODE &node) {
 }
 
 void SDOCanNode::SDO_Receive(CO_NODE &node) {
-    /* Initiate an SDO receive operation, reading data into sampleDataArray
+    static uint8_t receiveBuffArray[1];
+
+    /* Initiate an SDO receive operation, reading data into sampleDataA address
      * from object dictionary entry 0x2100:01. */
-    CO_ERR err = core::io::SDOReceive(node, sampleDataArray, 1, CO_DEV(0x2100,0x01));
+    CO_ERR err = core::io::SDOReceive(node, receiveBuffArray, 1, CO_DEV(0x2100,0x01), AppCSdoCallback() );
 
     /* Check if the SDO receive operation was successfully started. */
     if (err == CO_ERR_NONE) {
@@ -41,21 +64,6 @@ void SDOCanNode::SDO_Receive(CO_NODE &node) {
     } else {
         /* Unable to start the SDO transfer */
         log::LOGGER.log(log::Logger::LogLevel::ERROR, "SDOReceive Request Error");
-    }
-}
-
-uint8_t SDOCanNode::getSampleDataA() {
-    return sampleDataA;
-}
-
-uint16_t SDOCanNode::getSampleDataB() {
-    return sampleDataB;
-}
-
-void SDOCanNode::update() {
-    sampleDataA++;
-    if (sampleDataA % 20 == 0) {
-        sampleDataB *= 3;
     }
 }
 
