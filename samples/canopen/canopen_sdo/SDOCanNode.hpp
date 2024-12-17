@@ -21,6 +21,24 @@ public:
     SDOCanNode();
 
     /**
+     * The application-specific callback function for finalizing an SDO receive operation.
+     * @param csdo[in] is the client-SDO object.
+     * @param index[in] is the object dictionary index.
+     * @param sub[in] is the object dictionary subindex.
+     * @param code[in] indicates the completion status of the operation (0 for success, error code otherwise).
+     */
+    static void SdoReceiveCallback(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);
+
+    /**
+     * The application-specific callback function for finalizing an SDO transfer operation.
+     * @param csdo[in] is the client-SDO object.
+     * @param index[in] is the object dictionary index.
+     * @param sub[in] is the object dictionary subindex.
+     * @param code[in] indicates the completion status of the operation (0 for success, error code otherwise).
+     */
+    static void SdoTransferCallback(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);
+
+    /**
      * Update Object Dictionary entry
      *
      * @param node[in] The canopen node to write to

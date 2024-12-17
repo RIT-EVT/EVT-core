@@ -34,7 +34,7 @@ uint8_t testerStorage[MAX_SIZE];
 core::types::FixedQueue<CANOPEN_QUEUE_SIZE, core::io::CANMessage>* canQueue;
 
 // SDO variables
-void* callBackContext;
+void* context;
 void (*callback)(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);
 
 } // namespace
@@ -137,13 +137,15 @@ void processCANopenNode(CO_NODE* canNode) {
     COTmrProcess(&canNode->Tmr);
 }
 
-CO_ERR SDOTransfer(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry) {
+CO_ERR SDOTransfer(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry, void (*AppCallback)(CO_CSDO *csdo, uint16_t index, uint8_t size, uint32_t entry)) {
    /**
     * Find the Client-SDO (CO_CSDO) object for the specified node.
     * @param node[in] is the CANopen node to operate on.
     * @return csdo[out] is the client-SDO object used to manage SDO communication.
     */
     CO_CSDO *csdo = COCSdoFind(&(node), 0);
+
+    core::io::registerCallBack(AppCallback, reinterpret_cast<void*>(csdo)); // Register callback function
 
    /**
     * Initiate an SDO download request.
@@ -171,7 +173,7 @@ CO_ERR SDOReceive(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry, vo
     */
     CO_CSDO *csdo = COCSdoFind(&(node), 0);
 
-    core::io::registerCallBack(AppCallback);
+    core::io::registerCallBack(AppCallback, reinterpret_cast<void*>(csdo)); // Register callback function
 
    /**
     * Initiate an SDO upload request.
@@ -191,10 +193,9 @@ CO_ERR SDOReceive(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry, vo
     return err;
 }
 
-void registerCallBack(void (*AppCallback)(CO_CSDO *csdo, uint16_t index, uint8_t size, uint32_t entry)) {
-    // Assign parameter AppCallback to callback.
+void registerCallBack(void (*AppCallback)(CO_CSDO *csdo, uint16_t index, uint8_t size, uint32_t entry), void* AppContext) {
     callback = AppCallback;
-    // callBackContext = context;
+    context = AppContext;
 }
 } // namespace core::io
 

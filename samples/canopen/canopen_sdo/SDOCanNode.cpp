@@ -1,5 +1,6 @@
 #include "SDOCanNode.hpp"
 #include <core/io/CANopen.hpp>
+#include <cstdio>
 
 SDOCanNode::SDOCanNode() {
     sampleDataA = 0;
@@ -8,22 +9,36 @@ SDOCanNode::SDOCanNode() {
     transferBuffArray[1] = 0;
 }
 
-/**
- * The application-specific callback function for finalizing an SDO transfer/receive operation.
- * @param csdo[in] is the client-SDO object.
- * @param index[in] is the object dictionary index.
- * @param sub[in] is the object dictionary subindex.
- * @param code[in] indicates the completion status of the operation (0 for success, error code otherwise).
- */
-void AppCSdoCallback(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code) {
+void SDOCanNode::SdoReceiveCallback(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code) {
+    char messageString[50];
     if (code == 0) {
         /* read data is available in 'readValue' */
-        log::LOGGER.log(log::Logger::LogLevel::INFO, "Value transferred %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
+        snprintf(&messageString[0], 25, "Value received %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
     }
     else {
         /* a timeout or abort is detected during SDO transfer  */
-        log::LOGGER.log(log::Logger::LogLevel::ERROR, "SDO callback don goofed 0x%x\r\n", code);
+        snprintf(&messageString[0], 25, "SDO receive callback don goofed 0x%x\r\n", code);
     }
+
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG,
+                    "SDO Receive Operation: \r\n\t%s\r\n",
+                    messageString);
+}
+
+void SDOCanNode::SdoTransferCallback(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code) {
+    char messageString[50];
+    if (code == 0) {
+        /* read data is available in 'readValue' */
+        snprintf(&messageString[0], 25, "Value transferred %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
+    }
+    else {
+        /* a timeout or abort is detected during SDO transfer  */
+        snprintf(&messageString[0], 25, "SDO transfer callback don goofed 0x%x\r\n", code);
+    }
+
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG,
+                    "SDO Transfer Operation: \r\n\t%s\r\n",
+                    messageString);
 }
 
 void SDOCanNode::SDO_Transfer(CO_NODE &node) {
@@ -33,8 +48,10 @@ void SDOCanNode::SDO_Transfer(CO_NODE &node) {
     transferBuffArray[1] = transferBuffArray[0] * 2;
 
     /* Initiate an SDO transfer using the specified node and transferBuffArray,
-     * targeting object dictionary entry 0x2100:02. */
-    CO_ERR err = core::io::SDOTransfer(node, transferBuffArray, 2, CO_DEV(0x2100,0x02));
+     * targeting object dictionary entry 0x2100:02.
+     * Pass in the SDOTransfer operation callback function.
+     */
+    CO_ERR err = core::io::SDOTransfer(node, transferBuffArray, 2, CO_DEV(0x2100,0x02), SdoTransferCallback);
 
     /* Check if the SDO transfer was successfully started. */
     if (err == CO_ERR_NONE) {
@@ -51,9 +68,11 @@ void SDOCanNode::SDO_Transfer(CO_NODE &node) {
 void SDOCanNode::SDO_Receive(CO_NODE &node) {
     static uint8_t receiveBuffArray[1];
 
-    /* Initiate an SDO receive operation, reading data into sampleDataA address
-     * from object dictionary entry 0x2100:01. */
-    CO_ERR err = core::io::SDOReceive(node, receiveBuffArray, 1, CO_DEV(0x2100,0x01), AppCSdoCallback() );
+    /* Initiate an SDO receive operation, reading data into receiveBuffArray address
+     * from object dictionary entry 0x2100:01.
+     * Pass in the SDOReceive operation callback function.
+     */
+    CO_ERR err = core::io::SDOReceive(node, receiveBuffArray, 1, CO_DEV(0x2100, 0x01), SdoReceiveCallback);
 
     /* Check if the SDO receive operation was successfully started. */
     if (err == CO_ERR_NONE) {
