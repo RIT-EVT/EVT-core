@@ -1,5 +1,5 @@
-#include <cstdint>
 #include <core/utils/log.hpp>
+#include <cstdint>
 
 #include <co_core.h>
 #include <core/io/CANDevice.hpp>
@@ -27,7 +27,7 @@ public:
      * @param sub[in] is the object dictionary subindex.
      * @param code[in] indicates the completion status of the operation (0 for success, error code otherwise).
      */
-    static void SdoReceiveCallback(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);
+    static void SdoReceiveCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code);
 
     /**
      * The application-specific callback function for finalizing an SDO transfer operation.
@@ -36,21 +36,21 @@ public:
      * @param sub[in] is the object dictionary subindex.
      * @param code[in] indicates the completion status of the operation (0 for success, error code otherwise).
      */
-    static void SdoTransferCallback(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);
+    static void SdoTransferCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code);
 
     /**
      * Update Object Dictionary entry
      *
      * @param node[in] The canopen node to write to
      */
-    void SDO_Transfer(CO_NODE &node);
+    void SDO_Transfer(CO_NODE& node);
 
     /**
      * Read Object Dictionary entry
      *
      * @param node[in] The canopen node to read from
      */
-    void SDO_Receive(CO_NODE &node);
+    void SDO_Receive(CO_NODE& node);
 
     /**
      * Get a pointer to the start of the object dictionary
@@ -122,7 +122,8 @@ private:
             .Type = CO_TUNSIGNED32,
             .Data = (CO_DATA) CO_COBID_SDO_REQUEST(),
         },
-        { /* SDO Server Response COBID */
+        {
+            /* SDO Server Response COBID */
             .Key  = CO_KEY(0x1280, 0x02, CO_OBJ_D___R_),
             .Type = CO_TUNSIGNED32,
             .Data = (CO_DATA) CO_COBID_SDO_RESPONSE(),

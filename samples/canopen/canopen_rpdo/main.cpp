@@ -9,9 +9,9 @@
 #include <core/io/UART.hpp>
 #include <core/io/types/CANMessage.hpp>
 #include <core/manager.hpp>
+#include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 #include <core/utils/types/FixedQueue.hpp>
-#include <core/utils/log.hpp>
 
 #include <core/io/CANopen.hpp>
 
@@ -43,7 +43,10 @@ void canInterrupt(io::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
 
     // print out raw received data
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
+    log::LOGGER.log(log::Logger::LogLevel::INFO,
+                    "Got RAW message from %X of length %d with data: ",
+                    message.getId(),
+                    message.getDataLength());
     uint8_t* data = message.getPayload();
     for (int i = 0; i < message.getDataLength(); i++) {
         log::LOGGER.log(log::Logger::LogLevel::INFO, "%X ", *data);

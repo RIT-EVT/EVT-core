@@ -1,7 +1,7 @@
 /**
-* This sample shows off CANopen support from EVT-core. This will
-* setup a CANopen node and attempt to make back and forth communication.
-*/
+ * This sample shows off CANopen support from EVT-core. This will
+ * setup a CANopen node and attempt to make back and forth communication.
+ */
 
 #include <core/io/CAN.hpp>
 #include <core/io/UART.hpp>
@@ -108,14 +108,13 @@ int main() {
 
     while (1) {
 
-        if((HAL_GetTick() - lastUpdate1) >= 1000 ){ // If 1000ms have passed receive CAN message.
+        if ((HAL_GetTick() - lastUpdate1) >= 1000) { // If 1000ms have passed receive CAN message.
             testCanNode.SDO_Receive(canNode);
-            lastUpdate1 = HAL_GetTick(); // Set to current time.
+            lastUpdate1 = HAL_GetTick();                    // Set to current time.
+        } else if ((HAL_GetTick() - lastUpdate2) >= 5000) { // If 5000ms have passed write CAN message.
+            testCanNode.SDO_Transfer(canNode);
+            lastUpdate2 = HAL_GetTick(); // Set to current time.
         }
-         else if((HAL_GetTick() - lastUpdate2) >= 5000 ){ // If 5000ms have passed write CAN message.
-             testCanNode.SDO_Transfer(canNode);
-             lastUpdate2 = HAL_GetTick(); // Set to current time.
-         }
 
         io::processCANopenNode(&canNode);
         // Wait for new data to come in

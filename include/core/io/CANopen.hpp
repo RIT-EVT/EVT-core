@@ -13,8 +13,8 @@
 #include <core/dev/Timer.hpp>
 #include <core/io/CAN.hpp>
 #include <core/io/types/CANMessage.hpp>
-#include <core/utils/types/FixedQueue.hpp>
 #include <core/utils/log.hpp>
+#include <core/utils/types/FixedQueue.hpp>
 
 // Allows for resizable CANOpen queue if needed
 #ifndef CANOPEN_QUEUE_SIZE
@@ -107,20 +107,22 @@ void processCANopenNode(CO_NODE* canNode);
  * @param AppCallback[in] Callback function when the transfer completes
  * @return CO_ERR[out]    Returns the result of the transfer operation
  */
-CO_ERR SDOTransfer(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry, void (*AppCallback)(CO_CSDO *csdo, uint16_t index, uint8_t size, uint32_t entry));
+CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry,
+                   void (*AppCallback)(CO_CSDO* csdo, uint16_t index, uint8_t size, uint32_t entry));
 
 /**
-* This function starts an SDO upload (read) request to fetch data from the specified
-* object dictionary entry on the target CANopen node
-*
-* @param node[in]        Reference to the CANopen node object
-* @param data[in]        Pointer to the buffer where received data will be stored
-* @param size[in]        Size of the buffer provided to receive data
-* @param entry[in]       Object dictionary entry (index + subindex) to read from
-* @param AppCallback[in] Callback function when the receive completes
-* @return CO_ERR[out]    Returns the result of the receive operation
-*/
-CO_ERR SDOReceive(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry, void (*AppCallback)(CO_CSDO *csdo, uint16_t index, uint8_t size, uint32_t entry));
+ * This function starts an SDO upload (read) request to fetch data from the specified
+ * object dictionary entry on the target CANopen node
+ *
+ * @param node[in]        Reference to the CANopen node object
+ * @param data[in]        Pointer to the buffer where received data will be stored
+ * @param size[in]        Size of the buffer provided to receive data
+ * @param entry[in]       Object dictionary entry (index + subindex) to read from
+ * @param AppCallback[in] Callback function when the receive completes
+ * @return CO_ERR[out]    Returns the result of the receive operation
+ */
+CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry,
+                  void (*AppCallback)(CO_CSDO* csdo, uint16_t index, uint8_t size, uint32_t entry));
 
 /**
  * This function assigns the user-provided callback function and AppContext to be
@@ -129,7 +131,8 @@ CO_ERR SDOReceive(CO_NODE &node, uint8_t *data, uint8_t size, uint32_t entry, vo
  * @param AppCallback[in] Pointer to the callback function to register
  * @param AppContext[in]     Context to be passed to the callback
  */
-void registerCallBack(void (*AppCallback)(CO_CSDO *csdo, uint16_t index, uint8_t size, uint32_t entry), void* AppContext);
+void registerCallBack(void (*AppCallback)(CO_CSDO* csdo, uint16_t index, uint8_t size, uint32_t entry),
+                      void* AppContext);
 } // namespace core::io
 
 #endif
