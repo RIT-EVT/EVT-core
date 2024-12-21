@@ -128,7 +128,8 @@ private:
             .Type = CO_TUNSIGNED32,
             .Data = (CO_DATA) CO_COBID_SDO_RESPONSE(),
         },
-        { /* Node ID of Server */
+        {
+            /* Node ID of Server */
             .Key  = CO_KEY(0x1280, 0x03, CO_OBJ_D___R_),
             .Type = CO_TUNSIGNED8,
             .Data = (CO_DATA) 1,
