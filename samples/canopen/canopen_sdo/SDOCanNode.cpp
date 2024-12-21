@@ -35,15 +35,16 @@ void SDOCanNode::SdoTransferCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub,
     log::LOGGER.log(log::Logger::LogLevel::DEBUG, "SDO Transfer Operation: \r\n\t%s\r\n", messageString);
 }
 
-void SDOCanNode::SDO_Transfer(CO_NODE& node) {
+void SDOCanNode::transferData(CO_NODE& node) {
     /* Increment the first element of transferBuffArray by 1. */
     transferBuffArray[0]++;
     /* Set the second element of transferBuffArray to twice the new value of the first element. */
     transferBuffArray[1] = transferBuffArray[0] * 2;
 
-    /* Initiate an SDO transfer using the specified node and transferBuffArray,
-     * targeting object dictionary entry 0x2100:02.
-     * Pass in the SDOTransfer operation callback function.
+    /*
+     * Initiates an SDO transfer for the specified node using the provided
+     * transfer buffer array. Targets the object dictionary entry at index 0x2100,
+     * sub-index 0x02. Registers and executes the SDOTransferCallback function upon completion.
      */
     CO_ERR err = core::io::SDOTransfer(node, transferBuffArray, 2, CO_DEV(0x2100, 0x02), SdoTransferCallback);
 
@@ -59,12 +60,13 @@ void SDOCanNode::SDO_Transfer(CO_NODE& node) {
     }
 }
 
-void SDOCanNode::SDO_Receive(CO_NODE& node) {
+void SDOCanNode::receiveData(CO_NODE& node) {
     static uint8_t receiveBuffArray[1];
 
-    /* Initiate an SDO receive operation, reading data into receiveBuffArray address
-     * from object dictionary entry 0x2100:01.
-     * Pass in the SDOReceive operation callback function.
+    /*
+     * Initiates an SDO receive operation for the specified node, reading data into
+     * the provided receive buffer array. Targets the object dictionary entry at
+     * index 0x2100, sub-index 0x01. Registers and executes the SDOReceiveCallback function upon completion.
      */
     CO_ERR err = core::io::SDOReceive(node, receiveBuffArray, 1, CO_DEV(0x2100, 0x01), SdoReceiveCallback);
 

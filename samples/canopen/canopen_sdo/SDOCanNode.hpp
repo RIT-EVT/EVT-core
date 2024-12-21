@@ -43,14 +43,14 @@ public:
      *
      * @param node[in] The canopen node to write to
      */
-    void SDO_Transfer(CO_NODE& node);
+    void transferData(CO_NODE& node);
 
     /**
      * Read Object Dictionary entry
      *
      * @param node[in] The canopen node to read from
      */
-    void SDO_Receive(CO_NODE& node);
+    void receiveData(CO_NODE& node);
 
     /**
      * Get a pointer to the start of the object dictionary
@@ -128,7 +128,7 @@ private:
             .Type = CO_TUNSIGNED32,
             .Data = (CO_DATA) CO_COBID_SDO_RESPONSE(),
         },
-        {
+        { /* Node ID of Server */
             .Key  = CO_KEY(0x1280, 0x03, CO_OBJ_D___R_),
             .Type = CO_TUNSIGNED8,
             .Data = (CO_DATA) 1,
