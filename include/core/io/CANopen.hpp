@@ -131,8 +131,7 @@ CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry,
  * @param AppCallback[in] Pointer to the callback function to register
  * @param AppContext[in]     Context to be passed to the callback
  */
-void registerCallBack(void (*AppCallback)(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code),
-                      void* AppContext);
+void registerCallBack(void (*AppCallback)(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code), void* AppContext);
 } // namespace core::io
 
 #endif
