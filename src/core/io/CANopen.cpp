@@ -191,7 +191,7 @@ CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry,
     return err;
 }
 
-void registerCallBack(void (*AppCallback)(CO_CSDO* csdo, uint16_t index, uint8_t size, uint32_t entry),
+void registerCallBack(void (*AppCallback)(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code),
                       void* AppContext) {
     callback = AppCallback;
     context  = AppContext;
