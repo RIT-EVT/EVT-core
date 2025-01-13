@@ -5,6 +5,8 @@
 #include <core/io/pin.hpp>
 #include <core/manager.hpp>
 #include <core/utils/terminal/terminal.hpp>
+#include <core/utils/terminal/Menu.hpp>
+#include <core/utils/terminal/MenuItem.hpp>
 #include <string>
 
 namespace utils
@@ -24,6 +26,24 @@ namespace utils
         utils::Menu getMenu()
         {
             return menu;
+        }
+
+        utils::SubMenu getCurrent()
+        {
+            return current;
+        }
+
+        bool isMain()
+        {
+            return m;
+        }
+
+        void runCmd(std::string[10] cmd)
+        {
+            char tag = cmd[0];
+            char* args = cmd[1:];
+
+            
         }
 
         void update(std::string message)

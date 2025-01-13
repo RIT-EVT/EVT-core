@@ -11,17 +11,34 @@ namespace utils  = core::dev::utils;
 
 int main()
 {
-    
+    //core setup
+    core::platform::init();
 
+    //UART setup
+    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
+
+    //make some items
     utils::Terminal::MenuItem print = MenuItem::MenuItem();
     utils::Terminal::MenuItem send = MenuItem::MenuItem();
     utils::Terminal::SubMenu sub = MenuItem::SubMenu();
     utils::Terminal::Menu menu = Menu::Menu();
     utils::Terminal::Terminal term = Terminal::Terminal();
+
+    printTerm(uart, term);
+    
+
+    return 0
+}
+
+//This print is specifically for MENUITEMS, SUBMENUS, and MENUS
+void print(io:UART uart, void* item)
+{
+    uart.printf(item.toStr());
 }
 
 
-std:string print(utils::Terminal::Terminal term)
+//TERMINAL specific print function
+void printTerm(io:UART uart, utils:Terminal::Terminal term)
 {
-    io::UART uart = term.getUART();
+    uart.printf(term.getMenu().toStr());
 }

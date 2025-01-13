@@ -34,6 +34,23 @@ namespace core:utils
             utils::Menu getMenu();
 
             /**
+             * returns the current page of the menu, only if the menu is not currently on the main page 
+             * */
+            utils::MenuItem getCurrent();
+
+            /**
+             * checks if the terminal is still on the main menu
+             */
+            bool isMain();
+
+            /**
+             * takes a command that has been processed into a list of strings, performs the command
+             * if the item specified has a callback function, this is what runs it
+             * if the item specified is a submenu, this is what opens it
+             */
+            void runCmd(std::string[10] cmd);
+
+            /**
              * Sends a provided message over UART
              * @param message a string message to send via UART
              */
@@ -47,6 +64,10 @@ namespace core:utils
         private:
             // menu instance
             utils::Menu menu;
+
+            utils::SubMenu current;
+
+            bool m;
 
             // UART instance 
             io::UART uart;
