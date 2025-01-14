@@ -26,6 +26,11 @@ namespace utils
                 return items;
             }
 
+            int getCount()
+            {
+                return itemCount;
+            }
+
             bool equals(MenuItem sub) : sub(sub)
             {
                 //check equivalence of attributes besides items 

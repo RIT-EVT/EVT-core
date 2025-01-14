@@ -35,6 +35,8 @@ namespace core:utils
              */
             std::string getText();
 
+            
+
             /**
              * returns callback method pointer
              */
@@ -94,6 +96,15 @@ namespace core:utils
              * @param sub the other submenu to compare to
              */
             bool equals(SubMenu sub);
+
+            /**
+             * returns itemCount
+             */
+            int getCount();
+            
+            /**
+             * returns a list of all items contained in the submenu
+             */
             MenuItem[itemCOunt] getItems();
 
         private:
@@ -105,6 +116,6 @@ namespace core:utils
             /**
              * list of all items inside of the sub-menu
              */
-            MenuItem[10] items;
+            MenuItem[itemCount] items;
     };
 }

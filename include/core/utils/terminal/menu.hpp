@@ -24,6 +24,11 @@ namespace core:utils
             MenuItem[itemCount] getItems();
 
             /**
+             * returns itemCount
+             */
+            int getCount();
+
+            /**
              * checks if this menu is equivalent to another menu
              * true if every menu item is equal
              */

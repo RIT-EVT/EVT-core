@@ -24,8 +24,38 @@ int main()
     utils::Terminal::Menu menu = Menu::Menu();
     utils::Terminal::Terminal term = Terminal::Terminal();
 
+    term.
+
     printTerm(uart, term);
     
+
+    
+    while(true)
+    {
+        std::string[10] args = term.recieve();
+
+        utils::Terminal::MenuItem[10] items;
+
+        int c = 0;
+
+        if(term.isMain())
+        {
+            items = term.getMenu().getItems();
+            c = term.getMenu().getCount();
+        }
+        else
+        {
+            items = term.getCurrent().getItems();
+            c = term.getCurrent().getCount()
+        }
+
+        for(int i = 0; i < c; i ++)
+        {
+
+        }
+
+
+    }
 
     return 0
 }

@@ -24,6 +24,11 @@ namespace utils
                 return out;
             }
 
+            int getCount()
+            {
+                return itemCount;
+            }
+
             utils::Terminal::MenuItem[itemCount] getItems()
             {
                 return items;
