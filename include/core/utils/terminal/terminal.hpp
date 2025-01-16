@@ -39,16 +39,14 @@ namespace core:utils
             utils::MenuItem getCurrent();
 
             /**
+             * sets current submenu to provided value
+             */
+            void setCurrent();
+
+            /**
              * checks if the terminal is still on the main menu
              */
             bool isMain();
-
-            /**
-             * takes a command that has been processed into a list of strings, performs the command
-             * if the item specified has a callback function, this is what runs it
-             * if the item specified is a submenu, this is what opens it
-             */
-            void runCmd(std::string[10] cmd);
 
             /**
              * Sends a provided message over UART

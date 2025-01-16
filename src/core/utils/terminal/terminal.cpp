@@ -33,18 +33,16 @@ namespace utils
             return current;
         }
 
+        void setCurrent(utils::Terminal::SubMenu sub)
+        {
+            current = sub;
+        }
+
         bool isMain()
         {
             return m;
         }
 
-        void runCmd(std::string[10] cmd)
-        {
-            char tag = cmd[0];
-            char* args = cmd[1:];
-
-            
-        }
 
         void update(std::string message)
         {
