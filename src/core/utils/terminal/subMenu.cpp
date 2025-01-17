@@ -4,9 +4,9 @@
 
 namespace utils
 {
-    class SubMenu : public MenuItem
+    class SubMenu : public core::utils::MenuItem
     {
-            SubMenu::SubMenu(std::string option, std::string text, void* cb, void* ctx, utils::Terminal::MenuItem[itemCount] items)
+            utils::SubMenu::SubMenu(std::string option, std::string text, void* cb, void* ctx, core::utils::MenuItem[itemCount] items)
             {
 
             }
@@ -21,7 +21,7 @@ namespace utils
                 return out;
             }
 
-            utils::Terminal::MenuItem[itemCount] getItems()
+            core::utils::MenuItem[itemCount] getItems()
             {
                 return items;
             }
@@ -31,7 +31,7 @@ namespace utils
                 return itemCount;
             }
 
-            bool equals(MenuItem sub) : sub(sub)
+            bool equals(core::utils::MenuItem sub) : sub(sub)
             {
                 //check equivalence of attributes besides items 
                 //this section is identical to menuItem
@@ -39,7 +39,7 @@ namespace utils
                 std::string text2 = it.getText();
                 void* cb2 = it.getcb();
                 void* ctx2 = it.getctx();
-                utils::Terminal::MenuItem items2[itemCount] = it.getItems();
+                core::utils::MenuItem items2[itemCount] = it.getItems();
                 if(option != option2 || text != text2 || cb != cb2 || ctx != ctx2)
                 {
                     return false;

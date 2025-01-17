@@ -1,7 +1,12 @@
-#include <menuItem.hpp>
+#ifndef EVT_TERM_MENU
+#define EVT_TERM_MENU
+
+//macro for max initial item count of a main menu
+#define MITEMCOUNT 10
+#include <core/utils/terminal/menuItem.hpp>
 #include <string>
 
-namespace core:utils
+namespace core::utils
 {
     class Menu
     {
@@ -11,7 +16,7 @@ namespace core:utils
              * Basic constructor takes a list a menu items
              * @param items a list of menu items 
              */
-            Menu(MenuItem[itemCount] items);
+            Menu(MenuItem items[MITEMCOUNT]);
 
             /**
              * creates a string representation of a menu, with each menu item on its own line
@@ -21,7 +26,7 @@ namespace core:utils
             /**
              * returns the list of menu items
              */
-            MenuItem[itemCount] getItems();
+            MenuItem* getItems();
 
             /**
              * returns itemCount
@@ -32,19 +37,21 @@ namespace core:utils
              * checks if this menu is equivalent to another menu
              * true if every menu item is equal
              */
-            bool equals(Menu mnu)
+            bool equals(Menu mnu);
 
         private:
 
             /**
              * list of all items contained in the menu
              */
-            MenuItem[itemCount] items;
+            MenuItem items[MITEMCOUNT];
 
             /**
              * maximum number of items allowed in any menu
              */
-            int itemCount = 10;
+            int itemCount = MITEMCOUNT;
 
-    }
+    };
 }
+
+#endif

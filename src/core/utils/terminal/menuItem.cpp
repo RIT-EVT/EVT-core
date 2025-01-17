@@ -5,7 +5,7 @@ namespace utils
 {
     class MenuItem
     {
-            MenuItem::MenuItem(std::string option, std::string text, void* cb, void* ctx) : ctx(ctx), cb(cb), text(text), option(option)
+            utils::MenuItem::MenuItem(std::string option, std::string text, void* cb, void* ctx) : ctx(ctx), cb(cb), text(text), option(option)
             {
 
             }

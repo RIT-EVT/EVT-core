@@ -6,7 +6,7 @@ namespace utils
 {
     class Menu
     {
-            Menu::Menu(utils::Terminal::MenuItem[itemCount] items) : items(items)
+            utils::Menu::Menu(core::utils::MenuItem item[ITEMCOUNT]) : items(items)
             {
 
             }
@@ -15,7 +15,7 @@ namespace utils
             {
                 std::string out = "";
 
-                for(int i = 0; i < itemCount; i ++)
+                for(int i = 0; i < getCount(); i ++)
                 {
                     out += items[0].toStr() 
                     out += "\n";
@@ -29,14 +29,14 @@ namespace utils
                 return itemCount;
             }
 
-            utils::Terminal::MenuItem[itemCount] getItems()
+            core::utils::MenuItem[itemCount] getItems()
             {
                 return items;
             }
 
             bool equals(Menu mnu) : mnu(mnu)
             {
-                utils::Terminal::MenuItem items2[itemCount] = mnu.getItems();
+                core::utils::MenuItem items2[itemCount] = mnu.getItems();
                 for (i = 0; i < itemCount; i ++)
                 {
                     if(!(items[i].equals(items2[i])))

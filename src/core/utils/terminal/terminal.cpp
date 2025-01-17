@@ -9,11 +9,13 @@
 #include <core/utils/terminal/MenuItem.hpp>
 #include <string>
 
+namespace io = core::io;
+
 namespace utils
 {
     class Terminal
     {
-        Terminal::Terminal(io::Uart& uart, utils::Terminal::Menu menu) : menu(menu), uart(uart)
+        utils::Terminal::Terminal(io::Uart& uart, core::utils::Menu menu) : menu(menu), uart(uart)
         {
             uart.printf("Starting Terminal...");
         }
@@ -33,7 +35,7 @@ namespace utils
             return current;
         }
 
-        void setCurrent(utils::Terminal::SubMenu sub)
+        void setCurrent(utils::terminal::SubMenu sub)
         {
             current = sub;
         }

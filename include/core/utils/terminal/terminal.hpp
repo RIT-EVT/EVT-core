@@ -1,17 +1,17 @@
-/**
- * header for terminal, finish this comment later
- */
+#ifndef EVT_TERMINAL
+#define EVT_TERMINAL
 
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
 #include <core/manager.hpp>
-#include <menu.hpp>
+#include <core/utils/terminal/menu.hpp>
 #include <string>
 
-namespace io = core::io;
-
-namespace core:utils 
+namespace core::utils
 {
+
+    namespace io = core::io;
+
     class Terminal
     {
         public:
@@ -70,7 +70,7 @@ namespace core:utils
             // UART instance 
             io::UART uart;
 
-    }
+    };
 }
 
-
+#endif

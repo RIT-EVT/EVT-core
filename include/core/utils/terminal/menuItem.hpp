@@ -1,6 +1,11 @@
+#ifndef EVT_TERM_MENUITEM
+#define EVT_TERM_MENUITEM
+
+//macro for max initial item count of submenus
+#define ITEMCOUNT 10
 #include <string>
 
-namespace core:utils
+namespace core::utils
 {
 
 
@@ -82,7 +87,7 @@ namespace core:utils
             /**
              * constructor for sub-menu sub-class
              */
-            SubMenu(std::string option, std::string text, void* cb, void* ctx, MenuItem[itemCount] items);
+            SubMenu(std::string option, std::string text, void* cb, void* ctx, MenuItem items[ITEMCOUNT]);
 
             /**
              * unique overridden toStr() method for sub-menus
@@ -105,17 +110,19 @@ namespace core:utils
             /**
              * returns a list of all items contained in the submenu
              */
-            MenuItem[itemCOunt] getItems();
+            MenuItem* getItems();
 
         private:
             /**
              * the total number of items that can be contained in any sub-menu
              */
-            int itemCount = 10;
+            int itemCount = ITEMCOUNT;
 
             /**
              * list of all items inside of the sub-menu
              */
-            MenuItem[itemCount] items;
+            MenuItem items[ITEMCOUNT];
     };
 }
+
+#endif
