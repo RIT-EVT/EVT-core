@@ -6,11 +6,11 @@
 #include <core/manager.hpp>
 #include <core/utils/terminal/menu.hpp>
 #include <string>
+#include <array>
+
 
 namespace core::utils
 {
-
-    namespace io = core::io;
 
     class Terminal
     {
@@ -36,12 +36,13 @@ namespace core::utils
             /**
              * returns the current page of the menu, only if the menu is not currently on the main page 
              * */
-            utils::MenuItem getCurrent();
+            utils::SubMenu getCurrent();
 
             /**
              * sets current submenu to provided value
+             * @param sub the submenu to replace the current one with
              */
-            void setCurrent();
+            void setCurrent(SubMenu sub);
 
             /**
              * checks if the terminal is still on the main menu
@@ -57,9 +58,9 @@ namespace core::utils
             /**
              * proccesses incoming UART messages
              */
-            std::string recieve();
+            std::array<std::string, 10> recieve();
 
-        private:
+        protected:
             // menu instance
             utils::Menu menu;
 
@@ -67,8 +68,9 @@ namespace core::utils
 
             bool m;
 
+            core::io::UART& uart;
+
             // UART instance 
-            io::UART uart;
 
     };
 }

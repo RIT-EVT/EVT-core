@@ -2,49 +2,48 @@
 #include <core/utils/terminal/menu.hpp>
 #include <string>
 
-namespace utils
+
+namespace core::utils
 {
-    class Menu
+    Menu::Menu(MenuItem* items) : items(items)
     {
-            utils::Menu::Menu(core::utils::MenuItem item[ITEMCOUNT]) : items(items)
+
+    }
+
+    std::string Menu::toStr()
+    {
+        std::string out = "";
+        MenuItem* items = this->items;
+        for(int i = 0; i < MITEMCOUNT; i ++)
+        {
+           out += items[0].toStr();
+           out += "\n";
+        }
+
+        return out;
+    }
+
+    int Menu::getCount()
+    {
+        return MITEMCOUNT;
+    }
+
+    MenuItem* Menu::getItems()
+    {
+        return this->items;
+    }
+
+    bool Menu::equals(Menu mnu)
+    {
+        MenuItem* items2;
+        std::copy(items2[0],items2[MITEMCOUNT-1],(mnu.getItems())[0]);
+        for (int i = 0; i < MITEMCOUNT; i ++)
+        {
+            if(!(items[i].equals(items2[i])))
             {
-
+                return false;
             }
-
-            std::string toStr()
-            {
-                std::string out = "";
-
-                for(int i = 0; i < getCount(); i ++)
-                {
-                    out += items[0].toStr() 
-                    out += "\n";
-                }
-
-                return out;
-            }
-
-            int getCount()
-            {
-                return itemCount;
-            }
-
-            core::utils::MenuItem[itemCount] getItems()
-            {
-                return items;
-            }
-
-            bool equals(Menu mnu) : mnu(mnu)
-            {
-                core::utils::MenuItem items2[itemCount] = mnu.getItems();
-                for (i = 0; i < itemCount; i ++)
-                {
-                    if(!(items[i].equals(items2[i])))
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
+        }
+        return true;
     }
 }

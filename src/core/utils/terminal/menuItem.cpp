@@ -1,52 +1,33 @@
 #include <core/utils/terminal/menuItem.hpp>
 #include <string>
 
-namespace utils
+namespace core::utils
 {
-    class MenuItem
+
+    MenuItem::MenuItem(std::string option, std::string text, void* cb, void* ctx) : option(option), text(text), cb(cb), ctx(ctx) 
     {
-            utils::MenuItem::MenuItem(std::string option, std::string text, void* cb, void* ctx) : ctx(ctx), cb(cb), text(text), option(option)
-            {
+        
+    }
 
-            }
+    std::string MenuItem::toStr()
+    {
+        std::string string = this->option;
+        string += ('|');
+        string += (this->text);
+        string += ("\n");
+        return string;
+    }
 
-            std::string toStr()
-            {
-                std::string string = option ;
-                string += '|';
-                string += text;
-                out += "\n";
-                return string;
-            }
-
-            std::string getOption()
-            {
-                return option;
-            }
-            std::string getText()
-            {
-                return text;
-            }
-            void* getcb()
-            {
-                return cb;
-            }
-            void* getctx()
-            {
-                return ctx;
-            }
-
-            bool equals(MenuItem it)
-            {
-                std::string option2 = it.getOption();
-                std::string text2 = it.getText();
-                void* cb2 = it.getcb();
-                void* ctx2 = it.getctx();
-                if(option != option2 || text != text2 || cb != cb2 || ctx != ctx2)
-                {
-                    return false;
-                }
-                return true;
-            }
+    bool MenuItem::equals(MenuItem it)
+    {
+        std::string option2 = it.getOption();
+        std::string text2 = it.getText();
+        void* cb2 = it.getcb();
+        void* ctx2 = it.getctx();
+        if(this->option != option2 || this->text != text2 || this->cb != cb2 || this->ctx != ctx2)
+        {
+            return false;
+        }
+        return true;
     }
 }

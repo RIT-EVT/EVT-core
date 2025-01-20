@@ -7,7 +7,7 @@
 #include <string>
 
 namespace io   = core::io;
-namespace utils  = core::dev::utils;
+namespace utils  = core::utils;
 
 int main()
 {
@@ -75,17 +75,17 @@ int main()
     return 0
 }
 
-void printCB(io::UART uart, void* args, utils::Terminal::Terminal term)
+void printCB(io::UART uart, void* args, utils::terminal::Terminal term)
 {
     uart.printf("Test Message");
 }
 
-void sendCB(io::UART uart, void* args, utils::Terminal::Terminal term)
+void sendCB(io::UART uart, void* args, utils::terminal::Terminal term)
 {
     uart.printf(args[0]);
 }
 
-void enterCB(io::UART uart, void* sub, utils::Terminal::Terminal term)
+void enterCB(io::UART uart, void* sub, utils::terminal::Terminal term)
 {
     term.setCurrent(sub);
 }
@@ -97,7 +97,7 @@ void print(io:UART uart, void* item)
 }
 
 //TERMINAL specific print function
-void printTerm(io:UART uart, utils:Terminal::Terminal term)
+void printTerm(io:UART uart, core::utils:terminal::Terminal term)
 {
     uart.printf(term.getMenu().toStr());
 }

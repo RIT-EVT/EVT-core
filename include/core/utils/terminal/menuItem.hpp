@@ -2,14 +2,11 @@
 #define EVT_TERM_MENUITEM
 
 //macro for max initial item count of submenus
-#define ITEMCOUNT 10
+const int ITEMCOUNT = 10;
 #include <string>
 
 namespace core::utils
 {
-
-
-    
     class MenuItem
     {
         public:
@@ -24,33 +21,15 @@ namespace core::utils
              */
             MenuItem(std::string option, std::string text, void* cb, void* ctx = nullptr);
 
-            /**
-             * returns a strings representation of the menu item
-             * this is the key, followed by the text description/name 
-             */
-            std::string toStr();
-
-            /**
-             * returns the option attribute that is the items key as a string
-             */
             std::string getOption();
-            
-            /**
-             * returns description text/name as a string
-             */
+
             std::string getText();
 
-            
-
-            /**
-             * returns callback method pointer
-             */
             void* getcb();
 
-            /**
-             * returns context for this item
-             */
             void* getctx();
+
+            std::string toStr();
 
             /**
              * checks if 2 items are equivalent
@@ -59,7 +38,7 @@ namespace core::utils
              */
             bool equals(MenuItem it);
 
-        private:
+        protected:
             /**
              * key value for item, this is used to select it in your commands
              */
@@ -81,13 +60,13 @@ namespace core::utils
             void* ctx;
     };
 
-    class SubMenu : MenuItem
+    class SubMenu : public MenuItem
     {
         public:
             /**
              * constructor for sub-menu sub-class
              */
-            SubMenu(std::string option, std::string text, void* cb, void* ctx, MenuItem items[ITEMCOUNT]);
+            SubMenu(std::string option, std::string text, void* cb, void* ctx, MenuItem* items);
 
             /**
              * unique overridden toStr() method for sub-menus
@@ -112,7 +91,26 @@ namespace core::utils
              */
             MenuItem* getItems();
 
-        private:
+        protected:
+            /**
+             * key value for item, this is used to select it in your commands
+             */
+            std::string option;
+
+            /**
+             * description/name of item
+             */
+            std::string text;
+
+            /**
+             * pointer to callback method for this item
+             */
+            void* cb;
+            
+            /**
+             * context for this item, void* because it is of an abstract type
+             */
+            void* ctx;
             /**
              * the total number of items that can be contained in any sub-menu
              */
@@ -121,7 +119,7 @@ namespace core::utils
             /**
              * list of all items inside of the sub-menu
              */
-            MenuItem items[ITEMCOUNT];
+            MenuItem* items;
     };
 }
 
