@@ -1,9 +1,11 @@
 #ifndef EVT_TERM_MENUITEM
 #define EVT_TERM_MENUITEM
+#include <core/io/UART.hpp>
+#include <string>
 
 //macro for max initial item count of submenus
-const int ITEMCOUNT = 10;
-#include <string>
+
+using callback_t = void (*)(core::io::UART&, void*);
 
 namespace core::utils
 {
@@ -19,17 +21,17 @@ namespace core::utils
              * @param cb a void pointer to this items callback method
              * @param ctx a void pointer to any context information for this menu(if none provided, is NULL)
              */
-            MenuItem(std::string option, std::string text, void* cb, void* ctx = nullptr);
+            MenuItem(std::string option, std::string text, callback_t cb, void* ctx = nullptr);
 
-            std::string getOption();
+            std::string getOption(){return option;}
 
-            std::string getText();
+            std::string getText(){return text;}
 
-            void* getcb();
+            callback_t getcb(){return cb;}
 
-            void* getctx();
+            void* getctx(){return ctx;}
 
-            std::string toStr();
+            std::string toStr(MenuItem it);
 
             /**
              * checks if 2 items are equivalent
@@ -52,7 +54,7 @@ namespace core::utils
             /**
              * pointer to callback method for this item
              */
-            void* cb;
+            callback_t cb;
             
             /**
              * context for this item, void* because it is of an abstract type
@@ -66,12 +68,12 @@ namespace core::utils
             /**
              * constructor for sub-menu sub-class
              */
-            SubMenu(std::string option, std::string text, void* cb, void* ctx, MenuItem* items);
+            SubMenu(std::string option, std::string text, callback_t cb, void* ctx, MenuItem* items);
 
             /**
              * unique overridden toStr() method for sub-menus
              */
-            std::string toStr();
+            std::string toStr(SubMenu sub);
 
             /**
              * unique overridden equals() method for sub-menus
@@ -84,14 +86,14 @@ namespace core::utils
             /**
              * returns itemCount
              */
-            int getCount();
+            int getCount(){return itemCount;}
             
             /**
              * returns a list of all items contained in the submenu
              */
-            MenuItem* getItems();
+            MenuItem* getItems(){return items;}
 
-        protected:
+        private:
             /**
              * key value for item, this is used to select it in your commands
              */
@@ -105,7 +107,7 @@ namespace core::utils
             /**
              * pointer to callback method for this item
              */
-            void* cb;
+            callback_t cb;
             
             /**
              * context for this item, void* because it is of an abstract type
@@ -114,7 +116,7 @@ namespace core::utils
             /**
              * the total number of items that can be contained in any sub-menu
              */
-            int itemCount = ITEMCOUNT;
+            int itemCount = 10;
 
             /**
              * list of all items inside of the sub-menu

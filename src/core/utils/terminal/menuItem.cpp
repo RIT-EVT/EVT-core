@@ -4,27 +4,27 @@
 namespace core::utils
 {
 
-    MenuItem::MenuItem(std::string option, std::string text, void* cb, void* ctx) : option(option), text(text), cb(cb), ctx(ctx) 
+    MenuItem::MenuItem(std::string option, std::string text, callback_t cb, void* ctx) : option(option), text(text), cb(cb), ctx(ctx) 
     {
         
     }
 
-    std::string MenuItem::toStr()
+    std::string toStr(MenuItem it) 
     {
-        std::string string = this->option;
+        std::string string = it.getOption();
         string += ('|');
-        string += (this->text);
+        string += (it.getText());
         string += ("\n");
         return string;
     }
 
-    bool MenuItem::equals(MenuItem it)
+    bool equals(MenuItem it, MenuItem it2) 
     {
-        std::string option2 = it.getOption();
-        std::string text2 = it.getText();
-        void* cb2 = it.getcb();
-        void* ctx2 = it.getctx();
-        if(this->option != option2 || this->text != text2 || this->cb != cb2 || this->ctx != ctx2)
+        std::string option2 = it2.getOption();
+        std::string text2 = it2.getText();
+        callback_t cb2 = it2.getcb();
+        void* ctx2 = it2.getctx();
+        if(it.getOption() != option2 || it.getText() != text2 || it.getcb() != cb2 || it.getctx() != ctx2)
         {
             return false;
         }

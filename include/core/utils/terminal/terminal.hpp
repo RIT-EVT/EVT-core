@@ -5,6 +5,7 @@
 #include <core/io/pin.hpp>
 #include <core/manager.hpp>
 #include <core/utils/terminal/menu.hpp>
+#include <core/utils/terminal/menuItem.hpp>
 #include <string>
 #include <array>
 
@@ -21,50 +22,49 @@ namespace core::utils
              * @param uart an instance of a UART object
              * @param baud 9600 or 115200
              */
-            Terminal(io::UART& uart, utils::Menu menu);
+            Terminal(io::UART& uart, Menu* menu);
 
-            /**
-             * returns the uart instance of this terminal
-             */
-            io::UART& getUART();
+            io::UART& getUART()
+            {
+                return uart;
+            }
 
-            /**
-             * returns the menu instance that serves as the root node of the tree containing the terminal
-             */
-            utils::Menu getMenu();
+            Menu* getMenu()
+            {
+                return menu;
+            }
 
-            /**
-             * returns the current page of the menu, only if the menu is not currently on the main page 
-             * */
-            utils::SubMenu getCurrent();
-
+            SubMenu* getCurrent()
+            {
+                return current;
+            }
             /**
              * sets current submenu to provided value
              * @param sub the submenu to replace the current one with
              */
-            void setCurrent(SubMenu sub);
+            void setCurrent(SubMenu* sub){current = sub;}
 
             /**
              * checks if the terminal is still on the main menu
              */
-            bool isMain();
+            bool isMain(){return m;}
 
             /**
              * Sends a provided message over UART
              * @param message a string message to send via UART
              */
-            void update(std::string message);
+            void update(std::string message, io::UART& uart);
 
             /**
              * proccesses incoming UART messages
              */
-            std::array<std::string, 10> recieve();
+            std::array<std::string, 10> recieve(io::UART& uart);
 
-        protected:
+        private:
             // menu instance
-            utils::Menu menu;
+            Menu* menu;
 
-            utils::SubMenu current;
+            SubMenu* current;
 
             bool m;
 

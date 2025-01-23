@@ -7,39 +7,30 @@ namespace core::utils
 {
     Menu::Menu(MenuItem* items) : items(items)
     {
-
+        
     }
 
-    std::string Menu::toStr()
+    std::string toStr(Menu mnu) 
     {
         std::string out = "";
-        MenuItem* items = this->items;
-        for(int i = 0; i < MITEMCOUNT; i ++)
+        MenuItem* items = mnu.getItems();
+        for(int i = 0; i < mnu.getCount(); i ++)
         {
-           out += items[0].toStr();
+           out += items[0].toStr(items[0]);
            out += "\n";
         }
 
         return out;
     }
 
-    int Menu::getCount()
-    {
-        return MITEMCOUNT;
-    }
-
-    MenuItem* Menu::getItems()
-    {
-        return this->items;
-    }
-
-    bool Menu::equals(Menu mnu)
+    bool equals(Menu mnu) 
     {
         MenuItem* items2;
-        std::copy(items2[0],items2[MITEMCOUNT-1],(mnu.getItems())[0]);
-        for (int i = 0; i < MITEMCOUNT; i ++)
+        std::copy(items2, items2 + mnu.getCount(), mnu.getItems());
+
+        for (int i = 0; i < mnu.getCount(); i ++)
         {
-            if(!(items[i].equals(items2[i])))
+            if(!(mnu.getItems()[i].equals(items2[i])))
             {
                 return false;
             }

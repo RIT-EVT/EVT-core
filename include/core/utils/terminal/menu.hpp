@@ -2,9 +2,9 @@
 #define EVT_TERM_MENU
 
 //macro for max initial item count of a main menu
-const int MITEMCOUNT = 10;
 #include <core/utils/terminal/menuItem.hpp>
 #include <string>
+
 
 namespace core::utils
 {
@@ -21,35 +21,36 @@ namespace core::utils
             /**
              * creates a string representation of a menu, with each menu item on its own line
              */
-            std::string toStr();
+             std::string toStr(Menu mnu);
 
             /**
-             * returns the list of menu items
+             * returns number of items in menu
              */
-            MenuItem* getItems();
+             int getCount(){return itemCount;}
 
             /**
-             * returns itemCount
+             * returns list of items in menu
              */
-            int getCount();
+             MenuItem* getItems() {return items;}
+
 
             /**
              * checks if this menu is equivalent to another menu
              * true if every menu item is equal
              */
-            bool equals(Menu mnu);
+             bool equals(Menu mnu);
 
-        protected:
+        private:
 
             /**
              * list of all items contained in the menu
              */
-            MenuItem* items;
+             MenuItem* items;
 
             /**
              * maximum number of items allowed in any menu
              */
-            int itemCount = MITEMCOUNT;
+             int itemCount = 10;
 
     };
 }

@@ -14,38 +14,12 @@ namespace io = core::io;
 
 namespace core::utils
 {
-    Terminal::Terminal(io::UART& uart, utils::Menu menu) : menu(menu), uart(uart), current(nullptr)
+    Terminal::Terminal(io::UART& uart, utils::Menu* menu) : menu(menu), uart(uart)
     {
         uart.printf("Starting Terminal...");
     }
 
-    io::UART& Terminal::getUART()
-    {
-        return uart;
-    }
-
-    utils::Menu Terminal::getMenu()
-    {
-        return menu;
-    }
-
-    utils::SubMenu Terminal::getCurrent()
-    {
-        return current;
-    }
-
-    void Terminal::setCurrent(SubMenu sub)
-    {
-        current = sub;
-    }
-
-    bool Terminal::isMain()
-    {
-        return m;
-    }
-
-
-    void Terminal::update(std::string message)
+    void update(std::string message, io::UART& uart)
     {
         for(int i = 0; i < 5; i ++)
         {
@@ -54,18 +28,18 @@ namespace core::utils
         uart.printf(message.c_str());
     }
 
-    std::array<std::string, 10> Terminal::recieve()
+    std::array<std::string, 10> recieve(io::UART& uart)
     {
         char buffer[100];
-        std::string argN[10];
+        std::array<std::string, 10> argN;
         uart.gets(buffer, 100);
         
         int c = 0;
-        char hold[20] = {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '};
-        h = 0;
+        char hold[20];
+        int h = 0;
         for(int i = 0; i < 100; i ++)
         {
-            if(buffer[i] = '\0')
+            if(buffer[i] == '\0')
             {
                 break;
             }
@@ -84,7 +58,10 @@ namespace core::utils
             else
             {
                 argN[c] = hold;
-                hold[20] = {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '};
+                for (int i = 0; i < 20; i++) 
+                {
+                    hold[i] = '\0';
+                }
                 h = 0;
                 c ++;
             }

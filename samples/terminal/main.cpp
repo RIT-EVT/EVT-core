@@ -5,9 +5,60 @@
 #include <core/io/pin.hpp>
 #include <core/manager.hpp>
 #include <string>
+#include <array>
 
 namespace io   = core::io;
 namespace utils  = core::utils;
+
+void printCB(io::UART& uart, void* args)
+{
+    uart.printf("Test Message");
+}
+
+void sendCB(io::UART& uart, void* args)
+{
+    void* argsArray = static_cast<void*>(args);
+    char* message = static_cast<char*>(argsArray);
+    uart.printf(message);
+}
+
+void enterCB(io::UART& uart, void* args)
+{
+    // Cast the void pointer to an array of void pointers
+    void** argsArray = static_cast<void**>(args);
+    
+    // Cast the first element of the array to SubMenu*
+    utils::SubMenu* sub = static_cast<utils::SubMenu*>(argsArray[0]);
+    
+    // Cast the second element of the array to Terminal*
+    utils::Terminal* term = static_cast<utils::Terminal*>(argsArray[1]);
+
+    // Set the current submenu
+    term->setCurrent(sub);
+}
+
+//This print is specifically for MENUITEMS, SUBMENUS, and MENUS
+void print(io::UART& uart, utils::Menu item)
+{
+    uart.printf(item.toStr(item).c_str());
+}
+
+void print(io::UART& uart, utils::MenuItem item)
+{
+    uart.printf(item.toStr(item).c_str());
+}
+
+void print(io::UART& uart, utils::SubMenu item)
+{
+    uart.printf(item.toStr(item).c_str());
+}
+
+//TERMINAL specific print function
+void printTerm(io::UART& uart, core::utils::Terminal term)
+{
+    utils::Menu* mnu = term.getMenu();
+    uart.printf((mnu->toStr(*mnu)).c_str());
+}
 
 int main()
 {
@@ -18,86 +69,69 @@ int main()
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     //make some items
-    utils::Terminal::MenuItem print = MenuItem::MenuItem("p","Print, takes only key", printCB, nullptr);
-    utils::Terminal::MenuItem send = MenuItem::MenuItem("s","Send, takes key and message", sendCB, nullptr);
-    utils::Terminal::SubMenu sub = MenuItem::SubMenu("b", "SubMenu", enterCB, nullptr, {print,send});
-    utils::Terminal::MenuItem[2] items = {print, send, sub};
-    utils::Terminal::Menu menu = Menu::Menu(items);
-    utils::Terminal::Terminal term = Terminal::Terminal(uart, menu);
+    utils::MenuItem print = utils::MenuItem("p","Print, takes only key", printCB, nullptr);
+    utils::MenuItem send = utils::MenuItem("s","Send, takes key and message", sendCB, nullptr);
+    utils::MenuItem items[2] = {print, send};
+    utils::SubMenu sub = utils::SubMenu("b", "SubMenu", enterCB, nullptr, items);
+    utils::MenuItem items2[3] = {print, send, sub};
+    utils::Menu menu = utils::Menu(items2);
+    utils::Terminal term = utils::Terminal(uart, &menu);
 
     printTerm(uart, term);
     
+    callback_t cb;
     
     while(true)
     {
-        utils::Terminal::MenuItem[10] items;
+        utils::MenuItem* mitems;
 
         int c = 0;
 
         if(term.isMain())
         {
-            items = term.getMenu().getItems();
-            c = term.getMenu().getCount();
-            term.update(term.getMenu().toStr());
+            utils::Menu* men = term.getMenu();
+            mitems = men->getItems();
+            c = men->getCount();
+            term.update(men->toStr(*men), uart);
         }
         else
         {
-            items = term.getCurrent().getItems();
-            c = term.getCurrent().getCount();
-            term.update(term.getCurrent().toStr());
+            utils::SubMenu* sub = term.getCurrent();
+            mitems = sub->getItems();
+            c = sub->getCount();
+            term.update(sub->toStr(*sub), uart);
         }
         
-        std::string[10] inputList = term.recieve();
+        std::array<std::string, 10> inputList = term.recieve(uart);
         std::string tag = inputList[0];
-        std::string[10] args = inputList[1:];
+        std::string args[10];
+        for (int i = 1; i < 10; i++) 
+        {
+            args[i - 1] = inputList[i];
+        }
 
-        void (*cb)(io::UART, void*, utils::Terminal::Terminal);
+        //void (*cb)(io::UART, void*, utils::Terminal);
+        
 
         for(int i = 0; i < c; i ++)
         {
-            if(tag = items[i].getOption())
+            if(tag == mitems[i].getOption())
             {
-                cb = items[i].getcb();
+                cb = mitems[i].getcb();
             }
         }
 
-        if(tag = "b")
+        if(tag == "b")
         {
-            cb(uart, sub, term);
+            void* argsArray[2] = { static_cast<void*>(&sub), static_cast<void*>(&term) };
+            cb(uart, argsArray);
         }
         else
         {
-            cb(uart, args, term);
+            cb(uart, args);
         }
 
     }
 
-    return 0
-}
-
-void printCB(io::UART uart, void* args, utils::terminal::Terminal term)
-{
-    uart.printf("Test Message");
-}
-
-void sendCB(io::UART uart, void* args, utils::terminal::Terminal term)
-{
-    uart.printf(args[0]);
-}
-
-void enterCB(io::UART uart, void* sub, utils::terminal::Terminal term)
-{
-    term.setCurrent(sub);
-}
-
-//This print is specifically for MENUITEMS, SUBMENUS, and MENUS
-void print(io:UART uart, void* item)
-{
-    uart.printf(item.toStr());
-}
-
-//TERMINAL specific print function
-void printTerm(io:UART uart, core::utils:terminal::Terminal term)
-{
-    uart.printf(term.getMenu().toStr());
+    return 0;
 }
