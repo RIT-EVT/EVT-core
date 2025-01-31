@@ -32,6 +32,12 @@ static void MX_TIM2_Init(void);
 
 void Error_Handler(void);
 
+//IRQ handler for TIM2
+void TIM2_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&htim2);
+}
+
+
 uint32_t ICValue   = 0;
 uint32_t Frequency = 0;
 uint32_t Duty      = 0;
@@ -56,8 +62,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim) {
 
 int main(void) {
     // Initialize system
-    core::platform::init();
-
+        core::platform::init();
     // Setup UART
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
@@ -69,10 +74,14 @@ int main(void) {
     MX_GPIO_Init();
     MX_TIM2_Init();
 
-    // io::PWM& pwm_input = io::getPWM<io::Pin::PA_0>();
+
+
     uart.printf("START     INPUT CAPTURE\n\r");
     // input capture
-
+    //enable TIM2 interrupt, set priority
+    HAL_NVIC_SetPriority(TIM2_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(TIM2_IRQn);
+    //enable interrupt src
     HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1); // main channel
     HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_2);    // indirect channel
 
@@ -201,6 +210,7 @@ void Error_Handler(void) {
     __disable_irq();
     while (1) {
         // TODO  Report Hal error return state
+        log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Bad");
 
     }
     /* USER CODE END Error_Handler_Debug */
