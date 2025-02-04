@@ -2,8 +2,8 @@
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
 #include <core/manager.hpp>
-#include <core/utils/time.hpp>
 #include <core/utils/log.hpp>
+#include <core/utils/time.hpp>
 
 /* Private defines -----------------------------------------------------------*/
 #define B1_Pin             GPIO_PIN_13
@@ -32,11 +32,10 @@ static void MX_TIM2_Init(void);
 
 void Error_Handler(void);
 
-//IRQ handler for TIM2
+// IRQ handler for TIM2
 void TIM2_IRQHandler(void) {
     HAL_TIM_IRQHandler(&htim2);
 }
-
 
 uint32_t ICValue   = 0;
 uint32_t Frequency = 0;
@@ -62,11 +61,11 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim) {
 
 int main(void) {
     // Initialize system
-        core::platform::init();
+    core::platform::init();
     // Setup UART
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
-    //setup logger
+    // setup logger
     log::LOGGER.setUART(&uart);
     log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
 
@@ -74,14 +73,12 @@ int main(void) {
     MX_GPIO_Init();
     MX_TIM2_Init();
 
-
-
     uart.printf("START     INPUT CAPTURE\n\r");
     // input capture
-    //enable TIM2 interrupt, set priority
+    // enable TIM2 interrupt, set priority
     HAL_NVIC_SetPriority(TIM2_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(TIM2_IRQn);
-    //enable interrupt src
+    // enable interrupt src
     HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1); // main channel
     HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_2);    // indirect channel
 
@@ -162,10 +159,10 @@ static void MX_TIM2_Init(void) {
     /**TIM2 GPIO Configuration
     PA0     ------> TIM2_CH1
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_0;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Pin       = GPIO_PIN_0;
+    GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull      = GPIO_NOPULL;
+    GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
     /* USER CODE END TIM2_Init 2 */
@@ -201,7 +198,6 @@ static void MX_GPIO_Init(void) {
 
     /* USER CODE BEGIN MX_GPIO_Init_2 */
     /* USER CODE END MX_GPIO_Init_2 */
-
 }
 
 void Error_Handler(void) {
@@ -211,7 +207,6 @@ void Error_Handler(void) {
     while (1) {
         // TODO  Report Hal error return state
         log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Bad");
-
     }
     /* USER CODE END Error_Handler_Debug */
 }
