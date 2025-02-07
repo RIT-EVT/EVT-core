@@ -34,6 +34,7 @@ target_sources(${PROJECT_NAME} PRIVATE
         src/core/io/GPIO.cpp
         src/core/io/I2C.cpp
         src/core/io/PWM.cpp
+        src/core/io/PWM_INPUT.cpp
         src/core/io/UART.cpp
         src/core/io/SPI.cpp
         src/core/io/types/CANMessage.cpp
@@ -57,6 +58,7 @@ if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
     src/core/io/platform/f3xx/GPIOf3xx.cpp
     src/core/io/platform/f3xx/I2Cf3xx.cpp
     src/core/io/platform/f3xx/PWMf3xx.cpp
+    src/core/io/platform/f3xx/PWM_INPUTf3xx.cpp
     src/core/io/platform/f3xx/UARTf3xx.cpp
     src/core/io/platform/f3xx/SPIf3xx.cpp
     src/core/dev/platform/f3xx/IWDGf3xx.cpp
