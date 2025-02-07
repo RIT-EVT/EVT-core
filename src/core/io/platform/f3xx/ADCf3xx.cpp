@@ -185,7 +185,7 @@ void ADCf3xx::addChannel(uint8_t rank) {
     default:
         channelStruct = {}; // sets all variables to 0
         log::LOGGER.log(log::Logger::LogLevel::ERROR, "INVALID PIN 0x%x!!", pin);
-        break; // Should never get here
+        break;              // Should never get here
     }
 
     // Subtract 1 because rank starts at 1

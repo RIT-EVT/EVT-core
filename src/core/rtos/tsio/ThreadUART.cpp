@@ -70,7 +70,7 @@ void ThreadUART::printf(const char* format, ...) {
     va_list args;           /* Access the variable argument list */
     va_start(args, format); /* Tells the args variable to point to the format parameter first */
 
-    char buffer[256];                                /* Buffer array to hold the message */
+    char buffer[256];       /* Buffer array to hold the message */
     vsnprintf(buffer, sizeof(buffer), format, args); /* vsnprint formats the string and stores it in the buffer array */
     buffer[255] = '\0';
 

@@ -1,29 +1,11 @@
-//
-// Created by dylan on 2/3/2025.
-//
 
+// Xander  2/3/2025.
 
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
 #include <core/manager.hpp>
 #include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
-
-/* Private defines -----------------------------------------------------------*/
-#define B1_Pin             GPIO_PIN_13
-#define B1_GPIO_Port       GPIOC
-#define USART_TX_Pin       GPIO_PIN_2
-#define USART_TX_GPIO_Port GPIOA
-#define USART_RX_Pin       GPIO_PIN_3
-#define USART_RX_GPIO_Port GPIOA
-#define LD2_Pin            GPIO_PIN_13
-#define LD2_GPIO_Port      GPIOB
-#define TMS_Pin            GPIO_PIN_13
-#define TMS_GPIO_Port      GPIOA
-#define TCK_Pin            GPIO_PIN_14
-#define TCK_GPIO_Port      GPIOA
-#define SWO_Pin            GPIO_PIN_3
-#define SWO_GPIO_Port      GPIOB
 
 namespace io   = core::io;
 namespace time = core::time;
@@ -37,7 +19,7 @@ static void MX_TIM2_Init(void);
 void Error_Handler(void);
 
 // IRQ handler for TIM2
-void TIM2_IRQHandler(void) {
+extern "C" void TIM2_IRQHandler(void) {
     HAL_TIM_IRQHandler(&htim2);
 }
 
@@ -74,7 +56,6 @@ int main(void) {
     log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
 
     /* Initialize all configured peripherals */
-    MX_GPIO_Init();
     MX_TIM2_Init();
 
     uart.printf("START     INPUT CAPTURE\n\r");
@@ -112,7 +93,7 @@ static void MX_TIM2_Init(void) {
     TIM_MasterConfigTypeDef sMasterConfig     = {0};
 
     /* USER CODE BEGIN TIM2_Init 1 */
-
+    __HAL_RCC_TIM2_CLK_ENABLE();
     /* USER CODE END TIM2_Init 1 */
     htim2.Instance               = TIM2;
     htim2.Init.Prescaler         = 0;
@@ -157,7 +138,6 @@ static void MX_TIM2_Init(void) {
     }
     /* USER CODE BEGIN TIM2_Init 2 */
     GPIO_InitTypeDef GPIO_InitStruct = {0};
-    __HAL_RCC_TIM2_CLK_ENABLE();
 
     __HAL_RCC_GPIOA_CLK_ENABLE();
     /**TIM2 GPIO Configuration
@@ -170,38 +150,6 @@ static void MX_TIM2_Init(void) {
     GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
     /* USER CODE END TIM2_Init 2 */
-}
-
-static void MX_GPIO_Init(void) {
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-    /* USER CODE BEGIN MX_GPIO_Init_1 */
-    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "GPIO_INIT");
-    /* USER CODE END MX_GPIO_Init_1 */
-
-    /* GPIO Ports Clock Enable */
-    __HAL_RCC_GPIOC_CLK_ENABLE();
-    __HAL_RCC_GPIOF_CLK_ENABLE();
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    __HAL_RCC_GPIOB_CLK_ENABLE();
-
-    /*Configure GPIO pin Output Level */
-    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-
-    /*Configure GPIO pin : B1_Pin */
-    GPIO_InitStruct.Pin  = B1_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
-
-    /*Configure GPIO pin : LD2_Pin */
-    GPIO_InitStruct.Pin   = LD2_Pin;
-    GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull  = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
-
-    /* USER CODE BEGIN MX_GPIO_Init_2 */
-    /* USER CODE END MX_GPIO_Init_2 */
 }
 
 void Error_Handler(void) {

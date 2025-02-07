@@ -269,7 +269,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
     default:
         channelStruct = {}; // sets all values to 0
         log::LOGGER.log(log::Logger::LogLevel::ERROR, "INVALID PIN 0x%x!!", pin);
-        break; // Should never get here
+        break;              // Should never get here
     }
 
     // This checks if the pin being used supports the ADC being used
