@@ -12,7 +12,7 @@ namespace utils  = core::utils;
 
 void printCB(io::UART& uart, void* args)
 {
-    uart.printf("Test Message");
+    uart.printf("Test Message\n\r");
 }
 
 void sendCB(io::UART& uart, void* args)
@@ -40,24 +40,31 @@ void enterCB(io::UART& uart, void* args)
 //This print is specifically for MENUITEMS, SUBMENUS, and MENUS
 void print(io::UART& uart, utils::Menu item)
 {
-    uart.printf(item.toStr(item).c_str());
+    item.printStr(uart);
 }
 
 void print(io::UART& uart, utils::MenuItem item)
 {
-    uart.printf(item.toStr(item).c_str());
+    item.printStr(uart);
 }
 
 void print(io::UART& uart, utils::SubMenu item)
 {
-    uart.printf(item.toStr(item).c_str());
+    item.printStr(uart);
 }
 
 //TERMINAL specific print function
 void printTerm(io::UART& uart, core::utils::Terminal term)
 {
-    utils::Menu* mnu = term.getMenu();
-    uart.printf((mnu->toStr(*mnu)).c_str());
+    if(term.isMain())
+    {
+        utils::Menu* mnu = term.getMenu();
+        mnu->printStr(uart);
+    }
+    else
+    {
+        term.getCurrent()->printMStr(uart);
+    }
 }
 
 int main()
@@ -68,69 +75,72 @@ int main()
     //UART setup
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
+    //item list end item
+    utils::MenuItem nul = utils::MenuItem("null","LIST END", nullptr, nullptr);
+
     //make some items
-    utils::MenuItem print = utils::MenuItem("p","Print, takes only key", printCB, nullptr);
-    utils::MenuItem send = utils::MenuItem("s","Send, takes key and message", sendCB, nullptr);
-    utils::MenuItem items[2] = {print, send};
-    utils::SubMenu sub = utils::SubMenu("b", "SubMenu", enterCB, nullptr, items);
-    utils::MenuItem items2[3] = {print, send, sub};
+    utils::MenuItem print = utils::MenuItem("p","Print, takes only key\n\r", printCB, nullptr);
+    utils::MenuItem send = utils::MenuItem("s","Send, takes key and message\n\r", sendCB, nullptr);
+    utils::MenuItem items[3] = {print, send, nul};
+    utils::SubMenu sub = utils::SubMenu("b", "SubMenu\n\r", enterCB, nullptr, items);
+    utils::MenuItem items2[4] = {print, send, sub, nul};
     utils::Menu menu = utils::Menu(items2);
     utils::Terminal term = utils::Terminal(uart, &menu);
 
     printTerm(uart, term);
     
     callback_t cb;
-    
+
     while(true)
     {
         utils::MenuItem* mitems;
 
         int c = 0;
 
-        if(term.isMain())
+        char** inputList;
+        term.recieve(inputList);
+        char* item = inputList[0];
+
+        bool m = term.isMain();
+        utils::Menu* men = term.getMenu();
+        
+        utils::MenuItem* subitemsM = men->getItems();
+        
+        utils::SubMenu* cur = term.getCurrent();
+        
+        utils::MenuItem* subitemsC;
+
+        if(!m)
+        { 
+            subitemsC = cur->getItems();
+        }
+
+        utils::MenuItem* chosen;
+            
+        if(m)
         {
-            utils::Menu* men = term.getMenu();
-            mitems = men->getItems();
-            c = men->getCount();
-            term.update(men->toStr(*men), uart);
+            for(int i = 0; i < 10; i ++)
+            {
+                if(item == subitemsM[i].getOption())
+                {
+                    *chosen = subitemsM[i];
+                    break;
+                }
+            }
         }
         else
         {
-            utils::SubMenu* sub = term.getCurrent();
-            mitems = sub->getItems();
-            c = sub->getCount();
-            term.update(sub->toStr(*sub), uart);
-        }
-        
-        std::array<std::string, 10> inputList = term.recieve(uart);
-        std::string tag = inputList[0];
-        std::string args[10];
-        for (int i = 1; i < 10; i++) 
-        {
-            args[i - 1] = inputList[i];
-        }
-
-        //void (*cb)(io::UART, void*, utils::Terminal);
-        
-
-        for(int i = 0; i < c; i ++)
-        {
-            if(tag == mitems[i].getOption())
+            for(int i = 0; i < 10; i ++)
             {
-                cb = mitems[i].getcb();
+                if(item == subitemsC[i].getOption())
+                {
+                    *chosen = subitemsC[i];
+                    break;
+                }
             }
         }
 
-        if(tag == "b")
-        {
-            void* argsArray[2] = { static_cast<void*>(&sub), static_cast<void*>(&term) };
-            cb(uart, argsArray);
-        }
-        else
-        {
-            cb(uart, args);
-        }
-
+        uart.printf("\n\rend\n\r");
     }
 
     return 0;

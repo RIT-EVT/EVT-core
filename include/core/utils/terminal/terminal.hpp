@@ -3,12 +3,9 @@
 
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
-#include <core/manager.hpp>
 #include <core/utils/terminal/menu.hpp>
 #include <core/utils/terminal/menuItem.hpp>
-#include <string>
-#include <array>
-
+#include <cstring>
 
 namespace core::utils
 {
@@ -53,12 +50,12 @@ namespace core::utils
              * Sends a provided message over UART
              * @param message a string message to send via UART
              */
-            void update(std::string message, io::UART& uart);
+            void update(char* message);
 
             /**
              * proccesses incoming UART messages
              */
-            std::array<std::string, 10> recieve(io::UART& uart);
+            char** recieve(char** holder);
 
         private:
             // menu instance

@@ -1,30 +1,27 @@
 #include <core/utils/terminal/menuItem.hpp>
-#include <string>
-
+#include <core/io/UART.hpp>
 namespace core::utils
 {
 
-    MenuItem::MenuItem(std::string option, std::string text, callback_t cb, void* ctx) : option(option), text(text), cb(cb), ctx(ctx) 
+    MenuItem::MenuItem(char* option, char* text, callback_t cb, void* ctx) : option(option), text(text), cb(cb), ctx(ctx) 
     {
         
     }
 
-    std::string toStr(MenuItem it) 
+    void MenuItem::printStr(core::io::UART& uart) 
     {
-        std::string string = it.getOption();
-        string += ('|');
-        string += (it.getText());
-        string += ("\n");
-        return string;
+        uart.printf(option); 
+        uart.printf("|");
+        uart.printf(text);
     }
 
-    bool equals(MenuItem it, MenuItem it2) 
+    bool MenuItem::equals(MenuItem it2) 
     {
-        std::string option2 = it2.getOption();
-        std::string text2 = it2.getText();
+        char* option2 = it2.getOption();
+        char* text2 = it2.getText();
         callback_t cb2 = it2.getcb();
         void* ctx2 = it2.getctx();
-        if(it.getOption() != option2 || it.getText() != text2 || it.getcb() != cb2 || it.getctx() != ctx2)
+        if(option != option2 || text != text2 || cb != cb2 || ctx != ctx2)
         {
             return false;
         }

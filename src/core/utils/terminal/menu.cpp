@@ -1,7 +1,6 @@
 #include <core/utils/terminal/menuItem.hpp>
 #include <core/utils/terminal/menu.hpp>
-#include <string>
-
+#include <core/io/UART.hpp>
 
 namespace core::utils
 {
@@ -10,27 +9,25 @@ namespace core::utils
         
     }
 
-    std::string toStr(Menu mnu) 
+    void Menu::printStr(core::io::UART& uart) 
     {
-        std::string out = "";
-        MenuItem* items = mnu.getItems();
-        for(int i = 0; i < mnu.getCount(); i ++)
+        for(int c = 0; c < itemCount; c ++)
         {
-           out += items[0].toStr(items[0]);
-           out += "\n";
+            if(items[c].getOption() == "null")
+            {
+                return;
+            }
+            items[c].printStr(uart);
         }
-
-        return out;
     }
 
-    bool equals(Menu mnu) 
+    bool Menu::equals(Menu mnu2) 
     {
-        MenuItem* items2;
-        std::copy(items2, items2 + mnu.getCount(), mnu.getItems());
+        MenuItem* items2 = mnu2.getItems();
 
-        for (int i = 0; i < mnu.getCount(); i ++)
+        for (int i = 0; i < itemCount; i ++)
         {
-            if(!(mnu.getItems()[i].equals(items2[i])))
+            if(!(items[i].equals(items2[i])))
             {
                 return false;
             }

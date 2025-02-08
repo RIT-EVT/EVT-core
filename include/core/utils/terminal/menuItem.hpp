@@ -1,7 +1,6 @@
 #ifndef EVT_TERM_MENUITEM
 #define EVT_TERM_MENUITEM
 #include <core/io/UART.hpp>
-#include <string>
 
 //macro for max initial item count of submenus
 
@@ -21,35 +20,35 @@ namespace core::utils
              * @param cb a void pointer to this items callback method
              * @param ctx a void pointer to any context information for this menu(if none provided, is NULL)
              */
-            MenuItem(std::string option, std::string text, callback_t cb, void* ctx = nullptr);
+            MenuItem(char* option, char* text, callback_t cb, void* ctx = nullptr);
 
-            std::string getOption(){return option;}
+            char* getOption(){return option;}
 
-            std::string getText(){return text;}
+            char* getText(){return text;}
 
             callback_t getcb(){return cb;}
 
             void* getctx(){return ctx;}
 
-            std::string toStr(MenuItem it);
+            void printStr(core::io::UART& uart);
 
             /**
              * checks if 2 items are equivalent
              * true if every attribute is equivalent using ==
-             * @param it a different menu item to compare to
+             * @param it2 a different menu item to compare to
              */
-            bool equals(MenuItem it);
+            bool equals(MenuItem it2);
 
         protected:
             /**
              * key value for item, this is used to select it in your commands
              */
-            std::string option;
+            char* option;
 
             /**
              * description/name of item
              */
-            std::string text;
+            char* text;
 
             /**
              * pointer to callback method for this item
@@ -68,20 +67,25 @@ namespace core::utils
             /**
              * constructor for sub-menu sub-class
              */
-            SubMenu(std::string option, std::string text, callback_t cb, void* ctx, MenuItem* items);
+            SubMenu(char* option, char* text, callback_t cb, void* ctx, MenuItem* items);
 
             /**
-             * unique overridden toStr() method for sub-menus
+             * unique overridden printStr() method for sub-menus
              */
-            std::string toStr(SubMenu sub);
+            void printStr(io::UART& uart);
+
+            /**
+             * print method that displays the submenu like a menu, instead of an item
+             */
+            void printMStr(io::UART& uart);
 
             /**
              * unique overridden equals() method for sub-menus
              * true if every attribute is equivalent, checks all but items with ==
              * items is checked the same way as menu equivalence
-             * @param sub the other submenu to compare to
+             * @param sub2 the other submenu to compare to
              */
-            bool equals(SubMenu sub);
+            bool equals(SubMenu sub2);
 
             /**
              * returns itemCount
@@ -97,12 +101,12 @@ namespace core::utils
             /**
              * key value for item, this is used to select it in your commands
              */
-            std::string option;
+            char* option;
 
             /**
              * description/name of item
              */
-            std::string text;
+            char* text;
 
             /**
              * pointer to callback method for this item

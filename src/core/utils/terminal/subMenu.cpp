@@ -1,41 +1,50 @@
 #include <core/utils/terminal/menuItem.hpp>
-#include <string>
+#include <core/io/UART.hpp>
 
 
 namespace core::utils
 {
-    SubMenu::SubMenu(std::string option, std::string text, callback_t cb, void* ctx, MenuItem* items) : MenuItem(option, text, cb, ctx)
+    SubMenu::SubMenu(char* option, char* text, callback_t cb, void* ctx, MenuItem* items) : option(option), text(text), cb(cb), ctx(ctx), items(items), MenuItem(option, text, cb, ctx)//SubMenu(option, text, cb, ctx, items)
     {
-        this->items = items;
+
     }
 
-    std::string toStr(SubMenu sub) 
+    void SubMenu::printStr(core::io::UART& uart) 
     {
-        //create string for line showing this sub-menu
-        std::string out = sub.getOption();
-        out += ("|");
-        out += (sub.getText());
-        out += ("\n");
-        return out;
+        //this is exclusively for displaying the submenu inside of a menu list
+        uart.printf(option); 
+        uart.printf("|");
+        uart.printf(text);
     }
 
-    bool equals(SubMenu sub, SubMenu sub2) 
+    void SubMenu::printMStr(core::io::UART& uart)
+    {
+        for(int c = 0; c < itemCount; c ++)
+        {
+            if(items[c].getOption() == "null")
+            {
+                return;
+            }
+            items[c].printStr(uart);
+        }
+    }
+
+    bool SubMenu::equals(SubMenu sub2) 
     {
         //check equivalence of attributes besides items 
         //this section is identical to menuItem
-        std::string option2 = sub2.getOption();
-        std::string text2 = sub2.getText();
+        char* option2 = sub2.getOption();
+        char* text2 = sub2.getText();
         callback_t cb2 = sub2.getcb();
         void* ctx2 = sub2.getctx();
         MenuItem* items2 = sub2.getItems();
-        if(sub.getOption() != option2 || sub.getText() != text2 || sub.getcb() != cb2 || sub.getctx() != ctx2)
+        if(option != option2 || text != text2 || cb != cb2 || ctx != ctx2)
         {
             return false;
         }
 
-        //Check items equivalence
-        MenuItem* items = sub.getItems();
-        for (int i = 0; i < sub.getCount(); i ++)
+        //Check items equivalence;
+        for (int i = 0; i < itemCount; i ++)
         {
             if(!(items[i].equals(items2[i])))
             {
