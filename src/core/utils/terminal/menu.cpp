@@ -4,7 +4,7 @@
 
 namespace core::utils
 {
-    Menu::Menu(MenuItem* items) : items(items)
+    Menu::Menu(MenuItem** items) : items(items)
     {
         
     }
@@ -13,21 +13,21 @@ namespace core::utils
     {
         for(int c = 0; c < itemCount; c ++)
         {
-            if(items[c].getOption() == "null")
+            if(items[c]->getOption() == "null")
             {
                 return;
             }
-            items[c].printStr(uart);
+            items[c]->printStr(uart);
         }
     }
 
-    bool Menu::equals(Menu mnu2) 
+    bool Menu::equals(Menu* mnu2) 
     {
-        MenuItem* items2 = mnu2.getItems();
+        MenuItem** items2 = mnu2->getItems();
 
         for (int i = 0; i < itemCount; i ++)
         {
-            if(!(items[i].equals(items2[i])))
+            if(!(items[i]->equals(items2[i])))
             {
                 return false;
             }

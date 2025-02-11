@@ -15,7 +15,7 @@ namespace core::utils
              * Basic constructor takes a list a menu items
              * @param items a list of menu items 
              */
-            Menu(MenuItem* items);
+            Menu(MenuItem** items);
 
             /**
              * creates a string representation of a menu, with each menu item on its own line
@@ -30,7 +30,7 @@ namespace core::utils
             /**
              * returns list of items in menu
              */
-             MenuItem* getItems() {return items;}
+             MenuItem** getItems() {return items;}
 
 
             /**
@@ -38,14 +38,14 @@ namespace core::utils
              * true if every menu item is equal
              * @param mnu2 the menu to compare to
              */
-             bool equals(Menu mnu2);
+             bool equals(Menu* mnu2);
 
         private:
 
             /**
              * list of all items contained in the menu
              */
-             MenuItem* items;
+             MenuItem** items;
 
             /**
              * maximum number of items allowed in any menu

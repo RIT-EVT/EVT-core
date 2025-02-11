@@ -28,6 +28,8 @@ namespace core::utils
 
             callback_t getcb(){return cb;}
 
+            void replace(MenuItem* newItem);
+
             void* getctx(){return ctx;}
 
             void printStr(core::io::UART& uart);
@@ -37,7 +39,7 @@ namespace core::utils
              * true if every attribute is equivalent using ==
              * @param it2 a different menu item to compare to
              */
-            bool equals(MenuItem it2);
+            bool equals(MenuItem* it2);
 
         protected:
             /**
@@ -67,7 +69,7 @@ namespace core::utils
             /**
              * constructor for sub-menu sub-class
              */
-            SubMenu(char* option, char* text, callback_t cb, void* ctx, MenuItem* items);
+            SubMenu(char* option, char* text, callback_t cb, void* ctx, MenuItem** items);
 
             /**
              * unique overridden printStr() method for sub-menus
@@ -85,7 +87,7 @@ namespace core::utils
              * items is checked the same way as menu equivalence
              * @param sub2 the other submenu to compare to
              */
-            bool equals(SubMenu sub2);
+            bool equals(SubMenu* sub2);
 
             /**
              * returns itemCount
@@ -95,7 +97,7 @@ namespace core::utils
             /**
              * returns a list of all items contained in the submenu
              */
-            MenuItem* getItems(){return items;}
+            MenuItem** getItems(){return items;}
 
         private:
             /**
@@ -125,7 +127,7 @@ namespace core::utils
             /**
              * list of all items inside of the sub-menu
              */
-            MenuItem* items;
+            MenuItem** items;
     };
 }
 

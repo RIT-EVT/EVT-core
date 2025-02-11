@@ -4,7 +4,7 @@
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
 #include <core/manager.hpp>
-#include <string>
+#include <cstring>
 #include <array>
 
 namespace io   = core::io;
@@ -81,9 +81,9 @@ int main()
     //make some items
     utils::MenuItem print = utils::MenuItem("p","Print, takes only key\n\r", printCB, nullptr);
     utils::MenuItem send = utils::MenuItem("s","Send, takes key and message\n\r", sendCB, nullptr);
-    utils::MenuItem items[3] = {print, send, nul};
+    utils::MenuItem* items[3] = {&print, &send, &nul};
     utils::SubMenu sub = utils::SubMenu("b", "SubMenu\n\r", enterCB, nullptr, items);
-    utils::MenuItem items2[4] = {print, send, sub, nul};
+    utils::MenuItem* items2[4] = {&print, &send, &sub, &nul};
     utils::Menu menu = utils::Menu(items2);
     utils::Terminal term = utils::Terminal(uart, &menu);
 
@@ -97,33 +97,38 @@ int main()
 
         int c = 0;
 
-        char** inputList;
+        char* inputList[10];
         term.recieve(inputList);
-        char* item = inputList[0];
-
+        char* tag = inputList[0];
         bool m = term.isMain();
+
         utils::Menu* men = term.getMenu();
         
-        utils::MenuItem* subitemsM = men->getItems();
+        utils::MenuItem** subitemsM = men->getItems();
         
         utils::SubMenu* cur = term.getCurrent();
         
-        utils::MenuItem* subitemsC;
+        utils::MenuItem** subitemsC;
 
+        
         if(!m)
         { 
             subitemsC = cur->getItems();
         }
 
-        utils::MenuItem* chosen;
-            
+        utils::MenuItem* chosen = &nul;
         if(m)
         {
             for(int i = 0; i < 10; i ++)
             {
-                if(item == subitemsM[i].getOption())
+                char* op = subitemsM[i]->getOption();
+                if(strcmp(op, "null") == 0)
                 {
-                    *chosen = subitemsM[i];
+                    break;
+                }
+                if(strcmp(tag,op) == 0)
+                {
+                    chosen = (subitemsM[i]);
                     break;
                 }
             }
@@ -132,15 +137,23 @@ int main()
         {
             for(int i = 0; i < 10; i ++)
             {
-                if(item == subitemsC[i].getOption())
+                char* op = subitemsC[i]->getOption();
+                if(strcmp(op, "null") == 0)
                 {
-                    *chosen = subitemsC[i];
+                    break;
+                }
+                if(strcmp(tag,op) == 0)
+                {
+                    chosen = (subitemsC[i]);
                     break;
                 }
             }
         }
+        cb = chosen->getcb();
 
-        uart.printf("\n\rend\n\r");
+        cb(uart, nullptr);
+
+        printTerm(uart, term);
     }
 
     return 0;

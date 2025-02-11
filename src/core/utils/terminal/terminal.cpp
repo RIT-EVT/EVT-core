@@ -26,13 +26,12 @@ namespace core::utils
         uart.printf(message);
     }
 
-    char** Terminal::recieve(char** holder)
+    void Terminal::recieve(char* holder[10])
     {
         char buffer[100];
         char* argN[10];
   
         uart.gets(buffer, 100);
-
 
         argN[0] = strtok(buffer, " ");
         for(int i = 1; i < 10; i ++)
@@ -40,44 +39,9 @@ namespace core::utils
             argN[i] = strtok(NULL," ");
         }
 
-        
-        // uart.gets(buffer, 100);
-        
-        // int c = 0;
-        // char hold[20];
-        // int h = 0;
-        // for(int i = 0; i < 100; i ++)
-        // {
-        //     if(buffer[i] == '\0')
-        //     {
-        //         break;
-        //     }
-
-        //     if(c >= 10)
-        //     {
-        //         uart.printf("ERROR TOO MANY ARGUMENTS");
-        //         break;
-        //     }
-
-        //     if(buffer[i] != ' ')
-        //     {
-        //         hold[h] = buffer[i];
-        //         h ++;
-        //     }
-        //     else
-        //     {
-        //         argN[c] = hold;
-        //         for (int i = 0; i < 20; i++) 
-        //         {
-        //             hold[i] = '\0';
-        //         }
-        //         h = 0;
-        //         c ++;
-        //     }
-            
-        // }
-        holder = argN;
-        return holder;
-
+        for(int i = 0; i < 10; i++)
+        {
+            holder[i] = argN[i];
+        }
     }
 }

@@ -55,7 +55,7 @@ namespace core::utils
             /**
              * proccesses incoming UART messages
              */
-            char** recieve(char** holder);
+            void recieve(char** holder);
 
         private:
             // menu instance
