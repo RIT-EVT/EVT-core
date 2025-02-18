@@ -10,31 +10,55 @@
 namespace io   = core::io;
 namespace utils  = core::utils;
 
-void printCB(io::UART& uart, void* args)
+enum dataType
 {
-    uart.printf("Test Message\n\r");
+    CHAR,
+    ITEM,
+    TERMINAL
+};
+
+void printCB(io::UART& uart, void** args)
+{
+    uart.printf("\n\rTest Message\n\r");
 }
 
-void sendCB(io::UART& uart, void* args)
+void sendCB(io::UART& uart, void** args)
 {
-    void* argsArray = static_cast<void*>(args);
-    char* message = static_cast<char*>(argsArray);
-    uart.printf(message);
+    uart.printf("\n\r");
+    for(int i = 1; i < 10; i ++)
+    {
+        if(args[i] == nullptr)
+        {
+            i = 10;
+            continue;
+        }
+        uart.printf((char*)args[i]);
+        uart.printf(" ");
+    }
 }
 
-void enterCB(io::UART& uart, void* args)
+void enterCB(io::UART& uart, void** args)
 {
-    // Cast the void pointer to an array of void pointers
-    void** argsArray = static_cast<void**>(args);
-    
-    // Cast the first element of the array to SubMenu*
-    utils::SubMenu* sub = static_cast<utils::SubMenu*>(argsArray[0]);
-    
-    // Cast the second element of the array to Terminal*
-    utils::Terminal* term = static_cast<utils::Terminal*>(argsArray[1]);
+    utils::Terminal* term = (utils::Terminal*)(args[10]);
 
-    // Set the current submenu
-    term->setCurrent(sub);
+    utils::MenuItem** items = term->getMenu()->getItems();
+
+    utils::MenuItem* chosen;
+    char* tag = (char*)args[0];
+    for(int i = 0; i < 10; i ++)
+            {
+                char* op = items[i]->getOption();
+                if(strcmp(op, "null") == 0)
+                {
+                    break;
+                }
+                if(strcmp(tag,op) == 0)
+                {
+                    chosen = (items[i]);
+                    break;
+                }
+            }
+    term->setCurrent((utils::SubMenu*)chosen);
 }
 
 //This print is specifically for MENUITEMS, SUBMENUS, and MENUS
@@ -56,6 +80,7 @@ void print(io::UART& uart, utils::SubMenu item)
 //TERMINAL specific print function
 void printTerm(io::UART& uart, core::utils::Terminal term)
 {
+    uart.printf("\n\r");
     if(term.isMain())
     {
         utils::Menu* mnu = term.getMenu();
@@ -100,6 +125,18 @@ int main()
         char* inputList[10];
         term.recieve(inputList);
         char* tag = inputList[0];
+        void* args[11];
+        for(int i = 0; i < 10; i ++)
+        {
+            if(inputList[i] == "\0")
+            {
+                args[i-1] = nullptr;
+                break;
+            }
+            args[i-1] = inputList[i];
+        }
+        args[10] = &term;
+
         bool m = term.isMain();
 
         utils::Menu* men = term.getMenu();
@@ -151,7 +188,7 @@ int main()
         }
         cb = chosen->getcb();
 
-        cb(uart, nullptr);
+        cb(uart, args);
 
         printTerm(uart, term);
     }

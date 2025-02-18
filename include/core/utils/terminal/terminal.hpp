@@ -39,7 +39,7 @@ namespace core::utils
              * sets current submenu to provided value
              * @param sub the submenu to replace the current one with
              */
-            void setCurrent(SubMenu* sub){current = sub;}
+            void setCurrent(SubMenu* sub);
 
             /**
              * checks if the terminal is still on the main menu

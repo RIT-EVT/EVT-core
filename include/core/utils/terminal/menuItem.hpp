@@ -4,7 +4,7 @@
 
 //macro for max initial item count of submenus
 
-using callback_t = void (*)(core::io::UART&, void*);
+using callback_t = void (*)(core::io::UART&, void**);
 
 namespace core::utils
 {

@@ -26,17 +26,23 @@ namespace core::utils
         uart.printf(message);
     }
 
+    void Terminal::setCurrent(SubMenu* sub)
+    {
+        current = sub;
+        m = false;
+    }
+
     void Terminal::recieve(char* holder[10])
     {
-        char buffer[100];
+        char buffer[99];
         char* argN[10];
   
-        uart.gets(buffer, 100);
+        uart.gets(buffer, 99);
 
         argN[0] = strtok(buffer, " ");
         for(int i = 1; i < 10; i ++)
         {
-            argN[i] = strtok(NULL," ");
+            argN[i] = strtok(NULL, " ");
         }
 
         for(int i = 0; i < 10; i++)
