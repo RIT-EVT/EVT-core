@@ -81,6 +81,7 @@ void print(io::UART& uart, utils::SubMenu item)
 void printTerm(io::UART& uart, core::utils::Terminal term)
 {
     uart.printf("\n\r");
+    uart.printf("Terminal:");
     if(term.isMain())
     {
         utils::Menu* mnu = term.getMenu();
@@ -111,17 +112,13 @@ int main()
     utils::MenuItem* items2[4] = {&print, &send, &sub, &nul};
     utils::Menu menu = utils::Menu(items2);
     utils::Terminal term = utils::Terminal(uart, &menu);
-
+    
     printTerm(uart, term);
     
     callback_t cb;
 
     while(true)
     {
-        utils::MenuItem* mitems;
-
-        int c = 0;
-
         char* inputList[10];
         term.recieve(inputList);
         char* tag = inputList[0];
@@ -137,55 +134,10 @@ int main()
         }
         args[10] = &term;
 
-        bool m = term.isMain();
-
-        utils::Menu* men = term.getMenu();
-        
-        utils::MenuItem** subitemsM = men->getItems();
-        
-        utils::SubMenu* cur = term.getCurrent();
-        
-        utils::MenuItem** subitemsC;
-
-        
-        if(!m)
-        { 
-            subitemsC = cur->getItems();
-        }
-
         utils::MenuItem* chosen = &nul;
-        if(m)
-        {
-            for(int i = 0; i < 10; i ++)
-            {
-                char* op = subitemsM[i]->getOption();
-                if(strcmp(op, "null") == 0)
-                {
-                    break;
-                }
-                if(strcmp(tag,op) == 0)
-                {
-                    chosen = (subitemsM[i]);
-                    break;
-                }
-            }
-        }
-        else
-        {
-            for(int i = 0; i < 10; i ++)
-            {
-                char* op = subitemsC[i]->getOption();
-                if(strcmp(op, "null") == 0)
-                {
-                    break;
-                }
-                if(strcmp(tag,op) == 0)
-                {
-                    chosen = (subitemsC[i]);
-                    break;
-                }
-            }
-        }
+        
+        term.process(chosen, tag);
+
         cb = chosen->getcb();
 
         cb(uart, args);

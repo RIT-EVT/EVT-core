@@ -50,4 +50,43 @@ namespace core::utils
             holder[i] = argN[i];
         }
     }
+
+    void Terminal::process(utils::MenuItem* holder, char* tag)
+    {
+        utils::MenuItem** subitemsM = menu->getItems();
+        utils::MenuItem** subitemsC = current->getItems();
+
+        if(m)
+        {
+            for(int i = 0; i < 10; i ++)
+            {
+                char* op = subitemsM[i]->getOption();
+                if(strcmp(op, "null") == 0)
+                {
+                    break;
+                }
+                if(strcmp(tag,op) == 0)
+                {
+                    holder = (subitemsM[i]);
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for(int i = 0; i < 10; i ++)
+            {
+                char* op = subitemsC[i]->getOption();
+                if(strcmp(op, "null") == 0)
+                {
+                    break;
+                }
+                if(strcmp(tag,op) == 0)
+                {
+                    holder = (subitemsC[i]);
+                    break;
+                }
+            }
+        }
+    }
 }

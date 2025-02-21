@@ -57,6 +57,8 @@ namespace core::utils
              */
             void recieve(char** holder);
 
+            void process(utils::MenuItem* holder, char* tag);
+
         private:
             // menu instance
             Menu* menu;
