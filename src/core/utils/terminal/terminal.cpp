@@ -69,54 +69,59 @@ namespace core::utils
         }
     }
 
-    void Terminal::process(utils::MenuItem* holder, char* tag)
+    utils::MenuItem* Terminal::process(utils::MenuItem* holder, char* tag)
     {
-        utils::MenuItem** subitemsM = menu->getItems();
-        utils::MenuItem** subitemsC = current->getItems();
-
         if(m)
         {
-            for(int i = 0; i < 10; i ++)
+            utils::MenuItem** subitemsM = menu->getItems();
+            
+            for(int i = 0; i < menu->getCount(); i ++)
             {
                 char* op = subitemsM[i]->getOption();
                 if(strcmp(op, "null") == 0)
                 {
                     holder = nullptr;
-                    return;
+                    return holder;
                 }
                 if(strcmp(tag,op) == 0)
                 {
                     holder = (subitemsM[i]);
-                    return;
+                    return holder;
                 }
             }
         }
         else
         {
-            for(int i = 0; i < 10; i ++)
+            utils::MenuItem** subitemsC = current->getItems();
+
+            for(int i = 0; i < menu->getCount(); i ++)
             {
                 char* op = subitemsC[i]->getOption();
                 if(strcmp(op, "null") == 0)
                 {
                     holder = nullptr;
-                    return;
+                    return holder;
                 }
                 if(strcmp(tag,op) == 0)
                 {
                     holder = (subitemsC[i]);
-                    return;
+                    return holder;
                 }
             }
         }
 
         if(strcmp(tag, "e") == 0)
         {
-            current->exit(uart, nullptr);
-            utils::SubMenu* h = current->getHead();
-            if(h != nullptr)
+            current->exit(uart,nullptr);
+            void* h = current->getHead();
+            if(h)
             {
-                current->replace(h);
+                current->replace((utils::SubMenu*)h);
             }
+
+            utils::MenuItem out = utils::MenuItem(nullptr,nullptr,"EXIT","EXIT",nullptr,nullptr);
+            holder->replace(&out);
+            return holder;
         }
     }
 }

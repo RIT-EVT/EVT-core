@@ -10,13 +10,6 @@
 namespace io   = core::io;
 namespace utils  = core::utils;
 
-enum dataType
-{
-    CHAR,
-    ITEM,
-    TERMINAL
-};
-
 //example callback that prints a test message
 void printCB(io::UART& uart, void** args)
 {
@@ -39,22 +32,6 @@ void sendCB(io::UART& uart, void** args)
     }
 }
 
-//This print is specifically for MENUITEMS, SUBMENUS, and MENUS
-void print(io::UART& uart, utils::Menu item)
-{
-    item.printStr(uart);
-}
-
-void print(io::UART& uart, utils::MenuItem item)
-{
-    item.printStr(uart);
-}
-
-void print(io::UART& uart, utils::SubMenu item)
-{
-    item.printStr(uart);
-}
-
 int main()
 {
     //core setup
@@ -64,7 +41,7 @@ int main()
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     //item list end item
-    utils::MenuItem nul = utils::MenuItem(nullptr,nullptr,"null","LIST END", nullptr, nullptr);
+    utils::MenuItem nul = utils::MenuItem(nullptr,nullptr,"null","LIST END\n\r", nullptr, nullptr);
 
     //make some items
     utils::MenuItem* items[10];
@@ -78,13 +55,13 @@ int main()
     void* m = &menu;
     void* t = &term;
     //a nullptr in the head parameter means it is part of the main menu
-    utils::MenuItem mainPrint = utils::MenuItem(nullptr,t,"p","print test",printCB,nullptr);
-    utils::MenuItem mainSend = utils::MenuItem(nullptr,t,"s","echo",sendCB,nullptr);
+    utils::MenuItem mainPrint = utils::MenuItem(nullptr,t,"p","print test\n\r",printCB,nullptr);
+    utils::MenuItem mainSend = utils::MenuItem(nullptr,t,"s","echo\n\r",sendCB,nullptr);
     //submenu cb is exit cb struct, ctx is void* to enter function cb struct. these are NOT responsible for moving menus, just for operations done duirng a menu move
-    utils::SubMenu sub = utils::SubMenu(nullptr,t,"sb","sub menu",nullptr,nullptr,items);
+    utils::SubMenu sub = utils::SubMenu(nullptr,t,"sb","sub menu\n\r",nullptr,nullptr,items);
     void* s = &sub;
-    utils::MenuItem subPrint = utils::MenuItem(s,t,"p","print test",printCB,nullptr);
-    utils::MenuItem subSend = utils::MenuItem(s,t,"s","echo",sendCB,nullptr);
+    utils::MenuItem subPrint = utils::MenuItem(s,t,"p","print test\n\r",printCB,nullptr);
+    utils::MenuItem subSend = utils::MenuItem(s,t,"s","echo\n\r",sendCB,nullptr);
 
     //create submenu
     int c = menu.getCount();
@@ -100,35 +77,42 @@ int main()
     menu.addItem(&sub);
     menu.addItem(&nul);
 
-    term.printTerm(uart);
-    uart.printf("Usage: flagChar argument argument | max 9 arguments");
-    callback_t cb;
+    //printTerm is how you display the current state of the terminal
+    
+    uart.printf("Usage: flagChar argument argument | max 9 arguments\n\r");
+
+    //forever while loop to constantly wait for user input
     while(true)
     {
+        term.printTerm(uart);
+        callback_t cb;
         char* inputList[10];
         term.recieve(inputList);
         char* tag = inputList[0];
         void* args[11];
-        for(int i = 0; i < c; i ++)
+        for(int i = 0; i < 10; i ++)
         {
             if(inputList[i] == "\0")
             {
-                args[i-1] = nullptr;
+                args[i] = nullptr;
                 break;
             }
-            args[i-1] = inputList[i];
+            args[i] = inputList[i];
         }
         args[10] = &term;
 
         utils::MenuItem* chosen = &nul;
-        
         term.process(chosen, tag);
 
+        chosen->printStr(uart);
+
+        if(chosen == nullptr || strcmp(chosen->getOption(),"EXIT") == 0)
+        {
+            continue;
+        }
         cb = chosen->getcb();
 
         cb(uart, args);
-
-        term.printTerm(uart);
     }
 
     return 0;

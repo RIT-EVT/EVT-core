@@ -59,7 +59,7 @@ namespace core::utils
              */
             void recieve(char** holder);
 
-            void process(utils::MenuItem* holder, char* tag);
+            utils::MenuItem* process(utils::MenuItem* holder, char* tag);
 
             //TERMINAL specific print function
             void printTerm(io::UART& uart);
