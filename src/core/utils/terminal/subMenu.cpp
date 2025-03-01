@@ -4,7 +4,7 @@
 
 namespace core::utils
 {
-    SubMenu::SubMenu(char* option, char* text, callback_t cb, void* ctx, MenuItem** items) : option(option), text(text), cb(cb), ctx(ctx), items(items), MenuItem(option, text, cb, ctx)//SubMenu(option, text, cb, ctx, items)
+    SubMenu::SubMenu(void* head, void* term, char* option, char* text, callback_t cb, void* ctx, MenuItem** items) : head(head), term(term), option(option), text(text), cb(cb), ctx(ctx), items(items), MenuItem(head, term, option, text, cb, ctx)//SubMenu(option, text, cb, ctx, items)
     {
 
     }
@@ -26,6 +26,29 @@ namespace core::utils
                 return;
             }
             items[c]->printStr(uart);
+        }
+        uart.printf("e|exit\n\r");
+    }
+
+    SubMenu* SubMenu::getHead()
+    {
+        if(head)
+        {
+            return (utils::SubMenu*)head;
+        }
+        return nullptr;
+
+    }
+
+    void SubMenu::setItems(MenuItem** itms)
+    {
+        for(int i = 0; i < itemCount; i++)
+        {
+            if(itms[i] == nullptr)
+            {
+                break;
+            }
+            items[i] = itms[i];
         }
     }
 
@@ -52,5 +75,18 @@ namespace core::utils
             }
         }
         return true;
+    }
+
+    void SubMenu::enter(io::UART& uart, void** args)
+    {
+        if(ctx){
+        callback_t cb = (callback_t)ctx;
+        cb(uart, args);
+        }
+    }
+
+    void SubMenu::exit(io::UART& uart, void** args)
+    {
+        cb(uart, args);
     }
 }

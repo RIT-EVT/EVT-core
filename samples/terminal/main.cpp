@@ -17,11 +17,13 @@ enum dataType
     TERMINAL
 };
 
+//example callback that prints a test message
 void printCB(io::UART& uart, void** args)
 {
     uart.printf("\n\rTest Message\n\r");
 }
 
+//example callback that echos user input(called send because e char is taken by exit)
 void sendCB(io::UART& uart, void** args)
 {
     uart.printf("\n\r");
@@ -35,30 +37,6 @@ void sendCB(io::UART& uart, void** args)
         uart.printf((char*)args[i]);
         uart.printf(" ");
     }
-}
-
-void enterCB(io::UART& uart, void** args)
-{
-    utils::Terminal* term = (utils::Terminal*)(args[10]);
-
-    utils::MenuItem** items = term->getMenu()->getItems();
-
-    utils::MenuItem* chosen;
-    char* tag = (char*)args[0];
-    for(int i = 0; i < 10; i ++)
-            {
-                char* op = items[i]->getOption();
-                if(strcmp(op, "null") == 0)
-                {
-                    break;
-                }
-                if(strcmp(tag,op) == 0)
-                {
-                    chosen = (items[i]);
-                    break;
-                }
-            }
-    term->setCurrent((utils::SubMenu*)chosen);
 }
 
 //This print is specifically for MENUITEMS, SUBMENUS, and MENUS
@@ -77,22 +55,6 @@ void print(io::UART& uart, utils::SubMenu item)
     item.printStr(uart);
 }
 
-//TERMINAL specific print function
-void printTerm(io::UART& uart, core::utils::Terminal term)
-{
-    uart.printf("\n\r");
-    uart.printf("Terminal:");
-    if(term.isMain())
-    {
-        utils::Menu* mnu = term.getMenu();
-        mnu->printStr(uart);
-    }
-    else
-    {
-        term.getCurrent()->printMStr(uart);
-    }
-}
-
 int main()
 {
     //core setup
@@ -102,28 +64,52 @@ int main()
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     //item list end item
-    utils::MenuItem nul = utils::MenuItem("null","LIST END", nullptr, nullptr);
+    utils::MenuItem nul = utils::MenuItem(nullptr,nullptr,"null","LIST END", nullptr, nullptr);
 
     //make some items
-    utils::MenuItem print = utils::MenuItem("p","Print, takes only key\n\r", printCB, nullptr);
-    utils::MenuItem send = utils::MenuItem("s","Send, takes key and message\n\r", sendCB, nullptr);
-    utils::MenuItem* items[3] = {&print, &send, &nul};
-    utils::SubMenu sub = utils::SubMenu("b", "SubMenu\n\r", enterCB, nullptr, items);
-    utils::MenuItem* items2[4] = {&print, &send, &sub, &nul};
-    utils::Menu menu = utils::Menu(items2);
+    utils::MenuItem* items[10];
+    for(int i = 0; i < 10; i ++)
+    {
+        items[i] = nullptr;
+    }
+    
+    utils::Menu menu = utils::Menu(items);
     utils::Terminal term = utils::Terminal(uart, &menu);
-    
-    printTerm(uart, term);
-    
-    callback_t cb;
+    void* m = &menu;
+    void* t = &term;
+    //a nullptr in the head parameter means it is part of the main menu
+    utils::MenuItem mainPrint = utils::MenuItem(nullptr,t,"p","print test",printCB,nullptr);
+    utils::MenuItem mainSend = utils::MenuItem(nullptr,t,"s","echo",sendCB,nullptr);
+    //submenu cb is exit cb struct, ctx is void* to enter function cb struct. these are NOT responsible for moving menus, just for operations done duirng a menu move
+    utils::SubMenu sub = utils::SubMenu(nullptr,t,"sb","sub menu",nullptr,nullptr,items);
+    void* s = &sub;
+    utils::MenuItem subPrint = utils::MenuItem(s,t,"p","print test",printCB,nullptr);
+    utils::MenuItem subSend = utils::MenuItem(s,t,"s","echo",sendCB,nullptr);
 
+    //create submenu
+    int c = menu.getCount();
+    utils::MenuItem* subs[c];
+    subs[0] = &subPrint;
+    subs[1] = &subSend;
+    subs[2] = &nul;
+    sub.setItems(subs);
+
+    //add main menu items to main menu
+    menu.addItem(&mainPrint);
+    menu.addItem(&mainSend);
+    menu.addItem(&sub);
+    menu.addItem(&nul);
+
+    term.printTerm(uart);
+    uart.printf("Usage: flagChar argument argument | max 9 arguments");
+    callback_t cb;
     while(true)
     {
         char* inputList[10];
         term.recieve(inputList);
         char* tag = inputList[0];
         void* args[11];
-        for(int i = 0; i < 10; i ++)
+        for(int i = 0; i < c; i ++)
         {
             if(inputList[i] == "\0")
             {
@@ -142,7 +128,7 @@ int main()
 
         cb(uart, args);
 
-        printTerm(uart, term);
+        term.printTerm(uart);
     }
 
     return 0;

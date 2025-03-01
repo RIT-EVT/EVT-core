@@ -15,10 +15,12 @@ namespace core::utils
     Terminal::Terminal(io::UART& uart, utils::Menu* menu) : menu(menu), uart(uart)
     {
         uart.printf("\n\rStarting Terminal...\n\r");
+        m = true;
     }
 
-    void Terminal::update(char* message)
+    void Terminal::update(char* message, utils::Menu m = nullptr)
     {
+        menu->replace(m);
         for(int i = 0; i < 5; i ++)
         {
             uart.printf("\n\r");
@@ -51,6 +53,22 @@ namespace core::utils
         }
     }
 
+    //TERMINAL specific print function
+    void Terminal::printTerm(io::UART& uart)
+    {
+        uart.printf("\n\r");
+        uart.printf("Terminal:\n\r");
+        if(m)
+        {
+            menu->printStr(uart);
+        }
+        else
+        {
+            current->printMStr(uart);
+            uart.printf("e|exit\n\r");
+        }
+    }
+
     void Terminal::process(utils::MenuItem* holder, char* tag)
     {
         utils::MenuItem** subitemsM = menu->getItems();
@@ -63,12 +81,13 @@ namespace core::utils
                 char* op = subitemsM[i]->getOption();
                 if(strcmp(op, "null") == 0)
                 {
-                    break;
+                    holder = nullptr;
+                    return;
                 }
                 if(strcmp(tag,op) == 0)
                 {
                     holder = (subitemsM[i]);
-                    break;
+                    return;
                 }
             }
         }
@@ -79,13 +98,24 @@ namespace core::utils
                 char* op = subitemsC[i]->getOption();
                 if(strcmp(op, "null") == 0)
                 {
-                    break;
+                    holder = nullptr;
+                    return;
                 }
                 if(strcmp(tag,op) == 0)
                 {
                     holder = (subitemsC[i]);
-                    break;
+                    return;
                 }
+            }
+        }
+
+        if(strcmp(tag, "e") == 0)
+        {
+            current->exit(uart, nullptr);
+            utils::SubMenu* h = current->getHead();
+            if(h != nullptr)
+            {
+                current->replace(h);
             }
         }
     }

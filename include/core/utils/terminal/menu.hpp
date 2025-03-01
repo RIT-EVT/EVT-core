@@ -25,12 +25,18 @@ namespace core::utils
             /**
              * returns number of items in menu
              */
-             int getCount(){return itemCount;}
+            int getCount(){return itemCount;}
+
+            void replace(Menu m);
 
             /**
              * returns list of items in menu
              */
-             MenuItem** getItems() {return items;}
+            MenuItem** getItems() {return items;}
+
+            void addItem(utils::MenuItem* item);
+
+            void delItem(int index);
 
 
             /**
@@ -38,7 +44,7 @@ namespace core::utils
              * true if every menu item is equal
              * @param mnu2 the menu to compare to
              */
-             bool equals(Menu* mnu2);
+            bool equals(Menu* mnu2);
 
         private:
 

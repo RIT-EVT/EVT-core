@@ -20,7 +20,7 @@ namespace core::utils
              * @param cb a void pointer to this items callback method
              * @param ctx a void pointer to any context information for this menu(if none provided, is NULL)
              */
-            MenuItem(char* option, char* text, callback_t cb, void* ctx = nullptr);
+            MenuItem(void* head, void* term, char* option, char* text, callback_t cb, void* ctx = nullptr);
 
             char* getOption(){return option;}
 
@@ -41,7 +41,7 @@ namespace core::utils
              */
             bool equals(MenuItem* it2);
 
-        protected:
+        private:
             /**
              * key value for item, this is used to select it in your commands
              */
@@ -61,6 +61,17 @@ namespace core::utils
              * context for this item, void* because it is of an abstract type
              */
             void* ctx;
+
+            
+            /**
+             * submenu or menu this item is in
+             */
+            void* head;
+
+            /**
+             * terminal this is in
+             */
+            void* term;
     };
 
     class SubMenu : public MenuItem
@@ -69,7 +80,7 @@ namespace core::utils
             /**
              * constructor for sub-menu sub-class
              */
-            SubMenu(char* option, char* text, callback_t cb, void* ctx, MenuItem** items);
+            SubMenu(void* head, void* term, char* option, char* text, callback_t cb, void* ctx, MenuItem** items);
 
             /**
              * unique overridden printStr() method for sub-menus
@@ -93,11 +104,19 @@ namespace core::utils
              * returns itemCount
              */
             int getCount(){return itemCount;}
+
+            SubMenu* getHead();
+
+            void setItems(MenuItem** itms);
             
             /**
              * returns a list of all items contained in the submenu
              */
             MenuItem** getItems(){return items;}
+
+            void enter(io::UART& uart, void** args);
+
+            void exit(io::UART& uart, void** args);
 
         private:
             /**
@@ -128,6 +147,16 @@ namespace core::utils
              * list of all items inside of the sub-menu
              */
             MenuItem** items;
+
+            /**
+             * submenu or menu this item is in
+             */
+            void* head;
+
+            /**
+             * terminal this is in
+             */
+            void* term;
     };
 }
 

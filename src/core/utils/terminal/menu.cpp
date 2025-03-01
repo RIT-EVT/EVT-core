@@ -15,9 +15,41 @@ namespace core::utils
         {
             if(items[c]->getOption() == "null")
             {
-                return;
+                 return;
             }
             items[c]->printStr(uart);
+        }
+    }
+
+    void Menu::addItem(utils::MenuItem* item)
+    {
+        int c =0;
+        for(int i = 0; i < itemCount; i ++)
+        {
+            if (items[i] == nullptr)
+            {
+                c = i+1;
+                break;
+            }
+        }
+        if(c >= itemCount)
+        {
+            return;
+        }
+        items[c] = item;
+    }
+
+    void Menu::delItem(int index)
+    {
+        items[index] = nullptr;
+    }
+
+    void Menu::replace(Menu m)
+    {
+        utils::MenuItem** i2 = m.getItems();
+        for(int i = 0; i < itemCount; i ++)
+        {
+            items[i] = i2[i];
         }
     }
 

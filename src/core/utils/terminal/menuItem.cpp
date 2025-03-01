@@ -3,7 +3,7 @@
 namespace core::utils
 {
 
-    MenuItem::MenuItem(char* option, char* text, callback_t cb, void* ctx) : option(option), text(text), cb(cb), ctx(ctx) 
+    MenuItem::MenuItem(void* head, void* term, char* option, char* text, callback_t cb, void* ctx) : head(head), term(term), option(option), text(text), cb(cb), ctx(ctx) 
     {
         
     }

@@ -48,9 +48,11 @@ namespace core::utils
 
             /**
              * Sends a provided message over UART
+             * also replaces menu with provided menu
              * @param message a string message to send via UART
+             * @param menu the menu to replace the current head node with
              */
-            void update(char* message);
+            void update(char* message, utils::Menu menu);
 
             /**
              * proccesses incoming UART messages
@@ -58,6 +60,9 @@ namespace core::utils
             void recieve(char** holder);
 
             void process(utils::MenuItem* holder, char* tag);
+
+            //TERMINAL specific print function
+            void printTerm(io::UART& uart);
 
         private:
             // menu instance
