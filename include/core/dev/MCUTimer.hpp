@@ -9,7 +9,6 @@
 #endif
 
 namespace core::dev {
-
 /**
  * Enum for all the hardware timers available on the current MCU
  */

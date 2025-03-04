@@ -16,7 +16,7 @@
 #include <core/platform/f4xx/stm32f4xx.hpp>
 #include <core/utils/log.hpp>
 
-namespace core::io {
+ namespace core::io {
 namespace {
 /// This is made as a static variable so that it is accessible in the interrupt.
 DMA_HandleTypeDef* dmaHandle[3];
@@ -214,7 +214,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
     GPIOf4xx::gpioStateInit(&gpioInit, pins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;
-    Channel_Support channelStruct;
+    Channel_Support channelStruct = { };
     // Combines the ADC channel with the ADC peripherals it supports into a struct, avoiding having multi-layered switch
     // statements
     switch (pin) {
@@ -323,10 +323,10 @@ void ADCf4xx::initTimer() {
 
     ADCf4xx::htim8.Instance               = TIM8;
     ADCf4xx::htim8.Init.Prescaler         = 0;
-    ADCf4xx::htim8.Init.CounterMode       = TIM_COUNTERMODE_UP;
     ADCf4xx::htim8.Init.Period            = (SystemCoreClock / 1000) - 1;
-    ADCf4xx::htim8.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
     ADCf4xx::htim8.Init.RepetitionCounter = 0;
+    ADCf4xx::htim8.Init.CounterMode       = TIM_COUNTERMODE_UP;
+    ADCf4xx::htim8.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
     ADCf4xx::htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
     HAL_TIM_Base_Init(&ADCf4xx::htim8);
     sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;

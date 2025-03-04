@@ -4,13 +4,19 @@
 #include <cstdint>
 
 namespace core::dev {
+typedef struct {
+    uint32_t counterMode;
+    uint32_t clockDivision;
+    uint32_t autoReloadPreload;
+    uint32_t clockSource;
+    uint32_t masterOutputTrigger;
+    uint32_t masterSlaveMode;
+} TimerConfiguration;
 
-/**
- * This class will represent an internal general purpose timer device for the STM32.
- * It is capable of triggering interrupts with a given frequency
- */
-class Timer {
+class   Timer {
 public:
+    virtual ~Timer() = default;
+
     /**
      * Starts the given timer and registers the given interrupt pointer to trigger when the timer overflows
      * @param[in] irqHandler The IRQ Handler function pointer.  Sets a new interrupt handler function
@@ -40,7 +46,6 @@ public:
      */
     virtual void setPeriod(uint32_t clockPeriod) = 0;
 };
-
 } // namespace core::dev
 
 #endif // EVT_TIMER_HPP

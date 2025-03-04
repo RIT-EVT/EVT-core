@@ -1,9 +1,11 @@
 #include <core/dev/platform/f4xx/Timerf4xx.hpp>
 
 #include <core/platform/f4xx/stm32f4xx.hpp>
+#include <core/utils/log.hpp>
+#define F4_TIMER_COUNT 10
 
-TIM_HandleTypeDef halTimers[10];
-void (*timerInterruptHandlers[10])(void* htim) = {nullptr};
+TIM_HandleTypeDef halTimers[F4_TIMER_COUNT];
+void (*timerInterruptHandlers[F4_TIMER_COUNT])(void* htim) = {nullptr};
 
 enum timerInterruptIndex {
     TIM2_IDX  = 0u,
@@ -15,10 +17,45 @@ enum timerInterruptIndex {
     TIM11_IDX = 6u,
     TIM12_IDX = 7u,
     TIM13_IDX = 8u,
-    TIM14_IDX = 9u
+    TIM14_IDX = 9u,
+    NO_IDX = -1
 };
 
-uint8_t getTimerInterruptIndex(TIM_TypeDef* peripheral);
+/**
+ * Returns the corresponding index for the given timer device as stored in the
+ * timerInterruptHandlers array
+ * @param htim the TIM_TypeDef pointer to the timer device
+ * @return an uint8_t between 0-9 corresponding to an element of timerInterruptHandlers
+ */
+timerInterruptIndex getTimerInterruptIndex(TIM_TypeDef* peripheral) {
+    timerInterruptIndex interruptIdx;
+
+    if (peripheral == TIM2) {
+        interruptIdx = TIM2_IDX;
+    } else if (peripheral == TIM3) {
+        interruptIdx = TIM3_IDX;
+    } else if (peripheral == TIM4) {
+        interruptIdx = TIM4_IDX;
+    } else if (peripheral == TIM5) {
+        interruptIdx = TIM5_IDX;
+    } else if (peripheral == TIM9) {
+        interruptIdx = TIM9_IDX;
+    } else if (peripheral == TIM10) {
+        interruptIdx = TIM10_IDX;
+    } else if (peripheral == TIM11) {
+        interruptIdx = TIM11_IDX;
+    } else if (peripheral == TIM12) {
+        interruptIdx = TIM12_IDX;
+    } else if (peripheral == TIM13) {
+        interruptIdx = TIM13_IDX;
+    } else if (peripheral == TIM14) {
+        interruptIdx = TIM14_IDX;
+    } else {
+        interruptIdx = NO_IDX;
+    }
+
+    return interruptIdx;
+}
 
 extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim) {
     TIM_TypeDef* peripheral = htim->Instance;
@@ -145,114 +182,94 @@ extern "C" void TIM8_TRG_COM_TIM14_IRQHandler(void) {
 
 extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
     uint8_t interruptIdx = getTimerInterruptIndex(htim->Instance);
+    core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Period Elapsed");
+
     if (timerInterruptHandlers[interruptIdx] != nullptr) {
         timerInterruptHandlers[interruptIdx](htim);
     }
 }
 
-/**
- * Returns the corresponding index for the given timer device as stored in the
- * timerInterruptHandlers array
- * @param htim the TIM_TypeDef pointer to the timer device
- * @return an uint8_t between 0-9 corresponding to an element of timerInterruptHandlers
- */
-uint8_t getTimerInterruptIndex(TIM_TypeDef* peripheral) {
-    uint8_t interruptIdx;
-
-    if (peripheral == TIM2) {
-        interruptIdx = timerInterruptIndex::TIM2_IDX;
-    } else if (peripheral == TIM3) {
-        interruptIdx = timerInterruptIndex::TIM3_IDX;
-    } else if (peripheral == TIM4) {
-        interruptIdx = timerInterruptIndex::TIM4_IDX;
-    } else if (peripheral == TIM5) {
-        interruptIdx = timerInterruptIndex::TIM5_IDX;
-    } else if (peripheral == TIM9) {
-        interruptIdx = timerInterruptIndex::TIM9_IDX;
-    } else if (peripheral == TIM10) {
-        interruptIdx = timerInterruptIndex::TIM10_IDX;
-    } else if (peripheral == TIM11) {
-        interruptIdx = timerInterruptIndex::TIM11_IDX;
-    } else if (peripheral == TIM12) {
-        interruptIdx = timerInterruptIndex::TIM12_IDX;
-    } else if (peripheral == TIM13) {
-        interruptIdx = timerInterruptIndex::TIM13_IDX;
-    } else if (peripheral == TIM14) {
-        interruptIdx = timerInterruptIndex::TIM14_IDX;
-    } else {
-        interruptIdx = -1;
-    }
-
-    return interruptIdx;
-}
-
 namespace core::dev {
-
-Timerf4xx::Timerf4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
-    initTimer(timerPeripheral, clockPeriod);
+TimerF4xx::TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration& configuration)
+    : configuration(configuration) {
+    this->clockPeriod   = clockPeriod;
     this->halTimer = &halTimers[getTimerInterruptIndex(timerPeripheral)];
-}
+    initTimer(timerPeripheral, clockPeriod, configuration);
+};
 
-void Timerf4xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
+TimerF4xx::~TimerF4xx() = default;
+
+void TimerF4xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration& configuration) {
     this->clockPeriod = clockPeriod;
     auto& htim        = halTimers[getTimerInterruptIndex(timerPeripheral)];
 
     htim.Instance       = timerPeripheral;
-    uint32_t prescaler  = SystemCoreClock / 1000;
-    htim.Init.Prescaler = prescaler - 1; // Sets f_CK_PSC to 1000 Hz
     // Allows period increments of 1 ms with max of 2^(32) ms.
-    htim.Init.CounterMode       = TIM_COUNTERMODE_UP;
+    htim.Init.CounterMode       = configuration.counterMode;
+    htim.Init.ClockDivision     = configuration.clockDivision;
+    htim.Init.AutoReloadPreload = configuration.autoReloadPreload;
+
+    uint32_t prescaler  = SystemCoreClock / 1000;
+    this->clockPeriod = clockPeriod;
+    htim.Init.Prescaler = prescaler - 1; // Sets f_CK_PSC to 1000 Hz
     htim.Init.Period            = clockPeriod - 1;
-    htim.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
-    htim.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+
     HAL_TIM_Base_Init(&htim);
 
-    TIM_ClockConfigTypeDef clockConfig   = {0};
-    TIM_MasterConfigTypeDef masterConfig = {0};
+    TIM_ClockConfigTypeDef clockConfig   = { };
 
-    clockConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+    clockConfig.ClockSource = configuration.clockSource;
     HAL_TIM_ConfigClockSource(&htim, &clockConfig);
+
+    TIM_MasterConfigTypeDef masterConfig = { };
+    core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Setup Timer");
 
     // Timers 9-14 are NOT master mode compatible, so waste of time to go through config
     if (getTimerInterruptIndex(timerPeripheral) < timerInterruptIndex::TIM9_IDX) {
-        masterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-        masterConfig.MasterSlaveMode     = TIM_MASTERSLAVEMODE_DISABLE;
+        masterConfig.MasterOutputTrigger = configuration.masterOutputTrigger;
+        masterConfig.MasterSlaveMode     = configuration.masterSlaveMode;
         HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
     }
-}
+};
 
-void Timerf4xx::startTimer(void (*irqHandler)(void* htim)) {
+void TimerF4xx::startTimer(void (*irqHandler)(void* htim)) {
     TIM_TypeDef* timerPeripheral = this->halTimer->Instance;
+
     // If timer is not waiting to start, stop it
     if (halTimer->State != HAL_TIM_STATE_READY) {
+        core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Start Timer 1");
+
         stopTimer();
     }
 
     timerInterruptHandlers[getTimerInterruptIndex(timerPeripheral)] = irqHandler;
+    core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Start Timer 1");
     startTimer();
 }
 
-void Timerf4xx::stopTimer() {
+void TimerF4xx::stopTimer() {
     HAL_TIM_Base_Stop_IT(this->halTimer);
 }
 
-void Timerf4xx::startTimer() {
+void TimerF4xx::startTimer() {
     // If timer is not waiting to start, stop it
     if (halTimer->State != HAL_TIM_STATE_READY) {
         stopTimer(); // Stop timer in case it was already running
     }
     auto htim = this->halTimer;
+
     // Clear the interrupt flag so interrupt doesn't trigger immediately
     __HAL_TIM_CLEAR_IT(htim, TIM_IT_UPDATE);
     HAL_TIM_Base_Start_IT(htim);
+    core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Start Timer");
 }
 
-void Timerf4xx::reloadTimer() {
+void TimerF4xx::reloadTimer() {
     this->halTimer->Instance->CNT = 0; // Clear the Counter register to reset the timer
 }
 
-void Timerf4xx::setPeriod(uint32_t clockPeriod) {
+void TimerF4xx::setPeriod(uint32_t clockPeriod) {
     stopTimer();
-    initTimer(this->halTimer->Instance, clockPeriod);
+    initTimer(this->halTimer->Instance, clockPeriod, this->configuration);
 }
-} // namespace core::dev
+}
