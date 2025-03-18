@@ -115,7 +115,7 @@ if(USE_RTOS)
     set(THREADX_TOOLCHAIN "gnu")
     add_subdirectory(libs/threadx)
 
-    set(THREADX_DIR ${CMAKE_SOURCE_DIR}/libs/threadx)
+    set(THREADX_DIR ${CMAKE_CURRENT_LIST_DIR}/libs/threadx)
 
     target_include_directories(${PROJECT_NAME} PRIVATE
             ${THREADX_DIR}/common/inc
