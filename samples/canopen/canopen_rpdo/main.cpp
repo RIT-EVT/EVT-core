@@ -45,7 +45,8 @@ void canInterrupt(io::CANMessage& message, void* priv) {
     char messageString[50];
 
     // print out raw received data
-    snprintf(&messageString[5], 6,
+    snprintf(&messageString[5],
+             6,
              "Got RAW message from %X of length %d with data: ",
              message.getId(),
              message.getDataLength());
