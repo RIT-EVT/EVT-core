@@ -22,19 +22,46 @@ namespace time = core::time;
 // create a can interrupt handler
 void canInterrupt(io::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
+    char messageString[50];
 
     uint8_t* data = message.getPayload();
     if (queue != nullptr)
         queue->append(message);
-    char messageString[50];
     for (int i = 0; i < message.getDataLength(); i++) {
         snprintf(&messageString[i * 5], 6, "0x%02X ", data[i]);
     }
+
     log::LOGGER.log(log::Logger::LogLevel::DEBUG,
                     "[CAN1] Got RAW message from %X of length %d with data: \r\n\t%s\r\n",
                     message.getId(),
                     message.getDataLength(),
                     messageString);
+}
+
+void SdoTransferCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code) {
+    char messageString[50];
+    if (code == 0) {
+        /* read data is available in 'readValue' */
+        snprintf(&messageString[0], 25, "Value transferred %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
+    } else {
+        /* a timeout or abort is detected during SDO transfer  */
+        snprintf(&messageString[0], 25, "SDO transfer callback don goofed 0x%x\r\n", code);
+    }
+
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "SDO Transfer Operation: \r\n\t%s\r\n", messageString);
+}
+
+void SdoReceiveCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code) {
+    char messageString[50];
+    if (code == 0) {
+        /* read data is available in 'readValue' */
+        snprintf(&messageString[0], 25, "Value received %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
+    } else {
+        /* a timeout or abort is detected during SDO transfer  */
+        snprintf(&messageString[0], 25, "SDO receive callback don goofed 0x%x\r\n", code);
+    }
+
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "SDO Receive Operation: \r\n\t%s\r\n", messageString);
 }
 
 int main() {
@@ -44,9 +71,6 @@ int main() {
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
     log::LOGGER.setUART(&uart);
     log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
-
-    // create the SDO node
-    SDOCanNode testCanNode;
 
     dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(100);
 
@@ -77,6 +101,9 @@ int main() {
 
     CO_NODE canNode;
 
+    // create the SDO node
+    SDOCanNode testCanNode(canNode);
+
     // Attempt to join the CAN network
     io::CAN::CANStatus result = can.connect();
 
@@ -100,6 +127,9 @@ int main() {
     // print any CANopen errors
     uart.printf("Error: %d\r\n", CONodeGetErr(&canNode));
 
+    core::io::registerCallBack(SdoTransferCallback, &canNode);
+    core::io::registerCallBack(SdoReceiveCallback, &canNode);
+
     ///////////////////////////////////////////////////////////////////////////
     // Main loop
     ///////////////////////////////////////////////////////////////////////////
@@ -107,16 +137,16 @@ int main() {
     uint32_t lastUpdate2 = HAL_GetTick();
 
     while (1) {
-        if ((HAL_GetTick() - lastUpdate1) >= 1000) {        // If 1000ms have passed receive CAN message.
-            testCanNode.receiveData(canNode);               // Receive data from server
-            lastUpdate1 = HAL_GetTick();                    // Set to current time.
+        if ((HAL_GetTick() - lastUpdate1) >= 1000) { // If 1000ms have passed receive CAN message.
+            testCanNode.receiveData(); // Receive data from server
+            lastUpdate1 = HAL_GetTick(); // Set to current time.
         } else if ((HAL_GetTick() - lastUpdate2) >= 5000) { // If 5000ms have passed write CAN message.
-            testCanNode.transferData(canNode);              // Send data to server
-            lastUpdate2 = HAL_GetTick();                    // Set to current time.
+            testCanNode.transferData(); // Send data to server
+            lastUpdate2 = HAL_GetTick(); // Set to current time.
         }
 
         io::processCANopenNode(&canNode);
         // Wait for new data to come in
-        time::wait(1);
+        time::wait(10);
     }
 }

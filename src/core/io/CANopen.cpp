@@ -137,16 +137,13 @@ void processCANopenNode(CO_NODE* canNode) {
     COTmrProcess(&canNode->Tmr);
 }
 
-CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry,
-                   void (*AppCallback)(CO_CSDO* csdo, uint16_t index, uint8_t size, uint32_t entry)) {
+CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry) {
     /**
      * Find the Client-SDO (CO_CSDO) object for the specified node.
      * @param node[in] is the CANopen node to operate on.
      * @return csdo[out] is the client-SDO object used to manage SDO communication.
      */
     CO_CSDO* csdo = COCSdoFind(&(node), 0);
-
-    core::io::registerCallBack(AppCallback, reinterpret_cast<void*>(csdo)); // Register callback function
 
     /**
      * Initiate an SDO download request.
@@ -164,16 +161,13 @@ CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry,
     return err;
 }
 
-CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry,
-                  void (*AppCallback)(CO_CSDO* csdo, uint16_t index, uint8_t size, uint32_t entry)) {
+CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry) {
     /**
      * Find the Client-SDO (CO_CSDO) object for the specified node.
      * @param node[in] is the CANopen node to operate on.
      * @return csdo[out] is the client-SDO object used to manage SDO communication.
      */
     CO_CSDO* csdo = COCSdoFind(&(node), 0);
-
-    core::io::registerCallBack(AppCallback, reinterpret_cast<void*>(csdo)); // Register callback function
 
     /**
      * Initiate an SDO upload request.

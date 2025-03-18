@@ -104,11 +104,9 @@ void processCANopenNode(CO_NODE* canNode);
  * @param data[in]        Pointer to the data buffer that holds the data to send
  * @param size[in]        Size of the data to transfer in bytes
  * @param entry[in]       Object dictionary entry (index + subindex) to write to
- * @param AppCallback[in] Callback function when the transfer completes
  * @return CO_ERR[out]    Returns the result of the transfer operation
  */
-CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry,
-                   void (*AppCallback)(CO_CSDO* csdo, uint16_t index, uint8_t size, uint32_t entry));
+CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry);
 
 /**
  * This function starts an SDO upload (read) request to fetch data from the specified
@@ -118,18 +116,16 @@ CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry,
  * @param data[in]        Pointer to the buffer where received data will be stored
  * @param size[in]        Size of the buffer provided to receive data
  * @param entry[in]       Object dictionary entry (index + subindex) to read from
- * @param AppCallback[in] Callback function when the receive completes
  * @return CO_ERR[out]    Returns the result of the receive operation
  */
-CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry,
-                  void (*AppCallback)(CO_CSDO* csdo, uint16_t index, uint8_t size, uint32_t entry));
+CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry);
 
 /**
  * This function assigns the user-provided callback function and AppContext to be
  * used when an SDO operation completes
  *
  * @param AppCallback[in] Pointer to the callback function to register
- * @param AppContext[in]     Context to be passed to the callback
+ * @param AppContext[in] Context to be passed to the callback
  */
 void registerCallBack(void (*AppCallback)(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code), void* AppContext);
 } // namespace core::io

@@ -18,39 +18,21 @@ namespace log = core::log;
 
 class SDOCanNode : public CANDevice {
 public:
-    SDOCanNode();
-
-    /**
-     * The application-specific callback function for finalizing an SDO receive operation.
-     * @param csdo[in] is the client-SDO object.
-     * @param index[in] is the object dictionary index.
-     * @param sub[in] is the object dictionary subindex.
-     * @param code[in] indicates the completion status of the operation (0 for success, error code otherwise).
-     */
-    static void SdoReceiveCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code);
-
-    /**
-     * The application-specific callback function for finalizing an SDO transfer operation.
-     * @param csdo[in] is the client-SDO object.
-     * @param index[in] is the object dictionary index.
-     * @param sub[in] is the object dictionary subindex.
-     * @param code[in] indicates the completion status of the operation (0 for success, error code otherwise).
-     */
-    static void SdoTransferCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code);
+    SDOCanNode(CO_NODE& canNode);
 
     /**
      * Update Object Dictionary entry
      *
      * @param node[in] The canopen node to write to
      */
-    void transferData(CO_NODE& node);
+    void transferData();
 
     /**
      * Read Object Dictionary entry
      *
      * @param node[in] The canopen node to read from
      */
-    void receiveData(CO_NODE& node);
+    void receiveData();
 
     /**
      * Get a pointer to the start of the object dictionary
@@ -92,6 +74,8 @@ private:
 
     uint8_t transferBuffArray[2]{};
 
+    CO_NODE& node;
+
     /**
      * Have to know the size of the object dictionary for initialization
      * process.
@@ -109,31 +93,7 @@ private:
         HEARTBEAT_PRODUCER_1017(2000),
         IDENTITY_OBJECT_1018,
         SDO_CONFIGURATION_1200,
-
-        {
-            /* Communication Object SDO Server */
-            .Key  = CO_KEY(0x1280, 0x00, CO_OBJ_D___R_),
-            .Type = CO_TUNSIGNED32,
-            .Data = (CO_DATA) 0x03,
-        },
-        {
-            /* SDO Server Request COBID */
-            .Key  = CO_KEY(0x1280, 0x01, CO_OBJ_D___R_),
-            .Type = CO_TUNSIGNED32,
-            .Data = (CO_DATA) CO_COBID_SDO_REQUEST(),
-        },
-        {
-            /* SDO Server Response COBID */
-            .Key  = CO_KEY(0x1280, 0x02, CO_OBJ_D___R_),
-            .Type = CO_TUNSIGNED32,
-            .Data = (CO_DATA) CO_COBID_SDO_RESPONSE(),
-        },
-        {
-            /* Node ID of Server */
-            .Key  = CO_KEY(0x1280, 0x03, CO_OBJ_D___R_),
-            .Type = CO_TUNSIGNED8,
-            .Data = (CO_DATA) 1,
-        },
+        SDO_CONFIGURATION_1280,
 
         // User defined data, this will be where we put elements that can be
         // accessed via SDO and depending on configuration PDO

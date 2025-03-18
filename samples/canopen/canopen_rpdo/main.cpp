@@ -12,6 +12,7 @@
 #include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 #include <core/utils/types/FixedQueue.hpp>
+#include <string>
 
 #include <core/io/CANopen.hpp>
 
@@ -41,18 +42,22 @@ namespace log  = core::log;
 // create a can interrupt handler
 void canInterrupt(io::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
+    char messageString[50];
 
     // print out raw received data
-    log::LOGGER.log(log::Logger::LogLevel::INFO,
-                    "Got RAW message from %X of length %d with data: ",
-                    message.getId(),
-                    message.getDataLength());
+    snprintf(&messageString[5], 6,
+             "Got RAW message from %X of length %d with data: ",
+             message.getId(),
+             message.getDataLength());
+
     uint8_t* data = message.getPayload();
+
     for (int i = 0; i < message.getDataLength(); i++) {
-        log::LOGGER.log(log::Logger::LogLevel::INFO, "%X ", *data);
+        snprintf(&messageString[i * 5], 1, "%X ", *data);
         data++;
     }
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "\r\n");
+
+    log::LOGGER.log(log::Logger::LogLevel::INFO, "\r\n\t%s\r\n", messageString);
 
     if (queue != nullptr)
         queue->append(message);
