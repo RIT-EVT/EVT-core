@@ -12,9 +12,9 @@ void (*timerInterruptHandlers[F302_TIMER_COUNT])(void* htim) = {nullptr};
 enum timerInterruptIndex {
     TIM1_IDX  = 0u,
     TIM2_IDX  = 1u,
-    TIM15_IDX = 3u,
-    TIM16_IDX = 4u,
-    TIM17_IDX = 5u,
+    TIM15_IDX = 2u,
+    TIM16_IDX = 3u,
+    TIM17_IDX = 4u,
     NO_IDX = -1
 };
 
@@ -94,26 +94,6 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
     }
 
     HAL_NVIC_DisableIRQ(irqNum);
-}
-
-extern "C" void TIM1_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM1)]);
-}
-
-extern "C" void TIM2_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM2)]);
-}
-
-extern "C" void TIM15_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM15)]);
-}
-
-extern "C" void TIM16_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM16)]);
-}
-
-extern "C" void TIM17_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM17)]);
 }
 #elif defined(STM32F334x8)
 #define F334_TIMER_COUNT 6
@@ -218,16 +198,18 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
     HAL_NVIC_DisableIRQ(irqNum);
 }
 
+extern "C" void TIM3_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM3)]);
+}
+#endif
+
+// Common IRQHandlers between both f3s
 extern "C" void TIM1_IRQHandler(void) {
     HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM1)]);
 }
 
 extern "C" void TIM2_IRQHandler(void) {
     HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM2)]);
-}
-
-extern "C" void TIM3_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM3)]);
 }
 
 extern "C" void TIM15_IRQHandler(void) {
@@ -241,9 +223,6 @@ extern "C" void TIM16_IRQHandler(void) {
 extern "C" void TIM17_IRQHandler(void) {
     HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM17)]);
 }
-
-#endif
-
 extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
     uint8_t interruptIdx = getTimerInterruptIndex(htim->Instance);
     if (timerInterruptHandlers[interruptIdx] != nullptr) {
