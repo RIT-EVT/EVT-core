@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#define AUTO_PRESCALER (-1)
+
 namespace core::dev {
 typedef struct {
     uint32_t counterMode;
@@ -44,7 +46,7 @@ public:
      *
      * @param[in] clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
      */
-    virtual void setPeriod(uint32_t clockPeriod) = 0;
+    virtual void setPeriod(uint32_t clockPeriod, uint32_t prescaler = AUTO_PRESCALER) = 0;
 };
 } // namespace core::dev
 

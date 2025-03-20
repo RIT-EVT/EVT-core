@@ -41,6 +41,7 @@ enum class MCUTimer {
     Timer13,
     Timer14,
 #endif
+    None
 };
 
 /**

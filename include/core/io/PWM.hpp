@@ -1,6 +1,7 @@
 #ifndef _EVT_PWM_
 #define _EVT_PWM_
 
+#include <core/dev/Timer.hpp>
 #include <stdint.h>
 
 namespace core::io {
@@ -55,6 +56,8 @@ protected:
     uint32_t dutyCycle;
     /// The period of the PWM
     uint32_t period;
+
+    dev::Timer& timer;
 };
 
 } // namespace core::io

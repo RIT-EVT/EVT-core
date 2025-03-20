@@ -13,7 +13,7 @@ class TimerF4xx final : public Timer {
 public:
     ~TimerF4xx() override;
 
-    explicit TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration configuration);
+    explicit TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration configuration, uint32_t clockPrescaler);
 
     void startTimer(void (*irqHandler)(void* htim)) override;
 
@@ -23,7 +23,7 @@ public:
 
     void reloadTimer() override;
 
-    void setPeriod(uint32_t clockPeriod) override;
+    void setPeriod(uint32_t clockPeriod, uint32_t clockPrescaler) override;
 private:
     // Pointer to the halTimer struct stored in the global array in Timerf4xx.cpp
     TIM_HandleTypeDef* halTimer = { };
@@ -39,7 +39,7 @@ private:
      * @param[in] clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
      * @param configuration
      */
-    void initializeTimer(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod);
+    void initializeTimer(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod, uint32_t clockPrescaler);
 };
 } // namespace core::dev
 
