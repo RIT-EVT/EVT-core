@@ -127,7 +127,7 @@ RTC& getRTC() {
 template<MCUTimer mcuTimer>
 Timer& getTimer(uint32_t clockPeriod, TimerConfiguration configuration) {
     #ifdef STM32F3xx
-    static Timerf3xx timer(getTIM(mcuTimer), clockPeriod);
+    static TimerF3xx timer(getTIM(mcuTimer), clockPeriod, configuration);
     return timer;
     #endif
     #ifdef STM32F4xx

@@ -13,9 +13,7 @@ class TimerF4xx final : public Timer {
 public:
     ~TimerF4xx() override;
 
-    explicit TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration& configuration);
-
-    void initializeTimer(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod, TimerConfiguration& configuration);
+    explicit TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration configuration);
 
     void startTimer(void (*irqHandler)(void* htim)) override;
 
@@ -33,7 +31,7 @@ private:
     // Timer clock period
     uint32_t clockPeriod;
 
-    TimerConfiguration& configuration;
+    TimerConfiguration configuration;
 
     /**
      * Handles the initialization of the timer module.  Actually configures the device and enables it.
@@ -41,7 +39,7 @@ private:
      * @param[in] clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
      * @param configuration
      */
-    void initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration& configuration);
+    void initializeTimer(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod);
 };
 } // namespace core::dev
 

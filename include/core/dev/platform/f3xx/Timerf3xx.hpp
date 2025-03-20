@@ -12,7 +12,7 @@ namespace core::dev {
 /**
  * Implementation of the Timer class for STM32f3xx MCUs
  */
-class Timerf3xx : public Timer {
+class TimerF3xx : public Timer {
 public:
     /**
      * Will initialize the timer device on the STM with the given period and the given IRQ Handler
@@ -23,8 +23,9 @@ public:
      *
      * @param[in] timerPeripheral The timer to use
      * @param[in] clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
+     * @param configuration
      */
-    explicit Timerf3xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod);
+    explicit TimerF3xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration configuration);
 
     void startTimer(void (*irqHandler)(void* htim)) override;
 
@@ -43,11 +44,14 @@ private:
     // Timer clock period
     uint32_t clockPeriod;
 
+    TimerConfiguration configuration;
+
     /**
      * Handles the initialization of the timer module.  Actually configures the device and enables it.
      * @param[in] timerPeripheral  The timer peripheral to configure.  Possible options for this board are
      * TIM2, TIM15, TIM16, TIM17.  It is up to the user to verify that resource conflicts do not occur.
      * @param[in] clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
+     * @param configuration
      */
     void initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod);
 };

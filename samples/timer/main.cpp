@@ -68,7 +68,7 @@ int main() {
         TIM_MASTERSLAVEMODE_DISABLE
     };
 
-    TIM_TypeDef* timPeriph = TIM2;
+    // TIM_TypeDef* timPeriph = TIM2;
     // auto timer = dev::TimerF4xx(timPeriph, 100, configuration);
     // F4xx does not support Timers 15 & 16, change them to Timer11 & Timer12
     dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(100, configuration);

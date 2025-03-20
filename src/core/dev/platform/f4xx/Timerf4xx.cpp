@@ -182,7 +182,6 @@ extern "C" void TIM8_TRG_COM_TIM14_IRQHandler(void) {
 
 extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
     uint8_t interruptIdx = getTimerInterruptIndex(htim->Instance);
-    core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Period Elapsed");
 
     if (timerInterruptHandlers[interruptIdx] != nullptr) {
         timerInterruptHandlers[interruptIdx](htim);
@@ -190,7 +189,7 @@ extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
 }
 
 namespace core::dev {
-TimerF4xx::TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration& configuration)
+TimerF4xx::TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration configuration)
     : configuration(configuration) {
     this->clockPeriod   = clockPeriod;
     this->halTimer = &halTimers[getTimerInterruptIndex(timerPeripheral)];
@@ -199,26 +198,26 @@ TimerF4xx::TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerCo
 
 TimerF4xx::~TimerF4xx() = default;
 
-void TimerF4xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration& configuration) {
+void TimerF4xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod) {
     this->clockPeriod = clockPeriod;
     auto& htim        = halTimers[getTimerInterruptIndex(timerPeripheral)];
 
     htim.Instance       = timerPeripheral;
     // Allows period increments of 1 ms with max of 2^(32) ms.
-    htim.Init.CounterMode       = configuration.counterMode;
-    htim.Init.ClockDivision     = configuration.clockDivision;
-    htim.Init.AutoReloadPreload = configuration.autoReloadPreload;
+    htim.Init.CounterMode       = this->configuration.counterMode;
+    htim.Init.ClockDivision     = this->configuration.clockDivision;
+    htim.Init.AutoReloadPreload = this->configuration.autoReloadPreload;
 
-    uint32_t prescaler  = SystemCoreClock / 1000;
-    this->clockPeriod = clockPeriod;
-    htim.Init.Prescaler = prescaler - 1; // Sets f_CK_PSC to 1000 Hz
-    htim.Init.Period            = clockPeriod - 1;
+    uint32_t prescaler    = SystemCoreClock / 1000;
+    this->clockPeriod     = clockPeriod;
+    htim.Init.Prescaler   = prescaler - 1; // Sets f_CK_PSC to 1000 Hz
+    htim.Init.Period      = clockPeriod - 1;
 
     HAL_TIM_Base_Init(&htim);
 
     TIM_ClockConfigTypeDef clockConfig   = { };
 
-    clockConfig.ClockSource = configuration.clockSource;
+    clockConfig.ClockSource = this->configuration.clockSource;
     HAL_TIM_ConfigClockSource(&htim, &clockConfig);
 
     TIM_MasterConfigTypeDef masterConfig = { };
@@ -226,8 +225,8 @@ void TimerF4xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, Ti
 
     // Timers 9-14 are NOT master mode compatible, so waste of time to go through config
     if (getTimerInterruptIndex(timerPeripheral) < timerInterruptIndex::TIM9_IDX) {
-        masterConfig.MasterOutputTrigger = configuration.masterOutputTrigger;
-        masterConfig.MasterSlaveMode     = configuration.masterSlaveMode;
+        masterConfig.MasterOutputTrigger = this->configuration.masterOutputTrigger;
+        masterConfig.MasterSlaveMode     = this->configuration.masterSlaveMode;
         HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
     }
 };
@@ -237,13 +236,10 @@ void TimerF4xx::startTimer(void (*irqHandler)(void* htim)) {
 
     // If timer is not waiting to start, stop it
     if (halTimer->State != HAL_TIM_STATE_READY) {
-        core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Start Timer 1");
-
         stopTimer();
     }
 
     timerInterruptHandlers[getTimerInterruptIndex(timerPeripheral)] = irqHandler;
-    core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Start Timer 1");
     startTimer();
 }
 
@@ -261,7 +257,6 @@ void TimerF4xx::startTimer() {
     // Clear the interrupt flag so interrupt doesn't trigger immediately
     __HAL_TIM_CLEAR_IT(htim, TIM_IT_UPDATE);
     HAL_TIM_Base_Start_IT(htim);
-    core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Start Timer");
 }
 
 void TimerF4xx::reloadTimer() {
@@ -270,6 +265,6 @@ void TimerF4xx::reloadTimer() {
 
 void TimerF4xx::setPeriod(uint32_t clockPeriod) {
     stopTimer();
-    initTimer(this->halTimer->Instance, clockPeriod, this->configuration);
+    initTimer(this->halTimer->Instance, clockPeriod);
 }
 }

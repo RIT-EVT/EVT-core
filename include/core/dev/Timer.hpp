@@ -13,7 +13,7 @@ typedef struct {
     uint32_t masterSlaveMode;
 } TimerConfiguration;
 
-class   Timer {
+class Timer {
 public:
     virtual ~Timer() = default;
 
