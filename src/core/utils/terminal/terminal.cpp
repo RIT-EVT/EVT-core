@@ -34,30 +34,38 @@ namespace core::utils
         m = false;
     }
 
-    void Terminal::recieve(char* holder[10])
+    bool Terminal::recieve(char* holder[10])
     {
-        char buffer[99];
-        char* argN[10];
-  
+        for(int i = 0; i < 99; i ++)
+        {
+            buffer[i] = '\0';
+        }
         uart.gets(buffer, 99);
 
-        argN[0] = strtok(buffer, " ");
+        holder[0] = strtok(buffer, " ");
         for(int i = 1; i < 10; i ++)
         {
-            argN[i] = strtok(NULL, " ");
+            holder[i] = strtok(NULL, " ");
         }
-
-        for(int i = 0; i < 10; i++)
-        {
-            holder[i] = argN[i];
-        }
+        return true;
+        // for(int i = 0; i < 10; i++)
+        // {
+        //     holder[i] = argN[i];
+        // }
     }
 
     //TERMINAL specific print function
-    void Terminal::printTerm(io::UART& uart)
+    void Terminal::printTerm()
     {
         uart.printf("\n\r");
         uart.printf("Terminal:\n\r");
+        uart.printf("is main: ");
+        if(m)
+        {
+            uart.printf("true\n\r");
+        }
+        else{uart.printf("false\n\r");}
+        
         if(m)
         {
             menu->printStr(uart);
@@ -65,13 +73,29 @@ namespace core::utils
         else
         {
             current->printMStr(uart);
-            uart.printf("e|exit\n\r");
+            uart.printf("q|QUIT\n\r");
+        }
+    }
+
+    void Terminal::enterSub(io::UART& uart, char** args, void* thing)
+    {
+        utils::MenuItem** items = menu->getItems();
+        char* name = args[0];
+        int c = menu->getCount();
+        utils::MenuItem* item;
+        for(int i = 0; i < c; i ++)
+        {
+            item = items[i];
+            if(strcmp(name, item->getOption()) == 0)
+            {
+                setCurrent((utils::SubMenu*)item);
+                break;
+            }
         }
     }
 
     void Terminal::process(char* tag, char** args)
     {
-        
         utils::MenuItem* holder;
         if(m)
         {
@@ -113,20 +137,12 @@ namespace core::utils
             }
         }
 
-        if(strcmp(tag, "e") == 0)
+        if(strcmp(tag, "q") == 0)
         {
-            current->exit(uart,nullptr);
-            void* h = current->getHead();
-            if(h)
-            {
-                current->replace((utils::SubMenu*)h);
-            }
-
-            utils::MenuItem out = utils::MenuItem(nullptr,nullptr,"EXIT","EXIT",nullptr,nullptr);
-            holder->replace(&out);
+            m = true;
         }
 
-        if(holder == nullptr || strcmp(holder->getOption(),"EXIT") == 0)
+        if(holder == nullptr || strcmp(holder->getOption(),"QUIT") == 0)
         {
             return;
         }

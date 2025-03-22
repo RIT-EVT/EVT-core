@@ -4,7 +4,7 @@
 
 namespace core::utils
 {
-    SubMenu::SubMenu(void* head, void* term, char* option, char* text, callback_t cb, void* ctx, MenuItem** items) : head(head), term(term), option(option), text(text), cb(cb), ctx(ctx), items(items), MenuItem(head, term, option, text, cb, ctx)//SubMenu(option, text, cb, ctx, items)
+    SubMenu::SubMenu(void* head, void* term, char* option, char* text, callback_t cb, void* ctx, MenuItem** sitems) : head(head), term(term), option(option), text(text), cb(cb), ctx(ctx), sitems(sitems), MenuItem(head, term, option, text, cb, ctx)//SubMenu(option, text, cb, ctx, items)
     {
 
     }
@@ -21,13 +21,12 @@ namespace core::utils
     {
         for(int c = 0; c < itemCount; c ++)
         {
-            if(items[c]->getOption() == "null")
+            if(sitems[c]->getOption() == "null")
             {
                 return;
             }
-            items[c]->printStr(uart);
+            sitems[c]->printStr(uart);
         }
-        uart.printf("e|exit\n\r");
     }
 
     SubMenu* SubMenu::getHead()
@@ -48,7 +47,7 @@ namespace core::utils
             {
                 break;
             }
-            items[i] = itms[i];
+            sitems[i] = itms[i];
         }
     }
 
@@ -69,7 +68,7 @@ namespace core::utils
         //Check items equivalence;
         for (int i = 0; i < itemCount; i ++)
         {
-            if(!(items[i]->equals(items2[i])))
+            if(!(sitems[i]->equals(items2[i])))
             {
                 return false;
             }

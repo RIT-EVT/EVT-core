@@ -27,6 +27,12 @@ void sendCB(io::UART& uart, char** inputList, void* term)
     }
 }
 
+void subCB(io::UART& uart, char** inputList, void* term)
+{
+    utils::Terminal* t = (utils::Terminal*) term;
+    t->enterSub(uart,inputList,term);
+}
+
 int main()
 {
     //core setup
@@ -38,29 +44,30 @@ int main()
     //item list end item
     utils::MenuItem nul = utils::MenuItem(nullptr,nullptr,"null","LIST END\n\r", nullptr, nullptr);
 
-    //make some items
+    //make some item lists
     utils::MenuItem* items[10];
     for(int i = 0; i < 10; i ++)
     {
         items[i] = nullptr;
     }
+    utils::MenuItem* subs[3];
     
+    //make empty main menu and terminal containing it
     utils::Menu menu = utils::Menu(items);
     utils::Terminal term = utils::Terminal(uart, &menu);
     void* m = &menu;
     void* t = &term;
+    //make items to fill terminal with
     //a nullptr in the head parameter means it is part of the main menu
     utils::MenuItem mainPrint = utils::MenuItem(nullptr,t,"p","print test\n\r",printCB,nullptr);
     utils::MenuItem mainSend = utils::MenuItem(nullptr,t,"s","echo\n\r",sendCB,nullptr);
     //submenu cb is exit cb struct, ctx is void* to enter function cb struct. these are NOT responsible for moving menus, just for operations done duirng a menu move
-    utils::SubMenu sub = utils::SubMenu(nullptr,t,"sb","sub menu\n\r",nullptr,nullptr,items);
+    utils::SubMenu sub = utils::SubMenu(nullptr,t,"sb","sub menu\n\r",subCB,nullptr,subs);
     void* s = &sub;
     utils::MenuItem subPrint = utils::MenuItem(s,t,"p","print test\n\r",printCB,nullptr);
     utils::MenuItem subSend = utils::MenuItem(s,t,"s","echo\n\r",sendCB,nullptr);
 
-    //create submenu
-    int c = menu.getCount();
-    utils::MenuItem* subs[c];
+    //filling a submenu
     subs[0] = &subPrint;
     subs[1] = &subSend;
     subs[2] = &nul;
@@ -83,7 +90,7 @@ int main()
     char* tag;
     while(true)
     {
-        term.printTerm(uart);
+        term.printTerm();
         
         term.recieve(inputList);
 

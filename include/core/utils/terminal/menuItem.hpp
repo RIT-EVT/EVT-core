@@ -112,7 +112,7 @@ namespace core::utils
             /**
              * returns a list of all items contained in the submenu
              */
-            MenuItem** getItems(){return items;}
+            MenuItem** getItems(){return sitems;}
 
             void enter(io::UART& uart, char** args);
 
@@ -146,7 +146,7 @@ namespace core::utils
             /**
              * list of all items inside of the sub-menu
              */
-            MenuItem** items;
+            MenuItem** sitems;
 
             /**
              * submenu or menu this item is in

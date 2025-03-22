@@ -35,6 +35,8 @@ namespace core::utils
             {
                 return current;
             }
+
+            void enterSub(io::UART& uart, char** args, void* thing);
             /**
              * sets current submenu to provided value
              * @param sub the submenu to replace the current one with
@@ -57,7 +59,7 @@ namespace core::utils
             /**
              * proccesses incoming UART messages
              */
-            void recieve(char** holder);
+            bool recieve(char** holder);
 
             /**
              * processes chosen menu item and runs its callback(if exit, exits into higher menu)
@@ -66,7 +68,7 @@ namespace core::utils
             void process(char* tag, char** args);
 
             //TERMINAL specific print function
-            void printTerm(io::UART& uart);
+            void printTerm();
 
         private:
             // menu instance
@@ -78,6 +80,7 @@ namespace core::utils
 
             core::io::UART& uart;
 
+             char buffer[99];
             // UART instance 
 
     };
