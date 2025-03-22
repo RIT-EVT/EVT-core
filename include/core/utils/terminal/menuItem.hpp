@@ -4,7 +4,7 @@
 
 //macro for max initial item count of submenus
 
-using callback_t = void (*)(core::io::UART&, void**);
+using callback_t = void (*)(core::io::UART&, char** inputList, void*);
 
 namespace core::utils
 {
@@ -114,9 +114,9 @@ namespace core::utils
              */
             MenuItem** getItems(){return items;}
 
-            void enter(io::UART& uart, void** args);
+            void enter(io::UART& uart, char** args);
 
-            void exit(io::UART& uart, void** args);
+            void exit(io::UART& uart, char** args);
 
         private:
             /**

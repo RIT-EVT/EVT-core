@@ -36,7 +36,15 @@ namespace core::utils
         {
             return;
         }
-        items[c] = item;
+        items[c-1] = item;
+    }
+
+    void Menu::newItems(utils::MenuItem** itms)
+    {
+        for(int i = 0; i < itemCount; i ++)
+        {
+            items[i] = itms[i];
+        }
     }
 
     void Menu::delItem(int index)

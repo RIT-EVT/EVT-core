@@ -59,7 +59,11 @@ namespace core::utils
              */
             void recieve(char** holder);
 
-            utils::MenuItem* process(utils::MenuItem* holder, char* tag);
+            /**
+             * processes chosen menu item and runs its callback(if exit, exits into higher menu)
+             * @param tag the user input key for the item
+             */
+            void process(char* tag, char** args);
 
             //TERMINAL specific print function
             void printTerm(io::UART& uart);

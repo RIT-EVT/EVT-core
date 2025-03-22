@@ -69,24 +69,27 @@ namespace core::utils
         }
     }
 
-    utils::MenuItem* Terminal::process(utils::MenuItem* holder, char* tag)
+    void Terminal::process(char* tag, char** args)
     {
+        
+        utils::MenuItem* holder;
         if(m)
         {
             utils::MenuItem** subitemsM = menu->getItems();
-            
+
             for(int i = 0; i < menu->getCount(); i ++)
             {
                 char* op = subitemsM[i]->getOption();
+
                 if(strcmp(op, "null") == 0)
                 {
                     holder = nullptr;
-                    return holder;
+                    break;
                 }
-                if(strcmp(tag,op) == 0)
+                else if(strcmp(tag,op) == 0)
                 {
                     holder = (subitemsM[i]);
-                    return holder;
+                    break;
                 }
             }
         }
@@ -100,12 +103,12 @@ namespace core::utils
                 if(strcmp(op, "null") == 0)
                 {
                     holder = nullptr;
-                    return holder;
+                    break;
                 }
                 if(strcmp(tag,op) == 0)
                 {
                     holder = (subitemsC[i]);
-                    return holder;
+                    break;
                 }
             }
         }
@@ -121,7 +124,15 @@ namespace core::utils
 
             utils::MenuItem out = utils::MenuItem(nullptr,nullptr,"EXIT","EXIT",nullptr,nullptr);
             holder->replace(&out);
-            return holder;
         }
+
+        if(holder == nullptr || strcmp(holder->getOption(),"EXIT") == 0)
+        {
+            return;
+        }
+
+        callback_t cb = holder->getcb();
+        
+        cb(uart, args, (void*)this);
     }
 }

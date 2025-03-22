@@ -77,16 +77,16 @@ namespace core::utils
         return true;
     }
 
-    void SubMenu::enter(io::UART& uart, void** args)
+    void SubMenu::enter(io::UART& uart, char** args)
     {
         if(ctx){
         callback_t cb = (callback_t)ctx;
-        cb(uart, args);
+        cb(uart, args, term);
         }
     }
 
-    void SubMenu::exit(io::UART& uart, void** args)
+    void SubMenu::exit(io::UART& uart, char** args)
     {
-        cb(uart, args);
+        cb(uart, args, term);
     }
 }

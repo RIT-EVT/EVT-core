@@ -11,23 +11,18 @@ namespace io   = core::io;
 namespace utils  = core::utils;
 
 //example callback that prints a test message
-void printCB(io::UART& uart, void** args)
+void printCB(io::UART& uart, char** inputList, void* term)
 {
     uart.printf("\n\rTest Message\n\r");
 }
 
 //example callback that echos user input(called send because e char is taken by exit)
-void sendCB(io::UART& uart, void** args)
+void sendCB(io::UART& uart, char** inputList, void* term)
 {
     uart.printf("\n\r");
     for(int i = 1; i < 10; i ++)
     {
-        if(args[i] == nullptr)
-        {
-            i = 10;
-            continue;
-        }
-        uart.printf((char*)args[i]);
+        uart.printf(inputList[i]);
         uart.printf(" ");
     }
 }
@@ -72,48 +67,39 @@ int main()
     sub.setItems(subs);
 
     //add main menu items to main menu
-    menu.addItem(&mainPrint);
-    menu.addItem(&mainSend);
-    menu.addItem(&sub);
-    menu.addItem(&nul);
+    items[0] = &mainPrint;
+    items[1] = &mainSend;
+    items[2] = &sub;
+    items[3] = &nul;
+
+    menu.newItems(items);
 
     //printTerm is how you display the current state of the terminal
     
     uart.printf("Usage: flagChar argument argument | max 9 arguments\n\r");
 
     //forever while loop to constantly wait for user input
+    char* inputList[10];
+    char* tag;
     while(true)
     {
         term.printTerm(uart);
-        callback_t cb;
-        char* inputList[10];
+        
         term.recieve(inputList);
-        char* tag = inputList[0];
-        void* args[11];
-        for(int i = 0; i < 10; i ++)
-        {
-            if(inputList[i] == "\0")
-            {
-                args[i] = nullptr;
-                break;
-            }
-            args[i] = inputList[i];
-        }
-        args[10] = &term;
 
-        utils::MenuItem* chosen = &nul;
-        term.process(chosen, tag);
+        tag = inputList[0];
+        //void* args[11];
+        // for(int i = 0; i < 10; i ++)
+        // {
+        //     args[i] = inputList[i];
+        // }
+        //args[10] = &term;
 
-        chosen->printStr(uart);
-
-        if(chosen == nullptr || strcmp(chosen->getOption(),"EXIT") == 0)
-        {
-            continue;
-        }
-        cb = chosen->getcb();
-
-        cb(uart, args);
+        //term.process(tag, args);
+        
+        term.process(tag,inputList);
     }
+
 
     return 0;
 }

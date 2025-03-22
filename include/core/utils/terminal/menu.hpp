@@ -36,6 +36,8 @@ namespace core::utils
 
             void addItem(utils::MenuItem* item);
 
+            void newItems(utils::MenuItem** itms);
+
             void delItem(int index);
 
 
