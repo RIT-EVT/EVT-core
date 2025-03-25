@@ -8,6 +8,12 @@
 #ifndef EVT_CAN_TIMEOUT
     #define EVT_CAN_TIMEOUT 255
 #endif
+#ifndef CAN_IRQ_PRE_INTERRUPT_ROUTINE
+    #define CAN_IRQ_PRE_INTERRUPT_ROUTINE
+#endif
+#ifndef CAN_IRQ_POST_INTERRUPT_ROUTINE
+    #define CAN_IRQ_POST_INTERRUPT_ROUTINE
+#endif
 
 namespace core::io {
 // Forward declarations:
