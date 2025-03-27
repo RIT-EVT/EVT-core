@@ -77,7 +77,7 @@ namespace core::utils
         }
     }
 
-    void Terminal::enterSub(io::UART& uart, char** args, void* thing)
+    void Terminal::enterSub(io::UART& uart, char** args, void* term)
     {
         utils::MenuItem** items = menu->getItems();
         char* name = args[0];

@@ -21,22 +21,37 @@ namespace core::utils
              */
             Terminal(io::UART& uart, Menu* menu);
 
+            /**
+             * returns uart instance used
+             */
             io::UART& getUART()
             {
                 return uart;
             }
 
+            /**
+             * returns main menu
+             */
             Menu* getMenu()
             {
                 return menu;
             }
 
+            /**
+             * returns current, will be nullptr if are not in a submenu
+             */
             SubMenu* getCurrent()
             {
                 return current;
             }
 
-            void enterSub(io::UART& uart, char** args, void* thing);
+            /**
+             * enters the given submenu
+             * @param uart the uart instance to use
+             * @param args the arguments provided, used for enter callback, first index is still option string
+             * @param term void pointer to the terminal this is being done inside of(optional to leave as nullptr, just here to be used with callbacks)
+             */
+            void enterSub(io::UART& uart, char** args, void* term);
             /**
              * sets current submenu to provided value
              * @param sub the submenu to replace the current one with
@@ -58,6 +73,7 @@ namespace core::utils
 
             /**
              * proccesses incoming UART messages
+             * @param holder list to store tokenized strings in, should be full of "/0" to start
              */
             bool recieve(char** holder);
 
@@ -74,14 +90,17 @@ namespace core::utils
             // menu instance
             Menu* menu;
 
+            //current submenu, if there is one, nullptr otherwise
             SubMenu* current;
-
+            
+            //true if currently in main menu
             bool m;
 
+            //uart instance this terminal is using
             core::io::UART& uart;
-
-             char buffer[99];
-            // UART instance 
+            
+            //char buffer for UART entry
+            char buffer[99];
 
     };
 }

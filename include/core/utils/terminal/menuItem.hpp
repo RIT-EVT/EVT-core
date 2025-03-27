@@ -4,6 +4,8 @@
 
 //macro for max initial item count of submenus
 
+//struct used for callback functions, a uart instance to communicate over, 
+//a list of input strings(your input from the terminal), and a void* to the function executed
 using callback_t = void (*)(core::io::UART&, char** inputList, void*);
 
 namespace core::utils
@@ -15,23 +17,45 @@ namespace core::utils
              * constructor for menu item object
              * takes a string for the option key, a string for the description text, 
              * a void pointer to the items callback method, and a void pointer to the items context
+             * @param parent pointer to parent node
+             * @param term pointer to terminal instance this item resides within
              * @param option a string representing the items "key", the char/string used to select it
              * @param text a short text description/name of an item
              * @param cb a void pointer to this items callback method
              * @param ctx a void pointer to any context information for this menu(if none provided, is NULL)
              */
-            MenuItem(void* head, void* term, char* option, char* text, callback_t cb, void* ctx = nullptr);
+            MenuItem(void* parent, void* term, char* option, char* text, callback_t cb, void* ctx = nullptr);
 
+            /**
+             * option acessor
+             */
             char* getOption(){return option;}
-
+            
+            /**
+             * text acessor
+             */
             char* getText(){return text;}
 
+            /**
+             * callback acessor
+             */
             callback_t getcb(){return cb;}
 
+            /**
+             * replace this item with another one
+             * @param newItem the new item
+             */
             void replace(MenuItem* newItem);
 
+            /**
+             * context acessor
+             */
             void* getctx(){return ctx;}
 
+            /**
+             * print string representation
+             * @param uart the uart instance to print over
+             */
             void printStr(core::io::UART& uart);
 
             /**
@@ -66,7 +90,7 @@ namespace core::utils
             /**
              * submenu or menu this item is in
              */
-            void* head;
+            void* parent;
 
             /**
              * terminal this is in
@@ -80,7 +104,7 @@ namespace core::utils
             /**
              * constructor for sub-menu sub-class
              */
-            SubMenu(void* head, void* term, char* option, char* text, callback_t cb, void* ctx, MenuItem** items);
+            SubMenu(void* parent, void* term, char* option, char* text, callback_t cb, void* ctx, MenuItem** items);
 
             /**
              * unique overridden printStr() method for sub-menus
@@ -104,9 +128,16 @@ namespace core::utils
              * returns itemCount
              */
             int getCount(){return itemCount;}
+            
+            /**
+             * returns parent
+             */
+            SubMenu* getParent(){return parent;}
 
-            SubMenu* getHead();
-
+            /**
+             * replaces current item list with provided one
+             * @param itms items to replace current list with
+             */
             void setItems(MenuItem** itms);
             
             /**
@@ -114,8 +145,28 @@ namespace core::utils
              */
             MenuItem** getItems(){return sitems;}
 
+
+
+            // #
+            // # USE THESE TO DO ANY NEEDED SETUP/CLEANUP WHEN ENTERING/EXITING A SUB MENU:
+            // #
+
+            /**
+             * automatic callback executor for entering
+             * custom behavor is stored in ctx void*
+             * if ctx is empty will do nothing
+             * @param uart uart instance to use for cb
+             * @param args arguments for cb
+             */
             void enter(io::UART& uart, char** args);
 
+            /**
+             * automatic callback executor for exiting
+             * custom behavor is stored in cb
+             * if cb is nullptr will do nothing
+             * @param uart uart instance to use for cb
+             * @param args arguments for cb
+             */
             void exit(io::UART& uart, char** args);
 
         private:
@@ -151,7 +202,7 @@ namespace core::utils
             /**
              * submenu or menu this item is in
              */
-            void* head;
+            void* parent;
 
             /**
              * terminal this is in
