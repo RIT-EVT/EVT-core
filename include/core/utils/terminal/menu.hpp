@@ -27,6 +27,10 @@ namespace core::utils
              */
             int getCount(){return itemCount;}
 
+            /**
+             * replaces this instance of a menu with another menu
+             * @param m the menu you want to replace it with
+             */
             void replace(Menu m);
 
             /**
@@ -34,10 +38,22 @@ namespace core::utils
              */
             MenuItem** getItems() {return items;}
 
+            /**
+             * adds an item to the menu
+             * @param item the item to add
+             */
             void addItem(utils::MenuItem* item);
 
+            /**
+             * replaces the current list of items with a new one
+             * @param itms the list to replace current with
+             */
             void newItems(utils::MenuItem** itms);
 
+            /**
+             * delete an item from the list
+             * @param index the index of the item in the list(top of list when printing is 0)
+             */
             void delItem(int index);
 
 
