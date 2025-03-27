@@ -6,7 +6,7 @@ namespace core::utils
 {
     Menu::Menu(MenuItem** items) : items(items)
     {
-        
+        //constructor
     }
 
     void Menu::printStr(core::io::UART& uart) 

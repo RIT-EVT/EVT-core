@@ -5,7 +5,8 @@
 //macro for max initial item count of submenus
 
 //struct used for callback functions, a uart instance to communicate over, 
-//a list of input strings(your input from the terminal), and a void* to the function executed
+//a list of input strings(your input from the terminal), and a void*
+//mostly a placeholder to ease handling void* to a function, when you fill with a function make sure the parameters are (UART,char**,void*)
 using callback_t = void (*)(core::io::UART&, char** inputList, void*);
 
 namespace core::utils
@@ -24,7 +25,7 @@ namespace core::utils
              * @param cb a void pointer to this items callback method
              * @param ctx a void pointer to any context information for this menu(if none provided, is NULL)
              */
-            MenuItem(void* parent, void* term, char* option, char* text, callback_t cb, void* ctx = nullptr);
+            MenuItem(void* parent, void* term, char* option, char* text, callback_t cb, void* ctx);
 
             /**
              * option acessor
@@ -103,6 +104,13 @@ namespace core::utils
         public:
             /**
              * constructor for sub-menu sub-class
+             * @param parent same as menuitem
+             * @param term same as menuitem
+             * @param option same as menuitem
+             * @param text same as menuitem
+             * @param cb exit behavior callback, leave null for nothing
+             * @param ctx enterence behavior callback void*(leave null for nothing)
+             * @param items list of items in submenu
              */
             SubMenu(void* parent, void* term, char* option, char* text, callback_t cb, void* ctx, MenuItem** items);
 
