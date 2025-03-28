@@ -115,7 +115,13 @@ if(USE_RTOS)
     set(THREADX_TOOLCHAIN "gnu")
     add_subdirectory(libs/threadx)
 
-    set(THREADX_DIR ${CMAKE_CURRENT_LIST_DIR}/libs/threadx)
+    set(THREADX_DIR ${EVT_CORE_DIR}/libs/threadx)
+    target_include_directories(${PROJECT_NAME} PUBLIC
+            $<BUILD_INTERFACE:${THREADX_DIR}/common/inc>
+            $<INSTALL_INTERFACE:/libs/threadx/common.inc>
+            $<BUILD_INTERFACE:${THREADX_DIR}/ports/cortex_m4/gnu/inc>
+            $<INSTALL_INTERFACE:/libs/threadx/ports/cortex_m4/gnu/inc>
+    )
 
     target_include_directories(${PROJECT_NAME} PRIVATE
             ${THREADX_DIR}/common/inc
