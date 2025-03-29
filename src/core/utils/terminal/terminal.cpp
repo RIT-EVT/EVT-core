@@ -4,8 +4,8 @@
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
 #include <core/utils/terminal/terminal.hpp>
-#include <core/utils/terminal/Menu.hpp>
-#include <core/utils/terminal/MenuItem.hpp>
+#include <core/utils/terminal/menu.hpp>
+#include <core/utils/terminal/menuItem.hpp>
 #include <cstring>
 
 namespace io = core::io;
