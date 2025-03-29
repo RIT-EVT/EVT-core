@@ -193,7 +193,7 @@ TimerF4xx::TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerCo
     : configuration(configuration) {
     this->clockPeriod   = clockPeriod;
     this->halTimer = &halTimers[getTimerInterruptIndex(timerPeripheral)];
-    initTimer(timerPeripheral, clockPeriod, configuration, clockPrescaler);
+    initTimer(timerPeripheral, clockPeriod, clockPrescaler);
 };
 
 TimerF4xx::~TimerF4xx() = default;

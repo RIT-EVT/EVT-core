@@ -16,11 +16,11 @@ io::GPIO* interruptGPIO2Hz;
 io::GPIO* interruptGPIOStopStart;
 io::GPIO* reloadGPIO;
 
-void timer2IRQHandler(void* htim) {
+void timerIRQHandler(void* htim) {
     io::GPIO::State state       = ledGPIO->readPin();
     io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
     ledGPIO->writePin(toggleState);
-    interruptGPIO2Hz->writePin(toggleState);
+    // interruptGPIO2Hz->writePin(toggleState);
 
     log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Flash LED");
 }
@@ -45,7 +45,6 @@ int main() {
 
     // Print directly to the UART to show that the file has been run despite any
     // problems with the Logger
-    uart.printf("Starting log test\n\r");
 
     // Set up the logger with a UART, logLevel, and clock
     // If timestamps aren't needed, don't set the logger's clock
@@ -60,7 +59,7 @@ int main() {
 
     // Setup the Timer
     dev::TimerConfiguration configuration = {
-        TIM_COUNTERMODE_DOWN,
+        TIM_COUNTERMODE_UP,
         TIM_CLOCKDIVISION_DIV1,
         TIM_AUTORELOAD_PRELOAD_ENABLE,
         TIM_CLOCKSOURCE_INTERNAL,
@@ -68,13 +67,13 @@ int main() {
         TIM_MASTERSLAVEMODE_DISABLE
     };
 
-    // TIM_TypeDef* timPeriph = TIM2;
-    // auto timer = dev::TimerF4xx(timPeriph, 100, configuration);
+    core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Setup Timer");
+
     // F4xx does not support Timers 15 & 16, change them to Timer11 & Timer12
-    dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(100, configuration);
+    dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(1000, configuration);
     // dev::Timer& timer16 = dev::getTimer<dev::MCUTimer::Timer16>(200);
 
-    timer.startTimer(timer2IRQHandler);
+    timer.startTimer(timerIRQHandler);
     // timer2.startTimer(timer2IRQHandler);
     // timer15.startTimer(timer15IRQHandler);
     // timer16.startTimer(timer16IRQHandler);

@@ -16,7 +16,6 @@ enum class MCUTimer {
 #if defined(STM32F302x8)
     Timer1,
     Timer2,
-    Timer6,
     Timer15,
     Timer16,
     Timer17,
@@ -24,8 +23,6 @@ enum class MCUTimer {
     Timer1,
     Timer2,
     Timer3,
-    Timer6,
-    Timer7,
     Timer15,
     Timer16,
     Timer17,
@@ -60,9 +57,6 @@ TIM_TypeDef* getTIM(MCUTimer mcuTimer) {
     case MCUTimer::Timer2:
         timPeriph = TIM2;
         break;
-    case MCUTimer::Timer6:
-        timPeriph = TIM6;
-        break;
     case MCUTimer::Timer15:
         timPeriph = TIM15;
         break;
@@ -81,12 +75,6 @@ TIM_TypeDef* getTIM(MCUTimer mcuTimer) {
         break;
     case MCUTimer::Timer3:
         timPeriph = TIM3;
-        break;
-    case MCUTimer::Timer6:
-        timPeriph = TIM6;
-        break;
-    case MCUTimer::Timer7:
-        timPeriph = TIM7;
         break;
     case MCUTimer::Timer15:
         timPeriph = TIM15;

@@ -434,9 +434,6 @@ static void setTimer(dev::MCUTimer instance, dev::Timer* timer) {
     case dev::MCUTimer::Timer2:
         *timer = dev::getTimer<dev::MCUTimer::Timer2>(0, timerConfiguration);
         break;
-    case dev::MCUTimer::Timer6:
-        *timer = dev::getTimer<dev::MCUTimer::Timer6>(0, timerConfiguration);
-        break;
     case dev::MCUTimer::Timer15:
         *timer = dev::getTimer<dev::MCUTimer::Timer15>(0, timerConfiguration);
         break;
@@ -448,19 +445,13 @@ static void setTimer(dev::MCUTimer instance, dev::Timer* timer) {
         break;
         #elif defined(STM32F334x8)
     case dev::MCUTimer::Timer1:
-        *timer = dev::getTimer<dev::MCUTimer::Timer11>(0, timerConfiguration);
+        *timer = dev::getTimer<dev::MCUTimer::Timer1>(0, timerConfiguration);
         break;
     case dev::MCUTimer::Timer2:
-        *timer = dev::getTimer<dev::MCUTimer::Timer12>(0, timerConfiguration);
+        *timer = dev::getTimer<dev::MCUTimer::Timer2>(0, timerConfiguration);
         break;
     case dev::MCUTimer::Timer3:
         *timer = dev::getTimer<dev::MCUTimer::Timer3>(0, timerConfiguration);
-        break;
-    case dev::MCUTimer::Timer6:
-        *timer = dev::getTimer<dev::MCUTimer::Timer6>(0, timerConfiguration);
-        break;
-    case dev::MCUTimer::Timer7:
-        *timer = dev::getTimer<dev::MCUTimer::Timer7>(0, timerConfiguration);
         break;
     case dev::MCUTimer::Timer15:
         *timer = dev::getTimer<dev::MCUTimer::Timer15>(0, timerConfiguration);
