@@ -66,6 +66,7 @@ namespace core::utils
             /**
              * Sends a provided message over UART
              * also replaces menu with provided menu
+             * used to reset menu to desired state and send a message
              * @param message a string message to send via UART
              * @param menu the menu to replace the current head node with
              */

@@ -4,14 +4,15 @@
 
 namespace core::utils
 {
-    SubMenu::SubMenu(void* head, void* term, char* option, char* text, callback_t cb, void* ctx, MenuItem** sitems) : head(head), term(term), option(option), text(text), cb(cb), ctx(ctx), sitems(sitems), MenuItem(head, term, option, text, cb, ctx)//SubMenu(option, text, cb, ctx, items)
+    SubMenu::SubMenu(void* parent, void* term, char* option, char* text, callback_t cb, void* ctx, MenuItem** sitems) : parent(parent), term(term), option(option), text(text), cb(cb), ctx(ctx), sitems(sitems), MenuItem(parent, term, option, text, cb, ctx)
     {
-
+        //constructor
     }
 
     void SubMenu::printStr(core::io::UART& uart) 
     {
         //this is exclusively for displaying the submenu inside of a menu list
+        // option | text
         uart.printf(option); 
         uart.printf("|");
         uart.printf(text);
@@ -19,6 +20,8 @@ namespace core::utils
 
     void SubMenu::printMStr(core::io::UART& uart)
     {
+        //used for printing this as the current menu state
+        //prints all items in list until it hits one with option string "null"
         for(int c = 0; c < itemCount; c ++)
         {
             if(sitems[c]->getOption() == "null")
@@ -29,24 +32,12 @@ namespace core::utils
         }
     }
 
-    SubMenu* SubMenu::getHead()
-    {
-        if(head)
-        {
-            return (utils::SubMenu*)head;
-        }
-        return nullptr;
-
-    }
-
     void SubMenu::setItems(MenuItem** itms)
     {
+        //replaces corresponding items in sitems with itms
+        //used to replace item list, or certain items by inputing an altered item list
         for(int i = 0; i < itemCount; i++)
         {
-            if(itms[i] == nullptr)
-            {
-                break;
-            }
             sitems[i] = itms[i];
         }
     }
@@ -78,14 +69,16 @@ namespace core::utils
 
     void SubMenu::enter(io::UART& uart, char** args)
     {
-        if(ctx){
-        callback_t cb = (callback_t)ctx;
-        cb(uart, args, term);
-        }
+        cb(uart,args,term);
     }
 
     void SubMenu::exit(io::UART& uart, char** args)
     {
-        cb(uart, args, term);
+        //if ctx has value use it as a callback
+        if(ctx)
+        {
+            callback_t cb = (callback_t)ctx;
+            cb(uart, args, term);
+        }
     }
 }

@@ -14,39 +14,49 @@ namespace core::utils
 {
     Terminal::Terminal(io::UART& uart, utils::Menu* menu) : menu(menu), uart(uart)
     {
+        //start message
         uart.printf("\n\rStarting Terminal...\n\r");
+        //set main menu flag to true
         m = true;
     }
 
-    void Terminal::update(char* message, utils::Menu m = nullptr)
+    void Terminal::update(char* message, utils::Menu m)
     {
+        //replace menu with provided
         menu->replace(m);
+        //print spacer lines
         for(int i = 0; i < 5; i ++)
         {
             uart.printf("\n\r");
         }
+        //print
         uart.printf(message);
     }
 
     void Terminal::setCurrent(SubMenu* sub)
     {
+        //sets current to input, sets main menu flag to false
         current = sub;
         m = false;
     }
 
     bool Terminal::recieve(char* holder[10])
     {
+        //fill buffer with null chars
         for(int i = 0; i < 99; i ++)
         {
             buffer[i] = '\0';
         }
+        //fill buffer
         uart.gets(buffer, 99);
 
+        //tokenize
         holder[0] = strtok(buffer, " ");
         for(int i = 1; i < 10; i ++)
         {
             holder[i] = strtok(NULL, " ");
         }
+        //return true, this is placeholder for ensuring a complete message
         return true;
         // for(int i = 0; i < 10; i++)
         // {
@@ -57,6 +67,7 @@ namespace core::utils
     //TERMINAL specific print function
     void Terminal::printTerm()
     {
+        //print header and some info
         uart.printf("\n\r");
         uart.printf("Terminal:\n\r");
         uart.printf("is main: ");
@@ -66,10 +77,12 @@ namespace core::utils
         }
         else{uart.printf("false\n\r");}
         
+        //print menu
         if(m)
         {
             menu->printStr(uart);
         }
+        //or submenu
         else
         {
             current->printMStr(uart);
@@ -83,11 +96,13 @@ namespace core::utils
         char* name = args[0];
         int c = menu->getCount();
         utils::MenuItem* item;
+        //find chosen item
         for(int i = 0; i < c; i ++)
         {
             item = items[i];
             if(strcmp(name, item->getOption()) == 0)
             {
+                //cast item to submenu and place in current
                 setCurrent((utils::SubMenu*)item);
                 break;
             }
@@ -96,9 +111,11 @@ namespace core::utils
 
     void Terminal::process(char* tag, char** args)
     {
+        //different behavior for menu and submenu
         utils::MenuItem* holder;
         if(m)
         {
+            //find item in menu
             utils::MenuItem** subitemsM = menu->getItems();
 
             for(int i = 0; i < menu->getCount(); i ++)
@@ -119,6 +136,7 @@ namespace core::utils
         }
         else
         {
+            //find item in submenu
             utils::MenuItem** subitemsC = current->getItems();
 
             for(int i = 0; i < menu->getCount(); i ++)
@@ -137,16 +155,20 @@ namespace core::utils
             }
         }
 
+        //check if quit flag, if quit set main menu flag to true
+        //this brings us back to main menu, current sill still have a value but this gets overwritten next menu move
         if(strcmp(tag, "q") == 0)
         {
             m = true;
         }
 
-        if(holder == nullptr || strcmp(holder->getOption(),"QUIT") == 0)
+        //if quit flag, kick out of process, 
+        if(holder == nullptr || strcmp(holder->getOption(),"q") == 0)
         {
             return;
         }
 
+        //get and run callback of chosen item
         callback_t cb = holder->getcb();
         
         cb(uart, args, (void*)this);

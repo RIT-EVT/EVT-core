@@ -31,6 +31,11 @@ namespace core::utils
              * option acessor
              */
             char* getOption(){return option;}
+
+            /**
+             * returns parent
+             */
+            void* getParent(){return parent;}
             
             /**
              * text acessor
@@ -140,7 +145,7 @@ namespace core::utils
             /**
              * returns parent
              */
-            SubMenu* getParent(){return parent;}
+            void* getParent(){return parent;}
 
             /**
              * replaces current item list with provided one
@@ -162,7 +167,7 @@ namespace core::utils
             /**
              * automatic callback executor for entering
              * custom behavor is stored in ctx void*
-             * if ctx is empty will do nothing
+             * if cb is empty will do nothing
              * @param uart uart instance to use for cb
              * @param args arguments for cb
              */
@@ -170,8 +175,8 @@ namespace core::utils
 
             /**
              * automatic callback executor for exiting
-             * custom behavor is stored in cb
-             * if cb is nullptr will do nothing
+             * custom behavor is stored in cb.
+             * if ctx is nullptr will do nothing
              * @param uart uart instance to use for cb
              * @param args arguments for cb
              */
