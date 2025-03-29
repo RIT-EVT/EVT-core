@@ -25,7 +25,6 @@ public:
 
     uint32_t getFrequency();
 
-
 private:
     /// HAL timer representation
     TIM_HandleTypeDef halTIM;

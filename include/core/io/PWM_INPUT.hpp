@@ -6,7 +6,7 @@
 
 namespace core::io {
 
-//Different pins are hardware specific
+// Different pins are hardware specific
 enum class Pin;
 
 class PWM_INPUT {
@@ -40,8 +40,7 @@ public:
      */
     virtual uint32_t getFrequency() = 0;
 
-
-protected :
+protected:
     /// The pin PWM input is on
     Pin pin;
     /// The duty cycle of the PWM input
@@ -50,7 +49,6 @@ protected :
     uint32_t period;
     /// The frequency of the PWM input
     uint32_t frequency;
-
 };
 
 } // namespace core::io
