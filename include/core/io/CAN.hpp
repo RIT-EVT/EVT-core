@@ -8,6 +8,9 @@
 #ifndef EVT_CAN_TIMEOUT
     #define EVT_CAN_TIMEOUT 255
 #endif
+// these macros are default blank, but can be defined elsewhere in order to do some process before and after a CAN
+// interrupt is called. The use case in mind is for RTOS: there is a specific Threadx method to call before an interrupt
+// and after an interrupt. By defining these macros in some other file, some set of methods can be appropriately called.
 #ifndef CAN_IRQ_PRE_INTERRUPT_ROUTINE
     #define CAN_IRQ_PRE_INTERRUPT_ROUTINE
 #endif
