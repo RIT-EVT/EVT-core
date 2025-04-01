@@ -1,67 +1,67 @@
 /**
  * This sample shows off CANopen support from EVT-core. This will
  * setup a CANopen node and attempt to make back and forth communication.
- *
- * This sample is intended to be run alongside canopen_tpdo.
  */
 
 #include <core/io/CAN.hpp>
 #include <core/io/UART.hpp>
 #include <core/io/types/CANMessage.hpp>
 #include <core/manager.hpp>
-#include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 #include <core/utils/types/FixedQueue.hpp>
-#include <string>
 
 #include <core/io/CANopen.hpp>
+#include <cstdio>
 
-#include "RPDOCanNode.hpp"
+#include "SDOCanNode.hpp"
 
 namespace io   = core::io;
 namespace dev  = core::dev;
 namespace time = core::time;
-namespace log  = core::log;
-
-///////////////////////////////////////////////////////////////////////////////
-// EVT-core CAN callback and CAN setup. This will include logic to set
-// aside CANopen messages into a specific queue
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Interrupt handler to get CAN messages. A function pointer to this function
- * will be passed to the EVT-core CAN interface which will in turn call this
- * function each time a new CAN message comes in.
- *
- * NOTE: For this sample, every non-extended (so 11 bit CAN IDs) will be
- * assumed to be intended to be passed as a CANopen message.
- *
- * @param message[in] The passed in CAN message that was read.
- */
 
 // create a can interrupt handler
 void canInterrupt(io::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
     char messageString[50];
 
-    // print out raw received data
-    snprintf(&messageString[5],
-             6,
-             "Got RAW message from %X of length %d with data: ",
-             message.getId(),
-             message.getDataLength());
-
     uint8_t* data = message.getPayload();
-
-    for (int i = 0; i < message.getDataLength(); i++) {
-        snprintf(&messageString[i * 5], 1, "%X ", *data);
-        data++;
-    }
-
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "\r\n\t%s\r\n", messageString);
-
     if (queue != nullptr)
         queue->append(message);
+    for (int i = 0; i < message.getDataLength(); i++) {
+        snprintf(&messageString[i * 5], 6, "0x%02X ", data[i]);
+    }
+
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG,
+                    "[CAN1] Got RAW message from %X of length %d with data: \r\n\t%s\r\n",
+                    message.getId(),
+                    message.getDataLength(),
+                    messageString);
+}
+
+void SdoTransferCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code) {
+    char messageString[50];
+    if (code == 0) {
+        /* read data is available in 'readValue' */
+        snprintf(&messageString[0], 25, "Value transferred %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
+    } else {
+        /* a timeout or abort is detected during SDO transfer  */
+        snprintf(&messageString[0], 25, "SDO transfer callback don goofed 0x%x\r\n", code);
+    }
+
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "SDO Transfer Operation: \r\n\t%s\r\n", messageString);
+}
+
+void SdoReceiveCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code) {
+    char messageString[50];
+    if (code == 0) {
+        /* read data is available in 'readValue' */
+        snprintf(&messageString[0], 25, "Value received %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
+    } else {
+        /* a timeout or abort is detected during SDO transfer  */
+        snprintf(&messageString[0], 25, "SDO receive callback don goofed 0x%x\r\n", code);
+    }
+
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "SDO Receive Operation: \r\n\t%s\r\n", messageString);
 }
 
 int main() {
@@ -69,12 +69,10 @@ int main() {
     core::platform::init();
 
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
+    log::LOGGER.setUART(&uart);
+    log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
 
-    // Initialize the timer
     dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(100);
-
-    // create the RPDO node
-    RPDOCanNode testCanNode;
 
     ///////////////////////////////////////////////////////////////////////////
     // Setup CAN configuration, this handles making drivers, applying settings.
@@ -94,15 +92,17 @@ int main() {
     uint8_t sdoBuffer[CO_SSDO_N * CO_SDO_BUF_BYTE];
     CO_TMR_MEM appTmrMem[16];
 
-    // Reserve CAN drivers
+    // Reserve driver variables
     CO_IF_DRV canStackDriver;
 
     CO_IF_CAN_DRV canDriver;
     CO_IF_TIMER_DRV timerDriver;
     CO_IF_NVM_DRV nvmDriver;
 
-    // Reserve canNode
     CO_NODE canNode;
+
+    // create the SDO node
+    SDOCanNode testCanNode(canNode);
 
     // Attempt to join the CAN network
     io::CAN::CANStatus result = can.connect();
@@ -127,18 +127,22 @@ int main() {
     // print any CANopen errors
     uart.printf("Error: %d\r\n", CONodeGetErr(&canNode));
 
+    core::io::registerCallBack(SdoTransferCallback, &canNode);
+    core::io::registerCallBack(SdoReceiveCallback, &canNode);
+
     ///////////////////////////////////////////////////////////////////////////
     // Main loop
     ///////////////////////////////////////////////////////////////////////////
+    uint32_t lastUpdate1 = HAL_GetTick();
+    uint32_t lastUpdate2 = HAL_GetTick();
 
-    uint8_t lastVal1  = 0;
-    uint16_t lastVal2 = 0;
     while (1) {
-        // Print new value when changed over CAN
-        if (lastVal1 != testCanNode.getSampleDataA() || lastVal2 != testCanNode.getSampleDataB()) {
-            lastVal1 = testCanNode.getSampleDataA();
-            lastVal2 = testCanNode.getSampleDataB();
-            uart.printf("Current value: %X, %X\r\n", lastVal1, lastVal2);
+        if ((HAL_GetTick() - lastUpdate1) >= 1000) {        // If 1000ms have passed receive CAN message.
+            testCanNode.receiveData();                      // Receive data from server
+            lastUpdate1 = HAL_GetTick();                    // Set to current time.
+        } else if ((HAL_GetTick() - lastUpdate2) >= 5000) { // If 5000ms have passed write CAN message.
+            testCanNode.transferData();                     // Send data to server
+            lastUpdate2 = HAL_GetTick();                    // Set to current time.
         }
 
         io::processCANopenNode(&canNode);
