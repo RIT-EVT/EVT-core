@@ -70,7 +70,7 @@ int main() {
     core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Setup Timer");
 
     // F4xx does not support Timers 15 & 16, change them to Timer11 & Timer12
-    dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(1000, configuration);
+    dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer1>(1000, configuration);
     // dev::Timer& timer16 = dev::getTimer<dev::MCUTimer::Timer16>(200);
 
     timer.startTimer(timerIRQHandler);

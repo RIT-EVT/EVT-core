@@ -10,6 +10,7 @@
 
 #include <HALf4/stm32f4xx.h>
 #include <HALf4/stm32f4xx_hal_adc.h>
+#include <core/dev/Timer.hpp>
 #include <core/io/pin.hpp>
 #include <core/io/platform/f4xx/ADCf4xx.hpp>
 #include <core/io/platform/f4xx/GPIOf4xx.hpp>
@@ -320,6 +321,18 @@ uint8_t ADCf4xx::getADCNum(ADCPeriph periph) {
 void ADCf4xx::initTimer() {
     TIM_ClockConfigTypeDef sClockSourceConfig = {0};
     TIM_MasterConfigTypeDef sMasterConfig     = {0};
+
+    // Setup the Timer
+    dev::TimerConfiguration configuration = {
+        TIM_COUNTERMODE_UP,
+        TIM_CLOCKDIVISION_DIV1,
+        TIM_AUTORELOAD_PRELOAD_ENABLE,
+        TIM_CLOCKSOURCE_INTERNAL,
+        TIM_TRGO_UPDATE,
+        TIM_MASTERSLAVEMODE_DISABLE
+    };
+
+
 
     ADCf4xx::htim8.Instance               = TIM8;
     ADCf4xx::htim8.Init.Prescaler         = 0;

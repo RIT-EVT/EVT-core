@@ -43,6 +43,8 @@ private:
     static bool timerInit;
     // Timer handle for TIM8, used to configure and control the timer instance
     static TIM_HandleTypeDef htim8;
+    // static dev::Timer<dev::MCUTimer::Timer9> timer;
+
 
     /**
      * Structure to represent the state of an ADC instance.
