@@ -2,8 +2,6 @@
 #define _EVT_ADCf4xx_
 
 #include <HALf4/stm32f4xx.h>
-#include <HALf4/stm32f4xx_hal.h>
-
 #include <core/io/ADC.hpp>
 
 namespace core::io {
@@ -42,9 +40,7 @@ private:
     // Flag to indicate if the timer has been initialized
     static bool timerInit;
     // Timer handle for TIM8, used to configure and control the timer instance
-    static TIM_HandleTypeDef htim8;
-    // static dev::Timer<dev::MCUTimer::Timer9> timer;
-
+    static dev::TimerF4xx timer8;
 
     /**
      * Structure to represent the state of an ADC instance.

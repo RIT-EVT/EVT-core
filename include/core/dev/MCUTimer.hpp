@@ -125,6 +125,9 @@ TIM_TypeDef* getTIM(MCUTimer mcuTimer) {
     case MCUTimer::Timer14:
         timPeriph = TIM14;
         break;
+    default:
+        timPeriph = TIM1;
+        break;
 #endif
     }
 

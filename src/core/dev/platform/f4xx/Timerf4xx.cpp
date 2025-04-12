@@ -167,21 +167,21 @@ extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
 }
 
 extern "C" void TIM1_UP_TIM10_IRQHandler(void) {
-    if (const timerInterruptIndex tim1Index = getTimerInterruptIndex(TIM1); timerInterruptHandlers[tim1Index] != nullptr) {
+    if (const timerInterruptIndex tim1Index = getTimerInterruptIndex(TIM1); halTimers[tim1Index].Instance != nullptr) {
         HAL_TIM_IRQHandler(&halTimers[tim1Index]);
     }
 
-    if (const timerInterruptIndex tim10Index = getTimerInterruptIndex(TIM10); timerInterruptHandlers[tim10Index] != nullptr) {
+    if (const timerInterruptIndex tim10Index = getTimerInterruptIndex(TIM10); halTimers[tim10Index].Instance != nullptr) {
         HAL_TIM_IRQHandler(&halTimers[tim10Index]);
     }
 }
 
 extern "C" void TIM8_UP_TIM13_IRQHandler(void) {
-    if (const timerInterruptIndex tim8Index = getTimerInterruptIndex(TIM8); timerInterruptHandlers[tim8Index] != nullptr) {
+    if (const timerInterruptIndex tim8Index = getTimerInterruptIndex(TIM8); halTimers[tim8Index].Instance != nullptr) {
         HAL_TIM_IRQHandler(&halTimers[tim8Index]);
     }
 
-    if (const timerInterruptIndex tim13Index = getTimerInterruptIndex(TIM13); timerInterruptHandlers[tim13Index] != nullptr) {
+    if (const timerInterruptIndex tim13Index = getTimerInterruptIndex(TIM13); halTimers[tim13Index].Instance != nullptr) {
         HAL_TIM_IRQHandler(&halTimers[tim13Index]);
     }
 }
