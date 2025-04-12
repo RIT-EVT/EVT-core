@@ -42,6 +42,7 @@
     #define CAN_SUPPORTED
     #define GPIO_SUPPORTED
     #define I2C_SUPPORTED
+    #define IWDG_SUPPORTED
     #define MCU_SUPPORTED
     #define PWM_SUPPORTED
     #define RTC_SUPPORTED
