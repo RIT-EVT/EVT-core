@@ -12,17 +12,16 @@ namespace dev = core::dev;
 namespace log = core::log;
 
 io::GPIO* ledGPIO;
-io::GPIO* interruptGPIO2Hz;
-io::GPIO* interruptGPIOStopStart;
-io::GPIO* reloadGPIO;
+// io::GPIO* interruptGPIO2Hz;
+// io::GPIO* interruptGPIOStopStart;
+// io::GPIO* reloadGPIO;
 
 void timerIRQHandler(void* htim) {
     io::GPIO::State state       = ledGPIO->readPin();
     io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
     ledGPIO->writePin(toggleState);
-    // interruptGPIO2Hz->writePin(toggleState);
 
-    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Flash LED");
+    log::LOGGER.log(log::Logger::LogLevel::INFO, "Flash LED");
 }
 
 // void timer15IRQHandler(void* htim) {
@@ -53,9 +52,9 @@ int main() {
 
     // Setup GPIO
     ledGPIO                = &io::getGPIO<io::Pin::LED>();
-    interruptGPIO2Hz       = &io::getGPIO<io::Pin::PC_3>(io::GPIO::Direction::OUTPUT);
-    interruptGPIOStopStart = &io::getGPIO<io::Pin::PC_2>(io::GPIO::Direction::OUTPUT);
-    reloadGPIO             = &io::getGPIO<io::Pin::PC_0>(io::GPIO::Direction::OUTPUT);
+    // interruptGPIO2Hz       = &io::getGPIO<io::Pin::PC_3>(io::GPIO::Direction::OUTPUT);
+    // interruptGPIOStopStart = &io::getGPIO<io::Pin::PC_2>(io::GPIO::Direction::OUTPUT);
+    // reloadGPIO             = &io::getGPIO<io::Pin::PC_0>(io::GPIO::Direction::OUTPUT);
 
     // Setup the Timer
     dev::TimerConfiguration configuration = {
@@ -67,10 +66,8 @@ int main() {
         TIM_MASTERSLAVEMODE_DISABLE
     };
 
-    core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Setup Timer");
-
     // F4xx does not support Timers 15 & 16, change them to Timer11 & Timer12
-    dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer1>(1000, configuration);
+    dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer8>(1000, configuration);
     // dev::Timer& timer16 = dev::getTimer<dev::MCUTimer::Timer16>(200);
 
     timer.startTimer(timerIRQHandler);

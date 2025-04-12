@@ -89,10 +89,6 @@ TIM_TypeDef* getTIM(MCUTimer mcuTimer) {
         timPeriph = TIM17;
         break;
 #elif defined(STM32F446xx)
-    /*
-     * Timers 1 and 8 are advanced timers
-     * so they are not included in this switch statement
-     */
     case MCUTimer::Timer1:
         timPeriph = TIM1;
         break;
