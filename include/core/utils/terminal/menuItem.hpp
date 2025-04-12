@@ -1,6 +1,7 @@
 #ifndef EVT_TERM_MENUITEM
 #define EVT_TERM_MENUITEM
 #include <core/io/UART.hpp>
+#include <terminal.hpp>
 
 // macro for max initial item count of submenus
 
@@ -8,7 +9,6 @@
 // a list of input strings(your input from the terminal), and a void*
 // mostly a placeholder to ease handling void* to a function, when you fill with a function make sure the parameters are
 // (UART,char**,void*)
-using callback_t = void (*)(core::io::UART&, char** inputList, void*);
 
 namespace core::utils {
 class MenuItem {
