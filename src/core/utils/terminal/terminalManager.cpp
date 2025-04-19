@@ -67,8 +67,8 @@ void Terminal::printTerm() {
     // } else {
     //     uart.printf("false\n\r");
     // }
-    
-    uart.printf("==========\n\r");
+    uart.printf(current->getText()); //this will eventually be changed to brint the nodes above current up to the head as well like head>between>current
+    uart.printf("===================\n\r");
     // print menu
     if (m) {
         menu->printStr(uart);

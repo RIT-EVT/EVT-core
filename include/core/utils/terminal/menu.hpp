@@ -3,6 +3,7 @@
 
 // macro for max initial item count of a main menu
 #include <core/utils/terminal/menuItem.hpp>
+#include <core/utils/terminal/terminal.hpp>
 
 namespace core::utils {
 
@@ -19,7 +20,7 @@ public:
      * @param ctx enterence behavior callback void*(leave null for nothing)
      * @param items list of items in submenu
      */
-    SubMenu(void* parent, void* term, char* option, char* text, callback_t cb, void* ctx, MenuItem** items);
+    SubMenu(Menu* parent, void* term, char* option, char* text, callback_t cb, void* ctx, MenuItem** items);
 
     /**
      * unique overridden printStr() method for sub-menus
@@ -120,8 +121,9 @@ private:
 
     /**
      * submenu or menu this item is in
+     * if nullptr the current node is the head
      */
-    void* parent;
+    Menu* parent;
 
     /**
      * terminal this is in

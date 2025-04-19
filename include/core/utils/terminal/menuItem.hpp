@@ -1,7 +1,7 @@
 #ifndef EVT_TERM_MENUITEM
 #define EVT_TERM_MENUITEM
 #include <core/io/UART.hpp>
-#include <terminal.hpp>
+#include <core/utils/terminal/terminal.hpp>
 
 // macro for max initial item count of submenus
 

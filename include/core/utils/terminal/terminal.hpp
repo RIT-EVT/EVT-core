@@ -3,20 +3,13 @@
 
 struct TerminalInterface
 {
-    std::function<void()> func1;
-    std::function<void()> func2;
-    std::function<void()> func3;
+    //fill with list full of pointers to terminalManager functions to circumvent 
+    void** funclist;
 
-    FunctionRunner(std::function<void()> f1, std::function<void()> f2, std::function<void()> f3)
-        : func1(f1), func2(f2), func3(f3) {}
+    FunctionRunner(void** funclist)
+        : funclist(funclist) {}
 
     void runAll() {
-        std::cout << "Running func1...\n";
-        func1();
-        std::cout << "Running func2...\n";
-        func2();
-        std::cout << "Running func3...\n";
-        func3();
     }
 };
 

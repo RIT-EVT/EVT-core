@@ -5,6 +5,7 @@
 #include <core/io/pin.hpp>
 #include <core/utils/terminal/menu.hpp>
 #include <core/utils/terminal/menuItem.hpp>
+#include <core/utils/terminal/terminal.hpp>
 #include <cstring>
 
 namespace core::utils {
@@ -90,7 +91,7 @@ private:
     Menu* menu;
 
     // current submenu, if there is one, nullptr otherwise
-    SubMenu* current;
+    Menu* current;
 
     // true if currently in main menu
     bool m;
