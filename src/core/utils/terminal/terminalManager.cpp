@@ -5,7 +5,7 @@
 #include <core/io/pin.hpp>
 #include <core/utils/terminal/menu.hpp>
 #include <core/utils/terminal/menuItem.hpp>
-#include <core/utils/terminal/terminal.hpp>
+#include <core/utils/terminal/terminalManager.hpp>
 #include <cstring>
 
 namespace io = core::io;
@@ -61,13 +61,14 @@ void Terminal::printTerm() {
     // print header and some info
     uart.printf("\n\r");
     uart.printf("Terminal:\n\r");
-    uart.printf("is main: ");
-    if (m) {
-        uart.printf("true\n\r");
-    } else {
-        uart.printf("false\n\r");
-    }
-
+    // uart.printf("is main: ");
+    // if (m) {
+    //     uart.printf("true\n\r");
+    // } else {
+    //     uart.printf("false\n\r");
+    // }
+    
+    uart.printf("==========\n\r");
     // print menu
     if (m) {
         menu->printStr(uart);
