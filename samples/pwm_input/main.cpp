@@ -12,12 +12,12 @@ namespace log  = core::log;
 
 // Defines for testing ---------------------------------------------------------------------------------
 //Channel defines-----
-#define directChannel       TIM_CHANNEL_2                 // TIM_CHANNEL_1
+#define directChannel       TIM_CHANNEL_1                 // TIM_CHANNEL_1
 #define activeDirectChannel HAL_TIM_ACTIVE_CHANNEL_1     // HAL_TIM_ACTIVE_CHANNEL_1
-#define indirectChannel     TIM_CHANNEL_2                 // TIM_CHANNEL_2
-#define triggerSource       TIM_TS_TI2FP2                 // TIM_TS_TI1FP1
+#define indirectChannel     TIM_CHANNEL_2                // TIM_CHANNEL_2
+#define triggerSource       TIM_TS_TI1FP1                 // TIM_TS_TI1FP1
 #define gpioClkEnable       __HAL_RCC_GPIOA_CLK_ENABLE(); //__HAL_RCC_GPIOA_CLK_ENABLE();
-#define thePin              GPIO_PIN_3                    // GPIO_PIN_0
+#define thePin              GPIO_PIN_2                    // GPIO_PIN_0
 #define altFunc             GPIO_AF9_TIM15                 // GPIO_AF1_TIM2
 #define gpioType            GPIOA                           // GPIOA
 //Timer Defines-----
@@ -27,6 +27,8 @@ namespace log  = core::log;
 #define IRQNum              TIM1_BRK_TIM15_IRQn                    //TIM2_IRQn
 #define clkEnable           __HAL_RCC_TIM15_CLK_ENABLE();  //__HAL_RCC_TIM2_CLK_ENABLE();
 //-------------------------------------------------------------------------------------------------------
+
+
 
 TIM_HandleTypeDef htimNum;
 
@@ -143,7 +145,7 @@ static void MX_TIM2_Init(void) {
     sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
     sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
     sConfigIC.ICFilter    = 0;
-    if (HAL_TIM_IC_ConfigChannel(&htimNum, &sConfigIC, directChannel) != HAL_OK) {
+    if (HAL_TIM_IC_ConfigChannel(&htimNum, &sConfigIC, directChannel) != HAL_OK) { //direct
         Error_Handler();
     }
     sConfigIC.ICPolarity  = TIM_INPUTCHANNELPOLARITY_FALLING;
