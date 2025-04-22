@@ -143,7 +143,7 @@ extern "C" void TIM8_TRG_COM_TIM14_IRQHandler(void) {
     HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM14)]);
 }
 
-extern "C" __weak void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
+extern "C" void HAL_TIM_PeriodElapsedCallback_OLD(TIM_HandleTypeDef* htim) {
     uint8_t interruptIdx = getTimerInterruptIndex(htim->Instance);
     if (timerInterruptHandlers[interruptIdx] != nullptr) {
         timerInterruptHandlers[interruptIdx](htim);

@@ -9,6 +9,8 @@
 
 namespace core::dev {
 
+extern "C" void HAL_TIM_PeriodElapsedCallback_OLD(TIM_HandleTypeDef* htim);
+
 /**
  * Implementation of the Timer class for STM32f4xx MCUs
  */
