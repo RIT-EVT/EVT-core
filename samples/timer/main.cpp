@@ -67,7 +67,7 @@ int main() {
     };
 
     // F4xx does not support Timers 15 & 16, change them to Timer11 & Timer12
-    dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer8>(1000, configuration);
+    // dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer1>(1000, configuration);
     // dev::Timer& timer16 = dev::getTimer<dev::MCUTimer::Timer16>(200);
 
     timer.startTimer(timerIRQHandler);

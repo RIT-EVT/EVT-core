@@ -124,7 +124,6 @@ timerInterruptIndex getTimerInterruptIndex(TIM_TypeDef* peripheral) {
 
     if (peripheral == TIM1) {
         interruptIdx = TIM1_IDX;
-        core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Index %d", interruptIdx);
     } else if (peripheral == TIM2) {
         interruptIdx = TIM2_IDX;
     } else if (peripheral == TIM3) {
@@ -147,7 +146,8 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim) {
 
     if (peripheral == TIM1) {
         __HAL_RCC_TIM1_CLK_ENABLE();
-        irqNum = TIM1_CC_IRQn;
+        irqNum = TIM1_UP_TIM16_IRQn;
+        //TIM8_UP_TIM13_IRQn;
     } else if (peripheral == TIM2) {
         __HAL_RCC_TIM2_CLK_ENABLE();
         irqNum = TIM2_IRQn;
@@ -159,7 +159,7 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim) {
         irqNum = TIM15_IRQn;
     } else if (peripheral == TIM16) {
         __HAL_RCC_TIM16_CLK_ENABLE();
-        irqNum = TIM16_IRQn;
+        irqNum = TIM1_UP_TIM16_IRQn;
     } else if (peripheral == TIM17) {
         __HAL_RCC_TIM17_CLK_ENABLE();
         irqNum = TIM17_IRQn;
@@ -177,7 +177,7 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
 
     if (peripheral == TIM1) {
       __HAL_RCC_TIM1_CLK_DISABLE();
-        irqNum = TIM1_CC_IRQn;
+        irqNum = TIM1_UP_TIM16_IRQn;
     } else if (peripheral == TIM2) {
         __HAL_RCC_TIM2_CLK_DISABLE();
         irqNum = TIM2_IRQn;
@@ -189,7 +189,7 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
         irqNum = TIM15_IRQn;
     } else if (peripheral == TIM16) {
         __HAL_RCC_TIM16_CLK_DISABLE();
-        irqNum = TIM16_IRQn;
+        irqNum = TIM1_UP_TIM16_IRQn;
     } else if (peripheral == TIM17) {
         __HAL_RCC_TIM17_CLK_DISABLE();
         irqNum = TIM17_IRQn;
@@ -206,9 +206,15 @@ extern "C" void TIM3_IRQHandler(void) {
 #endif
 
 // Common IRQHandlers between both f3s
-extern "C" void TIM1_CC_IRQHandler(void) {
-    core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "IDX %d", halTimers[getTimerInterruptIndex(TIM1)]);
+extern "C" void TIM1_UP_TIM16_IRQHandler(void) {
     HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM1)]);
+    if (const timerInterruptIndex tim1Index = getTimerInterruptIndex(TIM1); halTimers[tim1Index].Instance != nullptr) {
+        HAL_TIM_IRQHandler(&halTimers[tim1Index]);
+    }
+
+    if (const timerInterruptIndex tim16Index = getTimerInterruptIndex(TIM16); halTimers[tim16Index].Instance != nullptr) {
+        HAL_TIM_IRQHandler(&halTimers[tim16Index]);
+    }
 }
 
 extern "C" void TIM2_IRQHandler(void) {
@@ -217,10 +223,6 @@ extern "C" void TIM2_IRQHandler(void) {
 
 extern "C" void TIM15_IRQHandler(void) {
     HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM15)]);
-}
-
-extern "C" void TIM16_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM16)]);
 }
 
 extern "C" void TIM17_IRQHandler(void) {
