@@ -45,7 +45,7 @@ void SdoTransferCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t co
         snprintf(&messageString[0], 25, "Value transferred %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
     } else {
         /* a timeout or abort is detected during SDO transfer  */
-        snprintf(&messageString[0], 25, "SDO transfer callback don goofed 0x%x\r\n", code);
+        snprintf(&messageString[0], 36, "SDO transfer callback don goofed 0x%x\r\n", code);
     }
 
     log::LOGGER.log(log::Logger::LogLevel::DEBUG, "SDO Transfer Operation: \r\n\t%s\r\n", messageString);
@@ -58,7 +58,7 @@ void SdoReceiveCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t cod
         snprintf(&messageString[0], 25, "Value received %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
     } else {
         /* a timeout or abort is detected during SDO transfer  */
-        snprintf(&messageString[0], 25, "SDO receive callback don goofed 0x%x\r\n", code);
+        snprintf(&messageString[0], 36, "SDO receive callback don goofed 0x%x\r\n", code);
     }
 
     log::LOGGER.log(log::Logger::LogLevel::DEBUG, "SDO Receive Operation: \r\n\t%s\r\n", messageString);
