@@ -4,6 +4,7 @@
 #include <core/rtos/BytePool.hpp>
 #include <core/rtos/Threadx.hpp>
 #include <core/utils/log.hpp>
+#include <core/dev/platform/f4xx/Timerf4xx.hpp>
 
 namespace log = core::log;
 
@@ -172,7 +173,9 @@ extern "C" void HAL_ResumeTick(void) {
 extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
     if (htim->Instance == TIM6) {
         HAL_IncTick();
+        return;
     }
+    core::dev::HAL_TIM_PeriodElapsedCallback_OLD(htim);
 }
 
 /**
