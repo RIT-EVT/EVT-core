@@ -42,10 +42,15 @@ TXError bulkInitialize(Initializable** initList, std::size_t length, BytePoolBas
     for (std::size_t i = 0; i < length; i++) {
         errorCode = initList[i]->init(pool);
         if (errorCode != TXE_SUCCESS) {
+#if EVT_CORE_LOG_ENABLE == 1
+            char name[INITIALIZABLE_NAME_MAX_LENGTH];
+            initList[i]->getName(name, INITIALIZABLE_NAME_MAX_LENGTH);
             log::LOGGER.log(log::Logger::LogLevel::DEBUG,
-                            "Errored on item %u in initializer list.\n\rError code: %u",
+                            "Errored on item %u (%s) in initializer list.\n\rError code: %u",
                             i,
+                            name,
                             errorCode);
+#endif
             return errorCode;
         }
     }
