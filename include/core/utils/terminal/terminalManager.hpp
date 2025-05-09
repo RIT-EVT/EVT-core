@@ -10,13 +10,13 @@
 
 namespace core::utils {
 
-class Terminal {
+class TerminalManager {
 public:
     /**
      * constructor for terminal object
      * takes a uart object and sets up the command line terminal
      * @param uart an instance of a UART object
-     * @param baud 9600 or 115200
+     * @param menu head node of terminal structure
      */
     Terminal(io::UART& uart, Menu* menu);
 
@@ -35,13 +35,6 @@ public:
     }
 
     /**
-     * returns current, will be nullptr if are not in a submenu
-     */
-    SubMenu* getCurrent() {
-        return current;
-    }
-
-    /**
      * enters the given submenu
      * @param uart the uart instance to use
      * @param args the arguments provided, used for enter callback, first index is still option string
@@ -50,13 +43,14 @@ public:
      */
     void enterSub(io::UART& uart, char** args, void* term);
     /**
-     * sets current submenu to provided value
+     * sets current menu/submenu to provided value
      * @param sub the submenu to replace the current one with
      */
-    void setCurrent(SubMenu* sub);
+    void setMenu(SubMenu* sub);
 
     /**
      * checks if the terminal is still on the main menu
+     * OK FOR NOW< MAYBE MAKE IT DETECT WHEN HEAD INSTED OF USING A FLAG
      */
     bool isMain() {
         return m;
@@ -65,9 +59,9 @@ public:
     /**
      * Sends a provided message over UART
      * also replaces menu with provided menu
-     * used to reset menu to desired state and send a message
+     * used to reset menu to desired state and notify user
      * @param message a string message to send via UART
-     * @param menu the menu to replace the current head node with
+     * @param menu the menu to replace the current menu with
      */
     void update(char* message, utils::Menu menu);
 

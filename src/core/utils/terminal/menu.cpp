@@ -1,72 +1,70 @@
 #include <core/io/UART.hpp>
-#include <core/utils/terminal/menu.hpp>
 #include <core/utils/terminal/menuItem.hpp>
 
 namespace core::utils {
-Menu::Menu(MenuItem** items) : items(items) {
+SubMenu::SubMenu(void* parent, void* term, char* option, char* text, callback_t cb, void* ctx, MenuItem** sitems)
+    : parent(parent), term(term), option(option), text(text), cb(cb), ctx(ctx), sitems(sitems),
+      MenuItem(parent, term, option, text, cb, ctx) {
     // constructor
 }
 
-void Menu::printStr(core::io::UART& uart) {
-    // loops through item list, stops when it hits an item with an option string of "null"
+void SubMenu::printStr(core::io::UART& uart) {
+    // this is exclusively for displaying the submenu inside of a menu list
+    //  option | text
+    uart.printf(option);
+    uart.printf("|");
+    uart.printf(text);
+}
+
+void SubMenu::printMStr(core::io::UART& uart) {
+    // used for printing this as the current menu state
+    // prints all items in list until it hits one with option string "null"
     for (int c = 0; c < itemCount; c++) {
-        if (items[c]->getOption() == "null") {
+        if (sitems[c]->getOption() == "null") {
             return;
         }
-        items[c]->printStr(uart);
+        sitems[c]->printStr(uart);
     }
 }
 
-void Menu::addItem(utils::MenuItem* item) {
-    // find next empty space
-    int c = 0;
+void SubMenu::setItems(MenuItem** itms) {
+    // replaces corresponding items in sitems with itms
+    // used to replace item list, or certain items by inputing an altered item list
     for (int i = 0; i < itemCount; i++) {
-        if (items[i] == nullptr) {
-            c = i + 1;
-            break;
-        }
+        sitems[i] = itms[i];
     }
-    // make sure next space is within bounds
-    if (c >= itemCount) {
-        return;
-    }
-    // if in bounds place in list, if not return nothing
-    items[c - 1] = item;
 }
 
-void Menu::newItems(utils::MenuItem** itms) {
-    // replace each item in list with corresponding one in new list
+bool SubMenu::equals(SubMenu* sub2) {
+    // check equivalence of attributes besides items
+    // this section is identical to menuItem
+    char* option2     = sub2->getOption();
+    char* text2       = sub2->getText();
+    callback_t cb2    = sub2->getcb();
+    void* ctx2        = sub2->getctx();
+    MenuItem** items2 = sub2->getItems();
+    if (option != option2 || text != text2 || cb != cb2 || ctx != ctx2) {
+        return false;
+    }
+
+    // Check items equivalence;
     for (int i = 0; i < itemCount; i++) {
-        items[i] = itms[i];
-    }
-}
-
-void Menu::delItem(int index) {
-    // set desired index to null
-    items[index] = nullptr;
-    // shift every higher index down
-    for (int i = index; i < itemCount - 1; i++) {
-        items[index] = items[index + 1];
-    } // set highest index to null to ensure there is no duplicate final item
-    items[itemCount - 1] = nullptr;
-}
-
-void Menu::replace(Menu m) {
-    // get item list of new menu
-    utils::MenuItem** i2 = m.getItems();
-    newItems(i2);
-}
-
-bool Menu::equals(Menu* mnu2) {
-    // get second list
-    MenuItem** items2 = mnu2->getItems();
-
-    for (int i = 0; i < itemCount; i++) {
-        // check if corresponding items are equal, if one fail return false
-        if (!(items[i]->equals(items2[i]))) {
+        if (!(sitems[i]->equals(items2[i]))) {
             return false;
         }
     }
     return true;
+}
+
+void SubMenu::enter(io::UART& uart, char** args) {
+    cb(uart, args, term);
+}
+
+void SubMenu::exit(io::UART& uart, char** args) {
+    // if ctx has value use it as a callback
+    if (ctx) {
+        callback_t cb = (callback_t) ctx;
+        cb(uart, args, term);
+    }
 }
 } // namespace core::utils

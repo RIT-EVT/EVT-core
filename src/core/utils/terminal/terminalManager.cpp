@@ -11,7 +11,7 @@
 namespace io = core::io;
 
 namespace core::utils {
-Terminal::Terminal(io::UART& uart, utils::Menu* menu) : menu(menu), uart(uart) {
+Terminal::TerminalManager(io::UART& uart, utils::Menu* menu) : menu(menu), uart(uart) {
     // start message
     uart.printf("\n\rStarting Terminal...\n\r");
     // set main menu flag to true
