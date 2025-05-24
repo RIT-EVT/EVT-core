@@ -28,16 +28,20 @@ struct {
 
 // Interrupt handler for CAN 1 or index 0 in the global CAN array
 extern "C" void CAN1_RX0_IRQHandler(void) {
+    CAN_IRQ_PRE_INTERRUPT_ROUTINE
     if (globalCAN[0].canHandler != nullptr) {
         HAL_CAN_IRQHandler(globalCAN[0].canHandler);
     }
+    CAN_IRQ_POST_INTERRUPT_ROUTINE
 }
 
 // Interrupt handler for CAN 2 or index 1 in the global CAN array
 extern "C" void CAN2_RX0_IRQHandler(void) {
+    CAN_IRQ_PRE_INTERRUPT_ROUTINE
     if (globalCAN[1].canHandler != nullptr) {
         HAL_CAN_IRQHandler(globalCAN[1].canHandler);
     }
+    CAN_IRQ_POST_INTERRUPT_ROUTINE
 }
 
 /**
