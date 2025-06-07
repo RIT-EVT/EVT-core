@@ -13,6 +13,7 @@
 #include <core/utils/time.hpp>
 #include <core/utils/types/FixedQueue.hpp>
 #include <core/utils/log.hpp>
+#include <cstring>
 
 #include <core/io/CANopen.hpp>
 #include <cstdio>
@@ -35,14 +36,16 @@ void canInterrupt(io::CANMessage& message, void* priv) {
     }
 
     for (int i = 0; i < message.getDataLength(); i++) {
-        snprintf(&messageString[i * 5], 6, "0x%02X ", data[i]);
+        snprintf(&messageString[strlen(messageString)], 6, "0x%02X ", data[i]);
     }
 
+    #ifdef EVT_CORE_LOG_ENABLE
     log::LOGGER.log(log::Logger::LogLevel::DEBUG,
                     "[CAN1] Got RAW message from %X of length %d with data: \r\n\t%s\r\n",
                     message.getId(),
                     message.getDataLength(),
                     messageString);
+    #endif
 }
 
 void SdoTransferCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code) {
