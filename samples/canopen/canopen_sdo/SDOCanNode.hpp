@@ -1,4 +1,3 @@
-#include <core/utils/log.hpp>
 #include <cstdint>
 
 #include <co_core.h>
@@ -13,9 +12,6 @@
  * For example, a temperature management system may to expose water pump
  * flow rate in the object dictionary.
  */
-
-namespace log = core::log;
-
 class SDOCanNode : public CANDevice {
 public:
     SDOCanNode(CO_NODE& canNode);
@@ -72,6 +68,7 @@ private:
     uint8_t sampleDataA;
     uint16_t sampleDataB;
 
+    /** Holds the data to be transferred */
     uint8_t transferBuffArray[2]{};
 
     CO_NODE& node;
@@ -93,7 +90,7 @@ private:
         HEARTBEAT_PRODUCER_1017(2000),
         IDENTITY_OBJECT_1018,
         SDO_CONFIGURATION_1200,
-        SDO_CONFIGURATION_1280,
+        SDO_CONFIGURATION_1280(NODE_ID),
 
         // User defined data, this will be where we put elements that can be
         // accessed via SDO and depending on configuration PDO

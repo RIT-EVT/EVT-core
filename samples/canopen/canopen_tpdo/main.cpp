@@ -10,7 +10,8 @@
 #include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 #include <core/utils/types/FixedQueue.hpp>
-#include <string>
+#include <cstring>
+#include <cstdio>
 
 #include <core/io/CANopen.hpp>
 
@@ -37,7 +38,7 @@ namespace log  = core::log;
  * @param message[in] The passed in CAN message that was read.
  */
 
-// create a can interrupt handler
+// Create a can interrupt handler
 void canInterrupt(io::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
     char messageString[50];
@@ -55,8 +56,9 @@ void canInterrupt(io::CANMessage& message, void* priv) {
     }
     log::LOGGER.log(log::Logger::LogLevel::INFO, "\r\n\t%s\r\n", messageString);
 
-    if (queue != nullptr)
+    if (queue != nullptr) {
         queue->append(message);
+    }
 }
 
 // setup a TPDO event handler to print the raw TPDO message when sending

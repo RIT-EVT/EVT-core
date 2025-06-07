@@ -2,6 +2,7 @@
 #include <core/io/CANopen.hpp>
 #include <core/io/types/CANMessage.hpp>
 #include <core/utils/types/FixedQueue.hpp>
+#include <core/utils/log.hpp>
 
 #include <core/dev/RTC.hpp>
 
@@ -9,6 +10,8 @@
 #include <stdint.h>
 
 #define MAX_SIZE 64
+
+namespace log = core::log;
 
 /*
  * Empty namespace to contain "global" variables. These will be used within

@@ -1,6 +1,9 @@
 /**
- * This sample shows off CANopen support from EVT-core. This will
- * setup a CANopen node and attempt to make back and forth communication.
+ * This sample shows the CANopen SDO feature. This will
+ * set up the SDO client and will send and receive data
+ * from the server node.
+ *
+ * This sample is intended to be run alongside canopen_tpdo.
  */
 
 #include <core/io/CAN.hpp>
@@ -9,6 +12,7 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 #include <core/utils/types/FixedQueue.hpp>
+#include <core/utils/log.hpp>
 
 #include <core/io/CANopen.hpp>
 #include <cstdio>
@@ -18,15 +22,18 @@
 namespace io   = core::io;
 namespace dev  = core::dev;
 namespace time = core::time;
+namespace log = core::log;
 
-// create a can interrupt handler
+// Create a can interrupt handler
 void canInterrupt(io::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
     char messageString[50];
 
     uint8_t* data = message.getPayload();
-    if (queue != nullptr)
+    if (queue != nullptr) {
         queue->append(message);
+    }
+
     for (int i = 0; i < message.getDataLength(); i++) {
         snprintf(&messageString[i * 5], 6, "0x%02X ", data[i]);
     }

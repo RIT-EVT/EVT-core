@@ -135,7 +135,7 @@
  * This macro helps create an SDO configuration range of the object dictionary.
  * This lives at the key 0x1280 with 4 sub indices.
  */
-#define SDO_CONFIGURATION_1280                          \
+#define SDO_CONFIGURATION_1280(SERVER_NODE_ID)          \
     {                                                   \
         /* Communication Object SDO Server */           \
         .Key  = CO_KEY(0x1280, 0x00, CO_OBJ_D___R_),    \
@@ -155,10 +155,10 @@
         .Data = (CO_DATA) CO_COBID_SDO_RESPONSE(),      \
     },                                                  \
     {                                                   \
-        /* SDO Server Response COBID */                 \
+        /* Node-ID of the SDO server */                 \
         .Key  = CO_KEY(0x1280, 0x03, CO_OBJ_D___R_),    \
         .Type = CO_TUNSIGNED8,                          \
-        .Data = (CO_DATA) 1,                            \
+        .Data = (CO_DATA) SERVER_NODE_ID,               \
     }
 
 /**
