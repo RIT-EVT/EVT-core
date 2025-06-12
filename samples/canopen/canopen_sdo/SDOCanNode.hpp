@@ -19,14 +19,12 @@ public:
     /**
      * Update Object Dictionary entry
      *
-     * @param node[in] The canopen node to write to
      */
     void transferData();
 
     /**
      * Read Object Dictionary entry
      *
-     * @param node[in] The canopen node to read from
      */
     void receiveData();
 
