@@ -10,9 +10,9 @@
 #include <core/io/UART.hpp>
 #include <core/io/types/CANMessage.hpp>
 #include <core/manager.hpp>
+#include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 #include <core/utils/types/FixedQueue.hpp>
-#include <core/utils/log.hpp>
 #include <cstring>
 
 #include <core/io/CANopen.hpp>
@@ -23,7 +23,7 @@
 namespace io   = core::io;
 namespace dev  = core::dev;
 namespace time = core::time;
-namespace log = core::log;
+namespace log  = core::log;
 
 // Create a can interrupt handler
 void canInterrupt(io::CANMessage& message, void* priv) {
@@ -39,13 +39,13 @@ void canInterrupt(io::CANMessage& message, void* priv) {
         snprintf(&messageString[strlen(messageString)], 6, "0x%02X ", data[i]);
     }
 
-    #ifdef EVT_CORE_LOG_ENABLE
+#ifdef EVT_CORE_LOG_ENABLE
     log::LOGGER.log(log::Logger::LogLevel::DEBUG,
                     "[CAN1] Got RAW message from %X of length %d with data: \r\n\t%s\r\n",
                     message.getId(),
                     message.getDataLength(),
                     messageString);
-    #endif
+#endif
 }
 
 void SdoTransferCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code) {

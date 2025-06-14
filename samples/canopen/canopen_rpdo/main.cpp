@@ -12,8 +12,8 @@
 #include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 #include <core/utils/types/FixedQueue.hpp>
-#include <cstring>
 #include <cstdio>
+#include <cstring>
 
 #include <core/io/CANopen.hpp>
 
@@ -45,14 +45,14 @@ void canInterrupt(io::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
     char messageString[50];
 
-    #ifdef EVT_CORE_LOG_ENABLE
+#ifdef EVT_CORE_LOG_ENABLE
     // print out raw received data
     snprintf(&messageString[0],
              25,
              "Got RAW message from %X of length %d with data: ",
              message.getId(),
              message.getDataLength());
-    #endif
+#endif
 
     uint8_t* data = message.getPayload();
 

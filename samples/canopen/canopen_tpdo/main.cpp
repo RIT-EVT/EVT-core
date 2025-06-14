@@ -10,8 +10,8 @@
 #include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 #include <core/utils/types/FixedQueue.hpp>
-#include <cstring>
 #include <cstdio>
+#include <cstring>
 
 #include <core/io/CANopen.hpp>
 

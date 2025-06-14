@@ -1,12 +1,11 @@
 #include "SDOCanNode.hpp"
 #include <core/io/CANopen.hpp>
-#include <cstdio>
 #include <core/utils/log.hpp>
+#include <cstdio>
 
 namespace log = core::log;
 
-SDOCanNode::SDOCanNode(CO_NODE& canNode) : node(canNode), sampleDataA(0), sampleDataB(0), transferBuffArray{0, 0} {
-}
+SDOCanNode::SDOCanNode(CO_NODE& canNode) : node(canNode), sampleDataA(0), sampleDataB(0), transferBuffArray{0, 0} {}
 
 void SDOCanNode::transferData() {
     /* Increment the first element of transferBuffArray by 1. */

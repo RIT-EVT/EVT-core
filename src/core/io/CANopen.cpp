@@ -1,8 +1,8 @@
 #include <co_csdo.h>
 #include <core/io/CANopen.hpp>
 #include <core/io/types/CANMessage.hpp>
-#include <core/utils/types/FixedQueue.hpp>
 #include <core/utils/log.hpp>
+#include <core/utils/types/FixedQueue.hpp>
 
 #include <core/dev/RTC.hpp>
 
