@@ -28,7 +28,7 @@ namespace core::io {
  * handle CAN operations.
  *
  * @param[in] can The CAN interface that will be used for the stack driver
- * @param[in] messageQueue Queue that will be read from for receiveing CAN messages
+ * @param[in] messageQueue Queue that will be read from for receiving CAN messages
  * @param[out] canDriver The CANopen stack driver to populate
  */
 void getCANopenCANDriver(CAN* can, types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>* messageQueue,

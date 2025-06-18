@@ -141,50 +141,22 @@ void processCANopenNode(CO_NODE* canNode) {
 }
 
 CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry) {
-    /**
-     * Find the Client-SDO (CO_CSDO) object for the specified node.
-     * @param node[in] is the CANopen node to operate on.
-     * @return csdo[out] is the client-SDO object used to manage SDO communication.
-     */
+    // Find the Client-SDO (CO_CSDO) object for the specified node.
     CO_CSDO* csdo = COCSdoFind(&(node), 0);
 
-    /**
-     * Initiate an SDO download request.
-     * @param csdo[in] is the client-SDO object.
-     * @param entry[in] specifies the object dictionary entry (index and subindex).
-     * @param data[in] is the pointer to the data to be sent.
-     * @param size[in] is the size of the data to be sent.
-     * @param AppCSdoTransferCb[in] is the callback function to be called upon transfer completion.
-     * @param 1000[in] is the timeout for the operation in milliseconds.
-     * @return err[out] indicates the result of the operation (success or error code).
-     */
+    // Initiate an SDO download request.
     CO_ERR err = COCSdoRequestDownload(csdo, entry, data, size, callback, 1000);
 
-    /* Return the result of the SDO transfer operation. */
     return err;
 }
 
 CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry) {
-    /**
-     * Find the Client-SDO (CO_CSDO) object for the specified node.
-     * @param node[in] is the CANopen node to operate on.
-     * @return csdo[out] is the client-SDO object used to manage SDO communication.
-     */
+    // Find the Client-SDO (CO_CSDO) object for the specified node.
     CO_CSDO* csdo = COCSdoFind(&(node), 0);
 
-    /**
-     * Initiate an SDO upload request.
-     * @param csdo[in] is the client-SDO object.
-     * @param entry[in] specifies the object dictionary entry (index and subindex).
-     * @param data[out] is the pointer to store the received data.
-     * @param size[in] is the size of the data buffer.
-     * @param AppCSdoReceiveCb[in] is the callback function to be called upon reception completion.
-     * @param 1000[in] is the timeout for the operation in milliseconds.
-     * @return err[out] indicates the result of the operation (success or error code).
-     */
+    // Initiate an SDO upload request.
     CO_ERR err = COCSdoRequestUpload(csdo, entry, data, size, callback, 1000);
 
-    /* Return the result of the SDO receive operation. */
     return err;
 }
 
