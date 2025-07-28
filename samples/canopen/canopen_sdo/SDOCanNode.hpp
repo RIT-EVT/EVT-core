@@ -88,7 +88,7 @@ private:
         HEARTBEAT_PRODUCER_1017(2000),
         IDENTITY_OBJECT_1018,
         SDO_CONFIGURATION_1200,
-        SDO_CONFIGURATION_1280(NODE_ID),
+        SDO_CONFIGURATION_1280(1),
 
         // User defined data, this will be where we put elements that can be
         // accessed via SDO and depending on configuration PDO
