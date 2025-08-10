@@ -74,7 +74,7 @@ public:
      * @param[in] pull The direction of the internal pull resistor
      */
     GPIO(Pin pin, Direction direction, Pull pull = Pull::PULL_DOWN);
-    
+
     /**
      * Sets whether this pin is configured for input or output.
      *
