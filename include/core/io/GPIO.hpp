@@ -78,21 +78,21 @@ public:
     /**
      * Set the direction of the pin.
      *
-     * @param[in] direction The direction of information.
+     * @param[in] direction The direction of the flow of information.
      */
     virtual void setDirection(Direction direction) = 0;
 
     /**
-     * Used for writing a state to a pin.
+     * Sets the output of this pin to the given logic state.
      *
-     * @param[in] state The state to write to the pin
+     * @param[in] state Logic level to set: State::LOW or State::HIGH.
      */
     virtual void writePin(State state) = 0;
 
     /**
-     * Used for reading the state of a pin.
+     * Reads the current logic state of this pin.
      *
-     * @return The state of the pin.
+     * @return The pin's logic level: State::LOW or State::HIGH.
      */
     virtual State readPin() = 0;
 
