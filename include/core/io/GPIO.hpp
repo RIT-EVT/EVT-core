@@ -33,7 +33,7 @@ public:
 
     /**
      * Binary representation of the flow of information, either input or
-     * output.
+     * output
      */
     enum class Direction {
         INPUT  = 0u,
