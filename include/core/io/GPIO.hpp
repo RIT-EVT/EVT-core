@@ -83,14 +83,14 @@ public:
     virtual void setDirection(Direction direction) = 0;
 
     /**
-     * Sets the output of this pin to the given logic state.
+     * Set the output of this pin to the given logic state.
      *
      * @param[in] state Logic level to set: State::LOW or State::HIGH.
      */
     virtual void writePin(State state) = 0;
 
     /**
-     * Reads the current logic state of this pin.
+     * Read the current logic state of this pin.
      *
      * @return The pin's logic level: State::LOW or State::HIGH.
      */
