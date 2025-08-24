@@ -1,0 +1,11 @@
+ {
+    "recommendations": [
+        "eamodio.gitlens",
+        "llvm-vs-code-extensions.vscode-clangd",
+        "ms-vscode.cmake-tools",
+        "stmicroelectronics.stm32cube-ide-debug-stlink-gdbserver",
+        "stmicroelectronics.stm32cube-ide-registers",
+        "seunlanlege.action-buttons",
+        "rioj7.command-variable",
+    ],
+}
