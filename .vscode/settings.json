@@ -1,0 +1,72 @@
+{
+    "actionButtons": {
+        "defaultColor": "statusBar.foreground",
+        "reloadButton": "$(refresh)",
+        "loadNpmCommands": false,
+        "inheritGlobalCommands": true,
+        "commands": [
+            {
+                "name": "$(trash) Clean",
+                "tooltip": "Perform a CMAKE clean on the current preset",
+                "command":"workbench.action.tasks.runTask",
+                "args": ["CMake: clean"],
+                "useVsCodeApi": true
+            },
+            {
+                "name": "$(tools) Build",
+                "tooltip": "Build the preset",
+                "command":"workbench.action.tasks.runTask",
+                "args": ["CMake: build"],
+                "useVsCodeApi": true
+            },
+            {
+                "name": "$(debug-alt) Debug",
+                "tooltip": "Flash code and start debugging",
+                "command":"workbench.action.tasks.runTask",
+                "args": ["flash debug"],
+                "useVsCodeApi": true
+            },
+            {
+                "name": "$(play) Run",
+                "tooltip": "Flash code",
+                "command":"workbench.action.tasks.runTask",
+                "args": ["Flash project"],
+                "useVsCodeApi": true,
+            }
+        ],
+    },
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "markup.other.log.error",
+                "settings": {
+                    "foreground": "#FF0000"
+                }
+            },
+            {
+                "scope": "markup.other.log.warn",
+                "settings": {
+                    "foreground": "#c500f7cc"
+                }
+            },
+            {
+                "scope": "markup.other.log.info",
+                "settings": {
+                    "foreground": "#2cd3c5"
+                }
+            },
+            {
+                "scope": "markup.other.log.debug",
+                "settings": {
+                    "foreground": "#888585"
+                }
+            },
+            {
+                "scope": "markup.other.log.highlight",
+                "settings": {
+                    "foreground": "#19ff04"
+                }
+            }
+        ]
+    },
+}
