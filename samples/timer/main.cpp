@@ -46,8 +46,14 @@ int main() {
     // Setup the Timer
     dev::Timer& timer2 = dev::getTimer<dev::MCUTimer::Timer2>(500);
     // F4xx does not support Timers 15 & 16, change them to Timer11 & Timer12
+
+    #ifdef STM32F4xx
+    dev::Timer& timer15 = dev::getTimer<dev::MCUTimer::Timer11>(100);
+    dev::Timer& timer16 = dev::getTimer<dev::MCUTimer::Timer12>(200);
+    #else
     dev::Timer& timer15 = dev::getTimer<dev::MCUTimer::Timer15>(100);
     dev::Timer& timer16 = dev::getTimer<dev::MCUTimer::Timer16>(200);
+    #endif
 
     timer2.startTimer(timer2IRQHandler);
     timer15.startTimer(timer15IRQHandler);
