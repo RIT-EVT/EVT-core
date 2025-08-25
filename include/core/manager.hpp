@@ -48,7 +48,7 @@
     #define SPI_SUPPORTED
     #define UART_SUPPORTED
     #define IWDG_SUPPORTED
-    
+
     #include <core/dev/MCUTimer.hpp>
     #include <core/dev/platform/f4xx/IWDGf4xx.hpp>
     #include <core/dev/platform/f4xx/RTCf4xx.hpp>
