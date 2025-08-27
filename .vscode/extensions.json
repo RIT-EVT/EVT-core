@@ -7,5 +7,6 @@
         "stmicroelectronics.stm32cube-ide-registers",
         "seunlanlege.action-buttons",
         "rioj7.command-variable",
+        "dangmai.workspace-default-settings",
     ],
 }
