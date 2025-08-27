@@ -31,9 +31,9 @@
                 "tooltip": "Flash code",
                 "command":"workbench.action.tasks.runTask",
                 "args": ["Flash project"],
-                "useVsCodeApi": true,
+                "useVsCodeApi": true
             }
-        ],
+        ]
     },
     "editor.tokenColorCustomizations": {
         "textMateRules": [
@@ -68,5 +68,5 @@
                 }
             }
         ]
-    },
+    }
 }
