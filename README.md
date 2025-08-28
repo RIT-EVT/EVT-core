@@ -143,14 +143,14 @@ Below is the supported features associated with each board
 | Feature  | STM32F302R8        | STM32F334R8        | STM32F446RE        |
 |----------|--------------------|--------------------|--------------------|
 | ADC      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| CAN      | :heavy_check_mark: | :heavy_check_mark: | :x:                |
+| CAN      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | CANopen  | :heavy_check_mark: | :heavy_check_mark: | :x:                |
 | GPIO     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | I2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | PWM      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| RTC      | :heavy_check_mark: | :heavy_check_mark: | :x:                |
+| RTC      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | SPI      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| Timer    | :heavy_check_mark: | :heavy_check_mark: | :x:                |
+| Timer    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | UART     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | Watchdog | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 
