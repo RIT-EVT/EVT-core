@@ -144,7 +144,7 @@ Below is the supported features associated with each board
 |----------|--------------------|--------------------|--------------------|
 | ADC      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | CAN      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| CANopen  | :heavy_check_mark: | :heavy_check_mark: | :x:                |
+| CANopen  | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | GPIO     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | I2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | PWM      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
