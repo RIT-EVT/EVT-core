@@ -7,12 +7,13 @@
 
 namespace core::dev {
 typedef struct {
-    uint32_t counterMode;
-    uint32_t clockDivision;
-    uint32_t autoReloadPreload;
-    uint32_t clockSource;
-    uint32_t masterOutputTrigger;
-    uint32_t masterSlaveMode;
+    uint32_t counterMode{};
+    uint32_t clockDivision{};
+    uint32_t autoReloadPreload{};
+    uint32_t clockSource{};
+    uint32_t masterOutputTrigger{};
+    uint32_t masterOutputTrigger2 = 0;
+    uint32_t masterSlaveMode{};
 } TimerConfiguration;
 
 class Timer {

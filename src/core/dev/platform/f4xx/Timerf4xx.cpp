@@ -248,8 +248,7 @@ void TimerF4xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, ui
         HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
     }
 
-
-    core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Setup Timer");
+    core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Finished timer setup");
 };
 
 void TimerF4xx::startTimer(void (*irqHandler)(void* htim)) {

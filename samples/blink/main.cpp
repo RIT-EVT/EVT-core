@@ -14,7 +14,6 @@
 
 namespace io   = core::io;
 namespace dev  = core::dev;
-namespace time = core::time;
 
 int main() {
     // Initialize system
@@ -30,7 +29,7 @@ int main() {
         led.toggle();
 
         // Wait half a second
-        time::wait(500);
+        core::time::wait(500);
     }
 
     return 0;

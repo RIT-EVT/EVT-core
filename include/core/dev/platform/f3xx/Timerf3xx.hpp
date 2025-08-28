@@ -12,7 +12,7 @@ namespace core::dev {
 /**
  * Implementation of the Timer class for STM32f3xx MCUs
  */
-class TimerF3xx : public Timer {
+class TimerF3xx final : public Timer {
 public:
     /**
      * Will initialize the timer device on the STM with the given period and the given IRQ Handler

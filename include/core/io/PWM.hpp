@@ -56,7 +56,7 @@ protected:
     uint32_t dutyCycle;
     /// The period of the PWM
     uint32_t period;
-
+    /// The timer used for PWM
     dev::Timer& timer;
 };
 

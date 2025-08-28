@@ -476,8 +476,6 @@ PWMf3xx::PWMf3xx(Pin pin) : PWM(pin) {
     TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
     setTimer(instance, &timer);
 
-    HAL_TIM_Base_Init(&halTIM);
-
     HAL_TIM_PWM_Init(&halTIM);
 
     sBreakDeadTimeConfig.OffStateRunMode  = TIM_OSSR_DISABLE;

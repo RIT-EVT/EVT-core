@@ -50,7 +50,7 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim) {
 
     if (peripheral == TIM1) {
         __HAL_RCC_TIM1_CLK_ENABLE();
-        irqNum = TIM1_CC_IRQn;
+        irqNum = TIM1_UP_TIM16_IRQn;
     } else if (peripheral == TIM2) {
         __HAL_RCC_TIM2_CLK_ENABLE();
         irqNum = TIM2_IRQn;
@@ -59,7 +59,7 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim) {
         irqNum = TIM15_IRQn;
     } else if (peripheral == TIM16) {
         __HAL_RCC_TIM16_CLK_ENABLE();
-        irqNum = TIM16_IRQn;
+        irqNum = TIM1_UP_TIM16_IRQn;
     } else if (peripheral == TIM17) {
         __HAL_RCC_TIM17_CLK_ENABLE();
         irqNum = TIM17_IRQn;
@@ -77,7 +77,7 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
 
     if (peripheral == TIM1) {
       __HAL_RCC_TIM1_CLK_DISABLE();
-        irqNum = TIM1_CC_IRQn;
+        irqNum = TIM1_UP_TIM16_IRQn;
     } else if (peripheral == TIM2) {
         __HAL_RCC_TIM2_CLK_DISABLE();
         irqNum = TIM2_IRQn;
@@ -86,7 +86,7 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
         irqNum = TIM15_IRQn;
     } else if (peripheral == TIM16) {
         __HAL_RCC_TIM16_CLK_DISABLE();
-        irqNum = TIM16_IRQn;
+        irqNum = TIM1_UP_TIM16_IRQn;
     } else if (peripheral == TIM17) {
         __HAL_RCC_TIM17_CLK_DISABLE();
         irqNum = TIM17_IRQn;
@@ -147,7 +147,6 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim) {
     if (peripheral == TIM1) {
         __HAL_RCC_TIM1_CLK_ENABLE();
         irqNum = TIM1_UP_TIM16_IRQn;
-        //TIM8_UP_TIM13_IRQn;
     } else if (peripheral == TIM2) {
         __HAL_RCC_TIM2_CLK_ENABLE();
         irqNum = TIM2_IRQn;
@@ -207,7 +206,6 @@ extern "C" void TIM3_IRQHandler(void) {
 
 // Common IRQHandlers between both f3s
 extern "C" void TIM1_UP_TIM16_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM1)]);
     if (const timerInterruptIndex tim1Index = getTimerInterruptIndex(TIM1); halTimers[tim1Index].Instance != nullptr) {
         HAL_TIM_IRQHandler(&halTimers[tim1Index]);
     }
@@ -245,7 +243,7 @@ TimerF3xx::TimerF3xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerCo
 
 void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, uint32_t clockPrescaler) {
     this->clockPeriod = clockPeriod;
-    auto& htim        = halTimers[getTimerInterruptIndex(timerPeripheral)];
+    auto& htim = halTimers[getTimerInterruptIndex(timerPeripheral)];
 
     htim.Instance       = timerPeripheral;
     if (clockPrescaler == AUTO_PRESCALER) {
@@ -254,6 +252,7 @@ void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, ui
     } else {
         htim.Init.Prescaler = clockPrescaler;
     }
+
     // Allows period increments of 1 ms with max of 2^(32) ms.
     htim.Init.CounterMode       = this->configuration.counterMode;
     htim.Init.Period            = clockPeriod - 1;
@@ -261,17 +260,21 @@ void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, ui
     htim.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
     HAL_TIM_Base_Init(&htim);
 
-    TIM_ClockConfigTypeDef clockConfig   = {0};
-    TIM_MasterConfigTypeDef masterConfig = {0};
+    TIM_ClockConfigTypeDef clockConfig   = { };
 
     clockConfig.ClockSource = this->configuration.clockSource;
     HAL_TIM_ConfigClockSource(&htim, &clockConfig);
 
-    masterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-    masterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
-    masterConfig.MasterSlaveMode     = TIM_MASTERSLAVEMODE_DISABLE;
+    TIM_MasterConfigTypeDef masterConfig = { };
+
+    masterConfig.MasterOutputTrigger = this->configuration.masterOutputTrigger;
+    // Should not be needed if it is always set to reset
+    // masterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
+    masterConfig.MasterSlaveMode     = this->configuration.masterSlaveMode;
+
     HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
 
+    core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Finished timer setup");
 
     // TIM_OC_InitTypeDef sConfigOC = {0};
     // TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};

@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include <HALf3/stm32f3xx.h>
+#include <core/dev/platform/f3xx/Timerf3xx.hpp>
 #include <core/io/PWM.hpp>
 #include <core/io/pin.hpp>
 
@@ -25,6 +26,7 @@ public:
     uint32_t getDutyCycle();
 
     uint32_t getPeriod();
+
 
 private:
     /// HAL timer representation

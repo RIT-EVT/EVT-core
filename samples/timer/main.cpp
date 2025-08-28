@@ -56,6 +56,8 @@ int main() {
     // interruptGPIOStopStart = &io::getGPIO<io::Pin::PC_2>(io::GPIO::Direction::OUTPUT);
     // reloadGPIO             = &io::getGPIO<io::Pin::PC_0>(io::GPIO::Direction::OUTPUT);
 
+    log::LOGGER.log(log::Logger::LogLevel::INFO, "Startup");
+
     // Setup the Timer
     dev::TimerConfiguration configuration = {
         TIM_COUNTERMODE_UP,
@@ -67,7 +69,8 @@ int main() {
     };
 
     // F4xx does not support Timers 15 & 16, change them to Timer11 & Timer12
-    dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer1>(1000, configuration);
+
+    dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer16>(1000, configuration);
     // dev::Timer& timer16 = dev::getTimer<dev::MCUTimer::Timer16>(200);
 
     timer.startTimer(timerIRQHandler);
