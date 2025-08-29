@@ -1,0 +1,80 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "stm32f302-preset",
+      "displayName": "STM32F302x8 Build",
+      "description": "Configures the build for an STM32F302x8 target using the ARM GCC toolchain and Ninja.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "EVT_CORE_LOG_ENABLE": "1",
+        "TARGET_DEV": "STM32F302x8",
+        "FORCE_COLORED_OUTPUT": "1"
+      }
+    },
+    {
+      "name": "stm32f334-preset",
+      "displayName": "STM32F334x8 Build",
+      "description": "Configures the build for an STM32F334x8 target using the ARM GCC toolchain and Ninja.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "EVT_CORE_LOG_ENABLE": "1",
+        "TARGET_DEV": "STM32F334x8",
+        "FORCE_COLORED_OUTPUT": "1"
+      }
+    },
+    {
+      "name": "stm32f446-preset",
+      "displayName": "STM32F446xx Build",
+      "description": "Configures the build for an STM32F446xx target using the ARM GCC toolchain and Ninja.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "EVT_CORE_LOG_ENABLE": "1",
+        "TARGET_DEV": "STM32F446xx",
+        "FORCE_COLORED_OUTPUT": "1"
+      }
+    },
+    {
+      "name": "stm32f446-rtos-preset",
+      "displayName": "STM32F446xx Build (RTOS)",
+      "description": "Configures the build for an STM32F446xx target with RTOS support using the ARM GCC toolchain and Ninja.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "EVT_CORE_LOG_ENABLE": true,
+        "TARGET_DEV": "STM32F446xx",
+        "FORCE_COLORED_OUTPUT": true,
+        "USE_RTOS": true
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "stm32f302-build",
+      "configurePreset": "stm32f302-preset",
+      "displayName": "Build for STM32F302"
+    },
+    {
+      "name": "stm32f334-build",
+      "configurePreset": "stm32f334-preset",
+      "displayName": "Build for STM32F334"
+    },
+    {
+      "name": "stm32f446-build",
+      "configurePreset": "stm32f446-preset",
+      "displayName": "Build for STM32F446"
+    },
+    {
+      "name": "stm32f446-rtos-build",
+      "configurePreset": "stm32f446-rtos-preset",
+      "displayName": "Build for STM32F446 (RTOS)"
+    }
+  ]
+}
