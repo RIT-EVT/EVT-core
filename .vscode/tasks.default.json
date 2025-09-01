@@ -59,7 +59,7 @@
                 "cwd": "${workspaceFolder}"
             },
             "problemMatcher": []
-        },
+        }
 	],
 	"inputs": [
     {

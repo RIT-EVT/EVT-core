@@ -13,7 +13,7 @@
                     "imageFileName": "${command:cmake.launchTargetPath}" 
                 }
             ],
-            "faultUnalignedAccess": false,
+            "faultUnalignedAccess": false
         },
         {
             "type": "stlinkgdbtarget",
@@ -28,7 +28,7 @@
                     "imageFileName": "${command:st-stm32-ide-debug-launch.get-projects-binary-from-context1}" //Provides a run prompt
                 }
             ],
-            "faultUnalignedAccess": false,
-        },
+            "faultUnalignedAccess": false
+        }
     ]
 }
