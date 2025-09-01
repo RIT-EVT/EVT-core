@@ -1,0 +1,77 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cmake",
+			"label": "CMake: clean",
+			"command": "clean",
+			"preset": "__defaultBuildPreset__",
+			"problemMatcher": [],
+			"detail": "CMake clean task"
+		},
+		{
+			"type": "cmake",
+			"label": "CMake: build",
+			"command": "build",
+			"targets": [
+				"all"
+			],
+			"preset": "__defaultBuildPreset__",
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "CMake build task"
+		},
+		{
+			"type": "cmake",
+			"label": "CMake: clean rebuild",
+			"command": "cleanRebuild",
+			"targets": [
+				"all"
+			],
+			"preset": "__defaultBuildPreset__",
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "CMake clean rebuild task"
+		},
+		{
+			"type": "shell",
+			"label": "flash debug",
+			"command": "${command:workbench.action.debug.start}",
+			"detail": "Flash code and launch the debugger"
+		},
+		{
+            "type": "shell",
+            "label": "Flash project",
+            "command": "${env:STM32_PRG_PATH}\\STM32_Programmer_CLI",
+			"windows":{
+				"command": "${env:STM32_PRG_PATH}\\STM32_Programmer_CLI.exe"
+			},
+            "args": [
+                "--connect",
+                "port=swd",
+                "mode=UR",  //Under reset
+                "--download", "${input:fileDirnameForwardSlash}",
+                "-hardRst", // Hardware reset - if rst pin is connected
+                "-rst",     // Software reset (backup)
+                "--start"   // Start execution
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        }
+	],
+	"inputs": [
+    {
+      "id": "fileDirnameForwardSlash",
+      "type": "command",
+      "command": "extension.commandvariable.transform",
+      "args": {
+        "text": "${command:cmake.launchTargetPath}",
+        "find": "\\\\",  // Reason for four '\': https://stackoverflow.com/a/4025505/2909854
+        "replace": "/",
+        "flags": "g"
+      }
+    }
+  ]
+}
