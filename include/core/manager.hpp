@@ -10,6 +10,7 @@
 #include <core/io/PWM.hpp>
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
+#include <core/dev/MCUTimer.hpp>
 
 #ifdef STM32F3xx
     #define ADC_SUPPORTED
@@ -23,7 +24,6 @@
     #define SPI_SUPPORTED
     #define UART_SUPPORTED
 
-    #include <core/dev/MCUTimer.hpp>
     #include <core/dev/platform/f3xx/IWDGf3xx.hpp>
     #include <core/dev/platform/f3xx/RTCf3xx.hpp>
     #include <core/dev/platform/f3xx/Timerf3xx.hpp>
@@ -48,7 +48,6 @@
     #define SPI_SUPPORTED
     #define UART_SUPPORTED
 
-    #include <core/dev/MCUTimer.hpp>
     #include <core/dev/platform/f4xx/IWDGf4xx.hpp>
     #include <core/dev/platform/f4xx/RTCf4xx.hpp>
     #include <core/dev/platform/f4xx/Timerf4xx.hpp>

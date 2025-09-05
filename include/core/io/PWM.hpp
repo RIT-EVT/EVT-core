@@ -2,12 +2,12 @@
 #define _EVT_PWM_
 
 #include <core/dev/Timer.hpp>
-#include <stdint.h>
+#include <cstdint>
 
 namespace core::io {
 
 // Forward declarations:
-// The diferent pins are hardware specific. Forward declarations to allow
+// The different pins are hardware specific. Forward declarations to allow
 // at compilation time the decision of which pins should be used.
 enum class Pin;
 
@@ -15,11 +15,11 @@ class PWM {
 
 public:
     /**
-     * Setup the given pin for PWM usage.
+     * Set up the given pin for PWM usage.
      *
      * @param[in] pin The pin to setup for PWM
      */
-    PWM(Pin pin);
+    explicit PWM(Pin pin);
 
     /**
      * Set the duty cycle for the pin to operate at.

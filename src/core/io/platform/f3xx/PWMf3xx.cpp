@@ -1,6 +1,7 @@
 #include <core/io/platform/f3xx/GPIOf3xx.hpp>
 #include <core/io/platform/f3xx/PWMf3xx.hpp>
-#include <core/manager.hpp>
+#include <core/dev/MCUTimer.hpp>
+#include <core/dev/platform/f3xx/Timerf3xx.hpp>
 
 namespace core::io {
 
@@ -426,46 +427,8 @@ static void setTimer(dev::MCUTimer instance, dev::Timer* timer) {
         // May need to finish filling this out 🤷‍♀️
     };
 
-    switch (instance) {
-        #if defined(STM32F302x8)
-    case dev::MCUTimer::Timer1:
-        *timer = dev::getTimer<dev::MCUTimer::Timer1>(0, timerConfiguration);
-        break;
-    case dev::MCUTimer::Timer2:
-        *timer = dev::getTimer<dev::MCUTimer::Timer2>(0, timerConfiguration);
-        break;
-    case dev::MCUTimer::Timer15:
-        *timer = dev::getTimer<dev::MCUTimer::Timer15>(0, timerConfiguration);
-        break;
-    case dev::MCUTimer::Timer16:
-        *timer = dev::getTimer<dev::MCUTimer::Timer16>(0, timerConfiguration);
-        break;
-    case dev::MCUTimer::Timer17:
-        *timer = dev::getTimer<dev::MCUTimer::Timer17>(0, timerConfiguration);
-        break;
-        #elif defined(STM32F334x8)
-    case dev::MCUTimer::Timer1:
-        *timer = dev::getTimer<dev::MCUTimer::Timer1>(0, timerConfiguration);
-        break;
-    case dev::MCUTimer::Timer2:
-        *timer = dev::getTimer<dev::MCUTimer::Timer2>(0, timerConfiguration);
-        break;
-    case dev::MCUTimer::Timer3:
-        *timer = dev::getTimer<dev::MCUTimer::Timer3>(0, timerConfiguration);
-        break;
-    case dev::MCUTimer::Timer15:
-        *timer = dev::getTimer<dev::MCUTimer::Timer15>(0, timerConfiguration);
-        break;
-    case dev::MCUTimer::Timer16:
-        *timer = dev::getTimer<dev::MCUTimer::Timer16>(0, timerConfiguration);
-        break;
-    case dev::MCUTimer::Timer17:
-        *timer = dev::getTimer<dev::MCUTimer::Timer17>(0, timerConfiguration);
-        break;
-        #endif
-    case dev::MCUTimer::None:
-        break;
-        }
+    static dev::TimerF3xx tim(getTIM(instance), 0, timerConfiguration);
+    timer = &tim;
 }
 
 PWMf3xx::PWMf3xx(Pin pin) : PWM(pin) {

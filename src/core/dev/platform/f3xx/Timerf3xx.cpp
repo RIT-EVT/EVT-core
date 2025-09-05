@@ -275,31 +275,6 @@ void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, ui
     HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
 
     core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Finished timer setup");
-
-    // TIM_OC_InitTypeDef sConfigOC = {0};
-    // TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
-    //
-    // sConfigOC.OCMode = TIM_OCMODE_TIMING;
-    // sConfigOC.Pulse = 0;
-    // sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-    // sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
-    // sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-    // sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
-    // sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-    // HAL_TIM_OC_ConfigChannel(&htim, &sConfigOC, TIM_CHANNEL_1);
-    //
-    // sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
-    // sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
-    // sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
-    // sBreakDeadTimeConfig.DeadTime = 0;
-    // sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
-    // sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
-    // sBreakDeadTimeConfig.BreakFilter = 0;
-    // sBreakDeadTimeConfig.Break2State = TIM_BREAK2_DISABLE;
-    // sBreakDeadTimeConfig.Break2Polarity = TIM_BREAK2POLARITY_HIGH;
-    // sBreakDeadTimeConfig.Break2Filter = 0;
-    // sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
-    // HAL_TIMEx_ConfigBreakDeadTime(&htim, &sBreakDeadTimeConfig);
 }
 
 void TimerF3xx::startTimer(void (*irqHandler)(void* htim)) {
