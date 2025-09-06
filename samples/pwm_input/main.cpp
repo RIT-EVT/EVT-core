@@ -30,8 +30,7 @@ int main(void) {
 
     uart.printf("STARTING PWM INPUT     INPUT CAPTURE\n\r");
 
-    io::PWM_INPUT& pwmInput = io::getPWM_INPUT<io::Pin::PA_2>();
-
+    io::PWM_INPUT& pwmInput = io::getPWM_INPUT<io::Pin::PA_0>();
 
     while (1) {
         time::wait(1000);

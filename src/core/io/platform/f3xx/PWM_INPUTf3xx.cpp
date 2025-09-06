@@ -233,6 +233,38 @@ PWM_INPUTf3xx::PWM_INPUTf3xx(Pin pin) : PWM_INPUT(pin) {
 }
 
 
+TIM_HandleTypeDef* PWM_INPUTf3xx::getHandle() {
+    return &halTIM;
+}
+
+
+extern "C" void TIM1_CC_IRQHandler(void) {
+    if (activePwmInput) {
+        HAL_TIM_IRQHandler(activePwmInput->getHandle());
+    }
+}
+
+extern "C" void TIM2_IRQHandler(void) {
+    if (activePwmInput) {
+        HAL_TIM_IRQHandler(activePwmInput->getHandle());
+    }
+}
+
+extern "C" void TIM1_BRK_TIM15_IRQHandler(void) {
+    if (activePwmInput) {
+        HAL_TIM_IRQHandler(activePwmInput->getHandle());
+    }
+}
+
+
+// Global HAL callback -> forwards to the single active instance
+extern "C" void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim) {
+    if (activePwmInput) {
+        activePwmInput->handleCapture(htim);
+    }
+}
+
+
 void PWM_INPUTf3xx::handleCapture(TIM_HandleTypeDef* htim) {
     if (htim->Channel == activeChannel) // If the interrupt is triggered by channel 1
     {
@@ -251,12 +283,7 @@ void PWM_INPUTf3xx::handleCapture(TIM_HandleTypeDef* htim) {
     }
 }
 
-// Global HAL callback -> forwards to the single active instance
-extern "C" void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim) {
-    if (activePwmInput) {
-        activePwmInput->handleCapture(htim);
-    }
-}
+
 
 
 uint32_t PWM_INPUTf3xx::getDutyCycle() {

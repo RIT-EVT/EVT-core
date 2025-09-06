@@ -34,7 +34,8 @@ public:
     void handleCapture(TIM_HandleTypeDef* htim);
 
     /// Provides access to HAL handle for IRQ forwarding
-    TIM_HandleTypeDef* getHandle() { return &halTIM; }
+   //TIM_HandleTypeDef* getHandle() { return &halTIM; }
+    TIM_HandleTypeDef* getHandle();
 
 private:
     /// HAL timer representation
@@ -45,6 +46,7 @@ private:
     uint32_t indirectChannel;
     ///active channel
     uint32_t activeChannel;
+
 };
 
 } // namespace core::io
