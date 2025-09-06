@@ -32,7 +32,8 @@ static void getInputInstance(Pin pin,
                              uint32_t* activeChannel) {
     switch (pin) {
 #if defined(STM32F302x8)
-    case Pin::PA_2:
+    // TIM 1 Channel 1 Direct, Channel 2 Indirect
+    case Pin::PC_0:
         *instance = TIM1;
         *directChannel = TIM_CHANNEL_1;
         *indirectChannel = TIM_CHANNEL_2;
@@ -41,7 +42,101 @@ static void getInputInstance(Pin pin,
         *irqNumber = TIM1_CC_IRQn;
         *activeChannel = HAL_TIM_ACTIVE_CHANNEL_1;
             break;
-        // TODO: Add other pins like in PWMf3xx::getInstance
+    case Pin::PA_8:
+            *instance = TIM1;
+            *directChannel = TIM_CHANNEL_1;
+            *indirectChannel = TIM_CHANNEL_2;
+            *alternateFunction = GPIO_AF6_TIM1;
+            *triggerSource = TIM_TS_TI1FP1;
+            *irqNumber = TIM1_CC_IRQn;
+            *activeChannel = HAL_TIM_ACTIVE_CHANNEL_1;
+            break;
+    // TIM 1 Channel 2 Direct, Channel 1 Indirect
+    case Pin::PC_1:
+            *instance = TIM1;
+            *directChannel = TIM_CHANNEL_2;
+            *indirectChannel = TIM_CHANNEL_1;
+            *alternateFunction = GPIO_AF2_TIM1;
+            *triggerSource = TIM_TS_TI2FP2;
+            *irqNumber = TIM1_CC_IRQn;
+            *activeChannel = HAL_TIM_ACTIVE_CHANNEL_2;
+            break;
+    // TIM 2 Channel 1 Direct, Channel 2 Indirect
+    case Pin::PA_0:
+            *instance = TIM2;
+            *directChannel = TIM_CHANNEL_1;
+            *indirectChannel = TIM_CHANNEL_2;
+            *alternateFunction = GPIO_AF1_TIM2;
+            *triggerSource = TIM_TS_TI1FP1;
+            *irqNumber = TIM2_IRQn;
+            *activeChannel = HAL_TIM_ACTIVE_CHANNEL_1;
+            break;
+    case Pin::PA_5:
+            *instance = TIM2;
+            *directChannel = TIM_CHANNEL_1;
+            *indirectChannel = TIM_CHANNEL_2;
+            *alternateFunction = GPIO_AF1_TIM2;
+            *triggerSource = TIM_TS_TI1FP1;
+            *irqNumber = TIM2_IRQn;
+            *activeChannel = HAL_TIM_ACTIVE_CHANNEL_1;
+            break;
+    case Pin::PA_15:
+            *instance = TIM2;
+            *directChannel = TIM_CHANNEL_1;
+            *indirectChannel = TIM_CHANNEL_2;
+            *alternateFunction = GPIO_AF1_TIM2;
+            *triggerSource = TIM_TS_TI1FP1;
+            *irqNumber = TIM2_IRQn;
+            *activeChannel = HAL_TIM_ACTIVE_CHANNEL_1;
+            break;
+    // TIM 2 Channel 2 Direct, Channel 1 Indirect
+    case Pin::PB_3:
+            *instance = TIM2;
+            *directChannel = TIM_CHANNEL_2;
+            *indirectChannel = TIM_CHANNEL_1;
+            *alternateFunction = GPIO_AF1_TIM2;
+            *triggerSource = TIM_TS_TI2FP2;
+            *irqNumber = TIM2_IRQn;
+            *activeChannel = HAL_TIM_ACTIVE_CHANNEL_2;
+            break;
+    // TIM 15 Channel 1 Direct, Channel 2 Indirect
+    case Pin::PA_2:
+            *instance = TIM15;
+            *directChannel = TIM_CHANNEL_1;
+            *indirectChannel = TIM_CHANNEL_2;
+            *alternateFunction = GPIO_AF9_TIM15;
+            *triggerSource = TIM_TS_TI1FP1;
+            *irqNumber = TIM1_BRK_TIM15_IRQn;
+            *activeChannel = HAL_TIM_ACTIVE_CHANNEL_1;
+            break;
+    case Pin::PB_14:
+            *instance = TIM15;
+            *directChannel = TIM_CHANNEL_1;
+            *indirectChannel = TIM_CHANNEL_2;
+            *alternateFunction = GPIO_AF1_TIM15;
+            *triggerSource = TIM_TS_TI1FP1;
+            *irqNumber = TIM1_BRK_TIM15_IRQn;
+            *activeChannel = HAL_TIM_ACTIVE_CHANNEL_1;
+            break;
+    // TIM 15 Channel 2 Direct, Channel 1 Indirect
+    case Pin::PA_3:
+            *instance = TIM15;
+            *directChannel = TIM_CHANNEL_2;
+            *indirectChannel = TIM_CHANNEL_1;
+            *alternateFunction = GPIO_AF9_TIM15;
+            *triggerSource = TIM_TS_TI2FP2;
+            *irqNumber = TIM1_BRK_TIM15_IRQn;
+            *activeChannel = HAL_TIM_ACTIVE_CHANNEL_2;
+            break;
+    case Pin::PB_15:
+            *instance = TIM15;
+            *directChannel = TIM_CHANNEL_2;
+            *indirectChannel = TIM_CHANNEL_1;
+            *alternateFunction = GPIO_AF1_TIM15;
+            *triggerSource = TIM_TS_TI2FP2;
+            *irqNumber = TIM1_BRK_TIM15_IRQn;
+            *activeChannel = HAL_TIM_ACTIVE_CHANNEL_2;
+            break;
 #endif
     default:
         *instance = NULL;
@@ -141,7 +236,7 @@ PWM_INPUTf3xx::PWM_INPUTf3xx(Pin pin) : PWM_INPUT(pin) {
 void PWM_INPUTf3xx::handleCapture(TIM_HandleTypeDef* htim) {
     if (htim->Channel == activeChannel) // If the interrupt is triggered by channel 1
     {
-        // Read the IC value
+        // Read the IC value (period)
         uint32_t inputCaptureValue = HAL_TIM_ReadCapturedValue(htim, directChannel);
 
         if (inputCaptureValue != 0) // first value is zero, non zero is period
@@ -150,7 +245,7 @@ void PWM_INPUTf3xx::handleCapture(TIM_HandleTypeDef* htim) {
             // signal high time/ period = duty cycle
             dutyCycle = (HAL_TIM_ReadCapturedValue(htim, indirectChannel) * 100) / inputCaptureValue;
 
-            frequency = SystemCoreClock / inputCaptureValue; // APB1 Timer clocks/period = F
+            frequency = SystemCoreClock / inputCaptureValue;
             period = inputCaptureValue;
         }
     }
