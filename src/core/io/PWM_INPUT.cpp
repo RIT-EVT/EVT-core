@@ -2,7 +2,7 @@
 
 namespace core::io {
 
-PWM_INPUT::PWM_INPUT(core::io::Pin pin) {
+PWM_INPUT::PWM_INPUT(Pin pin) { //core::io::Pin pin
     this->pin       = pin;
     this->dutyCycle = 0;
     this->period    = 0;
