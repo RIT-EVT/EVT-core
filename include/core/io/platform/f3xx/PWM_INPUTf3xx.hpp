@@ -30,11 +30,10 @@ public:
 
     uint32_t getFrequency();
 
-    /// Called from HAL_TIM_IC_CaptureCallback to update measurements
+    /// Called from HAL_TIM_IC_CaptureCallback to update duty cycle, period, and frequency
     void handleCapture(TIM_HandleTypeDef* htim);
 
     /// Provides access to HAL handle for IRQ forwarding
-   //TIM_HandleTypeDef* getHandle() { return &halTIM; }
     TIM_HandleTypeDef* getHandle();
 
 private:
@@ -51,4 +50,4 @@ private:
 
 } // namespace core::io
 
-#endif // EVT_PWM_INPUTF3XX_HPP
+#endif

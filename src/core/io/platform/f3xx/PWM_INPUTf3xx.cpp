@@ -9,8 +9,9 @@ namespace core::io {
 static PWM_INPUTf3xx* activePwmInput = nullptr;
 
 /**
- * Get timer instance, direct channel, indirect channel, and alternate function
- * associated with a pin. This information is pulled from the STM32F302x8 documentation.
+ * Get timer instance, direct channel, indirect channel, alternate function,
+ * triggerSource, irqNumber, and activeChannel associated with a pin.
+ * This information is pulled from the STM32F302x8 documentation.
  * F302 pinout and alternate functions specifically for PWM_INPUT can be found in the drive.
  *
   @param pin The pin to check the instance of
@@ -144,7 +145,7 @@ static void getInputInstance(Pin pin,
         *indirectChannel = -1;
         *alternateFunction = -1;
         *triggerSource = -1;
-        *irqNumber = (IRQn_Type)-1; //TODO fix this, find actual default
+        *irqNumber = (IRQn_Type)-1;
         *activeChannel = -1;
 
     }
@@ -266,24 +267,20 @@ extern "C" void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim) {
 
 
 void PWM_INPUTf3xx::handleCapture(TIM_HandleTypeDef* htim) {
-    if (htim->Channel == activeChannel) // If the interrupt is triggered by channel 1
+    if (htim->Channel == activeChannel) // If the interrupt is triggered by the active channel
     {
         // Read the IC value (period)
         uint32_t inputCaptureValue = HAL_TIM_ReadCapturedValue(htim, directChannel);
 
         if (inputCaptureValue != 0) // first value is zero, non zero is period
         {
-            // calculate the Duty Cycle
-            // signal high time/ period = duty cycle
+            // signal high (time/ period) * 100 = duty cycle as percent
             dutyCycle = (HAL_TIM_ReadCapturedValue(htim, indirectChannel) * 100) / inputCaptureValue;
-
             frequency = SystemCoreClock / inputCaptureValue;
             period = inputCaptureValue;
         }
     }
 }
-
-
 
 
 uint32_t PWM_INPUTf3xx::getDutyCycle() {

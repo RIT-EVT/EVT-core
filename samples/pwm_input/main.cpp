@@ -1,15 +1,15 @@
-
-// Xander  2/3/2025.
+/**
+ * Example of PWM input.
+ * This sample will measure the duty cycle, frequency, and period of a PWM signal.
+ */
 
 #include <core/io/PWM_INPUT.hpp>
 #include <core/io/UART.hpp>
 #include <core/manager.hpp>
-#include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 
 namespace io   = core::io;
 namespace time = core::time;
-namespace log  = core::log;
 
 
 uint32_t Period   = 0; //ICValue
@@ -21,19 +21,15 @@ uint32_t DutyCycle      = 0;
 int main(void) {
     // Initialize system
     core::platform::init();
+
     // Setup UART
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
-    // setup logger
-    log::LOGGER.setUART(&uart);
-    log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
-
-    uart.printf("STARTING PWM INPUT     INPUT CAPTURE\n\r");
+    uart.printf("Starting PWM input capture\n\r");
 
     io::PWM_INPUT& pwmInput = io::getPWM_INPUT<io::Pin::PA_0>();
 
     while (1) {
-        time::wait(1000);
         Period = pwmInput.getPeriod();
         Frequency = pwmInput.getFrequency();
         DutyCycle = pwmInput.getDutyCycle();
@@ -41,6 +37,7 @@ int main(void) {
         uart.printf("\n\rFrequency: %d\n\r", Frequency) ;
         uart.printf("\n\rDuty: %d\n\r", DutyCycle);
         uart.printf("\n\r----------------------------------\n\r");
+        time::wait(1000);
     }
 }
 
