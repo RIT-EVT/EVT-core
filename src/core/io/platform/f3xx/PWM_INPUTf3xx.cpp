@@ -295,10 +295,4 @@ uint32_t PWM_INPUTf3xx::getFrequency() {
     return frequency;
 }
 
-
-
-
-
-
-
 }
