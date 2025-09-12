@@ -10,7 +10,6 @@
 
 namespace core::io {
 
-
 /**
  * PWM input for f3
  * Measures the duty cycle, frequency, and period of a PWM signal on a pin
@@ -38,14 +37,13 @@ public:
 
 private:
     /// HAL timer representation
-    TIM_HandleTypeDef halTIM; //hal timer handle
+    TIM_HandleTypeDef halTIM; // hal timer handle
     /// Channel for rising edge measurement
     uint32_t directChannel;
     /// Channel for falling edge measurement
     uint32_t indirectChannel;
-    ///active channel
+    /// active channel
     uint32_t activeChannel;
-
 };
 
 } // namespace core::io

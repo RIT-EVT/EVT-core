@@ -11,12 +11,9 @@
 namespace io   = core::io;
 namespace time = core::time;
 
-
-uint32_t Period   = 0; //ICValue
+uint32_t Period    = 0; // ICValue
 uint32_t Frequency = 0;
-uint32_t DutyCycle      = 0;
-
-
+uint32_t DutyCycle = 0;
 
 int main(void) {
     // Initialize system
@@ -30,11 +27,11 @@ int main(void) {
     io::PWM_INPUT& pwmInput = io::getPWM_INPUT<io::Pin::PB_15>();
 
     while (1) {
-        Period = pwmInput.getPeriod();
+        Period    = pwmInput.getPeriod();
         Frequency = pwmInput.getFrequency();
         DutyCycle = pwmInput.getDutyCycle();
         uart.printf("\n\rPeriod: %d\n\r", Period);
-        uart.printf("\n\rFrequency: %d\n\r", Frequency) ;
+        uart.printf("\n\rFrequency: %d\n\r", Frequency);
         uart.printf("\n\rDuty: %d\n\r", DutyCycle);
         uart.printf("\n\r----------------------------------\n\r");
         time::wait(1000);

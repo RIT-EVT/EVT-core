@@ -33,8 +33,8 @@
     #include <core/io/platform/f3xx/CANf3xx.hpp>
     #include <core/io/platform/f3xx/GPIOf3xx.hpp>
     #include <core/io/platform/f3xx/I2Cf3xx.hpp>
-    #include <core/io/platform/f3xx/PWMf3xx.hpp>
     #include <core/io/platform/f3xx/PWM_INPUTf3xx.hpp>
+    #include <core/io/platform/f3xx/PWMf3xx.hpp>
     #include <core/io/platform/f3xx/SPIf3xx.hpp>
     #include <core/io/platform/f3xx/UARTf3xx.hpp>
     #include <core/platform/f3xx/stm32f3xx.hpp>
@@ -257,7 +257,6 @@ PWM_INPUT& getPWM_INPUT() {
     #endif
 }
 #endif
-
 
 /**
  * Get an instance of a UART.

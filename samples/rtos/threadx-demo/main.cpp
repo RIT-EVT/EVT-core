@@ -52,7 +52,7 @@ typedef struct counters {
  * Struct that holds the arguments for the thread that generates the numbers
  */
 struct numberGenThreadArgs {
-    rtos::Queue* outputQueue;   // The queue of numbers that the number gen thread add it's generated number to
+    rtos::Queue* outputQueue; // The queue of numbers that the number gen thread add it's generated number to
 
     rtos::Semaphore* semaphore; // A semaphore that mutually excludes the threads from accessing the queue or printing
                                 // to uart at the same time these shouldn't necessarily need to be mutually exclusive,
@@ -68,17 +68,17 @@ struct numberGenThreadArgs {
  * Struct that holds the arguments for all other threads
  */
 struct numberConsumerThreadArgs {
-    rtos::Queue* inputQueue;            // The queue that the threads will pull values that the number gen thread adds
+    rtos::Queue* inputQueue; // The queue that the threads will pull values that the number gen thread adds
 
-    rtos::Semaphore* semaphore;         // A semaphore that mutually excludes the threads from accessing the queue or
-                                        // printing to uart
+    rtos::Semaphore* semaphore; // A semaphore that mutually excludes the threads from accessing the queue or
+                                // printing to uart
 
     rtos::tsio::ThreadUART* threadUART; // The instance of ThreadUART that this thread will use to print.
 
     rtos::EventFlags* eventFlags; // the EventFlags that the number consumer threads will use to show they have gotten a
                                   // number, which will trigger the eventFlagThread to run it's own method.
 
-    uint8_t num;                  // What number this thread is
+    uint8_t num; // What number this thread is
 
     counters_t* counters; // the struct of counters for the number consumer threads to increase their counters when they
                           // get a number
