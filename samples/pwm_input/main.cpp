@@ -27,7 +27,7 @@ int main(void) {
 
     uart.printf("Starting PWM input capture\n\r");
 
-    io::PWM_INPUT& pwmInput = io::getPWM_INPUT<io::Pin::PC_0>();
+    io::PWM_INPUT& pwmInput = io::getPWM_INPUT<io::Pin::PB_15>();
 
     while (1) {
         Period = pwmInput.getPeriod();

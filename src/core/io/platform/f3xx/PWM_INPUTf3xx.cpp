@@ -12,7 +12,8 @@ static PWM_INPUTf3xx* activePwmInput = nullptr;
  * Get timer instance, direct channel, indirect channel, alternate function,
  * triggerSource, irqNumber, and activeChannel associated with a pin.
  * This information is pulled from the STM32F302x8 documentation.
- * F302 pinout and alternate functions specifically for PWM_INPUT can be found in the drive.
+ *
+ * NOTE: PA_2 and PA_3 are used for UART Tx and Rx respectively
  *
   @param pin The pin to check the instance of
 * @param instance The timer instance to assign to
@@ -101,7 +102,7 @@ static void getInputInstance(Pin pin,
             *activeChannel = HAL_TIM_ACTIVE_CHANNEL_2;
             break;
     // TIM 15 Channel 1 Direct, Channel 2 Indirect
-    case Pin::PA_2:
+    case Pin::PA_2: //PA2 is UART tx, don't use if using UART
             *instance = TIM15;
             *directChannel = TIM_CHANNEL_1;
             *indirectChannel = TIM_CHANNEL_2;
@@ -120,7 +121,7 @@ static void getInputInstance(Pin pin,
             *activeChannel = HAL_TIM_ACTIVE_CHANNEL_1;
             break;
     // TIM 15 Channel 2 Direct, Channel 1 Indirect
-    case Pin::PA_3:
+    case Pin::PA_3: //PA3 is UART rx, don't use if using UART
             *instance = TIM15;
             *directChannel = TIM_CHANNEL_2;
             *indirectChannel = TIM_CHANNEL_1;
@@ -162,6 +163,13 @@ PWM_INPUTf3xx::PWM_INPUTf3xx(Pin pin) : PWM_INPUT(pin) {
     getInputInstance(pin, &instance, &directChannel, &indirectChannel, &alternateFunction, &triggerSource,
                      &irqNumber, &activeChannel);
 
+
+    TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+    TIM_SlaveConfigTypeDef sSlaveConfig       = {0};
+    TIM_IC_InitTypeDef sConfigIC              = {0};
+    TIM_MasterConfigTypeDef sMasterConfig     = {0};
+
+
     if (instance == TIM1) {
         __HAL_RCC_TIM1_CLK_ENABLE();
     } else if (instance == TIM2) {
@@ -170,10 +178,6 @@ PWM_INPUTf3xx::PWM_INPUTf3xx(Pin pin) : PWM_INPUT(pin) {
         __HAL_RCC_TIM15_CLK_ENABLE();
     }
 
-    TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-    TIM_SlaveConfigTypeDef sSlaveConfig       = {0};
-    TIM_IC_InitTypeDef sConfigIC              = {0};
-    TIM_MasterConfigTypeDef sMasterConfig     = {0};
 
     //initilize timer base
     halTIM.Instance               = instance;
@@ -186,7 +190,6 @@ PWM_INPUTf3xx::PWM_INPUTf3xx(Pin pin) : PWM_INPUT(pin) {
 
     //configure clock src
     sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-    HAL_TIM_PWM_Init(&halTIM);
     HAL_TIM_ConfigClockSource(&halTIM, &sClockSourceConfig);
     HAL_TIM_IC_Init(&halTIM);
 
