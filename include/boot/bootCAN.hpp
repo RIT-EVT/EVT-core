@@ -1,0 +1,4 @@
+#ifndef EVT_BOOTCAN_HPP
+#define EVT_BOOTCAN_HPP
+
+#endif // EVT_BOOTCAN_HPP
