@@ -6,18 +6,17 @@
 #include <HALf3/stm32f3xx.h>
 #include <core/dev/platform/f3xx/Timerf3xx.hpp>
 #include <core/io/PWM.hpp>
-#include <core/io/pin.hpp>
 
 namespace core::io {
 
-class PWMf3xx : public PWM {
+class PWMf3xx : public PWM, public dev::TimerF3xx {
 public:
     /**
      * Setup the given pin for PWM usage.
      *
      * @param pin[in] The pin to setup for PWM
      */
-    PWMf3xx(Pin pin);
+    PWMf3xx(Pin pin, TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, dev::TimerConfiguration configuration, uint32_t clockPrescaler = AUTO_PRESCALER);
 
     void setDutyCycle(uint32_t dutyCycle);
 
@@ -26,15 +25,9 @@ public:
     uint32_t getDutyCycle();
 
     uint32_t getPeriod();
-
-
 private:
-    /// HAL timer representation
-    TIM_HandleTypeDef halTIM;
     /// Channel identification
     uint32_t halTIMChannelID;
-    /// HAL channel representation
-    TIM_OC_InitTypeDef halChannel;
 };
 
 } // namespace core::io

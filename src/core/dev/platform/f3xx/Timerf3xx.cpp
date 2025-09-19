@@ -333,7 +333,7 @@ void TimerF3xx::reloadTimer() {
     this->halTimer->Instance->CNT = 0; // Clear the Counter register to reset the timer
 }
 
-void TimerF3xx::setPeriod(uint32_t clockPeriod, uint32_t clockPrescaler) {
+void TimerF3xx::setPeriod(uint32_t clockPeriod, uint32_t clockPrescaler = AUTO_PRESCALER) {
     stopTimer();
     initTimer(this->halTimer->Instance, clockPeriod, clockPrescaler);
 }

@@ -12,7 +12,7 @@ namespace core::dev {
 /**
  * Implementation of the Timer class for STM32f3xx MCUs
  */
-class TimerF3xx final : public Timer {
+class TimerF3xx : public Timer {
 public:
     /**
      * Will initialize the timer device on the STM with the given period and the given IRQ Handler
@@ -35,9 +35,9 @@ public:
 
     void reloadTimer() override;
 
-    void setPeriod(uint32_t clockPeriod, uint32_t clockPrescaler = AUTO_PRESCALER) override;
+    void setPeriod(uint32_t clockPeriod, uint32_t clockPrescaler) override;
 
-private:
+protected:
     // Pointer to the halTimer struct stored in the global array in Timerf3xx.cpp
     TIM_HandleTypeDef* halTimer;
 

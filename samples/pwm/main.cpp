@@ -7,7 +7,6 @@
 #include <core/utils/time.hpp>
 
 namespace io   = core::io;
-namespace time = core::time;
 
 int main() {
     // Initialize system
@@ -20,9 +19,9 @@ int main() {
     pwm.setDutyCycle(50);
 
     while (1) {
-        time::wait(5000);
+        core::time::wait(5000);
         pwm.setDutyCycle(70);
-        time::wait(5000);
+        core::time::wait(5000);
         pwm.setDutyCycle(30);
     }
 }
