@@ -27,7 +27,7 @@ public:
     uint32_t getPeriod();
 private:
     /// Channel identification
-    uint32_t halTIMChannelID;
+    uint32_t halTIMChannelID {};
 };
 
 } // namespace core::io
