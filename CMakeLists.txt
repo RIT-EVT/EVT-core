@@ -31,6 +31,7 @@ target_sources(${PROJECT_NAME} PRIVATE
         src/core/io/ADC.cpp
         src/core/io/CAN.cpp
         src/core/io/CANopen.cpp
+        src/core/io/DAC.cpp
         src/core/io/GPIO.cpp
         src/core/io/I2C.cpp
         src/core/io/PWM.cpp
@@ -54,6 +55,7 @@ if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
     src/core/platform/f3xx/stm32f302x8.cpp
     src/core/io/platform/f3xx/ADCf3xx.cpp
     src/core/io/platform/f3xx/CANf3xx.cpp
+    src/core/io/platform/f3xx/DACf3xx.cpp
     src/core/io/platform/f3xx/GPIOf3xx.cpp
     src/core/io/platform/f3xx/I2Cf3xx.cpp
     src/core/io/platform/f3xx/PWMf3xx.cpp
@@ -67,6 +69,7 @@ elseif(COMPDEFS MATCHES "(.*)STM32F4xx(.*)")
     src/core/platform/f4xx/stm32f446xx.cpp
     src/core/io/platform/f4xx/ADCf4xx.cpp
     src/core/io/platform/f4xx/CANf4xx.cpp
+    src/core/io/platform/f4xx/DACf4xx.cpp
     src/core/io/platform/f4xx/GPIOf4xx.cpp
     src/core/io/platform/f4xx/I2Cf4xx.cpp
     src/core/io/platform/f4xx/PWMf4xx.cpp
