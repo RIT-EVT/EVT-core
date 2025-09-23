@@ -57,8 +57,7 @@ protected:
 
 // Convenience typedef - use different name to avoid macro conflict
 namespace core::io {
-    using DigitalToAnalogConverter = DACBase;
+using DigitalToAnalogConverter = DACBase;
 }
 
 #endif // _EVT_DAC_
-

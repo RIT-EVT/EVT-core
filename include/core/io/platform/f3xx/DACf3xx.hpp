@@ -27,12 +27,14 @@ public:
     void setVoltage(float voltage) override;
     float getVoltage() const override;
 
-    DAC_HandleTypeDef* getHalDac() { return &halDac; }
+    DAC_HandleTypeDef* getHalDac() {
+        return &halDac;
+    }
 
 private:
     static constexpr uint32_t MAX_RAW = 4095;
-    static constexpr float VREF_POS = 3.3;
-    uint32_t currentValue = 0;
+    static constexpr float VREF_POS   = 3.3;
+    uint32_t currentValue             = 0;
     DAC_HandleTypeDef halDac;
 
     /**
@@ -62,4 +64,3 @@ private:
 } // namespace core::io
 
 #endif // _EVT_DACF3XX_H
-
