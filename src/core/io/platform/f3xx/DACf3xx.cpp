@@ -35,7 +35,19 @@ void DACf3xx::setValue(uint32_t value) {
         value = MAX_RAW;
     }
     
-    uint32_t channel = (pin == Pin::PA_4) ? DAC_CHANNEL_1 : DAC_CHANNEL_2;
+    uint32_t channel;
+    if (pin == Pin::PA_4) {
+        channel = DAC_CHANNEL_1;
+    } else if (pin == Pin::PA_5) {
+#if defined(DAC_CHANNEL2_SUPPORT)
+        channel = DAC_CHANNEL_2; // STM32F334 supports PA_5 (DAC_CHANNEL_2)
+#else
+        channel = DAC_CHANNEL_1; // STM32F302 doesn't support PA_5, use CHANNEL_1
+#endif
+    } else {
+        channel = DAC_CHANNEL_1; // Default fallback
+    }
+    
     HAL_DAC_SetValue(&halDac, channel, DAC_ALIGN_12B_R, value);
     currentValue = value;
 }
@@ -79,7 +91,18 @@ void DACf3xx::initDAC() {
     sConfig.DAC_Trigger = DAC_TRIGGER_NONE;
     sConfig.DAC_OutputBuffer = DAC_OUTPUTBUFFER_ENABLE;
     
-    uint32_t channel = (pin == Pin::PA_4) ? DAC_CHANNEL_1 : DAC_CHANNEL_2;
+    uint32_t channel;
+    if (pin == Pin::PA_4) {
+        channel = DAC_CHANNEL_1;
+    } else if (pin == Pin::PA_5) {
+#if defined(DAC_CHANNEL2_SUPPORT)
+        channel = DAC_CHANNEL_2; // STM32F334 supports PA_5 (DAC_CHANNEL_2)
+#else
+        channel = DAC_CHANNEL_1; // STM32F302 doesn't support PA_5, use CHANNEL_1
+#endif
+    } else {
+        channel = DAC_CHANNEL_1; // Default fallback
+    }
     status = HAL_DAC_ConfigChannel(&halDac, &sConfig, channel);
     if (status != HAL_OK) {
         return;
