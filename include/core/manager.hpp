@@ -370,15 +370,23 @@ static dev::MCUTimer timerInstance(Pin pin) {
 template<Pin pin>
 PWM& getPWM() {
     #ifdef STM32F3xx
-    dev::TimerConfiguration timerConfiguration = {
+    // dev::TimerConfiguration timerConfiguration = {
+    //     TIM_COUNTERMODE_UP,
+    //     TIM_CLOCKDIVISION_DIV1,
+    //     TIM_AUTORELOAD_PRELOAD_ENABLE
+    //     // May need to finish filling this out 🤷‍♀️
+    // };
+    dev::TimerConfiguration configuration = {
         TIM_COUNTERMODE_UP,
         TIM_CLOCKDIVISION_DIV1,
-        TIM_AUTORELOAD_PRELOAD_ENABLE
-        // May need to finish filling this out 🤷‍♀️
+        TIM_AUTORELOAD_PRELOAD_ENABLE,
+        TIM_CLOCKSOURCE_INTERNAL,
+        TIM_TRGO_RESET,
+        TIM_MASTERSLAVEMODE_DISABLE
     };
 
     dev::MCUTimer mcuTimer = timerInstance(pin);
-    static PWMf3xx pwm(pin, dev::getTIM(mcuTimer), 0, timerConfiguration);
+    static PWMf3xx pwm(pin, dev::getTIM(mcuTimer), 0, configuration);
     return pwm;
     #endif
     #ifdef STM32F4xx

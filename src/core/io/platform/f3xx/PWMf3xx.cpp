@@ -1,6 +1,7 @@
 #include <core/io/pin.hpp>
 #include <core/io/platform/f3xx/GPIOf3xx.hpp>
 #include <core/io/platform/f3xx/PWMf3xx.hpp>
+#include <core/utils/log.hpp>
 
 namespace core::io {
 
@@ -377,7 +378,15 @@ PWMf3xx::PWMf3xx(Pin pin, TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, de
     uint8_t numOfPins         = 1;
 
     GPIOf3xx::gpioStateInit(
-        &gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, alternateFunction);
+        &gpioInit,
+        myPins,
+        numOfPins,
+        GPIO_MODE_AF_PP,
+        GPIO_NOPULL,
+        GPIO_SPEED_FREQ_LOW,
+        alternateFunction);
+
+    TimerF3xx::startTimer();
 }
 
 void PWMf3xx::setDutyCycle(uint32_t dutyCycle) {
@@ -417,8 +426,8 @@ void PWMf3xx::setPeriod(uint32_t period) {
     } while (autoReload > 65535);
 
     TimerF3xx::setPeriod(autoReload, prescaler);
+    TimerF3xx::startTimer();
 
-    HAL_TIM_Base_Init(halTimer);
     HAL_TIM_PWM_Start(halTimer, halTIMChannelID);
 
     // Duty cycle value depends on period, need to update duty cycle

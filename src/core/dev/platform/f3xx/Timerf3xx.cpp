@@ -228,7 +228,7 @@ extern "C" void TIM17_IRQHandler(void) {
 }
 extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
     uint8_t interruptIdx = getTimerInterruptIndex(htim->Instance);
-    core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Period Elapsed", interruptIdx);
+
     if (timerInterruptHandlers[interruptIdx] != nullptr) {
         timerInterruptHandlers[interruptIdx](htim);
     }
@@ -257,7 +257,7 @@ void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, ui
     htim.Init.CounterMode       = this->configuration.counterMode;
     htim.Init.Period            = clockPeriod - 1;
     htim.Init.ClockDivision     = this->configuration.clockDivision;
-    htim.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+    htim.Init.AutoReloadPreload = this->configuration.autoReloadPreload;
     HAL_TIM_Base_Init(&htim);
 
     TIM_ClockConfigTypeDef clockConfig   = { };
@@ -274,35 +274,11 @@ void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, ui
 
     HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
 
-    core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Finished timer setup");
-
-    // TIM_OC_InitTypeDef sConfigOC = {0};
-    // TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
-    //
-    // sConfigOC.OCMode = TIM_OCMODE_TIMING;
-    // sConfigOC.Pulse = 0;
-    // sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-    // sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
-    // sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-    // sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
-    // sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-    // HAL_TIM_OC_ConfigChannel(&htim, &sConfigOC, TIM_CHANNEL_1);
-    //
-    // sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
-    // sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
-    // sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
-    // sBreakDeadTimeConfig.DeadTime = 0;
-    // sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
-    // sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
-    // sBreakDeadTimeConfig.BreakFilter = 0;
-    // sBreakDeadTimeConfig.Break2State = TIM_BREAK2_DISABLE;
-    // sBreakDeadTimeConfig.Break2Polarity = TIM_BREAK2POLARITY_HIGH;
-    // sBreakDeadTimeConfig.Break2Filter = 0;
-    // sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
-    // HAL_TIMEx_ConfigBreakDeadTime(&htim, &sBreakDeadTimeConfig);
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Finished timer setup");
 }
 
 void TimerF3xx::startTimer(void (*irqHandler)(void* htim)) {
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Start Timer IRQ");
     TIM_TypeDef* timerPeripheral = this->halTimer->Instance;
     // If timer is not waiting to start, stop it
     if (halTimer->State != HAL_TIM_STATE_READY) {
@@ -318,6 +294,7 @@ void TimerF3xx::stopTimer() {
 }
 
 void TimerF3xx::startTimer() {
+    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Start Timer no IRQ");
     // If timer is not waiting to start, stop it
     if (halTimer->State != HAL_TIM_STATE_READY) {
         stopTimer(); // Stop timer in case it was already running
@@ -334,6 +311,7 @@ void TimerF3xx::reloadTimer() {
 }
 
 void TimerF3xx::setPeriod(uint32_t clockPeriod, uint32_t clockPrescaler = AUTO_PRESCALER) {
+    core::log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Set period: %d, Prescaler: %d", clockPeriod, clockPrescaler);
     stopTimer();
     initTimer(this->halTimer->Instance, clockPeriod, clockPrescaler);
 }
