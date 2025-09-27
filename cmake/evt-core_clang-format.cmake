@@ -25,7 +25,7 @@ if(CLANG_FORMAT)
     # Loop through each file and create a separate command because Windows has a 128-character limit
     # on its commands
     foreach(src_file ${ALL_CXX_SOURCE_FILES})
-        add_custom_command(TARGET clang-format
+        add_custom_command(TARGET clang-format PRE_BUILD 
                 COMMAND ${CLANG_FORMAT} -i -style=file ${src_file}
                 )
     endforeach()
