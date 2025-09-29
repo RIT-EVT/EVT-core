@@ -14,7 +14,6 @@
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
 #include <core/manager.hpp>
-#include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 
 #ifdef STM32F3xx
@@ -27,66 +26,62 @@
 
 namespace io   = core::io;
 namespace time = core::time;
-namespace log  = core::log;
 
 constexpr float TOLERANCE = 0.1f; // 100mV tolerance for ADC readings
 
-bool testDACInitialization(io::DACBase& dac) {
+bool testDACInitialization(io::DACBase& dac, io::UART& uart) {
     // Test 1: Verify DAC starts at zero
     float initialVoltage = dac.getVoltage();
     bool passed          = (initialVoltage < 0.1f); // Should be near 0V
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "DAC Init Test: %s (%.2fV)", passed ? "PASS" : "FAIL", initialVoltage);
+    uart.printf("DAC Init Test: %s (%dmV)\r\n", passed ? "PASS" : "FAIL", (int)(initialVoltage * 1000));
     return passed;
 }
 
-bool testDACSetValue(io::DACBase& dac, uint32_t value, float expectedVoltage) {
+bool testDACSetValue(io::DACBase& dac, uint32_t value, float expectedVoltage, io::UART& uart) {
     dac.setValue(value);
     float actualVoltage = dac.getVoltage();
     float difference =
         (actualVoltage > expectedVoltage) ? (actualVoltage - expectedVoltage) : (expectedVoltage - actualVoltage);
     bool passed = (difference < TOLERANCE);
-    log::LOGGER.log(log::Logger::LogLevel::INFO,
-                    "DAC setValue(%d): %s (Expected: %.2fV, Actual: %.2fV, Diff: %.2fV)",
-                    value,
-                    passed ? "PASS" : "FAIL",
-                    expectedVoltage,
-                    actualVoltage,
-                    difference);
+    uart.printf("DAC setValue(%d): %s (Expected: %dmV, Actual: %dmV, Diff: %dmV)\r\n",
+                value,
+                passed ? "PASS" : "FAIL",
+                (int)(expectedVoltage * 1000),
+                (int)(actualVoltage * 1000),
+                (int)(difference * 1000));
     return passed;
 }
 
-bool testDACSetVoltage(io::DACBase& dac, float voltage) {
+bool testDACSetVoltage(io::DACBase& dac, float voltage, io::UART& uart) {
     dac.setVoltage(voltage);
     float actualVoltage = dac.getVoltage();
     float difference    = (actualVoltage > voltage) ? (actualVoltage - voltage) : (voltage - actualVoltage);
     bool passed         = (difference < TOLERANCE);
-    log::LOGGER.log(log::Logger::LogLevel::INFO,
-                    "DAC setVoltage(%.2fV): %s (Actual: %.2fV, Diff: %.2fV)",
-                    voltage,
-                    passed ? "PASS" : "FAIL",
-                    actualVoltage,
-                    difference);
+    uart.printf("DAC setVoltage(%dmV): %s (Actual: %dmV, Diff: %dmV)\r\n",
+                (int)(voltage * 1000),
+                passed ? "PASS" : "FAIL",
+                (int)(actualVoltage * 1000),
+                (int)(difference * 1000));
     return passed;
 }
 
-bool testADCReading(io::ADC& adc, float expectedVoltage) {
+bool testADCReading(io::ADC& adc, float expectedVoltage, io::UART& uart) {
     float adcVoltage = adc.read();
     float difference = (adcVoltage > expectedVoltage) ? (adcVoltage - expectedVoltage) : (expectedVoltage - adcVoltage);
     bool passed      = (difference < TOLERANCE);
-    log::LOGGER.log(log::Logger::LogLevel::INFO,
-                    "ADC Reading: %s (Expected: %.2fV, Actual: %.2fV, Diff: %.2fV)",
-                    passed ? "PASS" : "FAIL",
-                    expectedVoltage,
-                    adcVoltage,
-                    difference);
+    uart.printf("ADC Reading: %s (Expected: %dmV, Actual: %dmV, Diff: %dmV)\r\n",
+                passed ? "PASS" : "FAIL",
+                (int)(expectedVoltage * 1000),
+                (int)(adcVoltage * 1000),
+                (int)(difference * 1000));
     return passed;
 }
 
-bool testDALoopback(io::DACBase& dac, io::ADC& adc, float testVoltage) {
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "DAC-ADC Loopback Test: %.2fV", testVoltage);
+bool testDALoopback(io::DACBase& dac, io::ADC& adc, float testVoltage, io::UART& uart) {
+    uart.printf("DAC-ADC Loopback Test: %dmV\r\n", (int)(testVoltage * 1000));
     dac.setVoltage(testVoltage);
     time::wait(10); // Allow settling time
-    return testADCReading(adc, testVoltage);
+    return testADCReading(adc, testVoltage, uart);
 }
 
 int main() {
@@ -95,15 +90,10 @@ int main() {
     // Initialize UART for logging
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
-    // Set up the logger
-    log::LOGGER.setUART(&uart);
-    log::LOGGER.setLogLevel(log::Logger::LogLevel::INFO);
 
     uart.printf("Starting DAC Comprehensive Test\r\n");
     uart.printf("Hardware: DAC_OUT(PA4) -> ADC_IN(PA0)\r\n");
-    uart.printf("Tolerance: %.1fV\r\n\r\n", TOLERANCE);
-
-    time::wait(500);
+    uart.printf("Tolerance: %dmV\r\n\r\n", (int)(TOLERANCE * 1000));
 
     // Initialize DAC and ADC
 #ifdef STM32F3xx
@@ -115,39 +105,39 @@ int main() {
 #endif
 
     // Test 1: DAC Initialization
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "--- Test 1: DAC Initialization ---");
-    testDACInitialization(dac);
+    uart.printf("--- Test 1: DAC Initialization ---\r\n");
+    testDACInitialization(dac, uart);
 
     // Test 2: DAC setValue() functionality
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "--- Test 2: DAC setValue() Functionality ---");
-    testDACSetValue(dac, 0, 0.0f);
-    testDACSetValue(dac, 1024, 0.82f); // ~0.82V
-    testDACSetValue(dac, 2048, 1.65f); // ~1.65V
-    testDACSetValue(dac, 3072, 2.47f); // ~2.47V
-    testDACSetValue(dac, 4095, 3.3f);  // ~3.3V
+    uart.printf("--- Test 2: DAC setValue() Functionality ---\r\n");
+    testDACSetValue(dac, 0, 0.0f, uart);
+    testDACSetValue(dac, 1024, 0.82f, uart); // ~0.82V
+    testDACSetValue(dac, 2048, 1.65f, uart); // ~1.65V
+    testDACSetValue(dac, 3072, 2.47f, uart); // ~2.47V
+    testDACSetValue(dac, 4095, 3.3f, uart);  // ~3.3V
 
     // Test 3: DAC setVoltage() functionality
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "--- Test 3: DAC setVoltage() Functionality ---");
-    testDACSetVoltage(dac, 0.5f);
-    testDACSetVoltage(dac, 1.0f);
-    testDACSetVoltage(dac, 2.0f);
-    testDACSetVoltage(dac, 3.0f);
+    uart.printf("--- Test 3: DAC setVoltage() Functionality ---\r\n");
+    testDACSetVoltage(dac, 0.5f, uart);
+    testDACSetVoltage(dac, 1.0f, uart);
+    testDACSetVoltage(dac, 2.0f, uart);
+    testDACSetVoltage(dac, 3.0f, uart);
 
     // Test 4: Input validation (should clamp to max)
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "--- Test 4: Input Validation ---");
+    uart.printf("--- Test 4: Input Validation ---\r\n");
     dac.setValue(5000); // Should clamp to 4095
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "DAC setValue(5000): Clamped to %d", dac.getValue());
+    uart.printf("DAC setValue(5000): Clamped to %d\r\n", dac.getValue());
     dac.setVoltage(5.0f); // Should clamp to 3.3V
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "DAC setVoltage(5.0V): Clamped to %.2fV", dac.getVoltage());
+    uart.printf("DAC setVoltage(5.0V): Clamped to %dmV\r\n", (int)(dac.getVoltage() * 1000));
 
     // Test 5: DAC-ADC Integration
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "--- Test 5: DAC-ADC Integration ---");
-    testDALoopback(dac, adc, 0.5f);
-    testDALoopback(dac, adc, 1.5f);
-    testDALoopback(dac, adc, 2.5f);
+    uart.printf("--- Test 5: DAC-ADC Integration ---\r\n");
+    testDALoopback(dac, adc, 0.5f, uart);
+    testDALoopback(dac, adc, 1.5f, uart);
+    testDALoopback(dac, adc, 2.5f, uart);
 
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "Starting Triangle Wave Pattern (Visual Test)");
-    log::LOGGER.log(log::Logger::LogLevel::INFO, "Connect oscilloscope to PA4 for waveform observation");
+    uart.printf("Starting Triangle Wave Pattern (Visual Test)\r\n");
+    uart.printf("Connect oscilloscope to PA4 for waveform observation\r\n");
 
     // Test 6: Triangle wave pattern (visual test)
     uint32_t value       = 0;
@@ -163,11 +153,10 @@ int main() {
 
         // Log every 100 cycles (every ~1 second)
         if (cycle_count % 100 == 0) {
-            log::LOGGER.log(log::Logger::LogLevel::INFO,
-                            "Triangle Wave: DAC=%d (%.2fV), ADC=%.2fV",
-                            value,
-                            dac.getVoltage(),
-                            adcVoltage);
+            uart.printf("Triangle Wave: DAC=%d (%dmV), ADC=%dmV\r\n",
+                        value,
+                        (int)(dac.getVoltage() * 1000),
+                        (int)(adcVoltage * 1000));
         }
 
         // Update triangle wave
@@ -175,13 +164,13 @@ int main() {
             value += 50;
             if (value >= 4000) {
                 increasing = false;
-                log::LOGGER.log(log::Logger::LogLevel::INFO, "Triangle Wave: Peak reached, reversing");
+                uart.printf("Triangle Wave: Peak reached, reversing\r\n");
             }
         } else {
             value -= 50;
             if (value <= 50) {
                 increasing = true;
-                log::LOGGER.log(log::Logger::LogLevel::INFO, "Triangle Wave: Valley reached, reversing");
+                uart.printf("Triangle Wave: Valley reached, reversing\r\n");
             }
         }
 
