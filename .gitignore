@@ -12,6 +12,8 @@ venv/
 .idea/
 .vscode/
 .cache/
+.settings/
+.clangd
 
 # macOS files
 .DS_Store
