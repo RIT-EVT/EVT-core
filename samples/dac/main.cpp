@@ -33,7 +33,7 @@ bool testDACInitialization(io::DACBase& dac, io::UART& uart) {
     // Test 1: Verify DAC starts at zero
     float initialVoltage = dac.getVoltage();
     bool passed          = (initialVoltage < 0.1f); // Should be near 0V
-    uart.printf("DAC Init Test: %s (%dmV)\r\n", passed ? "PASS" : "FAIL", (int)(initialVoltage * 1000));
+    uart.printf("DAC Init Test: %s (%dmV)\r\n", passed ? "PASS" : "FAIL", (int) (initialVoltage * 1000));
     return passed;
 }
 
@@ -46,9 +46,9 @@ bool testDACSetValue(io::DACBase& dac, uint32_t value, float expectedVoltage, io
     uart.printf("DAC setValue(%d): %s (Expected: %dmV, Actual: %dmV, Diff: %dmV)\r\n",
                 value,
                 passed ? "PASS" : "FAIL",
-                (int)(expectedVoltage * 1000),
-                (int)(actualVoltage * 1000),
-                (int)(difference * 1000));
+                (int) (expectedVoltage * 1000),
+                (int) (actualVoltage * 1000),
+                (int) (difference * 1000));
     return passed;
 }
 
@@ -58,10 +58,10 @@ bool testDACSetVoltage(io::DACBase& dac, float voltage, io::UART& uart) {
     float difference    = (actualVoltage > voltage) ? (actualVoltage - voltage) : (voltage - actualVoltage);
     bool passed         = (difference < TOLERANCE);
     uart.printf("DAC setVoltage(%dmV): %s (Actual: %dmV, Diff: %dmV)\r\n",
-                (int)(voltage * 1000),
+                (int) (voltage * 1000),
                 passed ? "PASS" : "FAIL",
-                (int)(actualVoltage * 1000),
-                (int)(difference * 1000));
+                (int) (actualVoltage * 1000),
+                (int) (difference * 1000));
     return passed;
 }
 
@@ -71,14 +71,14 @@ bool testADCReading(io::ADC& adc, float expectedVoltage, io::UART& uart) {
     bool passed      = (difference < TOLERANCE);
     uart.printf("ADC Reading: %s (Expected: %dmV, Actual: %dmV, Diff: %dmV)\r\n",
                 passed ? "PASS" : "FAIL",
-                (int)(expectedVoltage * 1000),
-                (int)(adcVoltage * 1000),
-                (int)(difference * 1000));
+                (int) (expectedVoltage * 1000),
+                (int) (adcVoltage * 1000),
+                (int) (difference * 1000));
     return passed;
 }
 
 bool testDALoopback(io::DACBase& dac, io::ADC& adc, float testVoltage, io::UART& uart) {
-    uart.printf("DAC-ADC Loopback Test: %dmV\r\n", (int)(testVoltage * 1000));
+    uart.printf("DAC-ADC Loopback Test: %dmV\r\n", (int) (testVoltage * 1000));
     dac.setVoltage(testVoltage);
     time::wait(10); // Allow settling time
     return testADCReading(adc, testVoltage, uart);
@@ -90,10 +90,9 @@ int main() {
     // Initialize UART for logging
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
-
     uart.printf("Starting DAC Comprehensive Test\r\n");
     uart.printf("Hardware: DAC_OUT(PA4) -> ADC_IN(PA0)\r\n");
-    uart.printf("Tolerance: %dmV\r\n\r\n", (int)(TOLERANCE * 1000));
+    uart.printf("Tolerance: %dmV\r\n\r\n", (int) (TOLERANCE * 1000));
 
     // Initialize DAC and ADC
 #ifdef STM32F3xx
@@ -128,7 +127,7 @@ int main() {
     dac.setValue(5000); // Should clamp to 4095
     uart.printf("DAC setValue(5000): Clamped to %d\r\n", dac.getValue());
     dac.setVoltage(5.0f); // Should clamp to 3.3V
-    uart.printf("DAC setVoltage(5.0V): Clamped to %dmV\r\n", (int)(dac.getVoltage() * 1000));
+    uart.printf("DAC setVoltage(5.0V): Clamped to %dmV\r\n", (int) (dac.getVoltage() * 1000));
 
     // Test 5: DAC-ADC Integration
     uart.printf("--- Test 5: DAC-ADC Integration ---\r\n");
@@ -155,8 +154,8 @@ int main() {
         if (cycle_count % 100 == 0) {
             uart.printf("Triangle Wave: DAC=%d (%dmV), ADC=%dmV\r\n",
                         value,
-                        (int)(dac.getVoltage() * 1000),
-                        (int)(adcVoltage * 1000));
+                        (int) (dac.getVoltage() * 1000),
+                        (int) (adcVoltage * 1000));
         }
 
         // Update triangle wave
