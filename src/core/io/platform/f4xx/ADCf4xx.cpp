@@ -124,12 +124,6 @@ float ADCf4xx::getVref() const {
     return vref_voltage;
 }
 
-bool ADCf4xx::calibrate() {
-    // Note: STM32F4xx doesn't have the same calibration functions as F3xx
-    // For F4xx, we would need to implement a different calibration approach
-    // For now, return true as a placeholder
-    return true;
-}
 
 void ADCf4xx::initADC(uint8_t num_channels) {
     /** Configure the global features of the ADC (Clock, Resolution, Data

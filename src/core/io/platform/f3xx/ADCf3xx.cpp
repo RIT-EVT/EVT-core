@@ -92,11 +92,6 @@ float ADCf3xx::getVref() const {
     return vref_voltage;
 }
 
-bool ADCf3xx::calibrate() {
-    // Perform ADC calibration for improved accuracy
-    HAL_StatusTypeDef status = HAL_ADCEx_Calibration_Start(&halADC, ADC_SINGLE_ENDED);
-    return (status == HAL_OK);
-}
 
 void ADCf3xx::initADC(uint8_t num_channels) {
     halADC.Instance = ADC1; // Only ADC the F3 supports

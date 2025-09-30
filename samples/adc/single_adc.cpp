@@ -4,7 +4,6 @@
  * UART.
  */
 #include <core/io/ADC.hpp>
-#include <core/io/platform/f3xx/ADCf3xx.hpp>
 #include <core/io/UART.hpp>
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
@@ -30,9 +29,7 @@ int main() {
 
 
 
-    // Optional: Perform ADC calibration for improved accuracy
-    // Cast to F3xx specific ADC to access calibrate method
-    static_cast<io::ADCf3xx&>(adc0).calibrate();
+    // ADC calibration removed - not needed for this application
 
     while (1) {
         adc0.setVref(1.8f);  // For 1.8V reference

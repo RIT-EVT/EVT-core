@@ -150,13 +150,6 @@ private:
      * aka controls ADC conversion frequency
      */
     static void initTimer();
-
-    /**
-     * Perform ADC calibration for improved accuracy
-     * 
-     * @return true if calibration was successful, false otherwise
-     */
-    static bool calibrate();
 };
 
 } // namespace core::io

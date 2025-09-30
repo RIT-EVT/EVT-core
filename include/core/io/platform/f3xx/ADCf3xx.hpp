@@ -31,13 +31,6 @@ public:
 
     float getVref() const;
 
-    /**
-     * Perform ADC calibration for improved accuracy
-     * 
-     * @return true if calibration was successful, false otherwise
-     */
-    static bool calibrate();
-
 private:
     // Max number of channels supported by the ADC
     static constexpr uint8_t MAX_CHANNELS = 15;
