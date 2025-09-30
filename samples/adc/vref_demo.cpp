@@ -38,12 +38,11 @@ int main() {
     // Test with default VREF (3.3V)
     uart.printf("\r\n=== Testing with default VREF (3.3V) ===\r\n");
     for (int i = 0; i < 5; i++) {
-        float voltage = adc0.read();
+        float voltage    = adc0.read();
         float percentage = adc0.readPercentage();
-        uint32_t raw = adc0.readRaw();
-        
-        uart.printf("Reading %d: %.3f V (%.1f%%, raw: %d)\r\n", 
-                   i+1, voltage, percentage * 100, raw);
+        uint32_t raw     = adc0.readRaw();
+
+        uart.printf("Reading %d: %.3f V (%.1f%%, raw: %d)\r\n", i + 1, voltage, percentage * 100, raw);
         time::wait(200);
     }
 
@@ -55,12 +54,11 @@ int main() {
     // Test with new VREF
     uart.printf("\r\n=== Testing with new VREF (5.0V) ===\r\n");
     for (int i = 0; i < 5; i++) {
-        float voltage = adc0.read();
+        float voltage    = adc0.read();
         float percentage = adc0.readPercentage();
-        uint32_t raw = adc0.readRaw();
-        
-        uart.printf("Reading %d: %.3f V (%.1f%%, raw: %d)\r\n", 
-                   i+1, voltage, percentage * 100, raw);
+        uint32_t raw     = adc0.readRaw();
+
+        uart.printf("Reading %d: %.3f V (%.1f%%, raw: %d)\r\n", i + 1, voltage, percentage * 100, raw);
         time::wait(200);
     }
 
@@ -72,23 +70,22 @@ int main() {
     // Test with new VREF
     uart.printf("\r\n=== Testing with new VREF (1.8V) ===\r\n");
     for (int i = 0; i < 5; i++) {
-        float voltage = adc0.read();
+        float voltage    = adc0.read();
         float percentage = adc0.readPercentage();
-        uint32_t raw = adc0.readRaw();
-        
-        uart.printf("Reading %d: %.3f V (%.1f%%, raw: %d)\r\n", 
-                   i+1, voltage, percentage * 100, raw);
+        uint32_t raw     = adc0.readRaw();
+
+        uart.printf("Reading %d: %.3f V (%.1f%%, raw: %d)\r\n", i + 1, voltage, percentage * 100, raw);
         time::wait(200);
     }
 
     // Demonstrate that raw values don't change, only voltage calculations do
     uart.printf("\r\n=== Demonstrating that raw values are independent of VREF ===\r\n");
     uart.printf("Note: Raw ADC values should remain the same regardless of VREF setting\r\n");
-    
+
     float test_vrefs[] = {1.0f, 2.5f, 3.3f, 5.0f};
     for (float vref : test_vrefs) {
         adc0.setVref(vref);
-        uint32_t raw = adc0.readRaw();
+        uint32_t raw  = adc0.readRaw();
         float voltage = adc0.read();
         uart.printf("VREF: %.1fV -> Raw: %d, Voltage: %.3fV\r\n", vref, raw, voltage);
         time::wait(100);

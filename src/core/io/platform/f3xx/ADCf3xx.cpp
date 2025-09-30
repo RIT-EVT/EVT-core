@@ -26,7 +26,7 @@ ADC_HandleTypeDef ADCf3xx::halADC = {0};
 Pin ADCf3xx::channels[MAX_CHANNELS];
 uint16_t ADCf3xx::buffer[MAX_CHANNELS];
 DMA_HandleTypeDef ADCf3xx::halDMA = {0};
-float ADCf3xx::vref_voltage = DEFAULT_VREF_POS;
+float ADCf3xx::vref_voltage       = DEFAULT_VREF_POS;
 
 ADCf3xx::ADCf3xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
     // Flag representing if the ADC has been configured yet
@@ -91,7 +91,6 @@ void ADCf3xx::setVref(float vref) {
 float ADCf3xx::getVref() const {
     return vref_voltage;
 }
-
 
 void ADCf3xx::initADC(uint8_t num_channels) {
     halADC.Instance = ADC1; // Only ADC the F3 supports

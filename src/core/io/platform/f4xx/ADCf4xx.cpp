@@ -124,7 +124,6 @@ float ADCf4xx::getVref() const {
     return vref_voltage;
 }
 
-
 void ADCf4xx::initADC(uint8_t num_channels) {
     /** Configure the global features of the ADC (Clock, Resolution, Data
      * Alignment and number of conversion)

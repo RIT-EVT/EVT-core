@@ -28,7 +28,7 @@ int main() {
     // Optional: Set custom VREF voltage (default is 3.3V)
 
     while (1) {
-        adc0.setVref(1.8f);  // For 1.8V reference
+        adc0.setVref(1.8f); // For 1.8V reference
         uart.printf("1.8V ADC Reference\r\n");
         uint32_t voltage_mv = static_cast<uint32_t>(adc0.read() * 1000);
         uint32_t percentage = static_cast<uint32_t>(adc0.readPercentage() * 100);
@@ -38,7 +38,7 @@ int main() {
         uart.printf("--------------------\r\n");
         time::wait(500);
 
-        adc0.setVref(5.0f);  // For 5V reference
+        adc0.setVref(5.0f); // For 5V reference
         uart.printf("5V ADC Reference\r\n");
         voltage_mv = static_cast<uint32_t>(adc0.read() * 1000);
         percentage = static_cast<uint32_t>(adc0.readPercentage() * 100);
@@ -48,7 +48,7 @@ int main() {
         uart.printf("--------------------\r\n");
         time::wait(500);
 
-        adc0.setVref(3.3f);  // For 3.3V reference
+        adc0.setVref(3.3f); // For 3.3V reference
         uart.printf("3.3V ADC Reference\r\n");
         voltage_mv = static_cast<uint32_t>(adc0.read() * 1000);
         percentage = static_cast<uint32_t>(adc0.readPercentage() * 100);

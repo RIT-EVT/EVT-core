@@ -46,14 +46,14 @@ public:
 
     /**
      * Set the reference voltage for the ADC
-     * 
+     *
      * @param[in] vref The reference voltage in volts (e.g., 3.3, 5.0)
      */
     virtual void setVref(float vref) = 0;
 
     /**
      * Get the current reference voltage for the ADC
-     * 
+     *
      * @return The reference voltage in volts
      */
     virtual float getVref() const = 0;
