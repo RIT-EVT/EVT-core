@@ -30,15 +30,21 @@ public:
 
     float readPercentage();
 
+    void setVref(float vref);
+
+    float getVref() const;
+
 private:
     // Max number of channels supported by the ADC
     static constexpr uint8_t MAX_CHANNELS = 16;
     // Number of supported ADC Peripherals
     static constexpr uint8_t NUM_ADCS = 3;
-    // Positive reference voltage of the ADC.  Needs to be updated based on the hardware configuration
-    static constexpr float VREF_POS = 3.3;
+    // Default positive reference voltage of the ADC.  Can be updated via setVref()
+    static constexpr float DEFAULT_VREF_POS = 3.3;
     // Max value for a 12 bit ADC reading (2^12 - 1)
     static constexpr uint32_t MAX_RAW = 4095;
+    // Current reference voltage (can be modified at runtime)
+    static float vref_voltage;
     // Flag to indicate if the timer has been initialized
     static bool timerInit;
     // Timer handle for TIM8, used to configure and control the timer instance
@@ -144,6 +150,13 @@ private:
      * aka controls ADC conversion frequency
      */
     static void initTimer();
+
+    /**
+     * Perform ADC calibration for improved accuracy
+     * 
+     * @return true if calibration was successful, false otherwise
+     */
+    static bool calibrate();
 };
 
 } // namespace core::io
