@@ -33,11 +33,6 @@ int main() {
     uint32_t vref_mv = static_cast<uint32_t>(adc0.getVref() * 1000);
     uart.printf("Initial VREF: %d mV\r\n", vref_mv);
 
-    // Note: ADC calibration is available in platform-specific implementations
-    // For STM32F3xx: ADCf3xx::calibrate()
-    // For STM32F4xx: ADCf4xx::calibrate()
-    uart.printf("Note: ADC calibration is available via platform-specific methods\r\n");
-
     time::wait(1000);
 
     // Test with default VREF (3.3V)

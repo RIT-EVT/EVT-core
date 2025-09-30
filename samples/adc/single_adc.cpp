@@ -27,10 +27,6 @@ int main() {
 
     // Optional: Set custom VREF voltage (default is 3.3V)
 
-
-
-    // ADC calibration removed - not needed for this application
-
     while (1) {
         adc0.setVref(1.8f);  // For 1.8V reference
         uart.printf("1.8V ADC Reference\r\n");

@@ -33,8 +33,6 @@ int main() {
     // adc0.setVref(5.0f);  // For 5V reference
     // adc1.setVref(1.8f);  // For 1.8V reference
 
-    // ADC calibration removed - not needed for this application
-
     while (1) {
         core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "--------------------");
         core::log::LOGGER.log(
