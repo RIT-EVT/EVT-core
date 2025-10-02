@@ -43,30 +43,37 @@ int main() {
     interruptGPIOStopStart = &io::getGPIO<io::Pin::PC_2>(io::GPIO::Direction::OUTPUT);
     reloadGPIO             = &io::getGPIO<io::Pin::PC_0>(io::GPIO::Direction::OUTPUT);
 
-    // Setup the Timer
-    dev::Timer& timer2 = dev::getTimer<dev::MCUTimer::Timer2>(500);
-<<<<<<< HEAD
+    dev::TimerConfiguration configuration = {
+        TIM_COUNTERMODE_UP,
+        TIM_CLOCKDIVISION_DIV1,
+        TIM_AUTORELOAD_PRELOAD_ENABLE,
+        TIM_CLOCKSOURCE_INTERNAL,
+        TIM_TRGO_RESET,
+        TIM_MASTERSLAVEMODE_DISABLE
+    };
 
-#ifdef STM32F4xx
-    // F4xx does not support Timers 15 & 16, change them to Timer11 & Timer12
-    dev::Timer& timer15 = dev::getTimer<dev::MCUTimer::Timer11>(100);
-    dev::Timer& timer16 = dev::getTimer<dev::MCUTimer::Timer12>(200);
-#else
-=======
-    // F4xx does not support Timers 15 & 16, change them to Timer11 & Timer12
->>>>>>> a82fb941 (Removed other files)
-    dev::Timer& timer15 = dev::getTimer<dev::MCUTimer::Timer15>(100);
-    dev::Timer& timer16 = dev::getTimer<dev::MCUTimer::Timer16>(200);
+    // Set up the Timer
+    dev::Timer& sampleTimer1 = dev::getTimer<dev::MCUTimer::Timer2>(1000, configuration);
 
-    timer2.startTimer(timer2IRQHandler);
-    timer15.startTimer(timer15IRQHandler);
-    timer16.startTimer(timer16IRQHandler);
+    #ifdef STM32F4xx
+    // F4xx does not support Timers 15 & 16, change them to Timer11 & Timer12
+    dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer11>(100);
+    dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer12>(200);
+    #else
+    dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer15>(1000, configuration);
+    dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer16>(1000, configuration);
+
+    #endif
+
+    sampleTimer1.startTimer(timer2IRQHandler);
+    sampleTimer2.startTimer(timer15IRQHandler);
+    sampleTimer3.startTimer(timer16IRQHandler);
 
     while (1) {
         core::time::wait(500);
-        timer15.stopTimer();
-        timer16.reloadTimer();
+        sampleTimer2.stopTimer();
+        sampleTimer3.reloadTimer();
         core::time::wait(500);
-        timer15.startTimer();
+        sampleTimer2.startTimer();
     }
 }
