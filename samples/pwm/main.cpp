@@ -19,15 +19,14 @@ int main() {
 
     io::PWM& pwm = io::getPWM<io::Pin::PA_8>();
     // 1000000 microseconds (1 second) period
-    pwm.setPeriod(1000000 / 5);
+    pwm.setPeriod(1000000);
     // 50 % duty cycle
     pwm.setDutyCycle(50);
 
     while (1) {
         core::time::wait(1000);
-        // pwm.setDutyCycle(70);
-        // core::time::wait(5000);
-        // pwm.setDutyCycle(30);
-        // core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "Hit");
+        pwm.setDutyCycle(70);
+        core::time::wait(5000);
+        pwm.setDutyCycle(30);
     }
 }
