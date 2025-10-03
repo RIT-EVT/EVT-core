@@ -22,7 +22,7 @@ enum timerInterruptIndex {
 /**
  * Returns the corresponding index for the given timer device as stored in the
  * timerInterruptHandlers array
- * @param htim the TIM_TypeDef pointer to the timer device
+ * @param[in] peripheral the TIM_TypeDef pointer to the timer device
  * @return an uint8_t between 0-3 corresponding to an element of timerInterruptHandlers
  */
 timerInterruptIndex getTimerInterruptIndex(TIM_TypeDef* peripheral) {

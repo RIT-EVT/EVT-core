@@ -9,24 +9,52 @@
 
 namespace core::io {
 
+/**
+ * @brief A PWM instance for F3xx family STM32s
+ *
+ * A subclass of both @ref PWM and @ref TimerF3xx. Since PWM on the F3 requires its own instance of a timer, a subclass
+ * is used instead of an internal timer variable. This provides more control over the timer, and is more accurate to what
+ * PWM is on the F3 (just a timer instance that flips a GPIO pin).
+ */
 class PWMf3xx : public PWM, public dev::TimerF3xx {
 public:
     /**
      * Setup the given pin for PWM usage.
      *
      * @param pin[in] The pin to setup for PWM
+     * @param clockPeriod[in] The clock period to run the internal PWM timer at. Set by manager.hpp
+     * @param configuration[in] The configuration for the internal PWM timer. Set by manager.hpp
+     * @param clockPrescaler[in] The clock prescaler for the internal PWM timer. Set by manager.hpp.
      */
     PWMf3xx(Pin pin, TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, dev::TimerConfiguration configuration, uint32_t clockPrescaler = AUTO_PRESCALER);
 
+    /**
+     * Set the duty cycle for PWM
+     * @param[in] dutyCycle The duty cycle to set PWM at.
+     */
     void setDutyCycle(uint32_t dutyCycle);
 
+    /**
+     * Set the period for PWM.
+     * @param[in] period The period for PWM.
+     */
     void setPeriod(uint32_t period);
 
+    /**
+     * Get the current duty cycle.
+     * @return the duty cycle that the PWM instance is currently running at.
+     */
     uint32_t getDutyCycle();
 
+    /**
+     * Get the current period.
+     * @return the period that the PWM instance is currently running at.
+     */
     uint32_t getPeriod();
 private:
-    /// Channel identification
+    /**
+     * The channel that the timer will run on for this PWM instance
+     * */
     uint32_t halTIMChannelID {};
 };
 

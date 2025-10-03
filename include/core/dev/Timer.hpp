@@ -3,21 +3,64 @@
 
 #include <cstdint>
 
+/**
+ * If AUTO_PRESCALER is sent as a prescaler the timer will calculate its own Prescaler.
+ */
 #define AUTO_PRESCALER (-1)
 
 namespace core::dev {
+/**
+ * @brief A timer configuration provides a timer with all configuration variables needed to be set up..
+ */
 typedef struct {
+    /**
+     * Specifies how the timer will count.
+     * This parameter can be a value of @ref TIM_Counter_Mode
+     * Maps to a timer's @ref TIM_Base_InitTypeDef:CounterMode
+     */
     uint32_t counterMode{};
+
+    /**
+     * Specifies the clock division.
+     * This parameter can be a value of @ref TIM_ClockDivision
+     * Maps to a timer's @ref TIM_Base_InitTypeDef:ClockDivision
+     */
     uint32_t clockDivision{};
+
+    /**
+     * Specifies the auto reload preload value, which controls whether @ref TIMx_ARR is buffered or not.
+     * This parameter can be a value of @ref TIM_AutoReloadPreload
+     * Maps to a timer's @ref TIM_Base_InitTypeDef:AutoReloadPreload
+     */
     uint32_t autoReloadPreload{};
+
+    /**
+     * Timer clock source
+     * This parameter can be a value of @ref TIM_Clock_Source
+     * Maps to @ref TIM_ClockConfigTypeDef:ClockSource
+     */
     uint32_t clockSource{};
+
+    /**
+     * Trigger output (TRGO) selection.
+     * This parameter can be a value of @ref TIM_Master_Mode_Selection
+     * Maps to @ref TIM_MasterConfigTypeDef:MasterOutputTrigger
+     */
     uint32_t masterOutputTrigger{};
-    uint32_t masterOutputTrigger2 = 0;
+
+    /**
+     * Master/slave mode selection.
+     * This parameter can be a value of @ref TIM_Master_Slave_Mode
+     * Maps to @ref TIM_MasterConfigTypeDef:MasterSlaveMode
+     */
     uint32_t masterSlaveMode{};
 } TimerConfiguration;
 
 class Timer {
 public:
+    /**
+     * Virtual destructor required by C++.
+     */
     virtual ~Timer() = default;
 
     /**
@@ -46,8 +89,9 @@ public:
      * You must call startTimer again to continue timer operation.
      *
      * @param[in] clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
+     * @param [in] clockPrescaler the prescaler used by the clock. Divides the system clock frequency to get it within an acceptable range for clocking. If set to @ref AUTO_PRESCALER, the function implementation should calculate its own prescaler.
      */
-    virtual void setPeriod(uint32_t clockPeriod, uint32_t prescaler = AUTO_PRESCALER) = 0;
+    virtual void setPeriod(uint32_t clockPeriod, uint32_t clockPrescaler = AUTO_PRESCALER) = 0;
 };
 } // namespace core::dev
 

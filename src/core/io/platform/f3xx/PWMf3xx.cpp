@@ -10,10 +10,9 @@ namespace core::io {
  * is pulled from the STM32F302x8 documentation. Easier representation of this
  * data can be found on MBed's STM32F302r8 documentation.
  *
- * @param pin The pin to check the instance of
- * @param instance The instance to assign to
- * @param channel The channel to assign to
- * @param alternateFunction The GPIO identifier for the function of the pin
+ * @param[in] pin The pin to check the instance of
+ * @param[in] channel The channel to assign to
+ * @param[in] alternateFunction The GPIO identifier for the function of the pin
  */
 static void getInstance(Pin pin, uint32_t* channel, uint32_t* alternateFunction) {
     switch (pin) {

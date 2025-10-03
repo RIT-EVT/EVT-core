@@ -227,6 +227,11 @@ I2C& getI2C() {
  * @param[in] pin The pin to attach to the PWM.
  */
 #ifdef PWM_SUPPORTED
+/**
+ * Finds the correct timer instance for a given PWM @Pin
+ * @param[in] pin the PWM pin to get a timer instance for.
+ * @return The @ref MCUTimer that correspeonds to the @pin
+ */
 static dev::MCUTimer timerInstance(Pin pin) {
     switch (pin) {
 #if defined(STM32F302x8)
@@ -370,12 +375,6 @@ static dev::MCUTimer timerInstance(Pin pin) {
 template<Pin pin>
 PWM& getPWM() {
     #ifdef STM32F3xx
-    // dev::TimerConfiguration timerConfiguration = {
-    //     TIM_COUNTERMODE_UP,
-    //     TIM_CLOCKDIVISION_DIV1,
-    //     TIM_AUTORELOAD_PRELOAD_ENABLE
-    //     // May need to finish filling this out 🤷‍♀️
-    // };
     dev::TimerConfiguration configuration = {
         TIM_COUNTERMODE_UP,
         TIM_CLOCKDIVISION_DIV1,
