@@ -1,6 +1,8 @@
 #ifndef EVT_BOOTFLASH_HPP
 #define EVT_BOOTFLASH_HPP
 
+#include <boot/IOInterface.hpp>
+
 namespace boot {
 
 enum class FlashStatus {
@@ -13,7 +15,7 @@ enum class FlashStatus {
     FAILED_READ = 6,
 };
 
-class Flash {
+class Flash: public IOInterface {
 public:
     Flash();
     int Lock();
@@ -21,6 +23,12 @@ public:
     int Erase();
     int ReadBuffer();
     int WriteBuffer();
+
+    void read(uint8_t* data, size_t size) override;
+
+    void write(uint8_t* data, size_t size) override;
+
+    void setIRQHandler(void(* handler)(IOInterface& inter, void* priv), void* priv) override;
 };
 }
 #endif // EVT_BOOTFLASH_HPP
