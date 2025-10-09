@@ -11,10 +11,6 @@
 namespace io   = core::io;
 namespace time = core::time;
 
-uint32_t Period    = 0; // ICValue
-uint32_t Frequency = 0;
-uint32_t DutyCycle = 0;
-
 int main(void) {
     // Initialize system
     core::platform::init();
@@ -23,6 +19,10 @@ int main(void) {
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
     uart.printf("Starting PWM input capture\n\r");
+
+    uint32_t Period    = 0; // ICValue
+    uint32_t Frequency = 0;
+    uint32_t DutyCycle = 0;
 
     io::PWM_INPUT& pwmInput = io::getPWM_INPUT<io::Pin::PB_15>();
 
