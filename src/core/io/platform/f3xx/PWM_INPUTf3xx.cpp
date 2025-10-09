@@ -22,7 +22,6 @@ static PWM_INPUTf3xx* activePwmInput = nullptr;
 * @param irqNumber IRQ number for NVIC
 * @param activeChannel HAL enum for which channel will fire the interrupt
  */
-
 static void getInputInstance(Pin pin, TIM_TypeDef** instance, uint32_t* directChannel, uint32_t* indirectChannel,
                              uint32_t* alternateFunction, uint32_t* triggerSource, IRQn_Type* irqNumber,
                              uint32_t* activeChannel) {
