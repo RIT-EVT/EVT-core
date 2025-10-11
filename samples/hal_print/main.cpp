@@ -1,8 +1,8 @@
 #include "HALf3/stm32f3xx_hal.h"
 #include <core/platform/f3xx/stm32f3xx.hpp>
 
-#define PA_2 0x02
-#define PA_3 0x03
+#define PA_2  0x02
+#define PA_3  0x03
 #define PA_11 0x0B
 #define PA_12 0x0C
 
@@ -45,14 +45,14 @@ void init_uart() {
 void init_can() {
     GPIO_InitTypeDef gpioInit;
 
-    halCAN.Instance               = CAN1;
-    halCAN.Init.Prescaler         = (HAL_RCC_GetHCLKFreq() / DEFAULT_BAUD / 16);
-    halCAN.Init.Mode              = CAN_MODE_NORMAL;
-    halCAN.Init.SyncJumpWidth     = CAN_SJW_1TQ;
-    halCAN.Init.TimeSeg1          = CAN_BS1_13TQ;
-    halCAN.Init.TimeSeg2          = CAN_BS2_2TQ;
-    halCAN.Init.TimeTriggeredMode = DISABLE;
-    halCAN.Init.AutoBusOff = DISABLE;
+    halCAN.Instance                  = CAN1;
+    halCAN.Init.Prescaler            = (HAL_RCC_GetHCLKFreq() / DEFAULT_BAUD / 16);
+    halCAN.Init.Mode                 = CAN_MODE_NORMAL;
+    halCAN.Init.SyncJumpWidth        = CAN_SJW_1TQ;
+    halCAN.Init.TimeSeg1             = CAN_BS1_13TQ;
+    halCAN.Init.TimeSeg2             = CAN_BS2_2TQ;
+    halCAN.Init.TimeTriggeredMode    = DISABLE;
+    halCAN.Init.AutoBusOff           = DISABLE;
     halCAN.Init.AutoWakeUp           = DISABLE;
     halCAN.Init.AutoRetransmission   = DISABLE;
     halCAN.Init.ReceiveFifoLocked    = DISABLE;
@@ -69,9 +69,9 @@ void init_can() {
     // Configuring GPIO
     gpioInit.Pin = static_cast<uint32_t>(1 << (PA_12 & 0x0F)) | static_cast<uint32_t>(1 << (PA_11 & 0x0F));
 
-    gpioInit.Mode = GPIO_MODE_AF_OD;
-    gpioInit.Pull = GPIO_PULLUP;
-    gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
+    gpioInit.Mode      = GPIO_MODE_AF_OD;
+    gpioInit.Pull      = GPIO_PULLUP;
+    gpioInit.Speed     = GPIO_SPEED_FREQ_HIGH;
     gpioInit.Alternate = GPIO_AF9_CAN;
 
     __HAL_RCC_GPIOA_CLK_ENABLE();

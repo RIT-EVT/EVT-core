@@ -1,16 +1,27 @@
-#ifndef EVT_BOOTUART_H
-#define EVT_BOOTUART_H
+#ifndef EVT_BOOT_UART_HPP
+#define EVT_BOOT_UART_HPP
 
 #include <boot/IOInterface.hpp>
+#include <core/io/pin.hpp>
 
-class UART: public IOInterface {
+namespace boot {
+
+/**
+ * Minimal abstract class for using UART without having to access EVT-Core.
+ */
+class UART : public IOInterface {
 public:
+    /**
+     * Constructor for the bootloader UART class.
+     */
     UART();
 
-    void read(uint8_t* data, size_t size) override;
-
-    void write(uint8_t* data, size_t size) override;
-
-    void setIRQHandler(void(* handler)(IOInterface& inter, void* priv), void* priv) override;
+    /**
+     * Print a formatted string over UART.
+     *
+     * @param format The string format to be printed out.
+     */
+    virtual void printf(const char* format, ...);
 };
-#endif // EVT_BOOTUART_H
+} // namespace boot
+#endif // EVT_BOOT_UART_HPP

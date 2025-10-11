@@ -1,34 +1,52 @@
-#ifndef EVT_BOOTFLASH_HPP
-#define EVT_BOOTFLASH_HPP
+#ifndef EVT_BOOT_FLASH_HPP
+#define EVT_BOOT_FLASH_HPP
 
 #include <boot/IOInterface.hpp>
 
 namespace boot {
 
 enum class FlashStatus {
-    SUCCESS = 0,
-    FAILURE = 1,
-    FLASH_BUSY = 2,
+    SUCCESS         = 0,
+    FAILURE         = 1,
+    FLASH_BUSY      = 2,
     RESOURCE_LOCKED = 3,
-    ACCESS_FAILURE = 4,
-    FAILED_WRITE = 5,
-    FAILED_READ = 6,
+    ACCESS_FAILURE  = 4,
+    FAILED_WRITE    = 5,
+    FAILED_READ     = 6,
 };
 
-class Flash: public IOInterface {
+/**
+ * This is the abstract class for Flash memory.
+ */
+class Flash : public IOInterface {
 public:
+    /**
+     * Constructor for the bootloader Flash memory class.
+     */
     Flash();
-    int Lock();
-    int Unlock();
-    int Erase();
-    int ReadBuffer();
-    int WriteBuffer();
 
-    void read(uint8_t* data, size_t size) override;
+    /**
+     * Sets the flash memory to read only.
+     *
+     * @return An error code based on if the memory was succesfully locked. Zero if succesfully locked.
+     */
+    virtual FlashStatus lock();
 
-    void write(uint8_t* data, size_t size) override;
+    /**
+     * Sets the flash memory to read and write.
+     *
+     * @return An error code based on if the memory was successfully locked. Zero if successfully locked.
+     */
+    virtual FlashStatus unlock();
 
-    void setIRQHandler(void(* handler)(IOInterface& inter, void* priv), void* priv) override;
+    /**
+     * Erases pages of memory.
+     *
+     * @param pageNum The page number to be erased.
+     * @return An error code based on if the memory was successfully erased. Zero if successfully erased.
+     */
+    virtual FlashStatus erasePage(int pageNum);
 };
-}
-#endif // EVT_BOOTFLASH_HPP
+} // namespace boot
+
+#endif // EVT_BOOT_FLASH_HPP

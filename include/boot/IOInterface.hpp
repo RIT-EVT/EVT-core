@@ -1,10 +1,19 @@
-#ifndef EVT_IOINTERFACE_HPP
-#define EVT_IOINTERFACE_HPP
+#ifndef EVT_BOOT_IOINTERFACE_HPP
+#define EVT_BOOT_IOINTERFACE_HPP
 
 #include <cstdint>
 
+namespace boot {
+
+/**
+ * Abstract class for the bootloaders interfaces to read and write the data from the peripherals. The point of this
+ * class is to reimplement the peripherals without having to use all of EVT-Core, allowing for less memory usage.
+ */
 class IOInterface {
 public:
+    /**
+     * Constructor for the interface.
+     */
     IOInterface();
 
     /**
@@ -24,11 +33,13 @@ public:
     virtual void write(uint8_t* data, size_t size) = 0;
 
     /**
+     * Sets the handler for IRQ and assign it a private data value.
      *
      * @param handler The interrupt handler.
      * @param priv Private data.
      */
     virtual void setIRQHandler(void (*handler)(IOInterface& inter, void* priv), void* priv);
 };
+} // namespace boot
 
-#endif // EVT_IOINTERFACE_HPP
+#endif // EVT_BOOT_IOINTERFACE_HPP
