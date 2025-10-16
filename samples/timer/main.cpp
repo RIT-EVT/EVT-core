@@ -43,6 +43,7 @@ int main() {
     interruptGPIOStopStart = &io::getGPIO<io::Pin::PC_2>(io::GPIO::Direction::OUTPUT);
     reloadGPIO             = &io::getGPIO<io::Pin::PC_0>(io::GPIO::Direction::OUTPUT);
 
+    // Initialize a configuration object for the timer.
     dev::TimerConfiguration configuration = {
         TIM_COUNTERMODE_UP,
         TIM_CLOCKDIVISION_DIV1,
