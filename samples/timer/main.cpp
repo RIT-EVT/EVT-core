@@ -57,8 +57,8 @@ int main() {
 
     #ifdef STM32F4xx
     // F4xx does not support Timers 15 & 16, change them to Timer11 & Timer12
-    dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer11>(100);
-    dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer12>(200);
+    dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer11>(200, configuration);
+    dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer12>(200, configuration);
     #else
     dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer15>(1000, configuration);
     dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer16>(1000, configuration);

@@ -7,7 +7,6 @@
 #ifdef STM32F4xx
     #include <HALf4/stm32f4xx.h>
 #endif
-#include <ctime>
 
 namespace core::dev {
 /**
@@ -92,9 +91,6 @@ TIM_TypeDef* getTIM(MCUTimer mcuTimer) {
     case MCUTimer::Timer1:
         timPeriph = TIM1;
         break;
-    case MCUTimer::Timer8:
-        timPeriph = TIM8;
-        break;
     case MCUTimer::Timer2:
         timPeriph = TIM2;
         break;
@@ -106,6 +102,9 @@ TIM_TypeDef* getTIM(MCUTimer mcuTimer) {
         break;
     case MCUTimer::Timer5:
         timPeriph = TIM5;
+        break;
+    case MCUTimer::Timer8:
+        timPeriph = TIM8;
         break;
     case MCUTimer::Timer9:
         timPeriph = TIM9;
