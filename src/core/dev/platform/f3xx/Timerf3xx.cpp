@@ -96,7 +96,7 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
 
     HAL_NVIC_DisableIRQ(irqNum);
 }
-#elif defined(STM32F334x8)
+#elif defined(STM32F334x8) // #if defined(STM32F302x8)
 #define F334_TIMER_COUNT 6
 
 TIM_HandleTypeDef halTimers[F334_TIMER_COUNT];
@@ -202,7 +202,7 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
 extern "C" void TIM3_IRQHandler(void) {
     HAL_TIM_IRQHandler(&halTimers[getTimerInterruptIndex(TIM3)]);
 }
-#endif
+#endif // #elif defined(STM32F334x8).
 
 // Common IRQHandlers between both f3s
 extern "C" void TIM1_UP_TIM16_IRQHandler(void) {
