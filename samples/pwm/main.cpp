@@ -14,10 +14,6 @@ int main() {
     // Initialize system
     core::platform::init();
 
-    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
-    core::log::LOGGER.setUART(&uart);
-    core::log::LOGGER.setLogLevel(core::log::Logger::LogLevel::DEBUG);
-
     io::PWM& pwm = io::getPWM<io::Pin::PA_8>();
     // 1000000 microseconds (1 second) period
     pwm.setPeriod(1000000);

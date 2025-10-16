@@ -10,7 +10,7 @@
 #include <core/utils/time.hpp>
 
 namespace io   = core::io;
-// namespace time = core::time;
+namespace time = core::time;
 
 int main() {
     // Initialize system
@@ -24,7 +24,7 @@ int main() {
 
     uart.printf("Starting ADC test\r\n");
 
-    core::time::wait(500);
+    time::wait(500);
 
     io::ADC& adc0 = io::getADC<io::Pin::PA_0, io::ADCPeriph::ONE>();
 
@@ -36,6 +36,6 @@ int main() {
             core::log::Logger::LogLevel::INFO, "ADC0: %d%%", static_cast<uint32_t>(adc0.readPercentage() * 100));
         core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "ADC0 raw: %d", adc0.readRaw());
         core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "--------------------\r\n");
-        core::time::wait(500);
+        time::wait(500);
     }
 }
