@@ -2,11 +2,11 @@
 #ifndef EVT_PWM_INPUTF3XX_HPP
 #define EVT_PWM_INPUTF3XX_HPP
 
-#include <stdint.h>
-
 #include <HALf3/stm32f3xx.h>
+
 #include <core/io/PWM_INPUT.hpp>
 #include <core/io/pin.hpp>
+#include <stdint.h>
 
 namespace core::io {
 
@@ -23,7 +23,7 @@ public:
      */
     PWM_INPUTf3xx(Pin pin);
 
-    uint32_t getDutyCycle();
+    uint8_t getDutyCycle();
 
     uint32_t getPeriod();
 

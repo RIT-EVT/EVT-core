@@ -26,7 +26,7 @@ public:
      *
      * @return The duty cycle of the PWM signal being read, as a percentage.
      */
-    virtual uint32_t getDutyCycle() = 0;
+    virtual uint8_t getDutyCycle() = 0;
 
     /**
      * Get the current period.
@@ -46,7 +46,7 @@ protected:
     /// The pin PWM input is on
     Pin pin;
     /// The duty cycle of the PWM input
-    uint32_t dutyCycle;
+    uint8_t dutyCycle;
     /// The period of the PWM input
     uint32_t period;
     /// The frequency of the PWM input

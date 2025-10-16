@@ -273,7 +273,7 @@ void PWM_INPUTf3xx::handleCapture(TIM_HandleTypeDef* htim) {
     }
 }
 
-uint32_t PWM_INPUTf3xx::getDutyCycle() {
+uint8_t PWM_INPUTf3xx::getDutyCycle() {
     return dutyCycle;
 }
 
