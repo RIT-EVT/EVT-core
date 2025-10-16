@@ -80,7 +80,7 @@ protected:
      * @param[in] clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
      * @param[in] clockPrescaler the prescaler that the clock will use. If clockPrescaler is set to @ref AUTO_PRESCALER, this function will calculate its own prescaler value.
      */
-    void initTimer(TIM_TypwseDef* timerPeripheral, uint32_t clockPeriod, uint32_t clockPrescaler);
+    void initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, uint32_t clockPrescaler);
 };
 
 } // namespace core::dev
