@@ -260,7 +260,7 @@ void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, ui
     htim.Init.AutoReloadPreload = this->configuration.autoReloadPreload;
     HAL_TIM_Base_Init(&htim);
 
-    TIM_ClockConfigTypeDef clockConfig   = { };
+    TIM_ClockConfigTypeDef clockConfig   = {0};
 
     clockConfig.ClockSource = this->configuration.clockSource;
     HAL_TIM_ConfigClockSource(&htim, &clockConfig);
