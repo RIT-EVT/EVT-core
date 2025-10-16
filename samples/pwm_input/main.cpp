@@ -32,7 +32,7 @@ int main(void) {
         DutyCycle = pwmInput.getDutyCycle();
         uart.printf("\n\rPeriod: %d\n\r", Period);
         uart.printf("\n\rFrequency: %d\n\r", Frequency);
-        uart.printf("\n\rDuty: %d\n\r", DutyCycle);
+        uart.printf("\n\rDuty: %2d%%\n\r", DutyCycle);
         uart.printf("\n\r----------------------------------\n\r");
         time::wait(1000);
     }
