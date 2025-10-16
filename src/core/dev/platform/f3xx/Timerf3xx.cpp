@@ -265,7 +265,7 @@ void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, ui
     clockConfig.ClockSource = this->configuration.clockSource;
     HAL_TIM_ConfigClockSource(&htim, &clockConfig);
 
-    TIM_MasterConfigTypeDef masterConfig = { };
+    TIM_MasterConfigTypeDef masterConfig = {0};
 
     masterConfig.MasterOutputTrigger = this->configuration.masterOutputTrigger;
     // Should not be needed if it is always set to reset
