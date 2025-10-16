@@ -40,7 +40,7 @@ public:
 
     void reloadTimer() override;
 
-    void setPeriod(uint32_t clock);
+    void setPeriod(uint32_t clock, uint32_t clockPrescaler) override;
 
     /**
      * Gets the time since the RTC clock began in seconds
