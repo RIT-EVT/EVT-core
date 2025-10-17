@@ -1,10 +1,10 @@
 
-#ifndef EVT_PWM_INPUTF3XX_HPP
-#define EVT_PWM_INPUTF3XX_HPP
+#ifndef EVT_PWMINPUTF3XX_HPP
+#define EVT_PWMINPUTF3XX_HPP
 
 #include <HALf3/stm32f3xx.h>
 
-#include <core/io/PWM_INPUT.hpp>
+#include <core/io/PWMInput.hpp>
 #include <core/io/pin.hpp>
 #include <stdint.h>
 
@@ -14,14 +14,14 @@ namespace core::io {
  * PWM input for f3
  * Measures the duty cycle, frequency, and period of a PWM signal on a pin
  */
-class PWM_INPUTf3xx : public PWM_INPUT {
+class PWMInputf3xx : public PWMInput {
 public:
     /**
      * Setup the given pin for PWM Input usage.
      *
      * @param pin[in] The pin to setup for PWM Input Capture
      */
-    PWM_INPUTf3xx(Pin pin);
+    PWMInputf3xx(Pin pin);
 
     uint8_t getDutyCycle();
 

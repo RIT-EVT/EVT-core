@@ -8,7 +8,7 @@
 #include <core/io/GPIO.hpp>
 #include <core/io/I2C.hpp>
 #include <core/io/PWM.hpp>
-#include <core/io/PWM_INPUT.hpp>
+#include <core/io/PWMInput.hpp>
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
 
@@ -33,7 +33,7 @@
     #include <core/io/platform/f3xx/CANf3xx.hpp>
     #include <core/io/platform/f3xx/GPIOf3xx.hpp>
     #include <core/io/platform/f3xx/I2Cf3xx.hpp>
-    #include <core/io/platform/f3xx/PWM_INPUTf3xx.hpp>
+    #include <core/io/platform/f3xx/PWMInputf3xx.hpp>
     #include <core/io/platform/f3xx/PWMf3xx.hpp>
     #include <core/io/platform/f3xx/SPIf3xx.hpp>
     #include <core/io/platform/f3xx/UARTf3xx.hpp>
@@ -244,15 +244,15 @@ PWM& getPWM() {
 #endif
 
 /**
- * Get an instance of a PWM_INPUT pin.
+ * Get an instance of a PWMInput pin.
  *
- * @param[in] pin The pin to attach to the PWM_INPUT.
+ * @param[in] pin The pin to attach to the PWMInput.
  */
 #ifdef PWM_INPUT_SUPPORTED
 template<Pin pin>
-PWM_INPUT& getPWM_INPUT() {
+PWMInput& getPWM_INPUT() {
     #ifdef STM32F3xx
-    static PWM_INPUTf3xx pwm_input(pin);
+    static PWMInputf3xx pwm_input(pin);
     return pwm_input;
     #endif
 }

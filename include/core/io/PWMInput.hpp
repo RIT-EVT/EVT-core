@@ -1,6 +1,6 @@
 
-#ifndef EVT_PWM_INPUT_HPP
-#define EVT_PWM_INPUT_HPP
+#ifndef EVT_PWMINPUT_HPP
+#define EVT_PWMINPUT_HPP
 
 #include <stdint.h>
 
@@ -11,15 +11,15 @@ namespace core::io {
 // at compilation time the decision of which pins should be used.
 enum class Pin;
 
-class PWM_INPUT {
+class PWMInput {
 
 public:
     /**
-     * Setup the given pin for PWM_INPUT usage.
+     * Setup the given pin for PWMInput usage.
      *
-     * @param[in] pin The pin to setup for PWM_INPUT
+     * @param[in] pin The pin to setup for PWMInput
      */
-    PWM_INPUT(Pin pin);
+    PWMInput(Pin pin);
 
     /**
      * Get the current duty cycle.

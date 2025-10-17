@@ -1,8 +1,8 @@
-#include <core/io/PWM_INPUT.hpp>
+#include <core/io/PWMInput.hpp>
 
 namespace core::io {
 
-PWM_INPUT::PWM_INPUT(Pin pin) { // core::io::Pin pin
+PWMInput::PWMInput(Pin pin) { // core::io::Pin pin
     this->pin       = pin;
     this->dutyCycle = 0;
     this->period    = 0;

@@ -1,11 +1,11 @@
 
 #include <core/io/platform/f3xx/GPIOf3xx.hpp>
-#include <core/io/platform/f3xx/PWM_INPUTf3xx.hpp>
+#include <core/io/platform/f3xx/PWMInputf3xx.hpp>
 
 namespace core::io {
 
 // Global pointer to the active instance (one at a time)
-static PWM_INPUTf3xx* activePwmInput = nullptr;
+static PWMInputf3xx* activePwmInput = nullptr;
 
 /**
  * Get timer instance, direct channel, indirect channel, alternate function,
@@ -144,7 +144,7 @@ static void getInputInstance(Pin pin, TIM_TypeDef** instance, uint32_t* directCh
     }
 }
 
-PWM_INPUTf3xx::PWM_INPUTf3xx(Pin pin) : PWM_INPUT(pin) {
+PWMInputf3xx::PWMInputf3xx(Pin pin) : PWMInput(pin) {
     TIM_TypeDef* instance;
     uint32_t alternateFunction;
     uint32_t triggerSource;
@@ -228,7 +228,7 @@ PWM_INPUTf3xx::PWM_INPUTf3xx(Pin pin) : PWM_INPUT(pin) {
     activePwmInput = this; // Register this instance as active
 }
 
-TIM_HandleTypeDef* PWM_INPUTf3xx::getHandle() {
+TIM_HandleTypeDef* PWMInputf3xx::getHandle() {
     return &halTIM;
 }
 
@@ -257,7 +257,7 @@ extern "C" void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim) {
     }
 }
 
-void PWM_INPUTf3xx::handleCapture(TIM_HandleTypeDef* htim) {
+void PWMInputf3xx::handleCapture(TIM_HandleTypeDef* htim) {
     if (htim->Channel == activeChannel) // If the interrupt is triggered by the active channel
     {
         // Read the IC value (period)
@@ -273,15 +273,15 @@ void PWM_INPUTf3xx::handleCapture(TIM_HandleTypeDef* htim) {
     }
 }
 
-uint8_t PWM_INPUTf3xx::getDutyCycle() {
+uint8_t PWMInputf3xx::getDutyCycle() {
     return dutyCycle;
 }
 
-uint32_t PWM_INPUTf3xx::getPeriod() {
+uint32_t PWMInputf3xx::getPeriod() {
     return period;
 }
 
-uint32_t PWM_INPUTf3xx::getFrequency() {
+uint32_t PWMInputf3xx::getFrequency() {
     return frequency;
 }
 
