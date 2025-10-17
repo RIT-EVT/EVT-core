@@ -3,7 +3,6 @@
  * This sample will measure the duty cycle, frequency, and period of a PWM signal.
  */
 
-
 #include <core/io/PWMInput.hpp>
 #include <core/io/UART.hpp>
 #include <core/manager.hpp>
