@@ -50,8 +50,18 @@ int main() {
     // Initialize system
     core::platform::init();
 
+    // Initialize a configuration object for the timer.
+    dev::TimerConfiguration configuration = {
+        TIM_COUNTERMODE_UP,
+        TIM_CLOCKDIVISION_DIV1,
+        TIM_AUTORELOAD_PRELOAD_ENABLE,
+        TIM_CLOCKSOURCE_INTERNAL,
+        TIM_TRGO_RESET,
+        TIM_MASTERSLAVEMODE_DISABLE
+    };
+
     // Initialize the timer
-    dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(100);
+    dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(100, configuration);
 
     // UART for testing
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
