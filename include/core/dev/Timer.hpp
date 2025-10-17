@@ -89,7 +89,9 @@ public:
      * You must call startTimer again to continue timer operation.
      *
      * @param[in] clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
-     * @param [in] clockPrescaler the prescaler used by the timer. Divides the system clock frequency to get it within an acceptable range for use with the required period. If set to @ref AUTO_PRESCALER, the function implementation will calculate its own prescaler.
+     * @param [in] clockPrescaler the prescaler used by the timer. Divides the system clock frequency to get it within
+     * an acceptable range for use with the required period. If set to @ref AUTO_PRESCALER, the function implementation
+     * will calculate its own prescaler.
      */
     virtual void setPeriod(uint32_t clockPeriod, uint32_t clockPrescaler = AUTO_PRESCALER) = 0;
 };

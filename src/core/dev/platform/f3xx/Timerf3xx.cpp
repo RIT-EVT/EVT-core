@@ -4,7 +4,7 @@
 #include <core/utils/log.hpp>
 
 #if defined(STM32F302x8)
-#define F302_TIMER_COUNT 5
+    #define F302_TIMER_COUNT 5
 
 TIM_HandleTypeDef halTimers[F302_TIMER_COUNT];
 void (*timerInterruptHandlers[F302_TIMER_COUNT])(void* htim) = {nullptr};
@@ -16,7 +16,7 @@ enum timerInterruptIndex {
     TIM15_IDX = 2u,
     TIM16_IDX = 3u,
     TIM17_IDX = 4u,
-    NO_IDX = -1
+    NO_IDX    = -1
 };
 
 /**
@@ -76,7 +76,7 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
     IRQn_Type irqNum;
 
     if (peripheral == TIM1) {
-      __HAL_RCC_TIM1_CLK_DISABLE();
+        __HAL_RCC_TIM1_CLK_DISABLE();
         irqNum = TIM1_UP_TIM16_IRQn;
     } else if (peripheral == TIM2) {
         __HAL_RCC_TIM2_CLK_DISABLE();
@@ -97,7 +97,7 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
     HAL_NVIC_DisableIRQ(irqNum);
 }
 #elif defined(STM32F334x8) // #if defined(STM32F302x8)
-#define F334_TIMER_COUNT 6
+    #define F334_TIMER_COUNT 6
 
 TIM_HandleTypeDef halTimers[F334_TIMER_COUNT];
 void (*timerInterruptHandlers[F334_TIMER_COUNT])(void* htim) = {nullptr};
@@ -110,7 +110,7 @@ enum timerInterruptIndex {
     TIM15_IDX = 3u,
     TIM16_IDX = 4u,
     TIM17_IDX = 5u,
-    NO_IDX = -1
+    NO_IDX    = -1
 };
 
 /**
@@ -153,7 +153,7 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim) {
     } else if (peripheral == TIM3) {
         __HAL_RCC_TIM3_CLK_ENABLE();
         irqNum = TIM3_IRQn;
-    }  else if (peripheral == TIM15) {
+    } else if (peripheral == TIM15) {
         __HAL_RCC_TIM15_CLK_ENABLE();
         irqNum = TIM15_IRQn;
     } else if (peripheral == TIM16) {
@@ -175,7 +175,7 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
     IRQn_Type irqNum;
 
     if (peripheral == TIM1) {
-      __HAL_RCC_TIM1_CLK_DISABLE();
+        __HAL_RCC_TIM1_CLK_DISABLE();
         irqNum = TIM1_UP_TIM16_IRQn;
     } else if (peripheral == TIM2) {
         __HAL_RCC_TIM2_CLK_DISABLE();
@@ -210,7 +210,8 @@ extern "C" void TIM1_UP_TIM16_IRQHandler(void) {
         HAL_TIM_IRQHandler(&halTimers[tim1Index]);
     }
 
-    if (const timerInterruptIndex tim16Index = getTimerInterruptIndex(TIM16); halTimers[tim16Index].Instance != nullptr) {
+    if (const timerInterruptIndex tim16Index = getTimerInterruptIndex(TIM16);
+        halTimers[tim16Index].Instance != nullptr) {
         HAL_TIM_IRQHandler(&halTimers[tim16Index]);
     }
 }
@@ -236,16 +237,18 @@ extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
 
 namespace core::dev {
 
-TimerF3xx::TimerF3xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration configuration, uint32_t clockPrescaler) : configuration(configuration) {
+TimerF3xx::TimerF3xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration configuration,
+                     uint32_t clockPrescaler)
+    : configuration(configuration) {
     this->halTimer = &halTimers[getTimerInterruptIndex(timerPeripheral)];
     initTimer(timerPeripheral, clockPeriod, clockPrescaler);
 }
 
 void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, uint32_t clockPrescaler) {
     this->clockPeriod = clockPeriod;
-    auto& htim = halTimers[getTimerInterruptIndex(timerPeripheral)];
+    auto& htim        = halTimers[getTimerInterruptIndex(timerPeripheral)];
 
-    htim.Instance       = timerPeripheral;
+    htim.Instance = timerPeripheral;
     if (clockPrescaler == AUTO_PRESCALER) {
         uint32_t prescaler  = HAL_RCC_GetHCLKFreq() / 1000;
         htim.Init.Prescaler = prescaler - 1; // Sets f_CK_PSC to 1000 Hz
@@ -260,7 +263,7 @@ void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, ui
     htim.Init.AutoReloadPreload = this->configuration.autoReloadPreload;
     HAL_TIM_Base_Init(&htim);
 
-    TIM_ClockConfigTypeDef clockConfig   = {0};
+    TIM_ClockConfigTypeDef clockConfig = {0};
 
     clockConfig.ClockSource = this->configuration.clockSource;
     HAL_TIM_ConfigClockSource(&htim, &clockConfig);
@@ -270,7 +273,7 @@ void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, ui
     masterConfig.MasterOutputTrigger = this->configuration.masterOutputTrigger;
     // Should not be needed if it is always set to reset
     // masterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
-    masterConfig.MasterSlaveMode     = this->configuration.masterSlaveMode;
+    masterConfig.MasterSlaveMode = this->configuration.masterSlaveMode;
 
     HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
 

@@ -234,7 +234,7 @@ I2C& getI2C() {
  */
 static dev::MCUTimer timerInstance(Pin pin) {
     switch (pin) {
-#if defined(STM32F302x8)
+    #if defined(STM32F302x8)
     case Pin::PA_0:
         return dev::MCUTimer::Timer2;
     case Pin::PA_1:
@@ -303,7 +303,7 @@ static dev::MCUTimer timerInstance(Pin pin) {
         return dev::MCUTimer::Timer1;
     case Pin::PF_0:
         return dev::MCUTimer::Timer1;
-#elif defined(STM32F334x8)
+    #elif defined(STM32F334x8)
     case Pin::PA_0:
         return dev::MCUTimer::Timer2;
     case Pin::PA_1:
@@ -366,7 +366,7 @@ static dev::MCUTimer timerInstance(Pin pin) {
         return dev::MCUTimer::Timer1;
     case Pin::PF_0:
         return dev::MCUTimer::Timer1;
-#endif
+    #endif
     default:
         return dev::MCUTimer::None;
     }
@@ -375,14 +375,12 @@ static dev::MCUTimer timerInstance(Pin pin) {
 template<Pin pin>
 PWM& getPWM() {
     #ifdef STM32F3xx
-    dev::TimerConfiguration configuration = {
-        TIM_COUNTERMODE_UP,
-        TIM_CLOCKDIVISION_DIV1,
-        TIM_AUTORELOAD_PRELOAD_ENABLE,
-        TIM_CLOCKSOURCE_INTERNAL,
-        TIM_TRGO_RESET,
-        TIM_MASTERSLAVEMODE_DISABLE
-    };
+    dev::TimerConfiguration configuration = {TIM_COUNTERMODE_UP,
+                                             TIM_CLOCKDIVISION_DIV1,
+                                             TIM_AUTORELOAD_PRELOAD_ENABLE,
+                                             TIM_CLOCKSOURCE_INTERNAL,
+                                             TIM_TRGO_RESET,
+                                             TIM_MASTERSLAVEMODE_DISABLE};
 
     dev::MCUTimer mcuTimer = timerInstance(pin);
     static PWMf3xx pwm(pin, dev::getTIM(mcuTimer), 0, configuration);

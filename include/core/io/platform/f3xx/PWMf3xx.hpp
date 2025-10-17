@@ -13,8 +13,8 @@ namespace core::io {
  * @brief A PWM instance for F3xx family STM32s
  *
  * A subclass of both @ref PWM and @ref TimerF3xx. Since PWM on the F3 requires its own instance of a timer, a subclass
- * is used instead of an internal timer variable. This provides more control over the timer, and is more accurate to what
- * PWM is on the F3 (just a timer instance that flips a GPIO pin).
+ * is used instead of an internal timer variable. This provides more control over the timer, and is more accurate to
+ * what PWM is on the F3 (just a timer instance that flips a GPIO pin).
  */
 class PWMf3xx : public PWM, public dev::TimerF3xx {
 public:
@@ -26,7 +26,8 @@ public:
      * @param configuration[in] The configuration for the internal PWM timer. Set by manager.hpp
      * @param clockPrescaler[in] The clock prescaler for the internal PWM timer. Set by manager.hpp.
      */
-    PWMf3xx(Pin pin, TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, dev::TimerConfiguration configuration, uint32_t clockPrescaler = AUTO_PRESCALER);
+    PWMf3xx(Pin pin, TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, dev::TimerConfiguration configuration,
+            uint32_t clockPrescaler = AUTO_PRESCALER);
 
     /**
      * Set the duty cycle for PWM
@@ -51,11 +52,12 @@ public:
      * @return the period that the PWM instance is currently running at.
      */
     uint32_t getPeriod();
+
 private:
     /**
      * The channel that the timer will run on for this PWM instance
      * */
-    uint32_t halTIMChannelID {};
+    uint32_t halTIMChannelID{};
 };
 
 } // namespace core::io

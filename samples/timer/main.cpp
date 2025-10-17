@@ -44,27 +44,25 @@ int main() {
     reloadGPIO             = &io::getGPIO<io::Pin::PC_0>(io::GPIO::Direction::OUTPUT);
 
     // Initialize a configuration object for the timer.
-    dev::TimerConfiguration configuration = {
-        TIM_COUNTERMODE_UP,
-        TIM_CLOCKDIVISION_DIV1,
-        TIM_AUTORELOAD_PRELOAD_ENABLE,
-        TIM_CLOCKSOURCE_INTERNAL,
-        TIM_TRGO_RESET,
-        TIM_MASTERSLAVEMODE_DISABLE
-    };
+    dev::TimerConfiguration configuration = {TIM_COUNTERMODE_UP,
+                                             TIM_CLOCKDIVISION_DIV1,
+                                             TIM_AUTORELOAD_PRELOAD_ENABLE,
+                                             TIM_CLOCKSOURCE_INTERNAL,
+                                             TIM_TRGO_RESET,
+                                             TIM_MASTERSLAVEMODE_DISABLE};
 
     // Set up the Timer
     dev::Timer& sampleTimer1 = dev::getTimer<dev::MCUTimer::Timer2>(1000, configuration);
 
-    #ifdef STM32F4xx
+#ifdef STM32F4xx
     // F4xx does not support Timers 15 & 16, change them to Timer11 & Timer12
     dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer11>(200, configuration);
     dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer12>(200, configuration);
-    #else
+#else
     dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer15>(1000, configuration);
     dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer16>(1000, configuration);
 
-    #endif
+#endif
 
     sampleTimer1.startTimer(timer2IRQHandler);
     sampleTimer2.startTimer(timer15IRQHandler);

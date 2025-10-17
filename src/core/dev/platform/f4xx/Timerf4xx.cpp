@@ -20,7 +20,7 @@ enum timerInterruptIndex {
     TIM12_IDX = 9u,
     TIM13_IDX = 10u,
     TIM14_IDX = 11u,
-    NO_IDX = -1
+    NO_IDX    = -1
 };
 
 /**
@@ -100,7 +100,7 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim) {
     } else if (peripheral == TIM14) {
         __HAL_RCC_TIM14_CLK_ENABLE();
         irqNum = TIM8_TRG_COM_TIM14_IRQn;
-    }  else if (peripheral == TIM8) {
+    } else if (peripheral == TIM8) {
         __HAL_RCC_TIM8_CLK_ENABLE();
         irqNum = TIM8_UP_TIM13_IRQn;
     } else {
@@ -171,7 +171,8 @@ extern "C" void TIM1_UP_TIM10_IRQHandler(void) {
         HAL_TIM_IRQHandler(&halTimers[tim1Index]);
     }
 
-    if (const timerInterruptIndex tim10Index = getTimerInterruptIndex(TIM10); halTimers[tim10Index].Instance != nullptr) {
+    if (const timerInterruptIndex tim10Index = getTimerInterruptIndex(TIM10);
+        halTimers[tim10Index].Instance != nullptr) {
         HAL_TIM_IRQHandler(&halTimers[tim10Index]);
     }
 }
@@ -181,7 +182,8 @@ extern "C" void TIM8_UP_TIM13_IRQHandler(void) {
         HAL_TIM_IRQHandler(&halTimers[tim8Index]);
     }
 
-    if (const timerInterruptIndex tim13Index = getTimerInterruptIndex(TIM13); halTimers[tim13Index].Instance != nullptr) {
+    if (const timerInterruptIndex tim13Index = getTimerInterruptIndex(TIM13);
+        halTimers[tim13Index].Instance != nullptr) {
         HAL_TIM_IRQHandler(&halTimers[tim13Index]);
     }
 }
@@ -203,10 +205,11 @@ extern "C" void TIM5_IRQHandler(void) {
 }
 
 namespace core::dev {
-TimerF4xx::TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration configuration, uint32_t clockPrescaler)
+TimerF4xx::TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration configuration,
+                     uint32_t clockPrescaler)
     : configuration(configuration) {
-    this->clockPeriod   = clockPeriod;
-    this->halTimer = &halTimers[getTimerInterruptIndex(timerPeripheral)];
+    this->clockPeriod = clockPeriod;
+    this->halTimer    = &halTimers[getTimerInterruptIndex(timerPeripheral)];
     initTimer(timerPeripheral, clockPeriod, clockPrescaler);
 };
 
@@ -214,32 +217,32 @@ TimerF4xx::~TimerF4xx() = default;
 
 void TimerF4xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, uint32_t clockPrescaler) {
     this->clockPeriod = clockPeriod;
-    auto& htim = halTimers[getTimerInterruptIndex(timerPeripheral)];
+    auto& htim        = halTimers[getTimerInterruptIndex(timerPeripheral)];
 
-    htim.Instance       = timerPeripheral;
+    htim.Instance = timerPeripheral;
     // Allows period increments of 1 ms with max of 2^(32) ms.
     htim.Init.CounterMode       = this->configuration.counterMode;
     htim.Init.ClockDivision     = this->configuration.clockDivision;
     htim.Init.AutoReloadPreload = this->configuration.autoReloadPreload;
 
     if (clockPrescaler == AUTO_PRESCALER) {
-        uint32_t prescaler    = SystemCoreClock / 1000;
-        htim.Init.Prescaler   = prescaler - 1; // Sets f_CK_PSC to 1000 Hz
+        uint32_t prescaler  = SystemCoreClock / 1000;
+        htim.Init.Prescaler = prescaler - 1; // Sets f_CK_PSC to 1000 Hz
     } else {
         htim.Init.Prescaler = clockPrescaler;
     }
 
-    this->clockPeriod     = clockPeriod;
-    htim.Init.Period      = clockPeriod - 1;
+    this->clockPeriod = clockPeriod;
+    htim.Init.Period  = clockPeriod - 1;
 
     HAL_TIM_Base_Init(&htim);
 
-    TIM_ClockConfigTypeDef clockConfig   = { };
+    TIM_ClockConfigTypeDef clockConfig = {};
 
     clockConfig.ClockSource = this->configuration.clockSource;
     HAL_TIM_ConfigClockSource(&htim, &clockConfig);
 
-    TIM_MasterConfigTypeDef masterConfig = { };
+    TIM_MasterConfigTypeDef masterConfig = {};
 
     // Timers 9-14 are NOT master mode compatible, so waste of time to go through config
     if (getTimerInterruptIndex(timerPeripheral) < timerInterruptIndex::TIM9_IDX) {
@@ -287,4 +290,4 @@ void TimerF4xx::setPeriod(uint32_t clockPeriod, uint32_t clockPrescaler) {
     stopTimer();
     initTimer(this->halTimer->Instance, clockPeriod, clockPrescaler);
 }
-}
+} // namespace core::dev

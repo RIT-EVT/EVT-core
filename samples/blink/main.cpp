@@ -12,8 +12,8 @@
 #include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
-namespace io   = core::io;
-namespace dev  = core::dev;
+namespace io  = core::io;
+namespace dev = core::dev;
 
 int main() {
     // Initialize system

@@ -377,13 +377,7 @@ PWMf3xx::PWMf3xx(Pin pin, TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, de
     uint8_t numOfPins         = 1;
 
     GPIOf3xx::gpioStateInit(
-        &gpioInit,
-        myPins,
-        numOfPins,
-        GPIO_MODE_AF_PP,
-        GPIO_NOPULL,
-        GPIO_SPEED_FREQ_LOW,
-        alternateFunction);
+        &gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, alternateFunction);
 
     TimerF3xx::startTimer();
 }

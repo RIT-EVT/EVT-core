@@ -56,14 +56,12 @@ constexpr uint8_t ADC3_SLOT = 2;
 ADCf4xx::ADC_State core::io::ADCf4xx::adcArray[NUM_ADCS];
 bool core::io::ADCf4xx::timerInit = false;
 
-dev::TimerConfiguration configuration = {
-    TIM_COUNTERMODE_UP,
-    TIM_CLOCKDIVISION_DIV1,
-    TIM_AUTORELOAD_PRELOAD_ENABLE,
-    TIM_CLOCKSOURCE_INTERNAL,
-    TIM_TRGO_UPDATE,
-    TIM_MASTERSLAVEMODE_DISABLE
-};
+dev::TimerConfiguration configuration = {TIM_COUNTERMODE_UP,
+                                         TIM_CLOCKDIVISION_DIV1,
+                                         TIM_AUTORELOAD_PRELOAD_ENABLE,
+                                         TIM_CLOCKSOURCE_INTERNAL,
+                                         TIM_TRGO_UPDATE,
+                                         TIM_MASTERSLAVEMODE_DISABLE};
 
 dev::TimerF4xx core::io::ADCf4xx::timer8 = dev::TimerF4xx(TIM8, 1000, configuration);
 
@@ -223,7 +221,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
     GPIOf4xx::gpioStateInit(&gpioInit, pins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;
-    Channel_Support channelStruct = { };
+    Channel_Support channelStruct = {};
     // Combines the ADC channel with the ADC peripherals it supports into a struct, avoiding having multi-layered switch
     // statements
     switch (pin) {

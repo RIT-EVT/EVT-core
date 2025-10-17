@@ -10,8 +10,8 @@
 namespace core::dev {
 
 /**
-* Concrete implementation of the Timer class for STM32f4xx MCUs.
-*/
+ * Concrete implementation of the Timer class for STM32f4xx MCUs.
+ */
 class TimerF4xx final : public Timer {
 public:
     ~TimerF4xx() override;
@@ -26,9 +26,11 @@ public:
      * @param[in] timerPeripheral the timer peripheral to use.
      * @param[in] clockPeriod the clock period in ms. An interrupt will be triggered at this frequency.
      * @param[in] configuration the configuration tells the timer how to configure itself.
-     * @param[in] clockPrescaler the prescaler that the clock will use. If clockPrescaler is set to @ref AUTO_PRESCALER, this function will calculate its own prescaler value.
+     * @param[in] clockPrescaler the prescaler that the clock will use. If clockPrescaler is set to @ref AUTO_PRESCALER,
+     * this function will calculate its own prescaler value.
      */
-    explicit TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration configuration, uint32_t clockPrescaler = AUTO_PRESCALER);
+    explicit TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration configuration,
+                       uint32_t clockPrescaler = AUTO_PRESCALER);
 
     /**
      * Starts the given timer and registers the given interrupt pointer to trigger when the timer overflows
@@ -56,14 +58,17 @@ public:
      * You must call startTimer again to continue timer operation.
      *
      * @param[in] clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
-     * @param [in] clockPrescaler the prescaler used by the clock. Divides the system clock frequency to get it within an acceptable range for clocking. If set to @ref AUTO_PRESCALER, the function implementation should calculate its own prescaler.
+     * @param [in] clockPrescaler the prescaler used by the clock. Divides the system clock frequency to get it within
+     * an acceptable range for clocking. If set to @ref AUTO_PRESCALER, the function implementation should calculate its
+     * own prescaler.
      */
     void setPeriod(uint32_t clockPeriod, uint32_t clockPrescaler = AUTO_PRESCALER) override;
+
 private:
     /**
      * Pointer to the halTimer struct stored in the global array in Timerf4xx.cpp
      */
-    TIM_HandleTypeDef* halTimer = { };
+    TIM_HandleTypeDef* halTimer = {};
 
     /**
      * Timer clock period
@@ -80,9 +85,10 @@ private:
      * @param[in] timerPeripheral  The timer peripheral to configure.  Possible options for this board are
      * TIM2, TIM15, TIM16, TIM17.  It is up to the user to verify that resource conflicts do not occur.
      * @param[in] clockPeriod the clock period in ms.  An interrupt will be triggered at that frequency.
-     * @param[in] clockPrescaler the prescaler that the clock will use. If clockPrescaler is set to @ref AUTO_PRESCALER, this function will calculate its own prescaler value.
+     * @param[in] clockPrescaler the prescaler that the clock will use. If clockPrescaler is set to @ref AUTO_PRESCALER,
+     * this function will calculate its own prescaler value.
      */
-    void initTimer(TIM_TypeDef *timerPeripheral, uint32_t clockPeriod, uint32_t clockPrescaler);
+    void initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, uint32_t clockPrescaler);
 };
 } // namespace core::dev
 
