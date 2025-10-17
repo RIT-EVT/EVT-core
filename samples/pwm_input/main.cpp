@@ -3,6 +3,7 @@
  * This sample will measure the duty cycle, frequency, and period of a PWM signal.
  */
 
+
 #include <core/io/PWMInput.hpp>
 #include <core/io/UART.hpp>
 #include <core/manager.hpp>
@@ -22,7 +23,7 @@ int main(void) {
 
     uint32_t Period    = 0; // ICValue
     uint32_t Frequency = 0;
-    uint8_t DutyCycle = 0;
+    uint8_t DutyCycle  = 0;
 
     io::PWMInput& pwmInput = io::getPWM_INPUT<io::Pin::PB_15>();
 
