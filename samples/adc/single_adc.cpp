@@ -17,7 +17,6 @@ int main() {
 
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
-
     uart.printf("Starting ADC test\r\n");
 
     time::wait(500);

@@ -19,15 +19,15 @@ void testADCAtVref(io::ADC& adc, float vref, const char* vref_name, io::UART& ua
     adc.setVref(vref);
     uint32_t vref_mv = static_cast<uint32_t>(adc.getVref() * 1000);
     uart.printf("VREF: %d mV\r\n", vref_mv);
-    
+
     for (int i = 0; i < 5; i++) {
         float voltage    = adc.read();
         float percentage = adc.readPercentage();
         uint32_t raw     = adc.readRaw();
-        
-        uint32_t voltage_mv = static_cast<uint32_t>(voltage * 1000);
+
+        uint32_t voltage_mv     = static_cast<uint32_t>(voltage * 1000);
         uint32_t percentage_int = static_cast<uint32_t>(percentage * 100);
-        
+
         uart.printf("Reading %d: %d mV (%d%%, raw: %d)\r\n", i + 1, voltage_mv, percentage_int, raw);
         time::wait(200);
     }
@@ -38,7 +38,6 @@ int main() {
     core::platform::init();
 
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
-
 
     uart.printf("Starting ADC VREF Demo\r\n");
 
@@ -68,9 +67,9 @@ int main() {
     float test_vrefs[] = {1.0f, 2.5f, 3.3f, 3.6f};
     for (float vref : test_vrefs) {
         adc0.setVref(vref);
-        uint32_t raw  = adc0.readRaw();
-        float voltage = adc0.read();
-        uint32_t vref_mv = static_cast<uint32_t>(vref * 1000);
+        uint32_t raw        = adc0.readRaw();
+        float voltage       = adc0.read();
+        uint32_t vref_mv    = static_cast<uint32_t>(vref * 1000);
         uint32_t voltage_mv = static_cast<uint32_t>(voltage * 1000);
         uart.printf("VREF: %d mV -> Raw: %d, Voltage: %d mV\r\n", vref_mv, raw, voltage_mv);
         time::wait(100);
