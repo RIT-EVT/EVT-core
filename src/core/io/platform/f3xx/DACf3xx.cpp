@@ -21,15 +21,15 @@ extern "C" void TIM7_DAC2_IRQHandler(void) {
 }
 
 DACf3xx::DACf3xx(Pin pin, DACPeriph dacPeriph) : DACBase(pin, dacPeriph), halDac{} {
-    dacInstance     = this;
-    
+    dacInstance = this;
+
     // Validate that the pin supports the requested DAC peripheral
     Channel_Support channelSupport = getChannelSupport(pin);
     if (!checkSupport(dacPeriph, channelSupport)) {
         // Pin doesn't support the requested DAC peripheral, use default
         dacPeriph = DACPeriph::ONE;
     }
-    
+
     // Set the appropriate DAC instance based on the peripheral
     switch (dacPeriph) {
     case DACPeriph::ONE:
@@ -39,17 +39,17 @@ DACf3xx::DACf3xx(Pin pin, DACPeriph dacPeriph) : DACBase(pin, dacPeriph), halDac
 #ifdef DAC2
         halDac.Instance = DAC2;
 #else
-        halDac.Instance = DAC1; // DAC2 not available on this variant
+        halDac.Instance = DAC1;      // DAC2 not available on this variant
 #endif
         break;
     default:
         halDac.Instance = DAC1; // Default fallback
         break;
     }
-    
+
     // Determine and store the channel
     channel = getChannelFromPin();
-    
+
     initGPIO();
     initDAC();
 }
@@ -134,7 +134,7 @@ void DACf3xx::initGPIO() {
         __HAL_RCC_DAC1_CLK_ENABLE(); // Default fallback
         break;
     }
-    
+
     __HAL_RCC_GPIOA_CLK_ENABLE();
 
     if (pin == Pin::PA_4) {
@@ -155,7 +155,7 @@ uint32_t DACf3xx::getChannelFromPin() {
 #ifdef DAC_CHANNEL_2
         return DAC_CHANNEL_2; // STM32F334 supports PA_5 (DAC_CHANNEL_2)
 #else
-        return DAC_CHANNEL_1; // STM32F302 doesn't support PA_5, use CHANNEL_1
+        return DAC_CHANNEL_1;        // STM32F302 doesn't support PA_5, use CHANNEL_1
 #endif
     } else {
         return DAC_CHANNEL_1; // Default fallback
@@ -164,27 +164,27 @@ uint32_t DACf3xx::getChannelFromPin() {
 
 DACf3xx::Channel_Support DACf3xx::getChannelSupport(Pin pin) {
     Channel_Support support = {0};
-    
+
     if (pin == Pin::PA_4) {
-        support.dac1 = 1;    // PA_4 supports DAC1
-        support.dac2 = 0;    // PA_4 doesn't support DAC2
+        support.dac1    = 1; // PA_4 supports DAC1
+        support.dac2    = 0; // PA_4 doesn't support DAC2
         support.channel = DAC_CHANNEL_1;
     } else if (pin == Pin::PA_5) {
-        support.dac1 = 0;    // PA_5 doesn't support DAC1
+        support.dac1 = 0; // PA_5 doesn't support DAC1
 #ifdef DAC_CHANNEL_2
-        support.dac2 = 1;    // PA_5 supports DAC2 (on STM32F334)
+        support.dac2    = 1; // PA_5 supports DAC2 (on STM32F334)
         support.channel = DAC_CHANNEL_2;
 #else
-        support.dac2 = 0;    // PA_5 doesn't support DAC2 (on STM32F302)
+        support.dac2    = 0;         // PA_5 doesn't support DAC2 (on STM32F302)
         support.channel = DAC_CHANNEL_1;
 #endif
     } else {
         // Default fallback
-        support.dac1 = 1;
-        support.dac2 = 0;
+        support.dac1    = 1;
+        support.dac2    = 0;
         support.channel = DAC_CHANNEL_1;
     }
-    
+
     return support;
 }
 

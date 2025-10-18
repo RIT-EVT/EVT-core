@@ -15,20 +15,20 @@ extern "C" void TIM6_DAC1_IRQHandler(void) {
 }
 
 DACf4xx::DACf4xx(Pin pin, DACPeriph dacPeriph) : DACBase(pin, dacPeriph), halDac{} {
-    dacInstance     = this;
-    
+    dacInstance = this;
+
     // Validate that the pin supports the requested DAC peripheral
     Channel_Support channelSupport = getChannelSupport(pin);
     if (!checkSupport(dacPeriph, channelSupport)) {
         // Pin doesn't support the requested DAC peripheral, use default
         dacPeriph = DACPeriph::ONE;
     }
-    
+
     halDac.Instance = DAC;
-    
+
     // Determine and store the channel
     channel = getChannelFromPin();
-    
+
     initGPIO();
     initDAC();
 }
@@ -117,22 +117,22 @@ uint32_t DACf4xx::getChannelFromPin() {
 
 DACf4xx::Channel_Support DACf4xx::getChannelSupport(Pin pin) {
     Channel_Support support = {0};
-    
+
     if (pin == Pin::PA_4) {
-        support.dac1 = 1;    // PA_4 supports DAC1
-        support.dac2 = 0;    // PA_4 doesn't support DAC2
+        support.dac1    = 1; // PA_4 supports DAC1
+        support.dac2    = 0; // PA_4 doesn't support DAC2
         support.channel = DAC_CHANNEL_1;
     } else if (pin == Pin::PA_5) {
-        support.dac1 = 0;    // PA_5 doesn't support DAC1
-        support.dac2 = 1;    // PA_5 supports DAC2
+        support.dac1    = 0; // PA_5 doesn't support DAC1
+        support.dac2    = 1; // PA_5 supports DAC2
         support.channel = DAC_CHANNEL_2;
     } else {
         // Default fallback
-        support.dac1 = 1;
-        support.dac2 = 0;
+        support.dac1    = 1;
+        support.dac2    = 0;
         support.channel = DAC_CHANNEL_1;
     }
-    
+
     return support;
 }
 

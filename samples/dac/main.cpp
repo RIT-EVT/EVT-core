@@ -19,33 +19,33 @@
 namespace io   = core::io;
 namespace time = core::time;
 
-constexpr float TOLERANCE = 0.1f; // 100mV tolerance for ADC readings
-constexpr int VOLTAGE_TO_MILLIVOLTS = 1000; // Conversion factor from volts to millivolts
-constexpr int SETTLING_TIME_MS = 10; // Time to wait for DAC/ADC settling in milliseconds
-constexpr int TRIANGLE_STEP_SIZE = 50; // Step size for triangle wave generation
-constexpr int TRIANGLE_LOG_INTERVAL = 100; // Log every N cycles for triangle wave
-constexpr int TRIANGLE_MAX_VALUE = 4000; // Maximum value for triangle wave (below DAC max)
-constexpr float VOLTAGE_CLAMP_MIN = 3.29f; // Minimum expected voltage after clamping
-constexpr float VOLTAGE_CLAMP_MAX = 3.31f; // Maximum expected voltage after clamping
-constexpr uint32_t DAC_MAX_VALUE = 4095; // Maximum 12-bit DAC value
-constexpr uint32_t TEST_OVERFLOW_VALUE = 5000; // Test value that exceeds DAC maximum
-constexpr float TEST_OVERFLOW_VOLTAGE = 5.0f; // Test voltage that exceeds DAC maximum
-constexpr float TEST_VOLTAGE_1 = 0.5f; // Test voltage 1 for loopback testing
-constexpr float TEST_VOLTAGE_2 = 1.5f; // Test voltage 2 for loopback testing
-constexpr float TEST_VOLTAGE_3 = 2.5f; // Test voltage 3 for loopback testing
-constexpr float TEST_VOLTAGE_4 = 1.0f; // Test voltage 4 for setVoltage testing
-constexpr float TEST_VOLTAGE_5 = 2.0f; // Test voltage 5 for setVoltage testing
-constexpr float TEST_VOLTAGE_6 = 3.0f; // Test voltage 6 for setVoltage testing
-constexpr uint32_t TEST_VALUE_1 = 2048; // Test value 1 for setValue testing (~1.65V)
-constexpr uint32_t TEST_VALUE_2 = 3072; // Test value 2 for setValue testing (~2.47V)
-constexpr float EXPECTED_VOLTAGE_1 = 1.65f; // Expected voltage for TEST_VALUE_1
-constexpr float EXPECTED_VOLTAGE_2 = 2.47f; // Expected voltage for TEST_VALUE_2
-constexpr float EXPECTED_VOLTAGE_3 = 3.3f; // Expected voltage for DAC_MAX_VALUE
-constexpr uint32_t TEST_VALUE_0 = 0; // Test value 0 for setValue testing (0V)
-constexpr uint32_t TEST_VALUE_3 = 1024; // Test value 3 for setValue testing (~0.82V)
-constexpr float EXPECTED_VOLTAGE_0 = 0.0f; // Expected voltage for TEST_VALUE_0
-constexpr float EXPECTED_VOLTAGE_4 = 0.82f; // Expected voltage for TEST_VALUE_3
-constexpr uint32_t UART_BAUD_RATE = 9600; // UART baud rate for logging
+constexpr float TOLERANCE              = 0.1f;  // 100mV tolerance for ADC readings
+constexpr int VOLTAGE_TO_MILLIVOLTS    = 1000;  // Conversion factor from volts to millivolts
+constexpr int SETTLING_TIME_MS         = 10;    // Time to wait for DAC/ADC settling in milliseconds
+constexpr int TRIANGLE_STEP_SIZE       = 50;    // Step size for triangle wave generation
+constexpr int TRIANGLE_LOG_INTERVAL    = 100;   // Log every N cycles for triangle wave
+constexpr int TRIANGLE_MAX_VALUE       = 4000;  // Maximum value for triangle wave (below DAC max)
+constexpr float VOLTAGE_CLAMP_MIN      = 3.29f; // Minimum expected voltage after clamping
+constexpr float VOLTAGE_CLAMP_MAX      = 3.31f; // Maximum expected voltage after clamping
+constexpr uint32_t DAC_MAX_VALUE       = 4095;  // Maximum 12-bit DAC value
+constexpr uint32_t TEST_OVERFLOW_VALUE = 5000;  // Test value that exceeds DAC maximum
+constexpr float TEST_OVERFLOW_VOLTAGE  = 5.0f;  // Test voltage that exceeds DAC maximum
+constexpr float TEST_VOLTAGE_1         = 0.5f;  // Test voltage 1 for loopback testing
+constexpr float TEST_VOLTAGE_2         = 1.5f;  // Test voltage 2 for loopback testing
+constexpr float TEST_VOLTAGE_3         = 2.5f;  // Test voltage 3 for loopback testing
+constexpr float TEST_VOLTAGE_4         = 1.0f;  // Test voltage 4 for setVoltage testing
+constexpr float TEST_VOLTAGE_5         = 2.0f;  // Test voltage 5 for setVoltage testing
+constexpr float TEST_VOLTAGE_6         = 3.0f;  // Test voltage 6 for setVoltage testing
+constexpr uint32_t TEST_VALUE_1        = 2048;  // Test value 1 for setValue testing (~1.65V)
+constexpr uint32_t TEST_VALUE_2        = 3072;  // Test value 2 for setValue testing (~2.47V)
+constexpr float EXPECTED_VOLTAGE_1     = 1.65f; // Expected voltage for TEST_VALUE_1
+constexpr float EXPECTED_VOLTAGE_2     = 2.47f; // Expected voltage for TEST_VALUE_2
+constexpr float EXPECTED_VOLTAGE_3     = 3.3f;  // Expected voltage for DAC_MAX_VALUE
+constexpr uint32_t TEST_VALUE_0        = 0;     // Test value 0 for setValue testing (0V)
+constexpr uint32_t TEST_VALUE_3        = 1024;  // Test value 3 for setValue testing (~0.82V)
+constexpr float EXPECTED_VOLTAGE_0     = 0.0f;  // Expected voltage for TEST_VALUE_0
+constexpr float EXPECTED_VOLTAGE_4     = 0.82f; // Expected voltage for TEST_VALUE_3
+constexpr uint32_t UART_BAUD_RATE      = 9600;  // UART baud rate for logging
 
 /**
  * Test DAC initialization by checking if it starts at zero voltage
@@ -57,7 +57,8 @@ bool testDACInitialization(io::DigitalToAnalogConverter& dac, io::UART& uart) {
     // Test 1: Verify DAC starts at zero
     float initialVoltage = dac.getVoltage();
     bool passed          = (initialVoltage < TOLERANCE); // Should be near 0V
-    uart.printf("DAC Init Test: %s (%dmV)\r\n", passed ? "PASS" : "FAIL", (int) (initialVoltage * VOLTAGE_TO_MILLIVOLTS));
+    uart.printf(
+        "DAC Init Test: %s (%dmV)\r\n", passed ? "PASS" : "FAIL", (int) (initialVoltage * VOLTAGE_TO_MILLIVOLTS));
     return passed;
 }
 
@@ -150,7 +151,7 @@ int main() {
 
     // Initialize DAC and ADC using manager methods
     io::DigitalToAnalogConverter& dac = io::getDAC<io::Pin::PA_4, io::DACPeriph::ONE>();
-    io::ADC& adc = io::getADC<io::Pin::PA_0, io::ADCPeriph::ONE>();
+    io::ADC& adc                      = io::getADC<io::Pin::PA_0, io::ADCPeriph::ONE>();
 
     // Test 1: DAC Initialization
     uart.printf("--- Test 1: DAC Initialization ---\r\n");
@@ -159,10 +160,10 @@ int main() {
     // Test 2: DAC setValue() functionality
     uart.printf("--- Test 2: DAC setValue() Functionality ---\r\n");
     testDACSetValue(dac, TEST_VALUE_0, EXPECTED_VOLTAGE_0, uart);
-    testDACSetValue(dac, TEST_VALUE_3, EXPECTED_VOLTAGE_4, uart); // ~0.82V
-    testDACSetValue(dac, TEST_VALUE_1, EXPECTED_VOLTAGE_1, uart); // ~1.65V
-    testDACSetValue(dac, TEST_VALUE_2, EXPECTED_VOLTAGE_2, uart); // ~2.47V
-    testDACSetValue(dac, DAC_MAX_VALUE, EXPECTED_VOLTAGE_3, uart);  // ~3.3V
+    testDACSetValue(dac, TEST_VALUE_3, EXPECTED_VOLTAGE_4, uart);  // ~0.82V
+    testDACSetValue(dac, TEST_VALUE_1, EXPECTED_VOLTAGE_1, uart);  // ~1.65V
+    testDACSetValue(dac, TEST_VALUE_2, EXPECTED_VOLTAGE_2, uart);  // ~2.47V
+    testDACSetValue(dac, DAC_MAX_VALUE, EXPECTED_VOLTAGE_3, uart); // ~3.3V
 
     // Test 3: DAC setVoltage() functionality
     uart.printf("--- Test 3: DAC setVoltage() Functionality ---\r\n");
@@ -177,13 +178,15 @@ int main() {
     bool valueClampTest = (dac.getValue() == DAC_MAX_VALUE);
     uart.printf("DAC setValue(%d): %s (Clamped to %d)\r\n",
                 TEST_OVERFLOW_VALUE,
-                valueClampTest ? "PASS" : "FAIL", dac.getValue());
-    
+                valueClampTest ? "PASS" : "FAIL",
+                dac.getValue());
+
     dac.setVoltage(TEST_OVERFLOW_VOLTAGE); // Should clamp to 3.3V
     bool voltageClampTest = (dac.getVoltage() >= VOLTAGE_CLAMP_MIN && dac.getVoltage() <= VOLTAGE_CLAMP_MAX);
     uart.printf("DAC setVoltage(%.1fV): %s (Clamped to %dmV)\r\n",
                 TEST_OVERFLOW_VOLTAGE,
-                voltageClampTest ? "PASS" : "FAIL", (int) (dac.getVoltage() * VOLTAGE_TO_MILLIVOLTS));
+                voltageClampTest ? "PASS" : "FAIL",
+                (int) (dac.getVoltage() * VOLTAGE_TO_MILLIVOLTS));
 
     // Test 5: DAC-ADC Integration
     uart.printf("--- Test 5: DAC-ADC Integration ---\r\n");

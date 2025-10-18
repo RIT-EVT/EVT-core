@@ -35,11 +35,11 @@ private:
     /// Maximum raw DAC value (12-bit resolution)
     static constexpr uint32_t MAX_RAW = 4095;
     /// Reference voltage for DAC output calculation
-    static constexpr float VREF_POS   = 3.3;
+    static constexpr float VREF_POS = 3.3;
     /// Current DAC output value
-    uint32_t currentValue             = 0;
+    uint32_t currentValue = 0;
     /// DAC channel for this instance
-    uint32_t channel                  = 0;
+    uint32_t channel = 0;
 
     /**
      * Bit packed struct to contain the channel along with the DAC peripherals the channel supports
