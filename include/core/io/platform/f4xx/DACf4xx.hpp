@@ -9,7 +9,8 @@
 namespace core::io {
 
 enum class DACPeriph {
-    ONE
+    ONE,
+    TWO
 };
 
 class DACf4xx : public DACBase {
@@ -27,24 +28,29 @@ public:
     void setVoltage(float voltage) override;
     float getVoltage() const override;
 
-    DAC_HandleTypeDef* getHalDac() {
-        return &halDac;
-    }
+    /// HAL DAC handle for STM32 operations (public for interrupt access)
+    DAC_HandleTypeDef halDac;
 
 private:
+    /// Maximum raw DAC value (12-bit resolution)
     static constexpr uint32_t MAX_RAW = 4095;
+    /// Reference voltage for DAC output calculation
     static constexpr float VREF_POS   = 3.3;
+    /// Current DAC output value
     uint32_t currentValue             = 0;
-    DAC_HandleTypeDef halDac;
+    /// DAC channel for this instance
+    uint32_t channel                  = 0;
 
     /**
      * Bit packed struct to contain the channel along with the DAC peripherals the channel supports
      *
      * dac1: 1 bit. Support for DAC1 peripheral. 1 for supported, 0 for not supported.
+     * dac2: 1 bit. Support for DAC2 peripheral. 1 for supported, 0 for not supported.
      * channel: 5 bits. The STM32 DAC channel value with said supported DAC peripherals
      */
     struct Channel_Support {
         uint8_t dac1    : 1;
+        uint8_t dac2    : 1;
         uint8_t channel : 5;
     };
 
@@ -57,8 +63,28 @@ private:
      */
     static bool checkSupport(DACPeriph periph, Channel_Support channelStruct);
 
+    /**
+     * Initialize the DAC peripheral with proper configuration
+     */
     void initDAC();
+
+    /**
+     * Initialize GPIO pins for DAC functionality
+     */
     void initGPIO();
+
+    /**
+     * Determine the DAC channel based on the pin
+     * @return The STM32 DAC channel value
+     */
+    uint32_t getChannelFromPin();
+
+    /**
+     * Get channel support information for a given pin
+     * @param pin The pin to get support information for
+     * @return Channel_Support struct with DAC peripheral support information
+     */
+    static Channel_Support getChannelSupport(Pin pin);
 };
 
 } // namespace core::io
