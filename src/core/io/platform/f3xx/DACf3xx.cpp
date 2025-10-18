@@ -36,7 +36,11 @@ DACf3xx::DACf3xx(Pin pin, DACPeriph dacPeriph) : DACBase(pin, dacPeriph), halDac
         halDac.Instance = DAC1;
         break;
     case DACPeriph::TWO:
+#ifdef DAC2
         halDac.Instance = DAC2;
+#else
+        halDac.Instance = DAC1; // DAC2 not available on this variant
+#endif
         break;
     default:
         halDac.Instance = DAC1; // Default fallback
@@ -120,7 +124,11 @@ void DACf3xx::initGPIO() {
         __HAL_RCC_DAC1_CLK_ENABLE();
         break;
     case DACPeriph::TWO:
+#ifdef __HAL_RCC_DAC2_CLK_ENABLE
         __HAL_RCC_DAC2_CLK_ENABLE();
+#else
+        __HAL_RCC_DAC1_CLK_ENABLE(); // DAC2 not available on this variant
+#endif
         break;
     default:
         __HAL_RCC_DAC1_CLK_ENABLE(); // Default fallback
@@ -144,7 +152,7 @@ uint32_t DACf3xx::getChannelFromPin() {
     if (pin == Pin::PA_4) {
         return DAC_CHANNEL_1;
     } else if (pin == Pin::PA_5) {
-#if defined(DAC_CHANNEL2_SUPPORT)
+#ifdef DAC_CHANNEL_2
         return DAC_CHANNEL_2; // STM32F334 supports PA_5 (DAC_CHANNEL_2)
 #else
         return DAC_CHANNEL_1; // STM32F302 doesn't support PA_5, use CHANNEL_1
@@ -163,8 +171,13 @@ DACf3xx::Channel_Support DACf3xx::getChannelSupport(Pin pin) {
         support.channel = DAC_CHANNEL_1;
     } else if (pin == Pin::PA_5) {
         support.dac1 = 0;    // PA_5 doesn't support DAC1
+#ifdef DAC_CHANNEL_2
         support.dac2 = 1;    // PA_5 supports DAC2 (on STM32F334)
         support.channel = DAC_CHANNEL_2;
+#else
+        support.dac2 = 0;    // PA_5 doesn't support DAC2 (on STM32F302)
+        support.channel = DAC_CHANNEL_1;
+#endif
     } else {
         // Default fallback
         support.dac1 = 1;
