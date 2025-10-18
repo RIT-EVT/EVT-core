@@ -173,7 +173,7 @@ ADC& getADC() {
  */
 #ifdef DAC_SUPPORTED
 template<Pin pin, DACPeriph dacPeriph = DACPeriph::ONE>
-DAC& getDAC() {
+DigitalToAnalogConverter& getDAC() {
     #ifdef STM32F4xx
     static DACf4xx dac(pin, dacPeriph);
     return dac;
