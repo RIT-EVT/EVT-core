@@ -13,15 +13,32 @@
 namespace io   = core::io;
 namespace time = core::time;
 
+// Function to perform ADC test at a given reference voltage
+void testADCAtVref(io::ADC& adc, float vref, const char* vref_name, io::UART& uart) {
+    uart.printf("\r\n=== Testing with %s ===\r\n", vref_name);
+    adc.setVref(vref);
+    uint32_t vref_mv = static_cast<uint32_t>(adc.getVref() * 1000);
+    uart.printf("VREF: %d mV\r\n", vref_mv);
+    
+    for (int i = 0; i < 5; i++) {
+        float voltage    = adc.read();
+        float percentage = adc.readPercentage();
+        uint32_t raw     = adc.readRaw();
+        
+        uint32_t voltage_mv = static_cast<uint32_t>(voltage * 1000);
+        uint32_t percentage_int = static_cast<uint32_t>(percentage * 100);
+        
+        uart.printf("Reading %d: %d mV (%d%%, raw: %d)\r\n", i + 1, voltage_mv, percentage_int, raw);
+        time::wait(200);
+    }
+}
+
 int main() {
     // Initialize system
     core::platform::init();
 
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
-    // Set up the logger to catch errors in ADC creation
-    core::log::LOGGER.setUART(&uart);
-    core::log::LOGGER.setLogLevel(core::log::Logger::LogLevel::INFO);
 
     uart.printf("Starting ADC VREF Demo\r\n");
 
@@ -36,58 +53,26 @@ int main() {
     time::wait(1000);
 
     // Test with default VREF (3.3V)
-    uart.printf("\r\n=== Testing with default VREF (3.3V) ===\r\n");
-    for (int i = 0; i < 5; i++) {
-        float voltage    = adc0.read();
-        float percentage = adc0.readPercentage();
-        uint32_t raw     = adc0.readRaw();
+    testADCAtVref(adc0, 3.3f, "default VREF (3.3V)", uart);
 
-        uart.printf("Reading %d: %.3f V (%.1f%%, raw: %d)\r\n", i + 1, voltage, percentage * 100, raw);
-        time::wait(200);
-    }
+    // Test with maximum safe VREF (3.6V)
+    testADCAtVref(adc0, 3.6f, "maximum safe VREF (3.6V)", uart);
 
-    // Change VREF to 5.0V (common for many sensors)
-    uart.printf("\r\n=== Changing VREF to 5.0V ===\r\n");
-    adc0.setVref(5.0f);
-    uart.printf("New VREF: %.2f V\r\n", adc0.getVref());
-
-    // Test with new VREF
-    uart.printf("\r\n=== Testing with new VREF (5.0V) ===\r\n");
-    for (int i = 0; i < 5; i++) {
-        float voltage    = adc0.read();
-        float percentage = adc0.readPercentage();
-        uint32_t raw     = adc0.readRaw();
-
-        uart.printf("Reading %d: %.3f V (%.1f%%, raw: %d)\r\n", i + 1, voltage, percentage * 100, raw);
-        time::wait(200);
-    }
-
-    // Change VREF to 1.8V (common for low-voltage systems)
-    uart.printf("\r\n=== Changing VREF to 1.8V ===\r\n");
-    adc0.setVref(1.8f);
-    uart.printf("New VREF: %.2f V\r\n", adc0.getVref());
-
-    // Test with new VREF
-    uart.printf("\r\n=== Testing with new VREF (1.8V) ===\r\n");
-    for (int i = 0; i < 5; i++) {
-        float voltage    = adc0.read();
-        float percentage = adc0.readPercentage();
-        uint32_t raw     = adc0.readRaw();
-
-        uart.printf("Reading %d: %.3f V (%.1f%%, raw: %d)\r\n", i + 1, voltage, percentage * 100, raw);
-        time::wait(200);
-    }
+    // Test with low voltage VREF (1.8V)
+    testADCAtVref(adc0, 1.8f, "low voltage VREF (1.8V)", uart);
 
     // Demonstrate that raw values don't change, only voltage calculations do
     uart.printf("\r\n=== Demonstrating that raw values are independent of VREF ===\r\n");
     uart.printf("Note: Raw ADC values should remain the same regardless of VREF setting\r\n");
 
-    float test_vrefs[] = {1.0f, 2.5f, 3.3f, 5.0f};
+    float test_vrefs[] = {1.0f, 2.5f, 3.3f, 3.6f};
     for (float vref : test_vrefs) {
         adc0.setVref(vref);
         uint32_t raw  = adc0.readRaw();
         float voltage = adc0.read();
-        uart.printf("VREF: %.1fV -> Raw: %d, Voltage: %.3fV\r\n", vref, raw, voltage);
+        uint32_t vref_mv = static_cast<uint32_t>(vref * 1000);
+        uint32_t voltage_mv = static_cast<uint32_t>(voltage * 1000);
+        uart.printf("VREF: %d mV -> Raw: %d, Voltage: %d mV\r\n", vref_mv, raw, voltage_mv);
         time::wait(100);
     }
 

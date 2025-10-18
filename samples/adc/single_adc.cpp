@@ -17,7 +17,6 @@ int main() {
 
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
-    // Logger setup removed - using direct UART prints instead
 
     uart.printf("Starting ADC test\r\n");
 
@@ -38,8 +37,8 @@ int main() {
         uart.printf("--------------------\r\n");
         time::wait(500);
 
-        adc0.setVref(5.0f); // For 5V reference
-        uart.printf("5V ADC Reference\r\n");
+        adc0.setVref(3.6f); // For 3.6V reference (max safe voltage)
+        uart.printf("3.6V ADC Reference\r\n");
         voltage_mv = static_cast<uint32_t>(adc0.read() * 1000);
         percentage = static_cast<uint32_t>(adc0.readPercentage() * 100);
         uart.printf("ADC0 : %d mV\r\n", voltage_mv);

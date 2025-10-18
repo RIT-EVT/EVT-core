@@ -34,7 +34,7 @@ public:
 private:
     // Max number of channels supported by the ADC
     static constexpr uint8_t MAX_CHANNELS = 15;
-    // Default positive reference voltage of the ADC.  Can be updated via setVref()
+    // Default positive reference voltage of the ADC.  Current reference voltage can be updated via setVref()
     static constexpr float DEFAULT_VREF_POS = 3.3;
     // Max value for a 12 bit ADC reading (2^12 - 1)
     static constexpr uint32_t MAX_RAW = 4095;
