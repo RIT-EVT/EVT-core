@@ -3,15 +3,6 @@
 #include <core/io/platform/f3xx/PWMf3xx.hpp>
 #include <core/dev/MCUTimer.hpp>
 
-#define PWM_F3_DEFAULT_TIMER_CONFIG \
-{ TIM_COUNTERMODE_UP, \
-TIM_CLOCKDIVISION_DIV1,\
-TIM_AUTORELOAD_PRELOAD_ENABLE, \
-TIM_CLOCKSOURCE_INTERNAL, \
-TIM_TRGO_RESET, \
-TIM_MASTERSLAVEMODE_DISABLE \
-}
-
 namespace core::io {
 
 /**
@@ -506,7 +497,7 @@ static dev::MCUTimer timerInstance(Pin pin) {
     }
 }
 
-PWMf3xx::PWMf3xx(Pin pin) : PWM(pin), TimerF3xx(dev::getTIM(timerInstance(pin)), 0, PWM_F3_DEFAULT_TIMER_CONFIG, AUTO_PRESCALER) {
+PWMf3xx::PWMf3xx(Pin pin) : PWM(pin), TimerF3xx(dev::getTIM(timerInstance(pin)), 0, defaultConfig, AUTO_PRESCALER) {
     uint32_t alternateFunction;
     getInstance(pin, &halTIMChannelID, &alternateFunction);
 

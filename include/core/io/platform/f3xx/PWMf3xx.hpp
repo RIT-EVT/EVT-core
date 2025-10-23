@@ -50,6 +50,16 @@ public:
     uint32_t getPeriod();
 
 private:
+    static constexpr dev::TimerConfiguration_t defaultConfig = {
+        TIM_COUNTERMODE_UP,
+        TIM_CLOCKDIVISION_DIV1,
+        TIM_AUTORELOAD_PRELOAD_ENABLE,
+        TIM_CLOCKSOURCE_INTERNAL,
+        TIM_TRGO_RESET,
+        TIM_MASTERSLAVEMODE_DISABLE
+    };
+
+
     /**
      * The channel that the timer will run on for this PWM instance
      * */
