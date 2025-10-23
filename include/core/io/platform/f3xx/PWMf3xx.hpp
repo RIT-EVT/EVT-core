@@ -19,15 +19,11 @@ namespace core::io {
 class PWMf3xx : public PWM, public dev::TimerF3xx {
 public:
     /**
-     * Setup the given pin for PWM usage.
-     *
-     * @param pin[in] The pin to setup for PWM
-     * @param clockPeriod[in] The clock period to run the internal PWM timer at. Set by manager.hpp
-     * @param configuration[in] The configuration for the internal PWM timer. Set by manager.hpp
-     * @param clockPrescaler[in] The clock prescaler for the internal PWM timer. Set by manager.hpp.
-     */
-    PWMf3xx(Pin pin, TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, dev::TimerConfiguration configuration,
-            uint32_t clockPrescaler = AUTO_PRESCALER);
+    * Set up the given pin for PWM usage.
+    *
+    * @param pin[in] The pin to set up for PWM
+    */
+    explicit PWMf3xx(Pin pin);
 
     /**
      * Set the duty cycle for PWM

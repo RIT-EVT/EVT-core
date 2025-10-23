@@ -1,7 +1,16 @@
 #include <core/io/pin.hpp>
 #include <core/io/platform/f3xx/GPIOf3xx.hpp>
 #include <core/io/platform/f3xx/PWMf3xx.hpp>
-#include <core/utils/log.hpp>
+#include <core/dev/MCUTimer.hpp>
+
+#define PWM_F3_DEFAULT_TIMER_CONFIG \
+{ TIM_COUNTERMODE_UP, \
+TIM_CLOCKDIVISION_DIV1,\
+TIM_AUTORELOAD_PRELOAD_ENABLE, \
+TIM_CLOCKSOURCE_INTERNAL, \
+TIM_TRGO_RESET, \
+TIM_MASTERSLAVEMODE_DISABLE \
+}
 
 namespace core::io {
 
@@ -352,9 +361,152 @@ static void getInstance(Pin pin, uint32_t* channel, uint32_t* alternateFunction)
     }
 }
 
-PWMf3xx::PWMf3xx(Pin pin, TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, dev::TimerConfiguration configuration,
-                 uint32_t clockPrescaler)
-    : PWM(pin), TimerF3xx(timerPeripheral, clockPeriod, configuration, clockPrescaler) {
+/**
+ * Finds the correct timer instance for a given PWM @Pin
+ * @param[in] pin the PWM pin to get a timer instance for.
+ * @return The @ref MCUTimer that correspeonds to the @pin
+ */
+static dev::MCUTimer timerInstance(Pin pin) {
+    switch (pin) {
+    #if defined(STM32F302x8)
+    case Pin::PA_0:
+        return dev::MCUTimer::Timer2;
+    case Pin::PA_1:
+        return dev::MCUTimer::Timer15;
+    case Pin::PA_2:
+        return dev::MCUTimer::Timer15;
+    case Pin::PA_3:
+        return dev::MCUTimer::Timer15;
+    case Pin::PA_5:
+        return dev::MCUTimer::Timer2;
+    case Pin::PA_8:
+        return dev::MCUTimer::Timer1;
+    case Pin::PA_6:
+        return dev::MCUTimer::Timer16;
+    case Pin::PA_7:
+        return dev::MCUTimer::Timer17;
+    case Pin::PA_9:
+        return dev::MCUTimer::Timer1;
+    case Pin::PA_10:
+        return dev::MCUTimer::Timer1;
+    case Pin::PA_11:
+        return dev::MCUTimer::Timer1;
+    case Pin::PA_12:
+        return dev::MCUTimer::Timer16;
+    case Pin::PA_13:
+        return dev::MCUTimer::Timer16;
+    case Pin::PA_15:
+        return dev::MCUTimer::Timer2;
+    case Pin::PB_0:
+        return dev::MCUTimer::Timer1;
+    case Pin::PB_1:
+        return dev::MCUTimer::Timer1;
+    case Pin::PB_3:
+        return dev::MCUTimer::Timer2;
+    case Pin::PB_4:
+        return dev::MCUTimer::Timer16;
+    case Pin::PB_5:
+        return dev::MCUTimer::Timer17;
+    case Pin::PB_6:
+        return dev::MCUTimer::Timer16;
+    case Pin::PB_7:
+        return dev::MCUTimer::Timer17;
+    case Pin::PB_8:
+        return dev::MCUTimer::Timer16;
+    case Pin::PB_9:
+        return dev::MCUTimer::Timer17;
+    case Pin::PB_10:
+        return dev::MCUTimer::Timer2;
+    case Pin::PB_11:
+        return dev::MCUTimer::Timer2;
+    case Pin::PB_13:
+        return dev::MCUTimer::Timer1;
+    case Pin::PB_14:
+        return dev::MCUTimer::Timer15;
+    case Pin::PB_15:
+        return dev::MCUTimer::Timer15;
+    case Pin::PC_0:
+        return dev::MCUTimer::Timer1;
+    case Pin::PC_1:
+        return dev::MCUTimer::Timer1;
+    case Pin::PC_2:
+        return dev::MCUTimer::Timer1;
+    case Pin::PC_3:
+        return dev::MCUTimer::Timer1;
+    case Pin::PC_13:
+        return dev::MCUTimer::Timer1;
+    case Pin::PF_0:
+        return dev::MCUTimer::Timer1;
+    #elif defined(STM32F334x8)
+    case Pin::PA_0:
+        return dev::MCUTimer::Timer2;
+    case Pin::PA_1:
+        return dev::MCUTimer::Timer15;
+    case Pin::PA_8:
+        return dev::MCUTimer::Timer1;
+    case Pin::PA_6:
+        return dev::MCUTimer::Timer16;
+    case Pin::PA_7:
+        return dev::MCUTimer::Timer17;
+    case Pin::PA_9:
+        return dev::MCUTimer::Timer1;
+    case Pin::PA_10:
+        return dev::MCUTimer::Timer1;
+    case Pin::PA_11:
+        return dev::MCUTimer::Timer1;
+    case Pin::PA_12:
+        return dev::MCUTimer::Timer16;
+    case Pin::PA_13:
+        return dev::MCUTimer::Timer16;
+    case Pin::PA_15:
+        return dev::MCUTimer::Timer2;
+    case Pin::PB_0:
+        return dev::MCUTimer::Timer1;
+    case Pin::PB_1:
+        return dev::MCUTimer::Timer1;
+    case Pin::PB_3:
+        return dev::MCUTimer::Timer2;
+    case Pin::PB_4:
+        return dev::MCUTimer::Timer16;
+    case Pin::PB_5:
+        return dev::MCUTimer::Timer17;
+    case Pin::PB_6:
+        return dev::MCUTimer::Timer16;
+    case Pin::PB_7:
+        return dev::MCUTimer::Timer17;
+    case Pin::PB_8:
+        return dev::MCUTimer::Timer16;
+    case Pin::PB_9:
+        return dev::MCUTimer::Timer17;
+    case Pin::PB_10:
+        return dev::MCUTimer::Timer2;
+    case Pin::PB_11:
+        return dev::MCUTimer::Timer2;
+    case Pin::PB_13:
+        return dev::MCUTimer::Timer1;
+    case Pin::PB_14:
+        return dev::MCUTimer::Timer15;
+    case Pin::PB_15:
+        return dev::MCUTimer::Timer15;
+    case Pin::PC_0:
+        return dev::MCUTimer::Timer1;
+    case Pin::PC_1:
+        return dev::MCUTimer::Timer1;
+    case Pin::PC_2:
+        return dev::MCUTimer::Timer1;
+    case Pin::PC_3:
+        return dev::MCUTimer::Timer1;
+    case Pin::PC_13:
+        return dev::MCUTimer::Timer1;
+    case Pin::PF_0:
+        return dev::MCUTimer::Timer1;
+    #endif
+    default:
+        return dev::MCUTimer::None;
+    }
+}
+
+PWMf3xx::PWMf3xx(Pin pin) : PWM(pin), TimerF3xx(dev::getTIM(timerInstance(pin)), 0, PWM_F3_DEFAULT_TIMER_CONFIG, AUTO_PRESCALER) {
     uint32_t alternateFunction;
     getInstance(pin, &halTIMChannelID, &alternateFunction);
 
