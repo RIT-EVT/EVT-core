@@ -41,7 +41,9 @@ public:
     void reloadTimer() override;
 
     //
-    // Since you are overriding it but not using the prescalar you should probably add a comment that it is unused. Also since it is unused, it is good practice to put (void) clockPrescaler in your definition to hint to C++ that you know it is unused and to suppress any warnings from that.
+    // Since you are overriding it but not using the prescalar you should probably add a comment that it is unused. Also
+    // since it is unused, it is good practice to put (void) clockPrescaler in your definition to hint to C++ that you
+    // know it is unused and to suppress any warnings from that.
     //
     void setPeriod(uint32_t clock, uint32_t clockPrescaler) override;
 
