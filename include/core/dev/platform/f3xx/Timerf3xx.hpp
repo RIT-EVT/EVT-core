@@ -10,7 +10,7 @@
 namespace core::dev {
 
 /**
- * Implementation of the Timer class for STM32f3xx MCUs
+ * Concrete implementation of the Timer class for STM32f3xx MCUs.
  */
 class TimerF3xx : public Timer {
 public:
