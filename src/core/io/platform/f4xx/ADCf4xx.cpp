@@ -56,7 +56,7 @@ constexpr uint8_t ADC3_SLOT = 2;
 ADCf4xx::ADC_State core::io::ADCf4xx::adcArray[NUM_ADCS];
 bool core::io::ADCf4xx::timerInit = false;
 
-dev::TimerConfiguration configuration = {TIM_COUNTERMODE_UP,
+dev::TimerConfiguration_t configuration = {TIM_COUNTERMODE_UP,
                                          TIM_CLOCKDIVISION_DIV1,
                                          TIM_AUTORELOAD_PRELOAD_ENABLE,
                                          TIM_CLOCKSOURCE_INTERNAL,

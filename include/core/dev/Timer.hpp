@@ -54,7 +54,7 @@ typedef struct {
      * Maps to @ref TIM_MasterConfigTypeDef:MasterSlaveMode
      */
     uint32_t masterSlaveMode{};
-} TimerConfiguration;
+} TimerConfiguration_t;
 
 class Timer {
 public:

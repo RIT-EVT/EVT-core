@@ -205,8 +205,7 @@ extern "C" void TIM5_IRQHandler(void) {
 }
 
 namespace core::dev {
-TimerF4xx::TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration configuration,
-                     uint32_t clockPrescaler)
+TimerF4xx::TimerF4xx(TIM_TypeDef* timerPeripheral, const uint32_t clockPeriod, const TimerConfiguration_t& configuration, const uint32_t clockPrescaler)
     : configuration(configuration) {
     this->clockPeriod = clockPeriod;
     this->halTimer    = &halTimers[getTimerInterruptIndex(timerPeripheral)];
@@ -215,7 +214,7 @@ TimerF4xx::TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerCo
 
 TimerF4xx::~TimerF4xx() = default;
 
-void TimerF4xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, uint32_t clockPrescaler) {
+void TimerF4xx::initTimer(TIM_TypeDef* timerPeripheral, const uint32_t clockPeriod, const uint32_t clockPrescaler) {
     this->clockPeriod = clockPeriod;
     auto& htim        = halTimers[getTimerInterruptIndex(timerPeripheral)];
 
@@ -226,7 +225,7 @@ void TimerF4xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, ui
     htim.Init.AutoReloadPreload = this->configuration.autoReloadPreload;
 
     if (clockPrescaler == AUTO_PRESCALER) {
-        uint32_t prescaler  = SystemCoreClock / 1000;
+        const uint32_t prescaler  = SystemCoreClock / 1000;
         htim.Init.Prescaler = prescaler - 1; // Sets f_CK_PSC to 1000 Hz
     } else {
         htim.Init.Prescaler = clockPrescaler;
@@ -286,7 +285,7 @@ void TimerF4xx::reloadTimer() {
     this->halTimer->Instance->CNT = 0; // Clear the Counter register to reset the timer
 }
 
-void TimerF4xx::setPeriod(uint32_t clockPeriod, uint32_t clockPrescaler) {
+void TimerF4xx::setPeriod(const uint32_t clockPeriod, const uint32_t clockPrescaler) {
     stopTimer();
     initTimer(this->halTimer->Instance, clockPeriod, clockPrescaler);
 }

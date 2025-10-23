@@ -44,7 +44,7 @@ int main() {
     reloadGPIO             = &io::getGPIO<io::Pin::PC_0>(io::GPIO::Direction::OUTPUT);
 
     // Initialize a configuration object for the timer.
-    dev::TimerConfiguration configuration = {TIM_COUNTERMODE_UP,
+    dev::TimerConfiguration_t configuration = {TIM_COUNTERMODE_UP,
                                              TIM_CLOCKDIVISION_DIV1,
                                              TIM_AUTORELOAD_PRELOAD_ENABLE,
                                              TIM_CLOCKSOURCE_INTERNAL,

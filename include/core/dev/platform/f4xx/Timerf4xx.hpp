@@ -30,7 +30,7 @@ public:
      * @param[in] clockPrescaler the prescaler that the clock will use. If clockPrescaler is set to @ref AUTO_PRESCALER,
      * this function will calculate its own prescaler value.
      */
-    explicit TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration configuration,
+    explicit TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, const TimerConfiguration_t& configuration,
                        uint32_t clockPrescaler = AUTO_PRESCALER);
 
     /**
@@ -80,7 +80,7 @@ private:
     /**
      * The configuration that this timer will use.
      */
-    TimerConfiguration configuration;
+    TimerConfiguration_t configuration;
 
     /**
      * Handles the initialization of the timer module.  Actually configures the device and enables it.

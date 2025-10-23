@@ -237,20 +237,19 @@ extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
 
 namespace core::dev {
 
-TimerF3xx::TimerF3xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, TimerConfiguration configuration,
-                     uint32_t clockPrescaler)
+TimerF3xx::TimerF3xx(TIM_TypeDef* timerPeripheral, const uint32_t clockPeriod, const TimerConfiguration_t& configuration, const uint32_t clockPrescaler)
     : configuration(configuration) {
     this->halTimer = &halTimers[getTimerInterruptIndex(timerPeripheral)];
     initTimer(timerPeripheral, clockPeriod, clockPrescaler);
 }
 
-void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, uint32_t clockPrescaler) {
+void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, const uint32_t clockPeriod, const uint32_t clockPrescaler) {
     this->clockPeriod = clockPeriod;
     auto& htim        = halTimers[getTimerInterruptIndex(timerPeripheral)];
 
     htim.Instance = timerPeripheral;
     if (clockPrescaler == AUTO_PRESCALER) {
-        uint32_t prescaler  = HAL_RCC_GetHCLKFreq() / 1000;
+        const uint32_t prescaler  = HAL_RCC_GetHCLKFreq() / 1000;
         htim.Init.Prescaler = prescaler - 1; // Sets f_CK_PSC to 1000 Hz
     } else {
         htim.Init.Prescaler = clockPrescaler;
@@ -313,7 +312,7 @@ void TimerF3xx::reloadTimer() {
     this->halTimer->Instance->CNT = 0; // Clear the Counter register to reset the timer
 }
 
-void TimerF3xx::setPeriod(uint32_t clockPeriod, uint32_t clockPrescaler = AUTO_PRESCALER) {
+void TimerF3xx::setPeriod(const uint32_t clockPeriod, const uint32_t clockPrescaler) {
     core::log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Set period: %d, Prescaler: %d", clockPeriod, clockPrescaler);
     stopTimer();
     initTimer(this->halTimer->Instance, clockPeriod, clockPrescaler);
