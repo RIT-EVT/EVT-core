@@ -30,7 +30,9 @@ void RTCTimer::reloadTimer() {
     bTimerStopped = false;
 }
 
-void RTCTimer::setPeriod(uint32_t clock, uint32_t clockPrescaler) {
+void RTCTimer::setPeriod(const uint32_t clock, const uint32_t clockPrescaler) {
+    // Remove warnings for unused prescaler.
+    (void) clockPrescaler;
     clockPeriod = clock / 1000;
 }
 
