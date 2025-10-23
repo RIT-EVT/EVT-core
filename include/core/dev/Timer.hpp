@@ -6,7 +6,7 @@
 /**
  * If AUTO_PRESCALER is sent as a prescaler the timer will calculate its own Prescaler.
  */
-#define AUTO_PRESCALER (-1)
+#define AUTO_PRESCALER uint32_t(-1)
 
 namespace core::dev {
 /**
