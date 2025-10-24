@@ -1,9 +1,6 @@
 #ifndef _EVT_PWMf3xx_
 #define _EVT_PWMf3xx_
 
-#include <stdint.h>
-
-#include <HALf3/stm32f3xx.h>
 #include <core/dev/platform/f3xx/Timerf3xx.hpp>
 #include <core/io/PWM.hpp>
 
@@ -24,6 +21,7 @@ public:
     * @param pin[in] The pin to set up for PWM
     */
     explicit PWMf3xx(Pin pin);
+
 
     /**
      * Set the duty cycle for PWM

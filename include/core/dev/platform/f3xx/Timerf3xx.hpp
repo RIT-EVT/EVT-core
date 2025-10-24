@@ -6,7 +6,6 @@
 #include <HALf3/stm32f3xx.h>
 
 #include <core/dev/Timer.hpp>
-#include <core/io/platform/f3xx/PWMf3xx.hpp>
 
 namespace core::dev {
 
