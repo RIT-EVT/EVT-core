@@ -5,7 +5,8 @@
 
 /**
  * If AUTO_PRESCALER is sent as a prescaler the timer will calculate its own Prescaler.
- * Yes, this is a negative in an uint32_t, but it ends up just causing an underflow, and making it the max of an uint32_t.
+ * Yes, this is a negative in an uint32_t, but it ends up just causing an underflow, and making it the max of an
+ * uint32_t.
  */
 #define AUTO_PRESCALER uint32_t(-1)
 

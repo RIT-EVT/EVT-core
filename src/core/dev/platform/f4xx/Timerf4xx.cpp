@@ -205,7 +205,8 @@ extern "C" void TIM5_IRQHandler(void) {
 }
 
 namespace core::dev {
-TimerF4xx::TimerF4xx(TIM_TypeDef* timerPeripheral, const uint32_t clockPeriod, const TimerConfiguration_t& configuration, const uint32_t clockPrescaler)
+TimerF4xx::TimerF4xx(TIM_TypeDef* timerPeripheral, const uint32_t clockPeriod,
+                     const TimerConfiguration_t& configuration, const uint32_t clockPrescaler)
     : configuration(configuration) {
     this->clockPeriod = clockPeriod;
     this->halTimer    = &halTimers[getTimerInterruptIndex(timerPeripheral)];
@@ -225,8 +226,8 @@ void TimerF4xx::initTimer(TIM_TypeDef* timerPeripheral, const uint32_t clockPeri
     htim.Init.AutoReloadPreload = this->configuration.autoReloadPreload;
 
     if (clockPrescaler == AUTO_PRESCALER) {
-        const uint32_t prescaler  = SystemCoreClock / 1000;
-        htim.Init.Prescaler = prescaler - 1; // Sets f_CK_PSC to 1000 Hz
+        const uint32_t prescaler = SystemCoreClock / 1000;
+        htim.Init.Prescaler      = prescaler - 1; // Sets f_CK_PSC to 1000 Hz
     } else {
         htim.Init.Prescaler = clockPrescaler;
     }

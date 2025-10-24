@@ -61,11 +61,11 @@ int main() {
 
     // Initialize a configuration object for the timer.
     dev::TimerConfiguration_t configuration = {TIM_COUNTERMODE_UP,
-                                             TIM_CLOCKDIVISION_DIV1,
-                                             TIM_AUTORELOAD_PRELOAD_ENABLE,
-                                             TIM_CLOCKSOURCE_INTERNAL,
-                                             TIM_TRGO_RESET,
-                                             TIM_MASTERSLAVEMODE_DISABLE};
+                                               TIM_CLOCKDIVISION_DIV1,
+                                               TIM_AUTORELOAD_PRELOAD_ENABLE,
+                                               TIM_CLOCKSOURCE_INTERNAL,
+                                               TIM_TRGO_RESET,
+                                               TIM_MASTERSLAVEMODE_DISABLE};
 
     // Initialize the timer
     dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(100, configuration);

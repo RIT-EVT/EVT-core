@@ -1,7 +1,7 @@
+#include <core/dev/MCUTimer.hpp>
 #include <core/io/pin.hpp>
 #include <core/io/platform/f3xx/GPIOf3xx.hpp>
 #include <core/io/platform/f3xx/PWMf3xx.hpp>
-#include <core/dev/MCUTimer.hpp>
 
 namespace core::io {
 
@@ -359,7 +359,7 @@ static void getInstance(Pin pin, uint32_t* channel, uint32_t* alternateFunction)
  */
 static dev::MCUTimer timerInstance(Pin pin) {
     switch (pin) {
-    #if defined(STM32F302x8)
+#if defined(STM32F302x8)
     case Pin::PA_0:
         return dev::MCUTimer::Timer2;
     case Pin::PA_1:
@@ -428,7 +428,7 @@ static dev::MCUTimer timerInstance(Pin pin) {
         return dev::MCUTimer::Timer1;
     case Pin::PF_0:
         return dev::MCUTimer::Timer1;
-    #elif defined(STM32F334x8)
+#elif defined(STM32F334x8)
     case Pin::PA_0:
         return dev::MCUTimer::Timer2;
     case Pin::PA_1:
@@ -491,7 +491,7 @@ static dev::MCUTimer timerInstance(Pin pin) {
         return dev::MCUTimer::Timer1;
     case Pin::PF_0:
         return dev::MCUTimer::Timer1;
-    #endif
+#endif
     default:
         return dev::MCUTimer::None;
     }

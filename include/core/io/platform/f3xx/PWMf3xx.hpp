@@ -16,12 +16,11 @@ namespace core::io {
 class PWMf3xx : public PWM, public dev::TimerF3xx {
 public:
     /**
-    * Set up the given pin for PWM usage.
-    *
-    * @param pin[in] The pin to set up for PWM
-    */
+     * Set up the given pin for PWM usage.
+     *
+     * @param pin[in] The pin to set up for PWM
+     */
     explicit PWMf3xx(Pin pin);
-
 
     /**
      * Set the duty cycle for PWM
@@ -48,15 +47,12 @@ public:
     uint32_t getPeriod();
 
 private:
-    static constexpr dev::TimerConfiguration_t defaultConfig = {
-        TIM_COUNTERMODE_UP,
-        TIM_CLOCKDIVISION_DIV1,
-        TIM_AUTORELOAD_PRELOAD_ENABLE,
-        TIM_CLOCKSOURCE_INTERNAL,
-        TIM_TRGO_RESET,
-        TIM_MASTERSLAVEMODE_DISABLE
-    };
-
+    static constexpr dev::TimerConfiguration_t defaultConfig = {TIM_COUNTERMODE_UP,
+                                                                TIM_CLOCKDIVISION_DIV1,
+                                                                TIM_AUTORELOAD_PRELOAD_ENABLE,
+                                                                TIM_CLOCKSOURCE_INTERNAL,
+                                                                TIM_TRGO_RESET,
+                                                                TIM_MASTERSLAVEMODE_DISABLE};
 
     /**
      * The channel that the timer will run on for this PWM instance
