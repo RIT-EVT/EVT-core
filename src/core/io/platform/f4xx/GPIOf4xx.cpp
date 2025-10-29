@@ -117,7 +117,7 @@ void GPIOf4xx::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin, void*
                   myPins,
                   numOfPins,
                   GPIOf4xx::GPIO_TRIGGER_INTERRUPT_BASE | (static_cast<uint32_t>(edge) << GPIO_MODE_IT_SHIFT),
-                  GPIO_PULLDOWN,
+                  static_cast<uint32_t>(pull),
                   GPIO_SPEED_FREQ_HIGH);
 
     auto pin_index                = static_cast<uint8_t>(this->pin) & 0x0F;
