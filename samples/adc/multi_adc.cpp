@@ -29,6 +29,10 @@ int main() {
     io::ADC& adc0 = io::getADC<io::Pin::PA_0, io::ADCPeriph::ONE>();
     io::ADC& adc1 = io::getADC<io::Pin::PC_4, io::ADCPeriph::ONE>();
 
+    // Optional: Set custom VREF voltage (default is 3.3V)
+    // adc0.setVref(3.6f);  // For 3.6V reference (max safe voltage)
+    // adc1.setVref(1.8f);  // For 1.8V reference
+
     while (1) {
         core::log::LOGGER.log(core::log::Logger::LogLevel::INFO, "--------------------");
         core::log::LOGGER.log(

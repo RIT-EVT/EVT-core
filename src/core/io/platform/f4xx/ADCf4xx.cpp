@@ -55,6 +55,7 @@ constexpr uint8_t ADC3_SLOT = 2;
 ADCf4xx::ADC_State core::io::ADCf4xx::adcArray[NUM_ADCS];
 bool core::io::ADCf4xx::timerInit = false;
 TIM_HandleTypeDef core::io::ADCf4xx::htim8;
+float core::io::ADCf4xx::vref_voltage = DEFAULT_VREF_POS;
 
 ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph)
     : ADC(pin, adcPeriph), adcState(ADCf4xx::adcArray[getADCNum(adcPeriph)]), adcNum(getADCNum(adcPeriph)) {
@@ -96,7 +97,7 @@ ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph)
 
 float ADCf4xx::read() {
     float percentage = readPercentage();
-    return percentage * VREF_POS;
+    return percentage * vref_voltage;
 }
 
 uint32_t ADCf4xx::readRaw() {
@@ -111,6 +112,16 @@ uint32_t ADCf4xx::readRaw() {
 float ADCf4xx::readPercentage() {
     float raw = static_cast<float>(readRaw());
     return static_cast<float>(raw / MAX_RAW);
+}
+
+void ADCf4xx::setVref(float vref) {
+    if (vref > 0.0f) {
+        vref_voltage = vref;
+    }
+}
+
+float ADCf4xx::getVref() const {
+    return vref_voltage;
 }
 
 void ADCf4xx::initADC(uint8_t num_channels) {
