@@ -4,13 +4,13 @@ namespace core::dev {
 
 RTCTimer::RTCTimer(RTC& r) : rtc(r) {
     time = 0;
-    setPeriod(1000);
+    setPeriod(1000, AUTO_PRESCALER);
     startTime = rtc.getTime();
 }
 
 RTCTimer::RTCTimer(RTC& r, uint32_t clock) : rtc(r) {
     time = 0;
-    setPeriod(clock);
+    setPeriod(clock, AUTO_PRESCALER);
     startTime = rtc.getTime();
 }
 
@@ -30,7 +30,9 @@ void RTCTimer::reloadTimer() {
     bTimerStopped = false;
 }
 
-void RTCTimer::setPeriod(uint32_t clock) {
+void RTCTimer::setPeriod(const uint32_t clock, const uint32_t clockPrescaler) {
+    // Remove warnings for unused prescaler.
+    (void) clockPrescaler;
     clockPeriod = clock / 1000;
 }
 

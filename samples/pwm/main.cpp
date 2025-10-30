@@ -4,6 +4,7 @@
  */
 #include <core/io/PWM.hpp>
 #include <core/manager.hpp>
+#include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 
 namespace io   = core::io;
@@ -20,7 +21,7 @@ int main() {
     pwm.setDutyCycle(50);
 
     while (1) {
-        time::wait(5000);
+        time::wait(1000);
         pwm.setDutyCycle(70);
         time::wait(5000);
         pwm.setDutyCycle(30);

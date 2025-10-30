@@ -37,7 +37,7 @@ namespace time = core::time;
  * NOTE: For this sample, every non-extended (so 11 bit CAN IDs) will be
  * assumed to be intended to be passed as a CANopen message.
  *
- * @param message[in] The passed in CAN message that was read.
+ * @param[in] message The passed in CAN message that was read.
  */
 void canInterrupt(io::CANMessage& message, void* priv) {
     core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>* queue =
@@ -50,8 +50,16 @@ int main() {
     // Initialize system
     core::platform::init();
 
+    // Initialize a configuration object for the timer.
+    dev::TimerConfiguration_t configuration = {TIM_COUNTERMODE_UP,
+                                               TIM_CLOCKDIVISION_DIV1,
+                                               TIM_AUTORELOAD_PRELOAD_ENABLE,
+                                               TIM_CLOCKSOURCE_INTERNAL,
+                                               TIM_TRGO_RESET,
+                                               TIM_MASTERSLAVEMODE_DISABLE};
+
     // Initialize the timer
-    dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(100);
+    dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(100, configuration);
 
     // UART for testing
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
