@@ -17,14 +17,12 @@ public:
     /**
      * A default configuration for an F4 timer.
      */
-    static constexpr TimerConfiguration_t defaultConfig = {
-      TIM_COUNTERMODE_UP,
-      TIM_CLOCKDIVISION_DIV1,
-      TIM_AUTORELOAD_PRELOAD_ENABLE,
-      TIM_CLOCKSOURCE_INTERNAL,
-      TIM_TRGO_RESET,
-      TIM_MASTERSLAVEMODE_DISABLE
-    };
+    static constexpr TimerConfiguration_t defaultConfig = {TIM_COUNTERMODE_UP,
+                                                           TIM_CLOCKDIVISION_DIV1,
+                                                           TIM_AUTORELOAD_PRELOAD_ENABLE,
+                                                           TIM_CLOCKSOURCE_INTERNAL,
+                                                           TIM_TRGO_RESET,
+                                                           TIM_MASTERSLAVEMODE_DISABLE};
 
     ~TimerF4xx() override;
 
@@ -38,12 +36,14 @@ public:
      * @param[in] timerPeripheral the timer peripheral to use.
      * @param[in] clockPeriod the clock period in ticks (ms when using AUTO_PRESCALER). An interrupt will be triggered
      * at this frequency.
-     * @param[in] configuration the configuration tells the timer how to configure itself. Defaults to @ref TimerF4xx::defaultConfig.
+     * @param[in] configuration the configuration tells the timer how to configure itself. Defaults to @ref
+     * TimerF4xx::defaultConfig.
      * @param[in] clockPrescaler the prescaler that the clock will use. If clockPrescaler is set to @ref AUTO_PRESCALER,
      * this function will calculate its own prescaler value.
      */
-    explicit TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, const TimerConfiguration_t& configuration = defaultConfig,
-                       uint32_t clockPrescaler = AUTO_PRESCALER);
+    explicit TimerF4xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod,
+                       const TimerConfiguration_t& configuration = defaultConfig,
+                       uint32_t clockPrescaler                   = AUTO_PRESCALER);
 
     /**
      * Starts the given timer and registers the given interrupt pointer to trigger when the timer overflows
@@ -77,6 +77,7 @@ public:
      * own prescaler.
      */
     void setPeriod(uint32_t clockPeriod, uint32_t clockPrescaler = AUTO_PRESCALER) override;
+
 protected:
     /**
      * Pointer to the halTimer struct stored in the global array in Timerf4xx.cpp
