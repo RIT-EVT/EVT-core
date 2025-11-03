@@ -48,9 +48,9 @@ int main() {
         TIM_CLOCKDIVISION_DIV1,        // Used the default clock division
         TIM_AUTORELOAD_PRELOAD_ENABLE, // Enables the auto reload preload which makes TIMx_ARR buffered.
         TIM_CLOCKSOURCE_INTERNAL,      // Set the clock source to be the microcontrollers internal clock.
-        TIM_TRGO_RESET,                // Tells the timer to reset whenever it enters a Master / Slave configuration. Will not be
-                                       // triggered or used in this configuration.
-        TIM_MASTERSLAVEMODE_DISABLE    // Disable Masster Slave Mode for the timer
+        TIM_TRGO_RESET, // Tells the timer to reset whenever it enters a Master / Slave configuration. Will not be
+                        // triggered or used in this configuration.
+        TIM_MASTERSLAVEMODE_DISABLE // Disable Masster Slave Mode for the timer
     };
 
     // Set up the Timer
