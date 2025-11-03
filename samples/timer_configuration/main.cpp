@@ -1,5 +1,5 @@
 /**
- * This sample will demo the basic functionality for the timer driver
+ * This sample will demo the the configuration object of a timer.
  */
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
@@ -43,16 +43,25 @@ int main() {
     interruptGPIOStopStart = &io::getGPIO<io::Pin::PC_2>(io::GPIO::Direction::OUTPUT);
     reloadGPIO             = &io::getGPIO<io::Pin::PC_0>(io::GPIO::Direction::OUTPUT);
 
+    dev::TimerConfiguration_t configuration = {
+        TIM_COUNTERMODE_UP, // Tell the counter to count upwards towards the clock period
+        TIM_CLOCKDIVISION_DIV1, // Used the default clock division
+        TIM_AUTORELOAD_PRELOAD_ENABLE, // Enables the auto reload preload which makes TIMx_ARR buffered.
+        TIM_CLOCKSOURCE_INTERNAL, // Set the clock source to be the microcontrollers internal clock.
+        TIM_TRGO_RESET, // Tells the timer to reset whenever it enters a Master / Slave configuration. Will not be triggered or used in this configuration.
+        TIM_MASTERSLAVEMODE_DISABLE // Disable Masster Slave Mode for the timer
+    };
+
     // Set up the Timer
-    dev::Timer& sampleTimer1 = dev::getTimer<dev::MCUTimer::Timer2>(1000);
+    dev::Timer& sampleTimer1 = dev::getTimer<dev::MCUTimer::Timer2>(1000, configuration);
 
 #ifdef STM32F4xx
     // F4xx does not support Timers 15 & 16, change them to Timer11 & Timer12
-    dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer11>(200);
-    dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer12>(200);
+    dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer11>(200, configuration);
+    dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer12>(200, configuration);
 #else
-    dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer15>(1000);
-    dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer16>(1000);
+    dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer15>(1000, configuration);
+    dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer16>(1000, configuration);
 #endif
 
     sampleTimer1.startTimer(timer2IRQHandler);

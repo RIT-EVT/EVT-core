@@ -15,6 +15,18 @@ namespace core::dev {
 class TimerF3xx : public Timer {
 public:
     /**
+     * The default configuration for an F3 timer.
+     */
+    static constexpr TimerConfiguration_t defaultConfig = {
+        TIM_COUNTERMODE_UP,
+        TIM_CLOCKDIVISION_DIV1,
+        TIM_AUTORELOAD_PRELOAD_ENABLE,
+        TIM_CLOCKSOURCE_INTERNAL,
+        TIM_TRGO_RESET,
+        TIM_MASTERSLAVEMODE_DISABLE
+      };
+
+    /**
      * Will initialize the timer device on the STM with the given period and the given IRQ Handler
      * that triggers with the given period.  Starts the timer
      * @param timerPeripheral[in] The timer peripheral to configure.  Possible options for this board are
@@ -24,14 +36,11 @@ public:
      * @param[in] timerPeripheral The timer to use
      * @param[in] clockPeriod the clock period in ticks (ms when using AUTO_PRESCALER). An interrupt will be triggered
      * at this frequency.
-     * @param[in] configuration the configuration tells the timer how to configure itself. Defaults to @ref
-     * TimerF3xx::defaultConfig.
+     * @param[in] configuration the configuration tells the timer how to configure itself. Defaults to @ref TimerF3xx::defaultConfig.
      * @param[in] clockPrescaler the prescaler that the clock will use. If clockPrescaler is set to @ref AUTO_PRESCALER,
      * this function will calculate its own prescaler value.
      */
-    explicit TimerF3xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod,
-                       const TimerConfiguration_t& configuration = defaultConfig,
-                       uint32_t clockPrescaler                   = AUTO_PRESCALER);
+    explicit TimerF3xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, const TimerConfiguration_t& configuration = defaultConfig, uint32_t clockPrescaler = AUTO_PRESCALER);
 
     /**
      * Starts the given timer and registers the given interrupt pointer to trigger when the timer overflows
@@ -92,14 +101,6 @@ protected:
      * this function will calculate its own prescaler value.
      */
     void initTimer(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod, uint32_t clockPrescaler);
-
-private:
-    static constexpr TimerConfiguration_t defaultConfig = {TIM_COUNTERMODE_UP,
-                                                           TIM_CLOCKDIVISION_DIV1,
-                                                           TIM_AUTORELOAD_PRELOAD_ENABLE,
-                                                           TIM_CLOCKSOURCE_INTERNAL,
-                                                           TIM_TRGO_RESET,
-                                                           TIM_MASTERSLAVEMODE_DISABLE};
 };
 
 } // namespace core::dev
