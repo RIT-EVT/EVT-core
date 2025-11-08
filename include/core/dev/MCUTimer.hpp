@@ -45,6 +45,11 @@ enum class MCUTimer {
 
 /**
  * Gets the corresponding HAL TIM_TypeDef* for each MCUTimer
+ * This function is inlined because of a couple of reasons.
+ * 1. It is in a header file, and functions in header files should be inlined. https://clang.llvm.org/extra/clang-tidy/checks/misc/definitions-in-headers.html
+ * 2. When this function is not inlined, F3 targets will not build. This is because PWMF3xx requires its own
+ *    `timerInstance` function that requires an MCUTimer import. Since manager.hpp also includes MCUTimer.hpp, and has
+ *    generally broken imports (see [FWT-255] https://rit-evt.atlassian.net/browse/FWT-255).
  *
  * @param mcuTimer MCUTimer of which to get the HAL equivalent
  * @return HAL equivalent of mcuTimer
@@ -68,6 +73,9 @@ inline TIM_TypeDef* getTIM(const MCUTimer mcuTimer) {
     case MCUTimer::Timer17:
         timPeriph = TIM17;
         break;
+    default:
+        timPeriph = TIM1;
+        break;
 #elif defined(STM32F334x8)
     case MCUTimer::Timer1:
         timPeriph = TIM1;
@@ -86,6 +94,9 @@ inline TIM_TypeDef* getTIM(const MCUTimer mcuTimer) {
         break;
     case MCUTimer::Timer17:
         timPeriph = TIM17;
+        break;
+    default:
+        timPeriph = TIM1;
         break;
 #elif defined(STM32F446xx)
     case MCUTimer::Timer1:
