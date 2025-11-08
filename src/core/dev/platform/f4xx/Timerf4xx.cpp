@@ -5,7 +5,8 @@
 #define F4_TIMER_COUNT 12
 
 TIM_HandleTypeDef halTimers[F4_TIMER_COUNT];
-void (*timerInterruptHandlers[F4_TIMER_COUNT])(void* htim) = {nullptr};
+void (*timerInterruptHandlers[F4_TIMER_COUNT])(void* context, void* htim) = {nullptr};
+void *timerInterruptContexts[F4_TIMER_COUNT] = { };
 
 enum timerInterruptIndex {
     TIM1_IDX  = 0u,
@@ -162,7 +163,8 @@ extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
     uint8_t interruptIdx = getTimerInterruptIndex(htim->Instance);
 
     if (timerInterruptHandlers[interruptIdx] != nullptr) {
-        timerInterruptHandlers[interruptIdx](htim);
+        void *context = timerInterruptContexts[interruptIdx];
+        timerInterruptHandlers[interruptIdx](context, htim);
     }
 }
 
@@ -254,7 +256,7 @@ void TimerF4xx::initTimer(TIM_TypeDef* timerPeripheral, const uint32_t clockPeri
     core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Finished timer setup");
 };
 
-void TimerF4xx::startTimer(void (*irqHandler)(void* htim)) {
+void TimerF4xx::startTimer(void (*irqHandler)(void* context, void* htim), void* context) {
     TIM_TypeDef* timerPeripheral = this->halTimer->Instance;
 
     // If timer is not waiting to start, stop it
@@ -262,6 +264,7 @@ void TimerF4xx::startTimer(void (*irqHandler)(void* htim)) {
         stopTimer();
     }
 
+    timerInterruptContexts[getTimerInterruptIndex(timerPeripheral)] = context;
     timerInterruptHandlers[getTimerInterruptIndex(timerPeripheral)] = irqHandler;
     startTimer();
 }

@@ -26,10 +26,12 @@ public:
      * Set the duty cycle for PWM
      * @param[in] dutyCycle The duty cycle to set PWM at.
      */
-    void setDutyCycle(uint32_t dutyCycle);
+    void setDutyCycle(uint32_t dutyCycle) override;
 
     /**
      * Set the period for PWM.
+     * Note: This does not match the dev::TimerF3xx set period, since PWM does not accept a different period.
+     * This function will hide the definition from the superclass. So you can ignore the warning.
      * @param[in] period The period for PWM.
      */
     void setPeriod(uint32_t period);
@@ -38,13 +40,13 @@ public:
      * Get the current duty cycle.
      * @return the duty cycle that the PWM instance is currently running at.
      */
-    uint32_t getDutyCycle();
+    uint32_t getDutyCycle() override;
 
     /**
      * Get the current period.
      * @return the period that the PWM instance is currently running at.
      */
-    uint32_t getPeriod();
+    uint32_t getPeriod() override;
 
 private:
     static constexpr dev::TimerConfiguration_t defaultConfig = {TIM_COUNTERMODE_UP,

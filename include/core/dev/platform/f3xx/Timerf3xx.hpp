@@ -46,8 +46,9 @@ public:
     /**
      * Starts the given timer and registers the given interrupt pointer to trigger when the timer overflows
      * @param[in] irqHandler The IRQ Handler function pointer.  Sets a new interrupt handler function
+     * @param[in] context The context to be sent to the irqHandler when it is called.
      */
-    void startTimer(void (*irqHandler)(void* htim)) override;
+    void startTimer(void (*irqHandler)(void* context, void* htim), void* context) override;
 
     /**
      * Starts the given timer using the IRQ Handler already assigned to that timer.
@@ -68,9 +69,9 @@ public:
      * Set the clock period for the timer. Will stop the timer, re-initialize the device with the updated period.
      * You must call startTimer again to continue timer operation.
      *
-     * @param[in] clockPeriod the clock period in ticks (ms when using AUTO_PRESCALER). An interrupt will be triggered
+     * @param[in] clockPeriod The clock period in ticks (ms when using AUTO_PRESCALER). An interrupt will be triggered
      * at that frequency.
-     * @param [in] clockPrescaler the prescaler used by the clock. Divides the system clock frequency to get it within
+     * @param [in] clockPrescaler The prescaler used by the clock. Divides the system clock frequency to get it within
      * an acceptable range for clocking. If set to @ref AUTO_PRESCALER, the function implementation should calculate its
      * own prescaler.
      */

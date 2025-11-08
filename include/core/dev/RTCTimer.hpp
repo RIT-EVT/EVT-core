@@ -32,7 +32,7 @@ public:
      *
      * @param[in] irqHandler The IRQ Handler function pointer.  Sets a new interrupt handler function
      */
-    void startTimer(void (*irqHandler)(void* htim)) override {}
+    void startTimer(void (*irqHandler)(void* context, void* htim), void* context) override {}
 
     void startTimer() override;
 

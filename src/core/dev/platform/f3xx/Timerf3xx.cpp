@@ -7,7 +7,8 @@
     #define F302_TIMER_COUNT 5
 
 TIM_HandleTypeDef halTimers[F302_TIMER_COUNT];
-void (*timerInterruptHandlers[F302_TIMER_COUNT])(void* htim) = {nullptr};
+void (*timerInterruptHandlers[F302_TIMER_COUNT])(void* context, void* htim) = {nullptr};
+void *timerInterruptContexts[F302_TIMER_COUNT] = { };
 
 // Timer 6 is technically available but does not support Capture Compare channels, so is therefore not supported.
 enum timerInterruptIndex {
@@ -100,7 +101,9 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
     #define F334_TIMER_COUNT 6
 
 TIM_HandleTypeDef halTimers[F334_TIMER_COUNT];
-void (*timerInterruptHandlers[F334_TIMER_COUNT])(void* htim) = {nullptr};
+
+void (*timerInterruptHandlers[F334_TIMER_COUNT])(void *context, void* htim) = {nullptr};
+void *timerInterruptContexts[F334_TIMER_COUNT] = { };
 
 // Timer 6 is technically available but does not support Capture Compare channels, so is therefore not supported.
 enum timerInterruptIndex {
@@ -231,7 +234,8 @@ extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
     uint8_t interruptIdx = getTimerInterruptIndex(htim->Instance);
 
     if (timerInterruptHandlers[interruptIdx] != nullptr) {
-        timerInterruptHandlers[interruptIdx](htim);
+        void *context = timerInterruptContexts[interruptIdx];
+        timerInterruptHandlers[interruptIdx](context, htim);
     }
 }
 
@@ -246,7 +250,7 @@ TimerF3xx::TimerF3xx(TIM_TypeDef* timerPeripheral, const uint32_t clockPeriod,
 
 void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, const uint32_t clockPeriod, const uint32_t clockPrescaler) {
     this->clockPeriod = clockPeriod;
-    auto& htim        = halTimers[getTimerInterruptIndex(timerPeripheral)];
+    auto& htim = halTimers[getTimerInterruptIndex(timerPeripheral)];
 
     htim.Instance = timerPeripheral;
     if (clockPrescaler == AUTO_PRESCALER) {
@@ -280,7 +284,7 @@ void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, const uint32_t clockPeri
     log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Finished timer setup");
 }
 
-void TimerF3xx::startTimer(void (*irqHandler)(void* htim)) {
+void TimerF3xx::startTimer(void (*irqHandler)(void* context, void* htim), void* context) {
     log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Start Timer IRQ");
     TIM_TypeDef* timerPeripheral = this->halTimer->Instance;
     // If timer is not waiting to start, stop it
@@ -288,6 +292,7 @@ void TimerF3xx::startTimer(void (*irqHandler)(void* htim)) {
         stopTimer();
     }
 
+    timerInterruptContexts[getTimerInterruptIndex(timerPeripheral)] = context;
     timerInterruptHandlers[getTimerInterruptIndex(timerPeripheral)] = irqHandler;
     startTimer();
 }

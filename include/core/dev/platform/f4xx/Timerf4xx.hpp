@@ -49,7 +49,7 @@ public:
      * Starts the given timer and registers the given interrupt pointer to trigger when the timer overflows
      * @param[in] irqHandler The IRQ Handler function pointer.  Sets a new interrupt handler function
      */
-    void startTimer(void (*irqHandler)(void* htim)) override;
+    void startTimer(void (*irqHandler)(void* context, void* htim), void* context) override;
 
     /**
      * Starts the given timer using the IRQ Handler already assigned to that timer.
