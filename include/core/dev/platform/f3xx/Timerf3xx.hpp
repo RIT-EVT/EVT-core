@@ -27,16 +27,15 @@ public:
     /**
      * Will initialize the timer device on the STM with the given period and the given IRQ Handler
      * that triggers with the given period.  Starts the timer
-     * @param timerPeripheral[in] The timer peripheral to configure.  Possible options for this board are
-     * TIM2, TIM15, TIM16, TIM17.  It is up to the user to verify that resource conflicts
-     * do not occur.
      *
+     * @param timerPeripheral[in] The timer peripheral to configure. Possible options for this board are
+     * TIM1, TIM2, TIM15, TIM16, TIM17.  It is up to the user to verify that resource conflicts do not occur.
      * @param[in] timerPeripheral The timer to use
-     * @param[in] clockPeriod the clock period in ticks (ms when using AUTO_PRESCALER). An interrupt will be triggered
+     * @param[in] clockPeriod The clock period in ticks (ms when using AUTO_PRESCALER). An interrupt will be triggered
      * at this frequency.
-     * @param[in] configuration the configuration tells the timer how to configure itself. Defaults to @ref
+     * @param[in] configuration The configuration tells the timer how to configure itself. Defaults to @ref
      * TimerF3xx::defaultConfig.
-     * @param[in] clockPrescaler the prescaler that the clock will use. If clockPrescaler is set to @ref AUTO_PRESCALER,
+     * @param[in] clockPrescaler The prescaler that the clock will use. If clockPrescaler is set to @ref AUTO_PRESCALER,
      * this function will calculate its own prescaler value.
      */
     explicit TimerF3xx(TIM_TypeDef* timerPeripheral, uint32_t clockPeriod,
@@ -95,8 +94,10 @@ protected:
 
     /**
      * Handles the initialization of the timer module.  Actually configures the device and enables it.
-     * @param[in] timerPeripheral  The timer peripheral to configure.  Possible options for this board are
-     * TIM2, TIM15, TIM16, TIM17.  It is up to the user to verify that resource conflicts do not occur.
+     *
+    * @param timerPeripheral[in] The timer peripheral to configure. It is up to the user to verify that resource conflicts do not occur.
+     * F334 Valid Options: TIM1, TIM2, TIM3, TIM15, TIM16, TIM17.
+     * F3O2 Valid Options: TIM1, TIM2, TIM15, TIM16, TIM17.
      * @param[in] clockPeriod the clock period in ticks (ms when using AUTO_PRESCALER).  An interrupt will be triggered
      * at that frequency.
      * @param[in] clockPrescaler the prescaler that the clock will use. If clockPrescaler is set to @ref AUTO_PRESCALER,

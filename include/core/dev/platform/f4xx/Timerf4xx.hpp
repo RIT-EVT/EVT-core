@@ -29,10 +29,9 @@ public:
     /**
      * Will initialize the timer device on the STM with the given period and the given IRQ Handler
      * that triggers with the given period.  Starts the timer
-     * @param timerPeripheral[in] The timer peripheral to configure. Possible options for this board are
-     * TIM1, TIM2, TIM3, TIM4, TIM5, TIM8, TIM9, TIM10, TIM11, TIM11, TIM13, TIM14.
-     * It is up to the user to verify that resource conflicts do not occur.
      *
+     * @param timerPeripheral[in] The timer peripheral to configure. It is up to the user to verify that resource conflicts do not occur.
+     * F446xx Valid Options: TIM1, TIM2, TIM3, TIM4, TIM5, TIM8, TIM9, TIM10, TIM11, TIM12, TIM13, TIM14.
      * @param[in] timerPeripheral the timer peripheral to use.
      * @param[in] clockPeriod the clock period in ticks (ms when using AUTO_PRESCALER). An interrupt will be triggered
      * at this frequency.
