@@ -31,7 +31,7 @@ public:
     /**
      * Set the period for PWM.
      * Note: This does not match the dev::TimerF3xx set period, since PWM does not accept a different period.
-     * This function will hide the definition from the superclass. So you can ignore the warning.
+     * This function will hide the definition from the superclass. So you can safely ignore the warning.
      * @param[in] period The period for PWM.
      */
     void setPeriod(uint32_t period);
