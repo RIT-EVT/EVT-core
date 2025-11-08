@@ -4,7 +4,9 @@
 #include <cstdint>
 
 /**
- * If AUTO_PRESCALER is sent as a prescaler the timer will calculate its own Prescaler.
+ * If AUTO_PRESCALER is sent as a prescaler the timer will calculate its own Prescaler in the setPeriod function.
+ * The automatic prescaler is calculated by dividing the system clock speed by 1000, then subtracting 1.
+ *
  * Yes, this is a negative in an uint32_t, but it ends up just causing an underflow, and making it the max of an
  * uint32_t.
  */
