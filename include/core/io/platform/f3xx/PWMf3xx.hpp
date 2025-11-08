@@ -15,37 +15,22 @@ namespace core::io {
  */
 class PWMf3xx : public PWM, public dev::TimerF3xx {
 public:
-    /**
-     * Set up the given pin for PWM usage.
-     *
-     * @param pin[in] The pin to set up for PWM
-     */
+    /** @inheritDoc */
     explicit PWMf3xx(Pin pin);
 
-    /**
-     * Set the duty cycle for PWM
-     * @param[in] dutyCycle The duty cycle to set PWM at.
-     */
+    /** @inheritDoc */
     void setDutyCycle(uint32_t dutyCycle) override;
 
     /**
-     * Set the period for PWM.
-     * Note: This does not match the dev::TimerF3xx set period, since PWM does not accept a different period.
-     * This function will hide the definition from the superclass. So you can safely ignore the warning.
-     * @param[in] period The period for PWM.
+     * @inheritDoc PWM::setPeriod
+     * This function will hide the definition from the TimerF3xx. So you can safely ignore the warning.
      */
     void setPeriod(uint32_t period);
 
-    /**
-     * Get the current duty cycle.
-     * @return the duty cycle that the PWM instance is currently running at.
-     */
+    /** @inheritDoc */
     uint32_t getDutyCycle() override;
 
-    /**
-     * Get the current period.
-     * @return the period that the PWM instance is currently running at.
-     */
+    /** @inheritDoc */
     uint32_t getPeriod() override;
 
 private:
