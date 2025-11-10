@@ -14,20 +14,20 @@ io::GPIO* interruptGPIO2Hz;
 io::GPIO* interruptGPIOStopStart;
 io::GPIO* reloadGPIO;
 
-void timer2IRQHandler(void* htim) {
+void timer2IRQHandler(void* htim, void* context) {
     io::GPIO::State state       = ledGPIO->readPin();
     io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
     ledGPIO->writePin(toggleState);
     interruptGPIO2Hz->writePin(toggleState);
 }
 
-void timer15IRQHandler(void* htim) {
+void timer15IRQHandler(void* htim, void* context) {
     io::GPIO::State state       = interruptGPIOStopStart->readPin();
     io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
     interruptGPIOStopStart->writePin(toggleState);
 }
 
-void timer16IRQHandler(void* htim) {
+void timer16IRQHandler(void* htim, void* context) {
     io::GPIO::State state       = reloadGPIO->readPin();
     io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
     reloadGPIO->writePin(toggleState);
@@ -65,9 +65,9 @@ int main() {
     dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer16>(1000, configuration);
 #endif
 
-    sampleTimer1.startTimer(timer2IRQHandler);
-    sampleTimer2.startTimer(timer15IRQHandler);
-    sampleTimer3.startTimer(timer16IRQHandler);
+    sampleTimer1.startTimer(timer2IRQHandler, nullptr);
+    sampleTimer2.startTimer(timer15IRQHandler, nullptr);
+    sampleTimer3.startTimer(timer16IRQHandler, nullptr);
 
     while (1) {
         core::time::wait(500);
