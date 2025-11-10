@@ -75,7 +75,7 @@ private:
     uint32_t time;
 
     /** The amount of time it takes the timer to go off in SECONDS */
-    uint32_t clockPeriod { };
+    uint32_t clockPeriod{};
 
     /** The epoc time the clock started */
     uint32_t startTime;

@@ -6,7 +6,7 @@
 
 TIM_HandleTypeDef halTimers[F4_TIMER_COUNT];
 void (*timerInterruptHandlers[F4_TIMER_COUNT])(void* context, void* htim) = {nullptr};
-void *timerInterruptContexts[F4_TIMER_COUNT] = { };
+void* timerInterruptContexts[F4_TIMER_COUNT]                              = {};
 
 enum timerInterruptIndex {
     TIM1_IDX  = 0u,
@@ -163,7 +163,7 @@ extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
     uint8_t interruptIdx = getTimerInterruptIndex(htim->Instance);
 
     if (timerInterruptHandlers[interruptIdx] != nullptr) {
-        void *context = timerInterruptContexts[interruptIdx];
+        void* context = timerInterruptContexts[interruptIdx];
         timerInterruptHandlers[interruptIdx](context, htim);
     }
 }

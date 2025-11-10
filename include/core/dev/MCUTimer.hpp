@@ -46,7 +46,8 @@ enum class MCUTimer {
 /**
  * Gets the corresponding HAL TIM_TypeDef* for each MCUTimer
  * This function is inlined because of a couple of reasons.
- * 1. It is in a header file, and functions in header files should be inlined. https://clang.llvm.org/extra/clang-tidy/checks/misc/definitions-in-headers.html
+ * 1. It is in a header file, and functions in header files should be inlined.
+ * https://clang.llvm.org/extra/clang-tidy/checks/misc/definitions-in-headers.html
  * 2. When this function is not inlined, F3 targets will not build. This is because PWMF3xx requires its own
  *    `timerInstance` function that requires an MCUTimer import. Since manager.hpp also includes MCUTimer.hpp, and has
  *    generally broken imports (see [FWT-255] https://rit-evt.atlassian.net/browse/FWT-255).

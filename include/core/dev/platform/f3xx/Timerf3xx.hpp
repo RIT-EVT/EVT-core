@@ -28,9 +28,9 @@ public:
      * Will initialize the timer device on the STM with the given period and the given IRQ Handler
      * that triggers with the given period.  Starts the timer
      *
-     * @param timerPeripheral[in] The timer peripheral to configure. It is up to the user to verify that resource conflicts do not occur.
-     * F334 Valid Options: TIM1, TIM2, TIM3, TIM15, TIM16, TIM17.
-     * F3O2 Valid Options: TIM1, TIM2, TIM15, TIM16, TIM17.
+     * @param timerPeripheral[in] The timer peripheral to configure. It is up to the user to verify that resource
+     * conflicts do not occur. F334 Valid Options: TIM1, TIM2, TIM3, TIM15, TIM16, TIM17. F3O2 Valid Options: TIM1,
+     * TIM2, TIM15, TIM16, TIM17.
      * @param[in] timerPeripheral The timer to use
      * @param[in] clockPeriod The clock period in ticks (ms when using AUTO_PRESCALER). An interrupt will be triggered
      * at this frequency.
@@ -77,9 +77,9 @@ protected:
     /**
      * Handles the initialization of the timer module.  Actually configures the device and enables it.
      *
-     * @param timerPeripheral[in] The timer peripheral to configure. It is up to the user to verify that resource conflicts do not occur.
-     * F334 Valid Options: TIM1, TIM2, TIM3, TIM15, TIM16, TIM17.
-     * F3O2 Valid Options: TIM1, TIM2, TIM15, TIM16, TIM17.
+     * @param timerPeripheral[in] The timer peripheral to configure. It is up to the user to verify that resource
+     * conflicts do not occur. F334 Valid Options: TIM1, TIM2, TIM3, TIM15, TIM16, TIM17. F3O2 Valid Options: TIM1,
+     * TIM2, TIM15, TIM16, TIM17.
      * @param[in] clockPeriod the clock period in ticks (ms when using AUTO_PRESCALER).  An interrupt will be triggered
      * at that frequency.
      * @param[in] clockPrescaler the prescaler that the clock will use. If clockPrescaler is set to @ref AUTO_PRESCALER,
