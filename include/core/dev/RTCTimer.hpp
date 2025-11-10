@@ -31,6 +31,7 @@ public:
      * not implemented.
      *
      * @param[in] irqHandler The IRQ Handler function pointer.  Sets a new interrupt handler function
+     * @param[in] context The context used by the irqHandler.
      */
     void startTimer(void (*irqHandler)(void* context, void* htim), void* context) override {}
 
@@ -44,9 +45,10 @@ public:
      * Set the period for PWM.
      * Note: This does not match the dev::Timer set period, since the RTCTimer does not accept a different period.
      * This function will hide the definition from the superclass. So you can safely ignore the warning.
-     * @param[in] period The period for PWM.
+     * @param[in] period The period for the RTC timer.
+     * @param[in] clockPrescaler UNUSED DO NOT SET.
      */
-    void setPeriod(uint32_t period);
+    void setPeriod(uint32_t period, uint32_t clockPrescaler = AUTO_PRESCALER);
 
     /**
      * Gets the time since the RTC clock began in seconds

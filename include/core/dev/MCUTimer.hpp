@@ -54,7 +54,7 @@ enum class MCUTimer {
  * @param mcuTimer MCUTimer of which to get the HAL equivalent
  * @return HAL equivalent of mcuTimer
  */
-inline TIM_TypeDef* getTIM(const MCUTimer mcuTimer) {
+TIM_TypeDef* getTIM(const MCUTimer mcuTimer) {
     TIM_TypeDef* timPeriph;
     switch (mcuTimer) {
 #if defined(STM32F302x8)

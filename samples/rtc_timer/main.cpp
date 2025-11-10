@@ -14,7 +14,7 @@ int main() {
     // Specific implementation of dev::RTC, clock type can vary
     dev::RTC& clock = dev::getRTC();
 
-    dev::RTCTimer timer(clock, 5000);
+    dev::RTCTimer timer (clock, 5000);
 
     uart.printf("\r\nTimer starting!\r\n");
     uart.printf("Current time: %d\r\n", timer.getTime());
