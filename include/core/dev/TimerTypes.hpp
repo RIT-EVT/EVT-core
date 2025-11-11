@@ -28,45 +28,96 @@
 #endif
 
 namespace core::dev {
+/**
+ * @brief Timer Counter Mode, analogous to TIM_Counter_Mode.
+ * @details
+ * Mirrors the definitions that are grouped under TIM_Counter_Mode. Adds extra documentation & easier use.
+ */
 enum class TimerCounterMode {
-    /** Counter used as up-counter   */
+    /** The timer's counter, counts up from 0 to the period */
     UP = TIM_COUNTERMODE_UP,
-    /** Counter used as down-counter */
+    /** The timer's counter, counts down from the period to 0. */
     DOWN = TIM_COUNTERMODE_DOWN,
-    /** Center-aligned mode 1 */
+    /**
+     * @brief Center-aligned mode 1, used for PWM.
+     * @details
+     * Behavior: The interrupt flags for triggers (Update & Capture/Compare) are only set when the counter is counting **down**.
+     * Compare Event: When the counter matches the CCR value while counting up.
+     */
     CENTRAL_ALIGNED_1 = TIM_COUNTERMODE_CENTERALIGNED1,
-    /** Center-aligned mode 2 */
+    /**
+     * @brief Center-aligned mode 2, used for PWM.
+     * @details
+     * Behavior: The interrupt flags for triggers (Update & Capture/Compare) are only set when the counter is counting **up**.
+     * Compare Event: When the counter matches the CCR value while counting down.
+     */
     CENTRAL_ALIGNED_2 = TIM_COUNTERMODE_CENTERALIGNED2,
-    /** Center-aligned mode 3 */
+    /**
+     * @brief Center-aligned mode 3, used for PWM.
+     * @details
+     * Behavior: The interrupt flags for triggers (Update & Capture/Compare) are set when the counter is counting **up** and counting **down**
+     * Compare Event: When the counter matches the CCR value while counting up and down. The event will occur twice per PWM period.
+     */
     CENTRAL_ALIGNED_3 = TIM_COUNTERMODE_CENTERALIGNED3,
 };
 
+/**
+ * @brief Timer Clock Division, indicates the clock division ratio.
+ * @details
+ * The elements of this enum are used in the clock division bit field. They indicate the division ratio between
+ * the timer clock (CK_INT) frequency and the dead-time. The dead-time is used by the sample clock (tDTS),
+ * dead-time generators, and the digital filters (ETR, TIx)
+ */
 enum class TimerClockDivision {
-    /** Clock division: tDTS=tCK_INT */
+    /**
+     * @brief Clock division: tDTS=tCK_INT
+     * @details
+     * The sample clock frequency (tDTS) = Timer clock (CK_INT) frequency
+     */
     DIVISION_1 = TIM_CLOCKDIVISION_DIV1,
-    /** Clock division: tDTS=2*tCK_INT */
+    /**
+     * @brief Clock division: tDTS=2*tCK_INT
+     * @details
+     * The sample clock frequency (tDTS) = 2 * Timer clock (CK_INT) frequency
+     * 2x `DIVISION_1`
+    */
     DIVISION_2 = TIM_CLOCKDIVISION_DIV2,
-    /** Clock division: tDTS=4*tCK_INT */
+    /**
+     * @brief Clock division: tDTS=4*tCK_INT
+     * @details
+     * The sample clock frequency (tDTS) = 4 * Timer clock (CK_INT) frequency
+     * 4x `DIVISION_1`
+    */
     DIVISION_4 = TIM_CLOCKDIVISION_DIV4,
 };
 
 enum class TimerAutoReloadPreload {
-    /** TIMx_ARR register is not buffered */
-    DISABLE = TIM_AUTORELOAD_PRELOAD_DISABLE,
-    /** < TIMx_ARR register is buffered */
-    ENABLE = TIM_AUTORELOAD_PRELOAD_ENABLE,
+    /** Timer auto reload preload register is not buffered */
+    NO_BUFFER = TIM_AUTORELOAD_PRELOAD_DISABLE,
+    /** Timer auto reload preload register is buffered */
+    BUFFER = TIM_AUTORELOAD_PRELOAD_ENABLE,
 };
 
 enum class TimerClockSource {
+    /*!< External clock source mode 2                          */
     EXTERNAL_MODE_2 = TIM_CLOCKSOURCE_ETRMODE2,
+    /*!< Internal clock source                                 */
     INTERNAL = TIM_CLOCKSOURCE_INTERNAL,
+    /*!< External clock source mode 1 (ITR0)                   */
     EXTERNAL_MODE_1_ITR0 = TIM_CLOCKSOURCE_ITR0,
+    /*!< External clock source mode 1 (ITR1)                   */
     EXTERNAL_MODE_1_ITR1 = TIM_CLOCKSOURCE_ITR1,
+    /*!< External clock source mode 1 (ITR2)                   */
     EXTERNAL_MODE_1_ITR2 = TIM_CLOCKSOURCE_ITR2,
+    /*!< External clock source mode 1 (ITR3)                   */
     EXTERNAL_MODE_1_ITR3 = TIM_CLOCKSOURCE_ITR3,
+    /*!< External clock source mode 1 (TTI1FP1 + edge detect.) */
     EXTERNAL_MODE_1_TTI1FP1_ED = TIM_CLOCKSOURCE_TI1ED,
+    /*!< External clock source mode 1 (TTI1FP1)                */
     EXTERNAL_MODE_1_TTI1FP1 = TIM_CLOCKSOURCE_TI1,
+    /*!< External clock source mode 1 (TTI2FP2)                */
     EXTERNAL_MODE_1_TTI2FP2 = TIM_CLOCKSOURCE_TI2,
+    /*!< External clock source mode 1 (ETRF)                   */
     EXTERNAL_MODE_1_ETRF = TIM_CLOCKSOURCE_ETRMODE1
 };
 

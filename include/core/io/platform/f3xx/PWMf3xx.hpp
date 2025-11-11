@@ -38,7 +38,7 @@ private:
     static constexpr dev::TimerConfiguration_t defaultConfig = {
         dev::TimerCounterMode::UP,
         dev::TimerClockDivision::DIVISION_1,
-        dev::TimerAutoReloadPreload::ENABLE,
+        dev::TimerAutoReloadPreload::BUFFER,
         dev::TimerClockSource::INTERNAL,
         dev::TimerMasterModeSelection::RESET,
         dev::TimerMasterSlaveMode::DISABLE

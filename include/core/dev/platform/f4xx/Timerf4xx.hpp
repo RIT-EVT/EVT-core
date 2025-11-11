@@ -21,7 +21,7 @@ public:
     static constexpr TimerConfiguration_t defaultConfig = {
         TimerCounterMode::UP,
         TimerClockDivision::DIVISION_1,
-        TimerAutoReloadPreload::ENABLE,
+        TimerAutoReloadPreload::BUFFER,
         TimerClockSource::INTERNAL,
         TimerMasterModeSelection::RESET,
         TimerMasterSlaveMode::DISABLE
