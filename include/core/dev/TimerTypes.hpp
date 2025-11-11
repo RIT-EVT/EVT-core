@@ -91,6 +91,9 @@ enum class TimerClockDivision {
     DIVISION_4 = TIM_CLOCKDIVISION_DIV4,
 };
 
+/**
+ * @brief Indicates whether the Auto Preload Reload register is buffed
+ */
 enum class TimerAutoReloadPreload {
     /** Timer auto reload preload register is not buffered */
     NO_BUFFER = TIM_AUTORELOAD_PRELOAD_DISABLE,
@@ -98,26 +101,72 @@ enum class TimerAutoReloadPreload {
     BUFFER = TIM_AUTORELOAD_PRELOAD_ENABLE,
 };
 
+/**
+ * @brief The source for clock signals that the timer will use.
+ * @details
+ * 
+ */
 enum class TimerClockSource {
-    /*!< External clock source mode 2                          */
+    /**
+     * @brief External Clock source mode 2
+     * @details
+     * When external clock source mode 2 is enabled, the timer counter is clocked whenever there is an active
+     * edge on the ETRF signal.
+     */
     EXTERNAL_MODE_2 = TIM_CLOCKSOURCE_ETRMODE2,
-    /*!< Internal clock source                                 */
+    /**
+     * @brief Internal clock source
+     * @details
+     *
+     */
     INTERNAL = TIM_CLOCKSOURCE_INTERNAL,
-    /*!< External clock source mode 1 (ITR0)                   */
+    /**
+     * @brief External Clock Source, Mode 1 (ITR0)
+     * @details
+     *
+     */
     EXTERNAL_MODE_1_ITR0 = TIM_CLOCKSOURCE_ITR0,
-    /*!< External clock source mode 1 (ITR1)                   */
+    /**
+     * @brief External Clock Source, Mode 1 (ITR1)
+     * @details
+     *
+     */
     EXTERNAL_MODE_1_ITR1 = TIM_CLOCKSOURCE_ITR1,
-    /*!< External clock source mode 1 (ITR2)                   */
+    /**
+    * @brief External Clock Source, Mode 1 (ITR2)
+    * @details
+    *
+    */
     EXTERNAL_MODE_1_ITR2 = TIM_CLOCKSOURCE_ITR2,
-    /*!< External clock source mode 1 (ITR3)                   */
+    /**
+     * @brief External Clock Source, Mode 1 (ITR3)
+     * @details
+     *
+     */
     EXTERNAL_MODE_1_ITR3 = TIM_CLOCKSOURCE_ITR3,
-    /*!< External clock source mode 1 (TTI1FP1 + edge detect.) */
+    /**
+     * @brief External Clock Source, Mode 1 (TTI1FP1 + edge detect)
+     * @details
+     *
+     */
     EXTERNAL_MODE_1_TTI1FP1_ED = TIM_CLOCKSOURCE_TI1ED,
-    /*!< External clock source mode 1 (TTI1FP1)                */
+    /**
+     * @brief External Clock Source, Mode 1 (TTI1FP1)
+     * @details
+     *
+     */
     EXTERNAL_MODE_1_TTI1FP1 = TIM_CLOCKSOURCE_TI1,
-    /*!< External clock source mode 1 (TTI2FP2)                */
+    /**
+     * @brief External Clock Source, Mode 1 (TTI2FP2)
+     * @details
+     *
+     */
     EXTERNAL_MODE_1_TTI2FP2 = TIM_CLOCKSOURCE_TI2,
-    /*!< External clock source mode 1 (ETRF)                   */
+    /**
+     * @brief External Clock Source, Mode 1 (ETRF)
+     * @details
+     *
+     */
     EXTERNAL_MODE_1_ETRF = TIM_CLOCKSOURCE_ETRMODE1
 };
 
