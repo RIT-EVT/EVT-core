@@ -1,3 +1,21 @@
+/**
+ * @brief This file contains all the types used by timers in EVT-Core.
+ *
+ * @details
+ * This file contains type definitions for the timer configuration structure, and support enums.
+ *
+ * TimerConfiguration_t is a configuration structure that timers use to set themselves up.
+ *
+ * The enums TimerCounterMode, TimerClockDivision, TimerAutoReloadPreload, TimerClockSource,
+ * TimerMasterModeSelection, and TimerMasterSlaveMode, are user facing declarations of HAL definitions
+ * used by TimerConfiguration_t structs.
+ *
+ * This file has one oddity, the HAL for supported boards (F3 & fF4) is included to give access to definitions used
+ * in the enums. Importing these into this file was chosen, instead of two separate F3 & F4 files, because there are
+ * no differences in the definition names, or supported values between the boards. This file is also NOT included
+ * into Timer.hpp to reduce the footprint of HAL includes.
+ */
+
 #ifndef EVT_TIMERTYPES_HPP
 #define EVT_TIMERTYPES_HPP
 
