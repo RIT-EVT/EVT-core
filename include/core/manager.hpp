@@ -134,7 +134,17 @@ RTC& getRTC() {
  * @return a configured timer object, with the given configuration & clock period.
  */
 template<MCUTimer mcuTimer>
-Timer& getTimer(uint32_t clockPeriod, TimerConfiguration_t configuration = TimerF3xx::defaultConfig) {
+Timer& getTimer(
+    uint32_t clockPeriod,
+    // This is a little wonky... we need the correct config so we need to get it from the respective board specific class.
+    // The only real way to do this, is to use a ifdef and grab the right class.
+    #ifdef STM32F3xx
+    TimerConfiguration_t configuration = TimerF3xx::defaultConfig
+    #endif
+    #ifdef STM32F4xx
+    TimerConfiguration_t configuration = TimerF4xx::defaultConfig
+    #endif
+    ) {
     #ifdef STM32F3xx
     static TimerF3xx timer(getTIM(mcuTimer), clockPeriod, configuration);
     return timer;

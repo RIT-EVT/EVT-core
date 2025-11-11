@@ -6,6 +6,7 @@
 #include <HALf4/stm32f4xx.h>
 
 #include <core/dev/Timer.hpp>
+#include <core/dev/TimerTypes.hpp>
 
 namespace core::dev {
 
@@ -17,12 +18,14 @@ public:
     /**
      * A default configuration for an F4 timer.
      */
-    static constexpr TimerConfiguration_t defaultConfig = {TIM_COUNTERMODE_UP,
-                                                           TIM_CLOCKDIVISION_DIV1,
-                                                           TIM_AUTORELOAD_PRELOAD_ENABLE,
-                                                           TIM_CLOCKSOURCE_INTERNAL,
-                                                           TIM_TRGO_RESET,
-                                                           TIM_MASTERSLAVEMODE_DISABLE};
+    static constexpr TimerConfiguration_t defaultConfig = {
+        TimerCounterMode::UP,
+        TimerClockDivision::DIVISION_1,
+        TimerAutoReloadPreload::ENABLE,
+        TimerClockSource::INTERNAL,
+        TimerMasterModeSelection::RESET,
+        TimerMasterSlaveMode::DISABLE
+    };
 
     ~TimerF4xx() override;
 

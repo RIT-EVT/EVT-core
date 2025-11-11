@@ -3,6 +3,7 @@
 
 #include <core/dev/platform/f3xx/Timerf3xx.hpp>
 #include <core/io/PWM.hpp>
+#include <core/dev/TimerTypes.hpp>
 
 namespace core::io {
 
@@ -34,12 +35,14 @@ public:
     uint32_t getPeriod() override;
 
 private:
-    static constexpr dev::TimerConfiguration_t defaultConfig = {TIM_COUNTERMODE_UP,
-                                                                TIM_CLOCKDIVISION_DIV1,
-                                                                TIM_AUTORELOAD_PRELOAD_ENABLE,
-                                                                TIM_CLOCKSOURCE_INTERNAL,
-                                                                TIM_TRGO_RESET,
-                                                                TIM_MASTERSLAVEMODE_DISABLE};
+    static constexpr dev::TimerConfiguration_t defaultConfig = {
+        dev::TimerCounterMode::UP,
+        dev::TimerClockDivision::DIVISION_1,
+        dev::TimerAutoReloadPreload::ENABLE,
+        dev::TimerClockSource::INTERNAL,
+        dev::TimerMasterModeSelection::RESET,
+        dev::TimerMasterSlaveMode::DISABLE
+    };
 
     /**
      * The channel that the timer will run on for this PWM instance

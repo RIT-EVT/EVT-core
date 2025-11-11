@@ -6,6 +6,7 @@
 #include <HALf3/stm32f3xx.h>
 
 #include <core/dev/Timer.hpp>
+#include <core/dev/TimerTypes.hpp>
 
 namespace core::dev {
 
@@ -17,13 +18,14 @@ public:
     /**
      * The default configuration for an F3 timer.
      */
-    static constexpr TimerConfiguration_t defaultConfig = {TIM_COUNTERMODE_UP,
-                                                           TIM_CLOCKDIVISION_DIV1,
-                                                           TIM_AUTORELOAD_PRELOAD_ENABLE,
-                                                           TIM_CLOCKSOURCE_INTERNAL,
-                                                           TIM_TRGO_RESET,
-                                                           TIM_MASTERSLAVEMODE_DISABLE};
-
+    static constexpr TimerConfiguration_t defaultConfig = {
+        TimerCounterMode::UP,
+        TimerClockDivision::DIVISION_1,
+        TimerAutoReloadPreload::ENABLE,
+        TimerClockSource::INTERNAL,
+        TimerMasterModeSelection::RESET,
+        TimerMasterSlaveMode::DISABLE
+    };
     /**
      * Will initialize the timer device on the STM with the given period and the given IRQ Handler
      * that triggers with the given period.  Starts the timer

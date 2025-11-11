@@ -223,9 +223,9 @@ void TimerF4xx::initTimer(TIM_TypeDef* timerPeripheral, const uint32_t clockPeri
 
     htim.Instance = timerPeripheral;
     // Allows period increments of 1 ms with max of 2^(32) ms.
-    htim.Init.CounterMode       = this->configuration.counterMode;
-    htim.Init.ClockDivision     = this->configuration.clockDivision;
-    htim.Init.AutoReloadPreload = this->configuration.autoReloadPreload;
+    htim.Init.CounterMode       = static_cast<uint32_t>(this->configuration.counterMode);
+    htim.Init.ClockDivision     = static_cast<uint32_t>(this->configuration.clockDivision);
+    htim.Init.AutoReloadPreload = static_cast<uint32_t>(this->configuration.autoReloadPreload);
 
     if (clockPrescaler == AUTO_PRESCALER) {
         const uint32_t prescaler = SystemCoreClock / 1000;
@@ -241,15 +241,15 @@ void TimerF4xx::initTimer(TIM_TypeDef* timerPeripheral, const uint32_t clockPeri
 
     TIM_ClockConfigTypeDef clockConfig = {};
 
-    clockConfig.ClockSource = this->configuration.clockSource;
+    clockConfig.ClockSource = static_cast<uint32_t>(this->configuration.clockSource);
     HAL_TIM_ConfigClockSource(&htim, &clockConfig);
 
     TIM_MasterConfigTypeDef masterConfig = {};
 
     // Timers 9-14 are NOT master mode compatible, so waste of time to go through config
     if (getTimerInterruptIndex(timerPeripheral) < timerInterruptIndex::TIM9_IDX) {
-        masterConfig.MasterOutputTrigger = this->configuration.masterOutputTrigger;
-        masterConfig.MasterSlaveMode     = this->configuration.masterSlaveMode;
+        masterConfig.MasterOutputTrigger = static_cast<uint32_t>(this->configuration.masterOutputTrigger);
+        masterConfig.MasterSlaveMode     = static_cast<uint32_t>(this->configuration.masterSlaveMode);
         HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
     }
 

@@ -261,23 +261,23 @@ void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, const uint32_t clockPeri
     }
 
     // Allows period increments of 1 ms with max of 2^(32) ms.
-    htim.Init.CounterMode       = this->configuration.counterMode;
+    htim.Init.CounterMode       = static_cast<uint32_t>(this->configuration.counterMode);
     htim.Init.Period            = clockPeriod - 1;
-    htim.Init.ClockDivision     = this->configuration.clockDivision;
-    htim.Init.AutoReloadPreload = this->configuration.autoReloadPreload;
+    htim.Init.ClockDivision     = static_cast<uint32_t>(this->configuration.clockDivision);
+    htim.Init.AutoReloadPreload = static_cast<uint32_t>(this->configuration.autoReloadPreload);
     HAL_TIM_Base_Init(&htim);
 
     TIM_ClockConfigTypeDef clockConfig = {0};
 
-    clockConfig.ClockSource = this->configuration.clockSource;
+    clockConfig.ClockSource = static_cast<uint32_t>(this->configuration.clockSource);
     HAL_TIM_ConfigClockSource(&htim, &clockConfig);
 
     TIM_MasterConfigTypeDef masterConfig = {0};
 
-    masterConfig.MasterOutputTrigger = this->configuration.masterOutputTrigger;
+    masterConfig.MasterOutputTrigger = static_cast<uint32_t>(this->configuration.masterOutputTrigger);
     // Should not be needed if it is always set to reset
     // masterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
-    masterConfig.MasterSlaveMode = this->configuration.masterSlaveMode;
+    masterConfig.MasterSlaveMode = static_cast<uint32_t>(this->configuration.masterSlaveMode);
 
     HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
 
