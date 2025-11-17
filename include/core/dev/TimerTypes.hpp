@@ -42,14 +42,14 @@ enum class TimerCounterMode {
      * @brief Center-aligned mode 1, used for PWM.
      * @details
      * Behavior: The interrupt flags for triggers (Update & Capture/Compare) are only set when the counter is counting **down**.
-     * Compare Event: When the counter matches the CCR value while counting up.
+     * Compare Event: When the counter matches the CCR value while counting down.
      */
     CENTRAL_ALIGNED_1 = TIM_COUNTERMODE_CENTERALIGNED1,
     /**
      * @brief Center-aligned mode 2, used for PWM.
      * @details
      * Behavior: The interrupt flags for triggers (Update & Capture/Compare) are only set when the counter is counting **up**.
-     * Compare Event: When the counter matches the CCR value while counting down.
+     * Compare Event: When the counter matches the CCR value while counting up.
      */
     CENTRAL_ALIGNED_2 = TIM_COUNTERMODE_CENTERALIGNED2,
     /**
@@ -102,72 +102,83 @@ enum class TimerAutoReloadPreload {
 };
 
 /**
- * @brief The source for clock signals that the timer will use.
+ * @brief Tells the timer what source will initiate a tick.
  * @details
- * 
+ * Clock sources define when a timer will receive a tick. This can be either an internal or external clock source.
+ * External clock sources have many options for configuring when an external signal will actually tigger a clock tick.
+ * Note: Many of these cases need more research. Particularly the external sources, as online information is limited.
+ * If you need to use one of these, fallback to the reference document for the MCU you are using (Please update this with more info)
  */
 enum class TimerClockSource {
     /**
-     * @brief External Clock source mode 2
-     * @details
-     * When external clock source mode 2 is enabled, the timer counter is clocked whenever there is an active
-     * edge on the ETRF signal.
-     */
-    EXTERNAL_MODE_2 = TIM_CLOCKSOURCE_ETRMODE2,
-    /**
      * @brief Internal clock source
      * @details
-     *
+     * The standard setting for timers. This will trigger the timer tick based on the STM32's internal clock.
      */
     INTERNAL = TIM_CLOCKSOURCE_INTERNAL,
     /**
      * @brief External Clock Source, Mode 1 (ITR0)
      * @details
-     *
+     * The timer's clock source is synchronized to Interrupt 0. This can be used to synchronize multiple timers together.
+     * Please see the Timer synchronization section of the Microcontroller Reference Document for more information.
      */
     EXTERNAL_MODE_1_ITR0 = TIM_CLOCKSOURCE_ITR0,
     /**
      * @brief External Clock Source, Mode 1 (ITR1)
      * @details
-     *
+     * The timer's clock source is synchronized to Interrupt 1. This can be used to synchronize multiple timers together.
+     * Please see the Timer synchronization section of the Microcontroller Reference Document for more information.
      */
     EXTERNAL_MODE_1_ITR1 = TIM_CLOCKSOURCE_ITR1,
     /**
     * @brief External Clock Source, Mode 1 (ITR2)
     * @details
-    *
+    * The timer's clock source is synchronized to Interrupt 2. This can be used to synchronize multiple timers together.
+    * Please see the Timer synchronization section of the Microcontroller Reference Document for more information.
     */
     EXTERNAL_MODE_1_ITR2 = TIM_CLOCKSOURCE_ITR2,
     /**
      * @brief External Clock Source, Mode 1 (ITR3)
      * @details
-     *
+     * The timer's clock source is synchronized to Interrupt 3. This can be used to synchronize multiple timers together.
+     * Please see the Timer synchronization section of the Microcontroller Reference Document for more information.
      */
     EXTERNAL_MODE_1_ITR3 = TIM_CLOCKSOURCE_ITR3,
     /**
      * @brief External Clock Source, Mode 1 (TTI1FP1 + edge detect)
      * @details
-     *
+     * The clock source comes from Filtered Timer Input 1. This should be used if the timer needs to be triggered
+     * on the rising or falling edge of a signal.
      */
     EXTERNAL_MODE_1_TTI1FP1_ED = TIM_CLOCKSOURCE_TI1ED,
     /**
      * @brief External Clock Source, Mode 1 (TTI1FP1)
      * @details
-     *
+     * The clock source comes from Filtered Timer Input 1.
+     * Note: More information needed
      */
     EXTERNAL_MODE_1_TTI1FP1 = TIM_CLOCKSOURCE_TI1,
     /**
      * @brief External Clock Source, Mode 1 (TTI2FP2)
      * @details
-     *
+     * The clock source comes from Filtered Timer Input 2.
+     * Note: More information needed
      */
     EXTERNAL_MODE_1_TTI2FP2 = TIM_CLOCKSOURCE_TI2,
     /**
      * @brief External Clock Source, Mode 1 (ETRF)
      * @details
-     *
+     * The clock source comes from the ETRF trigger / signal.
+     * Note: More information needed
      */
-    EXTERNAL_MODE_1_ETRF = TIM_CLOCKSOURCE_ETRMODE1
+    EXTERNAL_MODE_1_ETRF = TIM_CLOCKSOURCE_ETRMODE1,
+    /**
+     * @brief External Clock source mode 2
+     * @details
+     * The timer receives a tick whenever there is an active edge on the ETRF trigger / signal.
+     * Note: More information needed
+     */
+    EXTERNAL_MODE_2 = TIM_CLOCKSOURCE_ETRMODE2
 };
 
 enum class TimerMasterModeSelection {
@@ -198,6 +209,8 @@ enum class TimerMasterSlaveMode {
 
 /**
  * @brief A timer configuration provides a timer with all configuration variables needed to be set up..
+ * @details
+ *
  */
 typedef struct {
     /**
