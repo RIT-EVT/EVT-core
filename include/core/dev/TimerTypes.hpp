@@ -34,9 +34,9 @@ namespace core::dev {
  * Mirrors the definitions that are grouped under TIM_Counter_Mode. Adds extra documentation & easier use.
  */
 enum class TimerCounterMode {
-    /** The timer's counter, counts up from 0 to the period */
+    /** The timer's counter counts up from 0 to the period */
     UP = TIM_COUNTERMODE_UP,
-    /** The timer's counter, counts down from the period to 0. */
+    /** The timer's counter counts down from the period to 0. */
     DOWN = TIM_COUNTERMODE_DOWN,
     /**
      * @brief Center-aligned mode 1, used for PWM.
