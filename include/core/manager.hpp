@@ -195,7 +195,7 @@ GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT, GPIO::Pull pu
     return gpioPin;
     #endif
     #ifdef STM32F4xx
-    static GPIOf4xx gpioPin(pin, direction);
+    static GPIOf4xx gpioPin(pin, direction, pull);
     return gpioPin;
     #endif
 }
