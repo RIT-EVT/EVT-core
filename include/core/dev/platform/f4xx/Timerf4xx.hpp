@@ -18,14 +18,12 @@ public:
     /**
      * A default configuration for an F4 timer.
      */
-    static constexpr TimerConfiguration_t defaultConfig = {
-        TimerCounterMode::UP,
-        TimerClockDivision::DIVISION_1,
-        TimerAutoReloadPreload::BUFFER,
-        TimerClockSource::INTERNAL,
-        TimerMasterModeSelection::RESET,
-        TimerMasterSlaveMode::DISABLE
-    };
+    static constexpr TimerConfiguration_t defaultConfig = {TimerCounterMode::UP,
+                                                           TimerClockDivision::DIVISION_1,
+                                                           TimerAutoReloadPreload::BUFFER,
+                                                           TimerClockSource::INTERNAL,
+                                                           TimerMasterModeSelection::RESET,
+                                                           TimerMasterSlaveMode::DISABLE};
 
     ~TimerF4xx() override;
 

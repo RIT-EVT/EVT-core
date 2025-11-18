@@ -56,14 +56,12 @@ constexpr uint8_t ADC3_SLOT = 2;
 ADCf4xx::ADC_State core::io::ADCf4xx::adcArray[NUM_ADCS];
 bool core::io::ADCf4xx::timerInit = false;
 
-dev::TimerConfiguration_t configuration = {
-    dev::TimerCounterMode::UP,
-    dev::TimerClockDivision::DIVISION_1,
-    dev::TimerAutoReloadPreload::ENABLE,
-    dev::TimerClockSource::INTERNAL,
-    dev::TimerMasterModeSelection::UPDATE,
-    dev::TimerMasterSlaveMode::DISABLE
-};
+dev::TimerConfiguration_t configuration = {dev::TimerCounterMode::UP,
+                                           dev::TimerClockDivision::DIVISION_1,
+                                           dev::TimerAutoReloadPreload::ENABLE,
+                                           dev::TimerClockSource::INTERNAL,
+                                           dev::TimerMasterModeSelection::UPDATE,
+                                           dev::TimerMasterSlaveMode::DISABLE};
 
 dev::TimerF4xx core::io::ADCf4xx::timer8 = dev::TimerF4xx(TIM8, 1000, configuration);
 

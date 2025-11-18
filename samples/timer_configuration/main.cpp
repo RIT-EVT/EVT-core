@@ -44,13 +44,13 @@ int main() {
     reloadGPIO             = &io::getGPIO<io::Pin::PC_0>(io::GPIO::Direction::OUTPUT);
 
     dev::TimerConfiguration_t configuration = {
-        dev::TimerCounterMode::UP,                  // Tell the counter to count upwards towards the clock period
-        dev::TimerClockDivision::DIVISION_1,        // Used the default clock division
-        dev::TimerAutoReloadPreload::BUFFER,        // Enables the auto reload preload which makes TIMx_ARR buffered.
-        dev::TimerClockSource::INTERNAL,            // Set the clock source to be the microcontrollers internal clock.
-        dev::TimerMasterModeSelection::RESET,       // Tells the timer to reset whenever it enters a Master / Slave configuration. Will not be
-                                                    // triggered or used in this configuration.
-        dev::TimerMasterSlaveMode::DISABLE          // Disable Masster Slave Mode for the timer
+        dev::TimerCounterMode::UP,            // Tell the counter to count upwards towards the clock period
+        dev::TimerClockDivision::DIVISION_1,  // Used the default clock division
+        dev::TimerAutoReloadPreload::BUFFER,  // Enables the auto reload preload which makes TIMx_ARR buffered.
+        dev::TimerClockSource::INTERNAL,      // Set the clock source to be the microcontrollers internal clock.
+        dev::TimerMasterModeSelection::RESET, // Tells the timer to reset whenever it enters a Master / Slave
+                                              // configuration. Will not be triggered or used in this configuration.
+        dev::TimerMasterSlaveMode::DISABLE // Disable Masster Slave Mode for the timer
     };
 
     // Set up the Timer

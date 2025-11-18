@@ -41,22 +41,23 @@ enum class TimerCounterMode {
     /**
      * @brief Center-aligned mode 1, used for PWM.
      * @details
-     * Behavior: The interrupt flags for triggers (Update & Capture/Compare) are only set when the counter is counting **down**.
-     * Compare Event: When the counter matches the CCR value while counting down.
+     * Behavior: The interrupt flags for triggers (Update & Capture/Compare) are only set when the counter is counting
+     * **down**. Compare Event: When the counter matches the CCR value while counting down.
      */
     CENTRAL_ALIGNED_1 = TIM_COUNTERMODE_CENTERALIGNED1,
     /**
      * @brief Center-aligned mode 2, used for PWM.
      * @details
-     * Behavior: The interrupt flags for triggers (Update & Capture/Compare) are only set when the counter is counting **up**.
-     * Compare Event: When the counter matches the CCR value while counting up.
+     * Behavior: The interrupt flags for triggers (Update & Capture/Compare) are only set when the counter is counting
+     * **up**. Compare Event: When the counter matches the CCR value while counting up.
      */
     CENTRAL_ALIGNED_2 = TIM_COUNTERMODE_CENTERALIGNED2,
     /**
      * @brief Center-aligned mode 3, used for PWM.
      * @details
-     * Behavior: The interrupt flags for triggers (Update & Capture/Compare) are set when the counter is counting **up** and counting **down**
-     * Compare Event: When the counter matches the CCR value while counting up and down. The event will occur twice per PWM period.
+     * Behavior: The interrupt flags for triggers (Update & Capture/Compare) are set when the counter is counting **up**
+     * and counting **down** Compare Event: When the counter matches the CCR value while counting up and down. The event
+     * will occur twice per PWM period.
      */
     CENTRAL_ALIGNED_3 = TIM_COUNTERMODE_CENTERALIGNED3,
 };
@@ -80,14 +81,14 @@ enum class TimerClockDivision {
      * @details
      * The sample clock frequency (tDTS) = 2 * Timer clock (CK_INT) frequency
      * 2x `DIVISION_1`
-    */
+     */
     DIVISION_2 = TIM_CLOCKDIVISION_DIV2,
     /**
      * @brief Clock division: tDTS=4*tCK_INT
      * @details
      * The sample clock frequency (tDTS) = 4 * Timer clock (CK_INT) frequency
      * 4x `DIVISION_1`
-    */
+     */
     DIVISION_4 = TIM_CLOCKDIVISION_DIV4,
 };
 
@@ -107,7 +108,8 @@ enum class TimerAutoReloadPreload {
  * Clock sources define when a timer will receive a clock. This can be either an internal or external clock source.
  * External clock sources have many options for configuring when an external signal will actually tigger a clock.
  * Note: Many of these cases need more research. Particularly the external sources, as online information is limited.
- * If you need to use one of these, fallback to the reference document for the MCU you are using (Please update this with more info)
+ * If you need to use one of these, fallback to the reference document for the MCU you are using (Please update this
+ * with more info)
  */
 enum class TimerClockSource {
     /**
@@ -119,29 +121,33 @@ enum class TimerClockSource {
     /**
      * @brief External Clock Source, Mode 1 (ITR0)
      * @details
-     * The timer's clock source is synchronized to Interrupt 0. This can be used to synchronize multiple timers together.
-     * Please see the Timer synchronization section of the Microcontroller Reference Document for more information.
+     * The timer's clock source is synchronized to Interrupt 0. This can be used to synchronize multiple timers
+     * together. Please see the Timer synchronization section of the Microcontroller Reference Document for more
+     * information.
      */
     EXTERNAL_MODE_1_ITR0 = TIM_CLOCKSOURCE_ITR0,
     /**
      * @brief External Clock Source, Mode 1 (ITR1)
      * @details
-     * The timer's clock source is synchronized to Interrupt 1. This can be used to synchronize multiple timers together.
-     * Please see the Timer synchronization section of the Microcontroller Reference Document for more information.
+     * The timer's clock source is synchronized to Interrupt 1. This can be used to synchronize multiple timers
+     * together. Please see the Timer synchronization section of the Microcontroller Reference Document for more
+     * information.
      */
     EXTERNAL_MODE_1_ITR1 = TIM_CLOCKSOURCE_ITR1,
     /**
-    * @brief External Clock Source, Mode 1 (ITR2)
-    * @details
-    * The timer's clock source is synchronized to Interrupt 2. This can be used to synchronize multiple timers together.
-    * Please see the Timer synchronization section of the Microcontroller Reference Document for more information.
-    */
+     * @brief External Clock Source, Mode 1 (ITR2)
+     * @details
+     * The timer's clock source is synchronized to Interrupt 2. This can be used to synchronize multiple timers
+     * together. Please see the Timer synchronization section of the Microcontroller Reference Document for more
+     * information.
+     */
     EXTERNAL_MODE_1_ITR2 = TIM_CLOCKSOURCE_ITR2,
     /**
      * @brief External Clock Source, Mode 1 (ITR3)
      * @details
-     * The timer's clock source is synchronized to Interrupt 3. This can be used to synchronize multiple timers together.
-     * Please see the Timer synchronization section of the Microcontroller Reference Document for more information.
+     * The timer's clock source is synchronized to Interrupt 3. This can be used to synchronize multiple timers
+     * together. Please see the Timer synchronization section of the Microcontroller Reference Document for more
+     * information.
      */
     EXTERNAL_MODE_1_ITR3 = TIM_CLOCKSOURCE_ITR3,
     /**

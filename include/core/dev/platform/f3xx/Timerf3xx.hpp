@@ -18,14 +18,12 @@ public:
     /**
      * The default configuration for an F3 timer.
      */
-    static constexpr TimerConfiguration_t defaultConfig = {
-        TimerCounterMode::UP,
-        TimerClockDivision::DIVISION_1,
-        TimerAutoReloadPreload::BUFFER,
-        TimerClockSource::INTERNAL,
-        TimerMasterModeSelection::RESET,
-        TimerMasterSlaveMode::DISABLE
-    };
+    static constexpr TimerConfiguration_t defaultConfig = {TimerCounterMode::UP,
+                                                           TimerClockDivision::DIVISION_1,
+                                                           TimerAutoReloadPreload::BUFFER,
+                                                           TimerClockSource::INTERNAL,
+                                                           TimerMasterModeSelection::RESET,
+                                                           TimerMasterSlaveMode::DISABLE};
     /**
      * Will initialize the timer device on the STM with the given period and the given IRQ Handler
      * that triggers with the given period.  Starts the timer
