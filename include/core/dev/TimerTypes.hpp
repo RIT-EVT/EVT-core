@@ -102,10 +102,10 @@ enum class TimerAutoReloadPreload {
 };
 
 /**
- * @brief Tells the timer what source will initiate a tick.
+ * @brief Tells the timer what source will initiate a clock.
  * @details
- * Clock sources define when a timer will receive a tick. This can be either an internal or external clock source.
- * External clock sources have many options for configuring when an external signal will actually tigger a clock tick.
+ * Clock sources define when a timer will receive a clock. This can be either an internal or external clock source.
+ * External clock sources have many options for configuring when an external signal will actually tigger a clock.
  * Note: Many of these cases need more research. Particularly the external sources, as online information is limited.
  * If you need to use one of these, fallback to the reference document for the MCU you are using (Please update this with more info)
  */
@@ -113,7 +113,7 @@ enum class TimerClockSource {
     /**
      * @brief Internal clock source
      * @details
-     * The standard setting for timers. This will trigger the timer tick based on the STM32's internal clock.
+     * The standard setting for timers. This will trigger the timer clock based on the STM32's internal clock.
      */
     INTERNAL = TIM_CLOCKSOURCE_INTERNAL,
     /**
@@ -175,35 +175,77 @@ enum class TimerClockSource {
     /**
      * @brief External Clock source mode 2
      * @details
-     * The timer receives a tick whenever there is an active edge on the ETRF trigger / signal.
+     * The timer receives a clock whenever there is an active edge on the ETRF trigger / signal.
      * Note: More information needed
      */
     EXTERNAL_MODE_2 = TIM_CLOCKSOURCE_ETRMODE2
 };
 
+/**
+ * @brief Controls what signals a timer outputs to timers configured as slaves.
+ * @details
+ * Defines how the Master in a master / slave timer relationship should function. Master mode timers can reset, start,
+ * stop, or clock the counter of another timer configured in Slave Mode.
+ * Note: Trigger outputs are only affected when TimerMasterSlaveMode is set to ENABLE.
+ */
 enum class TimerMasterModeSelection {
-    /*!< TIMx_EGR.UG bit is used as trigger output (TRGO)              */
+    /**
+     * @brief Sends a RESET signal to slave timers.
+     * @details
+     * The TIMx_EGR.UG bit is used as the trigger output (TRGO), which sends the RESET signal to
+     * any configured slave timers.
+     */
     RESET = TIM_TRGO_RESET,
-    /*!< TIMx_CR1.CEN bit is used as trigger output (TRGO)             */
+    /**
+     * @brief Sends an ENABLE signal to slave timers.
+     * @details
+     * The TIMx_CR1.CEN bit is used as the trigger output (TRGO), which sends the ENABLE signal to
+     * any configured slave timers.
+     */
     ENABLE = TIM_TRGO_ENABLE,
-    /*!< Update event is used as trigger output (TRGO)                 */
+    /**
+     * @breif Sends an Update event to slave timers.
+     */
     UPDATE = TIM_TRGO_UPDATE,
-    /*!< Capture or a compare match 1 is used as trigger output (TRGO) */
+    /**
+     * @brief Capture or a compare match 1 is used as trigger output (TRGO)
+     */
     OC1 = TIM_TRGO_OC1,
-    /*!< OC1REF signal is used as trigger output (TRGO)                */
+    /**
+     * @brief OC1REF signal is used as trigger output (TRGO)
+     */
     OC1REF = TIM_TRGO_OC1REF,
-    /*!< OC2REF signal is used as trigger output (TRGO)                */
+    /**
+     * @brief OC2REF signal is used as trigger output (TRGO)
+     */
     OC2REF = TIM_TRGO_OC2REF,
-    /*!< OC3REF signal is used as trigger output(TRGO)                 */
+    /**
+     * @brief OC3REF signal is used as trigger output (TRGO)
+     */
     OC3REF = TIM_TRGO_OC3REF,
-    /*!< OC4REF signal is used as trigger output(TRGO)                 */
+    /**
+     * @brief C4REF signal is used as trigger output (TRGO)
+     */
     OC4REF = TIM_TRGO_OC4REF,
 };
 
+/**
+ * @brief Allows a timer to control another set of timers.
+ * @details
+ * When one timer is configured in Master Mode, it can reset, start, stop, or clock the counter of another timer
+ * configured in Slave Mode. Timers can be chained together through the combination of TimerMasterModeSelection and
+ * TimerClockSource options. Master / Slave configurations are dependent on the MCU, so it is important to check the
+ * Reference Document for the MCU you are using.
+ */
 enum class TimerMasterSlaveMode {
-    /*!< No action */
+    /**
+     * @brief The Master/Slave mode is enabled.
+     * @details
+     * This timer will control other timers that are enabled to listen to TimerMasterModeSelection trigger output as
+     * their clock source.
+     */
     ENABLE = TIM_MASTERSLAVEMODE_ENABLE,
-    /*!< Master/slave mode is selected */
+    /** The Master/Slave mode is disabled. */
     DISABLE = TIM_MASTERSLAVEMODE_DISABLE,
 };
 
