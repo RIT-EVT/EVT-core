@@ -25,6 +25,8 @@ namespace time = core::time;
 // aside CANopen messages into a specific queue
 ///////////////////////////////////////////////////////////////////////////////
 
+io::UART *uart;
+
 /**
  * Interrupt handler to get CAN messages. A function pointer to this function
  * will be passed to the EVT-core CAN interface which will in turn call this
@@ -36,20 +38,18 @@ namespace time = core::time;
  * @param message[in] The passed in CAN message that was read.
  */
 
-io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
-
 // create a can interrupt handler
 void canInterrupt(io::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
 
     // print out raw received data
-    uart.printf("Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
+    uart->printf("Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
     uint8_t* data = message.getPayload();
     for (int i = 0; i < message.getDataLength(); i++) {
-        uart.printf("%X ", *data);
+        uart->printf("%X ", *data);
         data++;
     }
-    uart.printf("\r\n");
+    uart->printf("\r\n");
 
     if (queue != nullptr)
         queue->append(message);
@@ -59,6 +59,7 @@ int main() {
     // Initialize system
     core::platform::init();
 
+    uart = &io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
     // Initialize the timer
     dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(100);
 
@@ -98,7 +99,7 @@ int main() {
 
     // test that the board is connected to the can network
     if (result != io::CAN::CANStatus::OK) {
-        uart.printf("Failed to connect to CAN network\r\n");
+        uart->printf("Failed to connect to CAN network\r\n");
         return 1;
     }
 
@@ -114,7 +115,7 @@ int main() {
     time::wait(500);
 
     // print any CANopen errors
-    uart.printf("Error: %d\r\n", CONodeGetErr(&canNode));
+    uart->printf("Error: %d\r\n", CONodeGetErr(&canNode));
 
     ///////////////////////////////////////////////////////////////////////////
     // Main loop
@@ -127,11 +128,11 @@ int main() {
         if (lastVal1 != testCanNode.getSampleDataA() || lastVal2 != testCanNode.getSampleDataB()) {
             lastVal1 = testCanNode.getSampleDataA();
             lastVal2 = testCanNode.getSampleDataB();
-            uart.printf("Current value: %X, %X\r\n", lastVal1, lastVal2);
+            uart->printf("Current value: %X, %X\r\n", lastVal1, lastVal2);
         }
 
         io::processCANopenNode(&canNode);
         // Wait for new data to come in
-        time::wait(10);
+        time::wait(1);
     }
 }
