@@ -23,7 +23,7 @@ namespace time = core::time;
 // aside CANopen messages into a specific queue
 ///////////////////////////////////////////////////////////////////////////////
 
-io::UART *uart;
+io::UART* uart;
 
 /**
  * Interrupt handler to get CAN messages. A function pointer to this function
