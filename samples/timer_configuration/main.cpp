@@ -50,7 +50,7 @@ int main() {
         dev::TimerClockSource::INTERNAL,      // Set the clock source to be the microcontrollers internal clock.
         dev::TimerMasterModeSelection::RESET, // Tells the timer to reset whenever it enters a Master / Slave
                                               // configuration. Will not be triggered or used in this configuration.
-        dev::TimerMasterSlaveMode::DISABLE // Disable Masster Slave Mode for the timer
+        dev::TimerMasterSlaveMode::DISABLE    // Disable Masster Slave Mode for the timer
     };
 
     // Set up the Timer
