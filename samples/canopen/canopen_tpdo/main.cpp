@@ -71,6 +71,7 @@ int main() {
     // create the TPDO node
     TPDOCanNode testCanNode;
 
+    // Initialize the timer
     dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(100);
 
     ///////////////////////////////////////////////////////////////////////////

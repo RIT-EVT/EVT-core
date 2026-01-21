@@ -205,7 +205,7 @@ static void canClose(void) {}
 /**
  * Interrupt handler for the timer, updates that the timer has gone off
  */
-void timerHandler(void* halTim) {
+void timerHandler(void* context, void* halTim) {
     timerCounter++;
 }
 
@@ -220,7 +220,7 @@ static void timerInit(uint32_t freq) {
 static void timerReload(uint32_t reload) {
     __evt_core_can_timer__->stopTimer();
     __evt_core_can_timer__->setPeriod(10);
-    __evt_core_can_timer__->startTimer(timerHandler);
+    __evt_core_can_timer__->startTimer(timerHandler, nullptr);
     timerCounter  = 0;
     timerRunning  = true;
     counterTarget = reload;
@@ -230,7 +230,7 @@ static void timerReload(uint32_t reload) {
  * Start the "timer" running
  */
 static void timerStart(void) {
-    __evt_core_can_timer__->startTimer(timerHandler);
+    __evt_core_can_timer__->startTimer(timerHandler, nullptr);
     timerRunning = true;
     timerCounter = 0;
 }
