@@ -2,9 +2,7 @@
  * This example shows off a basic PWM signal. You will need to use a logic
  * analyzer to see the generated square wave.
  */
-// #include <core/io/PWM.hpp>
 #include <core/manager.hpp>
-#include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 
 namespace io   = core::io;

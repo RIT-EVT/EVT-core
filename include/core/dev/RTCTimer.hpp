@@ -69,16 +69,16 @@ private:
     RTC& rtc;
 
     /**
-     * The amount of seconds that have elapsed while the timer is running.
+     * The number of seconds that have elapsed while the timer is running.
      * Only updates when stopTimer() is called.
      */
-    uint32_t time;
+    uint32_t time = 0;
 
     /** The amount of time it takes the timer to go off in SECONDS */
-    uint32_t clockPeriod{};
+    uint32_t clockPeriod = 0;
 
     /** The epoc time the clock started */
-    uint32_t startTime;
+    uint32_t startTime = 0;
 
     /** true if timer has been stopped */
     bool bTimerStopped = true;
