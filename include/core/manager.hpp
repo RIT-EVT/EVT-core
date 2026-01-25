@@ -90,6 +90,7 @@ namespace core::dev {
  * must be a value between 8 and 32768 ms.
  */
 #ifdef IWDG_SUPPORTED
+#define IWDG_SUPPORTED
 IWDG& getIWDG(uint32_t ms) {
     #ifdef STM32F3xx
     // 8 < ms < 32768

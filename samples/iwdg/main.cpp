@@ -1,3 +1,6 @@
+#ifndef IWDG_SUPPORTED
+#define IWDG_SUPPORTED
+
 /**
  * Example of IWDG functionality. The timer is refreshed 3 times in a loop,
  * then hits an infinite loop in the code which triggers a system reset.
@@ -31,3 +34,5 @@ int main() {
     while (1)
         ;
 }
+
+#endif
