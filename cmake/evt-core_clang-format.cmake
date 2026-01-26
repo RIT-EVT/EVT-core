@@ -16,7 +16,7 @@ file(GLOB_RECURSE
         )
 
 # Get the path to clang-format
-find_program(CLANG_FORMAT "../.clang-format")
+find_program(CLANG_FORMAT "clang-format")
 # Create the formatting target if clang-format is found
 if(CLANG_FORMAT)
     message(STATUS "Found clang-format: ${CLANG_FORMAT}")
