@@ -17,7 +17,7 @@ public:
      *
      * @param r
      */
-    RTCTimer(RTC& r);
+    explicit RTCTimer(RTC& r);
 
     /**
      * Create instance of RTCTimer.
@@ -31,8 +31,9 @@ public:
      * not implemented.
      *
      * @param[in] irqHandler The IRQ Handler function pointer.  Sets a new interrupt handler function
+     * @param[in] context The context used by the irqHandler.
      */
-    void startTimer(void (*irqHandler)(void* htim)) override {}
+    void startTimer(void (*irqHandler)(void* context, void* htim), void* context) override {}
 
     void startTimer() override;
 
@@ -40,40 +41,47 @@ public:
 
     void reloadTimer() override;
 
-    void setPeriod(uint32_t clock) override;
+    /**
+     * Set the period for PWM.
+     * Note: This does not match the dev::Timer set period, since the RTCTimer does not accept a different period.
+     * This function will hide the definition from the superclass. So you can safely ignore the warning.
+     * @param[in] period The period for the RTC timer.
+     * @param[in] clockPrescaler UNUSED DO NOT SET.
+     */
+    void setPeriod(uint32_t period, uint32_t clockPrescaler = AUTO_PRESCALER);
 
     /**
      * Gets the time since the RTC clock began in seconds
      *
      * @return the time since the RTC clock began
      */
-    uint32_t getTime();
+    [[nodiscard]] uint32_t getTime() const;
 
     /**
      * Gets whether the timer has gone off
      *
      * @return whether the time has gone off
      */
-    bool hasGoneOff();
+    [[nodiscard]] bool hasGoneOff() const;
 
 private:
     /** Instance of on-board*/
     RTC& rtc;
 
     /**
-     * The amount of seconds that have elapsed while the timer is running.
+     * The number of seconds that have elapsed while the timer is running.
      * Only updates when stopTimer() is called.
      */
-    uint32_t time;
+    uint32_t time = 0;
 
     /** The amount of time it takes the timer to go off in SECONDS */
-    uint32_t clockPeriod;
+    uint32_t clockPeriod = 0;
 
     /** The epoc time the clock started */
-    uint32_t startTime;
+    uint32_t startTime = 0;
 
     /** true if timer has been stopped */
-    bool bTimerStopped;
+    bool bTimerStopped = true;
 };
 
 } // namespace core::dev
