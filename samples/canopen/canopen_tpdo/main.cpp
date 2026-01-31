@@ -73,6 +73,7 @@ int main() {
 
     uart = &io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
 
+    // Initialize the timer
     dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(100);
 
     ///////////////////////////////////////////////////////////////////////////

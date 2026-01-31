@@ -124,14 +124,32 @@ RTC& getRTC() {
 #endif
 
 #ifdef MCU_SUPPORTED
+/**
+ * A verbose method for getting an EVT-Core timer. This initializer supports a timer configuration object, which allows
+ * for configuration of the timer.
+ *
+ * @tparam mcuTimer The microcontroller timer that the timer will run on.
+ * @param clockPeriod The clock period to run the timer at
+ * @param configuration Configuration variables for the timer.
+ * @return a configured timer object, with the given configuration & clock period.
+ */
 template<MCUTimer mcuTimer>
-Timer& getTimer(uint32_t clockPeriod) {
+Timer& getTimer(uint32_t clockPeriod,
+    // This is a little wonky... we need the correct config so we need to get it from the respective board specific
+    // class. The only real way to do this, is to use a ifdef and grab the right class.
     #ifdef STM32F3xx
-    static Timerf3xx timer(getTIM(mcuTimer), clockPeriod);
+                TimerConfiguration_t configuration = TimerF3xx::defaultConfig
+    #endif
+    #ifdef STM32F4xx
+                    TimerConfiguration_t configuration = TimerF4xx::defaultConfig
+    #endif
+) {
+    #ifdef STM32F3xx
+    static TimerF3xx timer(getTIM(mcuTimer), clockPeriod, configuration);
     return timer;
     #endif
     #ifdef STM32F4xx
-    static Timerf4xx timer(getTIM(mcuTimer), clockPeriod);
+    static TimerF4xx timer(getTIM(mcuTimer), clockPeriod, configuration);
     return timer;
     #endif
 }
