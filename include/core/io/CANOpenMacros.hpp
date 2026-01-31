@@ -320,18 +320,18 @@
     }
 
 /**
- * This macro converts a TPDO number to the corresponding Link number.
+ * This macro converts a TPDO number to the corresponding Link number. ONLY USE FOR THE DATA_LINK!
  * 
  * @param PDO_NUMBER (integer) the PDO number for the data link
  */
-#define TPDO_NUMBER(PDO_NUMBER) (PDO_NUMBER)
+#define LINK_TPDO_NUMBER(PDO_NUMBER) (PDO_NUMBER)
 
 /**
- * This macro converts a RPDO number to the corresponding Link number.
+ * This macro converts a RPDO number to the corresponding Link number. ONLY USE FOR THE DATA_LINK!
  * 
  * @param PDO_NUMBER (integer) the PDO number for the data link
  */
-#define RPDO_NUMBER(PDO_NUMBER) (PDO_NUMBER + 0x100)
+#define LINK_RPDO_NUMBER(PDO_NUMBER) (PDO_NUMBER + 0x100)
 
 // clang-format on
 

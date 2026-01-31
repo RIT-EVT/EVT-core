@@ -106,9 +106,9 @@ private:
 
         // User defined data, this will be where we put elements that can be
         // accessed via SDO and depending on configuration PDO
-        DATA_LINK_START_KEY_21XX(TPDO_NUMBER(0), 0x02),
-        DATA_LINK_21XX(TPDO_NUMBER(0), 0x01, CO_TUNSIGNED8, &sampleDataA),
-        DATA_LINK_21XX(TPDO_NUMBER(0), 0x02, CO_TUNSIGNED16, &sampleDataB),
+        DATA_LINK_START_KEY_21XX(LINK_TPDO_NUMBER(0), 0x02),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0), 0x01, CO_TUNSIGNED8, &sampleDataA),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0), 0x02, CO_TUNSIGNED16, &sampleDataB),
 
         // End of dictionary marker
         CO_OBJ_DICT_ENDMARK,
