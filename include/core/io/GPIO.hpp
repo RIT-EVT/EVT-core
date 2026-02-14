@@ -33,7 +33,7 @@ public:
 
     /**
      * Binary representation of the flow of information, either input or
-     * output.
+     * output
      */
     enum class Direction {
         INPUT  = 0u,
@@ -76,23 +76,23 @@ public:
     GPIO(Pin pin, Direction direction, Pull pull = Pull::PULL_DOWN);
 
     /**
-     * Set the direction of the pin.
+     * Sets whether this pin is configured for input or output.
      *
-     * @param[in] direction The direction of information.
+     * @param[in] direction Pin direction: Direction::Input or Direction::Output.
      */
     virtual void setDirection(Direction direction) = 0;
 
     /**
-     * Used for writing a state to a pin.
+     * Set the output of this pin to the given logic state.
      *
-     * @param[in] state The state to write to the pin
+     * @param[in] state Logic level to set: State::LOW or State::HIGH.
      */
     virtual void writePin(State state) = 0;
 
     /**
-     * Used for reading the state of a pin.
+     * Read the current logic state of this pin.
      *
-     * @return The state of the pin.
+     * @return The pin's logic level: State::LOW or State::HIGH.
      */
     virtual State readPin() = 0;
 
