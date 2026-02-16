@@ -29,6 +29,8 @@ namespace log  = core::log;
 // aside CANopen messages into a specific queue
 ///////////////////////////////////////////////////////////////////////////////
 
+io::UART* uart;
+
 /**
  * Interrupt handler to get CAN messages. A function pointer to this function
  * will be passed to the EVT-core CAN interface which will in turn call this
@@ -113,7 +115,7 @@ int main() {
 
     // test that the board is connected to the can network
     if (result != io::CAN::CANStatus::OK) {
-        uart.printf("Failed to connect to CAN network\r\n");
+        uart->printf("Failed to connect to CAN network\r\n");
         return 1;
     }
 
@@ -129,7 +131,7 @@ int main() {
     time::wait(500);
 
     // print any CANopen errors
-    uart.printf("Error: %d\r\n", CONodeGetErr(&canNode));
+    uart->printf("Error: %d\r\n", CONodeGetErr(&canNode));
 
     ///////////////////////////////////////////////////////////////////////////
     // Main loop
@@ -142,11 +144,11 @@ int main() {
         if (lastVal1 != testCanNode.getSampleDataA() || lastVal2 != testCanNode.getSampleDataB()) {
             lastVal1 = testCanNode.getSampleDataA();
             lastVal2 = testCanNode.getSampleDataB();
-            uart.printf("Current value: %X, %X\r\n", lastVal1, lastVal2);
+            uart->printf("Current value: %X, %X\r\n", lastVal1, lastVal2);
         }
 
         io::processCANopenNode(&canNode);
         // Wait for new data to come in
-        time::wait(10);
+        time::wait(1);
     }
 }
