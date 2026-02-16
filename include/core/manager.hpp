@@ -57,7 +57,8 @@
     #include <core/io/platform/f4xx/GPIOf4xx.hpp>
     #include <core/io/platform/f4xx/I2Cf4xx.hpp>
     #include <core/io/platform/f4xx/PWMf4xx.hpp>
-    #include <core/io/platform/f4xx/SPIf4xx.hpp>
+    #include <dev/spi.hpp>
+// #include <core/io/platform/f4xx/SPIf4xx.hpp>
     #include <core/io/platform/f4xx/UARTf4xx.hpp>
     #include <core/platform/f4xx/stm32f4xx.hpp>
 
@@ -70,7 +71,7 @@ namespace core::platform {
  * platform specific and usually involves clock setup and other peripheral
  * init logic.
  */
-void init() {
+inline void init() {
 #ifdef STM32F3xx
     stm32f3xx_init();
 #endif
@@ -111,7 +112,7 @@ IWDG& getIWDG(uint32_t ms) {
  * Get an instance of an RTC
  */
 #ifdef RTC_SUPPORTED
-RTC& getRTC() {
+inline RTC& getRTC() {
     #ifdef STM32F3xx
     static RTCf3xx rtc;
     return rtc;
@@ -279,7 +280,7 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
     return spi;
     #endif
     #ifdef STM32F4xx
-    static SPIf4xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
+    static SPI3f4xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
     return spi;
     #endif
 }
@@ -299,7 +300,7 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
     return spi;
     #endif
     #ifdef STM32F4xx
-    static SPIf4xx spi(CSPins, pinLength, sckPin, mosiPin);
+    static SPI3f4xx spi(CSPins, pinLength, sckPin, mosiPin);
     return spi;
     #endif
 }
