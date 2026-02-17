@@ -13,8 +13,7 @@ project(HALf4
     LANGUAGES C ASM
 )
 
-add_library(${PROJECT_NAME} STATIC
-        src/stm32f4xx_hal_sdram.c)
+add_library(${PROJECT_NAME} STATIC)
 
 # Glob together all C source files
 file(GLOB HALf4_C_SRC_FILES src/*.c)
