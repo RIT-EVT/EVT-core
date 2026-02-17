@@ -1,18 +1,16 @@
 #ifndef EVT_FMC_HPP
 #define EVT_FMC_HPP
 
-#ifdef __cplusplus
-
-extern "C" {
-    #endif
-
+#ifdef STM32F4xx
     #include "HALf4/stm32f4xx_hal.h"
     #include "HALf4/stm32f4xx_ll_fmc.h"
     #include "HALf4/stm32f4xx_hal_sdram.h"
-
-    #ifdef __cplusplus
-}
+#else
+    #include "HALf3/stm32f3xx_hal.h"
+    #include "HALf3/stm32f3xx_ll_fmc.h"
+    #include "HALf3/stm32f3xx_hal_sdram.h"
 #endif
+
 
 #define SDRAM_TIMEOUT (0x0000FFFFUL)
 
@@ -79,7 +77,7 @@ typedef FMC_GPIO 	FMC_CMD;
 // #define FMC_ 		((GPIO) {GPIO_PIN_x, GPIOx})
 
 #define SDRAM_CLK_SPEED ((uint32_t)(HAL_RCC_GetSysClockFreq() / 2))
-#define SDRAM_CLK_PERIOD_US (1000000000UL / (SDRAM_CLK_SPEED / 1000)) // LOSES SOME RESOLUTION, BUT ITS NEEDED TO FIT WITHIN 32-BITS
+#define SDRAM_CLK_PERIOD_US (1000000000UL / (SDRAM_CLK_SPEED / 1000)) // LOSES SOME RESOLUTION, BUT IT'S NEEDED TO FIT WITHIN 32-BITS
 #define NS_TO_SDRAM_CLK_CYCLES(NS) ((NS * 1000 + SDRAM_CLK_PERIOD_US) / (SDRAM_CLK_PERIOD_US))
 
 // All of these can be found in the datasheet of the Ram chip
@@ -179,7 +177,7 @@ public:
      * Structure to hold an array of GPIO byte enable pins for the FMC
      */
     struct FMCByteEnablePins {
-        FMC_BE* pins;
+        FMC_BE *pins;
         uint8_t count;
     };
 
@@ -187,7 +185,7 @@ public:
      * Structure to hold an array of GPIO bank pins for the FMC
      */
     struct FMCBankPins {
-        FMC_BANK* pins;
+        FMC_BANK *pins;
         uint8_t count;
     };
 
@@ -224,7 +222,7 @@ public:
      *
      * @param[in] offset Byte offset from the SDRAM base address
      */
-    uint32_t read32(uint32_t offset) const;
+    [[nodiscard]] uint32_t read32(uint32_t offset) const;
 
 private:
     /**
@@ -242,32 +240,13 @@ private:
      */
     void InitPinGroup(const FMC_GPIO* pins, uint8_t count);
 
-
-
-    FMC_SDRAM_TypeDef sdramDevice;
-    uint32_t sdBank;
-    uint32_t columnBitsNumber;
-    uint32_t rowBitsNumber;
-    uint32_t memoryDataWidth;
-    uint32_t internalBankNumber;
-    uint32_t casLatency;
-    uint32_t writeProtection;
-    uint32_t sdClockPeriod;
-    uint32_t readBurst;
-    uint32_t readPipeDelay;
-
-    uint32_t loadToActiveDelay;
-    uint32_t exitSelfRefreshDelay;
-    uint32_t selfRefreshTime;
-    uint32_t rowCycleDelay;
-    uint32_t writeRecoveryTime;
-    uint32_t rpDelay;
-    uint32_t rcdDelay;
+    SdramInitConfig sdramInitConfig;
+    SdramTimingConfig sdramTimingConfig;
 
     SDRAM_HandleTypeDef sdram;
     FMC_SDRAM_TimingTypeDef sdramTiming;
 
-    uint32_t baseAddress; //address to read and write to
+    uint32_t sdramMemoryAddress; //address to read and write to
 };
 
 }

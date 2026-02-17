@@ -2,81 +2,64 @@
 
 namespace core::io {
 
-FMC::FMC(const FMCPinConfig& pin_config, const SdramInitConfig& sdramInitConfig, const SdramTimingConfig& sdramTimingConfig) :
-sdramDevice(*sdramInitConfig.sdramDevice),
-sdBank(sdramInitConfig.sdBank),
-columnBitsNumber(sdramInitConfig.columnBitsNumber),
-rowBitsNumber(sdramInitConfig.rowBitsNumber),
-memoryDataWidth(sdramInitConfig.memoryDataWidth),
-internalBankNumber(sdramInitConfig.internalBankNumber),
-casLatency(sdramInitConfig.casLatency),
-writeProtection(sdramInitConfig.writeProtection),
-sdClockPeriod(sdramInitConfig.sdClockPeriod),
-readBurst(sdramInitConfig.readBurst),
-readPipeDelay(sdramInitConfig.readPipeDelay),
-loadToActiveDelay(sdramTimingConfig.loadToActiveDelay),
-exitSelfRefreshDelay(sdramTimingConfig.exitSelfRefreshDelay),
-selfRefreshTime(sdramTimingConfig.selfRefreshTime),
-rowCycleDelay(sdramTimingConfig.rowCycleDelay),
-writeRecoveryTime(sdramTimingConfig.writeRecoveryTime),
-rpDelay(sdramTimingConfig.rpDelay),
-rcdDelay(sdramTimingConfig.rcdDelay) {
-    InitHardware(pin_config);
-
-    sdram = {0};
-    sdramTiming = {0};
+FMC::FMC(const FMCPinConfig& pinConfig, const SdramInitConfig& sdramInitConfig, const SdramTimingConfig& sdramTimingConfig) :
+sdramInitConfig(sdramInitConfig),
+sdramTimingConfig(sdramTimingConfig),
+sdram({nullptr}),
+sdramTiming({0}) {
+    InitHardware(pinConfig);
 
     // map the class init structs to the hal structs
     sdram.Instance = sdramInitConfig.sdramDevice;
     sdram.Init.SDBank = sdramInitConfig.sdBank;
-    sdram.Init.ColumnBitsNumber = columnBitsNumber;
-    sdram.Init.RowBitsNumber = rowBitsNumber;
-    sdram.Init.MemoryDataWidth = memoryDataWidth;
-    sdram.Init.InternalBankNumber = internalBankNumber;
-    sdram.Init.WriteProtection = writeProtection;
-    sdram.Init.ReadBurst = readBurst;
-    sdram.Init.ReadPipeDelay = readPipeDelay;
+    sdram.Init.ColumnBitsNumber = sdramInitConfig.columnBitsNumber;
+    sdram.Init.RowBitsNumber = sdramInitConfig.rowBitsNumber;
+    sdram.Init.MemoryDataWidth = sdramInitConfig.memoryDataWidth;
+    sdram.Init.InternalBankNumber = sdramInitConfig.internalBankNumber;
+    sdram.Init.WriteProtection = sdramInitConfig.writeProtection;
+    sdram.Init.ReadBurst = sdramInitConfig.readBurst;
+    sdram.Init.ReadPipeDelay = sdramInitConfig.readPipeDelay;
 
-    sdramTiming.LoadToActiveDelay = loadToActiveDelay;
-    sdramTiming.ExitSelfRefreshDelay = exitSelfRefreshDelay;
-    sdramTiming.SelfRefreshTime = selfRefreshTime;
-    sdramTiming.RowCycleDelay = rowCycleDelay;
-    sdramTiming.WriteRecoveryTime = writeRecoveryTime;
-    sdramTiming.RPDelay = rpDelay;
-    sdramTiming.RCDDelay = rcdDelay;
+    sdramTiming.LoadToActiveDelay = sdramTimingConfig.loadToActiveDelay;
+    sdramTiming.ExitSelfRefreshDelay = sdramTimingConfig.exitSelfRefreshDelay;
+    sdramTiming.SelfRefreshTime = sdramTimingConfig.selfRefreshTime;
+    sdramTiming.RowCycleDelay = sdramTimingConfig.rowCycleDelay;
+    sdramTiming.WriteRecoveryTime = sdramTimingConfig.writeRecoveryTime;
+    sdramTiming.RPDelay = sdramTimingConfig.rpDelay;
+    sdramTiming.RCDDelay = sdramTimingConfig.rcdDelay;
 
     HAL_SDRAM_Init(&sdram, &sdramTiming);
 
-    if (sdBank == FMC_SDRAM_BANK1)
-        baseAddress = 0xC0000000;
+    if (sdramInitConfig.sdBank == FMC_SDRAM_BANK1) //determine read write memory address
+        sdramMemoryAddress = 0xC0000000;
     else
-        baseAddress = 0xD0000000;
+        sdramMemoryAddress = 0xD0000000;
 }
 
 void FMC::write32(uint32_t offset, uint32_t value) const
 {
-    volatile uint32_t* ptr =
-        reinterpret_cast<volatile uint32_t*>(baseAddress + offset);
+    volatile auto* ptr =
+        reinterpret_cast<volatile uint32_t*>(sdramMemoryAddress + offset);
 
     *ptr = value;
 }
 
 uint32_t FMC::read32(uint32_t offset) const
 {
-    volatile uint32_t* ptr =
-        reinterpret_cast<volatile uint32_t*>(baseAddress + offset);
+    volatile auto* ptr =
+        reinterpret_cast<volatile uint32_t*>(sdramMemoryAddress + offset);
 
     return *ptr;
 }
 
-void FMC::InitHardware(const FMCPinConfig& pin_config) {
+void FMC::InitHardware(const FMCPinConfig& pinConfig) {
     __HAL_RCC_FMC_CLK_ENABLE();
 
-    InitPinGroup(pin_config.address.pins, pin_config.address.count);
-    InitPinGroup(pin_config.data.pins, pin_config.data.count);
-    InitPinGroup(pin_config.byteEnable.pins, pin_config.byteEnable.count);
-    InitPinGroup(pin_config.bank.pins, pin_config.bank.count);
-    InitPinGroup(pin_config.command.pins, pin_config.command.count);
+    InitPinGroup(pinConfig.address.pins, pinConfig.address.count);
+    InitPinGroup(pinConfig.data.pins, pinConfig.data.count);
+    InitPinGroup(pinConfig.byteEnable.pins, pinConfig.byteEnable.count);
+    InitPinGroup(pinConfig.bank.pins, pinConfig.bank.count);
+    InitPinGroup(pinConfig.command.pins, pinConfig.command.count);
 }
 
 void FMC::InitPinGroup(const FMC_GPIO* pins, uint8_t count) {
