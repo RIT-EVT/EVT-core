@@ -207,7 +207,7 @@ public:
      * @param[in] sdramInitConfig a struct containing all FMC SDRAM configuration
      * @param[in] sdramTimingConfig a struct containing all FMC SDRAM timing configuration variables
      */
-    FMC(const FMCPinConfig &pin_config, const SdramInitConfig& sdramInitConfig, const SdramTimingConfig& sdramTimingConfig);
+    FMC(FMCPinConfig pin_config, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig);
 
     /**
      * Write a value to SDRAM at the specified byte offset.
@@ -242,6 +242,7 @@ private:
 
     SdramInitConfig sdramInitConfig;
     SdramTimingConfig sdramTimingConfig;
+    FMCPinConfig fmcPinConfig;
 
     SDRAM_HandleTypeDef sdram;
     FMC_SDRAM_TimingTypeDef sdramTiming;

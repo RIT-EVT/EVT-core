@@ -2,9 +2,10 @@
 
 namespace core::io {
 
-FMC::FMC(const FMCPinConfig& pinConfig, const SdramInitConfig& sdramInitConfig, const SdramTimingConfig& sdramTimingConfig) :
+FMC::FMC(const FMCPinConfig pinConfig, const SdramInitConfig sdramInitConfig, const SdramTimingConfig sdramTimingConfig) :
 sdramInitConfig(sdramInitConfig),
 sdramTimingConfig(sdramTimingConfig),
+fmcPinConfig(pinConfig),
 sdram({nullptr}),
 sdramTiming({0}) {
     InitHardware(pinConfig);
