@@ -28,7 +28,7 @@ namespace core::io {
  * handle CAN operations.
  *
  * @param[in] can The CAN interface that will be used for the stack driver
- * @param[in] messageQueue Queue that will be read from for receiveing CAN messages
+ * @param[in] messageQueue Queue that will be read from for receiving CAN messages
  * @param[out] canDriver The CANopen stack driver to populate
  */
 void getCANopenCANDriver(CAN* can, types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>* messageQueue,
@@ -94,6 +94,38 @@ void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* ca
  */
 void processCANopenNode(CO_NODE* canNode);
 
+/**
+ * This function sets up and starts an SDO download (write) request to transfer data
+ * to the specified object dictionary entry on the target CANopen node.
+ *
+ * @param node[in]        Reference to the CANopen node object
+ * @param data[in]        Pointer to the data buffer that holds the data to send
+ * @param size[in]        Size of the data to transfer in bytes
+ * @param entry[in]       Object dictionary entry (index + subindex) to write to
+ * @return CO_ERR[out]    Returns the result of the transfer operation
+ */
+CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry);
+
+/**
+ * This function starts an SDO upload (read) request to fetch data from the specified
+ * object dictionary entry on the target CANopen node
+ *
+ * @param node[in]        Reference to the CANopen node object
+ * @param data[in]        Pointer to the buffer where received data will be stored
+ * @param size[in]        Size of the buffer provided to receive data
+ * @param entry[in]       Object dictionary entry (index + subindex) to read from
+ * @return CO_ERR[out]    Returns the result of the receive operation
+ */
+CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry);
+
+/**
+ * This function assigns the user-provided callback function and AppContext to be
+ * used when an SDO operation completes
+ *
+ * @param AppCallback[in] Pointer to the callback function to register
+ * @param AppContext[in] Context to be passed to the callback
+ */
+void registerCallBack(void (*AppCallback)(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code), void* AppContext);
 } // namespace core::io
 
 #endif
