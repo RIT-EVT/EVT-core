@@ -1,16 +1,9 @@
 #ifndef EVT_FMC_HPP
 #define EVT_FMC_HPP
 
-#ifdef STM32F4xx
-    #include "HALf4/stm32f4xx_hal.h"
-    #include "HALf4/stm32f4xx_ll_fmc.h"
-    #include "HALf4/stm32f4xx_hal_sdram.h"
-#else
-    #include "HALf3/stm32f3xx_hal.h"
-    #include "HALf3/stm32f3xx_ll_fmc.h"
-    #include "HALf3/stm32f3xx_hal_sdram.h"
-#endif
-
+#include "HALf4/stm32f4xx_hal.h"
+#include "HALf4/stm32f4xx_ll_fmc.h"
+#include "HALf4/stm32f4xx_hal_sdram.h"
 
 #define SDRAM_TIMEOUT (0x0000FFFFUL)
 
@@ -113,7 +106,7 @@ typedef FMC_GPIO 	FMC_CMD;
 
 namespace core::io {
 
-class FMC {
+class FMCf4xx {
 public:
     /**
      * Structure to simplify SDRAM initialization, pre-filled with default values
@@ -207,7 +200,7 @@ public:
      * @param[in] sdramInitConfig a struct containing all FMC SDRAM configuration
      * @param[in] sdramTimingConfig a struct containing all FMC SDRAM timing configuration variables
      */
-    FMC(FMCPinConfig pin_config, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig);
+    FMCf4xx(FMCPinConfig pin_config, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig);
 
     /**
      * Write a value to SDRAM at the specified byte offset.

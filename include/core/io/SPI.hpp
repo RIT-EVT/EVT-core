@@ -1,4 +1,4 @@
-    #ifndef _EVT_SPI_
+#ifndef _EVT_SPI_
 #define _EVT_SPI_
 
 #include <cstdint>

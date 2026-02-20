@@ -1,8 +1,8 @@
-#include <core/io/FMC.hpp>
+#include <core/io/platform/f4xx/FMCf4xx.hpp>
 
 namespace core::io {
 
-FMC::FMC(const FMCPinConfig pinConfig, const SdramInitConfig sdramInitConfig, const SdramTimingConfig sdramTimingConfig) :
+FMCf4xx::FMCf4xx(const FMCPinConfig pinConfig, const SdramInitConfig sdramInitConfig, const SdramTimingConfig sdramTimingConfig) :
 sdramInitConfig(sdramInitConfig),
 sdramTimingConfig(sdramTimingConfig),
 fmcPinConfig(pinConfig),
@@ -37,7 +37,7 @@ sdramTiming({0}) {
         sdramMemoryAddress = 0xD0000000;
 }
 
-void FMC::write32(uint32_t offset, uint32_t value) const
+void FMCf4xx::write32(uint32_t offset, uint32_t value) const
 {
     volatile auto* ptr =
         reinterpret_cast<volatile uint32_t*>(sdramMemoryAddress + offset);
@@ -45,7 +45,7 @@ void FMC::write32(uint32_t offset, uint32_t value) const
     *ptr = value;
 }
 
-uint32_t FMC::read32(uint32_t offset) const
+uint32_t FMCf4xx::read32(uint32_t offset) const
 {
     volatile auto* ptr =
         reinterpret_cast<volatile uint32_t*>(sdramMemoryAddress + offset);
@@ -53,7 +53,7 @@ uint32_t FMC::read32(uint32_t offset) const
     return *ptr;
 }
 
-void FMC::InitHardware(const FMCPinConfig& pinConfig) {
+void FMCf4xx::InitHardware(const FMCPinConfig& pinConfig) {
     __HAL_RCC_FMC_CLK_ENABLE();
 
     InitPinGroup(pinConfig.address.pins, pinConfig.address.count);
@@ -63,7 +63,7 @@ void FMC::InitHardware(const FMCPinConfig& pinConfig) {
     InitPinGroup(pinConfig.command.pins, pinConfig.command.count);
 }
 
-void FMC::InitPinGroup(const FMC_GPIO* pins, uint8_t count) {
+void FMCf4xx::InitPinGroup(const FMC_GPIO* pins, uint8_t count) {
     GPIO_InitTypeDef gpio {};
 
     gpio.Mode = GPIO_MODE_AF_PP;
