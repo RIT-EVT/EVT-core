@@ -37,17 +37,31 @@ sdramTiming({0}) {
         sdramMemoryAddress = 0xD0000000;
 }
 
-void FMCf4xx::write32(uint32_t offset, uint32_t value) const
-{
-    volatile auto* ptr =
+void FMCf4xx::write32(uint32_t offset, uint32_t value) const {
+    // Ensure 4-byte alignment
+    if (offset % sizeof(uint32_t) != 0)
+        return;
+
+    // Ensure within SDRAM bounds
+    if (offset >= RAM_SIZE)
+        return;
+
+    auto* const ptr =
         reinterpret_cast<volatile uint32_t*>(sdramMemoryAddress + offset);
 
     *ptr = value;
 }
 
-uint32_t FMCf4xx::read32(uint32_t offset) const
-{
-    volatile auto* ptr =
+uint32_t FMCf4xx::read32(uint32_t offset) const {
+    // Ensure 4-byte alignment
+    if (offset % sizeof(uint32_t) != 0)
+        return 0;
+
+    // Ensure within SDRAM bounds
+    if (offset >= RAM_SIZE)
+        return 0;
+
+    auto* const ptr =
         reinterpret_cast<volatile uint32_t*>(sdramMemoryAddress + offset);
 
     return *ptr;

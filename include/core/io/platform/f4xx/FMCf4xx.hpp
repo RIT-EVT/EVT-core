@@ -1,6 +1,20 @@
 #ifndef EVT_FMC_HPP
 #define EVT_FMC_HPP
 
+/**
+ * FMC SDRAM driver for STM32F4 series.
+ *
+ * Provides a C++ abstraction for configuring and accessing external SDRAM
+ * using the Flexible Memory Controller (FMC) peripheral.
+ *
+ * This driver wraps STM32 HAL functionality and simplifies:
+ * - GPIO configuration for FMC pins
+ * - SDRAM timing configuration
+ * - SDRAM read/write operations
+ *
+ * @note Requires STM32 HAL libraries.
+ */
+
 #include "HALf4/stm32f4xx_hal.h"
 #include "HALf4/stm32f4xx_ll_fmc.h"
 #include "HALf4/stm32f4xx_hal_sdram.h"
@@ -106,12 +120,20 @@ typedef FMC_GPIO 	FMC_CMD;
 
 namespace core::io {
 
+/**
+ * Driver for configuring and accessing external SDRAM via FMC.
+ *
+ * Class initializes the FMC peripheral and associated GPIO pins,
+ * configures SDRAM timing parameters, and provides simple 32-bit
+ * memory read/write access methods.
+ */
 class FMCf4xx {
 public:
     /**
      * Structure to simplify SDRAM initialization, pre-filled with default values
      *
-     * Holds all the parameters needed to configure the SDRAM
+     * Holds all SDRAM controller settings that map directly to
+     * the HAL_SDRAM_Init configuration structure.
      */
     struct SdramInitConfig {
         FMC_SDRAM_TypeDef* sdramDevice = FMC_SDRAM_DEVICE;
@@ -130,7 +152,7 @@ public:
     /**
      * Structure to simplify SDRAM timing initialization, pre-filled with default values
      *
-     * Holds all the parameters needed to configure the SDRAM timing
+     * Contains all required SDRAM timing delays in clock cycles.
      */
     struct SdramTimingConfig {
         uint32_t loadToActiveDelay = LOAD_MODE_REGISTER_TO_ACTIVE;
@@ -183,7 +205,14 @@ public:
     };
 
     /**
-     * Structure to hold all FMC GPIO pins
+     * Groups all FMC GPIO pin configurations.
+     *
+     * Contains arrays of:
+     * - Address pins
+     * - Data pins
+     * - Bank select pins
+     * - Command pins
+     * - Byte enable pins
      */
     struct FMCPinConfig {
         FMCAddressPins address;
@@ -196,11 +225,16 @@ public:
     /**
      * Initializes an FMC device
      *
-     * @param[in] pin_config a struct containing all FMC GPIO pin group arrays
-     * @param[in] sdramInitConfig a struct containing all FMC SDRAM configuration
-     * @param[in] sdramTimingConfig a struct containing all FMC SDRAM timing configuration variables
+     * @param[in] pinConfig All FMC GPIO pin configurations.
+     * @param[in] sdramInitConfig SDRAM controller configuration parameters.
+     * @param[in] sdramTimingConfig SDRAM timing configuration parameters.
+     *
+     * - Enables FMC peripheral clock
+     * - Initializes GPIO pins
+     * - Configures SDRAM controller
+     * - Calls HAL_SDRAM_Init()
      */
-    FMCf4xx(FMCPinConfig pin_config, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig);
+    FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig);
 
     /**
      * Write a value to SDRAM at the specified byte offset.
