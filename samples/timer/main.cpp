@@ -10,7 +10,6 @@
 
 namespace io  = core::io;
 namespace dev = core::dev;
-namespace log = core::log;
 
 io::GPIO* ledGPIO;
 io::GPIO* interruptGPIO2Hz;
@@ -18,22 +17,19 @@ io::GPIO* interruptGPIOStopStart;
 io::GPIO* reloadGPIO;
 
 void timer2IRQHandler(void* context, void* htim) {
-    // io::GPIO::State state       = ledGPIO->readPin();
-    // io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
-    // ledGPIO->writePin(toggleState);
-    // interruptGPIO2Hz->writePin(toggleState);
-    io::UART* uart = (io::UART*) context;
-
-    uart->printf("Starting log test\n\r");
+    io::GPIO::State state       = ledGPIO->readPin();
+    io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
+    ledGPIO->writePin(toggleState);
+    interruptGPIO2Hz->writePin(toggleState);
 }
 
-void timer15IRQHandler(void* htim) {
+void timer15IRQHandler(void* context, void* htim) {
     io::GPIO::State state       = interruptGPIOStopStart->readPin();
     io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
     interruptGPIOStopStart->writePin(toggleState);
 }
 
-void timer16IRQHandler(void* htim) {
+void timer16IRQHandler(void* context, void* htim) {
     io::GPIO::State state       = reloadGPIO->readPin();
     io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
     reloadGPIO->writePin(toggleState);
@@ -68,19 +64,19 @@ int main() {
     dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer11>(200);
     dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer12>(200);
 #else
-    // dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer15>(1000);
-    // dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer16>(1000);
+    dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer15>(1000);
+    dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer16>(1000);
 #endif
 
-    sampleTimer1.startTimer(timer2IRQHandler, &uart);
-    // sampleTimer2.startTimer(timer15IRQHandler);
-    // sampleTimer3.startTimer(timer16IRQHandler);
+    sampleTimer1.startTimer(timer2IRQHandler, nullptr);
+    sampleTimer2.startTimer(timer15IRQHandler, nullptr);
+    sampleTimer3.startTimer(timer16IRQHandler, nullptr);
 
     while (1) {
-        // core::time::wait(500);
-        // sampleTimer2.stopTimer();
-        // sampleTimer3.reloadTimer();
-        // core::time::wait(500);
-        // sampleTimer2.startTimer();
+        core::time::wait(500);
+        sampleTimer2.stopTimer();
+        sampleTimer3.reloadTimer();
+        core::time::wait(500);
+        sampleTimer2.startTimer();
     }
 }
