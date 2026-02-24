@@ -18,28 +18,27 @@ io::GPIO* interruptGPIOStopStart;
 io::GPIO* reloadGPIO;
 
 void timer2IRQHandler(void* context, void* htim) {
-    // io::GPIO::State state       = ledGPIO->readPin();
-    // io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
-    // ledGPIO->writePin(toggleState);
-    // interruptGPIO2Hz->writePin(toggleState);
-    io::UART* uart = (io::UART*) context;
+    const io::GPIO::State state       = ledGPIO->readPin();
+    const io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
+    ledGPIO->writePin(toggleState);
+    interruptGPIO2Hz->writePin(toggleState);
 
-    uart->printf("Starting log test\n\r");
+    auto* uart = static_cast<io::UART*>(context);
+
+    uart->printf("Timer 2 Interrupt\n\r");
 }
 
-void timer15IRQHandler(void* htim) {
-    io::GPIO::State state       = interruptGPIOStopStart->readPin();
-    io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
+void timer15IRQHandler(void* context, void* htim) {
+    const io::GPIO::State state       = interruptGPIOStopStart->readPin();
+    const io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
     interruptGPIOStopStart->writePin(toggleState);
 }
 
-void timer16IRQHandler(void* htim) {
-    io::GPIO::State state       = reloadGPIO->readPin();
-    io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
+void timer16IRQHandler(void* context, void* htim) {
+    const io::GPIO::State state       = reloadGPIO->readPin();
+    const io::GPIO::State toggleState = state == io::GPIO::State::HIGH ? io::GPIO::State::LOW : io::GPIO::State::HIGH;
     reloadGPIO->writePin(toggleState);
 }
-
-namespace log = core::log;
 
 int main() {
     // Initialize system
@@ -68,19 +67,24 @@ int main() {
     dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer11>(200);
     dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer12>(200);
 #else
-    // dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer15>(1000);
-    // dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer16>(1000);
+    dev::Timer& sampleTimer2 = dev::getTimer<dev::MCUTimer::Timer15>(1000);
+    dev::Timer& sampleTimer3 = dev::getTimer<dev::MCUTimer::Timer16>(1000);
 #endif
 
+    // If you need access to a class or structure you defined in main() within your timer, you can use the context of
+    // an IRQ handler. This will take a reference to anything you pass and make it available to your function in the
+    // context parameter.
     sampleTimer1.startTimer(timer2IRQHandler, &uart);
-    // sampleTimer2.startTimer(timer15IRQHandler);
-    // sampleTimer3.startTimer(timer16IRQHandler);
+
+    // Using nullptr here since we do not need a context for the sample.
+    sampleTimer2.startTimer(timer15IRQHandler, nullptr);
+    sampleTimer3.startTimer(timer16IRQHandler, nullptr);
 
     while (1) {
-        // core::time::wait(500);
-        // sampleTimer2.stopTimer();
-        // sampleTimer3.reloadTimer();
-        // core::time::wait(500);
-        // sampleTimer2.startTimer();
+        core::time::wait(500);
+        sampleTimer2.stopTimer();
+        sampleTimer3.reloadTimer();
+        core::time::wait(500);
+        sampleTimer2.startTimer();
     }
 }
