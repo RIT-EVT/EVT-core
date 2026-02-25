@@ -5,6 +5,7 @@
 
 #include <core/io/ADC.hpp>
 #include <core/io/CAN.hpp>
+#include <core/io/DAC.hpp>
 #include <core/io/GPIO.hpp>
 #include <core/io/I2C.hpp>
 #include <core/io/PWM.hpp>
@@ -14,6 +15,7 @@
 #ifdef STM32F3xx
     #define ADC_SUPPORTED
     #define CAN_SUPPORTED
+    #define DAC_SUPPORTED
     #define GPIO_SUPPORTED
     #define I2C_SUPPORTED
     #define IWDG_SUPPORTED
@@ -29,6 +31,7 @@
     #include <core/dev/platform/f3xx/Timerf3xx.hpp>
     #include <core/io/platform/f3xx/ADCf3xx.hpp>
     #include <core/io/platform/f3xx/CANf3xx.hpp>
+    #include <core/io/platform/f3xx/DACf3xx.hpp>
     #include <core/io/platform/f3xx/GPIOf3xx.hpp>
     #include <core/io/platform/f3xx/I2Cf3xx.hpp>
     #include <core/io/platform/f3xx/PWMf3xx.hpp>
@@ -40,6 +43,7 @@
 #ifdef STM32F4xx
     #define ADC_SUPPORTED
     #define CAN_SUPPORTED
+    #define DAC_SUPPORTED
     #define GPIO_SUPPORTED
     #define I2C_SUPPORTED
     #define MCU_SUPPORTED
@@ -54,6 +58,7 @@
     #include <core/dev/platform/f4xx/Timerf4xx.hpp>
     #include <core/io/platform/f4xx/ADCf4xx.hpp>
     #include <core/io/platform/f4xx/CANf4xx.hpp>
+    #include <core/io/platform/f4xx/DACf4xx.hpp>
     #include <core/io/platform/f4xx/GPIOf4xx.hpp>
     #include <core/io/platform/f4xx/I2Cf4xx.hpp>
     #include <core/io/platform/f4xx/PWMf4xx.hpp>
@@ -174,6 +179,26 @@ ADC& getADC() {
     #ifdef STM32F3xx
     static ADCf3xx adc(pin, adcPeriph);
     return adc;
+    #endif
+}
+#endif
+
+/**
+ * Get an instance of a DAC channel
+ *
+ * @param[in] pin The pin to use with the DAC
+ * @param[in] dacPeriph The DAC peripheral to use
+ */
+#ifdef DAC_SUPPORTED
+template<Pin pin, DACPeriph dacPeriph = DACPeriph::ONE>
+DigitalToAnalogConverter& getDAC() {
+    #ifdef STM32F4xx
+    static DACf4xx dac(pin, dacPeriph);
+    return dac;
+    #endif
+    #ifdef STM32F3xx
+    static DACf3xx dac(pin, dacPeriph);
+    return dac;
     #endif
 }
 #endif
