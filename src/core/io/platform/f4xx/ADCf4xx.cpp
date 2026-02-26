@@ -58,7 +58,7 @@ bool core::io::ADCf4xx::timerInit = false;
 
 dev::TimerConfiguration_t configuration = {dev::TimerCounterMode::UP,
                                            dev::TimerClockDivision::DIVISION_1,
-                                           dev::TimerAutoReloadPreload::ENABLE,
+                                           dev::TimerAutoReloadPreload::BUFFER,
                                            dev::TimerClockSource::INTERNAL,
                                            dev::TimerMasterModeSelection::UPDATE,
                                            dev::TimerMasterSlaveMode::DISABLE};
