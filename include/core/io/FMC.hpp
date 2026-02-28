@@ -26,12 +26,11 @@ public:
      * @param[in] offset Byte offset from the SDRAM base address
      */
     uint32_t read32(uint32_t offset) const;
+
 protected:
     uint32_t sdramMemoryAddress;
 };
 
-}
+} // namespace core::io
 
 #endif // EVT_FMC_HPP
-
-
