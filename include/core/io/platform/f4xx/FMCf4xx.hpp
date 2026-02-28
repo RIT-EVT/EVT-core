@@ -1,5 +1,5 @@
-#ifndef EVT_FMC_HPP
-#define EVT_FMC_HPP
+#ifndef EVT_FMCF4xx_HPP
+#define EVT_FMCF4xx_HPP
 
 /**
  * FMC SDRAM driver for STM32F4 series.
