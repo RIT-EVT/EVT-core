@@ -121,12 +121,12 @@
     },                                                  \
     {                                                   \
         /* SDO Server Request COBID */                  \
-        .Key  = CO_KEY(0x1200, 0x01, CO_OBJ__N__R_),    \
+        .Key  = CO_KEY(0x1200, 0x01, CO_OBJ_DN__R_),    \
         .Type = CO_TUNSIGNED32,                         \
         .Data = (CO_DATA) CO_COBID_SDO_REQUEST(),       \
     },                                                  \
     { /* SDO Server Response COBID */                   \
-        .Key  = CO_KEY(0x1200, 0x02, CO_OBJ__N__R_),    \
+        .Key  = CO_KEY(0x1200, 0x02, CO_OBJ_DN__R_),    \
         .Type = CO_TUNSIGNED32,                         \
         .Data = (CO_DATA) CO_COBID_SDO_RESPONSE(),      \
     }
@@ -199,7 +199,7 @@
     {                                                                                 \
         .Key  = CO_KEY(0x1600 + RPDO_NUMBER, SUB_INDEX, CO_OBJ_D___R_),               \
         .Type = CO_TUNSIGNED32,                                                       \
-        .Data = (CO_DATA) CO_LINK(0x2100 + RPDO_NUMBER, 0x00 + SUB_INDEX, DATA_SIZE), \
+        .Data = (CO_DATA) CO_LINK(0x2200 + RPDO_NUMBER, 0x00 + SUB_INDEX, DATA_SIZE), \
     }
 
 /**
@@ -288,12 +288,12 @@
  * on the PDO number that it is associated with, this macro takes the PDO number associated with the
  * data that will be linked.
  *
- * @param PDO_NUMBER (integer) the PDO number that this data link section is associated with.
+ * @param LINK_NUMBER (integer) the link number that this data link section is associated with.
  * @param NUMBER_OF_SUB_INDICES (integer) the number of links that this section will include.
  */
-#define DATA_LINK_START_KEY_21XX(PDO_NUMBER, NUMBER_OF_SUB_INDICES) \
+#define DATA_LINK_START_KEY_21XX(LINK_NUMBER, NUMBER_OF_SUB_INDICES) \
     {                                                               \
-        .Key  = CO_KEY(0x2100 + PDO_NUMBER, 0, CO_OBJ_D___R_),      \
+        .Key  = CO_KEY(0x2100 + LINK_NUMBER, 0, CO_OBJ_D___R_),      \
         .Type = CO_TUNSIGNED8,                                      \
         .Data = (CO_DATA) NUMBER_OF_SUB_INDICES,                    \
     }
@@ -305,19 +305,34 @@
  * to allow for both TPDOs and RPDOs of any number to be linked as well as any data type and
  * any data pointers.
  *
- * @param PDO_NUMBER (integer) the PDO number that this data link is associated with
+ * @param LINK_NUMBER (integer) the link number that this data link is associated with
  * @param SUB_INDEX (integer) the sub index in the great Data Link section.
  * @param DATA_TYPE (CO_T...) type of the data that is being linked too. You should use the CANOpen definitions for
  *  types here.
  * @param DATA_POINTER (pointer) a pointer to a piece of data that this data link will connect to. Please provide this
  *  as a pointer using the &variableName syntax. This macro does not automatically add the &
  */
-#define DATA_LINK_21XX(PDO_NUMBER, SUB_INDEX, DATA_TYPE, DATA_POINTER) \
+#define DATA_LINK_21XX(LINK_NUMBER, SUB_INDEX, DATA_TYPE, DATA_POINTER) \
     {                                                                  \
-        .Key  = CO_KEY(0x2100 + PDO_NUMBER, SUB_INDEX, CO_OBJ____PRW), \
+        .Key  = CO_KEY(0x2100 + LINK_NUMBER, SUB_INDEX, CO_OBJ____PRW), \
         .Type = DATA_TYPE,                                             \
         .Data = (CO_DATA) DATA_POINTER,                                \
     }
+
+/**
+ * This macro converts a TPDO number to the corresponding Link number. ONLY USE FOR THE DATA_LINK!
+ * 
+ * @param PDO_NUMBER (integer) the PDO number for the data link
+ */
+#define LINK_TPDO_NUMBER(PDO_NUMBER) (PDO_NUMBER)
+
+/**
+ * This macro converts a RPDO number to the corresponding Link number. ONLY USE FOR THE DATA_LINK!
+ * 
+ * @param PDO_NUMBER (integer) the PDO number for the data link
+ */
+#define LINK_RPDO_NUMBER(PDO_NUMBER) (PDO_NUMBER + 0x100)
+
 // clang-format on
 
 #endif // EVT_CANOPENMACROS_HPP
