@@ -4,14 +4,12 @@
 namespace core::io {
 
 FMCf4xx::FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig) :
-FMC(0xC0000000),
+FMC(getSdramBaseAddress()),
 sdramInitConfig(sdramInitConfig),
 sdramTimingConfig(sdramTimingConfig),
 fmcPinConfig(pinConfig),
 sdram({nullptr}),
 sdramTiming({0}) {
-    // FMC(getSdramBaseAddress());
-
     InitHardware(pinConfig);
 
     // map the class init structs to the hal structs
