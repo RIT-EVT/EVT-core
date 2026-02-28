@@ -1212,7 +1212,7 @@ uint32_t HAL_SDRAM_GetModeStatus(SDRAM_HandleTypeDef *hsdram)
   *                the configuration information for SDRAM module.
   * @retval HAL state
   */
-HAL_SDRAM_StateTypeDef HAL_SDRAM_GetState(const SDRAM_HandleTypeDef *hsdram)
+HAL_SDRAM_StateTypeDef HAL_SDRAM_GetState(SDRAM_HandleTypeDef *hsdram)
 {
   return hsdram->State;
 }

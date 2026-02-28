@@ -1,13 +1,17 @@
 #include <core/io/platform/f4xx/FMCf4xx.hpp>
+#include <core/io/FMC.hpp>
 
 namespace core::io {
 
-FMCf4xx::FMCf4xx(const FMCPinConfig pinConfig, const SdramInitConfig sdramInitConfig, const SdramTimingConfig sdramTimingConfig) :
+FMCf4xx::FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig) :
+FMC(0xC0000000),
 sdramInitConfig(sdramInitConfig),
 sdramTimingConfig(sdramTimingConfig),
 fmcPinConfig(pinConfig),
 sdram({nullptr}),
 sdramTiming({0}) {
+    // FMC(getSdramBaseAddress());
+
     InitHardware(pinConfig);
 
     // map the class init structs to the hal structs
@@ -30,11 +34,6 @@ sdramTiming({0}) {
     sdramTiming.RCDDelay = sdramTimingConfig.rcdDelay;
 
     HAL_SDRAM_Init(&sdram, &sdramTiming);
-
-    if (sdramInitConfig.sdBank == FMC_SDRAM_BANK1) //determine read write memory address
-        sdramMemoryAddress = 0xC0000000;
-    else
-        sdramMemoryAddress = 0xD0000000;
 }
 
 void FMCf4xx::write32(uint32_t offset, uint32_t value) const {
@@ -65,6 +64,13 @@ uint32_t FMCf4xx::read32(uint32_t offset) const {
         reinterpret_cast<volatile uint32_t*>(sdramMemoryAddress + offset);
 
     return *ptr;
+}
+
+uint32_t FMCf4xx::getSdramBaseAddress() {
+    if (sdramInitConfig.sdBank == FMC_SDRAM_BANK1) //determine read write memory address
+        return 0xC0000000;
+
+    return 0xD0000000; //else
 }
 
 void FMCf4xx::InitHardware(const FMCPinConfig& pinConfig) {

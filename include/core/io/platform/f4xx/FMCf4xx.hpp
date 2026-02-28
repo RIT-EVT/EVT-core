@@ -19,6 +19,8 @@
 #include "HALf4/stm32f4xx_ll_fmc.h"
 #include "HALf4/stm32f4xx_hal_sdram.h"
 
+#include "core/io/FMC.hpp"
+
 #define SDRAM_TIMEOUT (0x0000FFFFUL)
 
 typedef struct {
@@ -127,7 +129,7 @@ namespace core::io {
  * configures SDRAM timing parameters, and provides simple 32-bit
  * memory read/write access methods.
  */
-class FMCf4xx {
+class FMCf4xx : public FMC {
 public:
     /**
      * Structure to simplify SDRAM initialization, pre-filled with default values
@@ -236,20 +238,9 @@ public:
      */
     FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig);
 
-    /**
-     * Write a value to SDRAM at the specified byte offset.
-     *
-     * @param[in] offset Byte offset from the SDRAM base address
-     * @param[in] value Value to write to memory
-     */
     void write32(uint32_t offset, uint32_t value) const;
 
-    /**
-     * Read a value SDRAM at the specified byte offset.
-     *
-     * @param[in] offset Byte offset from the SDRAM base address
-     */
-    [[nodiscard]] uint32_t read32(uint32_t offset) const;
+    uint32_t read32(uint32_t offset) const;
 
 private:
     /**
@@ -267,14 +258,17 @@ private:
      */
     void InitPinGroup(const FMC_GPIO* pins, uint8_t count);
 
+    /**
+     * @return the base address depending on the bank number
+     */
+    uint32_t getSdramBaseAddress();
+
     SdramInitConfig sdramInitConfig;
     SdramTimingConfig sdramTimingConfig;
     FMCPinConfig fmcPinConfig;
 
     SDRAM_HandleTypeDef sdram;
     FMC_SDRAM_TimingTypeDef sdramTiming;
-
-    uint32_t sdramMemoryAddress; //address to read and write to
 };
 
 }
