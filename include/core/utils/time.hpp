@@ -1,7 +1,6 @@
 /**
  * The functions defined in here are used for time based operations. All
  * operations are platform independent.
- *
  */
 
 #ifndef _EVT_TIME_

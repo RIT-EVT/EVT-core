@@ -1,0 +1,34 @@
+{
+    "configurations": [
+        {
+            "type": "stlinkgdbtarget",
+            "request": "launch",
+            "name": "Debug",
+            "origin": "snippet",
+            "cwd": "${workspaceFolder}",
+            "preBuild": "${command:st-stm32-ide-debug-launch.build}",
+            "runEntry": "main",
+            "imagesAndSymbols": [
+                {
+                    "imageFileName": "${command:cmake.launchTargetPath}" 
+                }
+            ],
+            "faultUnalignedAccess": false
+        },
+        {
+            "type": "stlinkgdbtarget",
+            "request": "launch",
+            "name": "Select From Targets",
+            "origin": "snippet",
+            "cwd": "${workspaceFolder}",
+            "preBuild": "${command:st-stm32-ide-debug-launch.build}",
+            "runEntry": "main",
+            "imagesAndSymbols": [
+                {
+                    "imageFileName": "${command:st-stm32-ide-debug-launch.get-projects-binary-from-context1}" //Provides a run prompt
+                }
+            ],
+            "faultUnalignedAccess": false
+        }
+    ]
+}

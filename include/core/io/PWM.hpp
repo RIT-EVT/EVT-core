@@ -6,7 +6,7 @@
 namespace core::io {
 
 // Forward declarations:
-// The diferent pins are hardware specific. Forward declarations to allow
+// The different pins are hardware specific. Forward declarations to allow
 // at compilation time the decision of which pins should be used.
 enum class Pin;
 
