@@ -11,79 +11,18 @@
  * - GPIO configuration for FMC pins
  * - SDRAM timing configuration
  * - SDRAM read/write operations
- *
- * @note Requires STM32 HAL libraries.
  */
 
-#include "HALf4/stm32f4xx_hal.h"
-#include "HALf4/stm32f4xx_ll_fmc.h"
-#include "HALf4/stm32f4xx_hal_sdram.h"
+#include <HALf4/stm32f4xx_hal.h>
+#include <HALf4/stm32f4xx_ll_fmc.h>
+#include <HALf4/stm32f4xx_hal_sdram.h>
 
-#include "core/io/FMC.hpp"
+#include <core/io/FMC.hpp>
+#include <core/io/GPIO.hpp>
+
+namespace core::io {
 
 #define SDRAM_TIMEOUT (0x0000FFFFUL)
-
-typedef struct {
-    uint16_t PIN;
-    GPIO_TypeDef* PORT;
-} GPIO;
-
-typedef GPIO 		FMC_GPIO;
-typedef FMC_GPIO 	FMC_ADDRESS;
-typedef FMC_GPIO 	FMC_DATA;
-typedef FMC_GPIO 	FMC_BE;
-typedef FMC_GPIO 	FMC_BANK;
-typedef FMC_GPIO 	FMC_CMD;
-
-// ADDRESS PINS
-#define FMC_A0 		((FMC_ADDRESS) 	{GPIO_PIN_0, GPIOF})
-#define FMC_A1 		((FMC_ADDRESS) 	{GPIO_PIN_1, GPIOF})
-#define FMC_A2 		((FMC_ADDRESS) 	{GPIO_PIN_2, GPIOF})
-#define FMC_A3 		((FMC_ADDRESS) 	{GPIO_PIN_3, GPIOF})
-#define FMC_A4 		((FMC_ADDRESS) 	{GPIO_PIN_4, GPIOF})
-#define FMC_A5 		((FMC_ADDRESS) 	{GPIO_PIN_5, GPIOF})
-#define FMC_A6 		((FMC_ADDRESS) 	{GPIO_PIN_12, GPIOF})
-#define FMC_A7 		((FMC_ADDRESS)	{GPIO_PIN_13, GPIOF})
-#define FMC_A8 		((FMC_ADDRESS) 	{GPIO_PIN_14, GPIOF})
-#define FMC_A9 		((FMC_ADDRESS) 	{GPIO_PIN_15, GPIOF})
-#define FMC_A10		((FMC_ADDRESS) 	{GPIO_PIN_0, GPIOG})
-#define FMC_A11		((FMC_ADDRESS) 	{GPIO_PIN_1, GPIOG})
-
-// DATA PINS
-#define FMC_D0		((FMC_DATA) 	{GPIO_PIN_14, GPIOD})
-#define FMC_D1		((FMC_DATA) 	{GPIO_PIN_15, GPIOD})
-#define FMC_D2		((FMC_DATA) 	{GPIO_PIN_0, GPIOD})
-#define FMC_D3		((FMC_DATA) 	{GPIO_PIN_1, GPIOD})
-#define FMC_D4 		((FMC_DATA) 	{GPIO_PIN_7, GPIOE})
-#define FMC_D5 		((FMC_DATA) 	{GPIO_PIN_8, GPIOE})
-#define FMC_D6 		((FMC_DATA) 	{GPIO_PIN_9, GPIOE})
-#define FMC_D7 		((FMC_DATA) 	{GPIO_PIN_10, GPIOE})
-#define FMC_D8 		((FMC_DATA) 	{GPIO_PIN_11, GPIOE})
-#define FMC_D9 		((FMC_DATA) 	{GPIO_PIN_12, GPIOE})
-#define FMC_D10		((FMC_DATA) 	{GPIO_PIN_13, GPIOE})
-#define FMC_D11		((FMC_DATA) 	{GPIO_PIN_14, GPIOE})
-#define FMC_D12		((FMC_DATA) 	{GPIO_PIN_15, GPIOE})
-#define FMC_D13		((FMC_DATA) 	{GPIO_PIN_8, GPIOD})
-#define FMC_D14		((FMC_DATA) 	{GPIO_PIN_9, GPIOD})
-#define FMC_D15		((FMC_DATA) 	{GPIO_PIN_10, GPIOD})
-
-// BYTE ENABLE PINS
-#define FMC_NBL0	((FMC_BE) 		{GPIO_PIN_0, GPIOE})
-#define FMC_NBL1	((FMC_BE) 		{GPIO_PIN_1, GPIOE})
-
-// BANK SELECT PINS
-#define FMC_BA0		((FMC_BANK) 	{GPIO_PIN_4, GPIOG})
-#define FMC_BA1		((FMC_BANK) 	{GPIO_PIN_5, GPIOG})
-
-// COMMAND PINS
-#define FMC_SDCLK	((FMC_CMD) 		{GPIO_PIN_8, GPIOG})
-#define FMC_SDNCAS 	((FMC_CMD) 		{GPIO_PIN_15, GPIOG})
-#define FMC_SDNE0 	((FMC_CMD) 		{GPIO_PIN_2, GPIOC})
-#define FMC_SDCKE0 	((FMC_CMD) 		{GPIO_PIN_3, GPIOC})
-#define FMC_SDNWE 	((FMC_CMD) 		{GPIO_PIN_5, GPIOH})
-#define FMC_SDNRAS	((FMC_CMD) 		{GPIO_PIN_11, GPIOF})
-
-// #define FMC_ 		((GPIO) {GPIO_PIN_x, GPIOx})
 
 #define SDRAM_CLK_SPEED ((uint32_t)(HAL_RCC_GetSysClockFreq() / 2))
 #define SDRAM_CLK_PERIOD_US (1000000000UL / (SDRAM_CLK_SPEED / 1000)) // LOSES SOME RESOLUTION, BUT IT'S NEEDED TO FIT WITHIN 32-BITS
@@ -119,8 +58,7 @@ typedef FMC_GPIO 	FMC_CMD;
 
 #define	RAM_SIZE						(0x4000000) // 64 megabits
 #define STARTING_ADDR					((uint32_t*)0xC000000)
-
-namespace core::io {
+#define ALT_STARTING_ADDR               ((uint32_t*)0xD000000)
 
 /**
  * Driver for configuring and accessing external SDRAM via FMC.
@@ -136,9 +74,12 @@ public:
      *
      * Holds all SDRAM controller settings that map directly to
      * the HAL_SDRAM_Init configuration structure.
+     *
+     * Default values are intended to be overridden to suit the specific use case before being passed into the constructor.
+     *
+     *
      */
     struct SdramInitConfig {
-        FMC_SDRAM_TypeDef* sdramDevice = FMC_SDRAM_DEVICE;
         uint32_t sdBank = FMC_SDRAM_BANK1;
         uint32_t columnBitsNumber = FMC_SDRAM_COLUMN_BITS_NUM_8;
         uint32_t rowBitsNumber = FMC_SDRAM_ROW_BITS_NUM_12;
@@ -165,6 +106,13 @@ public:
         uint32_t rpDelay = ROW_PRECHARGE_DELAY;
         uint32_t rcdDelay = ROW_TO_COLUMN_DELAY;
     };
+
+    typedef GPIO FMC_GPIO;
+    typedef FMC_GPIO FMC_ADDRESS;
+    typedef FMC_GPIO FMC_DATA;
+    typedef FMC_GPIO FMC_BE;
+    typedef FMC_GPIO FMC_BANK;
+    typedef FMC_GPIO FMC_CMD;
 
     /**
      * Structure to hold an array of GPIO address pins for the FMC
@@ -236,7 +184,7 @@ public:
      * - Configures SDRAM controller
      * - Calls HAL_SDRAM_Init()
      */
-    FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig);
+    FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig, FMC_SDRAM_TypeDef* sdramDevice);
 
     void write32(uint32_t offset, uint32_t value) const;
 
@@ -262,6 +210,8 @@ private:
      * @return the base address depending on the bank number
      */
     uint32_t getSdramBaseAddress();
+
+    FMC_SDRAM_TypeDef* sdramDevice = FMC_SDRAM_DEVICE;
 
     SdramInitConfig sdramInitConfig;
     SdramTimingConfig sdramTimingConfig;

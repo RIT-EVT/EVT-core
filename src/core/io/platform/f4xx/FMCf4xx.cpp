@@ -3,8 +3,9 @@
 
 namespace core::io {
 
-FMCf4xx::FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig) :
+FMCf4xx::FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig, FMC_SDRAM_TypeDef* sdramDevice) :
 FMC(getSdramBaseAddress()),
+sdramDevice(sdramDevice),
 sdramInitConfig(sdramInitConfig),
 sdramTimingConfig(sdramTimingConfig),
 fmcPinConfig(pinConfig),
@@ -13,7 +14,7 @@ sdramTiming({0}) {
     InitHardware(pinConfig);
 
     // map the class init structs to the hal structs
-    sdram.Instance = sdramInitConfig.sdramDevice;
+    sdram.Instance = sdramDevice;
     sdram.Init.SDBank = sdramInitConfig.sdBank;
     sdram.Init.ColumnBitsNumber = sdramInitConfig.columnBitsNumber;
     sdram.Init.RowBitsNumber = sdramInitConfig.rowBitsNumber;
