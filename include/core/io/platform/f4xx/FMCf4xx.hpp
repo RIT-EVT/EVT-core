@@ -59,10 +59,8 @@ namespace core::io {
 #define	RAM_SIZE						(0x4000000) // 64 megabits
 #define STARTING_ADDR					((uint32_t*)0xC000000)
 #define ALT_STARTING_ADDR               ((uint32_t*)0xD000000)
-#define RAM_SIZE      (0x4000000) // 64 megabits
-#define STARTING_ADDR ((uint32_t*) 0xC000000)
-
-namespace core::io {
+#define RAM_SIZE                        (0x4000000) // 64 megabits
+#define STARTING_ADDR                   ((uint32_t*) 0xC000000)
 
 /**
  * Driver for configuring and accessing external SDRAM via FMC.
@@ -114,13 +112,12 @@ private:
      */
     void InitPinGroup(FMC_PIN* pins, uint8_t count);
 
-
     FMC_SDRAM_TypeDef* sdramDevice;
 
     SDRAM_HandleTypeDef sdram;
     FMC_SDRAM_TimingTypeDef sdramTiming;
 };
 
-} // namespace core::io
+}// namespace core::io
 
 #endif // EVT_FMC_HPP

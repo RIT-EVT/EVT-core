@@ -1,7 +1,6 @@
 #include <core/io/platform/f4xx/FMCf4xx.hpp>
 #include "core/io/platform/f4xx/GPIOf4xx.hpp"
 
-
 namespace core::io {
 
 FMCf4xx::FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig, FMC_SDRAM_TypeDef* sdramDevice) :
@@ -12,15 +11,15 @@ sdramTiming({0}) {
     InitHardware(pinConfig);
 
     // map the class init structs to the hal structs
-    sdram.Instance                = sdramDevice;
-    sdram.Init.SDBank             = sdramInitConfig.sdBank;
-    sdram.Init.ColumnBitsNumber   = sdramInitConfig.columnBitsNumber;
-    sdram.Init.RowBitsNumber      = sdramInitConfig.rowBitsNumber;
-    sdram.Init.MemoryDataWidth    = sdramInitConfig.memoryDataWidth;
-    sdram.Init.InternalBankNumber = sdramInitConfig.internalBankNumber;
-    sdram.Init.WriteProtection    = sdramInitConfig.writeProtection;
-    sdram.Init.ReadBurst          = sdramInitConfig.readBurst;
-    sdram.Init.ReadPipeDelay      = sdramInitConfig.readPipeDelay;
+    sdram.Instance                   = sdramDevice;
+    sdram.Init.SDBank                = sdramInitConfig.sdBank;
+    sdram.Init.ColumnBitsNumber      = sdramInitConfig.columnBitsNumber;
+    sdram.Init.RowBitsNumber         = sdramInitConfig.rowBitsNumber;
+    sdram.Init.MemoryDataWidth       = sdramInitConfig.memoryDataWidth;
+    sdram.Init.InternalBankNumber    = sdramInitConfig.internalBankNumber;
+    sdram.Init.WriteProtection       = sdramInitConfig.writeProtection;
+    sdram.Init.ReadBurst             = sdramInitConfig.readBurst;
+    sdram.Init.ReadPipeDelay         = sdramInitConfig.readPipeDelay;
 
     sdramTiming.LoadToActiveDelay    = sdramTimingConfig.loadToActiveDelay;
     sdramTiming.ExitSelfRefreshDelay = sdramTimingConfig.exitSelfRefreshDelay;
