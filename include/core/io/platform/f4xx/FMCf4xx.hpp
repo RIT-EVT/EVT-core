@@ -56,10 +56,9 @@ namespace core::io {
 #define EXIT_SELF_REFRESH_DELAY      (NS_TO_SDRAM_CLK_CYCLES(tXSR))
 #define LOAD_MODE_REGISTER_TO_ACTIVE (NS_TO_SDRAM_CLK_CYCLES(tMRD))
 
-
-#define	RAM_SIZE	      (0x4000000) // 64 megabits
+#define RAM_SIZE          (0x4000000) // 64 megabits
 #define STARTING_ADDR     ((uint32_t*) 0xC000000)
-#define ALT_STARTING_ADDR ((uint32_t*)0xD000000)
+#define ALT_STARTING_ADDR ((uint32_t*) 0xD000000)
 
 /**
  * Driver for configuring and accessing external SDRAM via FMC.
@@ -82,7 +81,8 @@ public:
      * - Configures SDRAM controller
      * - Calls HAL_SDRAM_Init()
      */
-    FMCf4xx(FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig);
+    FMCf4xx(FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig,
+            SdramTimingConfig sdramTimingConfig);
 
     /**
      * Returns a SdramInitConfig struct pre-filled with default values.
