@@ -52,7 +52,7 @@ public:
      * Structure to hold an array of GPIO address pins for the FMC
      */
     struct FMCAddressPins {
-        FMC_ADDRESS *pins;
+        FMC_ADDRESS* pins;
         uint8_t count;
     };
 
@@ -60,7 +60,7 @@ public:
      * Structure to hold an array of GPIO address pins for the FMC
      */
     struct FMCDataPins {
-        FMC_DATA *pins;
+        FMC_DATA* pins;
         uint8_t count;
     };
 
@@ -68,7 +68,7 @@ public:
      * Structure to hold an array of GPIO command pins for the FMC
      */
     struct FMCCommandPins {
-        FMC_CMD *pins;
+        FMC_CMD* pins;
         uint8_t count;
     };
 
@@ -76,7 +76,7 @@ public:
      * Structure to hold an array of GPIO byte enable pins for the FMC
      */
     struct FMCByteEnablePins {
-        FMC_BE *pins;
+        FMC_BE* pins;
         uint8_t count;
     };
 
@@ -84,7 +84,7 @@ public:
      * Structure to hold an array of GPIO bank pins for the FMC
      */
     struct FMCBankPins {
-        FMC_BANK *pins;
+        FMC_BANK* pins;
         uint8_t count;
     };
 
@@ -99,11 +99,11 @@ public:
      * - Byte enable pins
      */
     struct FMCPinConfig {
-        FMCAddressPins    address;
-        FMCDataPins       data;
+        FMCAddressPins address;
+        FMCDataPins data;
         FMCByteEnablePins byteEnable;
-        FMCBankPins       bank;
-        FMCCommandPins    command;
+        FMCBankPins bank;
+        FMCCommandPins command;
     };
 
     /**
