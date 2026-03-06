@@ -13,9 +13,11 @@
  * - SDRAM read/write operations
  */
 
+#include "core/io/FMC.hpp"
+
 #include <HALf4/stm32f4xx_hal.h>
-#include <HALf4/stm32f4xx_ll_fmc.h>
 #include <HALf4/stm32f4xx_hal_sdram.h>
+#include <HALf4/stm32f4xx_ll_fmc.h>
 
 #include <core/io/FMC.hpp>
 #include <core/io/GPIO.hpp>
@@ -70,109 +72,6 @@ namespace core::io {
 class FMCf4xx : public FMC {
 public:
     /**
-     * Structure to simplify SDRAM initialization, pre-filled with default values
-     *
-     * Holds all SDRAM controller settings that map directly to
-     * the HAL_SDRAM_Init configuration structure.
-     *
-     * Default values are intended to be overridden to suit the specific use case before being passed into the constructor.
-     *
-     *
-     */
-    struct SdramInitConfig {
-        uint32_t sdBank = FMC_SDRAM_BANK1;
-        uint32_t columnBitsNumber = FMC_SDRAM_COLUMN_BITS_NUM_8;
-        uint32_t rowBitsNumber = FMC_SDRAM_ROW_BITS_NUM_12;
-        uint32_t memoryDataWidth = FMC_SDRAM_MEM_BUS_WIDTH_16;
-        uint32_t internalBankNumber = FMC_SDRAM_INTERN_BANKS_NUM_4;
-        uint32_t casLatency = FMC_SDRAM_CAS_LATENCY_2;
-        uint32_t writeProtection = FMC_SDRAM_WRITE_PROTECTION_DISABLE;
-        uint32_t sdClockPeriod = FMC_SDRAM_CLOCK_PERIOD_2;
-        uint32_t readBurst = FMC_SDRAM_RBURST_ENABLE;
-        uint32_t readPipeDelay = FMC_SDRAM_RPIPE_DELAY_0;
-    };
-
-    /**
-     * Structure to simplify SDRAM timing initialization, pre-filled with default values
-     *
-     * Contains all required SDRAM timing delays in clock cycles.
-     */
-    struct SdramTimingConfig {
-        uint32_t loadToActiveDelay = LOAD_MODE_REGISTER_TO_ACTIVE;
-        uint32_t exitSelfRefreshDelay = EXIT_SELF_REFRESH_DELAY;
-        uint32_t selfRefreshTime = SELF_REFRESH_TIME;
-        uint32_t rowCycleDelay = ROW_CYCLE_DELAY;
-        uint32_t writeRecoveryTime = RECOVERY_DELAY;
-        uint32_t rpDelay = ROW_PRECHARGE_DELAY;
-        uint32_t rcdDelay = ROW_TO_COLUMN_DELAY;
-    };
-
-    typedef GPIO FMC_GPIO;
-    typedef FMC_GPIO FMC_ADDRESS;
-    typedef FMC_GPIO FMC_DATA;
-    typedef FMC_GPIO FMC_BE;
-    typedef FMC_GPIO FMC_BANK;
-    typedef FMC_GPIO FMC_CMD;
-
-    /**
-     * Structure to hold an array of GPIO address pins for the FMC
-     */
-    struct FMCAddressPins {
-        FMC_ADDRESS *pins;
-        uint8_t count;
-    };
-
-    /**
-     * Structure to hold an array of GPIO address pins for the FMC
-     */
-    struct FMCDataPins {
-        FMC_DATA *pins;
-        uint8_t count;
-    };
-
-    /**
-     * Structure to hold an array of GPIO command pins for the FMC
-     */
-    struct FMCCommandPins {
-        FMC_CMD *pins;
-        uint8_t count;
-    };
-
-    /**
-     * Structure to hold an array of GPIO byte enable pins for the FMC
-     */
-    struct FMCByteEnablePins {
-        FMC_BE *pins;
-        uint8_t count;
-    };
-
-    /**
-     * Structure to hold an array of GPIO bank pins for the FMC
-     */
-    struct FMCBankPins {
-        FMC_BANK *pins;
-        uint8_t count;
-    };
-
-    /**
-     * Groups all FMC GPIO pin configurations.
-     *
-     * Contains arrays of:
-     * - Address pins
-     * - Data pins
-     * - Bank select pins
-     * - Command pins
-     * - Byte enable pins
-     */
-    struct FMCPinConfig {
-        FMCAddressPins address;
-        FMCDataPins    data;
-        FMCByteEnablePins byteEnable;
-        FMCBankPins    bank;
-        FMCCommandPins command;
-    };
-
-    /**
      * Initializes an FMC device
      *
      * @param[in] pinConfig All FMC GPIO pin configurations.
@@ -186,10 +85,17 @@ public:
      */
     FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig, FMC_SDRAM_TypeDef* sdramDevice);
 
-    void write32(uint32_t offset, uint32_t value) const;
+    /**
+     * Returns a SdramInitConfig struct pre-filled with default values.
+     * Intended to be overridden to suit the specific use case before being passed into the constructor.
+     */
+    static SdramInitConfig defaultSdramInitConfig();
 
-    uint32_t read32(uint32_t offset) const;
-
+    /**
+     * Returns a SdramTimingConfig pre-filled with default values.
+     * Intended to be overridden to suit the specific use case before being passed into the constructor.
+     */
+    static SdramTimingConfig defaultSdramTimingConfig();
 private:
     /**
      * Helper function to initialize all GPIO FMC pins
@@ -204,18 +110,10 @@ private:
      * @param[in] pins an array of FMC GPIO pins
      * @param[in] count length of array
      */
-    void InitPinGroup(const FMC_GPIO* pins, uint8_t count);
+    void InitPinGroup(FMC_PIN* pins, uint8_t count);
 
-    /**
-     * @return the base address depending on the bank number
-     */
-    uint32_t getSdramBaseAddress();
 
     FMC_SDRAM_TypeDef* sdramDevice = FMC_SDRAM_DEVICE;
-
-    SdramInitConfig sdramInitConfig;
-    SdramTimingConfig sdramTimingConfig;
-    FMCPinConfig fmcPinConfig;
 
     SDRAM_HandleTypeDef sdram;
     FMC_SDRAM_TimingTypeDef sdramTiming;

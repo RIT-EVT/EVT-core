@@ -1,14 +1,14 @@
 #include <core/io/platform/f4xx/FMCf4xx.hpp>
+
+#include "core/io/platform/f4xx/GPIOf4xx.hpp"
+
 #include <core/io/FMC.hpp>
 
 namespace core::io {
 
 FMCf4xx::FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig, FMC_SDRAM_TypeDef* sdramDevice) :
-FMC(getSdramBaseAddress()),
+FMC(pinConfig, sdramInitConfig, sdramTimingConfig),
 sdramDevice(sdramDevice),
-sdramInitConfig(sdramInitConfig),
-sdramTimingConfig(sdramTimingConfig),
-fmcPinConfig(pinConfig),
 sdram({nullptr}),
 sdramTiming({0}) {
     InitHardware(pinConfig);
@@ -35,42 +35,36 @@ sdramTiming({0}) {
     HAL_SDRAM_Init(&sdram, &sdramTiming);
 }
 
-void FMCf4xx::write32(uint32_t offset, uint32_t value) const {
-    // Ensure 4-byte alignment
-    if (offset % sizeof(uint32_t) != 0)
-        return;
+FMC::SdramInitConfig defaultSdramInitConfig() {
+    FMC::SdramInitConfig config {};
 
-    // Ensure within SDRAM bounds
-    if (offset >= RAM_SIZE)
-        return;
+    config.sdBank = FMC_SDRAM_BANK1;
+    config.columnBitsNumber = FMC_SDRAM_COLUMN_BITS_NUM_8;
+    config.rowBitsNumber = FMC_SDRAM_ROW_BITS_NUM_12;
+    config.memoryDataWidth = FMC_SDRAM_MEM_BUS_WIDTH_16;
+    config.internalBankNumber = FMC_SDRAM_INTERN_BANKS_NUM_4;
+    config.casLatency = FMC_SDRAM_CAS_LATENCY_2;
+    config.writeProtection = FMC_SDRAM_WRITE_PROTECTION_DISABLE;
+    config.sdClockPeriod = FMC_SDRAM_CLOCK_PERIOD_2;
+    config.readBurst = FMC_SDRAM_RBURST_ENABLE;
+    config.readPipeDelay = FMC_SDRAM_RPIPE_DELAY_0;
 
-    auto* const ptr =
-        reinterpret_cast<volatile uint32_t*>(sdramMemoryAddress + offset);
+    return config;
+};
 
-    *ptr = value;
-}
+FMC::SdramTimingConfig defaultSdramTimingConfig() {
+    FMC::SdramTimingConfig config {};
 
-uint32_t FMCf4xx::read32(uint32_t offset) const {
-    // Ensure 4-byte alignment
-    if (offset % sizeof(uint32_t) != 0)
-        return 0;
+    config.loadToActiveDelay = LOAD_MODE_REGISTER_TO_ACTIVE;
+    config.exitSelfRefreshDelay = EXIT_SELF_REFRESH_DELAY;
+    config.selfRefreshTime = SELF_REFRESH_TIME;
+    config.rowCycleDelay = ROW_CYCLE_DELAY;
+    config.writeRecoveryTime = RECOVERY_DELAY;
+    config.rpDelay = ROW_PRECHARGE_DELAY;
+    config.rcdDelay = ROW_TO_COLUMN_DELAY;
 
-    // Ensure within SDRAM bounds
-    if (offset >= RAM_SIZE)
-        return 0;
-
-    auto* const ptr =
-        reinterpret_cast<volatile uint32_t*>(sdramMemoryAddress + offset);
-
-    return *ptr;
-}
-
-uint32_t FMCf4xx::getSdramBaseAddress() {
-    if (sdramInitConfig.sdBank == FMC_SDRAM_BANK1) //determine read write memory address
-        return 0xC0000000;
-
-    return 0xD0000000; //else
-}
+    return config;
+};
 
 void FMCf4xx::InitHardware(const FMCPinConfig& pinConfig) {
     __HAL_RCC_FMC_CLK_ENABLE();
@@ -82,29 +76,10 @@ void FMCf4xx::InitHardware(const FMCPinConfig& pinConfig) {
     InitPinGroup(pinConfig.command.pins, pinConfig.command.count);
 }
 
-void FMCf4xx::InitPinGroup(const FMC_GPIO* pins, uint8_t count) {
-    GPIO_InitTypeDef gpio {};
+void FMCf4xx::InitPinGroup(FMC_PIN* pins, uint8_t count) {
+    GPIO_InitTypeDef gpioInit;
 
-    gpio.Mode = GPIO_MODE_AF_PP;
-    gpio.Pull = GPIO_NOPULL;
-    gpio.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    gpio.Alternate = GPIO_AF12_FMC;
-
-    for (uint8_t i = 0; i < count; i++)
-    {
-        gpio.Pin = pins[i].PIN;
-
-        if (pins[i].PORT == GPIOA) __HAL_RCC_GPIOA_CLK_ENABLE();
-        else if (pins[i].PORT == GPIOB) __HAL_RCC_GPIOB_CLK_ENABLE();
-        else if (pins[i].PORT == GPIOC) __HAL_RCC_GPIOC_CLK_ENABLE();
-        else if (pins[i].PORT == GPIOD) __HAL_RCC_GPIOD_CLK_ENABLE();
-        else if (pins[i].PORT == GPIOE) __HAL_RCC_GPIOE_CLK_ENABLE();
-        else if (pins[i].PORT == GPIOF) __HAL_RCC_GPIOF_CLK_ENABLE();
-        else if (pins[i].PORT == GPIOG) __HAL_RCC_GPIOG_CLK_ENABLE();
-        else if (pins[i].PORT == GPIOH) __HAL_RCC_GPIOH_CLK_ENABLE();
-
-        HAL_GPIO_Init(pins[i].PORT, &gpio);
-    }
+    GPIOf4xx::gpioStateInit(&gpioInit, pins, count, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 }
 
 } // namespace core::io
