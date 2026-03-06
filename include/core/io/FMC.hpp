@@ -112,6 +112,7 @@ public:
     FMC(void* sdramMemoryAddress, FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig);
 
     void* sdramMemoryAddress;
+
 protected:
     FMCPinConfig fmcPinConfig;
     SdramInitConfig sdramInitConfig;
