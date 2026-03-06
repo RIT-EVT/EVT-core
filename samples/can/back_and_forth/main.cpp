@@ -20,9 +20,9 @@ void canIRQHandler(io::CANMessage& message, void* priv) {
 //    uart->printf("Message contents: ");
 
     uint8_t* message_payload = message.getPayload();
-    for (int i = 0; i < message.getDataLength(); i++) {
+//    for (int i = 0; i < message.getDataLength(); i++) {
 //        uart->printf("0x%02X ", message_payload[i]);
-    }
+//    }
 //    uart->printf("\r\n\r\n");
 }
 
@@ -55,7 +55,6 @@ int main() {
 
     uint8_t count = 0;
     while (true) {
-        payload[1] = count;
         transmit_BMS.setPayload(payload);
         uart.printf("sending 0x%x\r\n", payload);
         result = can.transmit(transmit_BMS);
@@ -64,21 +63,21 @@ int main() {
             return 1;
         }
 
-//        if (count % 2 == 0) {
-//            result = can.transmit(transmit_GFDB);
-//            if (result != io::CAN::CANStatus::OK) {
-//                uart.printf("Failed to send GFDB\r\n");
-//                return 1;
-//            }
-//        }
-//
-//        if (count % 4 == 0) {
-//            result = can.transmit(transmit_HIB);
-//            if (result != io::CAN::CANStatus::OK) {
-//                uart.printf("Failed to send HIB\r\n");
-//                return 1;
-//            }
-//        }
+        if (count % 2 == 0) {
+            result = can.transmit(transmit_GFDB);
+            if (result != io::CAN::CANStatus::OK) {
+                uart.printf("Failed to send GFDB\r\n");
+                return 1;
+            }
+        }
+
+        if (count % 4 == 0) {
+            result = can.transmit(transmit_HIB);
+            if (result != io::CAN::CANStatus::OK) {
+                uart.printf("Failed to send HIB\r\n");
+                return 1;
+            }
+        }
 
         count++;
         time::wait(500);

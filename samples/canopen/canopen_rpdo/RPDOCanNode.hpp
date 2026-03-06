@@ -37,6 +37,12 @@ public:
     uint8_t getSampleDataA();
     uint16_t getSampleDataB();
 
+
+    uint16_t getPackCur();
+    uint16_t getswitchFault();
+    uint16_t getBoardSig();
+
+
     /**
      * Get a pointer to the start of the object dictionary
      *
@@ -75,6 +81,12 @@ private:
     uint8_t sampleDataA;
     uint16_t sampleDataB;
 
+
+    uint16_t switchFaultStatus;
+    uint16_t packCurrent;
+
+    uint16_t boardSig;
+
     /**
      * Have to know the size of the object dictionary for initialization
      * process.
@@ -104,14 +116,17 @@ private:
         // 1: Link to the first PDO message sampleDataA with a size of 8 and a sub index of 1
         // 2: Link to teh second PDO message sampleDataB with a size of 16 and a sub index of 2.
         RECEIVE_PDO_MAPPING_START_KEY_16XX(0, 2),
-        RECEIVE_PDO_MAPPING_ENTRY_16XX(0, 1, PDO_MAPPING_UNSIGNED8),
+        RECEIVE_PDO_MAPPING_ENTRY_16XX(0, 1, PDO_MAPPING_UNSIGNED16),
         RECEIVE_PDO_MAPPING_ENTRY_16XX(0, 2, PDO_MAPPING_UNSIGNED16),
 
         // User defined data, this will be where we put elements that can be
         // accessed via SDO and depending on configuration PDO
         DATA_LINK_START_KEY_21XX(LINK_RPDO_NUMBER(0), 2),
-        DATA_LINK_21XX(LINK_RPDO_NUMBER(0), 1, CO_TUNSIGNED8, &sampleDataA),
-        DATA_LINK_21XX(LINK_RPDO_NUMBER(0), 2, CO_TUNSIGNED16, &sampleDataB),
+        DATA_LINK_21XX(LINK_RPDO_NUMBER(0), 1, CO_TUNSIGNED16, &packCurrent),
+        DATA_LINK_21XX(LINK_RPDO_NUMBER(0), 2, CO_TUNSIGNED16, &switchFaultStatus),
+
+        DATA_LINK_START_KEY_21XX(LINK_RPDO_NUMBER(0x100), 1),
+        DATA_LINK_21XX(LINK_RPDO_NUMBER(0x100), 1, CO_TUNSIGNED16, &boardSig),
 
         // End of dictionary marker
         CO_OBJ_DICT_ENDMARK,

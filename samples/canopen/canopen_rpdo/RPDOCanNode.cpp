@@ -3,6 +3,9 @@
 RPDOCanNode::RPDOCanNode() {
     sampleDataA = 0;
     sampleDataB = 0;
+    boardSig = 0;
+    switchFaultStatus = 0;
+    packCurrent = 0;
 }
 
 CO_OBJ_T* RPDOCanNode::getObjectDictionary() {
@@ -30,4 +33,16 @@ uint16_t RPDOCanNode::getSampleDataB() {
 }
 uint8_t RPDOCanNode::getNodeID() {
     return NODE_ID;
+}
+
+uint16_t RPDOCanNode::getBoardSig() {
+    return boardSig;
+}
+
+uint16_t RPDOCanNode::getswitchFault() {
+    return switchFaultStatus;
+}
+
+uint16_t RPDOCanNode::getPackCur() {
+    return packCurrent;
 }

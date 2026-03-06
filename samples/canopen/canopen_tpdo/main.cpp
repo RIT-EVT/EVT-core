@@ -135,6 +135,7 @@ int main() {
     while (1) {
         // increment node values
         testCanNode.update();
+//        uart->printf("Sending values L)\r\n");
         if (lastVal1 != testCanNode.getSampleDataA() || lastVal2 != testCanNode.getSampleDataB()) {
             lastVal1 = testCanNode.getSampleDataA();
             lastVal2 = testCanNode.getSampleDataB();

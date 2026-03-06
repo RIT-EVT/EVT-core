@@ -43,13 +43,15 @@ void canInterrupt(io::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
 
     // print out raw received data
-    uart->printf("Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
-    uint8_t* data = message.getPayload();
-    for (int i = 0; i < message.getDataLength(); i++) {
-        uart->printf("%X ", *data);
-        data++;
-    }
-    uart->printf("\r\n");
+//    if (message.getId() != 0x701) {
+//        uart->printf("Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
+//        uint8_t* data = message.getPayload();
+//        for (int i = 0; i < message.getDataLength(); i++) {
+//            uart->printf("%X ", *data);
+//            data++;
+//        }
+//        uart->printf("\r\n");
+//    }
 
     if (queue != nullptr)
         queue->append(message);
@@ -121,14 +123,17 @@ int main() {
     // Main loop
     ///////////////////////////////////////////////////////////////////////////
 
-    uint8_t lastVal1  = 0;
+    uint16_t lastVal1  = 0;
     uint16_t lastVal2 = 0;
+    uint16_t lastVal3  = 0;
+    uart->printf("Current values: %X, %X, %X\r\n", lastVal1, lastVal2, lastVal3);
     while (1) {
         // Print new value when changed over CAN
-        if (lastVal1 != testCanNode.getSampleDataA() || lastVal2 != testCanNode.getSampleDataB()) {
-            lastVal1 = testCanNode.getSampleDataA();
-            lastVal2 = testCanNode.getSampleDataB();
-            uart->printf("Current value: %X, %X\r\n", lastVal1, lastVal2);
+        if (lastVal1 != testCanNode.getPackCur() || lastVal2 != testCanNode.getswitchFault() || lastVal3 != testCanNode.getBoardSig()) {
+            lastVal1 = testCanNode.getPackCur();
+            lastVal2 = testCanNode.getswitchFault();
+            lastVal3 = testCanNode.getBoardSig();
+            uart->printf("Current values: %X, %X, %X\r\n", lastVal1, lastVal2, lastVal3);
         }
 
         io::processCANopenNode(&canNode);
