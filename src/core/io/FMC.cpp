@@ -2,7 +2,8 @@
 
 namespace core::io {
 
-FMC::FMC(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig) :
+FMC::FMC(void* sdramMemoryAddress, FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig) :
+    sdramMemoryAddress(sdramMemoryAddress),
     fmcPinConfig(pinConfig),
     sdramInitConfig(sdramInitConfig),
     sdramTimingConfig(sdramTimingConfig) {}

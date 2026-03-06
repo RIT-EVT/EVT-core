@@ -59,8 +59,6 @@ namespace core::io {
 #define	RAM_SIZE						(0x4000000) // 64 megabits
 #define STARTING_ADDR					((uint32_t*)0xC000000)
 #define ALT_STARTING_ADDR               ((uint32_t*)0xD000000)
-#define RAM_SIZE                        (0x4000000) // 64 megabits
-#define STARTING_ADDR                   ((uint32_t*) 0xC000000)
 
 /**
  * Driver for configuring and accessing external SDRAM via FMC.
@@ -72,7 +70,7 @@ namespace core::io {
 class FMCf4xx : public FMC {
 public:
     /**
-     * Initializes an FMC device
+     * Initializes a FMC device
      *
      * @param[in] pinConfig All FMC GPIO pin configurations.
      * @param[in] sdramInitConfig SDRAM controller configuration parameters.
@@ -83,7 +81,7 @@ public:
      * - Configures SDRAM controller
      * - Calls HAL_SDRAM_Init()
      */
-    FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig, FMC_SDRAM_TypeDef* sdramDevice);
+    FMCf4xx(FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig);
 
     /**
      * Returns a SdramInitConfig struct pre-filled with default values.
@@ -120,4 +118,4 @@ private:
 
 }// namespace core::io
 
-#endif // EVT_FMC_HPP
+#endif // EVT_FMCF4xx_HPP

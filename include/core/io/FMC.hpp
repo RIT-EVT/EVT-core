@@ -1,9 +1,7 @@
 #ifndef EVT_FMC_HPP
 #define EVT_FMC_HPP
 
-#include "GPIO.hpp"
-
-#include <cstdint>
+#include <core/io/GPIO.hpp>
 
 namespace core::io {
 
@@ -101,18 +99,19 @@ public:
      * - Byte enable pins
      */
     struct FMCPinConfig {
-        FMCAddressPins address;
-        FMCDataPins    data;
+        FMCAddressPins    address;
+        FMCDataPins       data;
         FMCByteEnablePins byteEnable;
-        FMCBankPins    bank;
-        FMCCommandPins command;
+        FMCBankPins       bank;
+        FMCCommandPins    command;
     };
 
     /**
      * Initializes an FMC device
      */
-    FMC(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig);
+    FMC(void* sdramMemoryAddress, FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig);
 
+    void* sdramMemoryAddress;
 protected:
     FMCPinConfig fmcPinConfig;
     SdramInitConfig sdramInitConfig;

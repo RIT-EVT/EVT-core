@@ -1,10 +1,10 @@
 #include <core/io/platform/f4xx/FMCf4xx.hpp>
-#include "core/io/platform/f4xx/GPIOf4xx.hpp"
+#include <core/io/platform/f4xx/GPIOf4xx.hpp>
 
 namespace core::io {
 
-FMCf4xx::FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig, FMC_SDRAM_TypeDef* sdramDevice) :
-FMC(pinConfig, sdramInitConfig, sdramTimingConfig),
+FMCf4xx::FMCf4xx(FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig) :
+FMC(sdramInitConfig.sdBank == FMC_SDRAM_BANK1 ? STARTING_ADDR : ALT_STARTING_ADDR, pinConfig, sdramInitConfig, sdramTimingConfig),
 sdramDevice(sdramDevice),
 sdram({nullptr}),
 sdramTiming({0}) {
