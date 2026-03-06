@@ -13,11 +13,9 @@
  * - SDRAM read/write operations
  */
 
-#include "core/io/FMC.hpp"
-
 #include <HALf4/stm32f4xx_hal.h>
-#include <HALf4/stm32f4xx_hal_sdram.h>
 #include <HALf4/stm32f4xx_ll_fmc.h>
+#include <HALf4/stm32f4xx_hal_sdram.h>
 
 #include <core/io/FMC.hpp>
 #include <core/io/GPIO.hpp>
@@ -31,36 +29,40 @@ namespace core::io {
 #define NS_TO_SDRAM_CLK_CYCLES(NS) ((NS * 1000 + SDRAM_CLK_PERIOD_US) / (SDRAM_CLK_PERIOD_US))
 
 // All of these can be found in the datasheet of the Ram chip
-#define tRCD 							( 15 )
-#define tRP 							( 15 )
-#define tWR 							( 10 ) // only specifies two clock cycles
-#define tRC 							( 63 )
-#define tRAS 							( 42 )
-#define tXSR 							( 70 )
-#define tMRD 							( 10 ) // only specifies two clock cycles
+#define tRCD (15)
+#define tRP  (15)
+#define tWR  (10) // only specifies two clock cycles
+#define tRC  (63)
+#define tRAS (42)
+#define tXSR (70)
+#define tMRD (10) // only specifies two clock cycles
 
 // Specific names from the FMC
-#define ROW_TO_COLUMN_DELAY_NS 			( tRCD )
-#define ROW_PRECHARGE_DELAY_NS 			( tRP  )
-#define RECOVERY_DELAY_NS 				( tWR  )
-#define ROW_CYCLE_DELAY_NS 				( tRC  )
-#define SELF_REFRESH_TIME_NS 			( tRAS )
-#define EXIT_SELF_REFRESH_DELAY_NS 		( tXSR )
-#define LOAD_MODE_REGISTER_TO_ACTIVE_NS ( tMRD )
+#define ROW_TO_COLUMN_DELAY_NS          (tRCD)
+#define ROW_PRECHARGE_DELAY_NS          (tRP)
+#define RECOVERY_DELAY_NS               (tWR)
+#define ROW_CYCLE_DELAY_NS              (tRC)
+#define SELF_REFRESH_TIME_NS            (tRAS)
+#define EXIT_SELF_REFRESH_DELAY_NS      (tXSR)
+#define LOAD_MODE_REGISTER_TO_ACTIVE_NS (tMRD)
 
 // Converted to Clock_Cycles
-#define ROW_TO_COLUMN_DELAY 			( NS_TO_SDRAM_CLK_CYCLES( tRCD ) ) //(tRCD * 1000 + SDRAM_CLK_PERIOD_US) / (SDRAM_CLK_PERIOD_US)
-#define ROW_PRECHARGE_DELAY 			( NS_TO_SDRAM_CLK_CYCLES( tRP  ) )
-#define RECOVERY_DELAY 					( NS_TO_SDRAM_CLK_CYCLES( tWR  ) )
-#define ROW_CYCLE_DELAY 				( NS_TO_SDRAM_CLK_CYCLES( tRC  ) )
-#define SELF_REFRESH_TIME 				( NS_TO_SDRAM_CLK_CYCLES( tRAS ) )
-#define EXIT_SELF_REFRESH_DELAY 		( NS_TO_SDRAM_CLK_CYCLES( tXSR ) )
-#define LOAD_MODE_REGISTER_TO_ACTIVE 	( NS_TO_SDRAM_CLK_CYCLES( tMRD ) )
+#define ROW_TO_COLUMN_DELAY          (NS_TO_SDRAM_CLK_CYCLES(tRCD)) //(tRCD * 1000 + SDRAM_CLK_PERIOD_US) / (SDRAM_CLK_PERIOD_US)
+#define ROW_PRECHARGE_DELAY          (NS_TO_SDRAM_CLK_CYCLES(tRP))
+#define RECOVERY_DELAY               (NS_TO_SDRAM_CLK_CYCLES(tWR))
+#define ROW_CYCLE_DELAY              (NS_TO_SDRAM_CLK_CYCLES(tRC))
+#define SELF_REFRESH_TIME            (NS_TO_SDRAM_CLK_CYCLES(tRAS))
+#define EXIT_SELF_REFRESH_DELAY      (NS_TO_SDRAM_CLK_CYCLES(tXSR))
+#define LOAD_MODE_REGISTER_TO_ACTIVE (NS_TO_SDRAM_CLK_CYCLES(tMRD))
 
 
 #define	RAM_SIZE						(0x4000000) // 64 megabits
 #define STARTING_ADDR					((uint32_t*)0xC000000)
 #define ALT_STARTING_ADDR               ((uint32_t*)0xD000000)
+#define RAM_SIZE      (0x4000000) // 64 megabits
+#define STARTING_ADDR ((uint32_t*) 0xC000000)
+
+namespace core::io {
 
 /**
  * Driver for configuring and accessing external SDRAM via FMC.
@@ -113,12 +115,12 @@ private:
     void InitPinGroup(FMC_PIN* pins, uint8_t count);
 
 
-    FMC_SDRAM_TypeDef* sdramDevice = FMC_SDRAM_DEVICE;
+    FMC_SDRAM_TypeDef* sdramDevice;
 
     SDRAM_HandleTypeDef sdram;
     FMC_SDRAM_TimingTypeDef sdramTiming;
 };
 
-}
+} // namespace core::io
 
 #endif // EVT_FMC_HPP

@@ -1,8 +1,6 @@
 #include <core/io/platform/f4xx/FMCf4xx.hpp>
-
 #include "core/io/platform/f4xx/GPIOf4xx.hpp"
 
-#include <core/io/FMC.hpp>
 
 namespace core::io {
 
@@ -14,23 +12,23 @@ sdramTiming({0}) {
     InitHardware(pinConfig);
 
     // map the class init structs to the hal structs
-    sdram.Instance = sdramDevice;
-    sdram.Init.SDBank = sdramInitConfig.sdBank;
-    sdram.Init.ColumnBitsNumber = sdramInitConfig.columnBitsNumber;
-    sdram.Init.RowBitsNumber = sdramInitConfig.rowBitsNumber;
-    sdram.Init.MemoryDataWidth = sdramInitConfig.memoryDataWidth;
+    sdram.Instance                = sdramDevice;
+    sdram.Init.SDBank             = sdramInitConfig.sdBank;
+    sdram.Init.ColumnBitsNumber   = sdramInitConfig.columnBitsNumber;
+    sdram.Init.RowBitsNumber      = sdramInitConfig.rowBitsNumber;
+    sdram.Init.MemoryDataWidth    = sdramInitConfig.memoryDataWidth;
     sdram.Init.InternalBankNumber = sdramInitConfig.internalBankNumber;
-    sdram.Init.WriteProtection = sdramInitConfig.writeProtection;
-    sdram.Init.ReadBurst = sdramInitConfig.readBurst;
-    sdram.Init.ReadPipeDelay = sdramInitConfig.readPipeDelay;
+    sdram.Init.WriteProtection    = sdramInitConfig.writeProtection;
+    sdram.Init.ReadBurst          = sdramInitConfig.readBurst;
+    sdram.Init.ReadPipeDelay      = sdramInitConfig.readPipeDelay;
 
-    sdramTiming.LoadToActiveDelay = sdramTimingConfig.loadToActiveDelay;
+    sdramTiming.LoadToActiveDelay    = sdramTimingConfig.loadToActiveDelay;
     sdramTiming.ExitSelfRefreshDelay = sdramTimingConfig.exitSelfRefreshDelay;
-    sdramTiming.SelfRefreshTime = sdramTimingConfig.selfRefreshTime;
-    sdramTiming.RowCycleDelay = sdramTimingConfig.rowCycleDelay;
-    sdramTiming.WriteRecoveryTime = sdramTimingConfig.writeRecoveryTime;
-    sdramTiming.RPDelay = sdramTimingConfig.rpDelay;
-    sdramTiming.RCDDelay = sdramTimingConfig.rcdDelay;
+    sdramTiming.SelfRefreshTime      = sdramTimingConfig.selfRefreshTime;
+    sdramTiming.RowCycleDelay        = sdramTimingConfig.rowCycleDelay;
+    sdramTiming.WriteRecoveryTime    = sdramTimingConfig.writeRecoveryTime;
+    sdramTiming.RPDelay              = sdramTimingConfig.rpDelay;
+    sdramTiming.RCDDelay             = sdramTimingConfig.rcdDelay;
 
     HAL_SDRAM_Init(&sdram, &sdramTiming);
 }

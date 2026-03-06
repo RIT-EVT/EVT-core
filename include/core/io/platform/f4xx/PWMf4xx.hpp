@@ -11,19 +11,19 @@ namespace core::io {
 
 class PWMf4xx : public PWM {
 public:
-    /**
-     * Setup the given pin for PWM usage.
-     *
-     * @param pin[in] The pin to setup for PWM
-     */
+    /** @inheritDoc */
     PWMf4xx(Pin pin);
 
+    /** @inheritDoc */
     void setDutyCycle(uint32_t dutyCycle) override;
 
+    /** @inheritDoc */
     void setPeriod(uint32_t period) override;
 
+    /** @inheritDoc */
     uint32_t getDutyCycle() override;
 
+    /** @inheritDoc */
     uint32_t getPeriod() override;
 
 private:

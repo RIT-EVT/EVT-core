@@ -10,6 +10,7 @@
 
 #include <HALf4/stm32f4xx.h>
 #include <HALf4/stm32f4xx_hal_adc.h>
+#include <core/dev/platform/f4xx/Timerf4xx.hpp>
 #include <core/io/pin.hpp>
 #include <core/io/platform/f4xx/ADCf4xx.hpp>
 #include <core/io/platform/f4xx/GPIOf4xx.hpp>
@@ -54,7 +55,17 @@ constexpr uint8_t ADC3_SLOT = 2;
 
 ADCf4xx::ADC_State core::io::ADCf4xx::adcArray[NUM_ADCS];
 bool core::io::ADCf4xx::timerInit = false;
-TIM_HandleTypeDef core::io::ADCf4xx::htim8;
+
+dev::TimerConfiguration_t configuration = {dev::TimerCounterMode::UP,
+                                           dev::TimerClockDivision::DIVISION_1,
+                                           dev::TimerAutoReloadPreload::BUFFER,
+                                           dev::TimerClockSource::INTERNAL,
+                                           dev::TimerMasterModeSelection::UPDATE,
+                                           dev::TimerMasterSlaveMode::DISABLE};
+
+dev::TimerF4xx core::io::ADCf4xx::timer8 = dev::TimerF4xx(TIM8, 1000, configuration);
+
+float core::io::ADCf4xx::vref_voltage = DEFAULT_VREF_POS;
 
 ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph)
     : ADC(pin, adcPeriph), adcState(ADCf4xx::adcArray[getADCNum(adcPeriph)]), adcNum(getADCNum(adcPeriph)) {
@@ -63,8 +74,8 @@ ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph)
         return;
     }
 
-    if (ADCf4xx::timerInit) {
-        HAL_TIM_Base_DeInit(&ADCf4xx::htim8); // Stop Timer8 (Trigger Source For ADC's)
+    if (timerInit) {
+        ADCf4xx::timer8.stopTimer();
         ADCf4xx::timerInit = false;
     }
 
@@ -83,10 +94,8 @@ ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph)
     dmaHandle[adcNum] = &this->ADCf4xx::adcArray[adcNum].halDMA;
     adcHandle[adcNum] = &this->ADCf4xx::adcArray[adcNum].halADC;
 
-    if (!ADCf4xx::timerInit) {
-        __HAL_RCC_TIM8_CLK_ENABLE();
-        initTimer();
-        HAL_TIM_Base_Start(&ADCf4xx::htim8); // Start Timer8 (Trigger Source For ADC's)
+    if (!timerInit) {
+        ADCf4xx::timer8.startTimer();
         ADCf4xx::timerInit = true;
     }
 
@@ -96,7 +105,7 @@ ADCf4xx::ADCf4xx(Pin pin, ADCPeriph adcPeriph)
 
 float ADCf4xx::read() {
     float percentage = readPercentage();
-    return percentage * VREF_POS;
+    return percentage * vref_voltage;
 }
 
 uint32_t ADCf4xx::readRaw() {
@@ -111,6 +120,16 @@ uint32_t ADCf4xx::readRaw() {
 float ADCf4xx::readPercentage() {
     float raw = static_cast<float>(readRaw());
     return static_cast<float>(raw / MAX_RAW);
+}
+
+void ADCf4xx::setVref(float vref) {
+    if (vref > 0.0f) {
+        vref_voltage = vref;
+    }
+}
+
+float ADCf4xx::getVref() const {
+    return vref_voltage;
 }
 
 void ADCf4xx::initADC(uint8_t num_channels) {
@@ -214,7 +233,7 @@ void ADCf4xx::addChannel(uint8_t rank) {
     GPIOf4xx::gpioStateInit(&gpioInit, pins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;
-    Channel_Support channelStruct;
+    Channel_Support channelStruct = {};
     // Combines the ADC channel with the ADC peripherals it supports into a struct, avoiding having multi-layered switch
     // statements
     switch (pin) {
@@ -311,30 +330,4 @@ uint8_t ADCf4xx::getADCNum(ADCPeriph periph) {
         return ADC3_SLOT;
     }
 }
-
-/*
- * This method initializes timer 8 with a Trigger Output of "Update Trigger", with a timer frequency of 1kHz.
- * The timer does not specifically tell the exact ADC to do a conversion, it just sends a general Update Trigger every
- * cycle. The ADC's are listening for this Update Trigger from timer 8, which is set in the ADC initialization.
- */
-void ADCf4xx::initTimer() {
-    TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-    TIM_MasterConfigTypeDef sMasterConfig     = {0};
-
-    ADCf4xx::htim8.Instance               = TIM8;
-    ADCf4xx::htim8.Init.Prescaler         = 0;
-    ADCf4xx::htim8.Init.CounterMode       = TIM_COUNTERMODE_UP;
-    ADCf4xx::htim8.Init.Period            = (SystemCoreClock / 1000) - 1;
-    ADCf4xx::htim8.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
-    ADCf4xx::htim8.Init.RepetitionCounter = 0;
-    ADCf4xx::htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
-    HAL_TIM_Base_Init(&ADCf4xx::htim8);
-    sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-    HAL_TIM_ConfigClockSource(&ADCf4xx::htim8, &sClockSourceConfig);
-
-    sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
-    sMasterConfig.MasterSlaveMode     = TIM_MASTERSLAVEMODE_DISABLE;
-    HAL_TIMEx_MasterConfigSynchronization(&ADCf4xx::htim8, &sMasterConfig);
-}
-
 } // namespace core::io

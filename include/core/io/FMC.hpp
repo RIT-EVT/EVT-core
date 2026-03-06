@@ -119,8 +119,6 @@ protected:
     SdramTimingConfig sdramTimingConfig;
 };
 
-}
+} // namespace core::io
 
 #endif // EVT_FMC_HPP
-
-

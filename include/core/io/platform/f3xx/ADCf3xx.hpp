@@ -27,13 +27,19 @@ public:
 
     float readPercentage();
 
+    void setVref(float vref);
+
+    float getVref() const;
+
 private:
     // Max number of channels supported by the ADC
     static constexpr uint8_t MAX_CHANNELS = 15;
-    // Positive reference voltage of the ADC.  Needs to be updated based on the hardware configuration
-    static constexpr float VREF_POS = 3.3;
+    // Default positive reference voltage of the ADC.  Current reference voltage can be updated via setVref()
+    static constexpr float DEFAULT_VREF_POS = 3.3;
     // Max value for a 12 bit ADC reading (2^12 - 1)
     static constexpr uint32_t MAX_RAW = 4095;
+    // Current reference voltage (can be modified at runtime)
+    static float vref_voltage;
     /// This is static since the STM32F3xx only has a single ADC which
     /// supports multiple channels. The ADC will be initialized once then
     /// each channel will be added on.

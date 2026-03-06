@@ -104,7 +104,7 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin
             if (!__HAL_RCC_SPI3_IS_CLK_ENABLED()) {
                 __HAL_RCC_SPI3_CLK_ENABLE();
             }
-            altId = GPIO_AF5_SPI3;
+            altId = GPIO_AF6_SPI3;
             break;
 #endif
         default:
