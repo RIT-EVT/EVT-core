@@ -1,25 +1,23 @@
-#include <core/io/platform/f4xx/FMCf4xx.hpp>
 #include "core/io/platform/f4xx/GPIOf4xx.hpp"
+#include <core/io/platform/f4xx/FMCf4xx.hpp>
 
 namespace core::io {
 
-FMCf4xx::FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig, FMC_SDRAM_TypeDef* sdramDevice) :
-FMC(pinConfig, sdramInitConfig, sdramTimingConfig),
-sdramDevice(sdramDevice),
-sdram({nullptr}),
-sdramTiming({0}) {
+FMCf4xx::FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig,
+                 FMC_SDRAM_TypeDef* sdramDevice)
+    : FMC(pinConfig, sdramInitConfig, sdramTimingConfig), sdramDevice(sdramDevice), sdram({nullptr}), sdramTiming({0}) {
     InitHardware(pinConfig);
 
     // map the class init structs to the hal structs
-    sdram.Instance                   = sdramDevice;
-    sdram.Init.SDBank                = sdramInitConfig.sdBank;
-    sdram.Init.ColumnBitsNumber      = sdramInitConfig.columnBitsNumber;
-    sdram.Init.RowBitsNumber         = sdramInitConfig.rowBitsNumber;
-    sdram.Init.MemoryDataWidth       = sdramInitConfig.memoryDataWidth;
-    sdram.Init.InternalBankNumber    = sdramInitConfig.internalBankNumber;
-    sdram.Init.WriteProtection       = sdramInitConfig.writeProtection;
-    sdram.Init.ReadBurst             = sdramInitConfig.readBurst;
-    sdram.Init.ReadPipeDelay         = sdramInitConfig.readPipeDelay;
+    sdram.Instance                = sdramDevice;
+    sdram.Init.SDBank             = sdramInitConfig.sdBank;
+    sdram.Init.ColumnBitsNumber   = sdramInitConfig.columnBitsNumber;
+    sdram.Init.RowBitsNumber      = sdramInitConfig.rowBitsNumber;
+    sdram.Init.MemoryDataWidth    = sdramInitConfig.memoryDataWidth;
+    sdram.Init.InternalBankNumber = sdramInitConfig.internalBankNumber;
+    sdram.Init.WriteProtection    = sdramInitConfig.writeProtection;
+    sdram.Init.ReadBurst          = sdramInitConfig.readBurst;
+    sdram.Init.ReadPipeDelay      = sdramInitConfig.readPipeDelay;
 
     sdramTiming.LoadToActiveDelay    = sdramTimingConfig.loadToActiveDelay;
     sdramTiming.ExitSelfRefreshDelay = sdramTimingConfig.exitSelfRefreshDelay;
@@ -33,32 +31,32 @@ sdramTiming({0}) {
 }
 
 FMC::SdramInitConfig defaultSdramInitConfig() {
-    FMC::SdramInitConfig config {};
+    FMC::SdramInitConfig config{};
 
-    config.sdBank = FMC_SDRAM_BANK1;
-    config.columnBitsNumber = FMC_SDRAM_COLUMN_BITS_NUM_8;
-    config.rowBitsNumber = FMC_SDRAM_ROW_BITS_NUM_12;
-    config.memoryDataWidth = FMC_SDRAM_MEM_BUS_WIDTH_16;
+    config.sdBank             = FMC_SDRAM_BANK1;
+    config.columnBitsNumber   = FMC_SDRAM_COLUMN_BITS_NUM_8;
+    config.rowBitsNumber      = FMC_SDRAM_ROW_BITS_NUM_12;
+    config.memoryDataWidth    = FMC_SDRAM_MEM_BUS_WIDTH_16;
     config.internalBankNumber = FMC_SDRAM_INTERN_BANKS_NUM_4;
-    config.casLatency = FMC_SDRAM_CAS_LATENCY_2;
-    config.writeProtection = FMC_SDRAM_WRITE_PROTECTION_DISABLE;
-    config.sdClockPeriod = FMC_SDRAM_CLOCK_PERIOD_2;
-    config.readBurst = FMC_SDRAM_RBURST_ENABLE;
-    config.readPipeDelay = FMC_SDRAM_RPIPE_DELAY_0;
+    config.casLatency         = FMC_SDRAM_CAS_LATENCY_2;
+    config.writeProtection    = FMC_SDRAM_WRITE_PROTECTION_DISABLE;
+    config.sdClockPeriod      = FMC_SDRAM_CLOCK_PERIOD_2;
+    config.readBurst          = FMC_SDRAM_RBURST_ENABLE;
+    config.readPipeDelay      = FMC_SDRAM_RPIPE_DELAY_0;
 
     return config;
 };
 
 FMC::SdramTimingConfig defaultSdramTimingConfig() {
-    FMC::SdramTimingConfig config {};
+    FMC::SdramTimingConfig config{};
 
-    config.loadToActiveDelay = LOAD_MODE_REGISTER_TO_ACTIVE;
+    config.loadToActiveDelay    = LOAD_MODE_REGISTER_TO_ACTIVE;
     config.exitSelfRefreshDelay = EXIT_SELF_REFRESH_DELAY;
-    config.selfRefreshTime = SELF_REFRESH_TIME;
-    config.rowCycleDelay = ROW_CYCLE_DELAY;
-    config.writeRecoveryTime = RECOVERY_DELAY;
-    config.rpDelay = ROW_PRECHARGE_DELAY;
-    config.rcdDelay = ROW_TO_COLUMN_DELAY;
+    config.selfRefreshTime      = SELF_REFRESH_TIME;
+    config.rowCycleDelay        = ROW_CYCLE_DELAY;
+    config.writeRecoveryTime    = RECOVERY_DELAY;
+    config.rpDelay              = ROW_PRECHARGE_DELAY;
+    config.rcdDelay             = ROW_TO_COLUMN_DELAY;
 
     return config;
 };

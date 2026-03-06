@@ -14,8 +14,8 @@
  */
 
 #include <HALf4/stm32f4xx_hal.h>
-#include <HALf4/stm32f4xx_ll_fmc.h>
 #include <HALf4/stm32f4xx_hal_sdram.h>
+#include <HALf4/stm32f4xx_ll_fmc.h>
 
 #include <core/io/FMC.hpp>
 #include <core/io/GPIO.hpp>
@@ -24,8 +24,9 @@ namespace core::io {
 
 #define SDRAM_TIMEOUT (0x0000FFFFUL)
 
-#define SDRAM_CLK_SPEED ((uint32_t)(HAL_RCC_GetSysClockFreq() / 2))
-#define SDRAM_CLK_PERIOD_US (1000000000UL / (SDRAM_CLK_SPEED / 1000)) // LOSES SOME RESOLUTION, BUT IT'S NEEDED TO FIT WITHIN 32-BITS
+#define SDRAM_CLK_SPEED ((uint32_t) (HAL_RCC_GetSysClockFreq() / 2))
+#define SDRAM_CLK_PERIOD_US \
+    (1000000000UL / (SDRAM_CLK_SPEED / 1000)) // LOSES SOME RESOLUTION, BUT IT'S NEEDED TO FIT WITHIN 32-BITS
 #define NS_TO_SDRAM_CLK_CYCLES(NS) ((NS * 1000 + SDRAM_CLK_PERIOD_US) / (SDRAM_CLK_PERIOD_US))
 
 // All of these can be found in the datasheet of the Ram chip
@@ -55,12 +56,11 @@ namespace core::io {
 #define EXIT_SELF_REFRESH_DELAY      (NS_TO_SDRAM_CLK_CYCLES(tXSR))
 #define LOAD_MODE_REGISTER_TO_ACTIVE (NS_TO_SDRAM_CLK_CYCLES(tMRD))
 
-
-#define	RAM_SIZE						(0x4000000) // 64 megabits
-#define STARTING_ADDR					((uint32_t*)0xC000000)
-#define ALT_STARTING_ADDR               ((uint32_t*)0xD000000)
-#define RAM_SIZE                        (0x4000000) // 64 megabits
-#define STARTING_ADDR                   ((uint32_t*) 0xC000000)
+#define RAM_SIZE          (0x4000000) // 64 megabits
+#define STARTING_ADDR     ((uint32_t*) 0xC000000)
+#define ALT_STARTING_ADDR ((uint32_t*) 0xD000000)
+#define RAM_SIZE          (0x4000000) // 64 megabits
+#define STARTING_ADDR     ((uint32_t*) 0xC000000)
 
 /**
  * Driver for configuring and accessing external SDRAM via FMC.
@@ -83,7 +83,8 @@ public:
      * - Configures SDRAM controller
      * - Calls HAL_SDRAM_Init()
      */
-    FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig, FMC_SDRAM_TypeDef* sdramDevice);
+    FMCf4xx(FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig,
+            FMC_SDRAM_TypeDef* sdramDevice);
 
     /**
      * Returns a SdramInitConfig struct pre-filled with default values.
@@ -96,6 +97,7 @@ public:
      * Intended to be overridden to suit the specific use case before being passed into the constructor.
      */
     static SdramTimingConfig defaultSdramTimingConfig();
+
 private:
     /**
      * Helper function to initialize all GPIO FMC pins
@@ -118,6 +120,6 @@ private:
     FMC_SDRAM_TimingTypeDef sdramTiming;
 };
 
-}// namespace core::io
+} // namespace core::io
 
 #endif // EVT_FMC_HPP
