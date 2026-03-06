@@ -23,10 +23,10 @@ uint16_t TPDOCanNode::getSampleDataB() {
 
 void TPDOCanNode::update() {
     sampleDataA++;
-    if (sampleDataA % 20 == 0) {
-        battPackCurrent++;
-        switchFaultStatus++;
-        VCUBoardSig++;
+    if (sampleDataA % 50 == 0) {
+        for (uint16_t &output : outData.outputs) {
+            output++;
+        }
     }
 }
 

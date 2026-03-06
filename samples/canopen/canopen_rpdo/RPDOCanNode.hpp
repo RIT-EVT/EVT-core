@@ -37,11 +37,11 @@ public:
     uint8_t getSampleDataA();
     uint16_t getSampleDataB();
 
-
     uint16_t getPackCur();
     uint16_t getswitchFault();
     uint16_t getBoardSig();
 
+    uint16_t getIn(int i);
 
     /**
      * Get a pointer to the start of the object dictionary
@@ -81,17 +81,30 @@ private:
     uint8_t sampleDataA;
     uint16_t sampleDataB;
 
-
     uint16_t switchFaultStatus;
     uint16_t packCurrent;
 
     uint16_t boardSig;
 
-    /**
-     * Have to know the size of the object dictionary for initialization
-     * process.
-     */
-    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 40;
+    typedef union {
+        struct {
+            uint16_t LVSS_out_EnableBoardSignal;        ///< LVSS (out) Determines which boards it will send power to
+            uint16_t LVSS_in_HVCurrent[2];              ///< LVSS (in)
+            uint16_t LVSS_in_PowerSwitchCurrents[4];    ///< LVSS (in)
+            uint16_t LVSS_in_Temperatures[2];           ///< LVSS (in)
+            uint16_t LVSS_in_PowerSwitchErrorStatus[3]; ///< LVSS (in)
+        };
+        struct {
+            uint16_t outputs[1];
+            uint16_t inputs[11];
+        };
+    } AccessoryCanData_t;
+
+    AccessoryCanData_t accessoryCanDataUnsafeBuffer;
+
+    static constexpr uint8_t LVSS_NODE_ID = 1;
+
+    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 55; // TODO: CANopen set size of object dictionary
 
     /**
      * The object dictionary itself. Will be populated by this object during
@@ -105,28 +118,51 @@ private:
         IDENTITY_OBJECT_1018,
         SDO_CONFIGURATION_1200,
 
-        /**
-         * Sets up the first RPDO to be an async trigger
-         * TPDO 0 of the TPDO_NODE_ID
-         */
-        RECEIVE_PDO_SETTINGS_OBJECT_140X(0, 0, TPDO_NODE_ID, RECEIVE_PDO_TRIGGER_ASYNC),
+        // RPDOS and data links
+        RECEIVE_PDO_SETTINGS_OBJECT_140X(0x00, 0x00, LVSS_NODE_ID, RECEIVE_PDO_TRIGGER_ASYNC),
+        RECEIVE_PDO_SETTINGS_OBJECT_140X(0x01, 0x01, LVSS_NODE_ID, RECEIVE_PDO_TRIGGER_ASYNC),
+        RECEIVE_PDO_SETTINGS_OBJECT_140X(0x02, 0x02, LVSS_NODE_ID, RECEIVE_PDO_TRIGGER_ASYNC),
+        RECEIVE_PDO_SETTINGS_OBJECT_140X(0x03, 0x03, LVSS_NODE_ID, RECEIVE_PDO_TRIGGER_ASYNC),
 
-        // RPDO0 mapping, determines the PDO messages to send when RPDO0 is triggered
-        // 0: The number of PDO message associated with the RPDO
-        // 1: Link to the first PDO message sampleDataA with a size of 8 and a sub index of 1
-        // 2: Link to teh second PDO message sampleDataB with a size of 16 and a sub index of 2.
-        RECEIVE_PDO_MAPPING_START_KEY_16XX(0, 2),
-        RECEIVE_PDO_MAPPING_ENTRY_16XX(0, 1, PDO_MAPPING_UNSIGNED16),
-        RECEIVE_PDO_MAPPING_ENTRY_16XX(0, 2, PDO_MAPPING_UNSIGNED16),
+        RECEIVE_PDO_MAPPING_START_KEY_16XX(0x00, 0x02),
+        RECEIVE_PDO_MAPPING_ENTRY_16XX(0x00, 0x01, PDO_MAPPING_UNSIGNED16),
+        RECEIVE_PDO_MAPPING_ENTRY_16XX(0x00, 0x02, PDO_MAPPING_UNSIGNED16),
 
-        // User defined data, this will be where we put elements that can be
-        // accessed via SDO and depending on configuration PDO
-        DATA_LINK_START_KEY_21XX(LINK_RPDO_NUMBER(0), 2),
-        DATA_LINK_21XX(LINK_RPDO_NUMBER(0), 1, CO_TUNSIGNED16, &packCurrent),
-        DATA_LINK_21XX(LINK_RPDO_NUMBER(0), 2, CO_TUNSIGNED16, &switchFaultStatus),
+        RECEIVE_PDO_MAPPING_START_KEY_16XX(0x01, 0x04),
+        RECEIVE_PDO_MAPPING_ENTRY_16XX(0x01, 0x01, PDO_MAPPING_UNSIGNED16),
+        RECEIVE_PDO_MAPPING_ENTRY_16XX(0x01, 0x02, PDO_MAPPING_UNSIGNED16),
+        RECEIVE_PDO_MAPPING_ENTRY_16XX(0x01, 0x03, PDO_MAPPING_UNSIGNED16),
+        RECEIVE_PDO_MAPPING_ENTRY_16XX(0x01, 0x04, PDO_MAPPING_UNSIGNED16),
 
-        DATA_LINK_START_KEY_21XX(LINK_RPDO_NUMBER(0x100), 1),
-        DATA_LINK_21XX(LINK_RPDO_NUMBER(0x100), 1, CO_TUNSIGNED16, &boardSig),
+        RECEIVE_PDO_MAPPING_START_KEY_16XX(0x02, 0x02),
+        RECEIVE_PDO_MAPPING_ENTRY_16XX(0x02, 0x01, PDO_MAPPING_UNSIGNED16),
+        RECEIVE_PDO_MAPPING_ENTRY_16XX(0x02, 0x02, PDO_MAPPING_UNSIGNED16),
+
+        RECEIVE_PDO_MAPPING_START_KEY_16XX(0x03, 0x03),
+        RECEIVE_PDO_MAPPING_ENTRY_16XX(0x03, 0x01, PDO_MAPPING_UNSIGNED16),
+        RECEIVE_PDO_MAPPING_ENTRY_16XX(0x03, 0x02, PDO_MAPPING_UNSIGNED16),
+        RECEIVE_PDO_MAPPING_ENTRY_16XX(0x03, 0x03, PDO_MAPPING_UNSIGNED16),
+
+        // data links
+        // LVSS!!!!
+        DATA_LINK_START_KEY_21XX(LINK_RPDO_NUMBER(0x00), 0x02),
+        DATA_LINK_21XX(LINK_RPDO_NUMBER(0x00), 0x01, CO_TUNSIGNED16, &accessoryCanDataUnsafeBuffer.LVSS_in_HVCurrent[0]),
+        DATA_LINK_21XX(LINK_RPDO_NUMBER(0x00), 0x02, CO_TUNSIGNED16, &accessoryCanDataUnsafeBuffer.LVSS_in_HVCurrent[1]),
+
+        DATA_LINK_START_KEY_21XX(LINK_RPDO_NUMBER(0x01), 0x04),
+        DATA_LINK_21XX(LINK_RPDO_NUMBER(0x01), 0x01, CO_TUNSIGNED16, &accessoryCanDataUnsafeBuffer.LVSS_in_PowerSwitchCurrents[0]),
+        DATA_LINK_21XX(LINK_RPDO_NUMBER(0x01), 0x02, CO_TUNSIGNED16, &accessoryCanDataUnsafeBuffer.LVSS_in_PowerSwitchCurrents[1]),
+        DATA_LINK_21XX(LINK_RPDO_NUMBER(0x01), 0x03, CO_TUNSIGNED16, &accessoryCanDataUnsafeBuffer.LVSS_in_PowerSwitchCurrents[2]),
+        DATA_LINK_21XX(LINK_RPDO_NUMBER(0x01), 0x04, CO_TUNSIGNED16, &accessoryCanDataUnsafeBuffer.LVSS_in_PowerSwitchCurrents[3]),
+
+        DATA_LINK_START_KEY_21XX(LINK_RPDO_NUMBER(0x02), 0x02),
+        DATA_LINK_21XX(LINK_RPDO_NUMBER(0x02), 0x01, CO_TUNSIGNED16, &accessoryCanDataUnsafeBuffer.LVSS_in_Temperatures[0]),
+        DATA_LINK_21XX(LINK_RPDO_NUMBER(0x02), 0x02, CO_TUNSIGNED16, &accessoryCanDataUnsafeBuffer.LVSS_in_Temperatures[1]),
+
+        DATA_LINK_START_KEY_21XX(LINK_RPDO_NUMBER(0x03), 0x03),
+        DATA_LINK_21XX(LINK_RPDO_NUMBER(0x03), 0x01, CO_TUNSIGNED16, &accessoryCanDataUnsafeBuffer.LVSS_in_PowerSwitchErrorStatus[0]),
+        DATA_LINK_21XX(LINK_RPDO_NUMBER(0x03), 0x02, CO_TUNSIGNED16, &accessoryCanDataUnsafeBuffer.LVSS_in_PowerSwitchErrorStatus[1]),
+        DATA_LINK_21XX(LINK_RPDO_NUMBER(0x03), 0x03, CO_TUNSIGNED16, &accessoryCanDataUnsafeBuffer.LVSS_in_PowerSwitchErrorStatus[2]  ),
 
         // End of dictionary marker
         CO_OBJ_DICT_ENDMARK,

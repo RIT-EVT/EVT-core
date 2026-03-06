@@ -84,207 +84,88 @@ private:
      * Have to know the size of the object dictionary for initialization
      * process.
      */
-//    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 24;
-//
-//    /**
-//     * The object dictionary itself. Will be populated by this object during
-//     * construction.
-//     *
-//     * The plus one is for the special "end of dictionary" marker.
-//     */
-//    CO_OBJ_T objectDictionary[OBJECT_DICTIONARY_SIZE + 1] = {
-//        MANDATORY_IDENTIFICATION_ENTRIES_1000_1014,
-//        HEARTBEAT_PRODUCER_1017(2000),
-//        IDENTITY_OBJECT_1018,
-//        SDO_CONFIGURATION_1200,
-//
-//        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x00, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 2000),
-//
-//        TRANSMIT_PDO_MAPPING_START_KEY_1AXX(0x00, 0x02),
-//        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x00, 0x01, PDO_MAPPING_UNSIGNED8),
-//        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x00, 0x02, PDO_MAPPING_UNSIGNED16),
-//
-//        // User defined data, this will be where we put elements that can be
-//        // accessed via SDO and depending on configuration PDO
-//        DATA_LINK_START_KEY_21XX(LINK_TPDO_NUMBER(0), 0x02),
-//        DATA_LINK_21XX(LINK_TPDO_NUMBER(0), 0x01, CO_TUNSIGNED8, &sampleDataA),
-//        DATA_LINK_21XX(LINK_TPDO_NUMBER(0), 0x02, CO_TUNSIGNED16, &sampleDataB),
-//
-//        // End of dictionary marker
-//        CO_OBJ_DICT_ENDMARK,
-//    };
-//};
+    typedef union {
+        struct {
+            uint16_t LVSS_out_HVCurrent[2];
+            uint16_t LVSS_out_PowerSwitchCurrents[4];
+            uint16_t LVSS_out_Temperatures[2];
+            uint16_t LVSS_out_PowerSwitchErrorStatus[3];
+        };
+        uint16_t outputs[11];
+    } LvssData_t;
 
+    LvssData_t outData = {{{0, 1}, {2, 3, 4, 5}, {6, 7}, {8, 9, 10}}};
 
-
-    uint16_t VCUBoardSig = 1;
-
-    uint16_t battPackCurrent = 0x01;
-
-    uint16_t switchFaultStatus = 0x01;
-
-    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 26;
+    static constexpr uint8_t OBJECT_DICTIONARY_SIZE       = 63;
     CO_OBJ_T objectDictionary[OBJECT_DICTIONARY_SIZE + 1] = {
         MANDATORY_IDENTIFICATION_ENTRIES_1000_1014,
         HEARTBEAT_PRODUCER_1017(2000),
         IDENTITY_OBJECT_1018,
         SDO_CONFIGURATION_1200,
 
-        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x00, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 100),
-
-        // TPDO 0 Map
+        ///////////////////////////////////////////////////////////////////////////
+        // TPDO0 (LVSS TPDO #0): 2 × u16  (4 bytes)
+        ///////////////////////////////////////////////////////////////////////////
+        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x00, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 500),
         TRANSMIT_PDO_MAPPING_START_KEY_1AXX(0x00, 0x02),
         TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x00, 0x01, PDO_MAPPING_UNSIGNED16),
         TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x00, 0x02, PDO_MAPPING_UNSIGNED16),
 
-        // User defined data, this will be where we put elements that can be
-        // accessed via SDO and depending on configuration PDO
-
-        DATA_LINK_START_KEY_21XX(LINK_TPDO_NUMBER(0x00), 0x02),
-        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x00), 0x01, CO_TUNSIGNED16, &battPackCurrent),
-        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x00), 0x02, CO_TUNSIGNED16, &switchFaultStatus),
-
-        DATA_LINK_START_KEY_21XX(LINK_TPDO_NUMBER(0x100), 0x01),
-        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x100), 0x01, CO_TUNSIGNED16, &VCUBoardSig),
-
-        // End of dictionary marker
-        CO_OBJ_DICT_ENDMARK,
-    };
-};
-
-
-
-/**
-#include <cstdint>
-
-#include <co_core.h>
-#include <core/io/CANDevice.hpp>
-#include <core/io/CANOpenMacros.hpp>
-
-
-class TPDOCanNode : public CANDevice {
-public:
-    TPDOCanNode();
-
-    void setSampleDataA(uint8_t newValue);
-    void setSampleDataB(uint16_t newValue);
-
-    uint8_t getSampleDataA();
-    uint16_t getSampleDataB();
-
-    void update();
-
-
-    CO_OBJ_T* getObjectDictionary() override;
-
-    uint8_t getNumElements() override;
-
-
-    uint8_t getNodeID() override;
-
-
-    static constexpr uint8_t NODE_ID = 1;
-    union switchData_u {
-        uint16_t battCurrent = 65535;
-        uint16_t hibCurrent;
-        uint16_t tmsCurrent;
-        uint16_t hudlCurrent;
-        uint16_t accCurrent;
-        uint16_t gubCurrent;
-
-        int16_t switch0Temp;
-        int16_t switch1Temp;
-        int16_t switch2Temp;
-    };
-
-private:
-
-    uint8_t sampleDataA;
-    uint16_t sampleDataB;
-
-    switchData_u PowerSwitchState;
-
-
-    uint16_t VCUBoardSig = 1;
-
-    uint16_t battPackCurrent = 0x01;
-
-    uint16_t switchFaultStatus = 0x01;
-
-    static constexpr uint8_t OBJECT_DICTIONARY_SIZE = 70;
-    CO_OBJ_T objectDictionary[OBJECT_DICTIONARY_SIZE + 1] = {
-        MANDATORY_IDENTIFICATION_ENTRIES_1000_1014,
-        HEARTBEAT_PRODUCER_1017(2000),
-        IDENTITY_OBJECT_1018,
-        SDO_CONFIGURATION_1200,
-
-        RECEIVE_PDO_SETTINGS_OBJECT_140X(0x00, 0x00, 0, RECEIVE_PDO_TRIGGER_ASYNC),
-
-        RECEIVE_PDO_MAPPING_START_KEY_16XX(0x00, 0x01),
-        {
-            .Key  = CO_KEY(0x1600 + 0x00, 0x01, CO_OBJ_D___R_),
-            .Type = CO_TUNSIGNED32,
-            .Data = (CO_DATA) CO_LINK(0x2200 + 0x00, 0x00 + 0x01, PDO_MAPPING_UNSIGNED16),
-        },
-
-        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x00, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 100),
-        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x01, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 1000),
-        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x02, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 1000),
-        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x03, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 1000),
-
-        // TPDO 0 Map
-        TRANSMIT_PDO_MAPPING_START_KEY_1AXX(0x00, 0x02),
-        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x00, 0x01, PDO_MAPPING_UNSIGNED16),
-        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x00, 0x02, PDO_MAPPING_UNSIGNED16),
-
-        // TPDO 1 Map
+        ///////////////////////////////////////////////////////////////////////////
+        // TPDO1 (LVSS TPDO #1): 4 × u16  (8 bytes)
+        ///////////////////////////////////////////////////////////////////////////
+        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x01, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 500),
         TRANSMIT_PDO_MAPPING_START_KEY_1AXX(0x01, 0x04),
         TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x01, 0x01, PDO_MAPPING_UNSIGNED16),
         TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x01, 0x02, PDO_MAPPING_UNSIGNED16),
         TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x01, 0x03, PDO_MAPPING_UNSIGNED16),
         TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x01, 0x04, PDO_MAPPING_UNSIGNED16),
 
-        // TPDO 2 Map
+        ///////////////////////////////////////////////////////////////////////////
+        // TPDO2 (LVSS TPDO #2): 2 × u16  (4 bytes)
+        ///////////////////////////////////////////////////////////////////////////
+        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x02, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 500),
         TRANSMIT_PDO_MAPPING_START_KEY_1AXX(0x02, 0x02),
         TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x02, 0x01, PDO_MAPPING_UNSIGNED16),
         TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x02, 0x02, PDO_MAPPING_UNSIGNED16),
 
-        // TPDO 3 Map
+        ///////////////////////////////////////////////////////////////////////////
+        // TPDO3 (LVSS TPDO #3): 3 × u16  (6 bytes)
+        ///////////////////////////////////////////////////////////////////////////
+        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x03, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 500),
         TRANSMIT_PDO_MAPPING_START_KEY_1AXX(0x03, 0x03),
         TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x03, 0x01, PDO_MAPPING_UNSIGNED16),
         TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x03, 0x02, PDO_MAPPING_UNSIGNED16),
         TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x03, 0x03, PDO_MAPPING_UNSIGNED16),
 
-        // User defined data, this will be where we put elements that can be
-        // accessed via SDO and depending on configuration PDO
+        ///////////////////////////////////////////////////////////////////////////
+        // Data links: what those mapped entries point to in memory
+        // (Group numbers 0x00..0x03 correspond to the TPDO number)
+        ///////////////////////////////////////////////////////////////////////////
 
-        DATA_LINK_START_KEY_21XX(0x00, 0x02),
-        DATA_LINK_21XX(0x00, 0x01, CO_TUNSIGNED16, &battPackCurrent),
-        DATA_LINK_21XX(0x00, 0x02, CO_TUNSIGNED16, &switchFaultStatus),
+        // TPDO0 payload: HV Current Data (2×u16)
+        DATA_LINK_START_KEY_21XX(LINK_TPDO_NUMBER(0x00), 0x02),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x00), 0x01, CO_TUNSIGNED16, &outData.LVSS_out_HVCurrent[0]),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x00), 0x02, CO_TUNSIGNED16, &outData.LVSS_out_HVCurrent[1]),
 
-        DATA_LINK_START_KEY_21XX(0x01, 0x04),
-        DATA_LINK_21XX(0x01, 0x01, CO_TUNSIGNED16, &PowerSwitchState.battCurrent),
-        DATA_LINK_21XX(0x01, 0x02, CO_TUNSIGNED16, &PowerSwitchState.hibCurrent),
-        DATA_LINK_21XX(0x01, 0x03, CO_TUNSIGNED16, &PowerSwitchState.tmsCurrent),
-        DATA_LINK_21XX(0x01, 0x04, CO_TUNSIGNED16, &PowerSwitchState.hudlCurrent),
+        // TPDO1 payload: Power Switch Currents Data (4×u16)
+        DATA_LINK_START_KEY_21XX(LINK_TPDO_NUMBER(0x01), 0x04),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x01), 0x01, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchCurrents[0]),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x01), 0x02, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchCurrents[1]),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x01), 0x03, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchCurrents[2]),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x01), 0x04, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchCurrents[3]),
 
-        DATA_LINK_START_KEY_21XX(0x02, 0x02),
-        DATA_LINK_21XX(0x02, 0x01, CO_TUNSIGNED16, &PowerSwitchState.accCurrent),
-        DATA_LINK_21XX(0x02, 0x02, CO_TUNSIGNED16, &PowerSwitchState.gubCurrent),
+        // TPDO2 payload: Temperature Data (2×u16)
+        DATA_LINK_START_KEY_21XX(LINK_TPDO_NUMBER(0x02), 0x02),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x02), 0x01, CO_TUNSIGNED16, &outData.LVSS_out_Temperatures[0]),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x02), 0x02, CO_TUNSIGNED16, &outData.LVSS_out_Temperatures[1]),
 
-        DATA_LINK_START_KEY_21XX(0x03, 0x03),
-        DATA_LINK_21XX(0x03, 0x01, CO_TSIGNED16, &PowerSwitchState.switch0Temp),
-        DATA_LINK_21XX(0x03, 0x02, CO_TSIGNED16, &PowerSwitchState.switch1Temp),
-        DATA_LINK_21XX(0x03, 0x03, CO_TSIGNED16, &PowerSwitchState.switch2Temp),
+        // TPDO3 payload: Power Switch Error Status (3×u16)
+        DATA_LINK_START_KEY_21XX(LINK_TPDO_NUMBER(0x03), 0x03),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x03), 0x01, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchErrorStatus[0]),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x03), 0x02, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchErrorStatus[1]),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x03), 0x03, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchErrorStatus[2]),
 
-        DATA_LINK_START_KEY_21XX(0x100, 0x01),
-        DATA_LINK_21XX(0x100, 0x01, CO_TUNSIGNED16, &VCUBoardSig),
-
-        // End of dictionary marker
         CO_OBJ_DICT_ENDMARK,
     };
 };
-
-
-
- */

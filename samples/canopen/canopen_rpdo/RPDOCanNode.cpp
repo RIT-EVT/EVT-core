@@ -46,3 +46,7 @@ uint16_t RPDOCanNode::getswitchFault() {
 uint16_t RPDOCanNode::getPackCur() {
     return packCurrent;
 }
+
+uint16_t RPDOCanNode::getIn(int i) {
+    return accessoryCanDataUnsafeBuffer.inputs[i];
+}
