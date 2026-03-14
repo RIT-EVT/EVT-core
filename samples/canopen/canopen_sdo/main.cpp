@@ -25,6 +25,8 @@ namespace dev  = core::dev;
 namespace time = core::time;
 namespace log  = core::log;
 
+io::UART* uart;
+
 // Create a can interrupt handler
 void canInterrupt(io::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
@@ -48,7 +50,7 @@ void canInterrupt(io::CANMessage& message, void* priv) {
 #endif
 }
 
-void SdoTransferCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code) {
+void SdoTransferCallback(CO_CSDO* csdo, uint32_t entry, uint32_t code, void* context) {
     char messageString[50];
     if (code == 0) {
         /* read data is available in 'readValue' */
@@ -61,7 +63,7 @@ void SdoTransferCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t co
     log::LOGGER.log(log::Logger::LogLevel::DEBUG, "SDO Transfer Operation: \r\n\t%s\r\n", messageString);
 }
 
-void SdoReceiveCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code) {
+void SdoReceiveCallback(CO_CSDO* csdo, uint32_t entry, uint32_t code, void* context) {
     char messageString[50];
     if (code == 0) {
         /* read data is available in 'readValue' */
@@ -78,8 +80,8 @@ int main() {
     // Initialize system
     core::platform::init();
 
-    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
-    log::LOGGER.setUART(&uart);
+    uart = &io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
+    log::LOGGER.setUART(uart);
     log::LOGGER.setLogLevel(log::Logger::LogLevel::DEBUG);
 
     dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(100);
@@ -119,7 +121,7 @@ int main() {
 
     // test that the board is connected to the can network
     if (result != io::CAN::CANStatus::OK) {
-        uart.printf("Failed to connect to CAN network\r\n");
+        uart->printf("Failed to connect to CAN network\r\n");
         return 1;
     }
 
@@ -135,10 +137,7 @@ int main() {
     time::wait(500);
 
     // print any CANopen errors
-    uart.printf("Error: %d\r\n", CONodeGetErr(&canNode));
-
-    core::io::registerCallBack(SdoTransferCallback, &canNode);
-    core::io::registerCallBack(SdoReceiveCallback, &canNode);
+    uart->printf("Error: %d\r\n", CONodeGetErr(&canNode));
 
     ///////////////////////////////////////////////////////////////////////////
     // Main loop
@@ -147,12 +146,12 @@ int main() {
     uint32_t lastUpdate2 = HAL_GetTick();
 
     while (1) {
-        if ((HAL_GetTick() - lastUpdate1) >= 1000) {        // If 1000ms have passed receive CAN message.
-            testCanNode.receiveData();                      // Receive data from server
-            lastUpdate1 = HAL_GetTick();                    // Set to current time.
+        if ((HAL_GetTick() - lastUpdate1) >= 1000) { // If 1000ms have passed receive CAN message.
+            testCanNode.receiveData(SdoReceiveCallback, &canNode); // Receive data from server
+            lastUpdate1 = HAL_GetTick();                           // Set to current time.
         } else if ((HAL_GetTick() - lastUpdate2) >= 5000) { // If 5000ms have passed write CAN message.
-            testCanNode.transferData();                     // Send data to server
-            lastUpdate2 = HAL_GetTick();                    // Set to current time.
+            testCanNode.transferData(SdoTransferCallback, &canNode); // Send data to server
+            lastUpdate2 = HAL_GetTick();                             // Set to current time.
         }
 
         io::processCANopenNode(&canNode);

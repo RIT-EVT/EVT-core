@@ -37,8 +37,27 @@ uint8_t testerStorage[MAX_SIZE];
 core::types::FixedQueue<CANOPEN_QUEUE_SIZE, core::io::CANMessage>* canQueue;
 
 // SDO variables
-void* context;
-void (*callback)(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code);
+typedef struct SDOState {
+    bool inProgress = false;
+    void* context;
+    core::io::csdo_callback_t callback;
+    CO_NODE* node;
+    uint32_t lastErr;
+} sdo_state_t;
+
+sdo_state_t state;
+
+void internalCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code) {
+    if (state.callback != nullptr) {
+        state.callback(csdo, CO_DEV(index, sub), code, state.context);
+    }
+
+    state.callback   = nullptr;
+    state.node       = nullptr;
+    state.context    = nullptr;
+    state.lastErr    = code;
+    state.inProgress = false;
+}
 
 } // namespace
 
@@ -140,31 +159,89 @@ void processCANopenNode(CO_NODE* canNode) {
     COTmrProcess(&canNode->Tmr);
 }
 
-CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry) {
+CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t transferCallback, void* transferContext) {
+    while (state.inProgress == true) {
+        processCANopenNode(state.node);
+        time::wait(100);
+    }
+
     // Find the Client-SDO (CO_CSDO) object for the specified node.
     CO_CSDO* csdo = COCSdoFind(&(node), 0);
+    CO_ERR err = CO_ERR_BAD_ARG;
 
-    // Initiate an SDO download request.
-    CO_ERR err = COCSdoRequestDownload(csdo, entry, data, size, callback, 1000);
+    if (csdo != nullptr) {
+        state.callback = transferCallback;
+        state.context = transferContext;
+        state.node = &node;
+
+        // Initiate an SDO download request.
+        err = COCSdoRequestDownload(csdo, entry, data, size, internalCallback, 1000);
+    }
+
+    if (err == CO_ERR_NONE) {
+        state.inProgress = true;
+    }
 
     return err;
 }
 
-CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry) {
+CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t receiveCallback, void*
+    receiveContext) {
+    while (state.inProgress == true) {
+        processCANopenNode(state.node);
+        time::wait(100);
+    }
+
     // Find the Client-SDO (CO_CSDO) object for the specified node.
     CO_CSDO* csdo = COCSdoFind(&(node), 0);
+    CO_ERR err = CO_ERR_BAD_ARG;
 
-    // Initiate an SDO upload request.
-    CO_ERR err = COCSdoRequestUpload(csdo, entry, data, size, callback, 1000);
+    if (csdo != nullptr) {
+        state.callback = receiveCallback;
+        state.context = receiveContext;
+        state.node = &node;
+
+        // Initiate an SDO upload request.
+        err = COCSdoRequestUpload(csdo, entry, data, size, internalCallback, 1000);
+    }
+
+    if (err == CO_ERR_NONE) {
+        state.inProgress = true;
+    }
 
     return err;
 }
 
-void registerCallBack(void (*AppCallback)(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code),
-                      void* AppContext) {
-    callback = AppCallback;
-    context  = AppContext;
+CO_ERR SDOTransferBlocking(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry) {
+    CO_ERR err = SDOTransfer(node, data, size, entry, nullptr, nullptr);
+
+    while (state.inProgress == true) {
+        processCANopenNode(state.node);
+        time::wait(100);
+    }
+
+    if (state.lastErr != 0) {
+        return CO_ERR_SDO_ABORT;
+    }
+
+    return err;
 }
+
+CO_ERR SDOReceiveBlocking(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry) {
+    CO_ERR err = SDOReceive(node, data, size, entry, nullptr, nullptr);
+
+    while (state.inProgress == true) {
+        processCANopenNode(state.node);
+        time::wait(100);
+    }
+
+    if (state.lastErr != 0) {
+        return CO_ERR_SDO_ABORT;
+    }
+
+    return err;
+}
+
 } // namespace core::io
 
 ///////////////////////////////////////////////////////////////////////////////

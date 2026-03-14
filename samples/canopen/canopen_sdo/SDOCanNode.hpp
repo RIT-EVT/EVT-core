@@ -3,6 +3,9 @@
 #include <co_core.h>
 #include <core/io/CANDevice.hpp>
 #include <core/io/CANOpenMacros.hpp>
+#include <core/io/CANopen.hpp>
+
+namespace io = core::io;
 
 /**
  * Representation of the CAN node. Handles constructing the object
@@ -19,14 +22,18 @@ public:
     /**
      * Update Object Dictionary entry
      *
+     * @param callback[in] Callback function for the transfer operation
+     * @param context[in] Context for the callback function
      */
-    void transferData();
+    void transferData(io::csdo_callback_t callback, void* context);
 
     /**
      * Read Object Dictionary entry
      *
+     * @param callback[in] Callback function for the receive operation
+     * @param context[in] Context for the callback function
      */
-    void receiveData();
+    void receiveData(io::csdo_callback_t callback, void* context);
 
     /**
      * Get a pointer to the start of the object dictionary
