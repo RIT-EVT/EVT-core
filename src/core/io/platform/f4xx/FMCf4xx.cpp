@@ -5,7 +5,8 @@ namespace core::io {
 
 FMCf4xx::FMCf4xx(FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig,
                  SdramTimingConfig sdramTimingConfig)
-    : FMC(sdramInitConfig.sdBank == FMC_SDRAM_BANK1 ? STARTING_ADDR : ALT_STARTING_ADDR, pinConfig, sdramInitConfig, // if statement to determine base address
+    : FMC(sdramInitConfig.sdBank == FMC_SDRAM_BANK1 ? STARTING_ADDR : ALT_STARTING_ADDR, pinConfig,
+          sdramInitConfig, // if statement to determine base address
           sdramTimingConfig),
       sdramDevice(sdramDevice), sdram({nullptr}), sdramTiming({0}) {
     InitHardware(pinConfig);
