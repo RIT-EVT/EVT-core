@@ -109,7 +109,8 @@ public:
     /**
      * Initializes an FMC device
      */
-    FMC(void* sdramMemoryAddress, FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig, SdramTimingConfig sdramTimingConfig);
+    FMC(void* sdramMemoryAddress, FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig,
+        SdramTimingConfig sdramTimingConfig);
 
     void* sdramMemoryAddress;
 
