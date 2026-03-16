@@ -132,18 +132,25 @@ int main() {
 
     uint8_t lastVal1  = 0;
     uint16_t lastVal2 = 0;
+    uint32_t i = 0;
     while (1) {
         // increment node values
         testCanNode.update();
 //        uart->printf("Sending values L)\r\n");
-        if (lastVal1 != testCanNode.getSampleDataA() || lastVal2 != testCanNode.getSampleDataB()) {
-            lastVal1 = testCanNode.getSampleDataA();
-            lastVal2 = testCanNode.getSampleDataB();
-            uart->printf("Current value: %X, %X\r\n", lastVal1, lastVal2);
+//        if (lastVal1 != testCanNode.getSampleDataA() || lastVal2 != testCanNode.getSampleDataB()) {
+//            lastVal1 = testCanNode.getSampleDataA();
+//            lastVal2 = testCanNode.getSampleDataB();
+//            uart->printf("Current value: %X, %X\r\n", lastVal1, lastVal2);
+//        }
+
+        if (i == 50) {
+            uart->printf("Error: %d\r\n", CONodeGetErr(&canNode));
+            i = 0;
         }
 
+        i++;
         io::processCANopenNode(&canNode);
         // Wait for new data to come in
-        time::wait(50);
+        time::wait(2);
     }
 }

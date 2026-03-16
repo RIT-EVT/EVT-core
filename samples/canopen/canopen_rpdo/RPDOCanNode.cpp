@@ -13,7 +13,7 @@ CO_OBJ_T* RPDOCanNode::getObjectDictionary() {
 }
 
 uint8_t RPDOCanNode::getNumElements() {
-    return OBJECT_DICTIONARY_SIZE + 1;
+    return sizeof(objectDictionary) / sizeof(objectDictionary[0]);
 }
 
 void RPDOCanNode::setSampleDataA(uint8_t newValue) {
