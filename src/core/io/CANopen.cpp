@@ -159,7 +159,8 @@ void processCANopenNode(CO_NODE* canNode) {
     COTmrProcess(&canNode->Tmr);
 }
 
-CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t transferCallback, void* transferContext) {
+CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t transferCallback,
+                   void* transferContext) {
     while (state.inProgress == true) {
         processCANopenNode(state.node);
         time::wait(100);
@@ -167,12 +168,12 @@ CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, c
 
     // Find the Client-SDO (CO_CSDO) object for the specified node.
     CO_CSDO* csdo = COCSdoFind(&(node), 0);
-    CO_ERR err = CO_ERR_BAD_ARG;
+    CO_ERR err    = CO_ERR_BAD_ARG;
 
     if (csdo != nullptr) {
         state.callback = transferCallback;
-        state.context = transferContext;
-        state.node = &node;
+        state.context  = transferContext;
+        state.node     = &node;
 
         // Initiate an SDO download request.
         err = COCSdoRequestDownload(csdo, entry, data, size, internalCallback, 1000);
@@ -185,8 +186,8 @@ CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, c
     return err;
 }
 
-CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t receiveCallback, void*
-    receiveContext) {
+CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t receiveCallback,
+                  void* receiveContext) {
     while (state.inProgress == true) {
         processCANopenNode(state.node);
         time::wait(100);
@@ -194,12 +195,12 @@ CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, cs
 
     // Find the Client-SDO (CO_CSDO) object for the specified node.
     CO_CSDO* csdo = COCSdoFind(&(node), 0);
-    CO_ERR err = CO_ERR_BAD_ARG;
+    CO_ERR err    = CO_ERR_BAD_ARG;
 
     if (csdo != nullptr) {
         state.callback = receiveCallback;
-        state.context = receiveContext;
-        state.node = &node;
+        state.context  = receiveContext;
+        state.node     = &node;
 
         // Initiate an SDO upload request.
         err = COCSdoRequestUpload(csdo, entry, data, size, internalCallback, 1000);

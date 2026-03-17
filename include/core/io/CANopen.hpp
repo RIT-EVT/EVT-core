@@ -108,7 +108,8 @@ void processCANopenNode(CO_NODE* canNode);
  * @param transferContext[in]  Context for the callback function
  * @return CO_ERR[out]         Returns the result of the transfer operation
  */
-CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t transferCallback, void* transferContext);
+CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t transferCallback,
+                   void* transferContext);
 
 /**
  * This function starts an SDO upload (read) request to fetch data from the specified
@@ -122,7 +123,8 @@ CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, c
  * @param receiveContext[in]  Context for the callback function
  * @return CO_ERR[out]        Returns the result of the receive operation
  */
-CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t receiveCallback, void* receiveContext);
+CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t receiveCallback,
+                  void* receiveContext);
 
 /**
  * This function sets up and starts an SDO download (write) request to transfer data
