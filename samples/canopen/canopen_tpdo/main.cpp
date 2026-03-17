@@ -80,8 +80,6 @@ int main() {
     // Initialize system
     core::platform::init();
 
-    io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
-
     // create the TPDO node
     TPDOCanNode testCanNode;
 
