@@ -48,7 +48,24 @@ jobs:
       - name: Upload built backend
         uses: actions/upload-artifact@v6
         with:
-          name: build-backend-${{ matrix.os }}-${{ matrix.arch }}
+          name: samples-f203
           path: |
-            !build/CMakeFiles
-            ${{github.workspace}}/build/**/*.bin
+            !CMakeFiles/**
+            ${{github.workspace}}/build/f302/**/*.bin
+
+      - name: Upload built backend
+        uses: actions/upload-artifact@v6
+        with:
+          name: samples-f334
+          path: |
+            !CMakeFiles/**
+            ${{github.workspace}}/build/f334/**/*.bin
+
+      - name: Upload built backend
+        uses: actions/upload-artifact@v6
+        with:
+          name: samples-f446
+          path: |
+            !CMakeFiles/**
+            ${{github.workspace}}/build/f446/**/*.bin
+
