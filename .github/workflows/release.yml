@@ -37,7 +37,7 @@ jobs:
 
       - name: F302 Release Build
         run: |
-          cmake -DTARGET_DEV=STM32F302x8 -D CMAKE_BUILD_TYPE RELEASE -B ${{github.workspace}}/build/f302/release
+          cmake -DTARGET_DEV=STM32F302x8 -DCMAKE_BUILD_TYPE=RELEASE -B ${{github.workspace}}/build/f302/release
           cmake --build ${{github.workspace}}/build/f302/release
 
       - name: F334 Debug Build
@@ -47,7 +47,7 @@ jobs:
 
       - name: F334 Release Build
         run: |
-          cmake -DTARGET_DEV=STM32F334x8 -B -D CMAKE_BUILD_TYPE RELEASE ${{github.workspace}}/build/f334/release
+          cmake -DTARGET_DEV=STM32F334x8 -B -DCMAKE_BUILD_TYPE=RELEASE ${{github.workspace}}/build/f334/release
           cmake --build ${{github.workspace}}/build/f334/release
           
       - name: F446 Debug Build
@@ -57,7 +57,7 @@ jobs:
            
       - name: F446 Release Build
         run: |
-          cmake -DTARGET_DEV=STM32F446xx --D CMAKE_BUILD_TYPE RELEASE B ${{github.workspace}}/build/f446/release
+          cmake -DTARGET_DEV=STM32F446xx -DCMAKE_BUILD_TYPE=RELEASE B ${{github.workspace}}/build/f446/release
           cmake --build ${{github.workspace}}/build/f446/release
           
       - name: Upload f203 Debug Samples
