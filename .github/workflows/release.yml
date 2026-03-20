@@ -1,0 +1,49 @@
+name: Release Samples
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: read
+
+jobs:
+  build-backend:
+    name: Build EVT-Core Samples
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Install Compiler and Linter
+        run: |
+          sudo apt-get install gcc-arm-none-eabi
+          sudo apt-get install clang-format-15
+          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-15 10000
+
+      - name: F302 Build
+        run: |
+          cmake -DTARGET_DEV=STM32F302x8 -B ${{github.workspace}}/build
+          cmake --build ${{github.workspace}}/build/f302
+
+      - name: F334 Build
+        run: |
+          cmake -DTARGET_DEV=STM32F334x8 -B ${{github.workspace}}/build
+          cmake --build ${{github.workspace}}/build/f334
+
+      - name: F446 Build
+        run: |
+          cmake -DTARGET_DEV=STM32F446xx -B ${{github.workspace}}/build
+          cmake --build ${{github.workspace}}/build/f446
+      
+      - name: Upload built backend
+        uses: actions/upload-artifact@v6
+        with:
+          name: build-backend-${{ matrix.os }}-${{ matrix.arch }}
+          path: |
+            !build/CMakeFiles
+            ${{github.workspace}}/build/**/*.bin
