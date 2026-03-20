@@ -45,7 +45,7 @@ jobs:
           cmake -DTARGET_DEV=STM32F446xx -B ${{github.workspace}}/build/f446
           cmake --build ${{github.workspace}}/build/f446
       
-      - name: Upload built backend
+      - name: Upload f203 Samples
         uses: actions/upload-artifact@v6
         with:
           name: samples-f203
@@ -53,7 +53,7 @@ jobs:
             !CMakeFiles/**
             ${{github.workspace}}/build/f302/**/*.bin
 
-      - name: Upload built backend
+      - name: Upload f334 Samples
         uses: actions/upload-artifact@v6
         with:
           name: samples-f334
@@ -61,7 +61,7 @@ jobs:
             !CMakeFiles/**
             ${{github.workspace}}/build/f334/**/*.bin
 
-      - name: Upload built backend
+      - name: Upload f446 Samples
         uses: actions/upload-artifact@v6
         with:
           name: samples-f446
