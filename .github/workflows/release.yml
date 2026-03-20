@@ -51,7 +51,7 @@ jobs:
           name: samples-f203
           path: |
             ${{github.workspace}}/build/f302/samples/**/*.bin
-            !CmakeFiles/
+            !CmakeFiles
 
       - name: Upload f334 Samples
         uses: actions/upload-artifact@v6
@@ -67,5 +67,4 @@ jobs:
           name: samples-f446
           path: |
             ${{github.workspace}}/build/f446/samples/**/*.bin
-            !CmakeFiles/**      
-
+            !CmakeFiles
