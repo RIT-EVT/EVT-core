@@ -13,6 +13,9 @@ on:
 env:
   GCC_ARM_TOOLS_PATH: /usr/bin
 
+permissions:
+  contents: read
+
 jobs:
   build:
     # Select the server's operating system
