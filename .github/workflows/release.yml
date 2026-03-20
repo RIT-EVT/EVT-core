@@ -32,32 +32,32 @@ jobs:
 
       - name: F302 Debug Build
         run: |
-          cmake -DTARGET_DEV=STM32F302x8 -B ${{github.workspace}}/build/f302
+          cmake -DTARGET_DEV=STM32F302x8 -B ${{github.workspace}}/build/f302/debug
           cmake --build ${{github.workspace}}/build/f302/debug
 
       - name: F302 Release Build
         run: |
-          cmake -DTARGET_DEV=STM32F302x8 -DCMAKE_BUILD_TYPE RELEASE -B ${{github.workspace}}/build/f302
+          cmake -DTARGET_DEV=STM32F302x8 -DCMAKE_BUILD_TYPE RELEASE -B ${{github.workspace}}/build/f302/release
           cmake --build ${{github.workspace}}/build/f302/release
 
       - name: F334 Debug Build
         run: |
-          cmake -DTARGET_DEV=STM32F334x8 -B ${{github.workspace}}/build/f334
+          cmake -DTARGET_DEV=STM32F334x8 -B ${{github.workspace}}/build/f334/debug
           cmake --build ${{github.workspace}}/build/f334/debug
 
       - name: F334 Release Build
         run: |
-          cmake -DTARGET_DEV=STM32F334x8 -B -D CMAKE_BUILD_TYPE RELEASE ${{github.workspace}}/build/f334
+          cmake -DTARGET_DEV=STM32F334x8 -B -D CMAKE_BUILD_TYPE RELEASE ${{github.workspace}}/build/f334/release
           cmake --build ${{github.workspace}}/build/f334/release
           
       - name: F446 Debug Build
         run: |
-          cmake -DTARGET_DEV=STM32F446xx -B ${{github.workspace}}/build/f446
+          cmake -DTARGET_DEV=STM32F446xx -B ${{github.workspace}}/build/f446/debug
           cmake --build ${{github.workspace}}/build/f446/debug
            
       - name: F446 Release Build
         run: |
-          cmake -DTARGET_DEV=STM32F446xx --D CMAKE_BUILD_TYPE RELEASE B ${{github.workspace}}/build/f446
+          cmake -DTARGET_DEV=STM32F446xx --D CMAKE_BUILD_TYPE RELEASE B ${{github.workspace}}/build/f446/release
           cmake --build ${{github.workspace}}/build/f446/release
           
       - name: Upload f203 Debug Samples
