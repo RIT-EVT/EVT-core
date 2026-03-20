@@ -3,7 +3,6 @@ name: Release Samples
 on:
   workflow_dispatch:
   pull_request:
-    branches: [feature/taylor/actions]
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
