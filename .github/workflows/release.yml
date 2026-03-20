@@ -37,7 +37,7 @@ jobs:
 
       - name: F302 Release Build
         run: |
-          cmake -DTARGET_DEV=STM32F302x8 -DCMAKE_BUILD_TYPE RELEASE -B ${{github.workspace}}/build/f302/release
+          cmake -DTARGET_DEV=STM32F302x8 -D CMAKE_BUILD_TYPE RELEASE -B ${{github.workspace}}/build/f302/release
           cmake --build ${{github.workspace}}/build/f302/release
 
       - name: F334 Debug Build
