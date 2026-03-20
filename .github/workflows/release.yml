@@ -32,17 +32,17 @@ jobs:
 
       - name: F302 Build
         run: |
-          cmake -DTARGET_DEV=STM32F302x8 -B ${{github.workspace}}/build
+          cmake -DTARGET_DEV=STM32F302x8 -B ${{github.workspace}}/build/f302
           cmake --build ${{github.workspace}}/build/f302
 
       - name: F334 Build
         run: |
-          cmake -DTARGET_DEV=STM32F334x8 -B ${{github.workspace}}/build
+          cmake -DTARGET_DEV=STM32F334x8 -B ${{github.workspace}}/build/f334
           cmake --build ${{github.workspace}}/build/f334
 
       - name: F446 Build
         run: |
-          cmake -DTARGET_DEV=STM32F446xx -B ${{github.workspace}}/build
+          cmake -DTARGET_DEV=STM32F446xx -B ${{github.workspace}}/build/f446
           cmake --build ${{github.workspace}}/build/f446
       
       - name: Upload built backend
