@@ -71,7 +71,7 @@ jobs:
       - name: Upload f302 Release Samples
         uses: actions/upload-artifact@v6
         with:
-          name: samples-f203-release
+          name: samples-f302-release
           path: |
             ${{github.workspace}}/build/f302/release/samples/**/*.bin
             !CmakeFiles
