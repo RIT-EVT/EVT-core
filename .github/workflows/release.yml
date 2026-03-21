@@ -60,7 +60,7 @@ jobs:
           cmake -DTARGET_DEV=STM32F446xx -DCMAKE_BUILD_TYPE=RELEASE -B ${{github.workspace}}/build/f446/release
           cmake --build ${{github.workspace}}/build/f446/release
           
-      - name: Upload f203 Debug Samples
+      - name: Upload f302 Debug Samples
         uses: actions/upload-artifact@v6
         with:
           name: samples-f203-debug
