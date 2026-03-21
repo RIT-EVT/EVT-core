@@ -159,7 +159,7 @@ extern "C" void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim) {
     HAL_NVIC_DisableIRQ(irqNum);
 }
 
-extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
+extern "C"  void HAL_TIM_PeriodElapsedCallback_OLD(TIM_HandleTypeDef* htim) {
     uint8_t interruptIdx = getTimerInterruptIndex(htim->Instance);
 
     if (timerInterruptHandlers[interruptIdx] != nullptr) {
