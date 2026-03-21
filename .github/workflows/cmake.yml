@@ -13,8 +13,6 @@ on:
 env:
   GCC_ARM_TOOLS_PATH: /usr/bin
 
-permissions:
-  contents: read
 
 jobs:
   build:
