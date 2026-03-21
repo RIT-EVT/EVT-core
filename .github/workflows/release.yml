@@ -68,7 +68,7 @@ jobs:
             ${{github.workspace}}/build/f302/debug/samples/**/*.bin
             !CmakeFiles
 
-      - name: Upload f203 Release Samples
+      - name: Upload f302 Release Samples
         uses: actions/upload-artifact@v6
         with:
           name: samples-f203-release
