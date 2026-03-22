@@ -73,6 +73,7 @@ GPIOf4xx::GPIOf4xx(Pin pin, GPIO::Direction direction, Pull pull) : GPIO(pin, di
 
     // TODO: double check that this actually applies to F4xx the same way it does to F3xx
     switch ((static_cast<uint8_t>(pin) & 0xF0) >> 4) {
+// STM32F446 and STM32F469
     case 0x0:
         this->port = GPIOA;
         break;
@@ -88,6 +89,17 @@ GPIOf4xx::GPIOf4xx(Pin pin, GPIO::Direction direction, Pull pull) : GPIO(pin, di
     case 0x5:
         this->port = GPIOF;
         break;
+#ifdef STM32F469xx
+    case 0x6:
+        this->port = GPIOG;
+        break;
+    case 0x7:
+        this->port = GPIOH;
+        break;
+    case 0x8:
+        this->port = GPIOI;
+        break;
+#endif
     default:
         break; // Should never get here
     }
@@ -189,6 +201,7 @@ void GPIOf4xx::gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins, uint8_t nu
 
     for (uint8_t i = 0; i < numOfPins; i++) {
         switch ((static_cast<uint8_t>(pins[i]) & 0xF0) >> 4) {
+// STM32F446 and STM32F469
         case 0x0:
             __HAL_RCC_GPIOA_CLK_ENABLE();
             HAL_GPIO_Init(GPIOA, targetGpio);
@@ -209,6 +222,20 @@ void GPIOf4xx::gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins, uint8_t nu
             __HAL_RCC_GPIOF_CLK_ENABLE();
             HAL_GPIO_Init(GPIOF, targetGpio);
             break;
+#ifdef STM32F469xx
+        case 0x6:
+            __HAL_RCC_GPIOG_CLK_ENABLE();
+            HAL_GPIO_Init(GPIOG, targetGpio);
+            break;
+        case 0x7:
+            __HAL_RCC_GPIOH_CLK_ENABLE();
+            HAL_GPIO_Init(GPIOH, targetGpio);
+            break;
+        case 0x8:
+            __HAL_RCC_GPIOI_CLK_ENABLE();
+            HAL_GPIO_Init(GPIOI, targetGpio);
+            break;
+#endif
         default:
             break; // Should never get here
         }
