@@ -96,45 +96,44 @@ private:
 
     LvssData_t outData = {{{0, 1}, {2, 3, 4, 5}, {6, 7}, {8, 9, 10}}};
 
-    static constexpr uint8_t OBJECT_DICTIONARY_SIZE       = 48;
+    static constexpr uint8_t OBJECT_DICTIONARY_SIZE       = 63;
     CO_OBJ_T objectDictionary[OBJECT_DICTIONARY_SIZE + 1] = {
         MANDATORY_IDENTIFICATION_ENTRIES_1000_1014,
         HEARTBEAT_PRODUCER_1017(2000),
         IDENTITY_OBJECT_1018,
         SDO_CONFIGURATION_1200,
 
-        ///////////////////////////////////////////////////////////////////////////
-        // TPDO0 (LVSS TPDO #0): 2 × u16  (4 bytes)
-        ///////////////////////////////////////////////////////////////////////////
-//        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x00, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 200),
-//        TRANSMIT_PDO_MAPPING_START_KEY_1AXX(0x00, 0x04),
-//        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x00, 0x01, PDO_MAPPING_UNSIGNED16),
-//        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x00, 0x02, PDO_MAPPING_UNSIGNED16),
-//        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x00, 0x03, PDO_MAPPING_UNSIGNED16),
-//        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x00, 0x04, PDO_MAPPING_UNSIGNED16),
+        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x00, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 1000),
+        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x01, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 1000),
+        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x02, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 1000),
+        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x03, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 1000),
 
         ///////////////////////////////////////////////////////////////////////////
-        // TPDO1 (LVSS TPDO #1): 4 × u16  (8 bytes)
+        // TPDO0: 2 × u16  (4 bytes)
         ///////////////////////////////////////////////////////////////////////////
-//        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x01, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 400),
-//        TRANSMIT_PDO_MAPPING_START_KEY_1AXX(0x01, 0x01),
-//        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x01, 0x01, PDO_MAPPING_UNSIGNED16),
-//        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x01, 0x02, PDO_MAPPING_UNSIGNED16),
-//        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x01, 0x03, PDO_MAPPING_UNSIGNED16),
-//        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x01, 0x04, PDO_MAPPING_UNSIGNED16),
+        TRANSMIT_PDO_MAPPING_START_KEY_1AXX(0x00, 0x02),
+        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x00, 0x01, PDO_MAPPING_UNSIGNED16),
+        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x00, 0x02, PDO_MAPPING_UNSIGNED16),
 
         ///////////////////////////////////////////////////////////////////////////
-        // TPDO2 (LVSS TPDO #2): 2 × u16  (4 bytes)
+        // TPDO1: 4 × u16  (8 bytes)
         ///////////////////////////////////////////////////////////////////////////
-        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x02, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 600),
+        TRANSMIT_PDO_MAPPING_START_KEY_1AXX(0x01, 0x04),
+        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x01, 0x01, PDO_MAPPING_UNSIGNED16),
+        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x01, 0x02, PDO_MAPPING_UNSIGNED16),
+        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x01, 0x03, PDO_MAPPING_UNSIGNED16),
+        TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x01, 0x04, PDO_MAPPING_UNSIGNED16),
+
+        ///////////////////////////////////////////////////////////////////////////
+        // TPDO2: 2 × u16  (4 bytes)
+        ///////////////////////////////////////////////////////////////////////////
         TRANSMIT_PDO_MAPPING_START_KEY_1AXX(0x02, 0x02),
         TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x02, 0x01, PDO_MAPPING_UNSIGNED16),
         TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x02, 0x02, PDO_MAPPING_UNSIGNED16),
 
         ///////////////////////////////////////////////////////////////////////////
-        // TPDO3 (LVSS TPDO #3): 3 × u16  (6 bytes)
+        // TPDO3: 3 × u16  (6 bytes)
         ///////////////////////////////////////////////////////////////////////////
-        TRANSMIT_PDO_SETTINGS_OBJECT_18XX(0x03, TRANSMIT_PDO_TRIGGER_TIMER, TRANSMIT_PDO_INHIBIT_TIME_DISABLE, 800),
         TRANSMIT_PDO_MAPPING_START_KEY_1AXX(0x03, 0x03),
         TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x03, 0x01, PDO_MAPPING_UNSIGNED16),
         TRANSMIT_PDO_MAPPING_ENTRY_1AXX(0x03, 0x02, PDO_MAPPING_UNSIGNED16),
@@ -146,20 +145,18 @@ private:
         ///////////////////////////////////////////////////////////////////////////
 
         // TPDO0 payload: HV Current Data (2×u16)
-//        DATA_LINK_START_KEY_21XX(LINK_TPDO_NUMBER(0x00), 0x04),
-//        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x00), 0x01, CO_TUNSIGNED16, &outData.LVSS_out_HVCurrent[0]),
-//        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x00), 0x02, CO_TUNSIGNED16, &outData.LVSS_out_HVCurrent[1]),
-//        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x00), 0x03, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchCurrents[0]),
-//        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x00), 0x04, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchCurrents[1]),
+        DATA_LINK_START_KEY_21XX(LINK_TPDO_NUMBER(0x00), 0x02),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x00), 0x01, CO_TUNSIGNED16, &outData.LVSS_out_HVCurrent[0]),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x00), 0x02, CO_TUNSIGNED16, &outData.LVSS_out_HVCurrent[1]),
 
         // TPDO1 payload: Power Switch Currents Data (4×u16)
-//        DATA_LINK_START_KEY_21XX(LINK_TPDO_NUMBER(0x01), 0x01),
-//        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x01), 0x01, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchCurrents[0]),
-//        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x01), 0x02, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchCurrents[1]),
-//        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x01), 0x03, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchCurrents[2]),
-//        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x01), 0x04, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchCurrents[3]),
+        DATA_LINK_START_KEY_21XX(LINK_TPDO_NUMBER(0x01), 0x04),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x01), 0x01, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchCurrents[0]),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x01), 0x02, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchCurrents[1]),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x01), 0x03, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchCurrents[2]),
+        DATA_LINK_21XX(LINK_TPDO_NUMBER(0x01), 0x04, CO_TUNSIGNED16, &outData.LVSS_out_PowerSwitchCurrents[3]),
 
-//         TPDO2 payload: Temperature Data (2×u16)
+        // TPDO2 payload: Temperature Data (2×u16)
         DATA_LINK_START_KEY_21XX(LINK_TPDO_NUMBER(0x02), 0x02),
         DATA_LINK_21XX(LINK_TPDO_NUMBER(0x02), 0x01, CO_TUNSIGNED16, &outData.LVSS_out_Temperatures[0]),
         DATA_LINK_21XX(LINK_TPDO_NUMBER(0x02), 0x02, CO_TUNSIGNED16, &outData.LVSS_out_Temperatures[1]),

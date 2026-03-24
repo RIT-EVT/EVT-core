@@ -24,9 +24,9 @@ uint16_t TPDOCanNode::getSampleDataB() {
 void TPDOCanNode::update() {
     sampleDataA++;
     if (sampleDataA % 50 == 0) {
-//        for (uint16_t &output : outData.outputs) {
-//            output++;
-//        }
+        for (uint16_t &output : outData.outputs) {
+            output++;
+        }
     }
 }
 
@@ -35,7 +35,7 @@ CO_OBJ_T* TPDOCanNode::getObjectDictionary() {
 }
 
 uint8_t TPDOCanNode::getNumElements() {
-    return sizeof(objectDictionary) / sizeof(objectDictionary[0]);
+    return OBJECT_DICTIONARY_SIZE;
 }
 
 uint8_t TPDOCanNode::getNodeID() {
