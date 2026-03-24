@@ -142,8 +142,9 @@ enum class Pin {
     UART_TX = PA_2,
     UART_RX = PA_3,
 };
+#endif
 
-#else
+#ifdef STM32F469xx
     LED = INVALID,
 
     PD_0  = 0x30,
