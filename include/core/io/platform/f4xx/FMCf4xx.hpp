@@ -56,9 +56,9 @@ namespace core::io {
 #define EXIT_SELF_REFRESH_DELAY      (NS_TO_SDRAM_CLK_CYCLES(tXSR))
 #define LOAD_MODE_REGISTER_TO_ACTIVE (NS_TO_SDRAM_CLK_CYCLES(tMRD))
 
-#define RAM_SIZE          (0x4000000) // 64 megabits
-#define STARTING_ADDR     ((uint32_t*) 0xC000000)
-#define ALT_STARTING_ADDR ((uint32_t*) 0xD000000)
+#define RAM_SIZE               (0x4000000) // 64 megabits
+#define FMC_SDRAM_BANK1_BASE   ((uint32_t*) 0xC000000) // found in the reference manual for the MCU
+#define FMC_SDRAM_BANK2_BASE   ((uint32_t*) 0xD000000)
 
 /**
  * Driver for configuring and accessing external SDRAM via FMC.
@@ -69,6 +69,118 @@ namespace core::io {
  */
 class FMCf4xx : public FMC {
 public:
+        /**
+     * Represents the status of operation of the FMC
+     *
+     * This can be used to represent the state of the SDRAM or the
+     * result of an FMC operation.
+     */
+    enum class Status {
+        OK       = 0x00U,
+        ERROR    = 0x01U,
+        BUSY     = 0x02U,
+        TIMEOUT  = 0x03U,
+    };
+
+    /**
+     * Holds all SDRAM controller settings that map directly to
+     * the HAL_SDRAM_Init configuration structure.
+     *
+     * Must be initialized before passing into the constructor
+     */
+    struct SdramInitConfig {
+        uint32_t sdBank;
+        uint32_t columnBitsNumber;
+        uint32_t rowBitsNumber;
+        uint32_t memoryDataWidth;
+        uint32_t internalBankNumber;
+        uint32_t casLatency;
+        uint32_t writeProtection;
+        uint32_t sdClockPeriod;
+        uint32_t readBurst;
+        uint32_t readPipeDelay;
+    };
+
+    /**
+     * Structure to simplify SDRAM timing initialization, contains all required SDRAM timing delays in clock cycles.
+     *
+     * Must be initialized before passing into the constructor
+     */
+    struct SdramTimingConfig {
+        uint32_t loadToActiveDelay;
+        uint32_t exitSelfRefreshDelay;
+        uint32_t selfRefreshTime;
+        uint32_t rowCycleDelay;
+        uint32_t writeRecoveryTime;
+        uint32_t rpDelay;
+        uint32_t rcdDelay;
+    };
+
+    typedef Pin FMC_PIN;
+    typedef FMC_PIN FMC_ADDRESS;
+    typedef FMC_PIN FMC_DATA;
+    typedef FMC_PIN FMC_BE;
+    typedef FMC_PIN FMC_BANK;
+    typedef FMC_PIN FMC_CMD;
+
+    /**
+     * Structure to hold an array of GPIO address pins for the FMC
+     */
+    struct FMCAddressPins {
+        FMC_ADDRESS* pins;
+        uint8_t count;
+    };
+
+    /**
+     * Structure to hold an array of GPIO address pins for the FMC
+     */
+    struct FMCDataPins {
+        FMC_DATA* pins;
+        uint8_t count;
+    };
+
+    /**
+     * Structure to hold an array of GPIO command pins for the FMC
+     */
+    struct FMCCommandPins {
+        FMC_CMD* pins;
+        uint8_t count;
+    };
+
+    /**
+     * Structure to hold an array of GPIO byte enable pins for the FMC
+     */
+    struct FMCByteEnablePins {
+        FMC_BE* pins;
+        uint8_t count;
+    };
+
+    /**
+     * Structure to hold an array of GPIO bank pins for the FMC
+     */
+    struct FMCBankPins {
+        FMC_BANK* pins;
+        uint8_t count;
+    };
+
+    /**
+     * Groups all FMC GPIO pin configurations.
+     *
+     * Contains arrays of:
+     * - Address pins
+     * - Data pins
+     * - Bank select pins
+     * - Command pins
+     * - Byte enable pins
+     */
+    struct FMCPinConfig {
+        FMCAddressPins address;
+        FMCDataPins data;
+        FMCByteEnablePins byteEnable;
+        FMCBankPins bank;
+        FMCCommandPins command;
+    };
+
     /**
      * Initializes a FMC device
      *
@@ -85,6 +197,54 @@ public:
             SdramTimingConfig sdramTimingConfig);
 
     /**
+     * Enable write protection for the sdram
+     *
+     * @return the result of attempting to enable the write protection
+     */
+    Status WriteProtectionEnable();
+
+    /**
+     * Disable write protection for the sdram
+     *
+     * @return the result of attempting to disable the write protection
+     */
+    Status WriteProtection_Disable();
+
+    /**
+     * Send a command to the sdram
+     *
+     * @param command The SdramCommandStruct holding the information of the command
+     * @param timeout How long to wait for the sdram command
+     * @return the result of attempting to send a command to the sdram
+     */
+    Status SendCommand(FMC_SDRAM_CommandTypeDef *command, uint32_t timeout);
+
+    /**
+     * Program the SDRAM Memory Refresh rate.
+     *
+     * @param refreshRate The SDRAM refresh rate value
+     * @return the result of attempting to program the refresh rate of the sdram
+     */
+    Status ProgramRefreshRate(uint32_t refreshRate);
+
+    /**
+     * Set the Number of consecutive SDRAM Memory auto Refresh commands.
+     *
+     * @param autoRefreshNumber Specifies the auto Refresh number.
+     * @return
+     */
+    Status SetAutoRefreshNumber(uint32_t autoRefreshNumber);
+
+    /**
+     * Returns the indicated FMC SDRAM bank mode status.
+     *
+    * @return The FMC SDRAM bank mode status, could be on of the following HAL defines:
+    *         FMC_SDRAM_NORMAL_MODE, FMC_SDRAM_SELF_REFRESH_MODE or
+    *         FMC_SDRAM_POWER_DOWN_MODE.
+     */
+    uint32_t GetModeStatus();
+
+    /**
      * Returns a SdramInitConfig struct pre-filled with default values.
      * Intended to be overridden to suit the specific use case before being passed into the constructor.
      */
@@ -96,7 +256,14 @@ public:
      */
     static SdramTimingConfig defaultSdramTimingConfig();
 
+    void* sdramMemoryAddress;
+
 private:
+    /**
+     * Helper function to determine the memory address based on the bank number
+     *
+     */
+    uint32_t* getSDRAMMemoryAddress();
     /**
      * Helper function to initialize all GPIO FMC pins
      *
@@ -113,6 +280,10 @@ private:
     void InitPinGroup(FMC_PIN* pins, uint8_t count);
 
     FMC_SDRAM_TypeDef* sdramDevice;
+
+    FMCPinConfig fmcPinConfig;
+    SdramInitConfig sdramInitConfig;
+    SdramTimingConfig sdramTimingConfig;
 
     SDRAM_HandleTypeDef sdram;
     FMC_SDRAM_TimingTypeDef sdramTiming;

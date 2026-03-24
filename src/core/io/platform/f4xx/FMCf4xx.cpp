@@ -4,10 +4,8 @@
 namespace core::io {
 
 FMCf4xx::FMCf4xx(FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig,
-                 SdramTimingConfig sdramTimingConfig)
-    : FMC(sdramInitConfig.sdBank == FMC_SDRAM_BANK1 ? STARTING_ADDR : ALT_STARTING_ADDR, pinConfig, sdramInitConfig, // if statement to determine base address
-          sdramTimingConfig),
-      sdramDevice(sdramDevice), sdram({nullptr}), sdramTiming({0}) {
+                 SdramTimingConfig sdramTimingConfig) :
+    sdramDevice(sdramDevice), sdram({nullptr}), sdramTiming({0}) {
     InitHardware(pinConfig);
 
     // map the class init structs to the hal structs
@@ -32,8 +30,53 @@ FMCf4xx::FMCf4xx(FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SdramIn
     HAL_SDRAM_Init(&sdram, &sdramTiming);
 }
 
-FMC::SdramInitConfig defaultSdramInitConfig() {
-    FMC::SdramInitConfig config{};
+FMCf4xx::Status FMCf4xx::WriteProtectionEnable() {
+    FMC_SDRAM_WriteProtection_Enable(sdramDevice, sdramInitConfig.sdBank);
+
+    return Status::OK;
+}
+
+FMCf4xx::Status FMCf4xx::WriteProtection_Disable() {
+    FMC_SDRAM_WriteProtection_Disable(sdramDevice, sdramInitConfig.sdBank);
+
+    return Status::OK;
+}
+
+FMCf4xx::Status FMCf4xx::SendCommand(FMC_SDRAM_CommandTypeDef *command, uint32_t timeout) {
+    FMC_SDRAM_CommandTypeDef *halCommand = nullptr;
+
+    halCommand->AutoRefreshNumber = command->AutoRefreshNumber;
+    halCommand->CommandMode = command->CommandMode;
+    halCommand->CommandTarget = command->CommandTarget;
+    halCommand->ModeRegisterDefinition = command->ModeRegisterDefinition;
+
+    HAL_StatusTypeDef halStatus = FMC_SDRAM_SendCommand(sdramDevice, halCommand, timeout);
+
+    if (halStatus == HAL_TIMEOUT) {
+        return Status::TIMEOUT;
+    }
+
+    return Status::OK;
+}
+
+FMCf4xx::Status FMCf4xx::ProgramRefreshRate(uint32_t refreshRate) {
+    FMC_SDRAM_ProgramRefreshRate(sdramDevice, refreshRate);
+
+    return Status::OK;
+}
+
+FMCf4xx::Status FMCf4xx::SetAutoRefreshNumber(uint32_t autoRefreshNumber) {
+    FMC_SDRAM_SetAutoRefreshNumber(sdramDevice, autoRefreshNumber);
+
+    return Status::OK;
+}
+
+uint32_t FMCf4xx::GetModeStatus() {
+    return FMC_SDRAM_GetModeStatus(sdramDevice, sdramInitConfig.sdBank);
+}
+
+FMCf4xx::SdramInitConfig defaultSdramInitConfig() {
+    FMCf4xx::SdramInitConfig config{};
 
     config.sdBank             = FMC_SDRAM_BANK1;
     config.columnBitsNumber   = FMC_SDRAM_COLUMN_BITS_NUM_8;
@@ -49,8 +92,8 @@ FMC::SdramInitConfig defaultSdramInitConfig() {
     return config;
 };
 
-FMC::SdramTimingConfig defaultSdramTimingConfig() {
-    FMC::SdramTimingConfig config{};
+FMCf4xx::SdramTimingConfig defaultSdramTimingConfig() {
+    FMCf4xx::SdramTimingConfig config{};
 
     config.loadToActiveDelay    = LOAD_MODE_REGISTER_TO_ACTIVE;
     config.exitSelfRefreshDelay = EXIT_SELF_REFRESH_DELAY;
@@ -62,6 +105,10 @@ FMC::SdramTimingConfig defaultSdramTimingConfig() {
 
     return config;
 };
+
+uint32_t* FMCf4xx::getSDRAMMemoryAddress() {
+    return sdramInitConfig.sdBank == FMC_SDRAM_BANK1 ? FMC_SDRAM_BANK1_BASE : FMC_SDRAM_BANK2_BASE;
+}
 
 void FMCf4xx::InitHardware(const FMCPinConfig& pinConfig) {
     __HAL_RCC_FMC_CLK_ENABLE();
