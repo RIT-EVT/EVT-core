@@ -102,49 +102,49 @@ enum class Pin {
     D14 = PB_9,
     D15 = PB_8,
 
-// Common Configured Pins
-#ifdef STM32F302x8
+    // Common Configured Pins
+    #ifdef STM32F302x8
     LED = PB_13,
-#endif
-#ifdef STM32F334x8
+    #endif
+    #ifdef STM32F334x8
     LED = PA_5,
-#endif
-#ifdef STM32F4xx
+    #endif
+    #ifdef STM32F4xx
     LED = PA_5,
-#endif
+    #endif
 
-#ifdef STM32F302x8
+    #ifdef STM32F302x8
     SPI_SCK  = PB_13, // D13
     SPI_MISO = PB_14, // D12
     SPI_MOSI = PB_15, // D11
     SPI_CS   = PB_6,  // D10
     I2C_SDA  = PB_8,
     I2C_SCL  = PB_9,
-#endif
-#ifdef STM32F334x8
+    #endif
+    #ifdef STM32F334x8
     SPI_SCK  = PA_5, // D13
     SPI_MISO = PA_6, // D12
     SPI_MOSI = PA_7, // D11
     SPI_CS   = PB_6, // D10
     I2C_SDA  = PB_8,
     I2C_SCL  = PB_9,
-#endif
+    #endif
 
-#ifdef STM32F446xx
+    #ifdef STM32F446xx
     SPI_SCK  = PA_5, // D13
     SPI_MISO = PA_6, // D12
     SPI_MOSI = PA_7, // D11
     SPI_CS   = PB_6, // D10
     I2C_SDA  = PB_9,
     I2C_SCL  = PB_8,
-#endif
+    #endif
 
     UART_TX = PA_2,
     UART_RX = PA_3,
 };
 
 #else
-    LED   = INVALID,
+    LED = INVALID,
 
     PD_0  = 0x30,
     PD_1  = 0x31,
