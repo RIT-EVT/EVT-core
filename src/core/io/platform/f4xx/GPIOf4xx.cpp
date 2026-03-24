@@ -71,7 +71,6 @@ GPIOf4xx::GPIOf4xx(Pin pin, GPIO::Direction direction, Pull pull) : GPIO(pin, di
                   static_cast<uint32_t>(pull),
                   GPIO_SPEED_FREQ_HIGH);
 
-    // TODO: double check that this actually applies to F4xx the same way it does to F3xx
     switch ((static_cast<uint8_t>(pin) & 0xF0) >> 4) {
         // STM32F446 and STM32F469
     case 0x0:
@@ -89,7 +88,7 @@ GPIOf4xx::GPIOf4xx(Pin pin, GPIO::Direction direction, Pull pull) : GPIO(pin, di
     case 0x5:
         this->port = GPIOF;
         break;
-#ifdef STM32F469xx
+#ifdef STM32F469xx // and not STM32F446
     case 0x6:
         this->port = GPIOG;
         break;

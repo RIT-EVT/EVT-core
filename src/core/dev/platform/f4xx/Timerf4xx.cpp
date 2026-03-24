@@ -68,7 +68,7 @@ timerInterruptIndex getTimerInterruptIndex(TIM_TypeDef* peripheral) {
     } else if (peripheral == TIM7) {
         interruptIdx = TIM7_IDX;
     }
-    #endif
+    #endif // STM32F469xx
     else {
         interruptIdx = NO_IDX;
    }

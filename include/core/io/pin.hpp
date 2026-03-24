@@ -67,86 +67,7 @@ enum class Pin {
     PC_14 = 0x2E,
     PC_15 = 0x2F,
 
-#ifndef STM32F469xx
-    PD_2 = 0x32,
-
-    PF_0 = 0x50,
-    PF_1 = 0x51,
-
-    // ADC internal channels
-    ADC_TEMP = 0xF0,
-    ADC_VREF = 0xF1,
-    ADC_VBAT = 0xF2,
-
-    // Arduino connector namings
-    A0  = PA_0,
-    A1  = PA_1,
-    A2  = PA_4,
-    A3  = PB_0,
-    A4  = PC_1,
-    A5  = PC_0,
-    D0  = PA_3,
-    D1  = PA_2,
-    D2  = PA_10,
-    D3  = PB_3,
-    D4  = PB_5,
-    D5  = PB_4,
-    D6  = PB_10,
-    D7  = PA_8,
-    D8  = PA_9,
-    D9  = PC_7,
-    D10 = PB_6,
-    D11 = PB_15,
-    D12 = PB_14,
-    D13 = PB_13,
-    D14 = PB_9,
-    D15 = PB_8,
-
-    // Common Configured Pins
-    #ifdef STM32F302x8
-    LED = PB_13,
-    #endif
-    #ifdef STM32F334x8
-    LED = PA_5,
-    #endif
-    #ifdef STM32F4xx
-    LED = PA_5,
-    #endif
-
-    #ifdef STM32F302x8
-    SPI_SCK  = PB_13, // D13
-    SPI_MISO = PB_14, // D12
-    SPI_MOSI = PB_15, // D11
-    SPI_CS   = PB_6,  // D10
-    I2C_SDA  = PB_8,
-    I2C_SCL  = PB_9,
-    #endif
-    #ifdef STM32F334x8
-    SPI_SCK  = PA_5, // D13
-    SPI_MISO = PA_6, // D12
-    SPI_MOSI = PA_7, // D11
-    SPI_CS   = PB_6, // D10
-    I2C_SDA  = PB_8,
-    I2C_SCL  = PB_9,
-    #endif
-
-    #ifdef STM32F446xx
-    SPI_SCK  = PA_5, // D13
-    SPI_MISO = PA_6, // D12
-    SPI_MOSI = PA_7, // D11
-    SPI_CS   = PB_6, // D10
-    I2C_SDA  = PB_9,
-    I2C_SCL  = PB_8,
-    #endif
-
-    UART_TX = PA_2,
-    UART_RX = PA_3,
-};
-#endif
-
-#ifdef STM32F469xx
-    LED = INVALID,
-
+    #ifdef STM32F469xx
     PD_0  = 0x30,
     PD_1  = 0x31,
     PD_2  = 0x32,
@@ -249,26 +170,105 @@ enum class Pin {
     PI_14 = 0x8E,
     PI_15 = 0x8F,
 
-    PI_0  = 0x80,
-    PI_1  = 0x81,
-    PI_2  = 0x82,
-    PI_3  = 0x83,
-    PI_4  = 0x84,
-    PI_5  = 0x85,
-    PI_6  = 0x86,
-    PI_7  = 0x87,
-    PI_8  = 0x88,
-    PI_9  = 0x89,
-    PI_10 = 0x8A,
-    PI_11 = 0x8B,
-    PI_12 = 0x8C,
-    PI_13 = 0x8D,
-    PI_14 = 0x8E,
-    PI_15 = 0x8F,
-
     UART_RX = PA_9,
     UART_RX = PA_10,
 };
-#endif
+    #endif
+
+    #ifndef STM32F469xx
+    PD_2 = 0x32,
+
+    PF_0 = 0x50,
+    PF_1 = 0x51,
+
+    // ADC internal channels
+    ADC_TEMP = 0xF0,
+    ADC_VREF = 0xF1,
+    ADC_VBAT = 0xF2,
+
+    // Arduino connector namings
+    A0  = PA_0,
+    A1  = PA_1,
+    A2  = PA_4,
+    A3  = PB_0,
+    A4  = PC_1,
+    A5  = PC_0,
+    D0  = PA_3,
+    D1  = PA_2,
+    D2  = PA_10,
+    D3  = PB_3,
+    D4  = PB_5,
+    D5  = PB_4,
+    D6  = PB_10,
+    D7  = PA_8,
+    D8  = PA_9,
+    D9  = PC_7,
+    D10 = PB_6,
+    D11 = PB_15,
+    D12 = PB_14,
+    D13 = PB_13,
+    D14 = PB_9,
+    D15 = PB_8,
+
+    #endif // STM32F469xx does not have these
+
+    // Common Configured Pins
+    #ifdef STM32F302x8
+    LED = PB_13,
+    #endif
+    #ifdef STM32F334x8
+    LED = PA_5,
+    #endif
+    #ifdef STM32F446xx
+    LED = PA_5,
+    #endif
+    #ifdef STM32F469xx
+    // STM32F469xx does not have a nucleo that allows this default pin to make sense
+    LED = INVALID,
+    #endif
+
+
+    #ifdef STM32F302x8
+    SPI_SCK  = PB_13, // D13
+    SPI_MISO = PB_14, // D12
+    SPI_MOSI = PB_15, // D11
+    SPI_CS   = PB_6,  // D10
+    I2C_SDA  = PB_8,
+    I2C_SCL  = PB_9,
+    #endif
+    #ifdef STM32F334x8
+    SPI_SCK  = PA_5, // D13
+    SPI_MISO = PA_6, // D12
+    SPI_MOSI = PA_7, // D11
+    SPI_CS   = PB_6, // D10
+    I2C_SDA  = PB_8,
+    I2C_SCL  = PB_9,
+    #endif
+
+    #ifdef STM32F446xx
+    SPI_SCK  = PA_5, // D13
+    SPI_MISO = PA_6, // D12
+    SPI_MOSI = PA_7, // D11
+    SPI_CS   = PB_6, // D10
+    I2C_SDA  = PB_9,
+    I2C_SCL  = PB_8,
+    #endif
+    #ifdef STM32F469xx
+    // STM32F469xx does not have a nucleo board that allows these "default" pins to make sense
+    // As such, it does not have proper support from the EVT-core samples library
+    SPI_SCK  = INVALID,
+    SPI_MISO = INVALID,
+    SPI_MOSI = INVALID,
+    SPI_CS   = INVALID,
+    I2C_SDA  = INVALID,
+    I2C_SCL  = INVALID,
+    #endif
+
+    UART_TX = PA_2,
+    UART_RX = PA_3,
+};
+
+
+
 }; // namespace core::io
 #endif
