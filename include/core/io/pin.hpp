@@ -4,9 +4,30 @@
  * for
  */
 #ifndef _EVT_PIN_
-#define _EVT_PIN_
+#define _EVT_PIN
+
+#ifdef STM32F303x8
+#define NUCLEO_SUPPORT
+#endif
+
+#ifdef STM32F334x8
+#define NUCLEO_SUPPORT
+#endif
+
+#ifdef STM32F446xx
+#define NUCLEO_SUPPORT
+#endif
+
+#ifdef STM32F469xx
+#define HAS_PORT_D
+#define HAS_PORT_E
+#define HAS_PORT_F
+#define HAS_PORT_H
+#define HAS_PORT_I
+#endif
 
 namespace core::io {
+
 
 /**
  * Pin mapping information. These values are generated via a combination of the GPIO bank that
@@ -66,7 +87,6 @@ enum class Pin {
     PC_13 = 0x2D,
     PC_14 = 0x2E,
     PC_15 = 0x2F,
-
 
     #ifdef HAS_PORT_D
     PD_0  = 0x30,
