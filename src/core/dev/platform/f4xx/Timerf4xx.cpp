@@ -22,8 +22,10 @@ enum timerInterruptIndex {
     TIM12_IDX = 9u,
     TIM13_IDX = 10u,
     TIM14_IDX = 11u,
+    #ifdef STM32F469xx
     TIM6_IDX = 12u,
     TIM7_IDX = 13u,
+    #endif
     NO_IDX    = -1
 };
 
