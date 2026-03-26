@@ -4,10 +4,10 @@
  * for
  */
 #ifndef _EVT_PIN_
-#define _EVT_PIN
+#define _EVT_PIN_
 
 // TODO: Fix this so that it changes pin out on a per Package Basis instead of a per MCU basis
-#ifdef STM32F303x8
+#ifdef STM32F302x8
 #define NUCLEO_SUPPORT
 #endif
 
