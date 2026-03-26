@@ -8,7 +8,7 @@
 namespace core::dev {
 
 /**
- * Implementation of the independent watchdog for STM32f3xx MCUs, which
+ * Implementation of the independent watchdog for STM32f4xx MCUs, which
  * use the low-speed internal RC oscillator to detect software failures and
  * trigger a reset.
  */
