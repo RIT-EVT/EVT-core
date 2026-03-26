@@ -8,7 +8,6 @@ TIM_HandleTypeDef halTimers[F4_TIMER_COUNT];
 void (*timerInterruptHandlers[F4_TIMER_COUNT])(void* context, void* htim) = {nullptr};
 void* timerInterruptContexts[F4_TIMER_COUNT]                              = {};
 
-
 enum timerInterruptIndex {
     TIM1_IDX  = 0u,
     TIM2_IDX  = 1u,
@@ -22,11 +21,11 @@ enum timerInterruptIndex {
     TIM12_IDX = 9u,
     TIM13_IDX = 10u,
     TIM14_IDX = 11u,
-    #ifdef STM32F469xx
+#ifdef STM32F469xx
     TIM6_IDX = 12u,
     TIM7_IDX = 13u,
-    #endif
-    NO_IDX    = -1
+#endif
+    NO_IDX = -1
 };
 
 /**
@@ -64,16 +63,16 @@ timerInterruptIndex getTimerInterruptIndex(TIM_TypeDef* peripheral) {
     } else if (peripheral == TIM8) {
         interruptIdx = TIM8_IDX;
     }
-    #ifdef STM32F469xx // but not STM32F446
+#ifdef STM32F469xx // but not STM32F446
     else if (peripheral == TIM6) {
         interruptIdx = TIM6_IDX;
     } else if (peripheral == TIM7) {
         interruptIdx = TIM7_IDX;
     }
-    #endif // STM32F469xx
+#endif // STM32F469xx
     else {
         interruptIdx = NO_IDX;
-   }
+    }
 
     return interruptIdx;
 }
@@ -119,7 +118,7 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim) {
         __HAL_RCC_TIM8_CLK_ENABLE();
         irqNum = TIM8_UP_TIM13_IRQn;
     }
-    #ifdef STM32F469xx
+#ifdef STM32F469xx
     else if (peripheral == TIM6) {
         __HAL_RCC_TIM6_CLK_ENABLE();
         irqNum = TIM6_DAC_IRQn;
@@ -127,7 +126,7 @@ extern "C" void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim) {
         __HAL_RCC_TIM7_CLK_ENABLE();
         irqNum = TIM7_IRQn;
     }
-    #endif
+#endif
     else {
         return; // Should never reach, but if an invalid peripheral is passed in then simply return
     }
