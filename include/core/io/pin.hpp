@@ -8,27 +8,26 @@
 
 // TODO: Fix this so that it changes pin out on a per Package Basis instead of a per MCU basis
 #ifdef STM32F302x8
-#define NUCLEO_SUPPORT
+    #define NUCLEO_SUPPORT
 #endif
 
 #ifdef STM32F334x8
-#define NUCLEO_SUPPORT
+    #define NUCLEO_SUPPORT
 #endif
 
 #ifdef STM32F446xx
-#define NUCLEO_SUPPORT
+    #define NUCLEO_SUPPORT
 #endif
 
 #ifdef STM32F469xx
-#define HAS_PORT_D
-#define HAS_PORT_E
-#define HAS_PORT_F
-#define HAS_PORT_H
-#define HAS_PORT_I
+    #define HAS_PORT_D
+    #define HAS_PORT_E
+    #define HAS_PORT_F
+    #define HAS_PORT_H
+    #define HAS_PORT_I
 #endif
 
 namespace core::io {
-
 
 /**
  * Pin mapping information. These values are generated via a combination of the GPIO bank that
@@ -89,7 +88,7 @@ enum class Pin {
     PC_14 = 0x2E,
     PC_15 = 0x2F,
 
-    #ifdef HAS_PORT_D
+#ifdef HAS_PORT_D
     PD_0  = 0x30,
     PD_1  = 0x31,
     PD_2  = 0x32,
@@ -106,9 +105,9 @@ enum class Pin {
     PD_13 = 0x3D,
     PD_14 = 0x3E,
     PD_15 = 0x3F,
-    #endif
+#endif
 
-    #ifdef HAS_PORT_E
+#ifdef HAS_PORT_E
     PE_0  = 0x40,
     PE_1  = 0x41,
     PE_2  = 0x42,
@@ -125,9 +124,9 @@ enum class Pin {
     PE_13 = 0x4D,
     PE_14 = 0x4E,
     PE_15 = 0x4F,
-    #endif
+#endif
 
-    #ifdef HAS_PORT_F
+#ifdef HAS_PORT_F
     PF_0  = 0x50,
     PF_1  = 0x51,
     PF_2  = 0x52,
@@ -144,9 +143,9 @@ enum class Pin {
     PF_13 = 0x5D,
     PF_14 = 0x5E,
     PF_15 = 0x5F,
-    #endif
+#endif
 
-    #ifdef HAS_PORT_G
+#ifdef HAS_PORT_G
     PG_0  = 0x60,
     PG_1  = 0x61,
     PG_2  = 0x62,
@@ -163,9 +162,9 @@ enum class Pin {
     PG_13 = 0x6D,
     PG_14 = 0x6E,
     PG_15 = 0x6F,
-    #endif
+#endif
 
-    #ifdef HAS_PORT_H
+#ifdef HAS_PORT_H
     PH_0  = 0x70,
     PH_1  = 0x71,
     PH_2  = 0x72,
@@ -182,9 +181,9 @@ enum class Pin {
     PH_13 = 0x7D,
     PH_14 = 0x7E,
     PH_15 = 0x7F,
-    #endif
+#endif
 
-    #ifdef HAS_PORT_I
+#ifdef HAS_PORT_I
     PI_0  = 0x80,
     PI_1  = 0x81,
     PI_2  = 0x82,
@@ -201,10 +200,9 @@ enum class Pin {
     PI_13 = 0x8D,
     PI_14 = 0x8E,
     PI_15 = 0x8F,
-    #endif
+#endif
 
-
-    #ifdef NUCLEO_SUPPORT
+#ifdef NUCLEO_SUPPORT
     PD_2 = 0x32,
 
     PF_0 = 0x50,
@@ -241,39 +239,39 @@ enum class Pin {
 
     // Common Configured Pins
     #if defined(STM32F302x8)
-      LED = PB_13,
+    LED = PB_13,
 
-      SPI_CS   = D10, // PB_6
-      SPI_MOSI = D11, // PB_15
-      SPI_MISO = D12, // PB_14
-      SPI_SCK  = D13, // PB_13
-      I2C_SDA  = D14, // PB_8
-      I2C_SCL  = D15, // PB_9
+    SPI_CS   = D10, // PB_6
+    SPI_MOSI = D11, // PB_15
+    SPI_MISO = D12, // PB_14
+    SPI_SCK  = D13, // PB_13
+    I2C_SDA  = D14, // PB_8
+    I2C_SCL  = D15, // PB_9
     #elif defined(STM32F334x8)
-      LED = PA_5,
+    LED = PA_5,
 
-      SPI_CS   = D10, // PB_6
-      SPI_MOSI = D11, // PA_5
-      SPI_MISO = D12, // PA_6
-      SPI_SCK  = D13, // PA_7
-      I2C_SDA  = D14, // PB_8
-      I2C_SCL  = D15, // PB_9
+    SPI_CS   = D10, // PB_6
+    SPI_MOSI = D11, // PA_5
+    SPI_MISO = D12, // PA_6
+    SPI_SCK  = D13, // PA_7
+    I2C_SDA  = D14, // PB_8
+    I2C_SCL  = D15, // PB_9
     #elif defined(STM32F446xx)
-      LED = PA_5,
+    LED = PA_5,
 
-      SPI_CS   = D10, // PA_5
-      SPI_MOSI = D11, // PA_6
-      SPI_MISO = D12, // PA_7
-      SPI_SCK  = D13, // PB_6
-      I2C_SDA  = D14, // PB_9
-      I2C_SCL  = D15, // PB_8
+    SPI_CS   = D10, // PA_5
+    SPI_MOSI = D11, // PA_6
+    SPI_MISO = D12, // PA_7
+    SPI_SCK  = D13, // PB_6
+    I2C_SDA  = D14, // PB_9
+    I2C_SCL  = D15, // PB_8
     #endif
 
     UART_TX = PA_2, // D1
     UART_RX = PA_3, // D0
-    #endif // NUCLEO_SUPPORT
+#endif              // NUCLEO_SUPPORT
 
-    #ifndef NUCLEO_SUPPORT // STM32F469xx
+#ifndef NUCLEO_SUPPORT // STM32F469xx
     LED      = INVALID,
     SPI_CS   = INVALID,
     SPI_MOSI = INVALID,
@@ -281,12 +279,16 @@ enum class Pin {
     SPI_SCK  = INVALID,
     I2C_SDA  = INVALID,
     I2C_SCL  = INVALID,
-    #endif
+#endif
 
+<<<<<<< HEAD
     #ifdef STM32F469xx
+=======
+#ifdef STM32F496xx
+>>>>>>> 123e355c744d8d538525bda2d65e845e19b4278a
     UART_TX = PA_9,
     UART_RX = PA_10,
-    #endif
+#endif
 };
 
 }; // namespace core::io
