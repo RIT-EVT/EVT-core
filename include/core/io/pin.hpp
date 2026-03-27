@@ -6,6 +6,27 @@
 #ifndef _EVT_PIN_
 #define _EVT_PIN_
 
+// TODO: Fix this so that it changes pin out on a per Package Basis instead of a per MCU basis
+#ifdef STM32F302x8
+    #define NUCLEO_SUPPORT
+#endif
+
+#ifdef STM32F334x8
+    #define NUCLEO_SUPPORT
+#endif
+
+#ifdef STM32F446xx
+    #define NUCLEO_SUPPORT
+#endif
+
+#ifdef STM32F469xx
+    #define HAS_PORT_D
+    #define HAS_PORT_E
+    #define HAS_PORT_F
+    #define HAS_PORT_H
+    #define HAS_PORT_I
+#endif
+
 namespace core::io {
 
 /**
@@ -67,6 +88,121 @@ enum class Pin {
     PC_14 = 0x2E,
     PC_15 = 0x2F,
 
+#ifdef HAS_PORT_D
+    PD_0  = 0x30,
+    PD_1  = 0x31,
+    PD_2  = 0x32,
+    PD_3  = 0x33,
+    PD_4  = 0x34,
+    PD_5  = 0x35,
+    PD_6  = 0x36,
+    PD_7  = 0x37,
+    PD_8  = 0x38,
+    PD_9  = 0x39,
+    PD_10 = 0x3A,
+    PD_11 = 0x3B,
+    PD_12 = 0x3C,
+    PD_13 = 0x3D,
+    PD_14 = 0x3E,
+    PD_15 = 0x3F,
+#endif
+
+#ifdef HAS_PORT_E
+    PE_0  = 0x40,
+    PE_1  = 0x41,
+    PE_2  = 0x42,
+    PE_3  = 0x43,
+    PE_4  = 0x44,
+    PE_5  = 0x45,
+    PE_6  = 0x46,
+    PE_7  = 0x47,
+    PE_8  = 0x48,
+    PE_9  = 0x49,
+    PE_10 = 0x4A,
+    PE_11 = 0x4B,
+    PE_12 = 0x4C,
+    PE_13 = 0x4D,
+    PE_14 = 0x4E,
+    PE_15 = 0x4F,
+#endif
+
+#ifdef HAS_PORT_F
+    PF_0  = 0x50,
+    PF_1  = 0x51,
+    PF_2  = 0x52,
+    PF_3  = 0x53,
+    PF_4  = 0x54,
+    PF_5  = 0x55,
+    PF_6  = 0x56,
+    PF_7  = 0x57,
+    PF_8  = 0x58,
+    PF_9  = 0x59,
+    PF_10 = 0x5A,
+    PF_11 = 0x5B,
+    PF_12 = 0x5C,
+    PF_13 = 0x5D,
+    PF_14 = 0x5E,
+    PF_15 = 0x5F,
+#endif
+
+#ifdef HAS_PORT_G
+    PG_0  = 0x60,
+    PG_1  = 0x61,
+    PG_2  = 0x62,
+    PG_3  = 0x63,
+    PG_4  = 0x64,
+    PG_5  = 0x65,
+    PG_6  = 0x66,
+    PG_7  = 0x67,
+    PG_8  = 0x68,
+    PG_9  = 0x69,
+    PG_10 = 0x6A,
+    PG_11 = 0x6B,
+    PG_12 = 0x6C,
+    PG_13 = 0x6D,
+    PG_14 = 0x6E,
+    PG_15 = 0x6F,
+#endif
+
+#ifdef HAS_PORT_H
+    PH_0  = 0x70,
+    PH_1  = 0x71,
+    PH_2  = 0x72,
+    PH_3  = 0x73,
+    PH_4  = 0x74,
+    PH_5  = 0x75,
+    PH_6  = 0x76,
+    PH_7  = 0x77,
+    PH_8  = 0x78,
+    PH_9  = 0x79,
+    PH_10 = 0x7A,
+    PH_11 = 0x7B,
+    PH_12 = 0x7C,
+    PH_13 = 0x7D,
+    PH_14 = 0x7E,
+    PH_15 = 0x7F,
+#endif
+
+#ifdef HAS_PORT_I
+    PI_0  = 0x80,
+    PI_1  = 0x81,
+    PI_2  = 0x82,
+    PI_3  = 0x83,
+    PI_4  = 0x84,
+    PI_5  = 0x85,
+    PI_6  = 0x86,
+    PI_7  = 0x87,
+    PI_8  = 0x88,
+    PI_9  = 0x89,
+    PI_10 = 0x8A,
+    PI_11 = 0x8B,
+    PI_12 = 0x8C,
+    PI_13 = 0x8D,
+    PI_14 = 0x8E,
+    PI_15 = 0x8F,
+#endif
+
+#ifdef NUCLEO_SUPPORT
     PD_2 = 0x32,
 
     PF_0 = 0x50,
@@ -101,45 +237,55 @@ enum class Pin {
     D14 = PB_9,
     D15 = PB_8,
 
-// Common Configured Pins
-#ifdef STM32F302x8
+    // Common Configured Pins
+    #if defined(STM32F302x8)
     LED = PB_13,
-#endif
-#ifdef STM32F334x8
+
+    SPI_CS   = D10, // PB_6
+    SPI_MOSI = D11, // PB_15
+    SPI_MISO = D12, // PB_14
+    SPI_SCK  = D13, // PB_13
+    I2C_SDA  = D14, // PB_8
+    I2C_SCL  = D15, // PB_9
+    #elif defined(STM32F334x8)
     LED = PA_5,
-#endif
-#ifdef STM32F4xx
+
+    SPI_CS   = D10, // PB_6
+    SPI_MOSI = D11, // PA_5
+    SPI_MISO = D12, // PA_6
+    SPI_SCK  = D13, // PA_7
+    I2C_SDA  = D14, // PB_8
+    I2C_SCL  = D15, // PB_9
+    #elif defined(STM32F446xx)
     LED = PA_5,
+
+    SPI_CS   = D10, // PA_5
+    SPI_MOSI = D11, // PA_6
+    SPI_MISO = D12, // PA_7
+    SPI_SCK  = D13, // PB_6
+    I2C_SDA  = D14, // PB_9
+    I2C_SCL  = D15, // PB_8
+    #endif
+
+    UART_TX = PA_2, // D1
+    UART_RX = PA_3, // D0
+#endif              // NUCLEO_SUPPORT
+
+#ifndef NUCLEO_SUPPORT // STM32F469xx
+    LED      = INVALID,
+    SPI_CS   = INVALID,
+    SPI_MOSI = INVALID,
+    SPI_MISO = INVALID,
+    SPI_SCK  = INVALID,
+    I2C_SDA  = INVALID,
+    I2C_SCL  = INVALID,
 #endif
 
-#ifdef STM32F302x8
-    SPI_SCK  = PB_13, // D13
-    SPI_MISO = PB_14, // D12
-    SPI_MOSI = PB_15, // D11
-    SPI_CS   = PB_6,  // D10
-    I2C_SDA  = PB_8,
-    I2C_SCL  = PB_9,
+#ifdef STM32F469xx
+    UART_TX = PA_9,
+    UART_RX = PA_10,
 #endif
-#ifdef STM32F334x8
-    SPI_SCK  = PA_5, // D13
-    SPI_MISO = PA_6, // D12
-    SPI_MOSI = PA_7, // D11
-    SPI_CS   = PB_6, // D10
-    I2C_SDA  = PB_8,
-    I2C_SCL  = PB_9,
-#endif
-
-#ifdef STM32F4xx
-    SPI_SCK  = PA_5, // D13
-    SPI_MISO = PA_6, // D12
-    SPI_MOSI = PA_7, // D11
-    SPI_CS   = PB_6, // D10
-    I2C_SDA  = PB_9,
-    I2C_SCL  = PB_8,
-#endif
-
-    UART_TX = PA_2,
-    UART_RX = PA_3,
 };
+
 }; // namespace core::io
 #endif

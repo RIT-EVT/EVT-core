@@ -59,7 +59,17 @@ jobs:
         run: |
           cmake -DTARGET_DEV=STM32F446xx -DCMAKE_BUILD_TYPE=RELEASE -B ${{github.workspace}}/build/f446/release
           cmake --build ${{github.workspace}}/build/f446/release
-          
+
+      - name: F469 Debug Build
+        run: |
+          cmake -DTARGET_DEV=STM32F469xx -B ${{github.workspace}}/build/f469/debug
+          cmake --build ${{github.workspace}}/build/f469/debug
+
+      - name: F469 Release Build
+        run: |
+          cmake -DTARGET_DEV=STM32F469xx -DCMAKE_BUILD_TYPE=RELEASE -B ${{github.workspace}}/build/f469/release
+          cmake --build ${{github.workspace}}/build/f469/release
+
       - name: Upload f302 Debug Samples
         uses: actions/upload-artifact@v6
         with:
@@ -106,4 +116,20 @@ jobs:
           name: samples-f446-release
           path: |
             ${{github.workspace}}/build/f446/release/samples/**/*.bin
+            !CmakeFiles
+
+      - name: Upload f469 Samples
+        uses: actions/upload-artifact@v6
+        with:
+          name: samples-f469-debug
+          path: |
+            ${{github.workspace}}/build/f469/debug/samples/**/*.bin
+            !CmakeFiles
+
+      - name: Upload f469 Release Samples
+        uses: actions/upload-artifact@v6
+        with:
+          name: samples-f469-release
+          path: |
+            ${{github.workspace}}/build/f469/release/samples/**/*.bin
             !CmakeFiles
