@@ -62,7 +62,7 @@ jobs:
 
       - name: F469 Debug Build
         run: |
-          cmake -DTARGET_DEV=STM32F469xx -B ${{github.workspace}}/build/f446/debug
+          cmake -DTARGET_DEV=STM32F469xx -B ${{github.workspace}}/build/f469/debug
           cmake --build ${{github.workspace}}/build/f469/debug
 
       - name: F469 Release Build
