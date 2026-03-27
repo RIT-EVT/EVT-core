@@ -1288,9 +1288,9 @@ typedef struct
 #define TIM12               ((TIM_TypeDef *) TIM12_BASE)
 #define TIM13               ((TIM_TypeDef *) TIM13_BASE)
 #define TIM14               ((TIM_TypeDef *) TIM14_BASE)
-#define RTC                 ((RTC_TypeDef *) RTC_BASE)
+#define RTC1                 ((RTC_TypeDef *) RTC_BASE) // Changed to match STM32F446xx.h
 #define WWDG                ((WWDG_TypeDef *) WWDG_BASE)
-#define IWDG                ((IWDG_TypeDef *) IWDG_BASE)
+#define IWDG1                ((IWDG_TypeDef *) IWDG_BASE) // Changed to match STM32F446xx.h
 #define I2S2ext             ((SPI_TypeDef *) I2S2ext_BASE)
 #define SPI2                ((SPI_TypeDef *) SPI2_BASE)
 #define SPI3                ((SPI_TypeDef *) SPI3_BASE)
@@ -1318,7 +1318,7 @@ typedef struct
 #define ADC3                ((ADC_TypeDef *) ADC3_BASE)
 #define ADC123_COMMON       ((ADC_Common_TypeDef *) ADC123_COMMON_BASE)
 /* Legacy define */
-#define ADC                  ADC123_COMMON
+#define ADC10                  ADC123_COMMON // Changed to match STM32F446xx.h
 #define SDIO                ((SDIO_TypeDef *) SDIO_BASE)
 #define SPI1                ((SPI_TypeDef *) SPI1_BASE)
 #define SPI4                ((SPI_TypeDef *) SPI4_BASE)
