@@ -281,7 +281,6 @@ enum class Pin {
     I2C_SCL  = INVALID,
 #endif
 
-
 #ifdef STM32F469xx
     UART_TX = PA_9,
     UART_RX = PA_10,
