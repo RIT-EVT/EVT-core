@@ -43,15 +43,15 @@ void canInterrupt(io::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
 
     // print out raw received data
-    if (message.getId() != 0x701) {
-        uart->printf("Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
-        uint8_t* data = message.getPayload();
-        for (int i = 0; i < message.getDataLength(); i++) {
-            uart->printf("%X ", *data);
-            data++;
-        }
-        uart->printf("\r\n");
-    }
+//    if (message.getId() != 0x701) {
+//        uart->printf("Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
+//        uint8_t* data = message.getPayload();
+//        for (int i = 0; i < message.getDataLength(); i++) {
+//            uart->printf("%X ", *data);
+//            data++;
+//        }
+//        uart->printf("\r\n");
+//    }
 
     if (queue != nullptr)
         queue->append(message);
@@ -67,6 +67,7 @@ int main() {
 
     // create the RPDO node
     RPDOCanNode testCanNode;
+    testCanNode.zeroIn();
 
     ///////////////////////////////////////////////////////////////////////////
     // Setup CAN configuration, this handles making drivers, applying settings.
@@ -126,10 +127,10 @@ int main() {
     uint16_t lastVal1  = 0;
     while (1) {
         // Print new value when changed over CAN
-        if (lastVal1 != testCanNode.getIn(10)) {
-            lastVal1 = testCanNode.getIn(10);
+//        if (lastVal1 != testCanNode.getIn(10)) {
+//            lastVal1 = testCanNode.getIn(10);
             uart->printf("%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\r\n", testCanNode.getIn(0), testCanNode.getIn(1), testCanNode.getIn(2), testCanNode.getIn(3), testCanNode.getIn(4), testCanNode.getIn(5), testCanNode.getIn(6), testCanNode.getIn(7), testCanNode.getIn(8), testCanNode.getIn(9), testCanNode.getIn(10));
-        }
+//        }
 
         io::processCANopenNode(&canNode);
         // Wait for new data to come in

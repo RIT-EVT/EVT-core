@@ -35,11 +35,17 @@ int main() {
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
     can.addIRQHandler(canIRQHandler, &uart);
 
-    // CAN message that will be sent
-    uint8_t payload[] = {0xDE, 0xAD, 0xBE, 0xBE, 0xEF, 0x00, 0x01, 0x02};
-    io::CANMessage transmit_BMS(1, 8, &payload[0], true);
-    io::CANMessage transmit_GFDB(0xA100100, 8, &payload[0], true);
-    io::CANMessage transmit_HIB(0x0D0, 8, &payload[0], true);
+    // contactor_closed ([0] & 0b01); rest ignored (BMS doesnt really have shit rn so this is fake)
+    uint8_t bmsPL[] = {0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+    // Isolation state [1]; rest is ignored
+    uint8_t gfdbPL[] = {0x00, 0xAD, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+    // THROTTLE ([0] << 8 | [1]); BRAKE ([2] << 8 | [3]); comparisonFault ([4] & 0b100) | ([5] & 0b100); forward_en [5] & 0b01; start_pressed = [6] & 0b10
+    uint8_t hibPL[] = {0xDE, 0xAD, 0xBE, 0xBE, 0xEF, 0x00, 0x01, 0x02};
+    io::CANMessage transmit_BMS(0x202, 8, &bmsPL[0], true);
+    io::CANMessage transmit_GFDB(0xA100100, 8, &gfdbPL[0], true);
+    io::CANMessage transmit_HIB(0x0D0, 8, &hibPL[0], true);
 
     uart.printf("Starting CAN testing\r\n");
 
@@ -53,10 +59,8 @@ int main() {
         return 1;
     }
 
-    uint8_t count = 0;
+    uint32_t count = 0;
     while (true) {
-        transmit_BMS.setPayload(payload);
-        uart.printf("sending 0x%x\r\n", payload);
         result = can.transmit(transmit_BMS);
         if (result != io::CAN::CANStatus::OK) {
             uart.printf("Failed to send BMS\r\n");
@@ -80,7 +84,7 @@ int main() {
         }
 
         count++;
-        time::wait(500);
+        time::wait(100);
     }
     return 0;
 }

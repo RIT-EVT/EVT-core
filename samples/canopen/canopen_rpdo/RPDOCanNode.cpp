@@ -50,3 +50,9 @@ uint16_t RPDOCanNode::getPackCur() {
 uint16_t RPDOCanNode::getIn(int i) {
     return accessoryCanDataUnsafeBuffer.inputs[i];
 }
+
+void RPDOCanNode::zeroIn() {
+    for (unsigned short & input : accessoryCanDataUnsafeBuffer.inputs) {
+        input = 0;
+    }
+}
