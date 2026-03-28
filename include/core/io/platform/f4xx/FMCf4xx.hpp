@@ -19,24 +19,18 @@
 
 #include <core/io/FMC.hpp>
 #include <core/io/GPIO.hpp>
+#include <sys/types.h>
 
 namespace core::io {
 
-#define SDRAM_TIMEOUT (0x0000FFFFUL)
-
-#define SDRAM_CLK_SPEED ((uint32_t) (HAL_RCC_GetSysClockFreq() / 2))
-#define SDRAM_CLK_PERIOD_US \
-    (1000000000UL / (SDRAM_CLK_SPEED / 1000)) // LOSES SOME RESOLUTION, BUT IT'S NEEDED TO FIT WITHIN 32-BITS
-#define NS_TO_SDRAM_CLK_CYCLES(NS) ((NS * 1000 + SDRAM_CLK_PERIOD_US) / (SDRAM_CLK_PERIOD_US))
-
-// All of these can be found in the datasheet of the Ram chip
-#define tRCD (15)
-#define tRP  (15)
-#define tWR  (10) // only specifies two clock cycles
-#define tRC  (63)
-#define tRAS (42)
-#define tXSR (70)
-#define tMRD (10) // only specifies two clock cycles
+// default timer values
+#define tRCD 							( 15 )
+#define tRP 							( 15 )
+#define tWR 							( 22 ) // only specifies two clock cycles
+#define tRC 							( 63 )
+#define tRAS 							( 42 )
+#define tXSR 							( 70 )
+#define tMRD 							( 22 ) // only specifies two clock cycles
 
 // Specific names from the FMC
 #define ROW_TO_COLUMN_DELAY_NS          (tRCD)
@@ -56,6 +50,7 @@ namespace core::io {
 #define EXIT_SELF_REFRESH_DELAY      (NS_TO_SDRAM_CLK_CYCLES(tXSR))
 #define LOAD_MODE_REGISTER_TO_ACTIVE (NS_TO_SDRAM_CLK_CYCLES(tMRD))
 
+#define SDRAM_TIMEOUT (0x0000FFFFUL)
 #define RAM_SIZE               (0x4000000) // 64 megabits
 #define FMC_SDRAM_BANK1_BASE   ((uint32_t*) 0xC000000) // found in the reference manual for the MCU
 #define FMC_SDRAM_BANK2_BASE   ((uint32_t*) 0xD000000)
@@ -69,7 +64,7 @@ namespace core::io {
  */
 class FMCf4xx : public FMC {
 public:
-        /**
+    /**
      * Represents the status of operation of the FMC
      *
      * This can be used to represent the state of the SDRAM or the
@@ -195,6 +190,24 @@ public:
      */
     FMCf4xx(FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig,
             SdramTimingConfig sdramTimingConfig);
+
+    /**
+     *
+     * @return the SDRAM clock frequency
+     */
+    static uint32_t getSdramClockFrequency();
+
+    /**
+     *
+     * @return the SDRAM clock period in microseconds
+     */
+    static uint32_t getSdramClockPeriodUS();
+
+    /**
+     *
+     * @return the SDRAM clock period in nanoseconds
+     */
+    static uint32_t NSToSdramClockCycles(uint32_t nanoseconds);
 
     /**
      * Enable write protection for the sdram

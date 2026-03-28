@@ -75,7 +75,19 @@ uint32_t FMCf4xx::GetModeStatus() {
     return FMC_SDRAM_GetModeStatus(sdramDevice, sdramInitConfig.sdBank);
 }
 
-FMCf4xx::SdramInitConfig defaultSdramInitConfig() {
+uint32_t FMCf4xx::getSdramClockFrequency() {
+    return HAL_RCC_GetSysClockFreq() / 2;
+}
+
+uint32_t FMCf4xx::getSdramClockPeriodUS() {
+    return 1000000000UL / (getSdramClockFrequency() / 1000);
+}
+
+uint32_t FMCf4xx::NSToSdramClockCycles(uint32_t nanoseconds) {
+    return (nanoseconds * 1000 + getSdramClockPeriodUS()) / (getSdramClockPeriodUS());
+}
+
+FMCf4xx::SdramInitConfig FMCf4xx::defaultSdramInitConfig() {
     FMCf4xx::SdramInitConfig config{};
 
     config.sdBank             = FMC_SDRAM_BANK1;
@@ -92,16 +104,16 @@ FMCf4xx::SdramInitConfig defaultSdramInitConfig() {
     return config;
 };
 
-FMCf4xx::SdramTimingConfig defaultSdramTimingConfig() {
+FMCf4xx::SdramTimingConfig FMCf4xx::defaultSdramTimingConfig() {
     FMCf4xx::SdramTimingConfig config{};
 
-    config.loadToActiveDelay    = LOAD_MODE_REGISTER_TO_ACTIVE;
-    config.exitSelfRefreshDelay = EXIT_SELF_REFRESH_DELAY;
-    config.selfRefreshTime      = SELF_REFRESH_TIME;
-    config.rowCycleDelay        = ROW_CYCLE_DELAY;
-    config.writeRecoveryTime    = RECOVERY_DELAY;
-    config.rpDelay              = ROW_PRECHARGE_DELAY;
-    config.rcdDelay             = ROW_TO_COLUMN_DELAY;
+    config.loadToActiveDelay    = NSToSdramClockCycles(LOAD_MODE_REGISTER_TO_ACTIVE_NS);
+    config.exitSelfRefreshDelay = NSToSdramClockCycles(EXIT_SELF_REFRESH_DELAY_NS);
+    config.selfRefreshTime      = NSToSdramClockCycles(SELF_REFRESH_TIME_NS);
+    config.rowCycleDelay        = NSToSdramClockCycles(ROW_CYCLE_DELAY_NS);
+    config.writeRecoveryTime    = NSToSdramClockCycles(RECOVERY_DELAY_NS);
+    config.rpDelay              = NSToSdramClockCycles(ROW_PRECHARGE_DELAY_NS);
+    config.rcdDelay             = NSToSdramClockCycles(ROW_TO_COLUMN_DELAY_NS);
 
     return config;
 };
