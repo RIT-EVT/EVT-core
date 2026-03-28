@@ -1,7 +1,6 @@
 #include <core/dev/platform/f4xx/Timerf4xx.hpp>
 
 #include <core/platform/f4xx/stm32f4xx.hpp>
-#include <core/utils/log.hpp>
 #define F4_TIMER_COUNT 12
 
 TIM_HandleTypeDef halTimers[F4_TIMER_COUNT];
@@ -275,8 +274,6 @@ void TimerF4xx::initTimer(TIM_TypeDef* timerPeripheral, const uint32_t clockPeri
         masterConfig.MasterSlaveMode     = static_cast<uint32_t>(this->configuration.masterSlaveMode);
         HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
     }
-
-    core::log::LOGGER.log(core::log::Logger::LogLevel::DEBUG, "Finished timer setup");
 };
 
 void TimerF4xx::startTimer(void (*irqHandler)(void* context, void* htim), void* context) {
