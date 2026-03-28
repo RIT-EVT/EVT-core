@@ -1,7 +1,6 @@
 #include <core/dev/platform/f3xx/Timerf3xx.hpp>
 
 #include <core/platform/f3xx/stm32f3xx.hpp>
-#include <core/utils/log.hpp>
 
 #if defined(STM32F302x8)
     #define F302_TIMER_COUNT 5
@@ -280,12 +279,9 @@ void TimerF3xx::initTimer(TIM_TypeDef* timerPeripheral, const uint32_t clockPeri
     masterConfig.MasterSlaveMode = static_cast<uint32_t>(this->configuration.masterSlaveMode);
 
     HAL_TIMEx_MasterConfigSynchronization(&htim, &masterConfig);
-
-    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Finished timer setup");
 }
 
 void TimerF3xx::startTimer(void (*irqHandler)(void* context, void* htim), void* context) {
-    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Start Timer IRQ");
     TIM_TypeDef* timerPeripheral = this->halTimer->Instance;
     // If timer is not waiting to start, stop it
     if (halTimer->State != HAL_TIM_STATE_READY) {
@@ -302,7 +298,6 @@ void TimerF3xx::stopTimer() {
 }
 
 void TimerF3xx::startTimer() {
-    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Start Timer no IRQ");
     // If timer is not waiting to start, stop it
     if (halTimer->State != HAL_TIM_STATE_READY) {
         stopTimer(); // Stop timer in case it was already running
@@ -319,7 +314,6 @@ void TimerF3xx::reloadTimer() {
 }
 
 void TimerF3xx::setPeriod(const uint32_t clockPeriod, const uint32_t clockPrescaler) {
-    core::log::LOGGER.log(log::Logger::LogLevel::DEBUG, "Set period: %d, Prescaler: %d", clockPeriod, clockPrescaler);
     stopTimer();
     initTimer(this->halTimer->Instance, clockPeriod, clockPrescaler);
 }
