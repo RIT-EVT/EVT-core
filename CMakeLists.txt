@@ -44,7 +44,8 @@ target_sources(${PROJECT_NAME} PRIVATE
         src/core/dev/RTCTimer.cpp
         src/core/dev/storage/M24C32.cpp
         src/core/dev/Thermistor.cpp
-        src/core/utils/log.cpp)
+        src/core/utils/log.cpp
+        src/core/io/FMC.cpp)
 
 get_directory_property(COMPDEFS COMPILE_DEFINITIONS)
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
@@ -75,7 +76,8 @@ elseif(COMPDEFS MATCHES "(.*)STM32F4xx(.*)")
     src/core/io/platform/f4xx/SPIf4xx.cpp
     src/core/dev/platform/f4xx/IWDGf4xx.cpp
     src/core/dev/platform/f4xx/RTCf4xx.cpp
-    src/core/dev/platform/f4xx/Timerf4xx.cpp)
+    src/core/dev/platform/f4xx/Timerf4xx.cpp
+    src/core/io/platform/f4xx/FMCf4xx.cpp)
 else()
     message(FATAL_ERROR "the HAL didnt compile in top level CMake")
 endif()
