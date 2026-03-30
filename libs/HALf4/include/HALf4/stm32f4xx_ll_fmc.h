@@ -1283,11 +1283,11 @@ typedef struct
   *  @{
   */
 HAL_StatusTypeDef  FMC_NORSRAM_Init(FMC_NORSRAM_TypeDef *Device,
-                                    FMC_NORSRAM_InitTypeDef *Init);
+                                    const FMC_NORSRAM_InitTypeDef *Init);
 HAL_StatusTypeDef  FMC_NORSRAM_Timing_Init(FMC_NORSRAM_TypeDef *Device,
-                                           FMC_NORSRAM_TimingTypeDef *Timing, uint32_t Bank);
+                                           const FMC_NORSRAM_TimingTypeDef *Timing, uint32_t Bank);
 HAL_StatusTypeDef  FMC_NORSRAM_Extended_Timing_Init(FMC_NORSRAM_EXTENDED_TypeDef *Device,
-                                                    FMC_NORSRAM_TimingTypeDef *Timing, uint32_t Bank,
+                                                    const FMC_NORSRAM_TimingTypeDef *Timing, uint32_t Bank,
                                                     uint32_t ExtendedMode);
 HAL_StatusTypeDef  FMC_NORSRAM_DeInit(FMC_NORSRAM_TypeDef *Device,
                                       FMC_NORSRAM_EXTENDED_TypeDef *ExDevice, uint32_t Bank);
@@ -1315,11 +1315,11 @@ HAL_StatusTypeDef  FMC_NORSRAM_WriteOperation_Disable(FMC_NORSRAM_TypeDef *Devic
 /** @defgroup FMC_LL_NAND_Private_Functions_Group1 NAND Initialization/de-initialization functions
   *  @{
   */
-HAL_StatusTypeDef  FMC_NAND_Init(FMC_NAND_TypeDef *Device, FMC_NAND_InitTypeDef *Init);
+HAL_StatusTypeDef  FMC_NAND_Init(FMC_NAND_TypeDef *Device, const FMC_NAND_InitTypeDef *Init);
 HAL_StatusTypeDef  FMC_NAND_CommonSpace_Timing_Init(FMC_NAND_TypeDef *Device,
-                                                    FMC_NAND_PCC_TimingTypeDef *Timing, uint32_t Bank);
+                                                    const FMC_NAND_PCC_TimingTypeDef *Timing, uint32_t Bank);
 HAL_StatusTypeDef  FMC_NAND_AttributeSpace_Timing_Init(FMC_NAND_TypeDef *Device,
-                                                       FMC_NAND_PCC_TimingTypeDef *Timing, uint32_t Bank);
+                                                       const FMC_NAND_PCC_TimingTypeDef *Timing, uint32_t Bank);
 HAL_StatusTypeDef  FMC_NAND_DeInit(FMC_NAND_TypeDef *Device, uint32_t Bank);
 /**
   * @}
@@ -1330,7 +1330,7 @@ HAL_StatusTypeDef  FMC_NAND_DeInit(FMC_NAND_TypeDef *Device, uint32_t Bank);
   */
 HAL_StatusTypeDef  FMC_NAND_ECC_Enable(FMC_NAND_TypeDef *Device, uint32_t Bank);
 HAL_StatusTypeDef  FMC_NAND_ECC_Disable(FMC_NAND_TypeDef *Device, uint32_t Bank);
-HAL_StatusTypeDef  FMC_NAND_GetECC(FMC_NAND_TypeDef *Device, uint32_t *ECCval, uint32_t Bank,
+HAL_StatusTypeDef  FMC_NAND_GetECC(const FMC_NAND_TypeDef *Device, uint32_t *ECCval, uint32_t Bank,
                                    uint32_t Timeout);
 /**
   * @}
@@ -1370,9 +1370,9 @@ HAL_StatusTypeDef  FMC_PCCARD_DeInit(FMC_PCCARD_TypeDef *Device);
 /** @defgroup FMC_LL_SDRAM_Private_Functions_Group1 SDRAM Initialization/de-initialization functions
   *  @{
   */
-HAL_StatusTypeDef  FMC_SDRAM_Init(FMC_SDRAM_TypeDef *Device, FMC_SDRAM_InitTypeDef *Init);
+HAL_StatusTypeDef  FMC_SDRAM_Init(FMC_SDRAM_TypeDef *Device, const FMC_SDRAM_InitTypeDef *Init);
 HAL_StatusTypeDef  FMC_SDRAM_Timing_Init(FMC_SDRAM_TypeDef *Device,
-                                         FMC_SDRAM_TimingTypeDef *Timing, uint32_t Bank);
+                                         const FMC_SDRAM_TimingTypeDef *Timing, uint32_t Bank);
 HAL_StatusTypeDef  FMC_SDRAM_DeInit(FMC_SDRAM_TypeDef *Device, uint32_t Bank);
 /**
   * @}
@@ -1384,11 +1384,11 @@ HAL_StatusTypeDef  FMC_SDRAM_DeInit(FMC_SDRAM_TypeDef *Device, uint32_t Bank);
 HAL_StatusTypeDef  FMC_SDRAM_WriteProtection_Enable(FMC_SDRAM_TypeDef *Device, uint32_t Bank);
 HAL_StatusTypeDef  FMC_SDRAM_WriteProtection_Disable(FMC_SDRAM_TypeDef *Device, uint32_t Bank);
 HAL_StatusTypeDef  FMC_SDRAM_SendCommand(FMC_SDRAM_TypeDef *Device,
-                                         FMC_SDRAM_CommandTypeDef *Command, uint32_t Timeout);
+                                         const FMC_SDRAM_CommandTypeDef *Command, uint32_t Timeout);
 HAL_StatusTypeDef  FMC_SDRAM_ProgramRefreshRate(FMC_SDRAM_TypeDef *Device, uint32_t RefreshRate);
 HAL_StatusTypeDef  FMC_SDRAM_SetAutoRefreshNumber(FMC_SDRAM_TypeDef *Device,
                                                   uint32_t AutoRefreshNumber);
-uint32_t           FMC_SDRAM_GetModeStatus(FMC_SDRAM_TypeDef *Device, uint32_t Bank);
+uint32_t           FMC_SDRAM_GetModeStatus(const FMC_SDRAM_TypeDef *Device, uint32_t Bank);
 /**
   * @}
   */
