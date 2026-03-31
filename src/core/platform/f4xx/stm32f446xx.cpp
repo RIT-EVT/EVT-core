@@ -9,9 +9,9 @@ namespace core::platform {
 
 void stm32f4xx_init() {
     HAL_Init();
-    RCC_OscInitTypeDef RCC_OscInitStruct   = {0};
-    RCC_ClkInitTypeDef RCC_ClkInitStruct   = {0};
-    RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+    RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+    // RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
     /** Configure the main internal regulator output voltage
      */
