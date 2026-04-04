@@ -131,6 +131,10 @@ void processCANopenNode(CO_NODE* canNode) {
     COTmrProcess(&canNode->Tmr);
 }
 
+void alertTPDO(CO_NODE* canNode, uint16_t tpdoNum) {
+    COTPdoTrigPdo(canNode->TPdo, tpdoNum);
+}
+
 } // namespace core::io
 
 ///////////////////////////////////////////////////////////////////////////////
