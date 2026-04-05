@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <core/io/platform/f4xx/GPIOf4xx.hpp>
 
 #include <core/io/GPIO.hpp>
@@ -58,45 +59,39 @@ namespace core::io {
 
 GPIOf4xx::GPIOf4xx(Pin pin, GPIO::Direction direction, Pull pull) : GPIO(pin, direction, pull) {
 
-    GPIO_InitTypeDef gpioInit;
-    Pin myPins[]      = {pin};
-    uint8_t numOfPins = 1;
+    gpioSingleInit(pin,
+                   static_cast<uint32_t>(direction),
+                   static_cast<uint32_t>(pull),
+                   GPIO_SPEED_FREQ_VERY_HIGH);
 
-    gpioStateInit(&gpioInit,
-                  myPins,
-                  numOfPins,
-                  static_cast<uint32_t>(direction),
-                  static_cast<uint32_t>(pull),
-                  GPIO_SPEED_FREQ_HIGH);
-
-    switch ((static_cast<uint8_t>(pin) & 0xF0) >> 4) {
+    switch (portFromPin(pin)) {
         // STM32F446 and STM32F469
-    case 0x0:
+    case Port::A:
         this->port = GPIOA;
         break;
-    case 0x1:
+    case Port::B:
         this->port = GPIOB;
         break;
-    case 0x2:
+    case Port::C:
         this->port = GPIOC;
         break;
-    case 0x3:
+    case Port::D:
         this->port = GPIOD;
         break;
-    case 0x5:
+    case Port::F:
         this->port = GPIOF;
         break;
 #ifdef STM32F469xx // and not STM32F446
-    case 0x4:
+    case Port::E:
         this->port = GPIOE;
         break;
-    case 0x6:
+    case Port::G:
         this->port = GPIOG;
         break;
-    case 0x7:
+    case Port::H:
         this->port = GPIOH;
         break;
-    case 0x8:
+    case Port::I:
         this->port = GPIOI;
         break;
 #endif
@@ -109,6 +104,11 @@ GPIOf4xx::GPIOf4xx(Pin pin, GPIO::Direction direction, Pull pull) : GPIO(pin, di
 }
 
 void GPIOf4xx::setDirection(GPIO::Direction direction) {
+    if (direction == Direction::INPUT) {
+        this->port->MODER &= GPIO_MODE_INPUT << (2 * pinNumberFromPin(this->pin));
+    } else { // Direction::OUTPUT
+        this->port->MODER &= MODE_OUTPUT << (2 * pinNumberFromPin(this->pin));
+    }
     // TODO: Add implementation of resetting the direction
 }
 
@@ -224,7 +224,7 @@ static void initHALGPIO(GPIO_InitTypeDef& targetGpio, Port port) {
     }
 }
 
-// do easy swaps without needing stack
+// do easy swaps without needing stack or calling additional function
 #define SWAP(A,B) \
     do { \
     A = A + B; \
@@ -235,14 +235,15 @@ static void initHALGPIO(GPIO_InitTypeDef& targetGpio, Port port) {
 void GPIOf4xx::gpioInit(Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pull, uint32_t speed, uint8_t alternate) {
     if (numOfPins == 0) {
         return;
-    } else if (numOfPins == 1) {
+    }
+    if (numOfPins == 1) {
         gpioSingleInit(pins[0], mode, pull, speed, alternate);
         return;
     }
 
     // HeapSort on Pin* pins from https://en.wikipedia.org/wiki/Heapsort#Standard_implementation
     auto* sorted = reinterpret_cast<uint8_t*>(pins);
-    uint16_t start = numOfPins / 2, end = numOfPins;
+    uint8_t start = numOfPins / 2, end = numOfPins;
     while (end > 1) {
         if (start > 0) { // Heap Construction
             start--;
@@ -251,8 +252,8 @@ void GPIOf4xx::gpioInit(Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pu
             SWAP(sorted[0], sorted[end]);
         }
         // siftDown(a, start, end)
-        uint16_t child;
-        uint16_t root = start;
+        uint8_t child;
+        uint8_t root = start;
         while ((child = 2 * root + 1) < end) {
             if (child + 1 < end && sorted[child] < sorted[child + 1]) {
                 child++;
@@ -273,19 +274,16 @@ void GPIOf4xx::gpioInit(Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pu
     for (uint8_t i = 1; i < numOfPins; i++) {
         if (portFromPin(pins[i]) > port_of_start) {
             if (start == i - 1) {
-                gpioSingleInit(pins[i - 1], mode, pull, speed, alternate);
-                start = i;
-                port_of_start = portFromPin(pins[start]);
+                gpioSingleInit(pins[start], mode, pull, speed, alternate);
             } else {
-                fillPinPack(pin_pack, &pins[start], static_cast<int8_t>(i  - start));
+                fillPinPack(pin_pack, &pins[start], i  - start);
                 gpioPortInit(pin_pack, port_of_start, mode, pull, speed, alternate);
-                start = i;
-                port_of_start = portFromPin(pins[start]);
             }
+            start = i;
+            port_of_start = portFromPin(pins[start]);
         }
     }
 }
-
 
 void GPIOf4xx::gpioSingleInit(Pin pin, uint32_t mode, uint32_t pull, uint32_t speed, uint8_t alternate) {
     GPIO_InitTypeDef targetGpio;
@@ -296,32 +294,6 @@ void GPIOf4xx::gpioSingleInit(Pin pin, uint32_t mode, uint32_t pull, uint32_t sp
     targetGpio.Alternate = alternate;
 
     initHALGPIO(targetGpio, portFromPin(pin));
-}
-
-void GPIOf4xx::gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pull,
-                             uint32_t speed, uint8_t alternate) {
-    #pragma deprecated("GPIOf4xx::gpioStateInit is deprecated, but available for backward compatibility")
-    if (numOfPins == 2) {
-        targetGpio->Pin = static_cast<uint32_t>(setPackBit(pins[0]))
-            | static_cast<uint32_t>(setPackBit(pins[1]));
-    } else {
-        targetGpio->Pin = setPackBit(pins[0]);
-    }
-
-    targetGpio->Mode = mode;
-
-    targetGpio->Pull = pull;
-
-    targetGpio->Speed = speed;
-
-    // 0x0EU is not used by the F446xx as an alternate value
-    if (alternate != 0x0EU) {
-        targetGpio->Alternate = alternate;
-    }
-
-    for (uint8_t i = 0; i < numOfPins; i++) {
-        initHALGPIO(*targetGpio, portFromPin(pins[i]));
-    }
 }
 
 // If your passed in pins aren't all on the same port then it's your damn fault
@@ -335,6 +307,32 @@ void GPIOf4xx::gpioPortInit(PinPack& pack_pins, Port port, uint32_t mode, uint32
     targetGpio.Alternate = alternate;
 
     initHALGPIO(targetGpio, port);
+}
+
+void GPIOf4xx::gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pull,
+                             uint32_t speed, uint8_t alternate) {
+    #pragma deprecated("GPIOf4xx::gpioStateInit is deprecated, but available for backwards compatibility")
+    if (numOfPins == 2) {
+        targetGpio->Pin = static_cast<uint32_t>(setPackBit(pins[0]))
+            | static_cast<uint32_t>(setPackBit(pins[1]));
+    } else {
+        targetGpio->Pin = setPackBit(pins[0]);
+    }
+
+    targetGpio->Mode = mode;
+
+    targetGpio->Pull = pull;
+
+    targetGpio->Speed = speed;
+
+    // 0x00U is the default value used by the F4xxxx
+    if (alternate != 0x00U) {
+        targetGpio->Alternate = alternate;
+    }
+
+    for (uint8_t i = 0; i < numOfPins; i++) {
+        initHALGPIO(*targetGpio, portFromPin(pins[i]));
+    }
 }
 
 } // namespace core::io

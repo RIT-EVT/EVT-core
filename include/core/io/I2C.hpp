@@ -17,7 +17,7 @@ namespace core::io {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
-enum class Pin;
+enum class Pin : uint8_t;
 
 /**
  * Contains generic implementations for some of the I2C functionality.
