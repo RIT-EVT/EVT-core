@@ -38,7 +38,7 @@ namespace core::io {
  * these values.
  */
 enum class Pin : uint8_t {
-    INVALID = -1, // THIS INTENTIONALLY DOES NOT POINT TO A PIN. Used as a default value, so the default value is
+    INVALID = 0xFF, // THIS INTENTIONALLY DOES NOT POINT TO A PIN. Used as a default value, so the default value is
                   // no longer PA_O (a real pin)
     PA_0  = 0x00,
     PA_1  = 0x01,
@@ -291,7 +291,7 @@ enum class Pin : uint8_t {
 };
 
 enum class Port : uint8_t {
-    Invalid = -1,
+    Invalid = 0xFF,
     A       = 0x0,
     B       = 0x1,
     C       = 0x2,
