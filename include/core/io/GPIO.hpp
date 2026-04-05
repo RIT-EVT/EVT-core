@@ -3,7 +3,7 @@
 
 #include "pin.hpp"
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace core::io {
 // Forward declarations:
