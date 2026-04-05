@@ -78,26 +78,26 @@ GPIOf4xx::GPIOf4xx(Pin pin, GPIO::Direction direction, Pull pull) : GPIO(pin, di
     case Port::F:
         this->port = GPIOF;
         break;
-    #ifdef HAS_PORT_E
+#ifdef HAS_PORT_E
     case Port::E:
         this->port = GPIOE;
         break;
-    #endif
-    #ifdef HAS_PORT_G
+#endif
+#ifdef HAS_PORT_G
     case Port::G:
         this->port = GPIOG;
         break;
-    #endif
-    #ifdef HAS_PORT_H
+#endif
+#ifdef HAS_PORT_H
     case Port::H:
         this->port = GPIOH;
         break;
-    #endif
-    #ifdef HAS_PORT_I
+#endif
+#ifdef HAS_PORT_I
     case Port::I:
         this->port = GPIOI;
         break;
-    #endif
+#endif
     default:
         break; // Should never get here
     }
@@ -205,30 +205,30 @@ static void initHALGPIO(GPIO_InitTypeDef& targetGpio, Port port) {
         __HAL_RCC_GPIOF_CLK_ENABLE();
         HAL_GPIO_Init(GPIOF, &targetGpio);
         break;
-    #ifdef HAS_PORT_E
+#ifdef HAS_PORT_E
     case Port::E:
         __HAL_RCC_GPIOE_CLK_ENABLE();
         HAL_GPIO_Init(GPIOE, &targetGpio);
         break;
-    #endif
-    #ifdef HAS_PORT_G
+#endif
+#ifdef HAS_PORT_G
     case Port::G:
         __HAL_RCC_GPIOG_CLK_ENABLE();
         HAL_GPIO_Init(GPIOG, &targetGpio);
         break;
-    #endif
-    #ifdef HAS_PORT_H
+#endif
+#ifdef HAS_PORT_H
     case Port::H:
         __HAL_RCC_GPIOH_CLK_ENABLE();
         HAL_GPIO_Init(GPIOH, &targetGpio);
         break;
-    #endif
-    #ifdef HAS_PORT_I
+#endif
+#ifdef HAS_PORT_I
     case Port::I:
         __HAL_RCC_GPIOI_CLK_ENABLE();
         HAL_GPIO_Init(GPIOI, &targetGpio);
         break;
-    #endif
+#endif
     default:
         break; // Bad Port input
     }
@@ -236,9 +236,9 @@ static void initHALGPIO(GPIO_InitTypeDef& targetGpio, Port port) {
 
 // do easy swaps without needing stack or calling additional function
 #define SWAP(A, B) \
-        A = A ^ B; \
-        B = A ^ B; \
-        A = A ^ B;
+    A = A ^ B;     \
+    B = A ^ B;     \
+    A = A ^ B;
 
 void GPIOf4xx::gpioInit(Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pull, uint32_t speed, uint8_t alternate) {
     if (numOfPins == 0) {
