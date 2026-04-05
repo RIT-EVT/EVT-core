@@ -39,7 +39,7 @@ namespace core::io {
  */
 enum class Pin : uint8_t {
     INVALID = 0xFF, // THIS INTENTIONALLY DOES NOT POINT TO A PIN. Used as a default value, so the default value is
-                  // no longer PA_O (a real pin)
+                    // no longer PA_O (a real pin)
     PA_0  = 0x00,
     PA_1  = 0x01,
     PA_2  = 0x02,
@@ -328,7 +328,7 @@ constexpr Port portFromPin(Pin pin) {
  * @return Pin number of the Pin
  */
 constexpr uint8_t pinNumberFromPin(Pin pin) {
-    return static_cast<uint8_t>(pin) & 0x0F ;
+    return static_cast<uint8_t>(pin) & 0x0F;
 }
 
 }; // namespace core::io
