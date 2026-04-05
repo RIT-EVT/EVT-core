@@ -47,7 +47,22 @@ public:
      * @param alternate gpio alternate function selection
      */
     static void gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pull,
-                              uint32_t speed, uint8_t alternate = 0x0DU);
+                              uint32_t speed, uint8_t alternate = 0x0E);
+
+    /**
+     * Condenses gpio settings initialization into a single function.
+     * @param targetGpio gpio instance to initialize
+     * @param pack_pins Byte Array of pins
+     * @param port Port of the pins to initialize
+     * @param mode gpio configuration mode
+     * @param pull pull-up or pull-down activation
+     * @param speed maximum gpio output frequency
+     * Possible values for Mode, Pull, and Speed can be found in "stm32f4xx_hal_gpio.h"
+     * @param alternate gpio alternate function selection
+     * @returns True if successful, False otherwise
+     */
+    static bool gpioPortInit(GPIO_InitTypeDef* targetGpio, PinPack& pack_pins, Port port, uint32_t mode, uint32_t pull,
+                             uint32_t speed, uint8_t alternate);
 
 private:
     // See stm32f4xx_hal_gpio -> GPIO_mode for info on derivations

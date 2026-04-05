@@ -6,6 +6,8 @@
 #ifndef _EVT_PIN_
 #define _EVT_PIN_
 
+#include <cstdint>
+
 // TODO: Fix this so that it changes pin out on a per Package Basis instead of a per MCU basis
 #ifdef STM32F302x8
     #define NUCLEO_SUPPORT
@@ -23,6 +25,7 @@
     #define HAS_PORT_D
     #define HAS_PORT_E
     #define HAS_PORT_F
+    #define HAS_PORT_G
     #define HAS_PORT_H
     #define HAS_PORT_I
 #endif
@@ -286,6 +289,31 @@ enum class Pin {
     UART_RX = PA_10,
 #endif
 };
+
+enum class Port {
+    Invalid = -1,
+    A = 0x0,
+    B = 0x1,
+    C = 0x2,
+    D = 0x3,
+    #ifdef HAS_PORT_E
+    E = 0x4,
+    #endif
+    F = 0x5,
+    #ifdef HAS_PORT_G
+    G = 0x6,
+    #endif
+    #ifdef HAS_PORT_H
+    H = 0x7,
+    #endif
+    #ifdef HAS_PORT_I
+    I = 0x8,
+    #endif
+};
+
+constexpr Port portFromPin(Pin pin) {
+    return static_cast<Port>((static_cast<uint32_t>(pin) & 0xF0) >> 4);
+}
 
 }; // namespace core::io
 #endif
