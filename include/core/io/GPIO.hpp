@@ -1,14 +1,10 @@
 #ifndef _EVT_GPIO_
 #define _EVT_GPIO_
 
-#include <stdint.h>
+#include <core/io/pin.hpp>
+#include <cstdint>
 
 namespace core::io {
-// Forward declarations:
-// The different pins are hardware specific. Forward declaration to allow
-// at compilation time the decision of which pins should be used.
-enum class Pin;
-
 /**
  * Interface for interacting with GPIO pins on a device. GPIO pins can have
  * their state read and written to.
@@ -23,6 +19,54 @@ enum class Pin;
  */
 class GPIO {
 public:
+#pragma pack(push, 1)
+    /**
+     * A union of a 16-bit number and a  breakdown of it in a struct of individual bits.
+     * the value is meant to quickly set or read a value with ease.
+     * the struct is meant for individually flipping bits in the field with a friendly format
+     * Meant for mass GPIO instantiation
+     *
+     * Usage Example 1:
+     * PinPack a = {.value = 0x0010};
+     * PinPack b = {.pin_4 = 1};
+     * then
+     * a == b
+     *
+     * Usage Example 2:
+     * PinPack a = {.pin_4 = 1, .pin_15 = 1};
+     * then reading from a.value gives
+     * a.value == 0x8010;
+     *
+     * Usage Example 3:
+     * uint16_t any_number = 0x1111;
+     * PinPack a;
+     * a.value = any_number;
+     * then
+     * a.pin_12 && a.pin_8 && a.pin_4 && a.pin_0 == 1
+     */
+    union PinPack {
+        uint16_t value;
+        struct {
+            uint16_t        // total size
+                pin_0  : 1, // Bit 0
+                pin_1  : 1, // Bit 1
+                pin_2  : 1, // Bit 2
+                pin_3  : 1, // Bit 3
+                pin_4  : 1, // Bit 4
+                pin_5  : 1, // Bit 5
+                pin_6  : 1, // Bit 6
+                pin_7  : 1, // Bit 7
+                pin_8  : 1, // Bit 8
+                pin_9  : 1, // Bit 9
+                pin_10 : 1, // Bit 10
+                pin_11 : 1, // Bit 11
+                pin_12 : 1, // Bit 12
+                pin_13 : 1, // Bit 13
+                pin_14 : 1, // Bit 14
+                pin_15 : 1; // Bit 15
+        };
+    };
+
     /**
      * Binary representation of the states the GPIO can be in
      */
@@ -74,6 +118,29 @@ public:
      * @param[in] pull The direction of the internal pull resistor
      */
     GPIO(Pin pin, Direction direction, Pull pull = Pull::PULL_DOWN);
+
+    /**
+     *
+     * @param pin
+     * @return uint16_t with the pin number's bit set
+     */
+    static uint16_t setPackBit(Pin pin) {
+        return 1 << pinNumberFromPin(pin);
+    }
+
+    /**
+     * Fill a given PinPack based on a given array of pins
+     *
+     * @param[out] pp PinPack to be filled given the pin array
+     * @param[in] pins Array of pins in the same Port
+     * @param[in] num_pins number of pins in array
+     */
+    static void fillPinPack(PinPack& pp, Pin* pins, uint8_t num_pins) {
+        pp.value = 0;
+        for (uint8_t i = 0; i < num_pins; i++) {
+            pp.value |= setPackBit(pins[i]);
+        }
+    }
 
     /**
      * Sets whether this pin is configured for input or output.
