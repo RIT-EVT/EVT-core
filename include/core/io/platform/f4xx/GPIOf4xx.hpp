@@ -51,7 +51,20 @@ public:
                               uint32_t speed, uint8_t alternate = 0x0E);
 
     /**
-     * Initialize a single GPIO pin with these functions
+     * Initialize an arbitrary number GPIO pins with this function
+     * @param pins Pin to set
+     * @param numOfPins number of pins in total
+     * @param mode gpio configuration mode
+     * @param pull pull-up or pull-down activation
+     * @param speed maximum gpio output frequency
+     * Possible values for Mode, Pull, and Speed can be found in "stm32f4xx_hal_gpio.h"
+     * @param alternate gpio alternate function selection
+     */
+    static void gpioInit(Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pull, uint32_t speed,
+                              uint8_t alternate = 0x0E);
+
+    /**
+     * Initialize a single GPIO pin with this function
      * @param pin Pin to set
      * @param mode gpio configuration mode
      * @param pull pull-up or pull-down activation

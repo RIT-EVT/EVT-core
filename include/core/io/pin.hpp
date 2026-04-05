@@ -37,7 +37,7 @@ namespace core::io {
  * the pin is on and the number of the pin. We referenced MBed's documentation for generating
  * these values.
  */
-enum class Pin {
+enum class Pin : uint8_t {
     INVALID = -1, // THIS INTENTIONALLY DOES NOT POINT TO A PIN. Used as a default value, so the default value is
                   // no longer PA_O (a real pin)
     PA_0  = 0x00,

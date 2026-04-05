@@ -178,51 +178,114 @@ void GPIOf4xx::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin, void*
     HAL_NVIC_EnableIRQ(irqNum);
 }
 
-static void initGPIO(GPIO_InitTypeDef& targetGpio, Port port) {
+static void initHALGPIO(GPIO_InitTypeDef& targetGpio, Port port) {
     switch (port) {
-        // STM32F446 and STM32F469
-        case Port::A:
-            __HAL_RCC_GPIOA_CLK_ENABLE();
-            HAL_GPIO_Init(GPIOA, &targetGpio);
-            break;
-        case Port::B:
-            __HAL_RCC_GPIOB_CLK_ENABLE();
-            HAL_GPIO_Init(GPIOB, &targetGpio);
-            break;
-        case Port::C:
-            __HAL_RCC_GPIOC_CLK_ENABLE();
-            HAL_GPIO_Init(GPIOC, &targetGpio);
-            break;
-        case Port::D:
-            __HAL_RCC_GPIOD_CLK_ENABLE();
-            HAL_GPIO_Init(GPIOD, &targetGpio);
-            break;
-        case Port::F:
-            __HAL_RCC_GPIOF_CLK_ENABLE();
-            HAL_GPIO_Init(GPIOF, &targetGpio);
-            break;
-    #ifdef STM32F469xx // STM32F469xx only
-        case Port::E:
-            __HAL_RCC_GPIOE_CLK_ENABLE();
-            HAL_GPIO_Init(GPIOE, &targetGpio);
-            break;
-        case Port::G:
-            __HAL_RCC_GPIOG_CLK_ENABLE();
-            HAL_GPIO_Init(GPIOG, &targetGpio);
-            break;
-        case Port::H:
-            __HAL_RCC_GPIOH_CLK_ENABLE();
-            HAL_GPIO_Init(GPIOH, &targetGpio);
-            break;
-        case Port::I:
-            __HAL_RCC_GPIOI_CLK_ENABLE();
-            HAL_GPIO_Init(GPIOI, &targetGpio);
-            break;
-    #endif
-        default:
-            break; // Bad Port input
+    // STM32F446 and STM32F469
+    case Port::A:
+        __HAL_RCC_GPIOA_CLK_ENABLE();
+        HAL_GPIO_Init(GPIOA, &targetGpio);
+        break;
+    case Port::B:
+        __HAL_RCC_GPIOB_CLK_ENABLE();
+        HAL_GPIO_Init(GPIOB, &targetGpio);
+        break;
+    case Port::C:
+        __HAL_RCC_GPIOC_CLK_ENABLE();
+        HAL_GPIO_Init(GPIOC, &targetGpio);
+        break;
+    case Port::D:
+        __HAL_RCC_GPIOD_CLK_ENABLE();
+        HAL_GPIO_Init(GPIOD, &targetGpio);
+        break;
+    case Port::F:
+        __HAL_RCC_GPIOF_CLK_ENABLE();
+        HAL_GPIO_Init(GPIOF, &targetGpio);
+        break;
+#ifdef STM32F469xx // STM32F469xx only
+    case Port::E:
+        __HAL_RCC_GPIOE_CLK_ENABLE();
+        HAL_GPIO_Init(GPIOE, &targetGpio);
+        break;
+    case Port::G:
+        __HAL_RCC_GPIOG_CLK_ENABLE();
+        HAL_GPIO_Init(GPIOG, &targetGpio);
+        break;
+    case Port::H:
+        __HAL_RCC_GPIOH_CLK_ENABLE();
+        HAL_GPIO_Init(GPIOH, &targetGpio);
+        break;
+    case Port::I:
+        __HAL_RCC_GPIOI_CLK_ENABLE();
+        HAL_GPIO_Init(GPIOI, &targetGpio);
+        break;
+#endif
+    default:
+        break; // Bad Port input
     }
 }
+
+// do easy swaps without needing stack
+#define SWAP(A,B) \
+    do { \
+    A = A + B; \
+    B = A - B; \
+    A = A - B; \
+    } while (0);
+
+void GPIOf4xx::gpioInit(Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pull, uint32_t speed, uint8_t alternate) {
+    if (numOfPins == 0) {
+        return;
+    } else if (numOfPins == 1) {
+        gpioSingleInit(pins[0], mode, pull, speed, alternate);
+        return;
+    }
+
+    // HeapSort on Pin* pins from https://en.wikipedia.org/wiki/Heapsort#Standard_implementation
+    auto* sorted = reinterpret_cast<uint8_t*>(pins);
+    uint16_t start = numOfPins / 2, end = numOfPins;
+    while (end > 1) {
+        if (start > 0) { // Heap Construction
+            start--;
+        } else { // Heap Extraction
+            end--;
+            SWAP(sorted[0], sorted[end]);
+        }
+        // siftDown(a, start, end)
+        uint16_t child;
+        uint16_t root = start;
+        while ((child = 2 * root + 1) < end) {
+            if (child + 1 < end && sorted[child] < sorted[child + 1]) {
+                child++;
+            }
+            if (sorted[root] < sorted[child]) {
+                SWAP(sorted[root], sorted[child]);
+                root = child; // repeat to continue sifting down the child now
+            } else {
+                break; // return to outer loop
+            }
+        }
+    }
+
+    // reuse start variable
+    PinPack pin_pack{};
+    start = 0;
+    Port port_of_start = portFromPin(pins[start]);
+    for (uint8_t i = 1; i < numOfPins; i++) {
+        if (portFromPin(pins[i]) > port_of_start) {
+            if (start == i - 1) {
+                gpioSingleInit(pins[i - 1], mode, pull, speed, alternate);
+                start = i;
+                port_of_start = portFromPin(pins[start]);
+            } else {
+                fillPinPack(pin_pack, &pins[start], static_cast<int8_t>(i  - start));
+                gpioPortInit(pin_pack, port_of_start, mode, pull, speed, alternate);
+                start = i;
+                port_of_start = portFromPin(pins[start]);
+            }
+        }
+    }
+}
+
 
 void GPIOf4xx::gpioSingleInit(Pin pin, uint32_t mode, uint32_t pull, uint32_t speed, uint8_t alternate) {
     GPIO_InitTypeDef targetGpio;
@@ -232,7 +295,7 @@ void GPIOf4xx::gpioSingleInit(Pin pin, uint32_t mode, uint32_t pull, uint32_t sp
     targetGpio.Speed = speed;
     targetGpio.Alternate = alternate;
 
-    initGPIO(targetGpio, portFromPin(pin));
+    initHALGPIO(targetGpio, portFromPin(pin));
 }
 
 void GPIOf4xx::gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pull,
@@ -257,7 +320,7 @@ void GPIOf4xx::gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins, uint8_t nu
     }
 
     for (uint8_t i = 0; i < numOfPins; i++) {
-        initGPIO(*targetGpio, portFromPin(pins[i]));
+        initHALGPIO(*targetGpio, portFromPin(pins[i]));
     }
 }
 
@@ -271,7 +334,7 @@ void GPIOf4xx::gpioPortInit(PinPack& pack_pins, Port port, uint32_t mode, uint32
     targetGpio.Speed = speed;
     targetGpio.Alternate = alternate;
 
-    initGPIO(targetGpio, port);
+    initHALGPIO(targetGpio, port);
 }
 
 } // namespace core::io

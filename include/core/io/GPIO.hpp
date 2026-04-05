@@ -124,10 +124,10 @@ public:
      * @param[in] pins Array of pins in the same Port
      * @param[in] num_pins number of pins in array
      */
-    static void fillPinPack(PinPack& pp, Pin* pins, uint32_t num_pins) {
+    static void fillPinPack(PinPack& pp, Pin* pins, int8_t num_pins) {
         pp.value = 0;
-        for (uint32_t i = 0; i < num_pins; i++) {
-            pp.value |= setPackBit(pins[i]);
+        for (num_pins-- ; num_pins >= 0; num_pins--) {
+            pp.value |= setPackBit(pins[num_pins]);
         }
     }
 
