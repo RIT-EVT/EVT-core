@@ -61,7 +61,7 @@ public:
      * @param alternate gpio alternate function selection
      */
     static void gpioInit(Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pull, uint32_t speed,
-                              uint8_t alternate = 0x00);
+                         uint8_t alternate = 0x00);
 
     /**
      * Initialize a single GPIO pin with this function

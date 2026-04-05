@@ -9,7 +9,7 @@ namespace core::io {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
-enum class Pin  : uint8_t;
+enum class Pin : uint8_t;
 enum class Port : uint8_t;
 
 /**
@@ -26,31 +26,31 @@ enum class Port : uint8_t;
  */
 class GPIO {
 public:
-    /**
-     * A union of a 16-bit number and a  breakdown of it in a struct of individual bits.
-     * the value is meant to quickly set or read a value with ease.
-     * the struct is meant for individually flipping bits in the field with a friendly format
-     * Meant for mass GPIO instantiation
-     *
-     * Usage Example 1:
-     * PinPack a = {.value = 0x0010};
-     * PinPack b = {.pin_4 = 1};
-     * then
-     * a == b
-     *
-     * Usage Example 2:
-     * PinPack a = {.pin_4 = 1, .pin_15 = 1};
-     * then reading from a.value gives
-     * a.value == 0x8010;
-     *
-     * Usage Example 3:
-     * uint16_t any_number = 0x1111;
-     * PinPack a;
-     * a.value = any_number;
-     * then
-     * a.pin_12 && a.pin_8 && a.pin_4 && a.pin_0 == 1
-     */
-    #pragma pack(push, 1)
+/**
+ * A union of a 16-bit number and a  breakdown of it in a struct of individual bits.
+ * the value is meant to quickly set or read a value with ease.
+ * the struct is meant for individually flipping bits in the field with a friendly format
+ * Meant for mass GPIO instantiation
+ *
+ * Usage Example 1:
+ * PinPack a = {.value = 0x0010};
+ * PinPack b = {.pin_4 = 1};
+ * then
+ * a == b
+ *
+ * Usage Example 2:
+ * PinPack a = {.pin_4 = 1, .pin_15 = 1};
+ * then reading from a.value gives
+ * a.value == 0x8010;
+ *
+ * Usage Example 3:
+ * uint16_t any_number = 0x1111;
+ * PinPack a;
+ * a.value = any_number;
+ * then
+ * a.pin_12 && a.pin_8 && a.pin_4 && a.pin_0 == 1
+ */
+#pragma pack(push, 1)
     union PinPack {
         uint16_t value;
         struct {
