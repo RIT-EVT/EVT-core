@@ -52,7 +52,7 @@ public:
 
     /**
      * Initialize an arbitrary length array of GPIO pins
-     * @param pins Pin to set
+     * @param pins Pins to set
      * @param numOfPins number of pins in total
      * @param mode gpio configuration mode
      * @param pull pull-up or pull-down activation
