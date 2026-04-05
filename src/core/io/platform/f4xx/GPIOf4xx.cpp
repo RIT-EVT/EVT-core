@@ -320,7 +320,7 @@ void GPIOf4xx::gpioPortInit(PinPack pack_pins, Port port, uint32_t mode, uint32_
 void GPIOf4xx::gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pull,
                              uint32_t speed, uint8_t alternate) {
 #pragma deprecated("GPIOf4xx::gpioStateInit is deprecated, but available for backwards compatibility. Instead use" \
-    "GPIOf4xx::gpioSingleInit() in most cases where you would want to use this function")
+                   "GPIOf4xx::gpioSingleInit() in most cases where you would want to use this function")
 
     if (numOfPins == 2) {
         targetGpio->Pin = setPackBit(pins[0]) | setPackBit(pins[1]);
