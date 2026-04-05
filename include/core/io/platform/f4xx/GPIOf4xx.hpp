@@ -36,6 +36,7 @@ public:
     void registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin, void* priv), void* priv) override;
 
     /**
+     * DEPRECATED!!!! DO NOT USE
      * Condenses gpio settings initialization into a single function.
      * @param targetGpio gpio instance to initialize
      * @param pins array of pins used by gpio instance
@@ -50,8 +51,18 @@ public:
                               uint32_t speed, uint8_t alternate = 0x0E);
 
     /**
+     * Initialize a single GPIO pin with these functions
+     * @param pin Pin to set
+     * @param mode gpio configuration mode
+     * @param pull pull-up or pull-down activation
+     * @param speed maximum gpio output frequency
+     * Possible values for Mode, Pull, and Speed can be found in "stm32f4xx_hal_gpio.h"
+     * @param alternate gpio alternate function selection
+     */
+    static void gpioSingleInit(Pin pin, uint32_t mode, uint32_t pull, uint32_t speed, uint8_t alternate = 0x0E);
+
+    /**
      * Condenses gpio settings initialization into a single function.
-     * @param targetGpio gpio instance to initialize
      * @param pack_pins Byte Array of pins
      * @param port Port of the pins to initialize
      * @param mode gpio configuration mode
@@ -59,10 +70,9 @@ public:
      * @param speed maximum gpio output frequency
      * Possible values for Mode, Pull, and Speed can be found in "stm32f4xx_hal_gpio.h"
      * @param alternate gpio alternate function selection
-     * @returns True if successful, False otherwise
      */
-    static bool gpioPortInit(GPIO_InitTypeDef* targetGpio, PinPack& pack_pins, Port port, uint32_t mode, uint32_t pull,
-                             uint32_t speed, uint8_t alternate);
+    static void gpioPortInit(PinPack& pack_pins, Port port, uint32_t mode, uint32_t pull, uint32_t speed,
+                             uint8_t alternate);
 
 private:
     // See stm32f4xx_hal_gpio -> GPIO_mode for info on derivations

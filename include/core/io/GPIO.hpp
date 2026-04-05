@@ -1,6 +1,8 @@
 #ifndef _EVT_GPIO_
 #define _EVT_GPIO_
 
+#include "pin.hpp"
+
 #include <stdint.h>
 
 namespace core::io {
@@ -48,6 +50,7 @@ public:
      * then
      * a.pin_12 && a.pin_8 && a.pin_4 && a.pin_0 == 1
      */
+    #pragma pack(push, 1)
     union PinPack {
         uint16_t value;
         struct {
@@ -123,6 +126,10 @@ public:
      */
     GPIO(Pin pin, Direction direction, Pull pull = Pull::PULL_DOWN);
 
+    static uint16_t setPackBit(Pin pin) {
+        return 1 << pinNumberFromPin(pin);
+    }
+
     /**
      * Fill a given PinPack based on a given array of pins
      *
@@ -133,7 +140,7 @@ public:
     static void fillPinPack(PinPack& pp, Pin* pins, uint32_t num_pins) {
         pp.value = 0;
         for (uint32_t i = 0; i < num_pins; i++) {
-            pp.value |= 1 << (static_cast<uint16_t>(pins[i]) & 0x0F);
+            pp.value |= setPackBit(pins[i]);
         }
     }
 

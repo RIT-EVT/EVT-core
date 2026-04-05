@@ -290,7 +290,7 @@ enum class Pin {
 #endif
 };
 
-enum class Port {
+enum class Port : uint8_t {
     Invalid = -1,
     A = 0x0,
     B = 0x1,
@@ -311,8 +311,24 @@ enum class Port {
     #endif
 };
 
+/**
+ * Pull the port from a Pin
+ *
+ * @param pin Pin
+ * @return Port of the Pin
+ */
 constexpr Port portFromPin(Pin pin) {
     return static_cast<Port>((static_cast<uint32_t>(pin) & 0xF0) >> 4);
+}
+
+/**
+ * Pull the pin number from a Pin
+ *
+ * @param pin Pin
+ * @return Pin number of the Pin
+ */
+constexpr uint8_t pinNumberFromPin(Pin pin) {
+    return static_cast<uint8_t>(pin) & 0x0F ;
 }
 
 }; // namespace core::io
