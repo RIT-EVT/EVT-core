@@ -2,17 +2,16 @@
 #define _EVT_ADC_
 
 #include <stdint.h>
+#include <core/io/pin.hpp>
 
 namespace core::io {
 
 // Forward declarations:
 // The different pins are hardware specific. Forward declarations to allow
 // at compilation time the decision of which pins should be used.
-enum class Pin : uint8_t;
 enum class ADCPeriph;
 
 class ADC {
-
 public:
     /**
      * Setup the given pin for ADC (analog to digital) usage

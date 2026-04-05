@@ -3,17 +3,14 @@
 
 #include <cstdint>
 #include <cstdlib>
+#include <core/io/pin.hpp>
+
 
 #ifndef EVT_UART_TIMEOUT
     #define EVT_UART_TIMEOUT 100
 #endif
 
 namespace core::io {
-
-// Forward declarations:
-// The different pins are hardware specific. Forward declarations to allow
-// at compilation time the decision of which pins should be used.
-enum class Pin : uint8_t;
 
 /**
  * Interface for UART operations. The UART has the ability for character and

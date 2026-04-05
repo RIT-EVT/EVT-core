@@ -1,16 +1,13 @@
 #ifndef _EVT_GPIO_
 #define _EVT_GPIO_
 
-#include "pin.hpp"
-
-#include <stdint.h>
+#include <cstdint>
+#include <core/io/pin.hpp>
 
 namespace core::io {
 // Forward declarations:
 // The different pins are hardware specific. Forward declaration to allow
 // at compilation time the decision of which pins should be used.
-enum class Pin : uint8_t;
-enum class Port : uint8_t;
 
 /**
  * Interface for interacting with GPIO pins on a device. GPIO pins can have

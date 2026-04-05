@@ -2,7 +2,7 @@
 #define _EVT_SPI_
 
 #include <cstdint>
-
+#include <core/io/pin.hpp>
 #include <core/io/GPIO.hpp>
 
 #ifndef EVT_SPI_TIMEOUT
@@ -22,11 +22,6 @@
 #define SPI_SPEED_31KHZ  31250
 
 namespace core::io {
-
-// Forward declarations:
-// The different pins are hardware specific. Forward declaration to allow
-// at compilation time the decision of which pins should be used.
-enum class Pin : uint8_t;
 
 class SPI {
 public:
