@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <core/io/platform/f4xx/GPIOf4xx.hpp>
 
 #include <core/io/GPIO.hpp>
@@ -7,6 +6,7 @@
 #include <HALf4/stm32f4xx_hal_gpio.h>
 #include <HALf4/stm32f4xx_hal_rcc.h>
 #include <core/platform/f4xx/stm32f4xx.hpp>
+#include <sys/types.h>
 
 void (*INTERRUPT_HANDLERS[16])(core::io::GPIO* pin, void* priv) = {nullptr};
 core::io::GPIO* INTERRUPT_GPIOS[16]                             = {nullptr};
@@ -101,12 +101,13 @@ GPIOf4xx::GPIOf4xx(Pin pin, GPIO::Direction direction, Pull pull) : GPIO(pin, di
 }
 
 void GPIOf4xx::setDirection(GPIO::Direction direction) {
+    const uint16_t position = 2 * pinNumberFromPin(this->pin);
+    this->port->MODER &= ~(0b11 << position);
     if (direction == Direction::INPUT) {
-        this->port->MODER &= GPIO_MODE_INPUT << (2 * pinNumberFromPin(this->pin));
+        this->port->MODER |= (MODE_INPUT << position);
     } else { // Direction::OUTPUT
-        this->port->MODER &= MODE_OUTPUT << (2 * pinNumberFromPin(this->pin));
+        this->port->MODER |= (MODE_OUTPUT << position);
     }
-    // TODO: Add implementation of resetting the direction
 }
 
 void GPIOf4xx::writePin(GPIO::State state) {
