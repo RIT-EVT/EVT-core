@@ -1,9 +1,8 @@
 #ifndef _EVT_PWM_
 #define _EVT_PWM_
 
-#include <cstdint>
 #include <core/io/pin.hpp>
-
+#include <cstdint>
 
 namespace core::io {
 

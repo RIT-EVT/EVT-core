@@ -1,9 +1,9 @@
 #ifndef _EVT_SPI_
 #define _EVT_SPI_
 
-#include <cstdint>
-#include <core/io/pin.hpp>
 #include <core/io/GPIO.hpp>
+#include <core/io/pin.hpp>
+#include <cstdint>
 
 #ifndef EVT_SPI_TIMEOUT
     #define EVT_SPI_TIMEOUT 100

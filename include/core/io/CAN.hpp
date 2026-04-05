@@ -1,9 +1,9 @@
 #ifndef _EVT_CAN_
 #define _EVT_CAN_
 
-#include <cstdint>
 #include <core/io/pin.hpp>
 #include <core/io/types/CANMessage.hpp>
+#include <cstdint>
 
 #ifndef EVT_CAN_TIMEOUT
     #define EVT_CAN_TIMEOUT 255
