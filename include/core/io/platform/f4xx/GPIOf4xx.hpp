@@ -51,7 +51,7 @@ public:
                               uint32_t speed, uint8_t alternate = 0x0E);
 
     /**
-     * Initialize an arbitrary number GPIO pins with this function
+     * Initialize an arbitrary length array of GPIO pins
      * @param pins Pin to set
      * @param numOfPins number of pins in total
      * @param mode gpio configuration mode
@@ -64,7 +64,7 @@ public:
                               uint8_t alternate = 0x00);
 
     /**
-     * Initialize a single GPIO pin with this function
+     * Initialize a single GPIO pin
      * @param pin Pin to set
      * @param mode gpio configuration mode
      * @param pull pull-up or pull-down activation
@@ -75,7 +75,7 @@ public:
     static void gpioSingleInit(Pin pin, uint32_t mode, uint32_t pull, uint32_t speed, uint8_t alternate = 0x00);
 
     /**
-     * Condenses gpio settings initialization into a single function.
+     * Mass Initialize GPIO pins with the same value with a grouping by port
      * @param pack_pins Byte Array of pins
      * @param port Port of the pins to initialize
      * @param mode gpio configuration mode
