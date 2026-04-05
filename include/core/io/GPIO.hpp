@@ -26,7 +26,7 @@ enum class Port : uint8_t;
  */
 class GPIO {
 public:
-    #pragma pack(push, 1)
+#pragma pack(push, 1)
     /**
      * A union of a 16-bit number and a  breakdown of it in a struct of individual bits.
      * the value is meant to quickly set or read a value with ease.
@@ -54,23 +54,23 @@ public:
     union PinPack {
         uint16_t value;
         struct {
-            uint16_t // total size
-            pin_0  : 1, // Bit 0
-            pin_1  : 1, // Bit 1
-            pin_2  : 1, // Bit 2
-            pin_3  : 1, // Bit 3
-            pin_4  : 1, // Bit 4
-            pin_5  : 1, // Bit 5
-            pin_6  : 1, // Bit 6
-            pin_7  : 1, // Bit 7
-            pin_8  : 1, // Bit 8
-            pin_9  : 1, // Bit 9
-            pin_10 : 1, // Bit 10
-            pin_11 : 1, // Bit 11
-            pin_12 : 1, // Bit 12
-            pin_13 : 1, // Bit 13
-            pin_14 : 1, // Bit 14
-            pin_15 : 1; // Bit 15
+            uint16_t        // total size
+                pin_0  : 1, // Bit 0
+                pin_1  : 1, // Bit 1
+                pin_2  : 1, // Bit 2
+                pin_3  : 1, // Bit 3
+                pin_4  : 1, // Bit 4
+                pin_5  : 1, // Bit 5
+                pin_6  : 1, // Bit 6
+                pin_7  : 1, // Bit 7
+                pin_8  : 1, // Bit 8
+                pin_9  : 1, // Bit 9
+                pin_10 : 1, // Bit 10
+                pin_11 : 1, // Bit 11
+                pin_12 : 1, // Bit 12
+                pin_13 : 1, // Bit 13
+                pin_14 : 1, // Bit 14
+                pin_15 : 1; // Bit 15
         };
     };
 
