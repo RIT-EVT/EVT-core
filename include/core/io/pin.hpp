@@ -33,9 +33,10 @@
 namespace core::io {
 
 /**
- * Pin mapping information. These values are generated via a combination of the GPIO bank that
- * the pin is on and the number of the pin. We referenced MBed's documentation for generating
- * these values.
+ * Pin mapping information. The port is the letter after P, and the pin number is the number after the underscore
+ *
+ * PB_10's port is B and pin number is 10
+ * See the Port enum to see what the value of a Port should be
  */
 enum class Pin : uint8_t {
     INVALID = 0xFF, // THIS INTENTIONALLY DOES NOT POINT TO A PIN. Used as a default value, so the default value is
@@ -312,7 +313,7 @@ enum class Port : uint8_t {
 };
 
 /**
- * Pull the port from a Pin
+ * Get the port from a Pin
  *
  * @param pin Pin
  * @return Port of the Pin
@@ -322,7 +323,7 @@ constexpr Port portFromPin(Pin pin) {
 }
 
 /**
- * Pull the pin number from a Pin
+ * Get the pin number from a Pin
  *
  * @param pin Pin
  * @return Pin number of the Pin

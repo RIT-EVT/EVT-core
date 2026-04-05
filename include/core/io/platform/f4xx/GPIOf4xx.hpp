@@ -38,53 +38,54 @@ public:
     /**
      * DEPRECATED!!!! DO NOT USE
      * Condenses gpio settings initialization into a single function.
-     * @param targetGpio gpio instance to initialize
-     * @param pins array of pins used by gpio instance
-     * @param numOfPins size of the pin array (either 1 or 2)
-     * @param mode gpio configuration mode
-     * @param pull pull-up or pull-down activation
-     * @param speed maximum gpio output frequency
+     * @param[in/out] targetGpio gpio instance to initialize
+     * @param[in] pins array of pins used by gpio instance
+     * @param[in] numOfPins size of the pin array (either 1 or 2)
+     * @param[in] mode gpio configuration mode
+     * @param[in] pull pull-up or pull-down activation
+     * @param[in] speed maximum gpio output frequency
      * Possible values for Mode, Pull, and Speed can be found in "stm32f4xx_hal_gpio.h"
-     * @param alternate gpio alternate function selection
+     * @param[in] alternate gpio alternate function selection
      */
     static void gpioStateInit(GPIO_InitTypeDef* targetGpio, Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pull,
                               uint32_t speed, uint8_t alternate = 0x0E);
 
     /**
-     * Initialize an arbitrary length array of GPIO pins
-     * @param pins Pins to set
-     * @param numOfPins number of pins in total
-     * @param mode gpio configuration mode
-     * @param pull pull-up or pull-down activation
-     * @param speed maximum gpio output frequency
+     * Initialize an arbitrary length array of GPIO pins.
+     * Does modify the array to be sorted as a result of its implementation
+     * @param[in] pins Pins to set
+     * @param[in] numOfPins number of pins in total
+     * @param[in] mode gpio configuration mode
+     * @param[in] pull pull-up or pull-down activation
+     * @param[in] speed maximum gpio output frequency
      * Possible values for Mode, Pull, and Speed can be found in "stm32f4xx_hal_gpio.h"
-     * @param alternate gpio alternate function selection
+     * @param[in] alternate gpio alternate function selection
      */
     static void gpioInit(Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pull, uint32_t speed,
                          uint8_t alternate = 0x00);
 
     /**
      * Initialize a single GPIO pin
-     * @param pin Pin to set
-     * @param mode gpio configuration mode
-     * @param pull pull-up or pull-down activation
-     * @param speed maximum gpio output frequency
+     * @param[in] pin Pin to set
+     * @param[in] mode gpio configuration mode
+     * @param[in] pull pull-up or pull-down activation
+     * @param[in] speed maximum gpio output frequency
      * Possible values for Mode, Pull, and Speed can be found in "stm32f4xx_hal_gpio.h"
-     * @param alternate gpio alternate function selection
+     * @param[in] alternate gpio alternate function selection
      */
     static void gpioSingleInit(Pin pin, uint32_t mode, uint32_t pull, uint32_t speed, uint8_t alternate = 0x00);
 
     /**
      * Mass Initialize GPIO pins with the same value with a grouping by port
-     * @param pack_pins Byte Array of pins
-     * @param port Port of the pins to initialize
-     * @param mode gpio configuration mode
-     * @param pull pull-up or pull-down activation
-     * @param speed maximum gpio output frequency
+     * @param[in] pack_pins Byte Array of pins
+     * @param[in] port Port of the pins to initialize
+     * @param[in] mode gpio configuration mode
+     * @param[in] pull pull-up or pull-down activation
+     * @param[in] speed maximum gpio output frequency
      * Possible values for Mode, Pull, and Speed can be found in "stm32f4xx_hal_gpio.h"
-     * @param alternate gpio alternate function selection
+     * @param[in] alternate gpio alternate function selection
      */
-    static void gpioPortInit(PinPack& pack_pins, Port port, uint32_t mode, uint32_t pull, uint32_t speed,
+    static void gpioPortInit(PinPack pack_pins, Port port, uint32_t mode, uint32_t pull, uint32_t speed,
                              uint8_t alternate);
 
 private:

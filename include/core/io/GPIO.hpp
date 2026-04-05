@@ -5,10 +5,6 @@
 #include <cstdint>
 
 namespace core::io {
-// Forward declarations:
-// The different pins are hardware specific. Forward declaration to allow
-// at compilation time the decision of which pins should be used.
-
 /**
  * Interface for interacting with GPIO pins on a device. GPIO pins can have
  * their state read and written to.
