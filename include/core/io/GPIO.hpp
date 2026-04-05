@@ -51,23 +51,10 @@ public:
     union PinPack {
         uint16_t value;
         struct {
-            uint16_t
-            pin_0:  1, // Bit 0
-            pin_1:  1,
-            pin_2:  1,
-            pin_3:  1,
-            pin_4:  1,
-            pin_5:  1,
-            pin_6:  1,
-            pin_7:  1,
-            pin_8:  1,
-            pin_9:  1,
-            pin_10: 1,
-            pin_11: 1,
-            pin_12: 1,
-            pin_13: 1,
-            pin_14: 1,
-            pin_15: 1; // Bit 15
+            uint16_t pin_0 : 1, // Bit 0
+                pin_1 : 1, pin_2 : 1, pin_3 : 1, pin_4 : 1, pin_5 : 1, pin_6 : 1, pin_7 : 1, pin_8 : 1, pin_9 : 1,
+                pin_10 : 1, pin_11 : 1, pin_12 : 1, pin_13 : 1, pin_14 : 1,
+                pin_15 : 1; // Bit 15
         };
     };
 

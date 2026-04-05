@@ -292,23 +292,23 @@ enum class Pin {
 
 enum class Port {
     Invalid = -1,
-    A = 0x0,
-    B = 0x1,
-    C = 0x2,
-    D = 0x3,
-    #ifdef HAS_PORT_E
+    A       = 0x0,
+    B       = 0x1,
+    C       = 0x2,
+    D       = 0x3,
+#ifdef HAS_PORT_E
     E = 0x4,
-    #endif
+#endif
     F = 0x5,
-    #ifdef HAS_PORT_G
+#ifdef HAS_PORT_G
     G = 0x6,
-    #endif
-    #ifdef HAS_PORT_H
+#endif
+#ifdef HAS_PORT_H
     H = 0x7,
-    #endif
-    #ifdef HAS_PORT_I
+#endif
+#ifdef HAS_PORT_I
     I = 0x8,
-    #endif
+#endif
 };
 
 constexpr Port portFromPin(Pin pin) {
