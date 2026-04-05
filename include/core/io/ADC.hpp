@@ -1,8 +1,8 @@
 #ifndef _EVT_ADC_
 #define _EVT_ADC_
 
-#include <stdint.h>
 #include <core/io/pin.hpp>
+#include <stdint.h>
 
 namespace core::io {
 

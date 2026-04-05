@@ -1,8 +1,8 @@
 #ifndef _EVT_I2C_
 #define _EVT_I2C_
 
-#include <cstdint>
 #include <core/io/pin.hpp>
+#include <cstdint>
 
 #define I2C_RETURN_IF_ERR(func)             \
     {                                       \

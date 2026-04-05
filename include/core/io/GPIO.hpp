@@ -1,8 +1,8 @@
 #ifndef _EVT_GPIO_
 #define _EVT_GPIO_
 
-#include <cstdint>
 #include <core/io/pin.hpp>
+#include <cstdint>
 
 namespace core::io {
 // Forward declarations:

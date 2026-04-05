@@ -1,10 +1,9 @@
 #ifndef _EVT_UART_
 #define _EVT_UART_
 
+#include <core/io/pin.hpp>
 #include <cstdint>
 #include <cstdlib>
-#include <core/io/pin.hpp>
-
 
 #ifndef EVT_UART_TIMEOUT
     #define EVT_UART_TIMEOUT 100
