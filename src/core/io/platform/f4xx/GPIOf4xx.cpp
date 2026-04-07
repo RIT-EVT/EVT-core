@@ -6,7 +6,6 @@
 #include <HALf4/stm32f4xx_hal_gpio.h>
 #include <HALf4/stm32f4xx_hal_rcc.h>
 #include <core/platform/f4xx/stm32f4xx.hpp>
-#include <sys/types.h>
 
 void (*INTERRUPT_HANDLERS[16])(core::io::GPIO* pin, void* priv) = {nullptr};
 core::io::GPIO* INTERRUPT_GPIOS[16]                             = {nullptr};
