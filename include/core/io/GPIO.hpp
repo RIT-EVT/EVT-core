@@ -19,7 +19,6 @@ namespace core::io {
  */
 class GPIO {
 public:
-#pragma pack(push, 1)
     /**
      * A union of a 16-bit number and a  breakdown of it in a struct of individual bits.
      * the value is meant to quickly set or read a value with ease.
@@ -44,7 +43,7 @@ public:
      * then
      * a.pin_12 && a.pin_8 && a.pin_4 && a.pin_0 == 1
      */
-    union PinPack {
+    union __attribute__((packed)) PinPack {
         uint16_t value;
         struct {
             uint16_t        // total size
