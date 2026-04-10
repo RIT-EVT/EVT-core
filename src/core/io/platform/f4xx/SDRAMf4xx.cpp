@@ -1,10 +1,11 @@
-#include <core/io/platform/f4xx/FMCf4xx.hpp>
 #include <core/io/platform/f4xx/GPIOf4xx.hpp>
+#include <core/io/platform/f4xx/SDRAMf4xx.hpp>
 
 namespace core::io {
 
-FMCf4xx::FMCf4xx(FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SdramInitConfig sdramInitConfig,
-                 SdramTimingConfig sdramTimingConfig) :
+SDRAMf4xx::SDRAMf4xx(FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SDRAMInitConfig sdramInitConfig,
+                 SDRAMTimingConfig sdramTimingConfig) :
+    SDRAM(sdramInitConfig.sdBank == FMC_SDRAM_BANK1 ? FMC_SDRAM_BANK1_BASE : FMC_SDRAM_BANK2_BASE, pinConfig, sdramInitConfig, sdramTimingConfig),
     sdramDevice(sdramDevice), sdram({nullptr}), sdramTiming({0}) {
     InitHardware(pinConfig);
 
@@ -30,20 +31,20 @@ FMCf4xx::FMCf4xx(FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SdramIn
     HAL_SDRAM_Init(&sdram, &sdramTiming);
 }
 
-FMCf4xx::Status FMCf4xx::WriteProtectionEnable() {
+SDRAMf4xx::Status SDRAMf4xx::WriteProtectionEnable() {
     FMC_SDRAM_WriteProtection_Enable(sdramDevice, sdramInitConfig.sdBank);
 
     return Status::OK;
 }
 
-FMCf4xx::Status FMCf4xx::WriteProtection_Disable() {
+SDRAMf4xx::Status SDRAMf4xx::WriteProtection_Disable() {
     FMC_SDRAM_WriteProtection_Disable(sdramDevice, sdramInitConfig.sdBank);
 
     return Status::OK;
 }
 
-FMCf4xx::Status FMCf4xx::SendCommand(FMC_SDRAM_CommandTypeDef *command, uint32_t timeout) {
-    FMC_SDRAM_CommandTypeDef *halCommand = nullptr;
+SDRAMf4xx::Status SDRAMf4xx::SendCommand(SDRAMCommandStruct *command, uint32_t timeout) {
+    FMC_SDRAM_CommandTypeDef *halCommand;
 
     halCommand->AutoRefreshNumber = command->AutoRefreshNumber;
     halCommand->CommandMode = command->CommandMode;
@@ -59,36 +60,24 @@ FMCf4xx::Status FMCf4xx::SendCommand(FMC_SDRAM_CommandTypeDef *command, uint32_t
     return Status::OK;
 }
 
-FMCf4xx::Status FMCf4xx::ProgramRefreshRate(uint32_t refreshRate) {
+SDRAMf4xx::Status SDRAMf4xx::ProgramRefreshRate(uint32_t refreshRate) {
     FMC_SDRAM_ProgramRefreshRate(sdramDevice, refreshRate);
 
     return Status::OK;
 }
 
-FMCf4xx::Status FMCf4xx::SetAutoRefreshNumber(uint32_t autoRefreshNumber) {
+SDRAMf4xx::Status SDRAMf4xx::SetAutoRefreshNumber(uint32_t autoRefreshNumber) {
     FMC_SDRAM_SetAutoRefreshNumber(sdramDevice, autoRefreshNumber);
 
     return Status::OK;
 }
 
-uint32_t FMCf4xx::GetModeStatus() {
+uint32_t SDRAMf4xx::GetModeStatus() {
     return FMC_SDRAM_GetModeStatus(sdramDevice, sdramInitConfig.sdBank);
 }
 
-uint32_t FMCf4xx::getSdramClockFrequency() {
-    return HAL_RCC_GetSysClockFreq() / 2;
-}
-
-uint32_t FMCf4xx::getSdramClockPeriodUS() {
-    return 1000000000UL / (getSdramClockFrequency() / 1000);
-}
-
-uint32_t FMCf4xx::NSToSdramClockCycles(uint32_t nanoseconds) {
-    return (nanoseconds * 1000 + getSdramClockPeriodUS()) / (getSdramClockPeriodUS());
-}
-
-FMCf4xx::SdramInitConfig FMCf4xx::defaultSdramInitConfig() {
-    FMCf4xx::SdramInitConfig config{};
+SDRAMf4xx::SDRAMInitConfig SDRAMf4xx::defaultSdramInitConfig() {
+    SDRAMInitConfig config{};
 
     config.sdBank             = FMC_SDRAM_BANK1;
     config.columnBitsNumber   = FMC_SDRAM_COLUMN_BITS_NUM_8;
@@ -104,8 +93,8 @@ FMCf4xx::SdramInitConfig FMCf4xx::defaultSdramInitConfig() {
     return config;
 };
 
-FMCf4xx::SdramTimingConfig FMCf4xx::defaultSdramTimingConfig() {
-    FMCf4xx::SdramTimingConfig config{};
+SDRAMf4xx::SDRAMTimingConfig SDRAMf4xx::defaultSdramTimingConfig() {
+    SDRAMTimingConfig config{};
 
     config.loadToActiveDelay    = NSToSdramClockCycles(LOAD_MODE_REGISTER_TO_ACTIVE_NS);
     config.exitSelfRefreshDelay = NSToSdramClockCycles(EXIT_SELF_REFRESH_DELAY_NS);
@@ -118,11 +107,11 @@ FMCf4xx::SdramTimingConfig FMCf4xx::defaultSdramTimingConfig() {
     return config;
 };
 
-uint32_t* FMCf4xx::getSDRAMMemoryAddress() {
+uint32_t* SDRAMf4xx::getSDRAMMemoryAddress() const {
     return sdramInitConfig.sdBank == FMC_SDRAM_BANK1 ? FMC_SDRAM_BANK1_BASE : FMC_SDRAM_BANK2_BASE;
 }
 
-void FMCf4xx::InitHardware(const FMCPinConfig& pinConfig) {
+void SDRAMf4xx::InitHardware(const FMCPinConfig& pinConfig) {
     __HAL_RCC_FMC_CLK_ENABLE();
 
     InitPinGroup(pinConfig.address.pins, pinConfig.address.count);
@@ -132,7 +121,7 @@ void FMCf4xx::InitHardware(const FMCPinConfig& pinConfig) {
     InitPinGroup(pinConfig.command.pins, pinConfig.command.count);
 }
 
-void FMCf4xx::InitPinGroup(FMC_PIN* pins, uint8_t count) {
+void SDRAMf4xx::InitPinGroup(FMC_PIN* pins, uint8_t count) {
     GPIO_InitTypeDef gpioInit;
 
     GPIOf4xx::gpioStateInit(&gpioInit, pins, count, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);

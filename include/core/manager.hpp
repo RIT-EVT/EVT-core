@@ -10,6 +10,7 @@
 #include <core/io/PWM.hpp>
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
+#include <core/io/SDRAM.hpp>
 
 #ifdef STM32F3xx
     #define ADC_SUPPORTED
@@ -47,19 +48,21 @@
     #define RTC_SUPPORTED
     #define SPI_SUPPORTED
     #define UART_SUPPORTED
+    #define SDRAM_SUPPORTED
 
-    #include <core/dev/MCUTimer.hpp>
-    #include <core/dev/platform/f4xx/IWDGf4xx.hpp>
-    #include <core/dev/platform/f4xx/RTCf4xx.hpp>
-    #include <core/dev/platform/f4xx/Timerf4xx.hpp>
-    #include <core/io/platform/f4xx/ADCf4xx.hpp>
-    #include <core/io/platform/f4xx/CANf4xx.hpp>
-    #include <core/io/platform/f4xx/GPIOf4xx.hpp>
-    #include <core/io/platform/f4xx/I2Cf4xx.hpp>
-    #include <core/io/platform/f4xx/PWMf4xx.hpp>
-    #include <core/io/platform/f4xx/SPIf4xx.hpp>
-    #include <core/io/platform/f4xx/UARTf4xx.hpp>
-    #include <core/platform/f4xx/stm32f4xx.hpp>
+        #include <core/dev/MCUTimer.hpp>
+        #include <core/dev/platform/f4xx/IWDGf4xx.hpp>
+        #include <core/dev/platform/f4xx/RTCf4xx.hpp>
+        #include <core/dev/platform/f4xx/Timerf4xx.hpp>
+        #include <core/io/platform/f4xx/ADCf4xx.hpp>
+        #include <core/io/platform/f4xx/CANf4xx.hpp>
+        #include <core/io/platform/f4xx/GPIOf4xx.hpp>
+        #include <core/io/platform/f4xx/I2Cf4xx.hpp>
+        #include <core/io/platform/f4xx/PWMf4xx.hpp>
+        #include <core/io/platform/f4xx/SDRAMf4xx.hpp>
+        #include <core/io/platform/f4xx/SPIf4xx.hpp>
+        #include <core/io/platform/f4xx/UARTf4xx.hpp>
+        #include <core/platform/f4xx/stm32f4xx.hpp>
 
 #endif
 
@@ -319,6 +322,17 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
     #ifdef STM32F4xx
     static SPIf4xx spi(CSPins, pinLength, sckPin, mosiPin);
     return spi;
+    #endif
+}
+#endif
+
+#ifdef SDRAM_SUPPORTED
+template<FMC::FMCPinConfig *pinConfig>
+FMC& getFMC(FMC_SDRAM_TypeDef* sdramDevice, SDRAMf4xx::SDRAMInitConfig sdramInitConfig,
+            SDRAMf4xx::SDRAMTimingConfig sdramTimingConfig) {
+    #ifdef STM32F4xx
+    static SDRAMf4xx fmc(sdramDevice, *pinConfig, sdramInitConfig, sdramTimingConfig);
+    return fmc;
     #endif
 }
 #endif
