@@ -30,7 +30,7 @@ io::UART* uart;
 // Create a can interrupt handler
 void canInterrupt(io::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
-    char messageString[50];
+    char messageString[100];
 
     uint8_t* data = message.getPayload();
     if (queue != nullptr) {
@@ -52,12 +52,13 @@ void canInterrupt(io::CANMessage& message, void* priv) {
 
 void SdoTransferCallback(CO_CSDO* csdo, uint32_t entry, uint32_t code, void* context) {
     char messageString[50];
+    uint8_t* transferBuff = static_cast<uint8_t*>(context);
     if (code == 0) {
-        /* read data is available in 'readValue' */
-        snprintf(&messageString[0], 25, "Value transferred %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
+        /* read data is available */
+        snprintf(&messageString[0], 25, "Value transferred %X\r\n", *transferBuff);
     } else {
         /* a timeout or abort is detected during SDO transfer  */
-        snprintf(&messageString[0], 36, "SDO transfer callback don goofed 0x%x\r\n", code);
+        snprintf(&messageString[0], 45, "SDO transfer callback don goofed %X\r\n", code);
     }
 
     log::LOGGER.log(log::Logger::LogLevel::DEBUG, "SDO Transfer Operation: \r\n\t%s\r\n", messageString);
@@ -65,12 +66,13 @@ void SdoTransferCallback(CO_CSDO* csdo, uint32_t entry, uint32_t code, void* con
 
 void SdoReceiveCallback(CO_CSDO* csdo, uint32_t entry, uint32_t code, void* context) {
     char messageString[50];
+    uint8_t* receiveBuff = static_cast<uint8_t*>(context);
     if (code == 0) {
-        /* read data is available in 'readValue' */
-        snprintf(&messageString[0], 25, "Value received %x, %x\r\n", csdo->Tfer.Buf[0], csdo->Tfer.Buf[1]);
+        /* read data is available */
+        snprintf(&messageString[0], 25, "Value received %X\r\n", *receiveBuff);
     } else {
-        /* a timeout or abort is detected during SDO transfer  */
-        snprintf(&messageString[0], 36, "SDO receive callback don goofed 0x%x\r\n", code);
+        /* a timeout or abort is detected during SDO receive  */
+        snprintf(&messageString[0], 45, "SDO receive callback don goofed %X\r\n", code);
     }
 
     log::LOGGER.log(log::Logger::LogLevel::DEBUG, "SDO Receive Operation: \r\n\t%s\r\n", messageString);
@@ -144,10 +146,11 @@ int main() {
     ///////////////////////////////////////////////////////////////////////////
     uint32_t lastUpdate1 = HAL_GetTick();
     uint32_t lastUpdate2 = HAL_GetTick();
+    uint8_t sampleData = 0;
 
     while (1) {
         if ((HAL_GetTick() - lastUpdate1) >= 1000) {                 // If 1000ms have passed receive CAN message.
-            testCanNode.receiveData(SdoReceiveCallback, &canNode);   // Receive data from server
+            testCanNode.receiveData(SdoReceiveCallback, &sampleData);   // Receive data from server
             lastUpdate1 = HAL_GetTick();                             // Set to current time.
         } else if ((HAL_GetTick() - lastUpdate2) >= 5000) {          // If 5000ms have passed write CAN message.
             testCanNode.transferData(SdoTransferCallback, &canNode); // Send data to server

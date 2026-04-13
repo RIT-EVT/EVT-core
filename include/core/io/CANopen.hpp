@@ -97,7 +97,7 @@ void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* ca
 void processCANopenNode(CO_NODE* canNode);
 
 /**
- * This function sets up and starts an SDO download (write) request to transfer data
+ * This function starts an asynchronous SDO download (write) request to transfer data
  * to the specified object dictionary entry on the target CANopen node.
  *
  * @param node[in]             Reference to the CANopen node object
@@ -106,14 +106,14 @@ void processCANopenNode(CO_NODE* canNode);
  * @param entry[in]            Object dictionary entry (index + subindex) to write to
  * @param transferCallback[in] Callback function for the transfer operation
  * @param transferContext[in]  Context for the callback function
- * @return CO_ERR[out]         Returns the result of the transfer operation
+ * @return CO_ERR[out]         Returns the result of scheduling the transfer operation
  */
 CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t transferCallback,
                    void* transferContext);
 
 /**
- * This function starts an SDO upload (read) request to fetch data from the specified
- * object dictionary entry on the target CANopen node
+ * This function starts an asynchronous SDO upload (read) request to fetch data from
+ * the specified object dictionary entry on the target CANopen node
  *
  * @param node[in]            Reference to the CANopen node object
  * @param data[in]            Pointer to the buffer where received data will be stored
@@ -121,14 +121,14 @@ CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, c
  * @param entry[in]           Object dictionary entry (index + subindex) to read from
  * @param receiveCallback[in] Callback function for the receive operation
  * @param receiveContext[in]  Context for the callback function
- * @return CO_ERR[out]        Returns the result of the receive operation
+ * @return CO_ERR[out]        Returns the result of scheduling the receive operation
  */
 CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t receiveCallback,
                   void* receiveContext);
 
 /**
- * This function sets up and starts an SDO download (write) request to transfer data
- * to the specified object dictionary entry on the target CANopen node.
+ * This function performs a blocking SDO download (write) request to transfer data to the
+ * specified object dictionary entry on the target CANopen node and waits for the response.
  *
  * @param node[in]        Reference to the CANopen node object
  * @param data[in]        Pointer to the data buffer that holds the data to send
@@ -136,11 +136,11 @@ CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, cs
  * @param entry[in]       Object dictionary entry (index + subindex) to write to
  * @return CO_ERR[out]    Returns the result of the transfer operation
  */
-CO_ERR SDOTransferBlocking(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry);
+uint32_t SDOTransferBlocking(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry);
 
 /**
- * This function starts an SDO upload (read) request to fetch data from the specified
- * object dictionary entry on the target CANopen node
+ * This function performs a blocking SDO upload (read) request to fetch data from
+ * the specified object dictionary entry on the target CANopen node.
  *
  * @param node[in]        Reference to the CANopen node object
  * @param data[in]        Pointer to the buffer where received data will be stored
@@ -148,7 +148,7 @@ CO_ERR SDOTransferBlocking(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t 
  * @param entry[in]       Object dictionary entry (index + subindex) to read from
  * @return CO_ERR[out]    Returns the result of the receive operation
  */
-CO_ERR SDOReceiveBlocking(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry);
+uint32_t SDOReceiveBlocking(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry);
 } // namespace core::io
 
 #endif

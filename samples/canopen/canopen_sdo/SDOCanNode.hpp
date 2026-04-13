@@ -1,5 +1,3 @@
-#include <cstdint>
-
 #include <co_core.h>
 #include <core/io/CANDevice.hpp>
 #include <core/io/CANOpenMacros.hpp>
@@ -64,15 +62,6 @@ public:
     static constexpr uint8_t NODE_ID = 2;
 
 private:
-    /**
-     * This sample data will be exposed over CAN through the object
-     * dictionary. The address of the variable will be included in the
-     * object dictionary and can be updated via SDO via a CANopen client.
-     * This device will then broadcast the value via a triggered PDO.
-     */
-    uint8_t sampleDataA;
-    uint16_t sampleDataB;
-
     /** Holds the data to be transferred */
     uint8_t transferBuffArray[2]{};
 
@@ -96,12 +85,6 @@ private:
         IDENTITY_OBJECT_1018,
         SDO_CONFIGURATION_1200,
         SDO_CONFIGURATION_1280(1),
-
-        // User defined data, this will be where we put elements that can be
-        // accessed via SDO and depending on configuration PDO
-        DATA_LINK_START_KEY_21XX(0, 0x02),
-        DATA_LINK_21XX(0x00, 0x01, CO_TUNSIGNED8, &sampleDataA),
-        DATA_LINK_21XX(0x00, 0x02, CO_TUNSIGNED16, &sampleDataB),
 
         // End of dictionary marker
         CO_OBJ_DICT_ENDMARK,

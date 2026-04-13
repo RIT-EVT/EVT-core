@@ -10,6 +10,8 @@
 #include <stdint.h>
 
 #define MAX_SIZE 64
+#define SDO_WAIT 10
+#define SDO_REQUEST_TIMEOUT 1000
 
 namespace log = core::log;
 
@@ -163,7 +165,7 @@ CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, c
                    void* transferContext) {
     while (state.inProgress == true) {
         processCANopenNode(state.node);
-        time::wait(100);
+        time::wait(SDO_WAIT);
     }
 
     // Find the Client-SDO (CO_CSDO) object for the specified node.
@@ -176,7 +178,7 @@ CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, c
         state.node     = &node;
 
         // Initiate an SDO download request.
-        err = COCSdoRequestDownload(csdo, entry, data, size, internalCallback, 1000);
+        err = COCSdoRequestDownload(csdo, entry, data, size, internalCallback, SDO_REQUEST_TIMEOUT);
     }
 
     if (err == CO_ERR_NONE) {
@@ -190,7 +192,7 @@ CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, cs
                   void* receiveContext) {
     while (state.inProgress == true) {
         processCANopenNode(state.node);
-        time::wait(100);
+        time::wait(SDO_WAIT);
     }
 
     // Find the Client-SDO (CO_CSDO) object for the specified node.
@@ -203,7 +205,7 @@ CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, cs
         state.node     = &node;
 
         // Initiate an SDO upload request.
-        err = COCSdoRequestUpload(csdo, entry, data, size, internalCallback, 1000);
+        err = COCSdoRequestUpload(csdo, entry, data, size, internalCallback, SDO_REQUEST_TIMEOUT);
     }
 
     if (err == CO_ERR_NONE) {
@@ -213,31 +215,31 @@ CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, cs
     return err;
 }
 
-CO_ERR SDOTransferBlocking(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry) {
+uint32_t SDOTransferBlocking(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry) {
     CO_ERR err = SDOTransfer(node, data, size, entry, nullptr, nullptr);
 
     while (state.inProgress == true) {
         processCANopenNode(state.node);
-        time::wait(100);
+        time::wait(SDO_WAIT);
     }
 
     if (state.lastErr != 0) {
-        return CO_ERR_SDO_ABORT;
+        return state.lastErr;
     }
 
     return err;
 }
 
-CO_ERR SDOReceiveBlocking(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry) {
+uint32_t SDOReceiveBlocking(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry) {
     CO_ERR err = SDOReceive(node, data, size, entry, nullptr, nullptr);
 
     while (state.inProgress == true) {
         processCANopenNode(state.node);
-        time::wait(100);
+        time::wait(SDO_WAIT);
     }
 
     if (state.lastErr != 0) {
-        return CO_ERR_SDO_ABORT;
+        return state.lastErr;
     }
 
     return err;
