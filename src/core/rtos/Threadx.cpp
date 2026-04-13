@@ -67,6 +67,9 @@ TXError sleep(uint32_t sleepTime) {
     return static_cast<TXError>(errorCode);
 }
 
+uint32_t getTick() {
+    return tx_time_get();
+}
 } // namespace core::rtos
 
 /********************************************/
