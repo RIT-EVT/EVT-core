@@ -35,7 +35,7 @@ void SDOCanNode::receiveData(io::csdo_callback_t callback, void* context) {
      * the provided receive buffer array. Targets the object dictionary entry at
      * index 0x2100, sub-index 0x01. Registers and executes the SDOReceiveCallback function upon completion.
      */
-    CO_ERR err = io::SDOReceive(node, (uint8_t*)context, 1, CO_DEV(0x2100, 0x01), callback, context);
+    CO_ERR err = io::SDOReceive(node, (uint8_t*) context, 1, CO_DEV(0x2100, 0x01), callback, context);
 
     /* Check if the SDO receive operation was successfully started. */
     if (err == CO_ERR_NONE) {

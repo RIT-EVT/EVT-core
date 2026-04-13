@@ -9,8 +9,8 @@
 #include <core/io/CANDevice.hpp>
 #include <stdint.h>
 
-#define MAX_SIZE 64
-#define SDO_WAIT 10
+#define MAX_SIZE            64
+#define SDO_WAIT            10
 #define SDO_REQUEST_TIMEOUT 1000
 
 namespace log = core::log;

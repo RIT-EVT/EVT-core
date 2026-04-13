@@ -146,15 +146,15 @@ int main() {
     ///////////////////////////////////////////////////////////////////////////
     uint32_t lastUpdate1 = HAL_GetTick();
     uint32_t lastUpdate2 = HAL_GetTick();
-    uint8_t sampleData = 0;
+    uint8_t sampleData   = 0;
 
     while (1) {
-        if ((HAL_GetTick() - lastUpdate1) >= 1000) {                 // If 1000ms have passed receive CAN message.
-            testCanNode.receiveData(SdoReceiveCallback, &sampleData);   // Receive data from server
-            lastUpdate1 = HAL_GetTick();                             // Set to current time.
-        } else if ((HAL_GetTick() - lastUpdate2) >= 5000) {          // If 5000ms have passed write CAN message.
-            testCanNode.transferData(SdoTransferCallback, &canNode); // Send data to server
-            lastUpdate2 = HAL_GetTick();                             // Set to current time.
+        if ((HAL_GetTick() - lastUpdate1) >= 1000) {                  // If 1000ms have passed receive CAN message.
+            testCanNode.receiveData(SdoReceiveCallback, &sampleData); // Receive data from server
+            lastUpdate1 = HAL_GetTick();                              // Set to current time.
+        } else if ((HAL_GetTick() - lastUpdate2) >= 5000) {           // If 5000ms have passed write CAN message.
+            testCanNode.transferData(SdoTransferCallback, &canNode);  // Send data to server
+            lastUpdate2 = HAL_GetTick();                              // Set to current time.
         }
 
         io::processCANopenNode(&canNode);
