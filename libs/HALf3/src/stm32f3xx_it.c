@@ -63,6 +63,7 @@
 /******************************************************************************/
 /*           Cortex-M4 Processor Interruption and Exception Handlers          */
 /******************************************************************************/
+inline void ensure_interrupt_linkage() {} // This is here to ensure linkage within the file
 /**
   * @brief This function handles Non maskable interrupt.
   */

@@ -44,7 +44,7 @@ void stm32f3xx_init() {
     HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
      */
 
-    SysTick_Handler();
+    ensure_interrupt_linkage();
 }
 
 } // namespace core::platform
