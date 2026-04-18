@@ -4,20 +4,18 @@
 
 namespace log = core::log;
 
-SDOCanNode::SDOCanNode(CO_NODE& canNode) : node(canNode), transferBuffArray{0, 0} {}
+SDOCanNode::SDOCanNode(CO_NODE& canNode) : node(canNode), transferBuff(0) {}
 
 void SDOCanNode::transferData(io::csdo_callback_t callback, void* context) {
-    /* Increment the first element of transferBuffArray by 1. */
-    transferBuffArray[0]++;
-    /* Set the second element of transferBuffArray to twice the new value of the first element. */
-    transferBuffArray[1] = transferBuffArray[0] * 2;
+    // Get the value to be transferred
+    transferBuff = static_cast<uint8_t*>(context);
 
     /*
      * Initiates an SDO transfer for the specified node using the provided
      * transfer buffer array. Targets the object dictionary entry at index 0x2100,
      * sub-index 0x02. Registers and executes the SDOTransferCallback function upon completion.
      */
-    CO_ERR err = io::SDOTransfer(node, transferBuffArray, 2, CO_DEV(0x2100, 0x02), callback, transferBuffArray);
+    CO_ERR err = io::SDOTransfer(node, transferBuff, 2, CO_DEV(0x2100, 0x02), callback, transferBuff);
 
     /* Check if the SDO transfer was successfully started. */
     if (err == CO_ERR_NONE) {

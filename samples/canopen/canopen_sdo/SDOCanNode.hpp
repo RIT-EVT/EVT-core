@@ -63,7 +63,7 @@ public:
 
 private:
     /** Holds the data to be transferred */
-    uint8_t transferBuffArray[2]{};
+    uint8_t* transferBuff;
 
     CO_NODE& node;
 

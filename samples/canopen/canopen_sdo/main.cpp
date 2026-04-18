@@ -50,9 +50,10 @@ void canInterrupt(io::CANMessage& message, void* priv) {
 #endif
 }
 
-void SdoTransferCallback(CO_CSDO* csdo, uint32_t entry, uint32_t code, void* context) {
+void SdoCompletedTransferCallback(CO_CSDO* csdo, uint32_t entry, uint32_t code, void* context) {
     char messageString[50];
     uint8_t* transferBuff = static_cast<uint8_t*>(context);
+
     if (code == 0) {
         /* read data is available */
         snprintf(&messageString[0], 25, "Value transferred %X\r\n", *transferBuff);
@@ -64,7 +65,7 @@ void SdoTransferCallback(CO_CSDO* csdo, uint32_t entry, uint32_t code, void* con
     log::LOGGER.log(log::Logger::LogLevel::DEBUG, "SDO Transfer Operation: \r\n\t%s\r\n", messageString);
 }
 
-void SdoReceiveCallback(CO_CSDO* csdo, uint32_t entry, uint32_t code, void* context) {
+void SdoCompletedReceiveCallback(CO_CSDO* csdo, uint32_t entry, uint32_t code, void* context) {
     char messageString[50];
     uint8_t* receiveBuff = static_cast<uint8_t*>(context);
     if (code == 0) {
@@ -146,15 +147,17 @@ int main() {
     ///////////////////////////////////////////////////////////////////////////
     uint32_t lastUpdate1 = HAL_GetTick();
     uint32_t lastUpdate2 = HAL_GetTick();
-    uint8_t sampleData   = 0;
+    uint8_t receiveSampleData  = 0;
+    uint8_t transferSampleData = 0;
 
     while (1) {
-        if ((HAL_GetTick() - lastUpdate1) >= 1000) {                  // If 1000ms have passed receive CAN message.
-            testCanNode.receiveData(SdoReceiveCallback, &sampleData); // Receive data from server
-            lastUpdate1 = HAL_GetTick();                              // Set to current time.
-        } else if ((HAL_GetTick() - lastUpdate2) >= 5000) {           // If 5000ms have passed write CAN message.
-            testCanNode.transferData(SdoTransferCallback, &canNode);  // Send data to server
-            lastUpdate2 = HAL_GetTick();                              // Set to current time.
+        if ((HAL_GetTick() - lastUpdate1) >= 1000) { // If 1000ms have passed receive CAN message.
+            testCanNode.receiveData(SdoCompletedReceiveCallback, &receiveSampleData); // Receive data from server
+            lastUpdate1 = HAL_GetTick();                                              // Set to current time.
+        } else if ((HAL_GetTick() - lastUpdate2) >= 5000) { // If 5000ms have passed write CAN message.
+            testCanNode.transferData(SdoCompletedTransferCallback, &transferSampleData); // Send data to server
+            lastUpdate2 = HAL_GetTick();                                                 // Set to current time.
+            transferSampleData++;                                                        // Increment value
         }
 
         io::processCANopenNode(&canNode);
