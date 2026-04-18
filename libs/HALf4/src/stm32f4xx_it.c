@@ -63,7 +63,11 @@
 /******************************************************************************/
 /*           Cortex-M4 Processor Interruption and Exception Handlers          */
 /******************************************************************************/
-inline void ensure_interrupt_linkage() {} // This is here to ensure linkage within the file
+/**
+ * @brief This function does not do anything, but ensures that the compiler/linker works and inserts the important
+ *  interrupt handlers from this file. What took Collin two weeks, took us an hour and a half >:)
+ */
+inline void ensure_interrupt_linkage() {}
 
 /**
   * @brief This function handles Non maskable interrupt.

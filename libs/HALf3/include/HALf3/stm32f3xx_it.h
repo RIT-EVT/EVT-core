@@ -56,7 +56,7 @@ void SVC_Handler(void);
 void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
-void ensure_interrupt_linkage(); // This is here to ensure linkage within the file
+void ensure_interrupt_linkage();
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
