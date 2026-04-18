@@ -145,8 +145,8 @@ int main() {
     ///////////////////////////////////////////////////////////////////////////
     // Main loop
     ///////////////////////////////////////////////////////////////////////////
-    uint32_t lastUpdate1 = HAL_GetTick();
-    uint32_t lastUpdate2 = HAL_GetTick();
+    uint32_t lastUpdate1       = HAL_GetTick();
+    uint32_t lastUpdate2       = HAL_GetTick();
     uint8_t receiveSampleData  = 0;
     uint8_t transferSampleData = 0;
 
