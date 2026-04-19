@@ -1,25 +1,31 @@
 #ifndef EVT_SDRAM_HPP
 #define EVT_SDRAM_HPP
 
+#ifdef STM32F4xx
+    #include <HALf4/stm32f4xx_hal.h>
+#endif
+#ifdef STM32F3xx
+    #include <HALf3/stm32f3xx_hal.h>
+#endif
 #include <core/io/FMC.hpp>
 
 /**
  * SDRAM Command Mode
  */
-#define FMC_SDRAM_CMD_NORMAL_MODE               (0x00000000U)
-#define FMC_SDRAM_CMD_CLK_ENABLE                (0x00000001U)
-#define FMC_SDRAM_CMD_PALL                      (0x00000002U)
-#define FMC_SDRAM_CMD_AUTOREFRESH_MODE          (0x00000003U)
-#define FMC_SDRAM_CMD_LOAD_MODE                 (0x00000004U)
-#define FMC_SDRAM_CMD_SELFREFRESH_MODE          (0x00000005U)
-#define FMC_SDRAM_CMD_POWERDOWN_MODE            (0x00000006U)
+constexpr uint32_t SDRAM_CMD_NORMAL_MODE = 0x00000000U;
+constexpr uint32_t SDRAM_CMD_CLK_ENABLE = 0x00000001U;
+constexpr uint32_t SDRAM_CMD_PALL = 0x00000002U;
+constexpr uint32_t SDRAM_CMD_AUTOREFRESH_MODE = 0x00000003U;
+constexpr uint32_t SDRAM_CMD_LOAD_MODE = 0x00000004U;
+constexpr uint32_t SDRAM_CMD_SELFREFRESH_MODE = 0x00000005U;
+constexpr uint32_t SDRAM_CMD_POWERDOWN_MODE = 0x00000006U;
 
 /**
  * SDRAM Command Target
  */
-#define FMC_SDRAM_CMD_TARGET_BANK2              FMC_SDCMR_CTB2
-#define FMC_SDRAM_CMD_TARGET_BANK1              FMC_SDCMR_CTB1
-#define FMC_SDRAM_CMD_TARGET_BANK1_2            (0x00000018U)
+constexpr uint32_t SDRAM_CMD_TARGET_BANK2 = FMC_SDCMR_CTB2;
+constexpr uint32_t SDRAM_CMD_TARGET_BANK1 = FMC_SDCMR_CTB1;
+constexpr uint32_t SDRAM_CMD_TARGET_BANK1_2 = 0x00000018U;
 
 namespace core::io {
 
@@ -86,8 +92,8 @@ class SDRAM : public FMC {
      * @param sdramInitConfig
      * @param sdramTimingConfig
      */
-    SDRAM(void* sdramMemoryAddress, FMCPinConfig pinConfig, SDRAMInitConfig sdramInitConfig,
-          SDRAMTimingConfig sdramTimingConfig);
+    SDRAM(void* sdramMemoryAddress, const FMCPinConfig& pinConfig, const SDRAMInitConfig& sdramInitConfig,
+          const SDRAMTimingConfig& sdramTimingConfig);
 
     /**
      *
@@ -99,7 +105,7 @@ class SDRAM : public FMC {
      *
      * @return the SDRAM clock period in microseconds
      */
-    static uint32_t getSdramClockPeriodUS();
+    static uint32_t getSdramClockPeriodPS();
 
     /**
      *
@@ -155,7 +161,7 @@ class SDRAM : public FMC {
      */
     virtual uint32_t GetModeStatus() = 0;
 
-    void* sdramMemoryAddress;
+    // void* sdramMemoryAddress;
 
 protected:
     SDRAMInitConfig sdramInitConfig;

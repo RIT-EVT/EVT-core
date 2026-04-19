@@ -3,14 +3,15 @@
 
 namespace core::io {
 
-SDRAMf4xx::SDRAMf4xx(FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SDRAMInitConfig sdramInitConfig,
+SDRAMf4xx::SDRAMf4xx(const FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SDRAMInitConfig sdramInitConfig,
                  SDRAMTimingConfig sdramTimingConfig) :
-    SDRAM(sdramInitConfig.sdBank == FMC_SDRAM_BANK1 ? FMC_SDRAM_BANK1_BASE : FMC_SDRAM_BANK2_BASE, pinConfig, sdramInitConfig, sdramTimingConfig),
-    sdramDevice(sdramDevice), sdram({nullptr}), sdramTiming({0}) {
+    SDRAM((sdramInitConfig.sdBank == FMC_SDRAM_BANK1) ? reinterpret_cast<void*>(SDRAM_BANK1) :
+        reinterpret_cast<void*>(SDRAM_BANK2), pinConfig, sdramInitConfig, sdramTimingConfig),
+    sdramDevice(const_cast<FMC_SDRAM_TypeDef*>(sdramDevice)), sdram(), sdramTiming() {
     InitHardware(pinConfig);
 
     // map the class init structs to the hal structs
-    sdram.Instance                = sdramDevice;
+    sdram.Instance                = this->sdramDevice;
     sdram.Init.SDBank             = sdramInitConfig.sdBank;
     sdram.Init.ColumnBitsNumber   = sdramInitConfig.columnBitsNumber;
     sdram.Init.RowBitsNumber      = sdramInitConfig.rowBitsNumber;
@@ -32,26 +33,26 @@ SDRAMf4xx::SDRAMf4xx(FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SDR
 }
 
 SDRAMf4xx::Status SDRAMf4xx::WriteProtectionEnable() {
-    FMC_SDRAM_WriteProtection_Enable(sdramDevice, sdramInitConfig.sdBank);
+    FMC_SDRAM_WriteProtection_Enable(this->sdramDevice, this->sdramInitConfig.sdBank);
 
     return Status::OK;
 }
 
 SDRAMf4xx::Status SDRAMf4xx::WriteProtection_Disable() {
-    FMC_SDRAM_WriteProtection_Disable(sdramDevice, sdramInitConfig.sdBank);
+    FMC_SDRAM_WriteProtection_Disable(this->sdramDevice, this->sdramInitConfig.sdBank);
 
     return Status::OK;
 }
 
 SDRAMf4xx::Status SDRAMf4xx::SendCommand(SDRAMCommandStruct *command, uint32_t timeout) {
-    FMC_SDRAM_CommandTypeDef *halCommand;
+    FMC_SDRAM_CommandTypeDef halCommand{};
 
-    halCommand->AutoRefreshNumber = command->AutoRefreshNumber;
-    halCommand->CommandMode = command->CommandMode;
-    halCommand->CommandTarget = command->CommandTarget;
-    halCommand->ModeRegisterDefinition = command->ModeRegisterDefinition;
+    halCommand.AutoRefreshNumber = command->AutoRefreshNumber;
+    halCommand.CommandMode = command->CommandMode;
+    halCommand.CommandTarget = command->CommandTarget;
+    halCommand.ModeRegisterDefinition = command->ModeRegisterDefinition;
 
-    HAL_StatusTypeDef halStatus = FMC_SDRAM_SendCommand(sdramDevice, halCommand, timeout);
+    HAL_StatusTypeDef halStatus = FMC_SDRAM_SendCommand(this->sdramDevice, &halCommand, timeout);
 
     if (halStatus == HAL_TIMEOUT) {
         return Status::TIMEOUT;
@@ -61,13 +62,13 @@ SDRAMf4xx::Status SDRAMf4xx::SendCommand(SDRAMCommandStruct *command, uint32_t t
 }
 
 SDRAMf4xx::Status SDRAMf4xx::ProgramRefreshRate(uint32_t refreshRate) {
-    FMC_SDRAM_ProgramRefreshRate(sdramDevice, refreshRate);
+    FMC_SDRAM_ProgramRefreshRate(this->sdramDevice, refreshRate);
 
     return Status::OK;
 }
 
 SDRAMf4xx::Status SDRAMf4xx::SetAutoRefreshNumber(uint32_t autoRefreshNumber) {
-    FMC_SDRAM_SetAutoRefreshNumber(sdramDevice, autoRefreshNumber);
+    FMC_SDRAM_SetAutoRefreshNumber(this->sdramDevice, autoRefreshNumber);
 
     return Status::OK;
 }
@@ -107,8 +108,8 @@ SDRAMf4xx::SDRAMTimingConfig SDRAMf4xx::defaultSdramTimingConfig() {
     return config;
 };
 
-uint32_t* SDRAMf4xx::getSDRAMMemoryAddress() const {
-    return sdramInitConfig.sdBank == FMC_SDRAM_BANK1 ? FMC_SDRAM_BANK1_BASE : FMC_SDRAM_BANK2_BASE;
+void* SDRAMf4xx::getSDRAMMemoryAddress() const {
+    return sdramInitConfig.sdBank == FMC_SDRAM_BANK1 ? reinterpret_cast<int32_t*>(reinterpret_cast<void*>(SDRAM_BANK1)) : reinterpret_cast<void*>(SDRAM_BANK2);
 }
 
 void SDRAMf4xx::InitHardware(const FMCPinConfig& pinConfig) {
@@ -121,7 +122,7 @@ void SDRAMf4xx::InitHardware(const FMCPinConfig& pinConfig) {
     InitPinGroup(pinConfig.command.pins, pinConfig.command.count);
 }
 
-void SDRAMf4xx::InitPinGroup(FMC_PIN* pins, uint8_t count) {
+void SDRAMf4xx::InitPinGroup(Pin* pins, uint8_t count) {
     GPIO_InitTypeDef gpioInit;
 
     GPIOf4xx::gpioStateInit(&gpioInit, pins, count, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);

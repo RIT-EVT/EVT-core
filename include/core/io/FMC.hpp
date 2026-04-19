@@ -28,18 +28,11 @@ public:
         TIMEOUT  = 0x03U,
     };
 
-    typedef Pin FMC_PIN;
-    typedef FMC_PIN FMC_ADDRESS;
-    typedef FMC_PIN FMC_DATA;
-    typedef FMC_PIN FMC_BE;
-    typedef FMC_PIN FMC_BANK;
-    typedef FMC_PIN FMC_CMD;
-
     /**
      * Structure to hold an array of GPIO address pins for the FMC
      */
     struct FMCAddressPins {
-        FMC_ADDRESS* pins;
+        Pin* pins;
         uint8_t count;
     };
 
@@ -47,7 +40,7 @@ public:
      * Structure to hold an array of GPIO address pins for the FMC
      */
     struct FMCDataPins {
-        FMC_DATA* pins;
+        Pin* pins;
         uint8_t count;
     };
 
@@ -55,7 +48,7 @@ public:
      * Structure to hold an array of GPIO command pins for the FMC
      */
     struct FMCCommandPins {
-        FMC_CMD* pins;
+        Pin* pins;
         uint8_t count;
     };
 
@@ -63,7 +56,7 @@ public:
      * Structure to hold an array of GPIO byte enable pins for the FMC
      */
     struct FMCByteEnablePins {
-        FMC_BE* pins;
+        Pin* pins;
         uint8_t count;
     };
 
@@ -71,7 +64,7 @@ public:
      * Structure to hold an array of GPIO bank pins for the FMC
      */
     struct FMCBankPins {
-        FMC_BANK* pins;
+        Pin* pins;
         uint8_t count;
     };
 
@@ -96,14 +89,15 @@ public:
     /**
      * Initializes an FMC device for controlling memory
      */
-    FMC(void* memoryAddress, FMCPinConfig pinConfig);
+    FMC(void* memoryAddress, const FMCPinConfig& pinConfig);
 
     virtual ~FMC() = default;
 
-    void* memoryAddress;
+    [[nodiscard]] void* getStartingAddress() const;
 
 protected:
     FMCPinConfig fmcPinConfig;
+    void* memoryAddress;
 };
 
 } // namespace core::io

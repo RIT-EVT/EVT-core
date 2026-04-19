@@ -17,35 +17,31 @@
 #include <core/io/FMC.hpp>
 
 #include <HALf4/stm32f4xx_hal.h>
-#include <HALf4/stm32f4xx_hal_sdram.h>
-#include <HALf4/stm32f4xx_ll_fmc.h>
-
-
 
 namespace core::io {
 
 // default timer values
-#define tRCD 							( 15 )
-#define tRP 							( 15 )
-#define tWR 							( 22 ) // only specifies two clock cycles
-#define tRC 							( 63 )
-#define tRAS 							( 42 )
-#define tXSR 							( 70 )
-#define tMRD 							( 22 ) // only specifies two clock cycles
+constexpr uint32_t tRCD = 15 ;
+constexpr uint32_t tRP = 15 ;
+constexpr uint32_t tWR = 22 ; // only specifies two clock cycles
+constexpr uint32_t tRC = 63 ;
+constexpr uint32_t tRAS = 42 ;
+constexpr uint32_t tXSR = 70 ;
+constexpr uint32_t tMRD = 22 ; // only specifies two clock cycles
 
 // Specific names from the FMC
-#define ROW_TO_COLUMN_DELAY_NS          (tRCD)
-#define ROW_PRECHARGE_DELAY_NS          (tRP)
-#define RECOVERY_DELAY_NS               (tWR)
-#define ROW_CYCLE_DELAY_NS              (tRC)
-#define SELF_REFRESH_TIME_NS            (tRAS)
-#define EXIT_SELF_REFRESH_DELAY_NS      (tXSR)
-#define LOAD_MODE_REGISTER_TO_ACTIVE_NS (tMRD)
+constexpr uint32_t ROW_TO_COLUMN_DELAY_NS = tRCD;
+constexpr uint32_t ROW_PRECHARGE_DELAY_NS = tRP;
+constexpr uint32_t RECOVERY_DELAY_NS = tWR;
+constexpr uint32_t ROW_CYCLE_DELAY_NS = tRC;
+constexpr uint32_t SELF_REFRESH_TIME_NS = tRAS;
+constexpr uint32_t EXIT_SELF_REFRESH_DELAY_NS = tXSR;
+constexpr uint32_t LOAD_MODE_REGISTER_TO_ACTIVE_NS = tMRD;
 
-#define SDRAM_TIMEOUT (0x0000FFFFUL)
-#define RAM_SIZE               (0x4000000) // 64 megabits
-#define FMC_SDRAM_BANK1_BASE   ((uint32_t*) 0xC000000) // found in the reference manual for the MCU
-#define FMC_SDRAM_BANK2_BASE   ((uint32_t*) 0xD000000)
+constexpr uint32_t SDRAM_TIMEOUT = 0x0000FFFFUL;
+constexpr uint32_t RAM_SIZE = 0x4000000; // 64 megabits
+constexpr uint32_t SDRAM_BANK1 = 0xC0000000;
+constexpr uint32_t SDRAM_BANK2 = 0xD0000000;
 
 /**
  *
@@ -58,6 +54,7 @@ public:
     /**
      * Initializes an FMC device
      *
+     * @param[in] sdramDevice FMC_SDRAM Peripheral configuration registers location
      * @param[in] pinConfig All FMC GPIO pin configurations.
      * @param[in] sdramInitConfig SDRAM controller configuration parameters.
      * @param[in] sdramTimingConfig SDRAM timing configuration parameters.
@@ -67,7 +64,7 @@ public:
      * - Configures SDRAM controller
      * - Calls HAL_SDRAM_Init()
      */
-    SDRAMf4xx(FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SDRAMInitConfig sdramInitConfig,
+    SDRAMf4xx(const FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SDRAMInitConfig sdramInitConfig,
             SDRAMTimingConfig sdramTimingConfig);
 
     /**
@@ -130,14 +127,12 @@ public:
      */
     static SDRAMTimingConfig defaultSdramTimingConfig();
 
-    void* sdramMemoryAddress;
-
 private:
     /**
      * Helper function to determine the memory address based on the bank number
      *
      */
-    uint32_t* getSDRAMMemoryAddress() const;
+    void* getSDRAMMemoryAddress() const;
     /**
      * Helper function to initialize all GPIO FMC pins
      *
@@ -151,13 +146,9 @@ private:
      * @param[in] pins an array of FMC GPIO pins
      * @param[in] count length of array
      */
-    void InitPinGroup(FMC_PIN* pins, uint8_t count);
+    void InitPinGroup(Pin* pins, uint8_t count);
 
     FMC_SDRAM_TypeDef* sdramDevice;
-
-    FMCPinConfig fmcPinConfig;
-    SDRAMInitConfig sdramInitConfig;
-    SDRAMTimingConfig sdramTimingConfig;
 
     SDRAM_HandleTypeDef sdram;
     FMC_SDRAM_TimingTypeDef sdramTiming;
