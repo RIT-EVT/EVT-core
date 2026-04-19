@@ -8,9 +8,9 @@
 #include <core/io/GPIO.hpp>
 #include <core/io/I2C.hpp>
 #include <core/io/PWM.hpp>
+#include <core/io/SDRAM.hpp>
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
-#include <core/io/SDRAM.hpp>
 
 #ifdef STM32F3xx
     #define ADC_SUPPORTED
@@ -68,7 +68,6 @@
         #include <core/io/platform/f4xx/SDRAMf4xx.hpp>
     #endif
 #endif
-
 
 namespace core::platform {
 
@@ -331,7 +330,7 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 #endif
 
 #ifdef SDRAM_SUPPORTED
-template<FMC::FMCPinConfig *pinConfig>
+template<FMC::FMCPinConfig* pinConfig>
 FMC& getFMC(FMC_SDRAM_TypeDef* sdramDevice, SDRAMf4xx::SDRAMInitConfig sdramInitConfig,
             SDRAMf4xx::SDRAMTimingConfig sdramTimingConfig) {
     #ifdef STM32F4xx

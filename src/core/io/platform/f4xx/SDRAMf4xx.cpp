@@ -4,10 +4,11 @@
 namespace core::io {
 
 SDRAMf4xx::SDRAMf4xx(const FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SDRAMInitConfig sdramInitConfig,
-                 SDRAMTimingConfig sdramTimingConfig) :
-    SDRAM((sdramInitConfig.sdBank == FMC_SDRAM_BANK1) ? reinterpret_cast<void*>(SDRAM_BANK1) :
-        reinterpret_cast<void*>(SDRAM_BANK2), pinConfig, sdramInitConfig, sdramTimingConfig),
-    sdramDevice(const_cast<FMC_SDRAM_TypeDef*>(sdramDevice)), sdram(), sdramTiming() {
+                     SDRAMTimingConfig sdramTimingConfig)
+    : SDRAM((sdramInitConfig.sdBank == FMC_SDRAM_BANK1) ? reinterpret_cast<void*>(SDRAM_BANK1)
+                                                        : reinterpret_cast<void*>(SDRAM_BANK2),
+            pinConfig, sdramInitConfig, sdramTimingConfig),
+      sdramDevice(const_cast<FMC_SDRAM_TypeDef*>(sdramDevice)), sdram(), sdramTiming() {
     InitHardware(pinConfig);
 
     // map the class init structs to the hal structs
@@ -44,12 +45,12 @@ SDRAMf4xx::Status SDRAMf4xx::WriteProtection_Disable() {
     return Status::OK;
 }
 
-SDRAMf4xx::Status SDRAMf4xx::SendCommand(SDRAMCommandStruct *command, uint32_t timeout) {
+SDRAMf4xx::Status SDRAMf4xx::SendCommand(SDRAMCommandStruct* command, uint32_t timeout) {
     FMC_SDRAM_CommandTypeDef halCommand{};
 
-    halCommand.AutoRefreshNumber = command->AutoRefreshNumber;
-    halCommand.CommandMode = command->CommandMode;
-    halCommand.CommandTarget = command->CommandTarget;
+    halCommand.AutoRefreshNumber      = command->AutoRefreshNumber;
+    halCommand.CommandMode            = command->CommandMode;
+    halCommand.CommandTarget          = command->CommandTarget;
     halCommand.ModeRegisterDefinition = command->ModeRegisterDefinition;
 
     HAL_StatusTypeDef halStatus = FMC_SDRAM_SendCommand(this->sdramDevice, &halCommand, timeout);
@@ -109,7 +110,8 @@ SDRAMf4xx::SDRAMTimingConfig SDRAMf4xx::defaultSdramTimingConfig() {
 };
 
 void* SDRAMf4xx::getSDRAMMemoryAddress() const {
-    return sdramInitConfig.sdBank == FMC_SDRAM_BANK1 ? reinterpret_cast<int32_t*>(reinterpret_cast<void*>(SDRAM_BANK1)) : reinterpret_cast<void*>(SDRAM_BANK2);
+    return sdramInitConfig.sdBank == FMC_SDRAM_BANK1 ? reinterpret_cast<int32_t*>(reinterpret_cast<void*>(SDRAM_BANK1))
+                                                     : reinterpret_cast<void*>(SDRAM_BANK2);
 }
 
 void SDRAMf4xx::InitHardware(const FMCPinConfig& pinConfig) {
