@@ -3,9 +3,9 @@
 
 #include <core/io/GPIO.hpp>
 
-#ifdef STM32F3xx
-    #error Controlling SDRAM through an FMC is not supported on F3xx chips
-#endif
+//#ifdef STM32F3xx
+//    #error Controlling SDRAM through an FMC is not supported on F3xx chips
+//#endif
 
 namespace core::io {
 
