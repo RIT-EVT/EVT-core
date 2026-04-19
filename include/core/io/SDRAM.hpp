@@ -2,11 +2,7 @@
 #define EVT_SDRAM_HPP
 
 #ifdef STM32F4xx
-    #include <HALf4/stm32f4xx_hal.h>
-#endif
-#ifdef STM32F3xx
-    #include <HALf3/stm32f3xx_hal.h>
-#endif
+#include <HALf4/stm32f4xx_hal.h>
 #include <core/io/FMC.hpp>
 
 /**
@@ -169,5 +165,7 @@ protected:
 };
 
 }
+
+#endif // STM32F4xx
 
 #endif //EVT_SDRAM_HPP

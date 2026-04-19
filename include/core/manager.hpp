@@ -49,23 +49,26 @@
     #define SPI_SUPPORTED
     #define UART_SUPPORTED
     #define IWDG_SUPPORTED
-    #define SDRAM_SUPPORTED
 
-        #include <core/dev/MCUTimer.hpp>
-        #include <core/dev/platform/f4xx/IWDGf4xx.hpp>
-        #include <core/dev/platform/f4xx/RTCf4xx.hpp>
-        #include <core/dev/platform/f4xx/Timerf4xx.hpp>
-        #include <core/io/platform/f4xx/ADCf4xx.hpp>
-        #include <core/io/platform/f4xx/CANf4xx.hpp>
-        #include <core/io/platform/f4xx/GPIOf4xx.hpp>
-        #include <core/io/platform/f4xx/I2Cf4xx.hpp>
-        #include <core/io/platform/f4xx/PWMf4xx.hpp>
+    #include <core/dev/MCUTimer.hpp>
+    #include <core/dev/platform/f4xx/IWDGf4xx.hpp>
+    #include <core/dev/platform/f4xx/RTCf4xx.hpp>
+    #include <core/dev/platform/f4xx/Timerf4xx.hpp>
+    #include <core/io/platform/f4xx/ADCf4xx.hpp>
+    #include <core/io/platform/f4xx/CANf4xx.hpp>
+    #include <core/io/platform/f4xx/GPIOf4xx.hpp>
+    #include <core/io/platform/f4xx/I2Cf4xx.hpp>
+    #include <core/io/platform/f4xx/PWMf4xx.hpp>
+    #include <core/io/platform/f4xx/SPIf4xx.hpp>
+    #include <core/io/platform/f4xx/UARTf4xx.hpp>
+    #include <core/platform/f4xx/stm32f4xx.hpp>
+
+    #ifdef STM32F469xx
+        #define SDRAM_SUPPORTED
         #include <core/io/platform/f4xx/SDRAMf4xx.hpp>
-        #include <core/io/platform/f4xx/SPIf4xx.hpp>
-        #include <core/io/platform/f4xx/UARTf4xx.hpp>
-        #include <core/platform/f4xx/stm32f4xx.hpp>
-
+    #endif
 #endif
+
 
 namespace core::platform {
 
@@ -331,7 +334,7 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 template<FMC::FMCPinConfig *pinConfig>
 FMC& getFMC(FMC_SDRAM_TypeDef* sdramDevice, SDRAMf4xx::SDRAMInitConfig sdramInitConfig,
             SDRAMf4xx::SDRAMTimingConfig sdramTimingConfig) {
-    #ifdef STM32F469xx
+    #ifdef STM32F4xx
     static SDRAMf4xx fmc(sdramDevice, *pinConfig, sdramInitConfig, sdramTimingConfig);
     return fmc;
     #endif
