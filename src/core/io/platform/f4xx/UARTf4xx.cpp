@@ -7,8 +7,6 @@
 #include <core/io/platform/f4xx/GPIOf4xx.hpp>
 #include <core/io/platform/f4xx/UARTf4xx.hpp>
 
-#include <HALf4/stm32f446xx.h>
-
 #include <core/utils/log.hpp>
 
 namespace log = core::log;

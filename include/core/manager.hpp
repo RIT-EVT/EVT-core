@@ -48,6 +48,7 @@
     #define RTC_SUPPORTED
     #define SPI_SUPPORTED
     #define UART_SUPPORTED
+    #define IWDG_SUPPORTED
     #define SDRAM_SUPPORTED
 
         #include <core/dev/MCUTimer.hpp>

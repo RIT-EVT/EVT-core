@@ -3,7 +3,8 @@
 #include <HALf4/stm32f4xx_it.h>
 
 #include <core/platform/f4xx/stm32f4xx.hpp>
-#include <iostream>
+
+#ifdef STM32F446xx
 
 using namespace std;
 namespace core::platform {
@@ -69,3 +70,5 @@ void Error_Handler(void) {
 }
 
 } // namespace core::platform
+
+#endif

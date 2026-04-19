@@ -68,6 +68,7 @@ elseif(COMPDEFS MATCHES "(.*)STM32F4xx(.*)")
     target_sources(${PROJECT_NAME} PRIVATE
     src/core/utils/platform/f4xx/timef4xx.cpp
     src/core/platform/f4xx/stm32f446xx.cpp
+    src/core/platform/f4xx/stm32f469xx.cpp
     src/core/io/platform/f4xx/ADCf4xx.cpp
     src/core/io/platform/f4xx/CANf4xx.cpp
     src/core/io/platform/f4xx/GPIOf4xx.cpp
