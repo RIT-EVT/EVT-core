@@ -1,7 +1,5 @@
 #include <core/io/SDRAM.hpp>
 
-#ifdef SDRAM_SUPPORTED
-
 namespace core::io {
 
 SDRAM::SDRAM(void* sdramMemoryAddress, const FMCPinConfig& pinConfig, const SDRAMInitConfig& sdramInitConfig,
@@ -20,5 +18,3 @@ uint32_t SDRAM::NSToSdramClockCycles(uint32_t nanoseconds) {
     return (nanoseconds * 1000 ) / (getSdramClockPeriodPS() + 1);
 }
 }
-
-#endif
