@@ -2,25 +2,25 @@
 #define EVT_SDRAM_HPP
 
 #ifdef STM32F4xx
-#include <HALf4/stm32f4xx_hal.h>
-#include <core/io/FMC.hpp>
+    #include <HALf4/stm32f4xx_hal.h>
+    #include <core/io/FMC.hpp>
 
 /**
  * SDRAM Command Mode
  */
-constexpr uint32_t SDRAM_CMD_NORMAL_MODE = 0x00000000U;
-constexpr uint32_t SDRAM_CMD_CLK_ENABLE = 0x00000001U;
-constexpr uint32_t SDRAM_CMD_PALL = 0x00000002U;
+constexpr uint32_t SDRAM_CMD_NORMAL_MODE      = 0x00000000U;
+constexpr uint32_t SDRAM_CMD_CLK_ENABLE       = 0x00000001U;
+constexpr uint32_t SDRAM_CMD_PALL             = 0x00000002U;
 constexpr uint32_t SDRAM_CMD_AUTOREFRESH_MODE = 0x00000003U;
-constexpr uint32_t SDRAM_CMD_LOAD_MODE = 0x00000004U;
+constexpr uint32_t SDRAM_CMD_LOAD_MODE        = 0x00000004U;
 constexpr uint32_t SDRAM_CMD_SELFREFRESH_MODE = 0x00000005U;
-constexpr uint32_t SDRAM_CMD_POWERDOWN_MODE = 0x00000006U;
+constexpr uint32_t SDRAM_CMD_POWERDOWN_MODE   = 0x00000006U;
 
 /**
  * SDRAM Command Target
  */
-constexpr uint32_t SDRAM_CMD_TARGET_BANK2 = FMC_SDCMR_CTB2;
-constexpr uint32_t SDRAM_CMD_TARGET_BANK1 = FMC_SDCMR_CTB1;
+constexpr uint32_t SDRAM_CMD_TARGET_BANK2   = FMC_SDCMR_CTB2;
+constexpr uint32_t SDRAM_CMD_TARGET_BANK1   = FMC_SDCMR_CTB1;
 constexpr uint32_t SDRAM_CMD_TARGET_BANK1_2 = 0x00000018U;
 
 namespace core::io {
@@ -30,7 +30,7 @@ namespace core::io {
  * Provides clock frequency functions
  */
 class SDRAM : public FMC {
-    public:
+public:
     /**
      * Holds all SDRAM controller settings that map directly to
      * the HAL_SDRAM_Init configuration structure.
@@ -130,7 +130,7 @@ class SDRAM : public FMC {
      * @param timeout How long to wait for the sdram command
      * @return the result of attempting to send a command to the sdram
      */
-    virtual Status SendCommand(SDRAMCommandStruct *command, uint32_t timeout) = 0;
+    virtual Status SendCommand(SDRAMCommandStruct* command, uint32_t timeout) = 0;
 
     /**
      * Program the SDRAM Memory Refresh rate.
@@ -151,9 +151,9 @@ class SDRAM : public FMC {
     /**
      * Returns the indicated FMC SDRAM bank mode status.
      *
-    * @return The FMC SDRAM bank mode status, could be on of the following HAL defines:
-    *         FMC_SDRAM_NORMAL_MODE, FMC_SDRAM_SELF_REFRESH_MODE or
-    *         FMC_SDRAM_POWER_DOWN_MODE.
+     * @return The FMC SDRAM bank mode status, could be on of the following HAL defines:
+     *         FMC_SDRAM_NORMAL_MODE, FMC_SDRAM_SELF_REFRESH_MODE or
+     *         FMC_SDRAM_POWER_DOWN_MODE.
      */
     virtual uint32_t GetModeStatus() = 0;
 
@@ -164,8 +164,8 @@ protected:
     SDRAMTimingConfig sdramTimingConfig;
 };
 
-}
+} // namespace core::io
 
 #endif // STM32F4xx
 
-#endif //EVT_SDRAM_HPP
+#endif // EVT_SDRAM_HPP

@@ -3,9 +3,9 @@
 
 #include <core/io/GPIO.hpp>
 
-//#ifdef STM32F3xx
-//    #error Controlling SDRAM through an FMC is not supported on F3xx chips
-//#endif
+// #ifdef STM32F3xx
+//     #error Controlling SDRAM through an FMC is not supported on F3xx chips
+// #endif
 
 namespace core::io {
 
@@ -22,10 +22,10 @@ public:
      * result of an FMC operation.
      */
     enum class Status {
-        OK       = 0x00U,
-        ERROR    = 0x01U,
-        BUSY     = 0x02U,
-        TIMEOUT  = 0x03U,
+        OK      = 0x00U,
+        ERROR   = 0x01U,
+        BUSY    = 0x02U,
+        TIMEOUT = 0x03U,
     };
 
     /**

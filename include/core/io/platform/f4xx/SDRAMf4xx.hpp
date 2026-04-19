@@ -13,35 +13,35 @@
  * - SDRAM operations
  */
 
-#include <core/io/SDRAM.hpp>
 #include <core/io/FMC.hpp>
+#include <core/io/SDRAM.hpp>
 
 #include <HALf4/stm32f4xx_hal.h>
 
 namespace core::io {
 
 // default timer values
-constexpr uint32_t tRCD = 15 ;
-constexpr uint32_t tRP = 15 ;
-constexpr uint32_t tWR = 22 ; // only specifies two clock cycles
-constexpr uint32_t tRC = 63 ;
-constexpr uint32_t tRAS = 42 ;
-constexpr uint32_t tXSR = 70 ;
-constexpr uint32_t tMRD = 22 ; // only specifies two clock cycles
+constexpr uint32_t tRCD = 15;
+constexpr uint32_t tRP  = 15;
+constexpr uint32_t tWR  = 22; // only specifies two clock cycles
+constexpr uint32_t tRC  = 63;
+constexpr uint32_t tRAS = 42;
+constexpr uint32_t tXSR = 70;
+constexpr uint32_t tMRD = 22; // only specifies two clock cycles
 
 // Specific names from the FMC
-constexpr uint32_t ROW_TO_COLUMN_DELAY_NS = tRCD;
-constexpr uint32_t ROW_PRECHARGE_DELAY_NS = tRP;
-constexpr uint32_t RECOVERY_DELAY_NS = tWR;
-constexpr uint32_t ROW_CYCLE_DELAY_NS = tRC;
-constexpr uint32_t SELF_REFRESH_TIME_NS = tRAS;
-constexpr uint32_t EXIT_SELF_REFRESH_DELAY_NS = tXSR;
+constexpr uint32_t ROW_TO_COLUMN_DELAY_NS          = tRCD;
+constexpr uint32_t ROW_PRECHARGE_DELAY_NS          = tRP;
+constexpr uint32_t RECOVERY_DELAY_NS               = tWR;
+constexpr uint32_t ROW_CYCLE_DELAY_NS              = tRC;
+constexpr uint32_t SELF_REFRESH_TIME_NS            = tRAS;
+constexpr uint32_t EXIT_SELF_REFRESH_DELAY_NS      = tXSR;
 constexpr uint32_t LOAD_MODE_REGISTER_TO_ACTIVE_NS = tMRD;
 
 constexpr uint32_t SDRAM_TIMEOUT = 0x0000FFFFUL;
-constexpr uint32_t RAM_SIZE = 0x4000000; // 64 megabits
-constexpr uint32_t SDRAM_BANK1 = 0xC0000000;
-constexpr uint32_t SDRAM_BANK2 = 0xD0000000;
+constexpr uint32_t RAM_SIZE      = 0x4000000; // 64 megabits
+constexpr uint32_t SDRAM_BANK1   = 0xC0000000;
+constexpr uint32_t SDRAM_BANK2   = 0xD0000000;
 
 /**
  *
@@ -65,7 +65,7 @@ public:
      * - Calls HAL_SDRAM_Init()
      */
     SDRAMf4xx(const FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SDRAMInitConfig sdramInitConfig,
-            SDRAMTimingConfig sdramTimingConfig);
+              SDRAMTimingConfig sdramTimingConfig);
 
     /**
      * Enable write protection for the sdram
@@ -88,7 +88,7 @@ public:
      * @param timeout How long to wait for the sdram command
      * @return the result of attempting to send a command to the sdram
      */
-    Status SendCommand(SDRAMCommandStruct *command, uint32_t timeout) override;
+    Status SendCommand(SDRAMCommandStruct* command, uint32_t timeout) override;
 
     /**
      * Program the SDRAM Memory Refresh rate.
@@ -109,9 +109,9 @@ public:
     /**
      * Returns the indicated FMC SDRAM bank mode status.
      *
-    * @return The FMC SDRAM bank mode status, could be on of the following HAL defines:
-    *         FMC_SDRAM_NORMAL_MODE, FMC_SDRAM_SELF_REFRESH_MODE or
-    *         FMC_SDRAM_POWER_DOWN_MODE.
+     * @return The FMC SDRAM bank mode status, could be on of the following HAL defines:
+     *         FMC_SDRAM_NORMAL_MODE, FMC_SDRAM_SELF_REFRESH_MODE or
+     *         FMC_SDRAM_POWER_DOWN_MODE.
      */
     uint32_t GetModeStatus() override;
 
