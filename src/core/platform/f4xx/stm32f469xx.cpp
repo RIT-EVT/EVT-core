@@ -1,5 +1,6 @@
 #include <HALf4/stm32f4xx.h>
 #include <HALf4/stm32f4xx_hal.h>
+#include <HALf4/stm32f4xx_it.h>
 
 #include <core/platform/f4xx/stm32f4xx.hpp>
 
@@ -51,6 +52,9 @@ void stm32f4xx_init() {
     if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK) {
         Error_Handler();
     }
+
+    // This function ensures that the interrupt handlers in stm32f4xx_it.c properly link
+    ensure_interrupt_linkage();
 }
 
 void Error_Handler(void) {

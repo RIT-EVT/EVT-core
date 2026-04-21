@@ -64,6 +64,12 @@
 /*           Cortex-M4 Processor Interruption and Exception Handlers          */
 /******************************************************************************/
 /**
+ * @brief This function does not do anything, but ensures that the compiler/linker works and inserts the important
+ *  interrupt handlers from this file. What took Collin two weeks, took us an hour and a half >:)
+ */
+inline void ensure_interrupt_linkage() {}
+
+/**
   * @brief This function handles Non maskable interrupt.
   */
 void NMI_Handler(void)
@@ -176,6 +182,7 @@ void PendSV_Handler(void)
 
   /* USER CODE END PendSV_IRQn 1 */
 }
+
 
 /**
   * @brief This function handles System tick timer.

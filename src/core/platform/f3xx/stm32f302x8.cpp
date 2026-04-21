@@ -44,7 +44,8 @@ void stm32f3xx_init() {
     HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
      */
 
-    SysTick_Handler();
+    // This function ensures that the interrupt handlers in stm32f4xx_it.c properly link
+    ensure_interrupt_linkage();
 }
 
 } // namespace core::platform
