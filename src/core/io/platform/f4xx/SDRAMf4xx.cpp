@@ -33,19 +33,19 @@ SDRAMf4xx::SDRAMf4xx(const FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfi
     HAL_SDRAM_Init(&sdram, &sdramTiming);
 }
 
-SDRAMf4xx::Status SDRAMf4xx::WriteProtectionEnable() {
-    FMC_SDRAM_WriteProtection_Enable(this->sdramDevice, this->sdramInitConfig.sdBank);
+FMC::Status SDRAMf4xx::EnableWriteProtection() {
+    HAL_StatusTypeDef halStatus = FMC_SDRAM_WriteProtection_Enable(this->sdramDevice, this->sdramInitConfig.sdBank);
 
-    return Status::OK;
+    return FMC::HALStatusToFMCStatus(halStatus);
 }
 
-SDRAMf4xx::Status SDRAMf4xx::WriteProtection_Disable() {
-    FMC_SDRAM_WriteProtection_Disable(this->sdramDevice, this->sdramInitConfig.sdBank);
+FMC::Status SDRAMf4xx::DisableWriteProtection() {
+    HAL_StatusTypeDef halStatus = FMC_SDRAM_WriteProtection_Disable(this->sdramDevice, this->sdramInitConfig.sdBank);
 
-    return Status::OK;
+    return FMC::HALStatusToFMCStatus(halStatus);
 }
 
-SDRAMf4xx::Status SDRAMf4xx::SendCommand(SDRAMCommandStruct* command, uint32_t timeout) {
+FMC::Status SDRAMf4xx::SendCommand(SDRAMCommandStruct* command, uint32_t timeout) {
     FMC_SDRAM_CommandTypeDef halCommand{};
 
     halCommand.AutoRefreshNumber      = command->AutoRefreshNumber;
@@ -55,23 +55,19 @@ SDRAMf4xx::Status SDRAMf4xx::SendCommand(SDRAMCommandStruct* command, uint32_t t
 
     HAL_StatusTypeDef halStatus = FMC_SDRAM_SendCommand(this->sdramDevice, &halCommand, timeout);
 
-    if (halStatus == HAL_TIMEOUT) {
-        return Status::TIMEOUT;
-    }
-
-    return Status::OK;
+    return FMC::HALStatusToFMCStatus(halStatus);
 }
 
-SDRAMf4xx::Status SDRAMf4xx::ProgramRefreshRate(uint32_t refreshRate) {
-    FMC_SDRAM_ProgramRefreshRate(this->sdramDevice, refreshRate);
-
-    return Status::OK;
+FMC::Status SDRAMf4xx::ProgramRefreshRate(uint32_t refreshRate) {
+    HAL_StatusTypeDef halStatus = FMC_SDRAM_ProgramRefreshRate(this->sdramDevice, refreshRate);
+    
+    return FMC::HALStatusToFMCStatus(halStatus);
 }
 
-SDRAMf4xx::Status SDRAMf4xx::SetAutoRefreshNumber(uint32_t autoRefreshNumber) {
-    FMC_SDRAM_SetAutoRefreshNumber(this->sdramDevice, autoRefreshNumber);
+FMC::Status SDRAMf4xx::SetAutoRefreshNumber(uint32_t autoRefreshNumber) {
+    HAL_StatusTypeDef halStatus = FMC_SDRAM_SetAutoRefreshNumber(this->sdramDevice, autoRefreshNumber);
 
-    return Status::OK;
+    return FMC::HALStatusToFMCStatus(halStatus);
 }
 
 uint32_t SDRAMf4xx::GetModeStatus() {
@@ -110,8 +106,7 @@ SDRAMf4xx::SDRAMTimingConfig SDRAMf4xx::defaultSdramTimingConfig() {
 };
 
 void* SDRAMf4xx::getSDRAMMemoryAddress() const {
-    return sdramInitConfig.sdBank == FMC_SDRAM_BANK1 ? reinterpret_cast<int32_t*>(reinterpret_cast<void*>(SDRAM_BANK1))
-                                                     : reinterpret_cast<void*>(SDRAM_BANK2);
+    return memoryAddress; // This is a protected variable from the FMC class definition
 }
 
 void SDRAMf4xx::InitHardware(const FMCPinConfig& pinConfig) {

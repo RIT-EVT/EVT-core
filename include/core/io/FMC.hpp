@@ -2,6 +2,7 @@
 #define EVT_FMC_HPP
 
 #include <core/io/GPIO.hpp>
+#include <HALf4/stm32f4xx_hal.h>
 
 // #ifdef STM32F3xx
 //     #error Controlling SDRAM through an FMC is not supported on F3xx chips
@@ -11,7 +12,7 @@ namespace core::io {
 
 /**
  * The FMC is a Flexible Memory Controller used for controlling various forms of memory, including external SDRAM,
- * NOR flash, NAND flash, and SRAM, the F3 series chips only support SRAM.
+ * NOR flash, NAND flash, and SRAM. the F3 series chips only support SRAM.
  */
 class FMC {
 public:
@@ -98,6 +99,10 @@ public:
 protected:
     FMCPinConfig fmcPinConfig;
     void* memoryAddress;
+
+    constexpr static Status HALStatusToFMCStatus(uint32_t hal_status) {
+        return static_cast<Status>(hal_status);
+    }
 };
 
 } // namespace core::io

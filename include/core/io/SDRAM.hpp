@@ -4,18 +4,6 @@
 #ifdef STM32F4xx
     #include <HALf4/stm32f4xx_hal.h>
     #include <core/io/FMC.hpp>
-
-/**
- * SDRAM Command Mode
- */
-constexpr uint32_t SDRAM_CMD_NORMAL_MODE      = 0x00000000U;
-constexpr uint32_t SDRAM_CMD_CLK_ENABLE       = 0x00000001U;
-constexpr uint32_t SDRAM_CMD_PALL             = 0x00000002U;
-constexpr uint32_t SDRAM_CMD_AUTOREFRESH_MODE = 0x00000003U;
-constexpr uint32_t SDRAM_CMD_LOAD_MODE        = 0x00000004U;
-constexpr uint32_t SDRAM_CMD_SELFREFRESH_MODE = 0x00000005U;
-constexpr uint32_t SDRAM_CMD_POWERDOWN_MODE   = 0x00000006U;
-
 /**
  * SDRAM Command Target
  */
@@ -31,6 +19,19 @@ namespace core::io {
  */
 class SDRAM : public FMC {
 public:
+    /**
+     * Types of command to send to the SDRAM at startup
+     */
+    enum class CommandType {
+        NORMAL_MODE = 0,
+        CLK_ENABLE,
+        PALL,
+        AUTOREFRESH_MODE,
+        LOAD_MODE,
+        SELFREFRESH_MODE,
+        POWERDOWN_MODE,
+    };
+
     /**
      * Holds all SDRAM controller settings that map directly to
      * the HAL_SDRAM_Init configuration structure.
@@ -114,14 +115,14 @@ public:
      *
      * @return the result of attempting to enable the write protection
      */
-    virtual Status WriteProtectionEnable() = 0;
+    virtual Status EnableWriteProtection() = 0;
 
     /**
      * Disable write protection for the sdram
      *
      * @return the result of attempting to disable the write protection
      */
-    virtual Status WriteProtection_Disable() = 0;
+    virtual Status DisableWriteProtection() = 0;
 
     /**
      * Send a command to the sdram
@@ -156,8 +157,6 @@ public:
      *         FMC_SDRAM_POWER_DOWN_MODE.
      */
     virtual uint32_t GetModeStatus() = 0;
-
-    // void* sdramMemoryAddress;
 
 protected:
     SDRAMInitConfig sdramInitConfig;

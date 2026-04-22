@@ -44,25 +44,20 @@ constexpr uint32_t SDRAM_BANK1   = 0xC0000000;
 constexpr uint32_t SDRAM_BANK2   = 0xD0000000;
 
 /**
- *
- *
  * Class initializes the FMC peripheral and associated GPIO pins,
  * configures SDRAM timing parameters, and provides simple SDRAM methods.
  */
 class SDRAMf4xx : public SDRAM {
 public:
     /**
-     * Initializes an FMC device
+     * Initializes an FMC device by enabling the specific peripheral clock,
+     * setting up the SDRAM Controller
      *
      * @param[in] sdramDevice FMC_SDRAM Peripheral configuration registers location
      * @param[in] pinConfig All FMC GPIO pin configurations.
      * @param[in] sdramInitConfig SDRAM controller configuration parameters.
      * @param[in] sdramTimingConfig SDRAM timing configuration parameters.
      *
-     * - Enables FMC peripheral clock
-     * - Initializes GPIO pins
-     * - Configures SDRAM controller
-     * - Calls HAL_SDRAM_Init()
      */
     SDRAMf4xx(const FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SDRAMInitConfig sdramInitConfig,
               SDRAMTimingConfig sdramTimingConfig);
@@ -72,14 +67,14 @@ public:
      *
      * @return the result of attempting to enable the write protection
      */
-    Status WriteProtectionEnable() override;
+    Status EnableWriteProtection() override;
 
     /**
      * Disable write protection for the sdram
      *
      * @return the result of attempting to disable the write protection
      */
-    Status WriteProtection_Disable() override;
+    Status DisableWriteProtection() override;
 
     /**
      * Send a command to the sdram
@@ -99,17 +94,17 @@ public:
     Status ProgramRefreshRate(uint32_t refreshRate) override;
 
     /**
-     * Set the Number of consecutive SDRAM Memory auto Refresh commands.
+     * Force a number of Refresh Commands to the SDRAM, effectively making it idle.
      *
      * @param autoRefreshNumber Specifies the auto Refresh number.
-     * @return
+     * @return STATUS::OK
      */
     Status SetAutoRefreshNumber(uint32_t autoRefreshNumber) override;
 
     /**
      * Returns the indicated FMC SDRAM bank mode status.
      *
-     * @return The FMC SDRAM bank mode status, could be on of the following HAL defines:
+     * @return The FMC SDRAM bank mode status, could be one of the following HAL defines:
      *         FMC_SDRAM_NORMAL_MODE, FMC_SDRAM_SELF_REFRESH_MODE or
      *         FMC_SDRAM_POWER_DOWN_MODE.
      */
@@ -130,7 +125,6 @@ public:
 private:
     /**
      * Helper function to determine the memory address based on the bank number
-     *
      */
     void* getSDRAMMemoryAddress() const;
     /**
