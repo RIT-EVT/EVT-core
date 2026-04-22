@@ -77,13 +77,17 @@ public:
     Status DisableWriteProtection() override;
 
     /**
-     * Send a command to the sdram
-     *
-     * @param command The SdramCommandStruct holding the information of the command
-     * @param timeout How long to wait for the sdram command
-     * @return the result of attempting to send a command to the sdram
-     */
-    Status SendCommand(SDRAMCommandStruct* command, uint32_t timeout) override;
+      * @brief Send a command to the sdram
+      * @param type is the kind of the command to be sent, can be a value from enum SDRAM::Command
+      * @param target specifies which device to send the command to, can be a value from SDRAM::Bank
+      * @param refreshNumber defines the number of SDRAM clock cycles where the controller sends the auto refresh
+      *  command (essentially a halted state where the SDRAM will ignore any requests), can be a value between 1 and 15
+      * @param modeRegister defines how the SDRAM will operate when sending the SET_SDRAM_MODE command, ignored
+      *  when sending any other command. The specific value to send depends on the datasheet usually
+      *  under Mode Register Definition
+      * @return the result of attempting to send a command to the sdram
+      */
+    Status SendCommand(SDRAMCommand type, SDRAMBank target, uint16_t refreshNumber, uint16_t modeRegister) override;
 
     /**
      * Program the SDRAM Memory Refresh rate.

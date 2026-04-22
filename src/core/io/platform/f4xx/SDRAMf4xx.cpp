@@ -45,15 +45,15 @@ FMC::Status SDRAMf4xx::DisableWriteProtection() {
     return FMC::HALStatusToFMCStatus(halStatus);
 }
 
-FMC::Status SDRAMf4xx::SendCommand(SDRAMCommandStruct* command, uint32_t timeout) {
+FMC::Status SDRAMf4xx::SendCommand(SDRAMCommand type, SDRAMBank target, uint16_t refreshNumber, uint16_t modeRegister) {
     FMC_SDRAM_CommandTypeDef halCommand{};
 
-    halCommand.AutoRefreshNumber      = command->AutoRefreshNumber;
-    halCommand.CommandMode            = command->CommandMode;
-    halCommand.CommandTarget          = command->CommandTarget;
-    halCommand.ModeRegisterDefinition = command->ModeRegisterDefinition;
+    halCommand.CommandMode            = static_cast<uint32_t>(type);
+    halCommand.CommandTarget          = static_cast<uint32_t>(target);
+    halCommand.AutoRefreshNumber      = refreshNumber;
+    halCommand.ModeRegisterDefinition = modeRegister;
 
-    HAL_StatusTypeDef halStatus = FMC_SDRAM_SendCommand(this->sdramDevice, &halCommand, timeout);
+    HAL_StatusTypeDef halStatus = FMC_SDRAM_SendCommand(this->sdramDevice, &halCommand, 0xFFFF);
 
     return FMC::HALStatusToFMCStatus(halStatus);
 }

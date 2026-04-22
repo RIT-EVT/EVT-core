@@ -4,12 +4,6 @@
 #ifdef STM32F4xx
     #include <HALf4/stm32f4xx_hal.h>
     #include <core/io/FMC.hpp>
-/**
- * SDRAM Command Target
- */
-constexpr uint32_t SDRAM_CMD_TARGET_BANK2   = FMC_SDCMR_CTB2;
-constexpr uint32_t SDRAM_CMD_TARGET_BANK1   = FMC_SDCMR_CTB1;
-constexpr uint32_t SDRAM_CMD_TARGET_BANK1_2 = 0x00000018U;
 
 namespace core::io {
 
@@ -20,16 +14,25 @@ namespace core::io {
 class SDRAM : public FMC {
 public:
     /**
-     * Types of command to send to the SDRAM at startup
+     * SDRAM Command Target
      */
-    enum class CommandType {
-        NORMAL_MODE = 0,
-        CLK_ENABLE,
-        PALL,
-        AUTOREFRESH_MODE,
-        LOAD_MODE,
-        SELFREFRESH_MODE,
-        POWERDOWN_MODE,
+    enum class SDRAMBank {
+        BANK1 = FMC_SDCMR_CTB1,
+        BANK2 = FMC_SDCMR_CTB2,
+        BOTH  = FMC_SDCMR_CTB1 | FMC_SDCMR_CTB2,
+    };
+
+    /**
+     * SDRAM Command modes for initialization and state change
+     */
+    enum class SDRAMCommand {
+        NORMAL_MODE      = 0,
+        CLK_ENABLE       = 1,
+        PALL             = 2,
+        AUTOREFRESH_MODE = 3,
+        SET_MODE         = 4,
+        SELFREFRESH_MODE = 5,
+        POWERDOWN_MODE   = 6,
     };
 
     /**
@@ -64,21 +67,6 @@ public:
         uint32_t writeRecoveryTime;
         uint32_t rpDelay;
         uint32_t rcdDelay;
-    };
-
-    /**
-     * Structure to send commands to the SDRAM through the FMC
-     *
-     * CommandMode is the mode of the command, cam be a value from the SDRAM Command Mode #define group
-     * CommandTarget specifies which device to send the command to, cam be a value from the SDRAM Command Target #define
-     * group AutoRefreshNumber defines the number of consecutive auto refresh command issued in auto refresh mode, can
-     * be a value between 1 and 15 ModeRegisterDefinition defines the SDRAM Mode to register content
-     */
-    struct SDRAMCommandStruct {
-        uint32_t CommandMode;
-        uint32_t CommandTarget;
-        uint32_t AutoRefreshNumber;
-        uint32_t ModeRegisterDefinition;
     };
 
     /**
@@ -125,13 +113,19 @@ public:
     virtual Status DisableWriteProtection() = 0;
 
     /**
-     * Send a command to the sdram
+     * @brief Send a command to the sdram
      *
-     * @param command The SdramCommandStruct holding the information of the command
-     * @param timeout How long to wait for the sdram command
+     * @param type is the kind of the command to be sent, can be a value from enum SDRAM::Command
+     * @param target specifies which device to send the command to, can be a value from SDRAM::Bank
+     * @param refreshNumber defines the number of SDRAM clock cycles where the controller sends the auto refresh
+     *  command (essentially a halted state where the SDRAM will ignore any requests), can be a value between 1 and 15
+     * @param modeRegister defines how the SDRAM will operate when sending the SET_SDRAM_MODE command, ignored
+     *  when sending any other command. The specific value to send depends on the datasheet usually
+     *  under Mode Register Definition
      * @return the result of attempting to send a command to the sdram
      */
-    virtual Status SendCommand(SDRAMCommandStruct* command, uint32_t timeout) = 0;
+    virtual Status SendCommand(SDRAMCommand type, SDRAMBank target, uint16_t refreshNumber, uint16_t modeRegister) = 0;
+
 
     /**
      * Program the SDRAM Memory Refresh rate.
