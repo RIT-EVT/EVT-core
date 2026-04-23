@@ -10,8 +10,14 @@ namespace io = core::io;
  * dictionary and other baseline settings. The idea is that each "board"
  * will have a specific object dictionary associated with it. The object
  * dictionary itself will also need to have information on "data of interest".
- * For example, a temperature management system may to expose water pump
+ * For example, a temperature management system may expose water pump
  * flow rate in the object dictionary.
+ * CANopen SDOs (Service Data Objects) provide direct access to the Object
+ * Dictionary entries of a CAN node. Unlike PDOs which are for high-speed,
+ * data, SDOs follow a client-server model (confirmed communication) to
+ * ensure reliability.
+ * Client (Host): Initiates the request to read or write.
+ * Server (Peripheral): The node whose Object Dictionary is being accessed.
  */
 class SDOCanNode : public CANDevice {
 public:
