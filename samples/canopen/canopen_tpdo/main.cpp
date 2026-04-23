@@ -7,8 +7,8 @@
 #include <cstring>
 
 #include <core/io/CANopen.hpp>
-#include <core/io/types/CANMessage.hpp>
 #include <core/io/UART.hpp>
+#include <core/io/types/CANMessage.hpp>
 #include <core/manager.hpp>
 #include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
