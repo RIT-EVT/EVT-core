@@ -1,13 +1,19 @@
 #include <core/io/CANopen.hpp>
-#include <core/io/types/CANMessage.hpp>
-#include <core/utils/types/FixedQueue.hpp>
 
-#include <core/dev/RTC.hpp>
-
-#include <core/io/CANDevice.hpp>
 #include <stdint.h>
 
-#define MAX_SIZE 64
+#include <co_csdo.h>
+#include <core/dev/RTC.hpp>
+#include <core/io/CANDevice.hpp>
+#include <core/io/types/CANMessage.hpp>
+#include <core/utils/log.hpp>
+#include <core/utils/types/FixedQueue.hpp>
+
+#define MAX_SIZE            64
+#define SDO_WAIT            10
+#define SDO_REQUEST_TIMEOUT 1000
+
+namespace log = core::log;
 
 /*
  * Empty namespace to contain "global" variables. These will be used within
@@ -31,6 +37,30 @@ uint8_t testerStorage[MAX_SIZE];
 
 // Queue that stores the CAN messages to send to the CANopen parser
 core::types::FixedQueue<CANOPEN_QUEUE_SIZE, core::io::CANMessage>* canQueue;
+
+// SDO variables
+typedef struct SDOState {
+    bool inProgress = false;
+    void* context;
+    core::io::csdo_callback_t callback;
+    CO_NODE* node;
+    uint32_t lastErr;
+} sdo_state_t;
+
+sdo_state_t state;
+
+void internalCallback(CO_CSDO* csdo, uint16_t index, uint8_t sub, uint32_t code) {
+    if (state.callback != nullptr) {
+        state.callback(csdo, CO_DEV(index, sub), code, state.context);
+    }
+
+    state.callback   = nullptr;
+    state.node       = nullptr;
+    state.context    = nullptr;
+    state.lastErr    = code;
+    state.inProgress = false;
+}
+
 } // namespace
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -129,6 +159,90 @@ void processCANopenNode(CO_NODE* canNode) {
     COTmrService(&canNode->Tmr);
     // Handle executing timer events that have elapsed
     COTmrProcess(&canNode->Tmr);
+}
+
+CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t transferCallback,
+                   void* transferContext) {
+    while (state.inProgress == true) {
+        processCANopenNode(state.node);
+        time::wait(SDO_WAIT);
+    }
+
+    // Find the Client-SDO (CO_CSDO) object for the specified node.
+    CO_CSDO* csdo = COCSdoFind(&(node), 0);
+    CO_ERR err    = CO_ERR_BAD_ARG;
+
+    if (csdo != nullptr) {
+        state.callback = transferCallback;
+        state.context  = transferContext;
+        state.node     = &node;
+
+        // Initiate an SDO download request.
+        err = COCSdoRequestDownload(csdo, entry, data, size, internalCallback, SDO_REQUEST_TIMEOUT);
+    }
+
+    if (err == CO_ERR_NONE) {
+        state.inProgress = true;
+    }
+
+    return err;
+}
+
+CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t receiveCallback,
+                  void* receiveContext) {
+    while (state.inProgress == true) {
+        processCANopenNode(state.node);
+        time::wait(SDO_WAIT);
+    }
+
+    // Find the Client-SDO (CO_CSDO) object for the specified node.
+    CO_CSDO* csdo = COCSdoFind(&(node), 0);
+    CO_ERR err    = CO_ERR_BAD_ARG;
+
+    if (csdo != nullptr) {
+        state.callback = receiveCallback;
+        state.context  = receiveContext;
+        state.node     = &node;
+
+        // Initiate an SDO upload request.
+        err = COCSdoRequestUpload(csdo, entry, data, size, internalCallback, SDO_REQUEST_TIMEOUT);
+    }
+
+    if (err == CO_ERR_NONE) {
+        state.inProgress = true;
+    }
+
+    return err;
+}
+
+uint32_t SDOTransferBlocking(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry) {
+    CO_ERR err = SDOTransfer(node, data, size, entry, nullptr, nullptr);
+
+    while (state.inProgress == true) {
+        processCANopenNode(state.node);
+        time::wait(SDO_WAIT);
+    }
+
+    if (state.lastErr != 0) {
+        return state.lastErr;
+    }
+
+    return err;
+}
+
+uint32_t SDOReceiveBlocking(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry) {
+    CO_ERR err = SDOReceive(node, data, size, entry, nullptr, nullptr);
+
+    while (state.inProgress == true) {
+        processCANopenNode(state.node);
+        time::wait(SDO_WAIT);
+    }
+
+    if (state.lastErr != 0) {
+        return state.lastErr;
+    }
+
+    return err;
 }
 
 } // namespace core::io

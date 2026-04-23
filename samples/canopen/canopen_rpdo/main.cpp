@@ -5,20 +5,23 @@
  * This sample is intended to be run alongside canopen_tpdo.
  */
 
-#include <core/io/CAN.hpp>
+#include <cstdio>
+#include <cstring>
+
+#include <core/io/CANopen.hpp>
 #include <core/io/UART.hpp>
 #include <core/io/types/CANMessage.hpp>
 #include <core/manager.hpp>
+#include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 #include <core/utils/types/FixedQueue.hpp>
-
-#include <core/io/CANopen.hpp>
 
 #include "RPDOCanNode.hpp"
 
 namespace io   = core::io;
 namespace dev  = core::dev;
 namespace time = core::time;
+namespace log  = core::log;
 
 ///////////////////////////////////////////////////////////////////////////////
 // EVT-core CAN callback and CAN setup. This will include logic to set
@@ -41,18 +44,29 @@ io::UART* uart;
 // create a can interrupt handler
 void canInterrupt(io::CANMessage& message, void* priv) {
     auto* queue = (core::types::FixedQueue<CANOPEN_QUEUE_SIZE, io::CANMessage>*) priv;
+    char messageString[50];
 
+#ifdef EVT_CORE_LOG_ENABLE
     // print out raw received data
-    uart->printf("Got RAW message from %X of length %d with data: ", message.getId(), message.getDataLength());
+    snprintf(&messageString[0],
+             25,
+             "Got RAW message from %X of length %d with data: ",
+             message.getId(),
+             message.getDataLength());
+#endif
+
     uint8_t* data = message.getPayload();
+
     for (int i = 0; i < message.getDataLength(); i++) {
-        uart->printf("%X ", *data);
+        snprintf(&messageString[strlen(messageString)], 1, "%X ", *data);
         data++;
     }
-    uart->printf("\r\n");
 
-    if (queue != nullptr)
+    log::LOGGER.log(log::Logger::LogLevel::INFO, "\r\n\t%s\r\n", messageString);
+
+    if (queue != nullptr) {
         queue->append(message);
+    }
 }
 
 int main() {
@@ -60,6 +74,7 @@ int main() {
     core::platform::init();
 
     uart = &io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
+
     // Initialize the timer
     dev::Timer& timer = dev::getTimer<dev::MCUTimer::Timer2>(100);
 
