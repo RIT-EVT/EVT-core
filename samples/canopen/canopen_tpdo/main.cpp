@@ -3,17 +3,16 @@
  * setup a CANopen node and attempt to make back and forth communication.
  */
 
-#include <core/io/CAN.hpp>
-#include <core/io/UART.hpp>
-#include <core/io/types/CANMessage.hpp>
-#include <core/manager.hpp>
-#include <core/utils/log.hpp>
-#include <core/utils/time.hpp>
-#include <core/utils/types/FixedQueue.hpp>
 #include <cstdio>
 #include <cstring>
 
 #include <core/io/CANopen.hpp>
+#include <core/io/types/CANMessage.hpp>
+#include <core/io/UART.hpp>
+#include <core/manager.hpp>
+#include <core/utils/log.hpp>
+#include <core/utils/time.hpp>
+#include <core/utils/types/FixedQueue.hpp>
 
 #include "TPDOCanNode.hpp"
 

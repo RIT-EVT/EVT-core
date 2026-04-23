@@ -1,13 +1,13 @@
-#include <co_csdo.h>
 #include <core/io/CANopen.hpp>
+
+#include <stdint.h>
+
+#include <co_csdo.h>
+#include <core/dev/RTC.hpp>
+#include <core/io/CANDevice.hpp>
 #include <core/io/types/CANMessage.hpp>
 #include <core/utils/log.hpp>
 #include <core/utils/types/FixedQueue.hpp>
-
-#include <core/dev/RTC.hpp>
-
-#include <core/io/CANDevice.hpp>
-#include <stdint.h>
 
 #define MAX_SIZE            64
 #define SDO_WAIT            10

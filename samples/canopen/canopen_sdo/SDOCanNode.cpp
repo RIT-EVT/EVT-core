@@ -1,6 +1,8 @@
 #include "SDOCanNode.hpp"
-#include <core/utils/log.hpp>
+
 #include <cstdio>
+
+#include <core/utils/log.hpp>
 
 namespace log = core::log;
 

@@ -6,19 +6,19 @@
  * This sample is intended to be run alongside canopen_tpdo.
  */
 
+#include "SDOCanNode.hpp"
+
+#include <cstdio>
+#include <cstring>
+
 #include <core/io/CAN.hpp>
-#include <core/io/UART.hpp>
+#include <core/io/CANopen.hpp>
 #include <core/io/types/CANMessage.hpp>
+#include <core/io/UART.hpp>
 #include <core/manager.hpp>
 #include <core/utils/log.hpp>
 #include <core/utils/time.hpp>
 #include <core/utils/types/FixedQueue.hpp>
-#include <cstring>
-
-#include <core/io/CANopen.hpp>
-#include <cstdio>
-
-#include "SDOCanNode.hpp"
 
 namespace io   = core::io;
 namespace dev  = core::dev;

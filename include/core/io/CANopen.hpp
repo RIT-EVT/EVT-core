@@ -106,7 +106,7 @@ void processCANopenNode(CO_NODE* canNode);
  * @param entry[in]            Object dictionary entry (index + subindex) to write to
  * @param transferCallback[in] Callback function for the transfer operation
  * @param transferContext[in]  Context for the callback function
- * @return CO_ERR[out]         Returns the result of scheduling the transfer operation
+ * @return CO_ERR              Returns the result of scheduling the transfer operation
  */
 CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t transferCallback,
                    void* transferContext);
@@ -116,12 +116,12 @@ CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, c
  * the specified object dictionary entry on the target CANopen node
  *
  * @param node[in]            Reference to the CANopen node object
- * @param data[in]            Pointer to the buffer where received data will be stored
+ * @param data[out]           Pointer to the buffer where received data will be stored
  * @param size[in]            Size of the buffer provided to receive data
  * @param entry[in]           Object dictionary entry (index + subindex) to read from
  * @param receiveCallback[in] Callback function for the receive operation
  * @param receiveContext[in]  Context for the callback function
- * @return CO_ERR[out]        Returns the result of scheduling the receive operation
+ * @return CO_ERR             Returns the result of scheduling the receive operation
  */
 CO_ERR SDOReceive(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t receiveCallback,
                   void* receiveContext);
@@ -143,10 +143,10 @@ uint32_t SDOTransferBlocking(CO_NODE& node, uint8_t* data, uint8_t size, uint32_
  * the specified object dictionary entry on the target CANopen node.
  *
  * @param node[in]        Reference to the CANopen node object
- * @param data[in]        Pointer to the buffer where received data will be stored
+ * @param data[out]       Pointer to the buffer where received data will be stored
  * @param size[in]        Size of the buffer provided to receive data
  * @param entry[in]       Object dictionary entry (index + subindex) to read from
- * @return CO_ERR[out]    Returns the result of the receive operation
+ * @return CO_ERR         Returns the result of the receive operation
  */
 uint32_t SDOReceiveBlocking(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry);
 } // namespace core::io
