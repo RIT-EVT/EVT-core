@@ -329,12 +329,19 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 }
 #endif
 
+/**
+ * Get an instance of SDRAM
+ *
+ * @tparam pins the array of pins that will be used by the SDRAM Controller
+ * @param sdramDevice actual register of data
+ * @param
+ */
 #ifdef SDRAM_SUPPORTED
-template<FMC::FMCPinConfig* pinConfig>
-FMC& getFMC(FMC_SDRAM_TypeDef* sdramDevice, SDRAMf4xx::SDRAMInitConfig sdramInitConfig,
-            SDRAMf4xx::SDRAMTimingConfig sdramTimingConfig) {
+template<Pin* pins>
+SDRAM& getSDRAM(FMC_SDRAM_TypeDef* sdramDevice, SDRAMf4xx::SDRAMInitConfig initConfig,
+            SDRAMf4xx::SDRAMTimingConfig timingConfig) {
     #ifdef STM32F4xx
-    static SDRAMf4xx fmc(sdramDevice, *pinConfig, sdramInitConfig, sdramTimingConfig);
+    static SDRAMf4xx fmc(sdramDevice, pins, initConfig, timingConfig);
     return fmc;
     #endif
 }

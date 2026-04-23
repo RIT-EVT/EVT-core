@@ -3,49 +3,50 @@
 
 namespace core::io {
 
-SDRAMf4xx::SDRAMf4xx(const FMC_SDRAM_TypeDef* sdramDevice, FMCPinConfig pinConfig, SDRAMInitConfig sdramInitConfig,
-                     SDRAMTimingConfig sdramTimingConfig)
-    : SDRAM((sdramInitConfig.sdBank == FMC_SDRAM_BANK1) ? reinterpret_cast<void*>(SDRAM_BANK1)
-                                                        : reinterpret_cast<void*>(SDRAM_BANK2),
-            pinConfig, sdramInitConfig, sdramTimingConfig),
-      sdramDevice(const_cast<FMC_SDRAM_TypeDef*>(sdramDevice)), sdram(), sdramTiming() {
-    InitHardware(pinConfig);
+SDRAMf4xx::SDRAMf4xx(const FMC_SDRAM_TypeDef* sdramDevice, Pin* pins,
+                     const SDRAMInitConfig& initConfig, const SDRAMTimingConfig& timingConfig)
+                     : SDRAM((initConfig.sdBank == FMC_SDRAM_BANK1)
+                              ? reinterpret_cast<void*>(SDRAM_BANK1)
+                              : reinterpret_cast<void*>(SDRAM_BANK2),
+                              pins, initConfig, timingConfig),
+                     sdramDevice(const_cast<FMC_SDRAM_TypeDef*>(sdramDevice)), sdram(), sdramTiming() {
+    InitHardware(pins);
 
     // map the class init structs to the hal structs
     sdram.Instance                = this->sdramDevice;
-    sdram.Init.SDBank             = sdramInitConfig.sdBank;
-    sdram.Init.ColumnBitsNumber   = sdramInitConfig.columnBitsNumber;
-    sdram.Init.RowBitsNumber      = sdramInitConfig.rowBitsNumber;
-    sdram.Init.MemoryDataWidth    = sdramInitConfig.memoryDataWidth;
-    sdram.Init.InternalBankNumber = sdramInitConfig.internalBankNumber;
-    sdram.Init.WriteProtection    = sdramInitConfig.writeProtection;
-    sdram.Init.ReadBurst          = sdramInitConfig.readBurst;
-    sdram.Init.ReadPipeDelay      = sdramInitConfig.readPipeDelay;
+    sdram.Init.SDBank             = initConfig.sdBank;
+    sdram.Init.ColumnBitsNumber   = initConfig.columnBitsNumber;
+    sdram.Init.RowBitsNumber      = initConfig.rowBitsNumber;
+    sdram.Init.MemoryDataWidth    = initConfig.memoryDataWidth;
+    sdram.Init.InternalBankNumber = initConfig.internalBankNumber;
+    sdram.Init.WriteProtection    = initConfig.writeProtection;
+    sdram.Init.ReadBurst          = initConfig.readBurst;
+    sdram.Init.ReadPipeDelay      = initConfig.readPipeDelay;
 
-    sdramTiming.LoadToActiveDelay    = sdramTimingConfig.loadToActiveDelay;
-    sdramTiming.ExitSelfRefreshDelay = sdramTimingConfig.exitSelfRefreshDelay;
-    sdramTiming.SelfRefreshTime      = sdramTimingConfig.selfRefreshTime;
-    sdramTiming.RowCycleDelay        = sdramTimingConfig.rowCycleDelay;
-    sdramTiming.WriteRecoveryTime    = sdramTimingConfig.writeRecoveryTime;
-    sdramTiming.RPDelay              = sdramTimingConfig.rpDelay;
-    sdramTiming.RCDDelay             = sdramTimingConfig.rcdDelay;
+    sdramTiming.LoadToActiveDelay    = timingConfig.loadToActiveDelay;
+    sdramTiming.ExitSelfRefreshDelay = timingConfig.exitSelfRefreshDelay;
+    sdramTiming.SelfRefreshTime      = timingConfig.selfRefreshTime;
+    sdramTiming.RowCycleDelay        = timingConfig.rowCycleDelay;
+    sdramTiming.WriteRecoveryTime    = timingConfig.writeRecoveryTime;
+    sdramTiming.RPDelay              = timingConfig.rpDelay;
+    sdramTiming.RCDDelay             = timingConfig.rcdDelay;
 
     HAL_SDRAM_Init(&sdram, &sdramTiming);
 }
 
-FMC::Status SDRAMf4xx::EnableWriteProtection() {
-    HAL_StatusTypeDef halStatus = FMC_SDRAM_WriteProtection_Enable(this->sdramDevice, this->sdramInitConfig.sdBank);
+SDRAM::Status SDRAMf4xx::EnableWriteProtection() {
+    HAL_StatusTypeDef halStatus = FMC_SDRAM_WriteProtection_Enable(this->sdramDevice, this->initConfig.sdBank);
 
-    return FMC::HALStatusToFMCStatus(halStatus);
+    return SDRAM::HALStatusToSDRAMStatus(halStatus);
 }
 
-FMC::Status SDRAMf4xx::DisableWriteProtection() {
-    HAL_StatusTypeDef halStatus = FMC_SDRAM_WriteProtection_Disable(this->sdramDevice, this->sdramInitConfig.sdBank);
+SDRAM::Status SDRAMf4xx::DisableWriteProtection() {
+    HAL_StatusTypeDef halStatus = FMC_SDRAM_WriteProtection_Disable(this->sdramDevice, this->initConfig.sdBank);
 
-    return FMC::HALStatusToFMCStatus(halStatus);
+    return SDRAM::HALStatusToSDRAMStatus(halStatus);
 }
 
-FMC::Status SDRAMf4xx::SendCommand(SDRAMCommand type, SDRAMBank target, uint16_t refreshNumber, uint16_t modeRegister) {
+SDRAM::Status SDRAMf4xx::SendCommand(SDRAMCommand type, SDRAMBank target, uint16_t refreshNumber, uint16_t modeRegister) {
     FMC_SDRAM_CommandTypeDef halCommand{};
 
     halCommand.CommandMode            = static_cast<uint32_t>(type);
@@ -55,26 +56,37 @@ FMC::Status SDRAMf4xx::SendCommand(SDRAMCommand type, SDRAMBank target, uint16_t
 
     HAL_StatusTypeDef halStatus = FMC_SDRAM_SendCommand(this->sdramDevice, &halCommand, 0xFFFF);
 
-    return FMC::HALStatusToFMCStatus(halStatus);
+    return SDRAM::HALStatusToSDRAMStatus(halStatus);
 }
 
-FMC::Status SDRAMf4xx::ProgramRefreshRate(uint32_t refreshRate) {
+SDRAM::Status SDRAMf4xx::ProgramRefreshRate(uint32_t refreshRate) {
     HAL_StatusTypeDef halStatus = FMC_SDRAM_ProgramRefreshRate(this->sdramDevice, refreshRate);
     
-    return FMC::HALStatusToFMCStatus(halStatus);
+    return SDRAM::HALStatusToSDRAMStatus(halStatus);
 }
 
-FMC::Status SDRAMf4xx::SetAutoRefreshNumber(uint32_t autoRefreshNumber) {
+SDRAM::Status SDRAMf4xx::SetAutoRefreshNumber(uint32_t autoRefreshNumber) {
     HAL_StatusTypeDef halStatus = FMC_SDRAM_SetAutoRefreshNumber(this->sdramDevice, autoRefreshNumber);
 
-    return FMC::HALStatusToFMCStatus(halStatus);
+    return SDRAM::HALStatusToSDRAMStatus(halStatus);
 }
 
-uint32_t SDRAMf4xx::GetModeStatus() {
-    return FMC_SDRAM_GetModeStatus(sdramDevice, sdramInitConfig.sdBank);
+SDRAM::SDRAMState SDRAMf4xx::GetModeStatus() {
+    switch(FMC_SDRAM_GetModeStatus(this->sdramDevice, this->initConfig.sdBank)) {
+    case FMC_SDRAM_SELF_REFRESH_MODE:
+        return SDRAMState::SELF_REFRESH_MODE;
+        break;
+    case FMC_SDRAM_POWER_DOWN_MODE:
+        return SDRAMState::POWER_DOWN_MODE;
+        break;
+    default:
+    case FMC_SDRAM_NORMAL_MODE:
+        return SDRAMState::NORMAL_MODE;
+        break;
+    }
 }
 
-SDRAMf4xx::SDRAMInitConfig SDRAMf4xx::defaultSdramInitConfig() {
+SDRAM::SDRAMInitConfig SDRAMf4xx::defaultSdramInitConfig() {
     SDRAMInitConfig config{};
 
     config.sdBank             = FMC_SDRAM_BANK1;
@@ -106,23 +118,13 @@ SDRAMf4xx::SDRAMTimingConfig SDRAMf4xx::defaultSdramTimingConfig() {
 };
 
 void* SDRAMf4xx::getSDRAMMemoryAddress() const {
-    return memoryAddress; // This is a protected variable from the FMC class definition
+    return memoryAddress; // This is a protected variable from the SDRAM class definition
 }
 
-void SDRAMf4xx::InitHardware(const FMCPinConfig& pinConfig) {
+void SDRAMf4xx::InitHardware(Pin* pins) {
     __HAL_RCC_FMC_CLK_ENABLE();
 
-    InitPinGroup(pinConfig.address.pins, pinConfig.address.count);
-    InitPinGroup(pinConfig.data.pins, pinConfig.data.count);
-    InitPinGroup(pinConfig.byteEnable.pins, pinConfig.byteEnable.count);
-    InitPinGroup(pinConfig.bank.pins, pinConfig.bank.count);
-    InitPinGroup(pinConfig.command.pins, pinConfig.command.count);
-}
-
-void SDRAMf4xx::InitPinGroup(Pin* pins, uint8_t count) {
-    GPIO_InitTypeDef gpioInit;
-
-    GPIOf4xx::gpioStateInit(&gpioInit, pins, count, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
+    // TODO: FIX WITH GPIO BULK INIT (ON DIFFERENT BRANCH)
 }
 
 } // namespace core::io
