@@ -44,8 +44,7 @@ target_sources(${PROJECT_NAME} PRIVATE
         src/core/dev/RTCTimer.cpp
         src/core/dev/storage/M24C32.cpp
         src/core/dev/Thermistor.cpp
-        src/core/utils/log.cpp
-        src/core/io/FMC.cpp)
+        src/core/utils/log.cpp)
 
 get_directory_property(COMPDEFS COMPILE_DEFINITIONS)
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
