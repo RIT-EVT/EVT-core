@@ -8,6 +8,7 @@
 #include <core/io/GPIO.hpp>
 #include <core/io/I2C.hpp>
 #include <core/io/PWM.hpp>
+#include <core/io/SDRAM.hpp>
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
 
@@ -61,6 +62,11 @@
     #include <core/io/platform/f4xx/SPIf4xx.hpp>
     #include <core/io/platform/f4xx/UARTf4xx.hpp>
     #include <core/platform/f4xx/stm32f4xx.hpp>
+
+    #ifdef STM32F469xx
+        #define SDRAM_SUPPORTED
+        #include <core/io/platform/f4xx/SDRAMf4xx.hpp>
+    #endif
 #endif
 
 namespace core::platform {
@@ -319,6 +325,24 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
     #ifdef STM32F4xx
     static SPIf4xx spi(CSPins, pinLength, sckPin, mosiPin);
     return spi;
+    #endif
+}
+#endif
+
+/**
+ * Get an instance of SDRAM
+ *
+ * @tparam pins the array of pins that will be used by the SDRAM Controller
+ * @param sdramDevice actual register of data
+ * @param
+ */
+#ifdef SDRAM_SUPPORTED
+template<Pin* pins>
+SDRAM& getSDRAM(FMC_SDRAM_TypeDef* sdramDevice, SDRAMf4xx::SDRAMInitConfig initConfig,
+            SDRAMf4xx::SDRAMTimingConfig timingConfig) {
+    #ifdef STM32F4xx
+    static SDRAMf4xx fmc(sdramDevice, pins, initConfig, timingConfig);
+    return fmc;
     #endif
 }
 #endif
