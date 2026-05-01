@@ -99,18 +99,21 @@ public:
           const SDRAMTimingConfig& timingConfig);
 
     /**
+     * Gets the Frequency of the SDRAM CLK
      *
      * @return the SDRAM clock frequency
      */
     static uint32_t getSdramClockFrequency();
 
     /**
+     * Get how long one SDRAM Clock cycle is in picoseconds
      *
-     * @return the SDRAM clock period in microseconds
+     * @return the SDRAM clock period in picoseconds
      */
     static uint32_t getSdramClockPeriodPS();
 
     /**
+     * Transform a time given in nanoseconds into how many clock cycles fit in that range
      *
      * @return the SDRAM clock period in nanoseconds
      */
