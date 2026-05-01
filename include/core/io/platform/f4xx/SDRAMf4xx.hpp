@@ -13,7 +13,6 @@
  * - SDRAM operations
  */
 
-#include <core/io/FMC.hpp>
 #include <core/io/SDRAM.hpp>
 
 #include <HALf4/stm32f4xx_hal.h>
