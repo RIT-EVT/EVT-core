@@ -2,9 +2,8 @@
 
 namespace core::io {
 
-SDRAM::SDRAM(void* memoryAddress, Pin* pins, const SDRAMInitConfig& initConfig,
-             const SDRAMTimingConfig& timingConfig) : memoryAddress(memoryAddress), initConfig(initConfig),
-             timingConfig(timingConfig), pins(pins) {}
+SDRAM::SDRAM(void* memoryAddress, Pin* pins, const SDRAMInitConfig& initConfig, const SDRAMTimingConfig& timingConfig)
+    : memoryAddress(memoryAddress), initConfig(initConfig), timingConfig(timingConfig), pins(pins) {}
 
 uint32_t SDRAM::getSdramClockFrequency() {
     return HAL_RCC_GetSysClockFreq() / 2;

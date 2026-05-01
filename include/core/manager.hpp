@@ -339,7 +339,7 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
 #ifdef SDRAM_SUPPORTED
 template<Pin* pins>
 SDRAM& getSDRAM(FMC_SDRAM_TypeDef* sdramDevice, SDRAMf4xx::SDRAMInitConfig initConfig,
-            SDRAMf4xx::SDRAMTimingConfig timingConfig) {
+                SDRAMf4xx::SDRAMTimingConfig timingConfig) {
     #ifdef STM32F4xx
     static SDRAMf4xx fmc(sdramDevice, pins, initConfig, timingConfig);
     return fmc;
