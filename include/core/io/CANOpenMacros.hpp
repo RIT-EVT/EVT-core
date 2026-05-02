@@ -132,6 +132,36 @@
     }
 
 /**
+ * This macro helps create an SDO configuration range of the object dictionary.
+ * This lives at the key 0x1280 with 4 sub indices.
+ */
+#define SDO_CONFIGURATION_1280(SERVER_NODE_ID)          \
+    {                                                   \
+        /* Communication Object SDO Server */           \
+        .Key  = CO_KEY(0x1280, 0x00, CO_OBJ_D___R_),    \
+        .Type = CO_TUNSIGNED32,                         \
+        .Data = (CO_DATA) 0x03,                         \
+    },                                                  \
+    {                                                   \
+        /* SDO Server Request COBID */                  \
+        .Key  = CO_KEY(0x1280, 0x01, CO_OBJ_D___R_),    \
+        .Type = CO_TUNSIGNED32,                         \
+        .Data = (CO_DATA) CO_COBID_SDO_REQUEST(),       \
+    },                                                  \
+    {                                                   \
+        /* SDO Server Response COBID */                 \
+        .Key  = CO_KEY(0x1280, 0x02, CO_OBJ_D___R_),    \
+        .Type = CO_TUNSIGNED32,                         \
+        .Data = (CO_DATA) CO_COBID_SDO_RESPONSE(),      \
+    },                                                  \
+    {                                                   \
+        /* Node-ID of the SDO server */                 \
+        .Key  = CO_KEY(0x1280, 0x03, CO_OBJ_D___R_),    \
+        .Type = CO_TUNSIGNED8,                          \
+        .Data = (CO_DATA) SERVER_NODE_ID,               \
+    }
+
+/**
  * This macro creates an RPDO settings object. This macro itself is abstract,
  * allowing it to be used with any RPDO number supported by CANOpen. To make
  * interaction with the entire object dictionary easier you just specify a number

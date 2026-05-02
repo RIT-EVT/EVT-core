@@ -61,7 +61,6 @@
     #include <core/io/platform/f4xx/SPIf4xx.hpp>
     #include <core/io/platform/f4xx/UARTf4xx.hpp>
     #include <core/platform/f4xx/stm32f4xx.hpp>
-
 #endif
 
 namespace core::platform {
