@@ -80,6 +80,8 @@ set (CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # does not produce the json file
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "") # works
 
+set(CMAKE_SIZEOF_VOID_P 4)
+
 include(GNUInstallDirs)
 
 ###############################################################################
