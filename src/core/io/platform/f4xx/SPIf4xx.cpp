@@ -76,11 +76,11 @@ uint8_t SPIf4xx::getSCKPortID(Pin sckPin) {
 
 SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin)
     : SPI(CSPins, pinLength, sckPin, mosiPin, misoPin) {
-    uint8_t mosiPort          = getMOSIPortID(mosiPin);
-    uint8_t misoPort          = getMISOPortID(misoPin);
-    uint8_t sckPort           = getSCKPortID(sckPin);
+    uint8_t mosiPort = getMOSIPortID(mosiPin);
+    uint8_t misoPort = getMISOPortID(misoPin);
+    uint8_t sckPort  = getSCKPortID(sckPin);
     // GPIO_InitTypeDef GPIOInit = {0};
-    uint8_t altId             = 0x00U;
+    uint8_t altId = 0x00U;
 
     if (mosiPort == misoPort && misoPort == sckPort) {
         switch (mosiPort) {
