@@ -39,7 +39,11 @@ void BusFault_Handler(void);
 void UsageFault_Handler(void);
 void DebugMon_Handler(void);
 void SysTick_Handler(void);
-void ensure_interrupt_linkage();
+/**
+ * @brief This function does not do anything, but ensures that the compiler/linker works and links together the vectored
+ * interrupt handlers to where they are initially weakly defined in startup_stm32f4xxxx.s
+ */
+void ensure_interrupt_linkage(void);
 
 #ifdef __cplusplus
 }

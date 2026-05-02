@@ -72,7 +72,7 @@
  *  thus has no additional consequences at runtime
  *  What took Collin two weeks, took us an hour and a half >:)
  */
-inline void ensure_interrupt_linkage() {}
+inline void ensure_interrupt_linkage(void) {}
 
 /**
   * @brief This function handles Non maskable interrupt.

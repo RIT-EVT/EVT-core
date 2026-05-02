@@ -65,9 +65,14 @@
 /******************************************************************************/
 /**
  * @brief This function does not do anything, but ensures that the compiler/linker works and inserts the important
- *  interrupt handlers from this file. What took Collin two weeks, took us an hour and a half >:)
+ *  interrupt handlers from this file. This was added instead of a call to SysTick_Handler() which had a side effect of
+ *  incrementing the counter used to tell how many milliseconds had passed since startup making it off by 1.
+ *  Additionally, the function is inlined to ensure that it will not have its own code area, but instead directly
+ *  insert itself into the assembly code of another. The fact that it is empty means that no code will be inserted and
+ *  thus has no additional consequences at runtime
+ *  What took Collin two weeks, took us an hour and a half >:)
  */
-inline void ensure_interrupt_linkage() {}
+inline void ensure_interrupt_linkage(void) {}
 
 /**
   * @brief This function handles Non maskable interrupt.
