@@ -147,12 +147,13 @@ PWMf4xx::PWMf4xx(Pin pin) : PWM(pin) {
     HAL_TIMEx_ConfigBreakDeadTime(&halTIM, &sBreakDeadTimeConfig);
 
     // Setup GPIO pin for PMW
-    GPIO_InitTypeDef gpioInit = {0};
-    Pin myPins[]              = {pin};
-    uint8_t numOfPins         = 1;
-
-    GPIOf4xx::gpioStateInit(
-        &gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, alternateFunction);
+    GPIOf4xx::gpioSingleInit(pin, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, alternateFunction);
+    // GPIO_InitTypeDef gpioInit = {0};
+    // Pin myPins[]              = {pin};
+    // uint8_t numOfPins         = 1;
+    //
+    // GPIOf4xx::gpioStateInit(
+    //     &gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, alternateFunction);
 }
 
 void PWMf4xx::setDutyCycle(uint32_t dutyCycle) {
