@@ -288,6 +288,9 @@ void GPIOf4xx::gpioInit(Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pu
             }
             start         = i;
             port_of_start = portFromPin(pins[start]);
+        } else if (i + 1 == numOfPins) {
+            fillPinPack(pin_pack, &pins[start], i - start + 1);
+            gpioPortInit(pin_pack, port_of_start, mode, pull, speed, alternate);
         }
     }
 }
