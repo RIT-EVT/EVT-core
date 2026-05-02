@@ -3,13 +3,12 @@
 
 namespace core::io {
 
-SDRAMf4xx::SDRAMf4xx(const FMC_SDRAM_TypeDef* sdramDevice, Pin* pins,
-                     const SDRAMInitConfig& initConfig, const SDRAMTimingConfig& timingConfig)
-                     : SDRAM((initConfig.sdBank == FMC_SDRAM_BANK1)
-                              ? reinterpret_cast<void*>(SDRAM_BANK1)
-                              : reinterpret_cast<void*>(SDRAM_BANK2),
-                              pins, initConfig, timingConfig),
-                     sdramDevice(const_cast<FMC_SDRAM_TypeDef*>(sdramDevice)), sdram(), sdramTiming() {
+SDRAMf4xx::SDRAMf4xx(const FMC_SDRAM_TypeDef* sdramDevice, Pin* pins, const SDRAMInitConfig& initConfig,
+                     const SDRAMTimingConfig& timingConfig)
+    : SDRAM((initConfig.sdBank == FMC_SDRAM_BANK1) ? reinterpret_cast<void*>(SDRAM_BANK1)
+                                                   : reinterpret_cast<void*>(SDRAM_BANK2),
+            pins, initConfig, timingConfig),
+      sdramDevice(const_cast<FMC_SDRAM_TypeDef*>(sdramDevice)), sdram(), sdramTiming() {
     InitHardware(pins);
 
     // map the class init structs to the hal structs
@@ -46,7 +45,8 @@ SDRAM::Status SDRAMf4xx::DisableWriteProtection() {
     return SDRAM::HALStatusToSDRAMStatus(halStatus);
 }
 
-SDRAM::Status SDRAMf4xx::SendCommand(SDRAMCommand type, SDRAMBank target, uint16_t refreshNumber, uint16_t modeRegister) {
+SDRAM::Status SDRAMf4xx::SendCommand(SDRAMCommand type, SDRAMBank target, uint16_t refreshNumber,
+                                     uint16_t modeRegister) {
     FMC_SDRAM_CommandTypeDef halCommand{};
 
     halCommand.CommandMode            = static_cast<uint32_t>(type);
@@ -61,7 +61,7 @@ SDRAM::Status SDRAMf4xx::SendCommand(SDRAMCommand type, SDRAMBank target, uint16
 
 SDRAM::Status SDRAMf4xx::ProgramRefreshRate(uint32_t refreshRate) {
     HAL_StatusTypeDef halStatus = FMC_SDRAM_ProgramRefreshRate(this->sdramDevice, refreshRate);
-    
+
     return SDRAM::HALStatusToSDRAMStatus(halStatus);
 }
 
@@ -72,7 +72,7 @@ SDRAM::Status SDRAMf4xx::SetAutoRefreshNumber(uint32_t autoRefreshNumber) {
 }
 
 SDRAM::SDRAMState SDRAMf4xx::GetModeStatus() {
-    switch(FMC_SDRAM_GetModeStatus(this->sdramDevice, this->initConfig.sdBank)) {
+    switch (FMC_SDRAM_GetModeStatus(this->sdramDevice, this->initConfig.sdBank)) {
     case FMC_SDRAM_SELF_REFRESH_MODE:
         return SDRAMState::SELF_REFRESH_MODE;
         break;

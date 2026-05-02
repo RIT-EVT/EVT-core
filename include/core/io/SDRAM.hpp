@@ -95,8 +95,7 @@ public:
      * @param initConfig HAL-level SDRAM parameters for how initialization works
      * @param timingConfig HAL-level SDRAM parameters for properly orchestrating hardware timing
      */
-    SDRAM(void* memoryAddress, Pin* pins, const SDRAMInitConfig& initConfig,
-          const SDRAMTimingConfig& timingConfig);
+    SDRAM(void* memoryAddress, Pin* pins, const SDRAMInitConfig& initConfig, const SDRAMTimingConfig& timingConfig);
 
     /**
      * Gets the Frequency of the SDRAM CLK
@@ -147,7 +146,6 @@ public:
      */
     virtual Status SendCommand(SDRAMCommand type, SDRAMBank target, uint16_t refreshNumber, uint16_t modeRegister) = 0;
 
-
     /**
      * Program the SDRAM Memory Refresh rate.
      *
@@ -178,6 +176,7 @@ public:
     [[nodiscard]] void* getSdramMemoryAddress() const {
         return this->memoryAddress;
     }
+
 protected:
     void* memoryAddress;
     Pin* pins;
