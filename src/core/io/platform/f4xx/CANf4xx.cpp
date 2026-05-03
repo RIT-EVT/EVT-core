@@ -124,8 +124,8 @@ CANf4xx::CANf4xx(Pin txPin, Pin rxPin, bool loopbackEnabled) : CAN(txPin, rxPin,
 
     // Setup GPIO
     // GPIO_InitTypeDef gpioInit = {0};
-    Pin canPins[]             = {txPin, rxPin};
-    uint8_t numOfPins         = 2;
+    Pin canPins[]     = {txPin, rxPin};
+    uint8_t numOfPins = 2;
 
     GPIOf4xx::gpioInit(canPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF9_CAN1);
 

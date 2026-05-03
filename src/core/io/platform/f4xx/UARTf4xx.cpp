@@ -114,7 +114,8 @@ UARTf4xx::UARTf4xx(Pin txPin, Pin rxPin, uint32_t baudrate, bool isSwapped) : UA
     }
 
     GPIOf4xx::gpioInit(myPins, 2, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, alt_id);
-    // GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, alt_id);
+    // GPIOf4xx::gpioStateInit(&gpioInit, myPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH,
+    // alt_id);
 
     halUART.Init.BaudRate     = baudrate;
     halUART.Init.WordLength   = UART_WORDLENGTH_8B;
