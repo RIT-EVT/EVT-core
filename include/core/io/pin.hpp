@@ -6,6 +6,8 @@
 #ifndef _EVT_PIN_
 #define _EVT_PIN_
 
+#include <cstdint>
+
 // TODO: Fix this so that it changes pin out on a per Package Basis instead of a per MCU basis
 #ifdef STM32F302x8
     #define NUCLEO_SUPPORT
@@ -23,6 +25,7 @@
     #define HAS_PORT_D
     #define HAS_PORT_E
     #define HAS_PORT_F
+    #define HAS_PORT_G
     #define HAS_PORT_H
     #define HAS_PORT_I
 #endif
@@ -30,13 +33,14 @@
 namespace core::io {
 
 /**
- * Pin mapping information. These values are generated via a combination of the GPIO bank that
- * the pin is on and the number of the pin. We referenced MBed's documentation for generating
- * these values.
+ * Pin mapping information. The port is the letter after P, and the pin number is the number after the underscore
+ *
+ * PB_10's port is B and pin number is 10
+ * See the Port enum to see what the value of a Port should be
  */
-enum class Pin {
-    INVALID = -1, // THIS INTENTIONALLY DOES NOT POINT TO A PIN. Used as a default value, so the default value is
-                  // no longer PA_O (a real pin)
+enum class Pin : uint8_t {
+    INVALID = 0xFF, // THIS INTENTIONALLY DOES NOT POINT TO A PIN. Used as a default value, so the default value is
+                    // no longer PA_O (a real pin)
     PA_0  = 0x00,
     PA_1  = 0x01,
     PA_2  = 0x02,
@@ -286,6 +290,47 @@ enum class Pin {
     UART_RX = PA_10,
 #endif
 };
+
+enum class Port : uint8_t {
+    Invalid = 0xFF,
+    A       = 0x0,
+    B       = 0x1,
+    C       = 0x2,
+    D       = 0x3,
+#ifdef HAS_PORT_E
+    E = 0x4,
+#endif
+    F = 0x5,
+#ifdef HAS_PORT_G
+    G = 0x6,
+#endif
+#ifdef HAS_PORT_H
+    H = 0x7,
+#endif
+#ifdef HAS_PORT_I
+    I = 0x8,
+#endif
+};
+
+/**
+ * Get the port from a Pin
+ *
+ * @param pin Pin
+ * @return Port of the Pin
+ */
+constexpr Port portFromPin(Pin pin) {
+    return static_cast<Port>((static_cast<uint32_t>(pin) & 0xF0) >> 4);
+}
+
+/**
+ * Get the pin number from a Pin
+ *
+ * @param pin Pin
+ * @return Pin number of the Pin
+ */
+constexpr uint8_t pinNumberFromPin(Pin pin) {
+    return static_cast<uint8_t>(pin) & 0x0F;
+}
 
 }; // namespace core::io
 #endif

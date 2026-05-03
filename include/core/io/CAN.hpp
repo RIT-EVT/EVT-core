@@ -1,9 +1,9 @@
 #ifndef _EVT_CAN_
 #define _EVT_CAN_
 
-#include <stdint.h>
-
+#include <core/io/pin.hpp>
 #include <core/io/types/CANMessage.hpp>
+#include <cstdint>
 
 #ifndef EVT_CAN_TIMEOUT
     #define EVT_CAN_TIMEOUT 255
@@ -19,11 +19,6 @@
 #endif
 
 namespace core::io {
-// Forward declarations:
-// The different pins are hardware specific. Forward declaration to allow
-// at compilation time the decision of which pins should be used.
-enum class Pin;
-
 /**
  * Generic interface for CAN bus communication. Devices can send and recieve
  * messages over the CAN bus using this interface.
