@@ -76,7 +76,9 @@ elseif(COMPDEFS MATCHES "(.*)STM32F4xx(.*)")
     src/core/io/platform/f4xx/SPIf4xx.cpp
     src/core/dev/platform/f4xx/IWDGf4xx.cpp
     src/core/dev/platform/f4xx/RTCf4xx.cpp
-    src/core/dev/platform/f4xx/Timerf4xx.cpp)
+    src/core/dev/platform/f4xx/Timerf4xx.cpp
+    src/core/io/SDRAM.cpp # STM32F469xx only peripheral
+    src/core/io/platform/f4xx/SDRAMf4xx.cpp)
 else()
     message(FATAL_ERROR "the HAL didnt compile in top level CMake")
 endif()
