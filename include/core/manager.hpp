@@ -8,6 +8,7 @@
 #include <core/io/GPIO.hpp>
 #include <core/io/I2C.hpp>
 #include <core/io/PWM.hpp>
+#include <core/io/PWMInput.hpp>
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
 
@@ -19,6 +20,7 @@
     #define IWDG_SUPPORTED
     #define MCU_SUPPORTED
     #define PWM_SUPPORTED
+    #define PWM_INPUT_SUPPORTED
     #define RTC_SUPPORTED
     #define SPI_SUPPORTED
     #define UART_SUPPORTED
@@ -31,6 +33,7 @@
     #include <core/io/platform/f3xx/CANf3xx.hpp>
     #include <core/io/platform/f3xx/GPIOf3xx.hpp>
     #include <core/io/platform/f3xx/I2Cf3xx.hpp>
+    #include <core/io/platform/f3xx/PWMInputf3xx.hpp>
     #include <core/io/platform/f3xx/PWMf3xx.hpp>
     #include <core/io/platform/f3xx/SPIf3xx.hpp>
     #include <core/io/platform/f3xx/UARTf3xx.hpp>
@@ -254,6 +257,21 @@ PWM& getPWM() {
     #ifdef STM32F4xx
     static PWMf4xx pwm(pin);
     return pwm;
+    #endif
+}
+#endif
+
+/**
+ * Get an instance of a PWMInput pin.
+ *
+ * @param[in] pin The pin to attach to the PWMInput.
+ */
+#ifdef PWM_INPUT_SUPPORTED
+template<Pin pin>
+PWMInput& getPWM_INPUT() {
+    #ifdef STM32F3xx
+    static PWMInputf3xx pwm_input(pin);
+    return pwm_input;
     #endif
 }
 #endif
