@@ -6,7 +6,7 @@
     #include <HALf4/stm32f4xx_hal.h>
 
 namespace core::io {
-    class SDRAMDevice;
+class SDRAMDevice;
 /**
  * Interface for configuring and accessing external SDRAM.
  * Provides clock frequency functions
@@ -209,7 +209,7 @@ protected:
  */
 class SDRAMDevice {
 public:
-    virtual ~SDRAMDevice()                      = default;
+    virtual ~SDRAMDevice()                                       = default;
     virtual SDRAM::Status sendStartUpCommands(SDRAM& controller) = 0;
 };
 
