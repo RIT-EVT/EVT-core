@@ -203,6 +203,10 @@ protected:
     }
 };
 
+/**
+ * Interface class to force SDRAM realizations to implement sendStartUpCommands, so that on creation everything can
+ * be made and handled at once. No waiting or calling extra functions after calling getSDRAM()
+ */
 class SDRAMDevice {
 public:
     virtual ~SDRAMDevice()                      = default;
