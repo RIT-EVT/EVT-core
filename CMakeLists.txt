@@ -24,7 +24,8 @@ project(EVT
     LANGUAGES CXX C ASM
 )
 
-add_library(${PROJECT_NAME} STATIC)
+add_library(${PROJECT_NAME} STATIC
+        include/core/io/types/SDRAM_Device.hpp)
 
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE

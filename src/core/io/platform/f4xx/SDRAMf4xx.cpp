@@ -5,10 +5,10 @@
 namespace core::io {
 
 SDRAMf4xx::SDRAMf4xx(SDRAMPinGroup& pins, const SDRAMInitConfig& sdramInitConfig,
-                     const SDRAMTimingConfig& sdramTimingConfig)
+                     const SDRAMTimingConfig& sdramTimingConfig, SDRAMDevice& device)
     : SDRAM((sdramInitConfig.sdBank == FMC_SDRAM_BANK1) ? reinterpret_cast<uint32_t*>(SDRAM_BANK1)
                                                         : reinterpret_cast<uint32_t*>(SDRAM_BANK2),
-            pins, sdramInitConfig, sdramTimingConfig),
+            pins, sdramInitConfig, sdramTimingConfig, device),
       sdramDevice(FMC_SDRAM_DEVICE), sdram(), sdramTiming() {
 
     // map the class init structs to the hal structs
@@ -33,8 +33,8 @@ SDRAMf4xx::SDRAMf4xx(SDRAMPinGroup& pins, const SDRAMInitConfig& sdramInitConfig
     sdramTiming.RCDDelay             = sdramTimingConfig.rcdDelay;
 
     InitHardware(pins);
-    HAL_StatusTypeDef status = HAL_SDRAM_Init(&sdram, &sdramTiming);
-    log::LOGGER.log(log::Logger::LogLevel::DEBUG, "%d status \r\n", status);
+    HAL_SDRAM_Init(&sdram, &sdramTiming);
+    device.sendStartUpCommands(*this);
 }
 
 SDRAM::Status SDRAMf4xx::EnableWriteProtection() {

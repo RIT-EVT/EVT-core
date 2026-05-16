@@ -24,8 +24,8 @@ namespace core::io {
  */
 class SDRAMf4xx : public SDRAM {
 public:
-#define SDRAM_BANK1 0xC0000000
-#define SDRAM_BANK2 0xD0000000
+      static constexpr auto SDRAM_BANK1 = 0xC0000000;
+      static constexpr auto SDRAM_BANK2 = 0xD0000000;
 
     /**
      * Initializes an FMC device by enabling the specific peripheral clock,
@@ -34,9 +34,11 @@ public:
      * @param[in] pins a struct containing an array of pins and their length for use by the SDRAM Controller.
      * @param[in] sdramInitConfig SDRAM controller configuration parameters.
      * @param[in] sdramTimingConfig SDRAM timing configuration parameters.
+     * @param[in] device interface class with abstract function that is overridden with a specific implementation
      *
      */
-    SDRAMf4xx(SDRAMPinGroup& pins, const SDRAMInitConfig& sdramInitConfig, const SDRAMTimingConfig& sdramTimingConfig);
+    SDRAMf4xx(SDRAMPinGroup& pins, const SDRAMInitConfig& sdramInitConfig, const SDRAMTimingConfig& sdramTimingConfig,
+      SDRAMDevice& device);
 
     /**
      * Enable write protection for the sdram

@@ -6,7 +6,7 @@
     #include <HALf4/stm32f4xx_hal.h>
 
 namespace core::io {
-
+    class SDRAMDevice;
 /**
  * Interface for configuring and accessing external SDRAM.
  * Provides clock frequency functions
@@ -104,9 +104,10 @@ public:
      * @param pins the pins for use by the SDRAM Controller
      * @param initConfig HAL-level SDRAM parameters for how initialization works
      * @param timingConfig HAL-level SDRAM parameters for properly orchestrating hardware timing
+     * @param device interface class with abstract function that is overridden with a specific implementation
      */
     SDRAM(uint32_t* memoryAddress, SDRAMPinGroup& pins, const SDRAMInitConfig& initConfig,
-          const SDRAMTimingConfig& timingConfig);
+          const SDRAMTimingConfig& timingConfig, const SDRAMDevice& device);
 
     /**
      * Gets the Frequency of the SDRAM CLK
@@ -195,10 +196,17 @@ protected:
     SDRAMPinGroup& pins;
     SDRAMInitConfig initConfig;
     SDRAMTimingConfig timingConfig;
+    const SDRAMDevice& device;
 
     static constexpr Status HALStatusToSDRAMStatus(uint32_t hal_status) {
         return static_cast<Status>(hal_status);
     }
+};
+
+class SDRAMDevice {
+public:
+    virtual ~SDRAMDevice()                      = default;
+    virtual SDRAM::Status sendStartUpCommands(SDRAM& controller) = 0;
 };
 
 } // namespace core::io
