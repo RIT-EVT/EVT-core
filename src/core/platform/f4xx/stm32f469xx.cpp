@@ -1,5 +1,6 @@
 #include <HALf4/stm32f4xx.h>
 #include <HALf4/stm32f4xx_hal.h>
+#include <HALf4/stm32f4xx_it.h>
 
 #include <core/platform/f4xx/stm32f4xx.hpp>
 
@@ -51,6 +52,11 @@ void stm32f4xx_init() {
     if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK) {
         Error_Handler();
     }
+
+    /* This function ensures that the interrupt handlers in stm32f4xx_it.c properly link. To do this, a
+       call to SysTick_Handler was made, but that adds the side effect of incrementing the counter used to tell how
+       many milliseconds had passed since starting making it inaccurate. */
+    ensure_interrupt_linkage();
 }
 
 void Error_Handler(void) {

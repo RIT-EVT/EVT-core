@@ -78,8 +78,9 @@ I2Cf4xx::I2Cf4xx(Pin sclPin, Pin sdaPin) : I2C(sclPin, sdaPin) {
     Pin i2cPins[2]    = {sclPin, sdaPin};
     uint8_t numOfPins = 2;
 
-    // TODO: CHECK GPIO STATES IN HAL CODE
-    GPIOf4xx::gpioStateInit(&gpioInit, i2cPins, numOfPins, GPIO_MODE_AF_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+    GPIOf4xx::gpioInit(i2cPins, numOfPins, GPIO_MODE_AF_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+    // GPIOf4xx::gpioStateInit(&gpioInit, i2cPins, numOfPins, GPIO_MODE_AF_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH,
+    // altId);
 
     /*
 // 8MHz = 0x00310309; 16MHz = 0x10320309; 48MHz = 0x50330309

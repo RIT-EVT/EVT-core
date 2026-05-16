@@ -1,6 +1,7 @@
 #ifndef _EVT_ADC_
 #define _EVT_ADC_
 
+#include <core/io/pin.hpp>
 #include <stdint.h>
 
 namespace core::io {
@@ -8,11 +9,9 @@ namespace core::io {
 // Forward declarations:
 // The different pins are hardware specific. Forward declarations to allow
 // at compilation time the decision of which pins should be used.
-enum class Pin;
 enum class ADCPeriph;
 
 class ADC {
-
 public:
     /**
      * Setup the given pin for ADC (analog to digital) usage

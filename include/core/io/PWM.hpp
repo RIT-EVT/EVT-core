@@ -1,17 +1,12 @@
 #ifndef _EVT_PWM_
 #define _EVT_PWM_
 
-#include <stdint.h>
+#include <core/io/pin.hpp>
+#include <cstdint>
 
 namespace core::io {
 
-// Forward declarations:
-// The different pins are hardware specific. Forward declarations to allow
-// at compilation time the decision of which pins should be used.
-enum class Pin;
-
 class PWM {
-
 public:
     /**
      * Setup the given pin for PWM usage.

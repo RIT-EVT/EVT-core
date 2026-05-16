@@ -226,11 +226,12 @@ void ADCf4xx::initDMA() {
 }
 
 void ADCf4xx::addChannel(uint8_t rank) {
-    GPIO_InitTypeDef gpioInit;
-    uint8_t numOfPins = 1;
-    Pin pins[]        = {pin};
+    // GPIO_InitTypeDef gpioInit;
+    // uint8_t numOfPins = 1;
+    // Pin pins[]        = {pin};
 
-    GPIOf4xx::gpioStateInit(&gpioInit, pins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
+    // GPIOf4xx::gpioStateInit(&gpioInit, pins, numOfPins, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
+    GPIOf4xx::gpioSingleInit(pin, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH);
 
     ADC_ChannelConfTypeDef adcChannel;
     Channel_Support channelStruct = {};
