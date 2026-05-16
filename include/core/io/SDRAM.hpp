@@ -3,7 +3,7 @@
 #include <core/io/pin.hpp>
 
 #ifdef STM32F4xx
-#include <HALf4/stm32f4xx_hal.h>
+    #include <HALf4/stm32f4xx_hal.h>
 
 namespace core::io {
 
@@ -40,7 +40,7 @@ public:
     enum class SDRAMCommand {
         NORMAL        = 0,
         CLK_ENABLE    = 1,
-        PRECHARGE_ALL          = 2,
+        PRECHARGE_ALL = 2,
         AUTO_REFRESH  = 3,
         SET_OPERATION = 4,
         SELF_REFRESH  = 5,
@@ -105,7 +105,8 @@ public:
      * @param initConfig HAL-level SDRAM parameters for how initialization works
      * @param timingConfig HAL-level SDRAM parameters for properly orchestrating hardware timing
      */
-    SDRAM(uint32_t* memoryAddress, SDRAMPinGroup& pins, const SDRAMInitConfig& initConfig, const SDRAMTimingConfig& timingConfig);
+    SDRAM(uint32_t* memoryAddress, SDRAMPinGroup& pins, const SDRAMInitConfig& initConfig,
+          const SDRAMTimingConfig& timingConfig);
 
     /**
      * Gets the Frequency of the SDRAM CLK
@@ -154,7 +155,8 @@ public:
      *  under Mode Register Definition
      * @return the result of attempting to send a command to the sdram
      */
-    virtual Status SendCommand(SDRAMCommand type, SDRAMCommandTarget target, uint16_t refreshNumber, uint16_t modeRegister) = 0;
+    virtual Status SendCommand(SDRAMCommand type, SDRAMCommandTarget target, uint16_t refreshNumber,
+                               uint16_t modeRegister) = 0;
 
     /**
      * Program the SDRAM Memory Refresh rate.

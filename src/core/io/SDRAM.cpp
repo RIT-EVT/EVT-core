@@ -2,7 +2,8 @@
 
 namespace core::io {
 
-SDRAM::SDRAM(uint32_t* memoryAddress, SDRAMPinGroup& pins, const SDRAMInitConfig& initConfig, const SDRAMTimingConfig& timingConfig)
+SDRAM::SDRAM(uint32_t* memoryAddress, SDRAMPinGroup& pins, const SDRAMInitConfig& initConfig,
+             const SDRAMTimingConfig& timingConfig)
     : memoryAddress(memoryAddress), pins(pins), initConfig(initConfig), timingConfig(timingConfig) {}
 
 uint32_t SDRAM::getSdramClockFrequency() {

@@ -13,8 +13,8 @@
  * - SDRAM operations
  */
 
-#include <core/io/SDRAM.hpp>
 #include <HALf4/stm32f4xx_hal.h>
+#include <core/io/SDRAM.hpp>
 
 namespace core::io {
 
@@ -24,8 +24,8 @@ namespace core::io {
  */
 class SDRAMf4xx : public SDRAM {
 public:
-    #define SDRAM_BANK1 0xC0000000
-    #define SDRAM_BANK2 0xD0000000
+#define SDRAM_BANK1 0xC0000000
+#define SDRAM_BANK2 0xD0000000
 
     /**
      * Initializes an FMC device by enabling the specific peripheral clock,
@@ -36,8 +36,7 @@ public:
      * @param[in] sdramTimingConfig SDRAM timing configuration parameters.
      *
      */
-    SDRAMf4xx(SDRAMPinGroup& pins, const SDRAMInitConfig& sdramInitConfig,
-              const SDRAMTimingConfig& sdramTimingConfig);
+    SDRAMf4xx(SDRAMPinGroup& pins, const SDRAMInitConfig& sdramInitConfig, const SDRAMTimingConfig& sdramTimingConfig);
 
     /**
      * Enable write protection for the sdram
@@ -64,16 +63,17 @@ public:
      *  under Mode Register Definition
      * @return the result of attempting to send a command to the sdram
      */
-    Status SendCommand(SDRAMCommand type, SDRAMCommandTarget target, uint16_t refreshNumber, uint16_t modeRegister) override;
+    Status SendCommand(SDRAMCommand type, SDRAMCommandTarget target, uint16_t refreshNumber,
+                       uint16_t modeRegister) override;
 
-  /**
-   * Program the SDRAM Memory Refresh rate.
-   *
-   * @param rowCount The number of rows in the SDRAM (1 << num_of_row_bits)
-   * @param refreshTime The amount of time to do all refresh cycles
-   * @return the result of attempting to program the refresh rate of the sdram
-   */
-  Status ProgramRefreshRate(uint32_t rowCount, uint32_t refreshTime) override;
+    /**
+     * Program the SDRAM Memory Refresh rate.
+     *
+     * @param rowCount The number of rows in the SDRAM (1 << num_of_row_bits)
+     * @param refreshTime The amount of time to do all refresh cycles
+     * @return the result of attempting to program the refresh rate of the sdram
+     */
+    Status ProgramRefreshRate(uint32_t rowCount, uint32_t refreshTime) override;
 
     /**
      * Force a number of Refresh Commands to the SDRAM, effectively making it idle.

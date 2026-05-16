@@ -6,8 +6,8 @@ namespace core::io {
 
 SDRAMf4xx::SDRAMf4xx(SDRAMPinGroup& pins, const SDRAMInitConfig& sdramInitConfig,
                      const SDRAMTimingConfig& sdramTimingConfig)
-    : SDRAM((sdramInitConfig.sdBank == FMC_SDRAM_BANK1)
-            ? reinterpret_cast<uint32_t*>(SDRAM_BANK1) : reinterpret_cast<uint32_t*>(SDRAM_BANK2),
+    : SDRAM((sdramInitConfig.sdBank == FMC_SDRAM_BANK1) ? reinterpret_cast<uint32_t*>(SDRAM_BANK1)
+                                                        : reinterpret_cast<uint32_t*>(SDRAM_BANK2),
             pins, sdramInitConfig, sdramTimingConfig),
       sdramDevice(FMC_SDRAM_DEVICE), sdram(), sdramTiming() {
 
@@ -64,7 +64,8 @@ SDRAM::Status SDRAMf4xx::SendCommand(SDRAMCommand type, SDRAMCommandTarget targe
 }
 
 SDRAM::Status SDRAMf4xx::ProgramRefreshRate(uint32_t rowCount, uint32_t refreshTime) {
-    HAL_StatusTypeDef halStatus = FMC_SDRAM_ProgramRefreshRate(this->sdramDevice, (((refreshTime * 1000) / rowCount) * (getSdramClockFrequency() / 1000000)) - 20);
+    HAL_StatusTypeDef halStatus = FMC_SDRAM_ProgramRefreshRate(
+        this->sdramDevice, (((refreshTime * 1000) / rowCount) * (getSdramClockFrequency() / 1000000)) - 20);
 
     return SDRAM::HALStatusToSDRAMStatus(halStatus);
 }
@@ -96,8 +97,7 @@ void* SDRAMf4xx::getSDRAMMemoryAddress() const {
 
 void SDRAMf4xx::InitHardware(SDRAMPinGroup& pins) {
     __HAL_RCC_FMC_CLK_ENABLE();
-    GPIOf4xx::gpioInit(pins.pins, pins.numPins, GPIO_MODE_AF_PP, GPIO_NOPULL,
-                           GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_FMC);
+    GPIOf4xx::gpioInit(pins.pins, pins.numPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_FMC);
 }
 
 } // namespace core::io
