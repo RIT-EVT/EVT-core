@@ -1,6 +1,8 @@
 #ifndef EVT_SDRAM_HPP
 #define EVT_SDRAM_HPP
 #include <core/io/pin.hpp>
+
+#ifdef STM32F4xx
 #include <HALf4/stm32f4xx_hal.h>
 
 namespace core::io {
@@ -198,5 +200,7 @@ protected:
 };
 
 } // namespace core::io
+
+#endif
 
 #endif // STM32F4xx
