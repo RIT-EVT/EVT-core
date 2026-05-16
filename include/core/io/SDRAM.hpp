@@ -1,9 +1,7 @@
 #ifndef EVT_SDRAM_HPP
 #define EVT_SDRAM_HPP
 #include <core/io/pin.hpp>
-
-#ifdef STM32F4xx
-    #include <HALf4/stm32f4xx_hal.h>
+#include <HALf4/stm32f4xx_hal.h>
 
 namespace core::io {
 
@@ -26,9 +24,9 @@ public:
     };
 
     /**
-     * SDRAM Command Target
+     * Target for when sending an SDRAM Command
      */
-    enum class SDRAMBank {
+    enum class SDRAMCommandTarget {
         BANK1 = FMC_SDCMR_CTB1,
         BANK2 = FMC_SDCMR_CTB2,
         BOTH  = FMC_SDCMR_CTB1 | FMC_SDCMR_CTB2,
@@ -40,7 +38,7 @@ public:
     enum class SDRAMCommand {
         NORMAL        = 0,
         CLK_ENABLE    = 1,
-        PALL          = 2,
+        PRECHARGE_ALL          = 2,
         AUTO_REFRESH  = 3,
         SET_OPERATION = 4,
         SELF_REFRESH  = 5,
@@ -51,6 +49,11 @@ public:
         NORMAL_MODE = 0,
         SELF_REFRESH_MODE,
         POWER_DOWN_MODE
+    };
+
+    enum class SDRAMBank {
+        BANK1 = 0,
+        BANK2 = 1
     };
 
     /**
@@ -87,6 +90,11 @@ public:
         uint32_t rcdDelay;
     };
 
+    struct SDRAMPinGroup {
+        Pin* pins;
+        uint8_t numPins;
+    };
+
     /**
      * Constructor for initializing an SDRAM to control external SDRAM
      *
@@ -95,7 +103,7 @@ public:
      * @param initConfig HAL-level SDRAM parameters for how initialization works
      * @param timingConfig HAL-level SDRAM parameters for properly orchestrating hardware timing
      */
-    SDRAM(void* memoryAddress, Pin* pins, const SDRAMInitConfig& initConfig, const SDRAMTimingConfig& timingConfig);
+    SDRAM(uint32_t* memoryAddress, SDRAMPinGroup& pins, const SDRAMInitConfig& initConfig, const SDRAMTimingConfig& timingConfig);
 
     /**
      * Gets the Frequency of the SDRAM CLK
@@ -144,15 +152,16 @@ public:
      *  under Mode Register Definition
      * @return the result of attempting to send a command to the sdram
      */
-    virtual Status SendCommand(SDRAMCommand type, SDRAMBank target, uint16_t refreshNumber, uint16_t modeRegister) = 0;
+    virtual Status SendCommand(SDRAMCommand type, SDRAMCommandTarget target, uint16_t refreshNumber, uint16_t modeRegister) = 0;
 
     /**
      * Program the SDRAM Memory Refresh rate.
      *
-     * @param refreshRate The SDRAM refresh rate value
+     * @param rowCount The number of rows in the SDRAM (1 << num_of_row_bits)
+     * @param refreshTime The amount of time to do all refresh cycles
      * @return the result of attempting to program the refresh rate of the sdram
      */
-    virtual Status ProgramRefreshRate(uint32_t refreshRate) = 0;
+    virtual Status ProgramRefreshRate(uint32_t rowCount, uint32_t refreshTime) = 0;
 
     /**
      * Force a number of Refresh Commands to the SDRAM, effectively making it idle.
@@ -173,13 +182,13 @@ public:
 
     virtual ~SDRAM() = default;
 
-    [[nodiscard]] void* getSdramMemoryAddress() const {
+    [[nodiscard]] uint32_t* getSdramMemoryAddress() const {
         return this->memoryAddress;
     }
 
 protected:
-    void* memoryAddress;
-    Pin* pins;
+    uint32_t* memoryAddress;
+    SDRAMPinGroup& pins;
     SDRAMInitConfig initConfig;
     SDRAMTimingConfig timingConfig;
 
@@ -191,5 +200,3 @@ protected:
 } // namespace core::io
 
 #endif // STM32F4xx
-
-#endif // EVT_SDRAM_HPP

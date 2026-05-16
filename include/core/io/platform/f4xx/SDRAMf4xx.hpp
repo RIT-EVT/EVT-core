@@ -14,7 +14,6 @@
  */
 
 #include <core/io/SDRAM.hpp>
-
 #include <HALf4/stm32f4xx_hal.h>
 
 namespace core::io {
@@ -25,21 +24,19 @@ namespace core::io {
  */
 class SDRAMf4xx : public SDRAM {
 public:
-    static constexpr uint32_t RAM_SIZE    = 0x4000000; // 64 megabits
-    static constexpr uint32_t SDRAM_BANK1 = 0xC0000000;
-    static constexpr uint32_t SDRAM_BANK2 = 0xD0000000;
+    #define SDRAM_BANK1 0xC0000000
+    #define SDRAM_BANK2 0xD0000000
 
     /**
      * Initializes an FMC device by enabling the specific peripheral clock,
      * setting up the SDRAM Controller
      *
-     * @param[in] sdramDevice SDRAM Peripheral configuration registers location
-     * @param[in] pins GPIO pins for control by the SDRAM Controller.
+     * @param[in] pins a struct containing an array of pins and their length for use by the SDRAM Controller.
      * @param[in] sdramInitConfig SDRAM controller configuration parameters.
      * @param[in] sdramTimingConfig SDRAM timing configuration parameters.
      *
      */
-    SDRAMf4xx(const FMC_SDRAM_TypeDef* sdramDevice, Pin* pins, const SDRAMInitConfig& sdramInitConfig,
+    SDRAMf4xx(SDRAMPinGroup& pins, const SDRAMInitConfig& sdramInitConfig,
               const SDRAMTimingConfig& sdramTimingConfig);
 
     /**
@@ -67,15 +64,16 @@ public:
      *  under Mode Register Definition
      * @return the result of attempting to send a command to the sdram
      */
-    Status SendCommand(SDRAMCommand type, SDRAMBank target, uint16_t refreshNumber, uint16_t modeRegister) override;
+    Status SendCommand(SDRAMCommand type, SDRAMCommandTarget target, uint16_t refreshNumber, uint16_t modeRegister) override;
 
-    /**
-     * Program the SDRAM Memory Refresh rate.
-     *
-     * @param refreshRate The SDRAM refresh rate value
-     * @return the result of attempting to program the refresh rate of the sdram
-     */
-    Status ProgramRefreshRate(uint32_t refreshRate) override;
+  /**
+   * Program the SDRAM Memory Refresh rate.
+   *
+   * @param rowCount The number of rows in the SDRAM (1 << num_of_row_bits)
+   * @param refreshTime The amount of time to do all refresh cycles
+   * @return the result of attempting to program the refresh rate of the sdram
+   */
+  Status ProgramRefreshRate(uint32_t rowCount, uint32_t refreshTime) override;
 
     /**
      * Force a number of Refresh Commands to the SDRAM, effectively making it idle.
@@ -115,34 +113,14 @@ private:
     /**
      * Helper function to initialize all GPIO SDRAM pins
      *
-     * @param[in] pins an array containing all SDRAM GPIO pins
+     * @param[in] pins a struct containing an array of all SDRAM GPIO pins and their length
      */
-    void InitHardware(Pin* pins);
+    static void InitHardware(SDRAMPinGroup& pins);
 
     FMC_SDRAM_TypeDef* sdramDevice;
 
     SDRAM_HandleTypeDef sdram;
     FMC_SDRAM_TimingTypeDef sdramTiming;
-
-    // default timer values
-    static constexpr uint32_t tRCD = 15;
-    static constexpr uint32_t tRP  = 15;
-    static constexpr uint32_t tWR  = 22; // only specifies two clock cycles
-    static constexpr uint32_t tRC  = 63;
-    static constexpr uint32_t tRAS = 42;
-    static constexpr uint32_t tXSR = 70;
-    static constexpr uint32_t tMRD = 22; // only specifies two clock cycles
-
-    // Specific names from the FMC
-    static constexpr uint32_t ROW_TO_COLUMN_DELAY_NS          = tRCD;
-    static constexpr uint32_t ROW_PRECHARGE_DELAY_NS          = tRP;
-    static constexpr uint32_t RECOVERY_DELAY_NS               = tWR;
-    static constexpr uint32_t ROW_CYCLE_DELAY_NS              = tRC;
-    static constexpr uint32_t SELF_REFRESH_TIME_NS            = tRAS;
-    static constexpr uint32_t EXIT_SELF_REFRESH_DELAY_NS      = tXSR;
-    static constexpr uint32_t LOAD_MODE_REGISTER_TO_ACTIVE_NS = tMRD;
-
-    static constexpr uint32_t SDRAM_TIMEOUT = 0x0000FFFFUL;
 };
 
 } // namespace core::io

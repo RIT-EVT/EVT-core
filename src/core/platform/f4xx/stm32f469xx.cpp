@@ -10,6 +10,7 @@ using namespace std;
 namespace core::platform {
 
 void stm32f4xx_init() {
+    HAL_Init();
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 

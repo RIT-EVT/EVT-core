@@ -248,6 +248,13 @@ void GPIOf4xx::gpioInit(Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pu
         return;
     }
 
+    // Ensure that GPIO is not just in read-only memory
+    Pin array_copy[numOfPins];
+    for (int i = 0; i < numOfPins; i++) {
+        array_copy[i] = pins[i];
+    }
+    pins = array_copy;
+
     // HeapSort on Pin* pins from https://en.wikipedia.org/wiki/Heapsort#Standard_implementation
     auto* sorted  = reinterpret_cast<uint8_t*>(pins);
     uint8_t start = numOfPins / 2, end = numOfPins;
@@ -288,7 +295,8 @@ void GPIOf4xx::gpioInit(Pin* pins, uint8_t numOfPins, uint32_t mode, uint32_t pu
             }
             start         = i;
             port_of_start = portFromPin(pins[start]);
-        } else if (i + 1 == numOfPins) {
+        }
+        if (i + 1 == numOfPins) {
             fillPinPack(pin_pack, &pins[start], i - start + 1);
             gpioPortInit(pin_pack, port_of_start, mode, pull, speed, alternate);
         }
