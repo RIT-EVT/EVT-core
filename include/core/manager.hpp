@@ -333,8 +333,9 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
  * Get an instance of SDRAM
  *
  * @tparam pins the array of pins that will be used by the SDRAM Controller
- * @param sdramDevice actual register of data
- * @param
+ * @param initConfig SDRAM controller config used to determine clock speed, address, and more
+ * @param timingConfig SDRAM controller config used for hardware level timing for sending commands
+ * @param sdramDevice the actual device being used, implementing the start-up command sequence
  */
 #ifdef SDRAM_SUPPORTED
 template<SDRAM::SDRAMPinGroup& pins>

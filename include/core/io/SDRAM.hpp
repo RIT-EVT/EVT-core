@@ -47,34 +47,37 @@ public:
         POWER_DOWN    = 6,
     };
 
+    /**
+     * All the states that the SDRAM can be held in.
+     * NORMAL_MODE means normal operation with nothing special happening
+     * SELF_REFRESH_MODE means that all data cells are refreshed automatically, but the MCU does not know when
+     * POWER_DOWN_MODE means the off state
+     */
     enum class SDRAMState {
         NORMAL_MODE = 0,
         SELF_REFRESH_MODE,
         POWER_DOWN_MODE
     };
 
-    enum class SDRAMBank {
-        BANK1 = 0,
-        BANK2 = 1
-    };
-
     /**
      * Holds all SDRAM controller settings that map directly to
      * the HAL_SDRAM_Init configuration structure.
      *
+     * Values should be looked for in stm32f4xx_ll_fmc.h with macro prefix FMC_SDRAM...
+     *
      * Must be initialized before passing into the constructor
      */
     struct SDRAMInitConfig {
-        uint32_t sdBank;
-        uint32_t columnBitsNumber;
-        uint32_t rowBitsNumber;
-        uint32_t memoryDataWidth;
-        uint32_t internalBankNumber;
-        uint32_t casLatency;
-        uint32_t writeProtection;
-        uint32_t sdClockPeriod;
-        uint32_t readBurst;
-        uint32_t readPipeDelay;
+        uint32_t sdBank; // Bank number for the controller (0 or 1 usually)
+        uint32_t columnBitsNumber; // number of Horizontal Addressing Cells
+        uint32_t rowBitsNumber; // number of Vertical Addressing Cells
+        uint32_t memoryDataWidth; // How large the data is: 8, 16, or 32 bit
+        uint32_t internalBankNumber; // How many layers of columns and rows there are. Usually 1, 2, or 4
+        uint32_t casLatency; // How many SDRAM CLK Cycles from data fetch received to data available from the output
+        uint32_t writeProtection; // If you want bank protection on at initialization
+        uint32_t sdClockPeriod; // How many MCU controller clock cycles per SDRAM CLK Cycle. Usually 1, 2, or 3
+        uint32_t readBurst; // How many bytes to expect per read request.
+        uint32_t readPipeDelay; // Number of SDRAM CLK Cycles until data is available from read. Usually 1
     };
 
     /**
@@ -83,13 +86,13 @@ public:
      * Must be initialized before passing into the constructor
      */
     struct SDRAMTimingConfig {
-        uint32_t loadToActiveDelay;
-        uint32_t exitSelfRefreshDelay;
-        uint32_t selfRefreshTime;
-        uint32_t rowCycleDelay;
-        uint32_t writeRecoveryTime;
-        uint32_t rpDelay;
-        uint32_t rcdDelay;
+        uint32_t loadToActiveDelay; // Time to update the load/operation register to SDRAM being read for commands
+        uint32_t exitSelfRefreshDelay; // How long to exit the self-refresh mode
+        uint32_t selfRefreshTime; // SDRAM CLK Cycles a row will be unavailable for while refreshing
+        uint32_t rowCycleDelay; // Number of SDRAM CLK Cycles until a new active command can be submitted to a bank
+        uint32_t writeRecoveryTime; // SDRAM CLK Cycles from write until a precharge can be given
+        uint32_t readToPrechargeDelay; // SDRAM CLK Cycles from read until a precharge
+        uint32_t rcdDelay; // SDRAM CLK Cycles from an active to read/write
     };
 
     struct SDRAMPinGroup {
@@ -111,24 +114,25 @@ public:
 
     /**
      * Gets the Frequency of the SDRAM CLK
-     *
+     * @param mcuClkPerSdramClk Number of microcontroller clock cycles for every SDRAM Clock Cycle
      * @return the SDRAM clock frequency
      */
-    static uint32_t getSdramClockFrequency();
+    static uint32_t getSdramClockFrequency(uint8_t mcuClkPerSdramClk);
 
     /**
-     * Get how long one SDRAM Clock cycle is in picoseconds
-     *
-     * @return the SDRAM clock period in picoseconds
+     * Get how long one SDRAM Clock cycle is in femtoseconds
+     * @param mcuClkPerSdramClk Number of microcontroller clock cycles for every SDRAM Clock Cycle
+     * @return the SDRAM clock period in femtoseconds
      */
-    static uint32_t getSdramClockPeriodPS();
+    static uint32_t getSdramClockPeriodFS(uint8_t mcuClkPerSdramClk);
 
     /**
      * Transform a time given in nanoseconds into how many clock cycles fit in that range
-     *
+     * @param nanoseconds Number of nanoseconds
+     * @param mcuClkPerSdramClk Number of microcontroller clock cycles for every SDRAM Clock Cycle
      * @return the SDRAM clock period in nanoseconds
      */
-    static uint32_t NSToSdramClockCycles(uint32_t nanoseconds);
+    static uint32_t NSToSdramClockCycles(uint32_t nanoseconds, uint8_t mcuClkPerSdramClk);
 
     /**
      * Enable write protection for the sdram
@@ -192,12 +196,32 @@ public:
     }
 
 protected:
+    /**
+     * Starting address of the RAM
+     */
     uint32_t* memoryAddress;
+    /**
+     * All the pins used by the RAM
+     */
     SDRAMPinGroup& pins;
+    /**
+     * Base config of the SDRAM
+     */
     SDRAMInitConfig initConfig;
+    /**
+     * Timing Config for the SDRAM Controller
+     */
     SDRAMTimingConfig timingConfig;
+    /**
+     * Associated Device that holds all the commands necessary to start up the device
+     */
     const SDRAMDevice& device;
 
+    /**
+     * Helper function to turn a HAL Status in than SDRAM::Status
+     * @param hal_status
+     * @return status returned by the HAL
+     */
     static constexpr Status HALStatusToSDRAMStatus(uint32_t hal_status) {
         return static_cast<Status>(hal_status);
     }
@@ -215,6 +239,6 @@ public:
 
 } // namespace core::io
 
-#endif
-
 #endif // STM32F4xx
+
+#endif // EVT_SDRAM_HPP

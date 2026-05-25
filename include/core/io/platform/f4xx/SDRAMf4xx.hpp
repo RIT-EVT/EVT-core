@@ -119,9 +119,18 @@ private:
      */
     static void InitHardware(SDRAMPinGroup& pins);
 
+    /**
+     * Address of the SDRAM register in memory within the overarching FMC
+     */
     FMC_SDRAM_TypeDef* sdramDevice;
 
+    /**
+     * SDRAM Initialization Config, passed to HAL for Low-Level initialization
+     */
     SDRAM_HandleTypeDef sdram;
+    /**
+     * SDRAM Timing Initialization Config
+     */
     FMC_SDRAM_TimingTypeDef sdramTiming;
 };
 
