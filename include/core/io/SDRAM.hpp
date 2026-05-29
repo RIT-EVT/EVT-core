@@ -68,16 +68,16 @@ public:
      * Must be initialized before passing into the constructor
      */
     struct SDRAMInitConfig {
-        uint32_t sdBank; // Bank number for the controller (0 or 1 usually)
-        uint32_t columnBitsNumber; // number of Horizontal Addressing Cells
-        uint32_t rowBitsNumber; // number of Vertical Addressing Cells
-        uint32_t memoryDataWidth; // How large the data is: 8, 16, or 32 bit
+        uint32_t sdBank;             // Bank number for the controller (0 or 1 usually)
+        uint32_t columnBitsNumber;   // number of Horizontal Addressing Cells
+        uint32_t rowBitsNumber;      // number of Vertical Addressing Cells
+        uint32_t memoryDataWidth;    // How large the data is: 8, 16, or 32 bit
         uint32_t internalBankNumber; // How many layers of columns and rows there are. Usually 1, 2, or 4
         uint32_t casLatency; // How many SDRAM CLK Cycles from data fetch received to data available from the output
         uint32_t writeProtection; // If you want bank protection on at initialization
-        uint32_t sdClockPeriod; // How many MCU controller clock cycles per SDRAM CLK Cycle. Usually 1, 2, or 3
-        uint32_t readBurst; // How many bytes to expect per read request.
-        uint32_t readPipeDelay; // Number of SDRAM CLK Cycles until data is available from read. Usually 1
+        uint32_t sdClockPeriod;   // How many MCU controller clock cycles per SDRAM CLK Cycle. Usually 1, 2, or 3
+        uint32_t readBurst;       // How many bytes to expect per read request.
+        uint32_t readPipeDelay;   // Number of SDRAM CLK Cycles until data is available from read. Usually 1
     };
 
     /**
@@ -86,13 +86,13 @@ public:
      * Must be initialized before passing into the constructor
      */
     struct SDRAMTimingConfig {
-        uint32_t loadToActiveDelay; // Time to update the load/operation register to SDRAM being read for commands
+        uint32_t loadToActiveDelay;    // Time to update the load/operation register to SDRAM being read for commands
         uint32_t exitSelfRefreshDelay; // How long to exit the self-refresh mode
-        uint32_t selfRefreshTime; // SDRAM CLK Cycles a row will be unavailable for while refreshing
-        uint32_t rowCycleDelay; // Number of SDRAM CLK Cycles until a new active command can be submitted to a bank
+        uint32_t selfRefreshTime;      // SDRAM CLK Cycles a row will be unavailable for while refreshing
+        uint32_t rowCycleDelay;     // Number of SDRAM CLK Cycles until a new active command can be submitted to a bank
         uint32_t writeRecoveryTime; // SDRAM CLK Cycles from write until a precharge can be given
         uint32_t readToPrechargeDelay; // SDRAM CLK Cycles from read until a precharge
-        uint32_t rcdDelay; // SDRAM CLK Cycles from an active to read/write
+        uint32_t rcdDelay;             // SDRAM CLK Cycles from an active to read/write
     };
 
     struct SDRAMPinGroup {
