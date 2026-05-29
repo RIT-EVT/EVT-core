@@ -1,6 +1,8 @@
 #include <core/io/SDRAM.hpp>
+#include <sys/types.h>
 
 namespace core::io {
+
 
     SDRAM::SDRAM(uint32_t* memoryAddress, SDRAMPinGroup& pins, const SDRAMInitConfig& initConfig,
                  const SDRAMTimingConfig& timingConfig, const SDRAMDevice& device)
@@ -10,7 +12,20 @@ namespace core::io {
         return HAL_RCC_GetSysClockFreq() / mcuClkPerSdramClk;
     }
 
-    uint32_t SDRAM::getSdramClockPeriodFS(uint8_t mcuClkPerSdramClk) {
+    uint8_t SDRAM::getMCUClkPerSdramClk(uint32_t sdClockPeriod) {
+        switch (sdClockPeriod) {
+            default:
+            case FMC_SDRAM_CLOCK_PERIOD_2:
+                return 2;
+                break;
+            case FMC_SDRAM_CLOCK_PERIOD_3:
+                return 3;
+                break;
+        }
+
+    }
+
+    uint32_t SDRAM::getSdramClockPeriodFS(uint32_t mcuClkPerSdramClk) {
         return 1000000000UL / (getSdramClockFrequency(mcuClkPerSdramClk) / 1000000);
 
         /**

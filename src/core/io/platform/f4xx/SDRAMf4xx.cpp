@@ -64,8 +64,9 @@ SDRAM::Status SDRAMf4xx::SendCommand(SDRAMCommand type, SDRAMCommandTarget targe
 }
 
 SDRAM::Status SDRAMf4xx::ProgramRefreshRate(uint32_t rowCount, uint32_t refreshTime) {
+    uint8_t clockPeriodNumber = getMCUClkPerSdramClk(sdram.Init.SDClockPeriod);
     HAL_StatusTypeDef halStatus = FMC_SDRAM_ProgramRefreshRate(
-        this->sdramDevice, (((refreshTime * 1000) / rowCount) * (getSdramClockFrequency(TODO) / 1000000)) - 20);
+        this->sdramDevice, (((refreshTime * 1000) / rowCount) * (getSdramClockFrequency(clockPeriodNumber) / 1000000)) - 20);
 
     return SDRAM::HALStatusToSDRAMStatus(halStatus);
 }

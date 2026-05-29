@@ -120,11 +120,18 @@ public:
     static uint32_t getSdramClockFrequency(uint8_t mcuClkPerSdramClk);
 
     /**
+     * Translates HAL SDRAM Clock number into a 2 or 3
+     * @param sdClockPeriod HAL SDRAM Clock Number (see FMC_SDRAM_Clock_Period FMC SDRAM Clock Period)
+     * @return Mcu Clock Cycles per SDRAM Clock Cycle
+     */
+    static uint8_t getMCUClkPerSdramClk(uint32_t sdClockPeriod);
+
+    /**
      * Get how long one SDRAM Clock cycle is in femtoseconds
      * @param mcuClkPerSdramClk Number of microcontroller clock cycles for every SDRAM Clock Cycle
      * @return the SDRAM clock period in femtoseconds
      */
-    static uint32_t getSdramClockPeriodFS(uint8_t mcuClkPerSdramClk);
+    static uint32_t getSdramClockPeriodFS(uint32_t mcuClkPerSdramClk);
 
     /**
      * Transform a time given in nanoseconds into how many clock cycles fit in that range
