@@ -1,5 +1,6 @@
 #include "HALf3/stm32f3xx_hal.h"
 #include <core/platform/f3xx/stm32f3xx.hpp>
+#include <boot/UART.hpp>
 
 #define PA_2  0x02
 #define PA_3  0x03

@@ -6,6 +6,7 @@ compile_commands.json
 cmake-build-debug/
 
 # Virtual environments
+.venv/
 venv/
 
 # IDE Files
