@@ -7,13 +7,7 @@ LED::LED(core::io::GPIO& gpio, LED::ActiveState activeState) : gpio(gpio) {
 }
 
 void LED::toggle() {
-    core::io::GPIO::State currentState = this->gpio.readPin();
-
-    if (core::io::GPIO::State::LOW == currentState) {
-        this->gpio.writePin(core::io::GPIO::State::HIGH);
-    } else {
-        this->gpio.writePin(core::io::GPIO::State::LOW);
-    }
+    this->gpio.togglePin();
 }
 
 void LED::setState(core::io::GPIO::State state) {
