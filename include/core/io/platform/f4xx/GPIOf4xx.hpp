@@ -31,6 +31,8 @@ public:
 
     void writePin(State state) override;
 
+    void togglePin() override;
+
     State readPin() override;
 
     void registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin, void* priv), void* priv) override;

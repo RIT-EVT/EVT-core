@@ -119,6 +119,10 @@ void GPIOf4xx::writePin(GPIO::State state) {
     HAL_GPIO_WritePin(this->port, this->halPin, static_cast<GPIO_PinState>(state));
 }
 
+void GPIOf4xx::togglePin() {
+    HAL_GPIO_TogglePin(this->port, this->halPin);
+}
+
 GPIO::State GPIOf4xx::readPin() {
     return static_cast<GPIO::State>(HAL_GPIO_ReadPin(this->port, this->halPin));
 }
