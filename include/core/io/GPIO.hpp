@@ -156,7 +156,7 @@ public:
     virtual void writePin(State state) = 0;
 
     /**
-     * Set the output of this pin to the opposite of current logic state.
+     * Set the output of this pin to the opposite of the current logic state.
      */
     virtual void togglePin() = 0;
 
