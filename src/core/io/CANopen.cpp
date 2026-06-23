@@ -161,6 +161,10 @@ void processCANopenNode(CO_NODE* canNode) {
     COTmrProcess(&canNode->Tmr);
 }
 
+void alertTPDO(CO_NODE* canNode, uint16_t tpdoNum) {
+    COTPdoTrigPdo(canNode->TPdo, tpdoNum);
+}
+
 CO_ERR SDOTransfer(CO_NODE& node, uint8_t* data, uint8_t size, uint32_t entry, csdo_callback_t transferCallback,
                    void* transferContext) {
     while (state.inProgress == true) {

@@ -156,6 +156,11 @@ public:
     virtual void writePin(State state) = 0;
 
     /**
+     * Set the output of this pin to the opposite of the current logic state.
+     */
+    virtual void togglePin() = 0;
+
+    /**
      * Read the current logic state of this pin.
      *
      * @return The pin's logic level: State::LOW or State::HIGH.

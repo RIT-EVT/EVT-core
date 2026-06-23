@@ -97,6 +97,15 @@ void initializeCANopenNode(CO_NODE* canNode, CANDevice* canDevice, CO_IF_DRV* ca
 void processCANopenNode(CO_NODE* canNode);
 
 /**
+ * Alert a canOpen TPDO to send the TPDO's values.
+ * DISCLAIMER: Does not immediately send said TPDO, just flags it for the next time processCANopenNode() runs.
+ *
+ * @param canNode the can node
+ * @param tpdoNum the TPDO number to be sent
+ */
+void alertTPDO(CO_NODE* canNode, uint16_t tpdoNum);
+
+/**
  * This function starts an asynchronous SDO download (write) request to transfer data
  * to the specified object dictionary entry on the target CANopen node.
  *
