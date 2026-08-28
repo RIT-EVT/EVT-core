@@ -269,6 +269,9 @@ enum class Pin : uint8_t {
     SPI_SCK  = D13, // PB_6
     I2C_SDA  = D14, // PB_9
     I2C_SCL  = D15, // PB_8
+
+    PH_0  = 0x70, //button pins on the CUI chip
+    PH_1  = 0x71,
     #endif
 
     UART_TX = PA_2, // D1
