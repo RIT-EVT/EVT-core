@@ -1,7 +1,6 @@
 /**
- * Example of CAN communication between two devices. The two devices need
- * to be on a CAN network. The other device can be running this sample code
- * as well.
+ * Listens to a CANopen bus and prints every PDO it sees, decoded into
+ * Node-ID / TPDO-NUM / value instead of the raw COB-ID.
  *
  * @author Collin Bolles
  */
@@ -12,58 +11,58 @@
 namespace io   = core::io;
 namespace time = core::time;
 
+// CANopen predefined connection set: COB-ID = (function code << 7) | Node-ID
+constexpr uint32_t CANOPEN_NODE_ID_MASK = 0x7F;
+constexpr uint32_t CANOPEN_FUNC_MASK    = 0x780;
+
+constexpr uint32_t TPDO_BASE  = 0x180;
+constexpr uint32_t TPDO_INC   = 0x100;
+constexpr uint8_t  TPDO_COUNT = 4;
+
 void canIRQHandler(io::CANMessage& message, void* priv) {
     io::UART* uart = (io::UART*) priv;
-    uart->printf("Message received\r\n");
-    uart->printf("Message id: 0x%X \r\n", message.getId());
-    uart->printf("Message length: %d\r\n", message.getDataLength());
-    uart->printf("Message contents: ");
 
-    uint8_t* message_payload = message.getPayload();
-    for (int i = 0; i < message.getDataLength(); i++) {
-        uart->printf("0x%02X ", message_payload[i]);
+    uint32_t id     = message.getId();
+    uint32_t nodeId = id & CANOPEN_NODE_ID_MASK;
+    uint32_t base   = id & CANOPEN_FUNC_MASK;
+
+    int8_t tpdoNum = -1;
+    for (uint8_t i = 0; i < TPDO_COUNT; i++) {
+        if (base == TPDO_BASE + (i * TPDO_INC)) {
+            tpdoNum = (int8_t) i;
+            break;
+        }
     }
-    uart->printf("\r\n\r\n");
+
+    if (tpdoNum < 0) {
+        uart->printf("Node-ID: %d\tNon-TPDO id: 0x%X\r\n", nodeId, id);
+        return;
+    }
+
+    uint8_t* payload = message.getPayload();
+    uint16_t value    = (uint16_t) (payload[0] | (payload[1] << 8));
+
+    uart->printf("Node-ID: %d\tTPDO: %d\tValue: %u\r\n", nodeId, tpdoNum, value);
 }
 
 int main() {
     // Initialize system
     core::platform::init();
 
-    // Get CAN instance with loopback enabled
     io::CAN& can   = io::getCAN<io::Pin::PA_12, io::Pin::PA_11>();
     io::UART& uart = io::getUART<io::Pin::UART_TX, io::Pin::UART_RX>(9600);
     can.addIRQHandler(canIRQHandler, &uart);
 
-    // CAN message that will be sent
-    uint8_t payload[] = {0xDE, 0xAD, 0xBE, 0xBE, 0xEF, 0x00, 0x01, 0x02};
-    io::CANMessage transmit_message(1, 8, &payload[0], true);
-    io::CANMessage received_message;
+    uart.printf("Starting CANopen sniffing\r\n");
 
-    uart.printf("Starting CAN testing\r\n");
-
-    io::CAN::CANStatus result;
-
-    // Attempt to join the CAN network
-    result = can.connect();
+    io::CAN::CANStatus result = can.connect();
 
     if (result != io::CAN::CANStatus::OK) {
         uart.printf("Failed to connect to the CAN network\r\n");
         return 1;
     }
 
-    uint8_t count = 0;
     while (true) {
-        // Transmit every second
-        payload[7] = count;
-        transmit_message.setPayload(payload);
-        result = can.transmit(transmit_message);
-        if (result != io::CAN::CANStatus::OK) {
-            uart.printf("Failed to transmit message\r\n");
-            return 1;
-        }
-        count++;
-
         time::wait(1000);
     }
 
