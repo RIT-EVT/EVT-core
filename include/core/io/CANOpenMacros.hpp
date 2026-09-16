@@ -11,7 +11,7 @@
 /// We chose to use two different macros here because it gives a better clue to the developer as to how a dictionary's
 /// TPDOs are sent. You could theoretically use either or and the behavior would be the same.
 #define TRANSMIT_PDO_TRIGGER_TIMER 0xFE
-#define TRANSMIT_PDO_ALERT_EVENT 0xFF
+#define TRANSMIT_PDO_ALERT_EVENT   0xFF
 
 #define PDO_MAPPING_UNSIGNED8  8
 #define PDO_MAPPING_UNSIGNED16 16
