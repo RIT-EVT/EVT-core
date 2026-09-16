@@ -4,7 +4,14 @@
 #define RECEIVE_PDO_TRIGGER_SYNC  0x00
 #define RECEIVE_PDO_TRIGGER_ASYNC 0xFE
 
+/// Both of these trigger macros TPDOs on events and internally act exactly the same according to CANopen.
+/// OxFE and OxFF tell CANopen that we TPDOs should be sent when the driver receives a send event.
+/// A send event can be either a timer or an alert.
+///
+/// We chose to use two different macros here because it gives a better clue to the developer as to how a dictionary's
+/// TPDOs are sent. You could theoretically use either or and the behavior would be the same.
 #define TRANSMIT_PDO_TRIGGER_TIMER 0xFE
+#define TRANSMIT_PDO_ALERT_EVENT 0xFF
 
 #define PDO_MAPPING_UNSIGNED8  8
 #define PDO_MAPPING_UNSIGNED16 16
@@ -239,7 +246,9 @@
  * Note: The TPDO Settings object's TPDO_ID is incremented by the NODE-ID within the CANopen driver.
  *
  * @param TPDO_NUMBER (integer) the TPDO number this settings object is for.
- * @param TRANSMISSION_TYPE (hex) the type of transmission to make. You should use TRANSMIT_PDO_TRIGGER_TIMER.
+ * @param TRANSMISSION_TYPE (hex) the type of transmission to make. You should use TRANSMIT_PDO_TRIGGER_TIMER if you
+ * want your TPDO to trigger on a timer. You should use TRANSMIT_PDO_ALERT_EVENT if you want to use `alertTPDO` from
+ * `include/core/io/CANopen.hpp`.
  * @param INHIBIT_TIME (integer) The amount of time (in 100μs increments) that must pass before another TPDO message can
  *  be sent.
  * @param INTERVAL (integer) the time trigger (in ms) that the TPDO sends on (0 = disable).
@@ -353,14 +362,14 @@
 
 /**
  * This macro converts a TPDO number to the corresponding Link number. ONLY USE FOR THE DATA_LINK!
- * 
+ *
  * @param PDO_NUMBER (integer) the PDO number for the data link
  */
 #define LINK_TPDO_NUMBER(PDO_NUMBER) (PDO_NUMBER)
 
 /**
  * This macro converts a RPDO number to the corresponding Link number. ONLY USE FOR THE DATA_LINK!
- * 
+ *
  * @param PDO_NUMBER (integer) the PDO number for the data link
  */
 #define LINK_RPDO_NUMBER(PDO_NUMBER) (PDO_NUMBER + 0x100)
