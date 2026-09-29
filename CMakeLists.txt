@@ -118,18 +118,25 @@ if(USE_RTOS)
     set(THREADX_ARCH "cortex_m4")
     set(THREADX_TOOLCHAIN "gnu")
     add_subdirectory(libs/threadx)
+    add_subdirectory(libs/usbx)
 
     set(THREADX_DIR ${EVT_CORE_DIR}/libs/threadx)
+    set(USBX_DIR ${EVT_CORE_DIR}/libs/usbx)
     target_include_directories(${PROJECT_NAME} PUBLIC
             $<BUILD_INTERFACE:${THREADX_DIR}/common/inc>
             $<INSTALL_INTERFACE:/libs/threadx/common.inc>
             $<BUILD_INTERFACE:${THREADX_DIR}/ports/cortex_m4/gnu/inc>
             $<INSTALL_INTERFACE:/libs/threadx/ports/cortex_m4/gnu/inc>
+
+            $<BUILD_INTERFACE:${USBX_DIR}/common/core/inc>
+            $<INSTALL_INTERFACE:/libs/usbx/common/core.inc>
     )
 
     target_include_directories(${PROJECT_NAME} PRIVATE
             ${THREADX_DIR}/common/inc
             ${THREADX_DIR}/ports/cortex_m4/gnu/inc
+
+            ${USBX_DIR}/common/core/inc
     )
 
     target_sources(${PROJECT_NAME} PRIVATE
@@ -142,6 +149,7 @@ if(USE_RTOS)
             src/core/rtos/Initializable.cpp
             src/core/rtos/tsio/ThreadUART.cpp
     )
+
 endif()
 
 if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
