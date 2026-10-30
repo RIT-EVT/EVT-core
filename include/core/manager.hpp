@@ -1,8 +1,10 @@
 #ifndef _EVT_MANAGER_H_
 #define _EVT_MANAGER_H_
 
-#include <cstdint>
+    #include <cstdint>
 
+#include "io/USB/UsbOtg.hpp"
+#include "io/USB/USBDevice.hpp"
 #include <core/io/ADC.hpp>
 #include <core/io/CAN.hpp>
 #include <core/io/GPIO.hpp>
@@ -49,6 +51,7 @@
     #define SPI_SUPPORTED
     #define UART_SUPPORTED
     #define IWDG_SUPPORTED
+    #define USB_SUPPORTED
 
     #include <core/dev/MCUTimer.hpp>
     #include <core/dev/platform/f4xx/IWDGf4xx.hpp>
@@ -61,7 +64,9 @@
     #include <core/io/platform/f4xx/PWMf4xx.hpp>
     #include <core/io/platform/f4xx/SPIf4xx.hpp>
     #include <core/io/platform/f4xx/UARTf4xx.hpp>
-    #include <core/platform/f4xx/stm32f4xx.hpp>
+    #include <core/io/platform/f4xx/USB/UsbOtgf4xx.hpp>
+    #include <core/io/platform/f4xx/USB/USBDevicef4xx.hpp>
+        #include <core/platform/f4xx/stm32f4xx.hpp>
 
     #ifdef STM32F469xx
         #define SDRAM_SUPPORTED
@@ -348,6 +353,24 @@ SDRAM& getSDRAM(const SDRAM::SDRAMInitConfig& initConfig, const SDRAM::SDRAMTimi
 }
 #endif
 
+#ifdef USB_SUPPORTED
+template<PCD_TypeDef* usbOtgDevice>
+UsbOtg& getUsbOtg(const UsbOtg::UsbOtgInitConfig& initConfig) {
+    #ifdef STM32F4xx
+    static UsbOtgf4xx usbOtg(initConfig, usbOtgDevice);
+    return usbOtg;
+    #endif
+}
+
+template<PCD_TypeDef* usbOtgDevice>
+UsbOtg& getUSBDevice(rtos::BytePoolBase& pool, uint32_t* readData, uint32_t* writeData, const UsbOtg::UsbOtgInitConfig& initConfig) {
+    #ifdef STM32F4xx
+    static rtos::USBDevicef4xx usbDevice(pool, readData, writeData, initConfig, usbOtgDevice);
+    return usbDevice;
+    #endif
+}
+#endif
 } // namespace core::io
+
 
 #endif

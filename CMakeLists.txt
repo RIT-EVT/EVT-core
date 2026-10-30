@@ -118,10 +118,10 @@ if(USE_RTOS)
     set(THREADX_ARCH "cortex_m4")
     set(THREADX_TOOLCHAIN "gnu")
     add_subdirectory(libs/threadx)
-    add_subdirectory(libs/usbx)
+    add_subdirectory(libs/stm32-mw-usbx)
 
     set(THREADX_DIR ${EVT_CORE_DIR}/libs/threadx)
-    set(USBX_DIR ${EVT_CORE_DIR}/libs/usbx)
+    set(USBX_DIR ${EVT_CORE_DIR}/libs/stm32-mw-usbx)
     target_include_directories(${PROJECT_NAME} PUBLIC
             $<BUILD_INTERFACE:${THREADX_DIR}/common/inc>
             $<INSTALL_INTERFACE:/libs/threadx/common.inc>
@@ -129,7 +129,11 @@ if(USE_RTOS)
             $<INSTALL_INTERFACE:/libs/threadx/ports/cortex_m4/gnu/inc>
 
             $<BUILD_INTERFACE:${USBX_DIR}/common/core/inc>
-            $<INSTALL_INTERFACE:/libs/usbx/common/core.inc>
+            $<INSTALL_INTERFACE:/libs/stm32-mw-usbx/common/core.inc>
+            $<BUILD_INTERFACE:${USBX_DIR}/common/usbx_device_classes/inc>
+            $<INSTALL_INTERFACE:/libs/stm32-mw-usbx/common/usbx_device_classes.inc>
+            $<BUILD_INTERFACE:${USBX_DIR}/common/usbx_stm32_device_controllers>
+            $<INSTALL_INTERFACE:/libs/stm32-mw-usbx/common/usbx_stm32_device_controllers>
     )
 
     target_include_directories(${PROJECT_NAME} PRIVATE
@@ -137,6 +141,9 @@ if(USE_RTOS)
             ${THREADX_DIR}/ports/cortex_m4/gnu/inc
 
             ${USBX_DIR}/common/core/inc
+            ${USBX_DIR}/common/core/usbx_device_classes
+            ${USBX_DIR}/common/core/usbx_stm32_device_controllers
+            ${USBX_DIR}/ports/generic/inc
     )
 
     target_sources(${PROJECT_NAME} PRIVATE
@@ -148,6 +155,8 @@ if(USE_RTOS)
             src/core/rtos/Threadx.cpp
             src/core/rtos/Initializable.cpp
             src/core/rtos/tsio/ThreadUART.cpp
+
+            src/core/io/USB/ux_device_descriptors.cpp
     )
 
 endif()
