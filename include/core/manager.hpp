@@ -1,5 +1,11 @@
+#pragma once
 #ifndef _EVT_MANAGER_H_
 #define _EVT_MANAGER_H_
+
+// Hard-guard to ensure top-level inclusion
+#ifndef MANAGER_INCLUSION
+#error "manager.hpp must only be included in the main.cpp, remove it from any all files"
+#endif
 
 #include <cstdint>
 
