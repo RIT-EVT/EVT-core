@@ -3,6 +3,7 @@
  * functionality and the values are continuously read in and printed over
  * UART.
  */
+
 #include <core/io/ADC.hpp>
 #include <core/io/UART.hpp>
 #include <core/manager.hpp>

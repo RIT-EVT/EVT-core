@@ -1,73 +1,81 @@
+#pragma once
 #ifndef _EVT_MANAGER_H_
-#define _EVT_MANAGER_H_
+    #define _EVT_MANAGER_H_
 
-#include <cstdint>
-
-#include <core/io/ADC.hpp>
-#include <core/io/CAN.hpp>
-#include <core/io/GPIO.hpp>
-#include <core/io/I2C.hpp>
-#include <core/io/PWM.hpp>
-#include <core/io/SDRAM.hpp>
-#include <core/io/UART.hpp>
-#include <core/io/pin.hpp>
-
-#ifdef STM32F3xx
-    #define ADC_SUPPORTED
-    #define CAN_SUPPORTED
-    #define GPIO_SUPPORTED
-    #define I2C_SUPPORTED
-    #define IWDG_SUPPORTED
-    #define MCU_SUPPORTED
-    #define PWM_SUPPORTED
-    #define RTC_SUPPORTED
-    #define SPI_SUPPORTED
-    #define UART_SUPPORTED
-
-    #include <core/dev/MCUTimer.hpp>
-    #include <core/dev/platform/f3xx/IWDGf3xx.hpp>
-    #include <core/dev/platform/f3xx/RTCf3xx.hpp>
-    #include <core/dev/platform/f3xx/Timerf3xx.hpp>
-    #include <core/io/platform/f3xx/ADCf3xx.hpp>
-    #include <core/io/platform/f3xx/CANf3xx.hpp>
-    #include <core/io/platform/f3xx/GPIOf3xx.hpp>
-    #include <core/io/platform/f3xx/I2Cf3xx.hpp>
-    #include <core/io/platform/f3xx/PWMf3xx.hpp>
-    #include <core/io/platform/f3xx/SPIf3xx.hpp>
-    #include <core/io/platform/f3xx/UARTf3xx.hpp>
-    #include <core/platform/f3xx/stm32f3xx.hpp>
-#endif
-
-#ifdef STM32F4xx
-    #define ADC_SUPPORTED
-    #define CAN_SUPPORTED
-    #define GPIO_SUPPORTED
-    #define I2C_SUPPORTED
-    #define MCU_SUPPORTED
-    #define PWM_SUPPORTED
-    #define RTC_SUPPORTED
-    #define SPI_SUPPORTED
-    #define UART_SUPPORTED
-    #define IWDG_SUPPORTED
-
-    #include <core/dev/MCUTimer.hpp>
-    #include <core/dev/platform/f4xx/IWDGf4xx.hpp>
-    #include <core/dev/platform/f4xx/RTCf4xx.hpp>
-    #include <core/dev/platform/f4xx/Timerf4xx.hpp>
-    #include <core/io/platform/f4xx/ADCf4xx.hpp>
-    #include <core/io/platform/f4xx/CANf4xx.hpp>
-    #include <core/io/platform/f4xx/GPIOf4xx.hpp>
-    #include <core/io/platform/f4xx/I2Cf4xx.hpp>
-    #include <core/io/platform/f4xx/PWMf4xx.hpp>
-    #include <core/io/platform/f4xx/SPIf4xx.hpp>
-    #include <core/io/platform/f4xx/UARTf4xx.hpp>
-    #include <core/platform/f4xx/stm32f4xx.hpp>
-
-    #ifdef STM32F469xx
-        #define SDRAM_SUPPORTED
-        #include <core/io/platform/f4xx/SDRAMf4xx.hpp>
+    // Hard-guard to ensure top-level inclusion
+    #ifdef MANAGER_INCLUSION
+        #error "manager.hpp must only be included in the main.cpp, remove it from any and all files"
     #endif
-#endif
+
+    #define MANAGER_INCLUSION
+
+    #include <cstdint>
+
+    #include <core/io/ADC.hpp>
+    #include <core/io/CAN.hpp>
+    #include <core/io/GPIO.hpp>
+    #include <core/io/I2C.hpp>
+    #include <core/io/PWM.hpp>
+    #include <core/io/SDRAM.hpp>
+    #include <core/io/UART.hpp>
+    #include <core/io/pin.hpp>
+
+    #ifdef STM32F3xx
+        #define ADC_SUPPORTED
+        #define CAN_SUPPORTED
+        #define GPIO_SUPPORTED
+        #define I2C_SUPPORTED
+        #define IWDG_SUPPORTED
+        #define MCU_SUPPORTED
+        #define PWM_SUPPORTED
+        #define RTC_SUPPORTED
+        #define SPI_SUPPORTED
+        #define UART_SUPPORTED
+
+        #include <core/dev/MCUTimer.hpp>
+        #include <core/dev/platform/f3xx/IWDGf3xx.hpp>
+        #include <core/dev/platform/f3xx/RTCf3xx.hpp>
+        #include <core/dev/platform/f3xx/Timerf3xx.hpp>
+        #include <core/io/platform/f3xx/ADCf3xx.hpp>
+        #include <core/io/platform/f3xx/CANf3xx.hpp>
+        #include <core/io/platform/f3xx/GPIOf3xx.hpp>
+        #include <core/io/platform/f3xx/I2Cf3xx.hpp>
+        #include <core/io/platform/f3xx/PWMf3xx.hpp>
+        #include <core/io/platform/f3xx/SPIf3xx.hpp>
+        #include <core/io/platform/f3xx/UARTf3xx.hpp>
+        #include <core/platform/f3xx/stm32f3xx.hpp>
+    #endif
+
+    #ifdef STM32F4xx
+        #define ADC_SUPPORTED
+        #define CAN_SUPPORTED
+        #define GPIO_SUPPORTED
+        #define I2C_SUPPORTED
+        #define MCU_SUPPORTED
+        #define PWM_SUPPORTED
+        #define RTC_SUPPORTED
+        #define SPI_SUPPORTED
+        #define UART_SUPPORTED
+        #define IWDG_SUPPORTED
+
+        #include <core/dev/MCUTimer.hpp>
+        #include <core/dev/platform/f4xx/IWDGf4xx.hpp>
+        #include <core/dev/platform/f4xx/RTCf4xx.hpp>
+        #include <core/dev/platform/f4xx/Timerf4xx.hpp>
+        #include <core/io/platform/f4xx/ADCf4xx.hpp>
+        #include <core/io/platform/f4xx/CANf4xx.hpp>
+        #include <core/io/platform/f4xx/GPIOf4xx.hpp>
+        #include <core/io/platform/f4xx/I2Cf4xx.hpp>
+        #include <core/io/platform/f4xx/PWMf4xx.hpp>
+        #include <core/io/platform/f4xx/SPIf4xx.hpp>
+        #include <core/io/platform/f4xx/UARTf4xx.hpp>
+        #include <core/platform/f4xx/stm32f4xx.hpp>
+
+        #ifdef STM32F469xx
+            #define SDRAM_SUPPORTED
+            #include <core/io/platform/f4xx/SDRAMf4xx.hpp>
+        #endif
+    #endif
 
 namespace core::platform {
 
@@ -77,59 +85,59 @@ namespace core::platform {
  * init logic.
  */
 void init() {
-#ifdef STM32F3xx
+    #ifdef STM32F3xx
     stm32f3xx_init();
-#endif
-#ifdef STM32F4xx
+    #endif
+    #ifdef STM32F4xx
     core::platform::stm32f4xx_init();
-#endif
+    #endif
 }
 
 } // namespace core::platform
 
 namespace core::dev {
 
-/**
- * Get an instance of an IWDG
- *
- * @param ms Time in milliseconds before the IWDG triggers a reset
- * must be a value between 8 and 32768 ms.
- */
-#ifdef IWDG_SUPPORTED
+    /**
+     * Get an instance of an IWDG
+     *
+     * @param ms Time in milliseconds before the IWDG triggers a reset
+     * must be a value between 8 and 32768 ms.
+     */
+    #ifdef IWDG_SUPPORTED
 IWDG& getIWDG(uint32_t ms) {
-    #ifdef STM32F3xx
+        #ifdef STM32F3xx
     // 8 < ms < 32768
     static IWDGf3xx iwdg(ms);
     return iwdg;
-    #endif
-    #ifdef STM32F4xx
+        #endif
+        #ifdef STM32F4xx
     // 8 < ms < 32768
     // Found in IWDG Main Features:
     // https://www.st.com/resource/en/reference_manual/dm00135183-stm32f446xx-advanced-arm-based-32-bit-mcus-stmicroelectronics.pdf
 
     static IWDGf4xx iwdg(ms);
     return iwdg;
-    #endif
+        #endif
 }
-#endif
+    #endif
 
-/**
- * Get an instance of an RTC
- */
-#ifdef RTC_SUPPORTED
+    /**
+     * Get an instance of an RTC
+     */
+    #ifdef RTC_SUPPORTED
 RTC& getRTC() {
-    #ifdef STM32F3xx
+        #ifdef STM32F3xx
     static RTCf3xx rtc;
     return rtc;
-    #endif
-    #ifdef STM32F4xx
+        #endif
+        #ifdef STM32F4xx
     static RTCf4xx rtc;
     return rtc;
-    #endif
+        #endif
 }
-#endif
+    #endif
 
-#ifdef MCU_SUPPORTED
+    #ifdef MCU_SUPPORTED
 /**
  * A verbose method for getting an EVT-Core timer. This initializer supports a timer configuration object, which allows
  * for configuration of the timer.
@@ -141,171 +149,171 @@ RTC& getRTC() {
  */
 template<MCUTimer mcuTimer>
 Timer& getTimer(uint32_t clockPeriod,
-    // This is a little wonky... we need the correct config so we need to get it from the respective board specific
-    // class. The only real way to do this, is to use a ifdef and grab the right class.
-    #ifdef STM32F3xx
+        // This is a little wonky... we need the correct config so we need to get it from the respective board specific
+        // class. The only real way to do this, is to use a ifdef and grab the right class.
+        #ifdef STM32F3xx
                 TimerConfiguration_t configuration = TimerF3xx::defaultConfig
-    #endif
-    #ifdef STM32F4xx
+        #endif
+        #ifdef STM32F4xx
                     TimerConfiguration_t configuration = TimerF4xx::defaultConfig
-    #endif
+        #endif
 ) {
-    #ifdef STM32F3xx
+        #ifdef STM32F3xx
     static TimerF3xx timer(getTIM(mcuTimer), clockPeriod, configuration);
     return timer;
-    #endif
-    #ifdef STM32F4xx
+        #endif
+        #ifdef STM32F4xx
     static TimerF4xx timer(getTIM(mcuTimer), clockPeriod, configuration);
     return timer;
-    #endif
+        #endif
 }
-#endif
+    #endif
 
 } // namespace core::dev
 
 namespace core::io {
 
-/**
- * Get an instance of an ADC channel
- *
- * @param[in] pin The pin to use with the ADC
- */
-#ifdef ADC_SUPPORTED
+    /**
+     * Get an instance of an ADC channel
+     *
+     * @param[in] pin The pin to use with the ADC
+     */
+    #ifdef ADC_SUPPORTED
 template<Pin pin, ADCPeriph adcPeriph = ADCPeriph::ONE>
 ADC& getADC() {
-    #ifdef STM32F4xx
+        #ifdef STM32F4xx
     static ADCf4xx adc(pin, adcPeriph);
     return adc;
-    #endif
-    #ifdef STM32F3xx
+        #endif
+        #ifdef STM32F3xx
     static ADCf3xx adc(pin, adcPeriph);
     return adc;
-    #endif
+        #endif
 }
-#endif
+    #endif
 
-/**
- * Get an instance of a CAN interface.
- *
- * @param[in] txPin CAN pin for transmitting messages
- * @param[in] rxPin CAN pin for receiving messages
- */
-#ifdef CAN_SUPPORTED
+    /**
+     * Get an instance of a CAN interface.
+     *
+     * @param[in] txPin CAN pin for transmitting messages
+     * @param[in] rxPin CAN pin for receiving messages
+     */
+    #ifdef CAN_SUPPORTED
 template<Pin txPin, Pin rxPin>
 CAN& getCAN(bool loopbackEnabled = false) {
-    #ifdef STM32F3xx
+        #ifdef STM32F3xx
     static CANf3xx can(txPin, rxPin, loopbackEnabled);
     return can;
-    #endif
-    #ifdef STM32F4xx
+        #endif
+        #ifdef STM32F4xx
     static CANf4xx can(txPin, rxPin, loopbackEnabled);
     return can;
-    #endif
+        #endif
 }
-#endif
+    #endif
 
-/**
- * Get an instance of a GPIO pin.
- *
- * @param[in] pin The pin to attach to the GPIO
- * @param[in] direction The direction, either input or output
- * @param[in] pull The direction of the internal pull resistor
- */
-#ifdef GPIO_SUPPORTED
+    /**
+     * Get an instance of a GPIO pin.
+     *
+     * @param[in] pin The pin to attach to the GPIO
+     * @param[in] direction The direction, either input or output
+     * @param[in] pull The direction of the internal pull resistor
+     */
+    #ifdef GPIO_SUPPORTED
 template<Pin pin>
 GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT, GPIO::Pull pull = GPIO::Pull::PULL_DOWN) {
-    #ifdef STM32F3xx
+        #ifdef STM32F3xx
     static GPIOf3xx gpioPin(pin, direction, pull);
     return gpioPin;
-    #endif
-    #ifdef STM32F4xx
+        #endif
+        #ifdef STM32F4xx
     static GPIOf4xx gpioPin(pin, direction, pull);
     return gpioPin;
-    #endif
+        #endif
 }
-#endif
+    #endif
 
-/**
- * Get an I2C master interface.
- *
- * @param[in] scl The I2C clock pin
- * @param[in] sda The I2C data pin
- */
-#ifdef I2C_SUPPORTED
+    /**
+     * Get an I2C master interface.
+     *
+     * @param[in] scl The I2C clock pin
+     * @param[in] sda The I2C data pin
+     */
+    #ifdef I2C_SUPPORTED
 template<Pin scl, Pin sda>
 I2C& getI2C() {
-    #ifdef STM32F3xx
+        #ifdef STM32F3xx
     static I2Cf3xx i2c(scl, sda);
     return i2c;
-    #endif
-    #ifdef STM32F4xx
+        #endif
+        #ifdef STM32F4xx
     static I2Cf4xx i2c(scl, sda);
     return i2c;
-    #endif
+        #endif
 }
-#endif
+    #endif
 
-/**
- * Get an instance of a PWM pin.
- *
- * @param[in] pin The pin to attach to the PWM.
- */
-#ifdef PWM_SUPPORTED
+    /**
+     * Get an instance of a PWM pin.
+     *
+     * @param[in] pin The pin to attach to the PWM.
+     */
+    #ifdef PWM_SUPPORTED
 template<Pin pin>
 PWM& getPWM() {
-    #ifdef STM32F3xx
+        #ifdef STM32F3xx
     static PWMf3xx pwm(pin);
     return pwm;
-    #endif
-    #ifdef STM32F4xx
+        #endif
+        #ifdef STM32F4xx
     static PWMf4xx pwm(pin);
     return pwm;
-    #endif
+        #endif
 }
-#endif
+    #endif
 
-/**
- * Get an instance of a UART.
- *
- * @param[in] txPin The transmit pin for the UART
- * @param[in] rxPin The receive pin for the UART
- * @param[in] baudrate The baudrate to operate at
- * @param[in] isSwapped Whether TX and RX should be swapped; defaults to false
- */
-#ifdef UART_SUPPORTED
+    /**
+     * Get an instance of a UART.
+     *
+     * @param[in] txPin The transmit pin for the UART
+     * @param[in] rxPin The receive pin for the UART
+     * @param[in] baudrate The baudrate to operate at
+     * @param[in] isSwapped Whether TX and RX should be swapped; defaults to false
+     */
+    #ifdef UART_SUPPORTED
 template<Pin txPin, Pin rxPin>
 UART& getUART(uint32_t baudrate, bool isSwapped = false) {
-    #ifdef STM32F3xx
+        #ifdef STM32F3xx
     static UARTf3xx uart(txPin, rxPin, baudrate, isSwapped);
     return uart;
-    #endif
-    #ifdef STM32F4xx
+        #endif
+        #ifdef STM32F4xx
     static UARTf4xx uart(txPin, rxPin, baudrate, isSwapped);
     return uart;
-    #endif
+        #endif
 }
-#endif
+    #endif
 
-/**
- * Get an instance of a SPI driver.
- *
- * @tparam sckPin Serial clock pin
- * @tparam mosiPin Master out, slave in pin
- * @tparam misoPin Master in, slave out pin
- * @param CSPins Array of chip select pins
- * @param pinLength Number of chip select pins in the array
- */
-#ifdef SPI_SUPPORTED
+    /**
+     * Get an instance of a SPI driver.
+     *
+     * @tparam sckPin Serial clock pin
+     * @tparam mosiPin Master out, slave in pin
+     * @tparam misoPin Master in, slave out pin
+     * @param CSPins Array of chip select pins
+     * @param pinLength Number of chip select pins in the array
+     */
+    #ifdef SPI_SUPPORTED
 template<Pin sckPin, Pin mosiPin, Pin misoPin>
 SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
-    #ifdef STM32F3xx
+        #ifdef STM32F3xx
     static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
     return spi;
-    #endif
-    #ifdef STM32F4xx
+        #endif
+        #ifdef STM32F4xx
     static SPIf4xx spi(CSPins, pinLength, sckPin, mosiPin, misoPin);
     return spi;
-    #endif
+        #endif
 }
 
 /**
@@ -318,35 +326,35 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
  */
 template<Pin sckPin, Pin mosiPin>
 SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
-    #ifdef STM32F3xx
+        #ifdef STM32F3xx
     static SPIf3xx spi(CSPins, pinLength, sckPin, mosiPin);
     return spi;
-    #endif
-    #ifdef STM32F4xx
+        #endif
+        #ifdef STM32F4xx
     static SPIf4xx spi(CSPins, pinLength, sckPin, mosiPin);
     return spi;
-    #endif
+        #endif
 }
-#endif
+    #endif
 
-/**
- * Get an instance of SDRAM
- *
- * @tparam pins the array of pins that will be used by the SDRAM Controller
- * @param initConfig SDRAM controller config used to determine clock speed, address, and more
- * @param timingConfig SDRAM controller config used for hardware level timing for sending commands
- * @param sdramDevice the actual device being used, implementing the start-up command sequence
- */
-#ifdef SDRAM_SUPPORTED
+    /**
+     * Get an instance of SDRAM
+     *
+     * @tparam pins the array of pins that will be used by the SDRAM Controller
+     * @param initConfig SDRAM controller config used to determine clock speed, address, and more
+     * @param timingConfig SDRAM controller config used for hardware level timing for sending commands
+     * @param sdramDevice the actual device being used, implementing the start-up command sequence
+     */
+    #ifdef SDRAM_SUPPORTED
 template<SDRAM::SDRAMPinGroup& pins>
 SDRAM& getSDRAM(const SDRAM::SDRAMInitConfig& initConfig, const SDRAM::SDRAMTimingConfig& timingConfig,
                 SDRAMDevice& device) {
-    #ifdef STM32F4xx
+        #ifdef STM32F4xx
     static SDRAMf4xx fmc(pins, initConfig, timingConfig, device);
     return fmc;
-    #endif
+        #endif
 }
-#endif
+    #endif
 
 } // namespace core::io
 
