@@ -3,9 +3,11 @@
 #define _EVT_MANAGER_H_
 
 // Hard-guard to ensure top-level inclusion
-#ifndef MANAGER_INCLUSION
+#ifdef MANAGER_INCLUSION
 #error "manager.hpp must only be included in the main.cpp, remove it from any and all files"
 #endif
+
+#define MANAGER_INCLUSION
 
 #include <cstdint>
 
