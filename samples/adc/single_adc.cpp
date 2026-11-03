@@ -3,9 +3,12 @@
  * functionality and the values are continuously read in and printed over
  * UART.
  */
+#define MANAGER_INCLUSION
+#include <core/manager.hpp>
+#undef MANAGER_INCLUSION
+
 #include <core/io/ADC.hpp>
 #include <core/io/UART.hpp>
-#include <core/manager.hpp>
 #include <core/utils/time.hpp>
 
 namespace io   = core::io;
