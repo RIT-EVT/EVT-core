@@ -4,7 +4,7 @@
 
 // Hard-guard to ensure top-level inclusion
 #ifndef MANAGER_INCLUSION
-#error "manager.hpp must only be included in the main.cpp, remove it from any all files"
+#error "manager.hpp must only be included in the main.cpp, remove it from any and all files"
 #endif
 
 #include <cstdint>
