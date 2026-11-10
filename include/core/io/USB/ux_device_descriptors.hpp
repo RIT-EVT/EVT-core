@@ -1,16 +1,5 @@
-//
-// Created by oscarc on 9/21/26.
-//
-
 #ifndef CUI_UX_DEVICE_DESCRIPTORS_HPP
 #define CUI_UX_DEVICE_DESCRIPTORS_HPP
-
-#if defined(STM32F4xx)
-    #include "HALf4/cmsis_gcc.h"
-#endif
-#if defined(STM32F3xx)
-    #include "HALf3/cmsis_gcc.h"
-#endif
 
 
 /* USER CODE BEGIN Header */
@@ -34,17 +23,16 @@
 /* USER CODE END Header */
 /* Define to prevent recursive inclusion -------------------------------------*/
 
-#ifdef __cplusplus0
-extern "C" {
-#endif
-
-
 /* Includes ------------------------------------------------------------------*/
-#include "ux_api.h"
 #include "ux_stm32_config.h"
 #include "tx_port.h"
-#include "ux_device_class_cdc_acm.h"
-#include "c++/12.3.1/cstdint"
+
+#if defined(STM32F4xx)
+    #include "HALf4/cmsis_gcc.h"
+#endif
+#if defined(STM32F3xx)
+    #include "HALf3/cmsis_gcc.h"
+#endif
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -72,190 +60,190 @@ constexpr uint8_t USBD_FRAMEWORK_MAX_DESC_SZ = 200U;
 /* Enum Class Type */
 typedef enum
 {
-  CLASS_TYPE_NONE     = 0,
-  CLASS_TYPE_HID      = 1,
-  CLASS_TYPE_CDC_ACM  = 2,
-  CLASS_TYPE_MSC      = 3,
-  CLASS_TYPE_CDC_ECM  = 4,
-  CLASS_TYPE_DFU      = 5,
-  CLASS_TYPE_VIDEO    = 6,
-  CLASS_TYPE_PIMA_MTP = 7,
-  CLASS_TYPE_CCID     = 8,
-  CLASS_TYPE_PRINTER  = 9,
-  CLASS_TYPE_RNDIS    = 10,
-} USBD_CompositeClassTypeDef;
+    CLASS_TYPE_NONE     = 0,
+    CLASS_TYPE_HID      = 1,
+    CLASS_TYPE_CDC_ACM  = 2,
+    CLASS_TYPE_MSC      = 3,
+    CLASS_TYPE_CDC_ECM  = 4,
+    CLASS_TYPE_DFU      = 5,
+    CLASS_TYPE_VIDEO    = 6,
+    CLASS_TYPE_PIMA_MTP = 7,
+    CLASS_TYPE_CCID     = 8,
+    CLASS_TYPE_PRINTER  = 9,
+    CLASS_TYPE_RNDIS    = 10,
+  } USBD_CompositeClassTypeDef;
 
 /* USB Endpoint handle structure */
 typedef struct
 {
-  uint32_t status;
-  uint32_t total_length;
-  uint32_t rem_length;
-  uint32_t maxpacket;
-  uint16_t is_used;
-  uint16_t bInterval;
+    uint32_t status;
+    uint32_t total_length;
+    uint32_t rem_length;
+    uint32_t maxpacket;
+    uint16_t is_used;
+    uint16_t bInterval;
 } USBD_EndpointTypeDef;
 
 /* USB endpoint handle structure */
 typedef struct
 {
-  uint8_t add;
-  uint8_t type;
-  uint16_t size;
-  uint8_t is_used;
+    uint8_t add;
+    uint8_t type;
+    uint16_t size;
+    uint8_t is_used;
 } USBD_EPTypeDef;
 
 /* USB Composite handle structure */
 typedef struct
 {
-  USBD_CompositeClassTypeDef ClassType;
-  uint32_t ClassId;
-  uint8_t InterfaceType;
-  uint32_t Active;
-  uint32_t NumEps;
-  uint32_t NumIf;
-  USBD_EPTypeDef Eps[USBD_MAX_CLASS_ENDPOINTS];
-  uint8_t Ifs[USBD_MAX_CLASS_INTERFACES];
+    USBD_CompositeClassTypeDef ClassType;
+    uint32_t ClassId;
+    uint8_t InterfaceType;
+    uint32_t Active;
+    uint32_t NumEps;
+    uint32_t NumIf;
+    USBD_EPTypeDef Eps[USBD_MAX_CLASS_ENDPOINTS];
+    uint8_t Ifs[USBD_MAX_CLASS_INTERFACES];
 } USBD_CompositeElementTypeDef;
 
 /* USB Device handle structure */
 typedef struct _USBD_DevClassHandleTypeDef
 {
-  uint8_t Speed;
-  uint32_t classId;
-  uint32_t NumClasses;
-  USBD_CompositeElementTypeDef tclasslist[USBD_MAX_SUPPORTED_CLASS];
-  uint32_t CurrDevDescSz;
-  uint32_t CurrConfDescSz;
+    uint8_t Speed;
+    uint32_t classId;
+    uint32_t NumClasses;
+    USBD_CompositeElementTypeDef tclasslist[USBD_MAX_SUPPORTED_CLASS];
+    uint32_t CurrDevDescSz;
+    uint32_t CurrConfDescSz;
 } USBD_DevClassHandleTypeDef;
 
 /* USB Device endpoint direction */
 typedef enum
 {
-  OUT   = 0x00,
-  IN    = 0x80,
-} USBD_EPDirectionTypeDef;
+    OUT   = 0x00,
+    IN    = 0x80,
+  } USBD_EPDirectionTypeDef;
 
 /* USB Device descriptors structure */
 typedef struct
 {
-  uint8_t bLength;
-  uint8_t bDescriptorType;
-  uint16_t bcdUSB;
-  uint8_t bDeviceClass;
-  uint8_t bDeviceSubClass;
-  uint8_t bDeviceProtocol;
-  uint8_t bMaxPacketSize;
-  uint16_t idVendor;
-  uint16_t idProduct;
-  uint16_t bcdDevice;
-  uint8_t iManufacturer;
-  uint8_t iProduct;
-  uint8_t iSerialNumber;
-  uint8_t bNumConfigurations;
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint16_t bcdUSB;
+    uint8_t bDeviceClass;
+    uint8_t bDeviceSubClass;
+    uint8_t bDeviceProtocol;
+    uint8_t bMaxPacketSize;
+    uint16_t idVendor;
+    uint16_t idProduct;
+    uint16_t bcdDevice;
+    uint8_t iManufacturer;
+    uint8_t iProduct;
+    uint8_t iSerialNumber;
+    uint8_t bNumConfigurations;
 } __PACKED USBD_DeviceDescTypedef;
 
 /* USB Iad descriptors structure */
 typedef struct
 {
-  uint8_t bLength;
-  uint8_t bDescriptorType;
-  uint8_t bFirstInterface;
-  uint8_t bInterfaceCount;
-  uint8_t bFunctionClass;
-  uint8_t bFunctionSubClass;
-  uint8_t bFunctionProtocol;
-  uint8_t iFunction;
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint8_t bFirstInterface;
+    uint8_t bInterfaceCount;
+    uint8_t bFunctionClass;
+    uint8_t bFunctionSubClass;
+    uint8_t bFunctionProtocol;
+    uint8_t iFunction;
 } __PACKED USBD_IadDescTypedef;
 
 /* USB interface descriptors structure */
 typedef struct
 {
-  uint8_t bLength;
-  uint8_t bDescriptorType;
-  uint8_t bInterfaceNumber;
-  uint8_t bAlternateSetting;
-  uint8_t bNumEndpoints;
-  uint8_t bInterfaceClass;
-  uint8_t bInterfaceSubClass;
-  uint8_t bInterfaceProtocol;
-  uint8_t iInterface;
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint8_t bInterfaceNumber;
+    uint8_t bAlternateSetting;
+    uint8_t bNumEndpoints;
+    uint8_t bInterfaceClass;
+    uint8_t bInterfaceSubClass;
+    uint8_t bInterfaceProtocol;
+    uint8_t iInterface;
 } __PACKED USBD_IfDescTypedef;
 
 /* USB endpoint descriptors structure */
 typedef struct
 {
-  uint8_t bLength;
-  uint8_t bDescriptorType;
-  uint8_t bEndpointAddress;
-  uint8_t bmAttributes;
-  uint16_t wMaxPacketSize;
-  uint8_t bInterval;
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint8_t bEndpointAddress;
+    uint8_t bmAttributes;
+    uint16_t wMaxPacketSize;
+    uint8_t bInterval;
 } __PACKED USBD_EpDescTypedef;
 
 /* USB Config descriptors structure */
 typedef struct
 {
-  uint8_t bLength;
-  uint8_t bDescriptorType;
-  uint16_t wDescriptorLength;
-  uint8_t bNumInterfaces;
-  uint8_t bConfigurationValue;
-  uint8_t iConfiguration;
-  uint8_t bmAttributes;
-  uint8_t bMaxPower;
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint16_t wDescriptorLength;
+    uint8_t bNumInterfaces;
+    uint8_t bConfigurationValue;
+    uint8_t iConfiguration;
+    uint8_t bmAttributes;
+    uint8_t bMaxPower;
 } __PACKED USBD_ConfigDescTypedef;
 
 /* USB Qualifier descriptors structure */
 typedef struct
 {
-  uint8_t bLength;
-  uint8_t bDescriptorType;
-  uint16_t bcdDevice;
-  uint8_t Class;
-  uint8_t SubClass;
-  uint8_t Protocol;
-  uint8_t bMaxPacketSize;
-  uint8_t bNumConfigurations;
-  uint8_t bReserved;
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint16_t bcdDevice;
+    uint8_t Class;
+    uint8_t SubClass;
+    uint8_t Protocol;
+    uint8_t bMaxPacketSize;
+    uint8_t bNumConfigurations;
+    uint8_t bReserved;
 } __PACKED USBD_DevQualiDescTypedef;
 
 typedef struct
 {
-  /* Header Functional Descriptor*/
-  uint8_t bLength;
-  uint8_t bDescriptorType;
-  uint8_t bDescriptorSubtype;
-  uint16_t bcdCDC;
+    /* Header Functional Descriptor*/
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint8_t bDescriptorSubtype;
+    uint16_t bcdCDC;
 } __PACKED USBD_CDCHeaderFuncDescTypedef;
 
 typedef struct
 {
-  /* Call Management Functional Descriptor*/
-  uint8_t bLength;
-  uint8_t bDescriptorType;
-  uint8_t bDescriptorSubtype;
-  uint8_t bmCapabilities;
-  uint8_t bDataInterface;
+    /* Call Management Functional Descriptor*/
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint8_t bDescriptorSubtype;
+    uint8_t bmCapabilities;
+    uint8_t bDataInterface;
 } __PACKED USBD_CDCCallMgmFuncDescTypedef;
 
 typedef struct
 {
-  /* ACM Functional Descriptor*/
-  uint8_t bLength;
-  uint8_t bDescriptorType;
-  uint8_t bDescriptorSubtype;
-  uint8_t bmCapabilities;
+    /* ACM Functional Descriptor*/
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint8_t bDescriptorSubtype;
+    uint8_t bmCapabilities;
 } __PACKED USBD_CDCACMFuncDescTypedef;
 
 typedef struct
 {
-  /* Union Functional Descriptor*/
-  uint8_t bLength;
-  uint8_t bDescriptorType;
-  uint8_t bDescriptorSubtype;
-  uint8_t bMasterInterface;
-  uint8_t bSlaveInterface;
+    /* Union Functional Descriptor*/
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint8_t bDescriptorSubtype;
+    uint8_t bMasterInterface;
+    uint8_t bSlaveInterface;
 } __PACKED USBD_CDCUnionFuncDescTypedef;
 
 /* Private defines -----------------------------------------------------------*/
@@ -369,8 +357,5 @@ constexpr uint16_t USBD_CONFIG_BMATTRIBUTES = 0xC0U;
                                 pIfDesc->iInterface = (istring); \
                                 *Sze += (uint32_t)sizeof(USBD_IfDescTypedef); \
                               } while(0)
-#ifdef __cplusplus
-
-#endif
 
 #endif // CUI_UX_DEVICE_DESCRIPTORS_HPP

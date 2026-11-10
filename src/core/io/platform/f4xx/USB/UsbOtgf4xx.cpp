@@ -22,4 +22,12 @@ void UsbOtgf4xx::init() {
     HAL_PCD_Init(&usbInit);
 }
 
+PCD_TypeDef* UsbOtgf4xx::getUsbOtgDevice() {
+    return usbOtgDevice;
+}
+
+PCD_HandleTypeDef UsbOtgf4xx::getUsbInit() {
+    return usbInit;
+}
+
 } // namespace core::io

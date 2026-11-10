@@ -12,7 +12,12 @@ public:
     UsbOtgf4xx(const UsbOtgInitConfig& initConfig, PCD_TypeDef* usbOtgDevice);
 
     void init() override;
-protected:
+
+    PCD_TypeDef* getUsbOtgDevice();
+
+    PCD_HandleTypeDef getUsbInit();
+
+private:
     PCD_TypeDef* usbOtgDevice;
 
     PCD_HandleTypeDef usbInit;
