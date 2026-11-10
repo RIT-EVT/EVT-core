@@ -1,42 +1,16 @@
 #include <core/io/USB/USBDevice.hpp>
 
-#include "core/io/USB/UsbOtg.hpp"
-#include "core/manager.hpp"
-
 #include <core/io/USB/ux_device_descriptors.hpp>
 #include <ux_api.h>
 
 namespace core::rtos {
 
-USBDevice::USBDevice(BytePoolBase& pool, uint32_t* readData, uint32_t* writeData) :
-    sharedFlags((char*) "Shared Flags"),
-    deviceThread((char*) "Device Thread",
-        deviceThreadEntryTrampoline,
-        this,
-        APPLICATION_THREAD_STACK_SIZE,
-        APPLICATION_THREAD_PRIORITY,
-        APPLICATION_THREAD_PREEMPT_THRESHOLD,
-        APPLICATION_THREAD_TIME_SLICE,
-        APPLICATION_THREAD_AUTOSTART),
-    readThreadArgs({&sharedFlags, readData}),
-    readThread((char*) "Read Thread",
-        USBDeviceCDCACM::readThreadEntry,
-        &readThreadArgs,
-        READ_THREAD_STACK_SIZE,
-        READ_THREAD_PRIORITY,
-        READ_THREAD_PREEMPT_THRESHOLD,
-        READ_THREAD_TIME_SLICE,
-        READ_THREAD_AUTOSTART),
-    writeThreadArgs({&sharedFlags, writeData}),
-    writeThread((char*) "Write Thread",
-        USBDeviceCDCACM::writeThreadEntry,
-        &writeThreadArgs,
-        WRITE_THREAD_STACK_SIZE,
-        WRITE_THREAD_PRIORITY,
-        WRITE_THREAD_PREEMPT_THRESHOLD,
-        WRITE_THREAD_TIME_SLICE,
-        WRITE_THREAD_AUTOSTART)
-{
+USBDevice::USBDevice(BytePoolBase& pool, UsbDeviceClass& deviceClass)
+    : Initializable((char*) "UsbDevice"),
+      deviceThread((char*) "Device Thread", deviceThreadEntryTrampoline, this, APPLICATION_THREAD_STACK_SIZE,
+                   APPLICATION_THREAD_PRIORITY, APPLICATION_THREAD_PREEMPT_THRESHOLD, APPLICATION_THREAD_TIME_SLICE,
+                   APPLICATION_THREAD_AUTOSTART),
+      deviceClass(deviceClass) {
     void* usbMemoryBlockPointer;
 
     pool.allocateMemory(DEVICE_MEMORY_STACK_SIZE, TXW_NO_WAIT, &usbMemoryBlockPointer);
@@ -68,19 +42,21 @@ USBDevice::USBDevice(BytePoolBase& pool, uint32_t* readData, uint32_t* writeData
                                language_id_framework_length,
                                nullptr);
 
-    cdcAcmParameter.ux_slave_class_cdc_acm_instance_activate   = USBDeviceCDCACM::cdcAcmActivate;
-    cdcAcmParameter.ux_slave_class_cdc_acm_instance_deactivate = USBDeviceCDCACM::cdcAcmDeactivate;
-    cdcAcmParameter.ux_slave_class_cdc_acm_parameter_change    = USBDeviceCDCACM::cdcAcmParameterChange;
-
-    cdcAcmConfigurationNumber = USBD_Get_Configuration_Number(CLASS_TYPE_CDC_ACM, 0);
-    cdcAcmInterfaceNumber     = USBD_Get_Interface_Number(CLASS_TYPE_CDC_ACM, 0);
-
-    ux_device_stack_class_register(_ux_system_slave_class_cdc_acm_name,
-                                   ux_device_class_cdc_acm_entry,
-                                   cdcAcmConfigurationNumber,
-                                   cdcAcmInterfaceNumber,
-                                   &cdcAcmParameter);
+    deviceClass.deviceClassInit();
 }
+
+TXError USBDevice::init(BytePoolBase& pool) {
+    Initializable* initializables[MAX_THREADS];
+
+    initializables[0] = &deviceThread;
+
+    size_t count = deviceClass.appendThreads(
+        initializables + 1,
+        MAX_THREADS
+    );
+
+    return bulkInitialize(initializables, count, pool);
+};
 
 void USBDevice::deviceThreadEntryTrampoline(USBDevice* device) {
     device->deviceThreadEntry();

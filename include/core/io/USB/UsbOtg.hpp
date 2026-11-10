@@ -1,15 +1,11 @@
-//
-// Created by oscarc on 10/17/26.
-//
-
 #ifndef CUI_USBOTG_HPP
 #define CUI_USBOTG_HPP
-
-#include <cstdint>
 
 namespace core::io {
 
 constexpr uint8_t DEVICE_ENDPOINTS = 8;
+constexpr uintptr_t HIGH_SPEED = 0x40040000UL;
+constexpr uintptr_t FULL_SPEED = 0x50000000UL;
 
 class UsbOtg {
 
@@ -29,12 +25,8 @@ public:
 
     virtual ~UsbOtg() = default;
 
-    UsbOtg(const UsbOtgInitConfig& initConfig);
-
     virtual void init() = 0;
 
-private:
-    UsbOtgInitConfig initConfig;
 };
 
 

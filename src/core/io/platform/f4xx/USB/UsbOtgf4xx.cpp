@@ -3,7 +3,7 @@
 namespace core::io {
 
 UsbOtgf4xx::UsbOtgf4xx(const UsbOtgInitConfig& initConfig, PCD_TypeDef* usbOtgDevice)
-    : UsbOtg(initConfig), usbOtgDevice(usbOtgDevice), usbInit() {
+    : usbOtgDevice(usbOtgDevice), usbInit() {
 
     usbInit.Instance = this->usbOtgDevice;
     usbInit.Init.dev_endpoints = initConfig.deviceEndpoints;
