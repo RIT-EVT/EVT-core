@@ -123,13 +123,15 @@ uint8_t CANf4xx::getPortID(Pin txPin, Pin rxPin) {
 CANf4xx::CANf4xx(Pin txPin, Pin rxPin, bool loopbackEnabled) : CAN(txPin, rxPin, loopbackEnabled) {
 
     // Setup GPIO
-    GPIO_InitTypeDef gpioInit = {0};
-    Pin canPins[]             = {txPin, rxPin};
-    uint8_t numOfPins         = 2;
+    // GPIO_InitTypeDef gpioInit = {0};
+    Pin canPins[]     = {txPin, rxPin};
+    uint8_t numOfPins = 2;
 
-    // Both CAN 1 and CAN 2 use AF9 for the GPIO so initialization can be identical
-    GPIOf4xx::gpioStateInit(
-        &gpioInit, canPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF9_CAN1);
+    GPIOf4xx::gpioInit(canPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF9_CAN1);
+
+    // // Both CAN 1 and CAN 2 use AF9 for the GPIO so initialization can be identical
+    // GPIOf4xx::gpioStateInit(
+    //     &gpioInit, canPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF9_CAN1);
 }
 
 CAN::CANStatus CANf4xx::connect(bool autoBusOff) {

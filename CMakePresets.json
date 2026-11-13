@@ -53,6 +53,19 @@
         "FORCE_COLORED_OUTPUT": true,
         "USE_RTOS": true
       }
+    },
+    {
+      "name": "stm32f469-preset",
+      "displayName": "STM32F469xx Build",
+      "description": "Configures the build for an STM32F469xx target using the ARM GCC toolchain and Ninja.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "EVT_CORE_LOG_ENABLE": "1",
+        "TARGET_DEV": "STM32F469xx",
+        "FORCE_COLORED_OUTPUT": "1"
+      }
     }
   ],
   "buildPresets": [
@@ -70,6 +83,11 @@
       "name": "stm32f446-build",
       "configurePreset": "stm32f446-preset",
       "displayName": "Build for STM32F446"
+    },
+    {
+      "name": "stm32f469-build",
+      "configurePreset": "stm32f469-preset",
+      "displayName": "Build for STM32F469"
     },
     {
       "name": "stm32f446-rtos-build",

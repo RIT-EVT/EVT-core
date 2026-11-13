@@ -1,6 +1,7 @@
 #ifndef _EVT_UART_
 #define _EVT_UART_
 
+#include <core/io/pin.hpp>
 #include <cstdint>
 #include <cstdlib>
 
@@ -9,11 +10,6 @@
 #endif
 
 namespace core::io {
-
-// Forward declarations:
-// The different pins are hardware specific. Forward declarations to allow
-// at compilation time the decision of which pins should be used.
-enum class Pin;
 
 /**
  * Interface for UART operations. The UART has the ability for character and

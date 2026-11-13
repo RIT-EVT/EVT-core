@@ -105,6 +105,10 @@ void GPIOf3xx::writePin(GPIO::State state) {
     HAL_GPIO_WritePin(this->port, this->halPin, static_cast<GPIO_PinState>(state));
 }
 
+void GPIOf3xx::togglePin() {
+    HAL_GPIO_TogglePin(this->port, this->halPin);
+}
+
 GPIO::State GPIOf3xx::readPin() {
     return static_cast<GPIO::State>(HAL_GPIO_ReadPin(this->port, this->halPin));
 }
@@ -118,7 +122,7 @@ void GPIOf3xx::registerIRQ(TriggerEdge edge, void (*irqHandler)(GPIO* pin, void*
                   myPins,
                   numOfPins,
                   GPIOf3xx::GPIO_TRIGGER_INTERRUPT_BASE | (static_cast<uint32_t>(edge) << GPIO_MODE_IT_SHIFT),
-                  GPIO_PULLDOWN,
+                  static_cast<uint32_t>(pull),
                   GPIO_SPEED_FREQ_HIGH);
 
     auto pin_index                = static_cast<uint8_t>(this->pin) & 0x0F;

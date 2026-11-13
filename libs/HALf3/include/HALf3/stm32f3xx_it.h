@@ -56,6 +56,11 @@ void SVC_Handler(void);
 void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
+/**
+* @brief This function does not do anything, but ensures that the compiler/linker works and links together the vectored
+* interrupt handlers to where they are initially weakly defined in startup_stm32f4xxxx.s
+*/
+void ensure_interrupt_linkage(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

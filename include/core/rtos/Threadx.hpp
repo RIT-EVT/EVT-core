@@ -53,6 +53,13 @@ void relinquish();
  */
 TXError sleep(uint32_t sleepTime);
 
+/**
+ * Get current tick count of RTOS system thread
+ *
+ * @return The current value of the internal ThreadX system clock
+ */
+uint32_t getTick();
+
 } // namespace core::rtos
 
 #endif // EVT_RTOS_THREADX_

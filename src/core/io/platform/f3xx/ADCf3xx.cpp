@@ -26,6 +26,7 @@ ADC_HandleTypeDef ADCf3xx::halADC = {0};
 Pin ADCf3xx::channels[MAX_CHANNELS];
 uint16_t ADCf3xx::buffer[MAX_CHANNELS];
 DMA_HandleTypeDef ADCf3xx::halDMA = {0};
+float ADCf3xx::vref_voltage       = DEFAULT_VREF_POS;
 
 ADCf3xx::ADCf3xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
     // Flag representing if the ADC has been configured yet
@@ -64,7 +65,7 @@ ADCf3xx::ADCf3xx(Pin pin, ADCPeriph adcPeriph) : ADC(pin, adcPeriph) {
 
 float ADCf3xx::read() {
     float percentage = readPercentage();
-    return percentage * VREF_POS;
+    return percentage * vref_voltage;
 }
 
 uint32_t ADCf3xx::readRaw() {
@@ -81,10 +82,18 @@ float ADCf3xx::readPercentage() {
     return static_cast<float>(raw / MAX_RAW);
 }
 
+void ADCf3xx::setVref(float vref) {
+    if (vref > 0.0f) {
+        vref_voltage = vref;
+    }
+}
+
+float ADCf3xx::getVref() const {
+    return vref_voltage;
+}
+
 void ADCf3xx::initADC(uint8_t num_channels) {
     halADC.Instance = ADC1; // Only ADC the F3 supports
-
-    // TODO: Figure out ADC calibration
 
     halADC.Init.ClockPrescaler   = ADC_CLOCK_SYNC_PCLK_DIV4; // Use AHB clock (8MHz) w/ division for ADC clock
     halADC.Init.Resolution       = ADC_RESOLUTION_12B;
@@ -213,6 +222,8 @@ bool ADCf3xx::checkSupport(ADCPeriph periph, Channel_Support channelStruct) {
     switch (periph) {
     case ADCPeriph::ONE:
         return channelStruct.adc1;
+    default:
+        return false;
     }
 }
 

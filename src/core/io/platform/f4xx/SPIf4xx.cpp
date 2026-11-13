@@ -76,11 +76,11 @@ uint8_t SPIf4xx::getSCKPortID(Pin sckPin) {
 
 SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin misoPin)
     : SPI(CSPins, pinLength, sckPin, mosiPin, misoPin) {
-    uint8_t mosiPort          = getMOSIPortID(mosiPin);
-    uint8_t misoPort          = getMISOPortID(misoPin);
-    uint8_t sckPort           = getSCKPortID(sckPin);
-    GPIO_InitTypeDef GPIOInit = {0};
-    uint8_t altId             = 0x00U;
+    uint8_t mosiPort = getMOSIPortID(mosiPin);
+    uint8_t misoPort = getMISOPortID(misoPin);
+    uint8_t sckPort  = getSCKPortID(sckPin);
+    // GPIO_InitTypeDef GPIOInit = {0};
+    uint8_t altId = 0x00U;
 
     if (mosiPort == misoPort && misoPort == sckPort) {
         switch (mosiPort) {
@@ -104,7 +104,7 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin
             if (!__HAL_RCC_SPI3_IS_CLK_ENABLED()) {
                 __HAL_RCC_SPI3_CLK_ENABLE();
             }
-            altId = GPIO_AF5_SPI3;
+            altId = GPIO_AF6_SPI3;
             break;
 #endif
         default:
@@ -112,18 +112,19 @@ SPIf4xx::SPIf4xx(GPIO* CSPins[], uint8_t pinLength, Pin sckPin, Pin mosiPin, Pin
             break;
         }
 
-        // gpioStateInit only supports initializing up to 2 pins, so this must be done
-        // init mosiPin and misoPin
-        Pin spiPins[]     = {mosiPin, misoPin};
-        uint8_t numOfPins = 2;
-
-        GPIOf4xx::gpioStateInit(
-            &GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
-        // init sckPin
-        spiPins[0] = sckPin;
-        numOfPins  = 1;
-        GPIOf4xx::gpioStateInit(
-            &GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+        Pin spiPins[] = {mosiPin, misoPin, sckPin};
+        GPIOf4xx::gpioInit(spiPins, 3, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+        // // gpioStateInit only supports initializing up to 2 pins, so this must be done
+        // // init mosiPin and misoPin
+        // uint8_t numOfPins = 2;
+        //
+        // GPIOf4xx::gpioStateInit(
+        //     &GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
+        // // init sckPin
+        // spiPins[0] = sckPin;
+        // numOfPins  = 1;
+        // GPIOf4xx::gpioStateInit(
+        //     &GPIOInit, spiPins, numOfPins, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, altId);
 
         halSPI.Init.Mode      = SPI_MODE_MASTER;
         halSPI.Init.Direction = SPI_DIRECTION_2LINES;

@@ -9,6 +9,7 @@
 #include <core/io/GPIO.hpp>
 #include <core/io/I2C.hpp>
 #include <core/io/PWM.hpp>
+#include <core/io/SDRAM.hpp>
 #include <core/io/UART.hpp>
 #include <core/io/pin.hpp>
 
@@ -51,6 +52,7 @@
     #define RTC_SUPPORTED
     #define SPI_SUPPORTED
     #define UART_SUPPORTED
+    #define IWDG_SUPPORTED
 
     #include <core/dev/MCUTimer.hpp>
     #include <core/dev/platform/f4xx/IWDGf4xx.hpp>
@@ -66,6 +68,10 @@
     #include <core/io/platform/f4xx/UARTf4xx.hpp>
     #include <core/platform/f4xx/stm32f4xx.hpp>
 
+    #ifdef STM32F469xx
+        #define SDRAM_SUPPORTED
+        #include <core/io/platform/f4xx/SDRAMf4xx.hpp>
+    #endif
 #endif
 
 namespace core::platform {
@@ -129,14 +135,32 @@ RTC& getRTC() {
 #endif
 
 #ifdef MCU_SUPPORTED
+/**
+ * A verbose method for getting an EVT-Core timer. This initializer supports a timer configuration object, which allows
+ * for configuration of the timer.
+ *
+ * @tparam mcuTimer The microcontroller timer that the timer will run on.
+ * @param clockPeriod The clock period to run the timer at
+ * @param configuration Configuration variables for the timer.
+ * @return a configured timer object, with the given configuration & clock period.
+ */
 template<MCUTimer mcuTimer>
-Timer& getTimer(uint32_t clockPeriod) {
+Timer& getTimer(uint32_t clockPeriod,
+    // This is a little wonky... we need the correct config so we need to get it from the respective board specific
+    // class. The only real way to do this, is to use a ifdef and grab the right class.
     #ifdef STM32F3xx
-    static Timerf3xx timer(getTIM(mcuTimer), clockPeriod);
+                TimerConfiguration_t configuration = TimerF3xx::defaultConfig
+    #endif
+    #ifdef STM32F4xx
+                    TimerConfiguration_t configuration = TimerF4xx::defaultConfig
+    #endif
+) {
+    #ifdef STM32F3xx
+    static TimerF3xx timer(getTIM(mcuTimer), clockPeriod, configuration);
     return timer;
     #endif
     #ifdef STM32F4xx
-    static Timerf4xx timer(getTIM(mcuTimer), clockPeriod);
+    static TimerF4xx timer(getTIM(mcuTimer), clockPeriod, configuration);
     return timer;
     #endif
 }
@@ -220,7 +244,7 @@ GPIO& getGPIO(GPIO::Direction direction = GPIO::Direction::OUTPUT, GPIO::Pull pu
     return gpioPin;
     #endif
     #ifdef STM32F4xx
-    static GPIOf4xx gpioPin(pin, direction);
+    static GPIOf4xx gpioPin(pin, direction, pull);
     return gpioPin;
     #endif
 }
@@ -326,6 +350,25 @@ SPI& getSPI(GPIO* CSPins[], uint8_t pinLength) {
     #ifdef STM32F4xx
     static SPIf4xx spi(CSPins, pinLength, sckPin, mosiPin);
     return spi;
+    #endif
+}
+#endif
+
+/**
+ * Get an instance of SDRAM
+ *
+ * @tparam pins the array of pins that will be used by the SDRAM Controller
+ * @param initConfig SDRAM controller config used to determine clock speed, address, and more
+ * @param timingConfig SDRAM controller config used for hardware level timing for sending commands
+ * @param sdramDevice the actual device being used, implementing the start-up command sequence
+ */
+#ifdef SDRAM_SUPPORTED
+template<SDRAM::SDRAMPinGroup& pins>
+SDRAM& getSDRAM(const SDRAM::SDRAMInitConfig& initConfig, const SDRAM::SDRAMTimingConfig& timingConfig,
+                SDRAMDevice& device) {
+    #ifdef STM32F4xx
+    static SDRAMf4xx fmc(pins, initConfig, timingConfig, device);
+    return fmc;
     #endif
 }
 #endif
