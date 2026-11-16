@@ -1,7 +1,6 @@
 #include <core/io/platform/f3xx/DACf3xx.hpp>
 
 #include <HALf3/stm32f3xx.h>
-#include <HALf3/stm32f3xx_hal.h>
 #include <core/platform/f3xx/stm32f3xx.hpp>
 #include <core/io/platform/f3xx/GPIOf3xx.hpp>
 #include <core/utils/log.hpp>

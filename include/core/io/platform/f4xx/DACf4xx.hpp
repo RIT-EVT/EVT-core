@@ -1,92 +1,95 @@
-#ifndef _EVT_DACF4XX_H
-#define _EVT_DACF4XX_H
-
-#include <HALf4/stm32f4xx.h>
-#include <HALf4/stm32f4xx_hal.h>
+#ifndef _EVT_DACf4xx_
+#define _EVT_DACf4xx_
 
 #include <core/io/DAC.hpp>
+#include <core/io/pin.hpp>
 
 namespace core::io {
 
-enum class DACPeriph {
-    ONE,
-    TWO
-};
-
+/**
+ * DAC output channel for the STM32F4xx.
+ *
+ * The pin selects the DAC channel, Timer Trigger, and DMA stream.
+ *
+ * F446 / F469
+ *   PA4 => DAC1, Channel 1, TIM7 Trigger, DMA1 stream 5 (request channel 7)
+ *   PA5 => DAC1, Channel 2, TIM7 Trigger, DMA1 stream 6 (request channel 7)
+ *
+ * Buffered output uses TIM7 (TIM6 is the RTOS tick), so TIM7 must not be used for anything
+ * else while buffered output runs. Both channels share TIM7, so they must use the same
+ * sample rate.
+ */
 class DACf4xx : public DACBase {
 public:
     /**
-     * Setup the given pin for DAC usage
+     * Set up the pin and DAC channel, starting in static mode at 0V.
+     * Should use getDAC() instead of calling this directly.
      *
-     * @param[in] pin The pin to setup for DAC
-     * @param[in] dacPeriph The DAC peripheral being used
+     * @param[in] pin A pin for which isValidPin() is true
      */
-    DACf4xx(Pin pin, DACPeriph dacPeriph);
+    explicit DACf4xx(Pin pin);
 
-    void setValue(uint32_t value) override;
-    uint32_t getValue() const override;
-    void setVoltage(float voltage) override;
-    float getVoltage() const override;
+    /**
+     * Check whether a pin supports DAC output.
+     *
+     * @param[in] pin The pin to check
+     * @return true if the pin can be used with getDAC()
+     */
+    static constexpr bool isValidPin(Pin pin) {
+        return slotFor(pin) != INVALID_SLOT;
+    }
 
-    /// HAL DAC handle for STM32 operations (public for interrupt access)
-    DAC_HandleTypeDef halDac;
+    DACStatus startBuffer(const uint16_t* samples, uint16_t length, uint32_t sampleHz, bool circular = true) override;
+
+    void stopBuffer() override;
+
+    /**
+     * Handle a DMA event for this channel. Called from the DMA interrupt, don't call this yourself...
+     *
+     * @param[in] event The event that occurred
+     */
+    void handleEvent(DACEvent event);
 
 private:
-    /// Maximum raw DAC value (12-bit resolution)
-    static constexpr uint32_t MAX_RAW = 4095;
-    /// Reference voltage for DAC output calculation
-    static constexpr float VREF_POS = 3.3;
-    /// Current DAC output value
-    uint32_t currentValue = 0;
-    /// DAC channel for this instance
-    uint32_t channel = 0;
+    /// Returned by slotFor() for pins without a DAC output
+    static constexpr uint8_t INVALID_SLOT = 0xFF;
 
     /**
-     * Bit packed struct to contain the channel along with the DAC peripherals the channel supports
+     * Map a pin to its array index.
      *
-     * dac1: 1 bit. Support for DAC1 peripheral. 1 for supported, 0 for not supported.
-     * dac2: 1 bit. Support for DAC2 peripheral. 1 for supported, 0 for not supported.
-     * channel: 5 bits. The STM32 DAC channel value with said supported DAC peripherals
+     * @param[in] pin The pin to look up
+     * @return The slot index, or INVALID_SLOT
      */
-    struct Channel_Support {
-        uint8_t dac1    : 1;
-        uint8_t dac2    : 1;
-        uint8_t channel : 5;
-    };
+    static constexpr uint8_t slotFor(Pin pin) {
+        switch (pin) {
+        case Pin::PA_4:
+            return 0;
+        case Pin::PA_5:
+            return 1;
+        default:
+            return INVALID_SLOT;
+        }
+    }
+
+    void writeRaw(uint16_t value) override;
+
+    uint16_t readRaw() const override;
 
     /**
-     * Check if the channel that is being initialized supports the DAC peripheral that it is being initialized on.
+     * Configure the channel's trigger source. The channel must be disabled.
      *
-     * @param periph the DAC peripheral being used
-     * @param channelStruct the struct of the channel with supports to test
-     * @return true if channel is supported by the DAC peripheral, false otherwise
+     * @param[in] trigger A HAL DAC_TRIGGER_* value
      */
-    static bool checkSupport(DACPeriph periph, Channel_Support channelStruct);
+    void configureChannel(uint32_t trigger);
 
-    /**
-     * Initialize the DAC peripheral with proper configuration
-     */
-    void initDAC();
-
-    /**
-     * Initialize GPIO pins for DAC functionality
-     */
-    void initGPIO();
-
-    /**
-     * Determine the DAC channel based on the pin
-     * @return The STM32 DAC channel value
-     */
-    uint32_t getChannelFromPin();
-
-    /**
-     * Get channel support information for a given pin
-     * @param pin The pin to get support information for
-     * @return Channel_Support struct with DAC peripheral support information
-     */
-    static Channel_Support getChannelSupport(Pin pin);
+    /// Index into the hardware resource table
+    const uint8_t slot;
+    /// Whether the channel is in timer-triggered mode and holds a reference on TIM7
+    bool triggered = false;
+    /// Whether the running buffer repeats
+    bool circular = false;
 };
 
 } // namespace core::io
 
-#endif // _EVT_DACF4XX_H
+#endif // _EVT_DACf4xx_
