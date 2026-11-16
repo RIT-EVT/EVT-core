@@ -190,20 +190,21 @@ ADC& getADC() {
 #endif
 
 /**
- * Get an instance of a DAC channel
+ * Get an instance of a DAC output channel
  *
- * @param[in] pin The pin to use with the DAC
- * @param[in] dacPeriph The DAC peripheral to use
+ * @param[in] pin The DAC output pin
  */
 #ifdef DAC_SUPPORTED
-template<Pin pin, DACPeriph dacPeriph = DACPeriph::ONE>
-DigitalToAnalogConverter& getDAC() {
-    #ifdef STM32F4xx
-    static DACf4xx dac(pin, dacPeriph);
+template<Pin pin>
+DACBase& getDAC() {
+    #ifdef STM32F3xx
+    static_assert(DACf3xx::isValidPin(pin), "Pin has no DAC output on this chip");
+    static DACf3xx dac(pin);
     return dac;
     #endif
-    #ifdef STM32F3xx
-    static DACf3xx dac(pin, dacPeriph);
+    #ifdef STM32F4xx
+    static_assert(DACf4xx::isValidPin(pin), "Pin has no DAC output on this chip");
+    static DACf4xx dac(pin);
     return dac;
     #endif
 }
