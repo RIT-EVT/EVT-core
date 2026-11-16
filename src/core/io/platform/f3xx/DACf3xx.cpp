@@ -144,7 +144,7 @@ void dispatch(DAC_HandleTypeDef* hdac, DACBase::DACEvent event) {
 } // namespace
 
 void DACf3xx::handleEvent(DACEvent event) {
-    // If error or on end of a non-circular buffer, stop the running
+    // On an error, or once DMA finishes a non-circular buffer, mark the buffer as no longer running.
     if (event == DACEvent::ERROR || (event == DACEvent::COMPLETE && !circular)) {
         bufferRunning = false;
     }
