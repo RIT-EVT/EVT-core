@@ -9,6 +9,7 @@ constexpr uint32_t CLK_SPEED = 50000000;
 // Interrupt Priority Mappings. 0 is high and 15 is low
 constexpr uint32_t CAN_INTERRUPT_PRIORITY   = 4;
 constexpr uint32_t ADC_INTERRUPT_PRIORITY   = 5;
+constexpr uint32_t DAC_INTERRUPT_PRIORITY   = 6;
 constexpr uint32_t TIMER_INTERRUPT_PRIORITY = 9;
 constexpr uint32_t GPIO_INTERRUPT_PRIORITY  = 10;
 
