@@ -1,6 +1,8 @@
 #include <core/io/platform/f4xx/USB/USBDevicef4xx.hpp>
 
+extern "C" {
 #include "ux_dcd_stm32.h"
+}
 
 namespace core::rtos {
 

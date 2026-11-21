@@ -24,13 +24,14 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
 
 /* Includes ------------------------------------------------------------------*/
-#include "ux_stm32_config.h"
 #include "tx_port.h"
 
 #if defined(STM32F4xx)
+    #include "HALf4/stm32f4xx_hal.h"
     #include "HALf4/cmsis_gcc.h"
 #endif
 #if defined(STM32F3xx)
+    #include "HALF3x/stm32f3xx_hal.h"
     #include "HALf3/cmsis_gcc.h"
 #endif
 

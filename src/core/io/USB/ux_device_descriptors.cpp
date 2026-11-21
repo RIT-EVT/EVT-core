@@ -22,7 +22,6 @@
 
 #include <core/io/USB/ux_device_descriptors.hpp>
 
-#include "HALf4/stm32f4xx_hal_def.h"
 #include "ux_api.h"
 
 /* Private includes ----------------------------------------------------------*/

@@ -7,6 +7,7 @@
 namespace core::rtos {
 
 EventFlags USBDeviceCDCACM::eventFlags = EventFlags((char *) "CDC ACM Connection Flag");
+UX_SLAVE_CLASS_CDC_ACM* USBDeviceCDCACM::cdcAcmInstance = nullptr;
 
 USBDeviceCDCACM::USBDeviceCDCACM(uint8_t readQueueMessageSize, uint8_t writeQueueMessageSize) :
 readQueue((char*) "USB Read Queue", readQueueMessageSize, READ_WRITE_QUEUE_SIZE),

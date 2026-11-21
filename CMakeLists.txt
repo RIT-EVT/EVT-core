@@ -119,6 +119,10 @@ if(USE_RTOS)
     set(THREADX_TOOLCHAIN "gnu")
     add_subdirectory(libs/threadx)
     add_subdirectory(libs/stm32-mw-usbx)
+    target_link_libraries(${PROJECT_NAME} PUBLIC
+            $<BUILD_INTERFACE:azrtos::threadx>
+            $<BUILD_INTERFACE:azrtos::usbx>
+    )
 
     set(THREADX_DIR ${EVT_CORE_DIR}/libs/threadx)
     set(USBX_DIR ${EVT_CORE_DIR}/libs/stm32-mw-usbx)
@@ -136,7 +140,6 @@ if(USE_RTOS)
             $<INSTALL_INTERFACE:/libs/stm32-mw-usbx/common/usbx_stm32_device_controllers>
             $<BUILD_INTERFACE:${USBX_DIR}/ports/cortex_m4/gnu/inc>
             $<INSTALL_INTERFACE:/libs/stm32-mw-usbx/ports/cortex_m4/gnu/inc>
-
     )
 
     target_include_directories(${PROJECT_NAME} PRIVATE
@@ -144,8 +147,8 @@ if(USE_RTOS)
             ${THREADX_DIR}/ports/cortex_m4/gnu/inc
 
             ${USBX_DIR}/common/core/inc
-            ${USBX_DIR}/common/core/usbx_device_classes
-            ${USBX_DIR}/common/core/usbx_stm32_device_controllers
+            ${USBX_DIR}/common/usbx_device_classes/inc
+            ${USBX_DIR}/common/usbx_stm32_device_controllers
             ${USBX_DIR}/ports/cortex_m4/gnu/inc
     )
 
@@ -172,11 +175,17 @@ if(COMPDEFS MATCHES "(.*)STM32F3xx(.*)")
     add_subdirectory(libs/HALf3/)
 
     target_link_libraries(${PROJECT_NAME} PUBLIC HALf3)
+    if(USE_RTOS)
+        target_link_libraries(usbx PUBLIC HALf3)
+    endif()
 elseif(COMPDEFS MATCHES "(.*)STM32F4xx(.*)")
     add_subdirectory(libs/HALf4/)
     # Later this will be handled dynamically, either the HALf3 or the HALf4 will
     # be linked to
     target_link_libraries(${PROJECT_NAME} PUBLIC HALf4)
+    if(USE_RTOS)
+        target_link_libraries(usbx PUBLIC HALf4)
+    endif()
 else()
     message(FATAL_ERROR "the HAL didnt compile in top level CMake")
 endif()

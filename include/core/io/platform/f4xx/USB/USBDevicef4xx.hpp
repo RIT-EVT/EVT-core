@@ -1,7 +1,7 @@
 #ifndef CUI_USBDEVICEF4XX_HPP
 #define CUI_USBDEVICEF4XX_HPP
 
-#include "HALf4/stm32f4xx_hal_pcd.h"
+#include "HALf4/stm32f4xx_hal.h"
 #include "UsbOtgf4xx.hpp"
 #include "core/io/USB/USBDevice.hpp"
 #include "core/io/USB/UsbOtg.hpp"
