@@ -1,0 +1,111 @@
+#ifndef EVT_USB_ENUMS_HPP
+#define EVT_USB_ENUMS_HPP
+
+#include "core/rtos/Enums.hpp"
+
+#include <ux_api.h>
+
+namespace core::rtos::usb {
+
+enum UXError {
+    UXE_SUCCESS                              = UX_SUCCESS,
+    UXE_ERROR                                = UX_ERROR,
+    UXE_BUSY                                 = UX_BUSY,
+    UXE_TIMEOUT                              = UX_TIMEOUT,
+    UXE_REENTRY                              = UX_REENTRY,
+    UXE_INVALID_STATE                        = UX_INVALID_STATE,
+    UXE_INVALID_PARAMETER                    = UX_INVALID_PARAMETER,
+    UXE_ABORTED                              = UX_ABORTED,
+    UXE_MATH_OVERFLOW                        = UX_MATH_OVERFLOW,
+    UXE_INVALID_BUILD_OPTION                 = UX_INVALID_BUILD_OPTION,
+    UXE_TOO_MANY_DEVICES                     = UX_TOO_MANY_DEVICES,
+    UXE_MEMORY_INSUFFICIENT                  = UX_MEMORY_INSUFFICIENT,
+    UXE_NO_TD_AVAILABLE                      = UX_NO_TD_AVAILABLE,
+    UXE_NO_ED_AVAILABLE                      = UX_NO_ED_AVAILABLE,
+    UXE_SEMAPHORE_ERROR                      = UX_SEMAPHORE_ERROR,
+    UXE_THREAD_ERROR                         = UX_THREAD_ERROR,
+    UXE_MUTEX_ERROR                          = UX_MUTEX_ERROR,
+    UXE_EVENT_ERROR                          = UX_EVENT_ERROR,
+    UXE_MEMORY_CORRUPTED                     = UX_MEMORY_CORRUPTED,
+    UXE_MEMORY_ARRAY_FULL                    = UX_MEMORY_ARRAY_FULL,
+    UXE_FATAL_ERROR                          = UX_FATAL_ERROR,
+    UXE_ALREADY_ACTIVATED                    = UX_ALREADY_ACTIVATED,
+    UXE_TRANSFER_STALLED                     = UX_TRANSFER_STALLED,
+    UXE_TRANSFER_NO_ANSWER                   = UX_TRANSFER_NO_ANSWER,
+    UXE_TRANSFER_ERROR                       = UX_TRANSFER_ERROR,
+    UXE_TRANSFER_MISSED_FRAME                = UX_TRANSFER_MISSED_FRAME,
+    UXE_TRANSFER_NOT_READY                   = UX_TRANSFER_NOT_READY,
+    UXE_TRANSFER_BUS_RESET                   = UX_TRANSFER_BUS_RESET,
+    UXE_TRANSFER_BUFFER_OVERFLOW             = UX_TRANSFER_BUFFER_OVERFLOW,
+    UXE_TRANSFER_APPLICATION_RESET           = UX_TRANSFER_APPLICATION_RESET,
+    UXE_TRANSFER_DATA_LESS_THAN_EXPECTED     = UX_TRANSFER_DATA_LESS_THAN_EXPECTED,
+    UXE_PORT_RESET_FAILED                    = UX_PORT_RESET_FAILED,
+    UXE_CONTROLLER_INIT_FAILED               = UX_CONTROLLER_INIT_FAILED,
+    UXE_CONTROLLER_DEAD                      = UX_CONTROLLER_DEAD,
+    UXE_NO_BANDWIDTH_AVAILABLE               = UX_NO_BANDWIDTH_AVAILABLE,
+    UXE_DESCRIPTOR_CORRUPTED                 = UX_DESCRIPTOR_CORRUPTED,
+    UXE_OVER_CURRENT_CONDITION               = UX_OVER_CURRENT_CONDITION,
+    UXE_DEVICE_ENUMERATION_FAILURE           = UX_DEVICE_ENUMERATION_FAILURE,
+    UXE_TOO_MANY_HUB_PORTS                   = UX_TOO_MANY_HUB_PORTS,
+    UXE_DEVICE_HANDLE_UNKNOWN                = UX_DEVICE_HANDLE_UNKNOWN,
+    UXE_CONFIGURATION_HANDLE_UNKNOWN         = UX_CONFIGURATION_HANDLE_UNKNOWN,
+    UXE_INTERFACE_HANDLE_UNKNOWN             = UX_INTERFACE_HANDLE_UNKNOWN,
+    UXE_ENDPOINT_HANDLE_UNKNOWN              = UX_ENDPOINT_HANDLE_UNKNOWN,
+    UXE_FUNCTION_NOT_SUPPORTED               = UX_FUNCTION_NOT_SUPPORTED,
+    UXE_CONTROLLER_UNKNOWN                   = UX_CONTROLLER_UNKNOWN,
+    UXE_PORT_INDEX_UNKNOWN                   = UX_PORT_INDEX_UNKNOWN,
+    UXE_NO_CLASS_MATCH                       = UX_NO_CLASS_MATCH,
+    UXE_HOST_CLASS_ALREADY_INSTALLED         = UX_HOST_CLASS_ALREADY_INSTALLED,
+    UXE_HOST_CLASS_UNKNOWN                   = UX_HOST_CLASS_UNKNOWN,
+    UXE_CONNECTION_INCOMPATIBLE              = UX_CONNECTION_INCOMPATIBLE,
+    UXE_HOST_CLASS_INSTANCE_UNKNOWN          = UX_HOST_CLASS_INSTANCE_UNKNOWN,
+    UXE_TRANSFER_TIMEOUT                     = UX_TRANSFER_TIMEOUT,
+    UXE_BUFFER_OVERFLOW                      = UX_BUFFER_OVERFLOW,
+    UXE_NO_ALTERNATE_SETTING                 = UX_NO_ALTERNATE_SETTING,
+    UXE_NO_DEVICE_CONNECTED                  = UX_NO_DEVICE_CONNECTED,
+    UXE_HOST_CLASS_PROTOCOL_ERROR            = UX_HOST_CLASS_PROTOCOL_ERROR,
+    UXE_HOST_CLASS_MEMORY_ERROR              = UX_HOST_CLASS_MEMORY_ERROR,
+    UXE_HOST_CLASS_MEDIA_NOT_SUPPORTED       = UX_HOST_CLASS_MEDIA_NOT_SUPPORTED,
+    UXE_CLASS_MALFORMED_PACKET_RECEIVED_ERROR = UX_CLASS_MALFORMED_PACKET_RECEIVED_ERROR
+};
+
+enum UXDeviceState {
+    UXS_RESET                     = UX_DEVICE_RESET,
+    UXS_ATTACHED                  = UX_DEVICE_ATTACHED,
+    UXS_ADDRESSED                 = UX_DEVICE_ADDRESSED,
+    UXS_CONFIGURED                = UX_DEVICE_CONFIGURED,
+    UXS_SUSPENDED                 = UX_DEVICE_SUSPENDED,
+    UXS_RESUMED                   = UX_DEVICE_RESUMED,
+    UXS_SELF_POWERED              = UX_DEVICE_SELF_POWERED_STATE,
+    UXS_BUS_POWERED               = UX_DEVICE_BUS_POWERED_STATE,
+    UXS_REMOTE_WAKEUP             = UX_DEVICE_REMOTE_WAKEUP,
+    UXS_BUS_RESET_COMPLETED       = UX_DEVICE_BUS_RESET_COMPLETED,
+    UXS_REMOVED                   = UX_DEVICE_REMOVED,
+    UXS_FORCE_DISCONNECT          = UX_DEVICE_FORCE_DISCONNECT
+};
+
+constexpr TXError toTXError(UXError uxStatus) {
+    switch (uxStatus) {
+    case UXE_SUCCESS:               // 0x00
+        return TXE_SUCCESS;         // 0x00
+    case UXE_MEMORY_INSUFFICIENT:   // 0x12
+        return TXE_NO_MEMORY;       // 0x10
+    case UXE_THREAD_ERROR:          // 0x16
+        return TXE_THREAD_ERROR;    // 0x0E
+    case UXE_SEMAPHORE_ERROR:       // 0x17
+        return TXE_SEMAPHORE_ERROR; // 0x0C
+    case UXE_MUTEX_ERROR:           // 0x18
+        return TXE_MUTEX_ERROR;     // 0x1C
+    case UXE_EVENT_ERROR:           // 0x19
+        return TXE_GROUP_ERROR;     // 0x08
+    case UXE_INVALID_PARAMETER:     // 0x1B (if defined in your UXError)
+        return TXE_PTR_ERROR;       // 0x03
+    default:
+        return TXE_NOT_AVAILABLE;   // 0x1D (Generic fallback)
+    }
+}
+
+
+}
+
+#endif // EVT_USB_ENUMS_HPP

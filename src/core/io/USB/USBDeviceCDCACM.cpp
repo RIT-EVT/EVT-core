@@ -1,38 +1,34 @@
 #include <core/io/USB/USBDeviceCDCACM.hpp>
 
+#include "core/dev/Encoder.hpp"
 #include "core/io/USB/ux_device_descriptors.hpp"
 #include "core/io/types/CANMessage.hpp"
 #include "ux_api.h"
 
-namespace core::rtos {
+namespace core::rtos::usb {
 
 EventFlags USBDeviceCDCACM::eventFlags = EventFlags((char *) "CDC ACM Connection Flag");
 UX_SLAVE_CLASS_CDC_ACM* USBDeviceCDCACM::cdcAcmInstance = nullptr;
 
-USBDeviceCDCACM::USBDeviceCDCACM(uint8_t readQueueMessageSize, uint8_t writeQueueMessageSize) :
-readQueue((char*) "USB Read Queue", readQueueMessageSize, READ_WRITE_QUEUE_SIZE),
-writeQueue((char*) "UQueueSB Write Queue", writeQueueMessageSize, READ_WRITE_QUEUE_SIZE),
-readThreadArgs({.messageQueue = &readQueue, .eventFlags = &eventFlags, .messageSize = readQueueMessageSize}),
-writeThreadArgs({.messageQueue = &readQueue, .eventFlags = &eventFlags, .messageSize = writeQueueMessageSize}),
-readThread((char*) "Read Thread",
-    readThreadEntry,
-    &readThreadArgs,
-    READ_THREAD_STACK_SIZE,
-    READ_THREAD_PRIORITY,
-    READ_THREAD_PREEMPT_THRESHOLD,
-    READ_THREAD_TIME_SLICE,
-    READ_THREAD_AUTOSTART),
-writeThread((char*) "Write Thread",
-    writeThreadEntry,
-    &writeThreadArgs,
-    WRITE_THREAD_STACK_SIZE,
-    WRITE_THREAD_PRIORITY,
-    WRITE_THREAD_PREEMPT_THRESHOLD,
-    WRITE_THREAD_TIME_SLICE,
-    WRITE_THREAD_AUTOSTART)
-{}
+USBDeviceCDCACM::USBDeviceCDCACM(uint8_t readQueueMessageSize, uint8_t writeQueueMessageSize, USBDevice& device)
+    : UsbDeviceClass(device), device(device),
+      readQueue((char*) "USB Read Queue", readQueueMessageSize, READ_WRITE_QUEUE_SIZE),
+      writeQueue((char*) "UQueueSB Write Queue", writeQueueMessageSize, READ_WRITE_QUEUE_SIZE),
+      readThreadArgs({.messageQueue = &readQueue, .eventFlags = &eventFlags, .messageSize = readQueueMessageSize}),
+      writeThreadArgs({.messageQueue = &readQueue, .eventFlags = &eventFlags, .messageSize = writeQueueMessageSize}),
+      readThread((char*) "Read Thread", readThreadEntry, &readThreadArgs, READ_THREAD_STACK_SIZE, READ_THREAD_PRIORITY,
+                 READ_THREAD_PREEMPT_THRESHOLD, READ_THREAD_TIME_SLICE, READ_THREAD_AUTOSTART),
+      writeThread((char*) "Write Thread", writeThreadEntry, &writeThreadArgs, WRITE_THREAD_STACK_SIZE,
+                  WRITE_THREAD_PRIORITY, WRITE_THREAD_PREEMPT_THRESHOLD, WRITE_THREAD_TIME_SLICE,
+                  WRITE_THREAD_AUTOSTART) {}
 
-void USBDeviceCDCACM::deviceClassInit() {
+TXError USBDeviceCDCACM::init(BytePoolBase& pool) {
+
+    TXError TXstatus = device.init(pool);
+    if (TXstatus != TX_SUCCESS) {
+        return TXstatus;
+    }
+
     UX_SLAVE_CLASS_CDC_ACM_PARAMETER cdcAcmParameter;
 
     cdcAcmParameter.ux_slave_class_cdc_acm_instance_activate   = cdcAcmActivate;
@@ -42,11 +38,22 @@ void USBDeviceCDCACM::deviceClassInit() {
     ULONG cdcAcmConfigurationNumber = USBD_Get_Configuration_Number(CLASS_TYPE_CDC_ACM, 0);
     ULONG cdcAcmInterfaceNumber     = USBD_Get_Interface_Number(CLASS_TYPE_CDC_ACM, 0);
 
-    ux_device_stack_class_register(_ux_system_slave_class_cdc_acm_name,
-                                   ux_device_class_cdc_acm_entry,
-                                   cdcAcmConfigurationNumber,
-                                   cdcAcmInterfaceNumber,
-                                   &cdcAcmParameter);
+    auto UXstatus = static_cast<UXError>(ux_device_stack_class_register(_ux_system_slave_class_cdc_acm_name,
+                                                                           ux_device_class_cdc_acm_entry,
+                                                                           cdcAcmConfigurationNumber,
+                                                                           cdcAcmInterfaceNumber,
+                                                                           &cdcAcmParameter));
+    if (UXstatus != UX_SUCCESS) {
+        return toTXError(UXstatus);
+    }
+
+    Initializable* initializables[THREAD_COUNT + 1];
+
+    initializables[0] = device.getDeviceThread();
+    initializables[1] = &readThread;
+    initializables[2] = &writeThread;
+
+    return bulkInitialize(initializables, THREAD_COUNT + 1, pool);
 
 }
 
@@ -56,17 +63,6 @@ TXError USBDeviceCDCACM::read(void* destination, uint32_t waitOption) {
 
 TXError USBDeviceCDCACM::write(void* destination, uint32_t waitOption) {
     return writeQueue.send(destination, waitOption);
-}
-
-size_t USBDeviceCDCACM::appendThreads(Initializable** destination, size_t capacity) {
-    if (capacity < THREAD_COUNT) {
-        return 0;
-    }
-
-    destination[0] = &readThread;
-    destination[1] = &writeThread;
-
-    return THREAD_COUNT;
 }
 
 void USBDeviceCDCACM::cdcAcmActivate(void* cdc_acm_instance) {

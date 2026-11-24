@@ -3,20 +3,27 @@
 #include <core/io/USB/ux_device_descriptors.hpp>
 #include <ux_api.h>
 
-namespace core::rtos {
+namespace core::rtos::usb {
 
-USBDevice::USBDevice(BytePoolBase& pool, UsbDeviceClass& deviceClass)
-    : Initializable((char*) "UsbDevice"),
+USBDevice::USBDevice()
+    : Initializable((char*) "USB Device"),
       deviceThread((char*) "Device Thread", deviceThreadEntryTrampoline, this, APPLICATION_THREAD_STACK_SIZE,
                    APPLICATION_THREAD_PRIORITY, APPLICATION_THREAD_PREEMPT_THRESHOLD, APPLICATION_THREAD_TIME_SLICE,
-                   APPLICATION_THREAD_AUTOSTART),
-      deviceClass(deviceClass) {
+                   APPLICATION_THREAD_AUTOSTART) {}
+
+TXError USBDevice::init(BytePoolBase& pool) {
     void* usbMemoryBlockPointer;
 
-    pool.allocateMemory(DEVICE_MEMORY_STACK_SIZE, TXW_NO_WAIT, &usbMemoryBlockPointer);
+    TXError TXstatus = pool.allocateMemory(DEVICE_MEMORY_STACK_SIZE, TXW_NO_WAIT, &usbMemoryBlockPointer);
+    if (TXstatus != TXE_SUCCESS) {
+        return TXstatus;
+    }
 
-    ux_system_initialize(usbMemoryBlockPointer, DEVICE_MEMORY_STACK_SIZE, UX_NULL, 0);
-
+    auto UXstatus =
+        static_cast<UXError>(ux_system_initialize(usbMemoryBlockPointer, DEVICE_MEMORY_STACK_SIZE, UX_NULL, 0));
+    if (UXstatus != UXE_SUCCESS) {
+        return toTXError(UXstatus);
+    }
     ULONG device_framework_hs_length;
     ULONG device_framework_fs_length;
     ULONG string_framework_length;
@@ -32,7 +39,7 @@ USBDevice::USBDevice(BytePoolBase& pool, UsbDeviceClass& deviceClass)
 
     uint8_t* language_id_framework = USBD_Get_Language_Id_Framework(&language_id_framework_length);
 
-    ux_device_stack_initialize(device_framework_high_speed,
+    UXstatus = static_cast<UXError>(ux_device_stack_initialize(device_framework_high_speed,
                                device_framework_hs_length,
                                device_framework_full_speed,
                                device_framework_fs_length,
@@ -40,23 +47,17 @@ USBDevice::USBDevice(BytePoolBase& pool, UsbDeviceClass& deviceClass)
                                string_framework_length,
                                language_id_framework,
                                language_id_framework_length,
-                               nullptr);
+                               nullptr));
+    if (UXstatus != UXE_SUCCESS) {
+        return toTXError(UXstatus);
+    }
 
-    deviceClass.deviceClassInit();
+    return TXE_SUCCESS;
 }
 
-TXError USBDevice::init(BytePoolBase& pool) {
-    Initializable* initializables[MAX_THREADS];
-
-    initializables[0] = &deviceThread;
-
-    size_t count = deviceClass.appendThreads(
-        initializables + 1,
-        MAX_THREADS
-    );
-
-    return bulkInitialize(initializables, count, pool);
-};
+Thread<USBDevice*>* USBDevice::getDeviceThread() {
+    return &deviceThread;
+}
 
 void USBDevice::deviceThreadEntryTrampoline(USBDevice* device) {
     device->deviceThreadEntry();

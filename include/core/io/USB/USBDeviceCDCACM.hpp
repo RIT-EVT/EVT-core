@@ -8,7 +8,7 @@
 #include "tx_port.h"
 #include "ux_device_class_cdc_acm.h"
 
-namespace core::rtos {
+namespace core::rtos::usb {
 
 constexpr uint32_t THREAD_COUNT = 2;
 
@@ -37,15 +37,13 @@ public:
         uint32_t messageSize;
     };
 
-    USBDeviceCDCACM(uint8_t readQueueMessageSize, uint8_t writeQueueMessageSize);
+    USBDeviceCDCACM(uint8_t readQueueMessageSize, uint8_t writeQueueMessageSize, USBDevice& device);
 
-    void deviceClassInit() override;
+    TXError init(BytePoolBase& pool) override;
 
     TXError read(void* destination, uint32_t waitOption);
 
     TXError write(void* messagePointer, uint32_t waitOption);
-
-    size_t appendThreads(Initializable** destination, size_t capacity) override;
 
     static void cdcAcmActivate(void *cdc_acm_instance);
     static void cdcAcmDeactivate(void *cdc_acm_instance);
@@ -55,6 +53,8 @@ public:
     static void writeThreadEntry(ReadWriteThreadArgs* args);
 
 private:
+    USBDevice& device;
+
     static EventFlags eventFlags;
 
     Queue readQueue;

@@ -4,13 +4,14 @@
 #include "HALf4/stm32f4xx_hal.h"
 #include "UsbOtgf4xx.hpp"
 #include "core/io/USB/USBDevice.hpp"
+#include "core/io/USB/UsbDeviceClass.hpp"
 #include "core/io/USB/UsbOtg.hpp"
 
-namespace core::rtos {
+namespace core::rtos::usb {
 
 class USBDevicef4xx : public USBDevice {
 public:
-    USBDevicef4xx(BytePoolBase& pool, UsbDeviceClass& deviceClass, const io::UsbOtg::UsbOtgInitConfig& initConfig, PCD_TypeDef* usbOtgDevice);
+    USBDevicef4xx(const io::UsbOtg::UsbOtgInitConfig& initConfig, PCD_TypeDef* usbOtgDevice);
 
 private:
     void deviceThreadEntry() override;

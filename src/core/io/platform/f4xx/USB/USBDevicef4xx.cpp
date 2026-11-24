@@ -4,10 +4,10 @@ extern "C" {
 #include "ux_dcd_stm32.h"
 }
 
-namespace core::rtos {
+namespace core::rtos::usb {
 
-USBDevicef4xx::USBDevicef4xx(BytePoolBase& pool, UsbDeviceClass& deviceClass, const io::UsbOtg::UsbOtgInitConfig& initConfig, PCD_TypeDef* usbOtgDevice)
-    : USBDevice(pool, deviceClass), usbOtg(initConfig, usbOtgDevice) {}
+USBDevicef4xx::USBDevicef4xx(const io::UsbOtg::UsbOtgInitConfig& initConfig, PCD_TypeDef* usbOtgDevice)
+    : usbOtg(initConfig, usbOtgDevice) {}
 
 void USBDevicef4xx::deviceThreadEntry() {
     usbOtg.init(); //Usb Otg init

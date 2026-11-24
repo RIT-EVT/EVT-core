@@ -1,16 +1,18 @@
 #ifndef CUI_USBDEVICECLASS_HPP
 #define CUI_USBDEVICECLASS_HPP
 
-namespace core::rtos {
+#include <core/io/USB/USBDevice.hpp>
 
-class UsbDeviceClass {
+namespace core::rtos::usb {
+
+class UsbDeviceClass : public Initializable {
 public:
     virtual ~UsbDeviceClass()  = default;
 
-    virtual void deviceClassInit() = 0;
+    UsbDeviceClass(USBDevice& device);
 
-    virtual size_t appendThreads(Initializable** destination, size_t capacity) = 0;
-
+private:
+    USBDevice& device;
 };
 
 }

@@ -355,9 +355,9 @@ SDRAM& getSDRAM(const SDRAM::SDRAMInitConfig& initConfig, const SDRAM::SDRAMTimi
 
 #ifdef USB_SUPPORTED
 template<uintptr_t usbOtgAddress>
-rtos::USBDevice& getUSBDevice(rtos::BytePoolBase& pool, rtos::UsbDeviceClass& deviceClass, const UsbOtg::UsbOtgInitConfig& initConfig) {
+rtos::usb::USBDevice& getUSBDevice(const UsbOtg::UsbOtgInitConfig& initConfig) {
     #ifdef STM32F4xx
-    static rtos::USBDevicef4xx usbDevice(pool, deviceClass, initConfig, reinterpret_cast<PCD_TypeDef*>(usbOtgAddress));
+    static rtos::usb::USBDevicef4xx usbDevice(initConfig, reinterpret_cast<PCD_TypeDef*>(usbOtgAddress));
     return usbDevice;
     #endif
 }
